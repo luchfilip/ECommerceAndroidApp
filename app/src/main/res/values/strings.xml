@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">Febeca C.A.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Configuraciones</string>
+    <string name="search">Buscar</string>
+    <string name="categories">Categorías</string>
+    <string name="filter">Filtrar</string>
+    <string name="share">COMPARTIR</string>
+    <string name="title_activity_product_detail">Detalle del Producto</string>
+    <string name="related_products">Productos Relacionados</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="product_details_label">Detalles</string>
+    <string name="search_label">Buscar</string>
+    <string name="search_hint">Buscar Producto</string>
+    <string name="shopping_cart">Carrito de Compra</string>
+    <string name="whish_list">Lista de deseos</string>
+    <string name="orders_list">Pedidos</string>
+    <string name="invoces_list">Facturas</string>
+    <string name="statement_of_account">Estado de Cuenta</string>
+    <string name="invite">Invitar amigos</string>
+    <string name="contact_us">Contáctanos</string>
+    <string name="manage">Administrar</string>
+    <string name="report_error">Reportar Error</string>
+    <string name="communicate">Comunicación</string>
+    <string name="tools">Herramientas</string>
+    <string name="add_to_cart">Agregar al Carrito</string>
+    <string name="move_to_cart">Mover al Carrito</string>
+    <string name="qty_ordered_label">Cant.:</string>
+    <string name="proceed_to_checkout">Proceder a Finalizar Pedido</string>
+    <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
+    <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
+    <string name="search_title">Buscar</string>
+    <string name="external_storage_unavailable">El almacenamiento externo no se encuentra disponible o no se tiene permiso para escribir.</string>
+    <string name="company_name">Febeca C.A.</string>
+    <string name="brands">Marcas</string>
+
+
+    <string name="authenticator_acount_type">com.smartbuilders.smartsales.auth</string>
+    <!--<string name="sync_adapter_content_authority">com.smartbuilders.smartsales.syncadapter</string>-->
+
+    <string name="new_user_authorized">New User Authorized</string>
+    <string name="error_validating_user_return_null">Error validating user, query return null.</string>
+    <string name="error_validating_user_response_move_to_next_false">Error validating user, response.moveToNext() is false in userSignIn.</string>
+    <string name="user_authorized">User Authorized</string>
+    <string name="user_not_authorized">User Not Authorized</string>
+    <string name="user_wrong_password">User Wrong Password</string>
+    <string name="user_not_exist_in_server">User Not Exist in Server</string>
+    <string name="user_response_move_to_next_false">response.moveToNext() is false in userSignIn</string>
+    <string name="user_session_token_null">Session token is null or 0-length</string>
+    <string name="general_authorization_error">General Authorization Error</string>
+    <string name="sync_started">Synchronization started</string>
+    <string name="sync_finished">Synchronization finished.</string>
+    <string name="sync_finished_duration">Synchronization finished, duration: %s.</string>
+    <string name="sync_canceled">Synchronization canceled</string>
+    <string name="general_exception">GENERAL_EXCEPTION</string>
+    <string name="io_exception">IO_EXCEPTION</string>
+    <string name="operation_canceled_execption">OPERATION_CANCELED_EXCEPTION</string>
+    <string name="xml_pull_parse_exception">XML_PULL_PARSE_EXCEPTION</string>
+    <string name="no_log_message_registered">No log message registered.</string>
+    <string name="authenticator_exception">AUTHENTICATOR_EXCEPTION</string>
+    <string name="network_connection_unavailable">Network Connection Unavailable.</string>
+    <string name="sync_complete">Synchronization complete</string>
+    <string name="authentication_failed">Authentication Failed.</string>
+    <string name="sync_cancelled_by_user">Synchronization cancelled by user.</string>
+    <string name="sync_duration">Synchronization Duration</string>
+    <string name="log_clean_succesfully">The Log was clean successfully.</string>
+    <string name="sync_in_progress">Synchronization in progress</string>
+    <string name="alarm_already_set">Error creating Alarm, Alarm already set.</string>
+    <string name="wait_please">Wait Please</string>
+    <string name="authenticating_user">Authenticating User</string>
+    <string name="mandatory_fields_empty">You need to fill all the mandatory fields.</string>
+    <string name="user_already_registered">User already registered in the application.</string>
+    <string name="error_server_address_ioexception">The connection couldn\'t be established</string>
+    <string name="error_server_address_malformedurlexception">The URL is not in a valid form</string>
+    <string name="server_address">Server Address</string>
+    <string name="user_name">User Name</string>
+    <string name="sync_user_group">Synchronization User Group</string>
+    <string name="password">Password</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_rif">R.I.F.</string>
+    <string name="prompt_client_code">Client code</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_rif">This R.I.F. is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_client_code">This client code is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="title_activity_product_list">Productos</string>
+    <string name="title_activity_shoping_cart">Carrito de Compra</string>
+    <string name="title_activity_checkout">Finalizar Pedido</string>
+    <string name="title_activity_order_list">Pedidos</string>
+    <string name="title_activity_order_detail">Detalle del Pedido</string>
+    <string name="title_activity_invoice_list">Facturas</string>
+    <string name="title_activity_invoice_detail">Detalle de la Factura</string>
+    <string name="title_activity_wish_list">Lista de Deseos</string>
+    <string name="title_activity_statement_of_account">Estado de Cuenta</string>
+    <string name="title_activity_filter_options">FilterOptionsActivity</string>
+    <string name="title_activity_brands_list">BrandsListActivity</string>
+</resources>

@@ -1,0 +1,16 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BrandsListFragment"
+    tools:showIn="@layout/activity_brands_list"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/brands_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/brands_list_style"
+        android:background="@android:color/white" />
+
+</LinearLayout>

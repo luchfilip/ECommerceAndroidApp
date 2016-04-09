@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.smartbuilders.smartsales.ecommerceandroidapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.smartbuilders.smartsales.ecommerceandroidapp.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.smartbuilders.smartsales.ecommerceandroidapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <application
+        android:name="android.support.multidex.MultiDexApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProductsListActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+            <!--
+                <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            -->
+            <!-- enable the search dialog to send searches to SearchableActivity -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
+        </activity>
+        <activity
+            android:name=".ProductDetailActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".ProductsListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ProductsListActivity" />
+        </activity>
+        <activity
+            android:name="com.jasgcorp.ids.AuthenticatorActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.WithActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
+        <provider
+            android:name=".providers.CachedFileProvider"
+            android:authorities="com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider"
+            android:exported="true"
+            android:multiprocess="true" />
+        <provider
+            android:name="com.jasgcorp.ids.providers.DataBaseContentProvider"
+            android:authorities="com.smartbuilders.smartsales.providers.Syncadapter"
+            android:exported="false"
+            android:syncable="true"
+            tools:ignore="ExportedContentProvider" />
+        <provider
+            android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"
+            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider"
+            android:exported="false"
+            android:syncable="true"
+            tools:ignore="ExportedContentProvider" />
+
+        <service android:name="com.jasgcorp.ids.syncadapter.authenticator.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <receiver
+            android:name="com.jasgcorp.ids.gcm.GcmBroadcastReceiver"
+            android:enabled="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- <action android:name="com.google.android.c2dm.intent.REGISTRATION" /> -->
+
+                <category android:name="com.smartbuilders.smartsales.ecommerceandroidapp" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".CategoriesListActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".FilterOptionsActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FilterOptionsActivity" />
+        </activity>
+        <activity
+            android:name=".SubCategoriesListActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".CategoriesListActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CategoriesListActivity" />
+        </activity>
+        <activity
+            android:name=".ShoppingCartActivity"
+            android:label="@string/title_activity_shoping_cart"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".CheckoutActivity"
+            android:label="@string/title_activity_checkout"
+            android:parentActivityName=".ShoppingCartActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShoppingCartActivity" />
+        </activity>
+        <activity
+            android:name=".OrdersListActivity"
+            android:label="@string/title_activity_order_list"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".OrderDetailActivity"
+            android:label="@string/title_activity_order_detail"
+            android:parentActivityName=".OrdersListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".OrdersListActivity" />
+        </activity>
+        <activity
+            android:name=".InvoicesListActivity"
+            android:label="@string/title_activity_invoice_list"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".InvoiceDetailActivity"
+            android:label="@string/title_activity_invoice_detail"
+            android:parentActivityName=".InvoicesListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InvoicesListActivity" />
+        </activity>
+        <activity
+            android:name=".WishListActivity"
+            android:label="@string/title_activity_wish_list"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".StatementOfAccountActivity"
+            android:label="@string/title_activity_statement_of_account"
+            android:theme="@style/AppTheme" />
+
+        <searchable xmlns:android="http://schemas.android.com/apk/res/android"
+            android:hint="@string/search_hint"
+            android:label="@string/app_name" />
+
+        <activity android:name=".SearchResultsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <activity
+            android:name=".FilterOptionsActivity"
+            android:label="@string/title_activity_filter_options"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".BrandsListActivity"
+            android:label="@string/title_activity_brands_list"
+            android:parentActivityName=".FilterOptionsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FilterOptionsActivity" />
+        </activity>
+    </application>
+
+</manifest>

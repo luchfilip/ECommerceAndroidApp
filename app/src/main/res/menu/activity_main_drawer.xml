@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_shopping_cart"
+            android:icon="@drawable/ic_shopping_cart_black_12dp"
+            android:title="@string/shopping_cart" />
+        <item
+            android:id="@+id/nav_whish_list"
+            android:title="@string/whish_list" />
+        <item
+            android:id="@+id/nav_orders"
+            android:icon="@drawable/ic_list_black_18dp"
+            android:title="@string/orders_list" />
+        <item
+            android:id="@+id/nav_invoices_list"
+            android:icon="@drawable/ic_list_black_18dp"
+            android:title="@string/invoces_list" />
+        <item
+            android:id="@+id/nav_statement_of_account"
+            android:title="@string/statement_of_account" />
+    </group>
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/invite" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_email_black_12dp"
+                android:title="@string/contact_us" />
+        </menu>
+    </item>
+    <item android:title="@string/tools">
+        <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/manage" />
+            <item
+                android:id="@+id/nav_report_error"
+                android:icon="@drawable/ic_report_problem_black_18dp"
+                android:title="@string/report_error" />
+        </menu>
+    </item>
+
+</menu>

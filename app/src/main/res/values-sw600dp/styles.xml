@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="categories_list_style">
+        <item name="android:choiceMode">singleChoice</item>
+    </style>
+
+    <style name="shoppingCart_list_style">
+
+    </style>
+
+    <style name="wish_list_style">
+
+    </style>
+
+    <style name="invoices_list_style">
+        <item name="android:choiceMode">singleChoice</item>
+    </style>
+
+    <style name="orders_list_style">
+        <item name="android:choiceMode">singleChoice</item>
+    </style>
+
+    <style name="brands_list_style">
+
+    </style>
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShoppingCartActivity$ShoppingCartFragment"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".ShoppingCartFragment"
+        tools:showIn="@layout/activity_shoping_cart"
+        android:orientation="vertical">-->
+    <ListView
+        android:id="@+id/shoppingCart_items_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/shoppingCart_list_style"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Líneas totales:"
+        android:id="@+id/total_lines"
+        android:layout_gravity="right"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="5dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sub Total:"
+        android:id="@+id/subTotalAmount_tv"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Impuestos:"
+        android:id="@+id/taxesAmount_tv"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total:"
+        android:id="@+id/totalAmount_tv"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/proceed_to_checkout"
+        android:id="@+id/proceed_to_checkout_button"
+        android:layout_gravity="right"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp" />
+
+</LinearLayout>
+<!--<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context=".CategoriesListActivity$CategoriesListFragment">
+
+    <ListView
+        android:id="@+id/categories_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/category_list_style"
+        android:background="@android:color/white" />
+</FrameLayout>-->

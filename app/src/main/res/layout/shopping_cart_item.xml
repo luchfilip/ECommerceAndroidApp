@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/touch_selector"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/product_image"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:layout_gravity="center|top"
+        android:layout_margin="4dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/product_name"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_item_button_img"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_highlight_off_black_18dp"
+                android:layout_marginRight="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empaque de venta: "
+            android:id="@+id/product_minPackageUnit"
+            android:textAppearance="@android:style/TextAppearance.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio: "
+            android:id="@+id/product_price"
+            android:textAppearance="@android:style/TextAppearance.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descuento (%): "
+            android:id="@+id/discount"
+            android:textAppearance="@android:style/TextAppearance.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total línea: "
+            android:id="@+id/total_line"
+            android:textAppearance="@android:style/TextAppearance.Small" />
+
+        <View style="@style/Divider"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qty_ordered_label"
+                android:id="@+id/textView"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/subtract_unit_button_img"
+                android:src="@drawable/ic_remove_circle_black_24dp"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/qty_ordered"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@android:style/TextAppearance.Small" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_unit_button_img"
+                android:src="@drawable/ic_add_circle_black_24dp"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp" />
+
+        </LinearLayout>-->
+
+    </LinearLayout>
+</LinearLayout>

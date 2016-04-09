@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0692d6</color>
+    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorAccent">#cccccc</color>
+    <color name="link">#0000EE</color>
+    <color name="lateral_menu_bg_color">#FEFEFE</color>
+    <color name="ratingbar_progress">#FFD700</color>
+    <color name="ratingbar_background">#FF00FF</color>
+    <color name="ratingbar_secondaryprogress">#CCCCCC</color>
+    <color name="promo_label_color">#B40404</color>
+    <color name="product_category">#333333</color>
+    <color name="product_subcategory">#467ed8</color>
+    <color name="label_color">#333333</color>
+    <color name="febeca_light_blue">#ff64c2f4</color>
+    <color name="grey">#CCCCCC</color>
+</resources>
