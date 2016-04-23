@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Invoice;
 
 public class InvoicesListActivity extends AppCompatActivity implements InvoicesListFragment.Callback {
 
     private static final String INVOICEDETAIL_FRAGMENT_TAG = "INVOICEDETAIL_FRAGMENT_TAG";
-
+    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+    public static final String STATE_CURRENT_USER = "state_current_user";
+    private User mCurrentUser;
     private boolean mTwoPane;
 
     @Override

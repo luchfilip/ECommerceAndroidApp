@@ -170,7 +170,8 @@ public class ShoppingCartFragment extends Fragment {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (orderLines != null) {
-            mShareActionProvider.setShareIntent(createShareProductIntent());
+            new CreateShareIntentThread().start();
+            //mShareActionProvider.setShareIntent(createShareProductIntent());
         } else {
             Log.d(TAG, "Share Action Provider is null?");
         }
@@ -220,5 +221,17 @@ public class ShoppingCartFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
+    }
+
+    class CreateShareIntentThread extends Thread {
+        public void run() {
+            final Intent shareIntent = createShareProductIntent();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mShareActionProvider.setShareIntent(shareIntent);
+                }
+            });
+        }
     }
 }

@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 
 public class OrdersListActivity extends AppCompatActivity implements OrdersListFragment.Callback {
 
     private boolean mTwoPane;
     private static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
+    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+    public static final String STATE_CURRENT_USER = "state_current_user";
+    private User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

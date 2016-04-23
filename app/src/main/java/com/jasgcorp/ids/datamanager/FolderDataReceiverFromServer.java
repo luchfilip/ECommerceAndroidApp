@@ -279,7 +279,7 @@ public class FolderDataReceiverFromServer extends Thread {
 	
 	/**
 	 * 
-	 * @param fileName
+	 * @param fileIdsInClient
 	 * @throws Exception 
 	 */
 	private void pullFileFromServer(String fileIdsInClient) throws Exception{
@@ -374,9 +374,7 @@ public class FolderDataReceiverFromServer extends Thread {
 	}
 	
 	/**
-	 * 
-	 * @param userName
-	 * @param syncGroup
+	 *
 	 * @param fileSyncId
 	 * @param folderClientName
 	 * @param fileName

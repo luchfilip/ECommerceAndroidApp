@@ -24,7 +24,6 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SyncInfo;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Build;

@@ -48,7 +48,6 @@ import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -64,7 +63,6 @@ import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 import android.util.SparseArray;
 

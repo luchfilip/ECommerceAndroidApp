@@ -4,8 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.jasgcorp.ids.syncadapter.authenticator.Authenticator;
-
 /**
  * http://developer.android.com/training/sync-adapters/creating-authenticator.html
  * Created by Alberto on 23/3/2016.

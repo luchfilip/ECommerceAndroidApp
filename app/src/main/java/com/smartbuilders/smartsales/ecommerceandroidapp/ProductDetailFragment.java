@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CustomPagerAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
@@ -35,7 +36,7 @@ public class ProductDetailFragment extends Fragment {
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
     public static final String KEY_PRODUCT = "key_product";
-
+    private User mCurrentUser;
 
     public ProductDetailFragment() {
     }
@@ -47,9 +48,13 @@ public class ProductDetailFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null
-                && getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
-            mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
+        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+            if(getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
+                mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
+            }
+            if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_CURRENT_USER)){
+                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ProductDetailActivity.KEY_CURRENT_USER);
+            }
         }
 
         ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());

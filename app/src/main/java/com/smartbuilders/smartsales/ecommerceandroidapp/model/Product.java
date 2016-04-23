@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +14,7 @@ public class Product extends Model implements Parcelable {
 
     private String internalCode;
     private ProductBrand brand;
-    private int imageId;
+    private int imageId = R.mipmap.ic_launcher;
     private ArrayList<Integer> imagesIds;
     private String name;
     private String description;

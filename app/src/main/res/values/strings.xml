@@ -33,6 +33,7 @@
     <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
     <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
     <string name="search_title">Buscar</string>
+    <string name="filter_title">Filtrar</string>
     <string name="external_storage_unavailable">El almacenamiento externo no se encuentra disponible o no se tiene permiso para escribir.</string>
     <string name="company_name">Febeca C.A.</string>
     <string name="brands">Marcas</string>
@@ -79,6 +80,7 @@
     <string name="user_name">User Name</string>
     <string name="sync_user_group">Synchronization User Group</string>
     <string name="password">Password</string>
+    <string name="company_host_name">www.febeca.com</string>
 
     <!-- Strings related to login -->
     <string name="prompt_rif">R.I.F.</string>
@@ -100,6 +102,6 @@
     <string name="title_activity_invoice_detail">Detalle de la Factura</string>
     <string name="title_activity_wish_list">Lista de Deseos</string>
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
-    <string name="title_activity_filter_options">FilterOptionsActivity</string>
-    <string name="title_activity_brands_list">BrandsListActivity</string>
+    <string name="title_activity_filter_options">Opciones de Filtrado</string>
+    <string name="title_activity_brands_list">Marcas</string>
 </resources>

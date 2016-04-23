@@ -12,11 +12,12 @@ import android.view.ViewGroup;
 import android.content.Intent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -29,6 +30,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     public static final int REDIRECT_PRODUCT_DETAILS = 1;
 
     private ArrayList<Product> mDataset;
+    private Product[] array;
     private Context mContext;
     private boolean mUseDetailLayout;
     private int mRedirectOption;
@@ -58,6 +60,9 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     public ProductRecyclerViewAdapter(ArrayList<Product> myDataset, boolean useDetailLayout,
              int redirectOption) {
         mDataset = myDataset;
+
+        this.array = myDataset.toArray(new Product[0]);
+
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
     }
@@ -112,7 +117,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         @Override
                         public void onClick(View v) {
                             mContext.startActivity((new Intent(mContext, ProductsListActivity.class)
-                                    .putExtra(ProductsListFragment.KEY_PRODUCT, mDataset.get(position))));
+                                    .putExtra(ProductsListActivity.KEY_PRODUCT, mDataset.get(position))));
                         }
                     });
                 break;
@@ -140,5 +145,22 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         String fileName = "tmpImg.jgg";
         Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
         return Utils.createShareProductIntent(mContext, product, fileName);
+    }
+
+    public void filter (String charText){
+        charText = charText.toLowerCase(Locale.getDefault());
+        mDataset.clear();
+        if (charText.length() == 0) {
+            mDataset.addAll(Arrays.asList(array));
+        } else {
+            for (Product product : array) {
+                if (product.getName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || (product.getDescription()!=null && product.getDescription()
+                        .toLowerCase(Locale.getDefault()).contains(charText))) {
+                    mDataset.add(product);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }

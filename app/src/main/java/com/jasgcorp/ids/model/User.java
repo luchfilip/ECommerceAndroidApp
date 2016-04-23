@@ -20,18 +20,6 @@ public class User implements Parcelable {
 
     }
 
-    public User(Parcel in) {
-        userName = in.readString();
-        userPass = in.readString();
-        sessionToken = in.readString();
-        authToken = in.readString();
-        serverAddress = in.readString();
-        gcmRegistrationId = in.readString();
-        userGroup = in.readString();
-        userId = in.readString();
-        saveDBInExternalCard = in.readByte() != 0;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userName);
@@ -43,6 +31,18 @@ public class User implements Parcelable {
         dest.writeString(userGroup);
         dest.writeString(userId);
         dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
+    }
+
+    public User(Parcel in) {
+        userName = in.readString();
+        userPass = in.readString();
+        sessionToken = in.readString();
+        authToken = in.readString();
+        serverAddress = in.readString();
+        gcmRegistrationId = in.readString();
+        userGroup = in.readString();
+        userId = in.readString();
+        saveDBInExternalCard = in.readByte() != 0;
     }
 
     @Override

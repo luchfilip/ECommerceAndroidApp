@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -23,14 +24,20 @@ import java.util.Set;
  */
 public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
-    HashMap<String, Integer> alphaIndexer;
-    String[] sections;
+    private static final String TAG = BrandAdapter.class.getSimpleName();
+
+    private HashMap<String, Integer> alphaIndexer;
+    private String[] sections;
     private Context mContext;
     private ArrayList<ProductBrand> mDataset;
+    private ArrayList<ProductBrand> arraylist;
 
     public BrandAdapter(Context context, ArrayList<ProductBrand> data) {
         mContext = context;
         mDataset = data;
+
+        this.arraylist = new ArrayList<ProductBrand>();
+        this.arraylist.addAll(mDataset);
 
         alphaIndexer = new HashMap<String, Integer>();
         int size = mDataset.size();
@@ -110,6 +117,22 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
     @Override
     public long getItemId(int position) {
         return mDataset.get(position).getId();
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mDataset.clear();
+        if (charText.length() == 0) {
+            mDataset.addAll(arraylist);
+        } else {
+            for (ProductBrand brand : arraylist) {
+                if (brand.getName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || brand.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    mDataset.add(brand);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder {

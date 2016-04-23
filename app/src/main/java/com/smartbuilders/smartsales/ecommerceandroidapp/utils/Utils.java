@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 public class Utils {
 
     public static ArrayList<Product> getGenericProductsList(int iterations){
-        ArrayList<Product> products = new ArrayList<Product>();
+        ArrayList<Product> products = new ArrayList<>();
         Product p;
         ProductCategory productCategory = new ProductCategory();
         productCategory.setName("Nombre del grupo");
@@ -118,6 +120,9 @@ public class Utils {
             p.setProductSubCategory(productSubCategory);
             products.add(p);
         }
+        if(iterations==1){
+            Collections.shuffle(products, new Random(System.nanoTime()));
+        }
         return products;
     }
 
@@ -205,7 +210,7 @@ public class Utils {
         return categories;
     }
 
-    public static ArrayList<ProductCategory> getSubCategoriesByCategoryId(int productCategoryId){
+    public static ArrayList<ProductSubCategory> getSubCategoriesByCategoryId(int productCategoryId){
         if(productCategoryId == 0){
             return getCategoriasGrupo0(productCategoryId);
         }else if(productCategoryId == 1){
@@ -227,11 +232,11 @@ public class Utils {
         }else if(productCategoryId == 9){
             return getCategoriasGrupo9(productCategoryId);
         }
-        return new ArrayList<ProductCategory>();
+        return new ArrayList<ProductSubCategory>();
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo0(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo0(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1002873, "COMBOS GRUPO 0", "", "1", 0);
         categories.add(pc);
@@ -347,8 +352,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo1(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo1(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1002926, "COMBOS GRUPO 1", "", "1", 0);
         categories.add(pc);
@@ -427,8 +432,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo2(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo2(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1002958, "COMBOS GRUPO 2", "", "1", 0);
         categories.add(pc);
@@ -515,8 +520,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo3(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo3(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1002990, "COMBOS GRUPO 3", "", "1", 0);
         categories.add(pc);
@@ -599,8 +604,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo4(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo4(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003122, "ALAMBRE DE PUAS", "", "1", 0);
         categories.add(pc);
@@ -667,8 +672,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo5(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo5(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003023, "COMBOS GRUPO 5", "", "1", 0);
         categories.add(pc);
@@ -707,8 +712,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo6(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo6(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003035, "COMBOS GRUPO 6", "", "1", 0);
         categories.add(pc);
@@ -775,8 +780,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo7(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo7(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003063, "COMBOS VARIOS", "", "1", 0);
         categories.add(pc);
@@ -861,8 +866,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo8(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo8(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003120, "COMBOS GRIFERIAS", "", "1", 0);
         categories.add(pc);
@@ -913,8 +918,8 @@ public class Utils {
         return categories;
     }
 
-    private static ArrayList<ProductCategory> getCategoriasGrupo9(int productCategoryId){
-        ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
+    private static ArrayList<ProductSubCategory> getCategoriasGrupo9(int productCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<ProductSubCategory>();
         ProductSubCategory  pc;
         pc = new ProductSubCategory(productCategoryId, 1003152, "COMBOS GRUPO 9", "", "1", 0);
         categories.add(pc);
@@ -1071,7 +1076,8 @@ public class Utils {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - " + ctx.getString(R.string.company_name));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - "
+                + "http://www.febeca.com:8080/products/compra/");
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + "/" + fileName));
         return shareIntent;

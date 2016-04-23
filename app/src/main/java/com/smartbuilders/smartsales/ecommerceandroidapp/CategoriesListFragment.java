@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**

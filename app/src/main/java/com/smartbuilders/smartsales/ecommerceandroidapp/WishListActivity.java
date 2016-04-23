@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.WishListLine;
@@ -24,7 +25,9 @@ import java.util.ArrayList;
 public class WishListActivity extends AppCompatActivity {
 
     private static final String TAG = WishListActivity.class.getSimpleName();
-
+    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+    public static final String STATE_CURRENT_USER = "state_current_user";
+    private User mCurrentUser;
     private ListView mListView;
     private WishListAdapter mWishListAdapter;
     ArrayList<WishListLine> wishListLines;
@@ -124,7 +127,8 @@ public class WishListActivity extends AppCompatActivity {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (wishListLines != null) {
-            mShareActionProvider.setShareIntent(createShareProductIntent());
+            new CreateShareIntentThread().start();
+            //mShareActionProvider.setShareIntent(createShareProductIntent());
         } else {
             Log.d(TAG, "Share Action Provider is null?");
         }
@@ -177,4 +181,15 @@ public class WishListActivity extends AppCompatActivity {
         return shareIntent;
     }
 
+    class CreateShareIntentThread extends Thread {
+        public void run() {
+            final Intent shareIntent = createShareProductIntent();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mShareActionProvider.setShareIntent(shareIntent);
+                }
+            });
+        }
+    }
 }

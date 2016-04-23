@@ -9,6 +9,16 @@ public class ProductBrand extends Model {
     private String description;
     private int imageId;
 
+    public ProductBrand(){
+
+    }
+
+    public ProductBrand(int id, String name, String description){
+        setId(id);
+        setName(name);
+        setDescription(description);
+    }
+
     public String getName() {
         return name;
     }

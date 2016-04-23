@@ -9,9 +9,13 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
@@ -19,12 +23,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
+    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private AccountManager mAccountManager;
     private boolean finishActivityOnResultOperationCanceledException;
@@ -48,11 +55,29 @@ public class MainActivity extends AppCompatActivity
     private Account mAccount;
     private NavigationView mNavigationView;
     private Button showFiltersButton;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(getIntent().getData()!=null){//check if intent is not null
+            Uri data = getIntent().getData();//set a variable for the Intent
+            String scheme = data.getScheme();//get the scheme (http,https)
+            String fullPath = data.getEncodedSchemeSpecificPart();//get the full path -scheme - fragments
+
+            String combine = scheme+":"+fullPath; //combine to get a full URI
+            String url = null;//declare variable to hold final URL
+            if(combine!=null){//if combine variable is not empty then navigate to that full path
+                Log.d(TAG, "combine: "+combine);
+                url = combine;
+            } else{//else open main page
+                Log.e(TAG, "combine is null");
+                url = "http://www.example.com";
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -75,7 +100,9 @@ public class MainActivity extends AppCompatActivity
         showFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class));
+                Intent intent = new Intent(MainActivity.this, FilterOptionsActivity.class);
+                intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+                startActivity(intent);
             }
         });
 
@@ -102,6 +129,58 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // Some code here
+                Log.d(TAG, "onQueryTextSubmit("+s+")");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Some code here
+                Log.d(TAG, "onQueryTextChange("+s+")");
+
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Some code here
+                Log.d(TAG, "onMenuItemActionExpand(...)");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Some code here
+                Log.d(TAG, "onMenuItemActionCollapse(...)");
+                return true;
+            }
+        });
+
+        // Get the search close button
+        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Some code here
+                EditText et = (EditText) findViewById(R.id.search_src_text);
+                Log.d(TAG, "closeButton.setOnClickListener - et.getText(): " + et.getText());
+            }
+        });
         return true;
     }
 
@@ -127,15 +206,25 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_shopping_cart) {
-            startActivity(new Intent(this, ShoppingCartActivity.class));
+            Intent intent = new Intent(MainActivity.this, ShoppingCartActivity.class);
+            intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
         } else if (id == R.id.nav_whish_list) {
-            startActivity(new Intent(this, WishListActivity.class));
+            Intent intent = new Intent(MainActivity.this, WishListActivity.class);
+            intent.putExtra(WishListActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
         } else if (id == R.id.nav_orders) {
-            startActivity(new Intent(this, OrdersListActivity.class));
+            Intent intent = new Intent(MainActivity.this, OrdersListActivity.class);
+            intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
         } else if (id == R.id.nav_invoices_list) {
-            startActivity(new Intent(this, InvoicesListActivity.class));
+            Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
+            intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
         } else if (id == R.id.nav_statement_of_account) {
-            startActivity(new Intent(this, StatementOfAccountActivity.class));
+            Intent intent = new Intent(MainActivity.this, StatementOfAccountActivity.class);
+            intent.putExtra(StatementOfAccountActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             try{
                 Utils.showPromptShareApp(this);
@@ -265,11 +354,18 @@ public class MainActivity extends AppCompatActivity
             categories.add(category);
 
             loadCategoriesList(categories);
+
+            //DatabaseHelper dbHelper = new DatabaseHelper(this, mCurrentUser);
+            //SQLiteDatabase db = dbHelper.getReadableDatabase();
+            //Cursor c = db.rawQuery("select nombre from articulos", null);
+            //while(c.moveToNext()){
+            //    Log.d(TAG, c.getString(0));
+            //}
         }
     }
 
     private void loadCategoriesList(ArrayList<ProductCategory> categories){
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);

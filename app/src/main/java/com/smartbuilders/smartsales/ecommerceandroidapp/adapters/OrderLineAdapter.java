@@ -48,7 +48,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_min_info, parent, false);
+                .inflate(R.layout.order_line_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(v);

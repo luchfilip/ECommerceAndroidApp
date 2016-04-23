@@ -1,10 +1,5 @@
 package com.jasgcorp.ids.datamanager;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-
 import android.content.Context;
 import android.util.Log;
 

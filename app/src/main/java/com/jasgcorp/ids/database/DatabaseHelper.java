@@ -3,6 +3,17 @@ package com.jasgcorp.ids.database;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup0;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup1;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup2;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup3;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup4;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup5;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup6;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup7;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup8;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
+
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -70,12 +81,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	public static final String CREATE_IDS_OUTGOING_FILE_SYNC = 
 								new StringBuffer("CREATE TABLE IF NOT EXISTS IDS_OUTGOING_FILE_SYNC ")
-													.append("(OUTGOING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, " )
+													.append("(OUTGOING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
 													.append(" FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, ")
 													.append(" FILE_PATH VARCHAR(512) NOT NULL, ")
 													.append(" FILE_SIZE INTEGER NOT NULL, ")
 													.append(" ISACTIVE CHAR DEFAULT 'Y', ")
 													.append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
+
+	public static final String CREATE_ARTICULOS =
+			new StringBuffer("CREATE TABLE ARTICULOS ")
+                        .append("(IDARTICULO INTEGER DEFAULT 0 NOT NULL, ")
+                        .append("IDPARTIDA INTEGER DEFAULT 0 NOT NULL, ")
+                        .append("IDMARCA INTEGER DEFAULT 0 NOT NULL, ")
+                        .append("NOMBRE VARCHAR(255) DEFAULT NULL, ")
+                        .append("DESCRIPCION CLOB DEFAULT NULL, ")
+                        .append("USO CLOB DEFAULT NULL, ")
+                        .append("OBSERVACIONES CLOB DEFAULT NULL, ")
+                        .append("IDREFERENCIA VARCHAR(36) DEFAULT NULL, ")
+                        .append("NACIONALIDAD VARCHAR(55) DEFAULT NULL, ")
+                        .append("ACTIVO CHAR(1) DEFAULT 'V', ")
+                        .append("CODVIEJO CHAR(7) DEFAULT NULL, ")
+                        .append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
+                        .append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
+                        .append("PRIMARY KEY (IDARTICULO))").toString();
+
 	/**
 	 * 
 	 * @param context
@@ -92,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	/**
 	 * 
 	 * @param context
-	 * @param dataBaseName
+	 * @param user
 	 */
 	public DatabaseHelper(Context context, User user){
 		super(context, 
@@ -123,6 +152,77 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 //			Log.i(TAG, "db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);");
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
+            db.execSQL(CREATE_ARTICULOS);
+            for(String insert : (new UtilsGroup0()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup1()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup2()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup3()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup4()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup5()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup6()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup7()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup8()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            for(String insert : (new UtilsGroup9()).getInserts()){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
 		}
 	}
 

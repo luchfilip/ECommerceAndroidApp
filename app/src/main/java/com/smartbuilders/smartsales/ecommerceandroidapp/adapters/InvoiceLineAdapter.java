@@ -48,7 +48,7 @@ public class InvoiceLineAdapter extends RecyclerView.Adapter<InvoiceLineAdapter.
         mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.product_min_info, parent, false);
+                    .inflate(R.layout.invoice_line_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(v);

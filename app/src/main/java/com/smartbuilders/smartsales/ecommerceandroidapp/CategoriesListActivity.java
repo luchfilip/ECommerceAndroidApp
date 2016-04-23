@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 
 public class CategoriesListActivity extends AppCompatActivity implements
@@ -13,10 +14,20 @@ public class CategoriesListActivity extends AppCompatActivity implements
     private static final String SUBCATEGORYFRAGMENT_TAG = "SUBCATEGORYFRAGMENT_TAG";
     private boolean mTwoPane;
 
+    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+    public static final String STATE_CURRENT_USER = "state_current_user";
+    private User mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories_list);
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -45,7 +56,7 @@ public class CategoriesListActivity extends AppCompatActivity implements
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putInt(SubCategoriesListFragment.KEY_CATEGORY_ID, productCategory.getId());
-
+            args.putParcelable(SubCategoriesListActivity.KEY_CURRENT_USER, mCurrentUser);
             SubCategoriesListFragment fragment = new SubCategoriesListFragment();
             fragment.setArguments(args);
 
@@ -55,6 +66,7 @@ public class CategoriesListActivity extends AppCompatActivity implements
         }else{
             Intent intent = new Intent(CategoriesListActivity.this, SubCategoriesListActivity.class);
             intent.putExtra(SubCategoriesListFragment.KEY_CATEGORY_ID, productCategory.getId());
+            intent.putExtra(SubCategoriesListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
             finish();
         }
