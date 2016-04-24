@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CategoryAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -22,9 +24,11 @@ public class CategoriesListFragment extends Fragment {
 
     private ListView mListView;
     private CategoryAdapter mCategoryAdapter;
+    private User mCurrentUser;
 
     public interface Callback {
         public void onItemSelected(ProductCategory productCategory);
+        public void onItemLongSelected(ProductCategory productCategory);
     }
 
     public CategoriesListFragment() {
@@ -40,7 +44,15 @@ public class CategoriesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);
 
-        mCategoryAdapter = new CategoryAdapter(getActivity(), Utils.getAllProductCategories());
+        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
+            if(getActivity().getIntent().getExtras().containsKey(CategoriesListActivity.KEY_CURRENT_USER)){
+                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(CategoriesListActivity.KEY_CURRENT_USER);
+            }
+        }
+
+        ProductCategoryDB categoryDB = new ProductCategoryDB(getContext(), mCurrentUser);
+
+        mCategoryAdapter = new CategoryAdapter(getActivity(), categoryDB.getActiveProductCategories());
 
         mListView = (ListView) rootView.findViewById(R.id.categories_list);
         mListView.setAdapter(mCategoryAdapter);
@@ -55,6 +67,17 @@ public class CategoriesListFragment extends Fragment {
                 if (productCategory != null) {
                     ((Callback) getActivity()).onItemSelected(productCategory);
                 }
+            }
+        });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductCategory productCategory = (ProductCategory) parent.getItemAtPosition(position);
+                if (productCategory != null) {
+                    ((Callback) getActivity()).onItemLongSelected(productCategory);
+                }
+                return true;
             }
         });
 

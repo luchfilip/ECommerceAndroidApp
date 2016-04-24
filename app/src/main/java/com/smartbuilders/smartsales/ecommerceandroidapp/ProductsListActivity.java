@@ -36,10 +36,12 @@ public class ProductsListActivity extends AppCompatActivity {
     public static final String KEY_PRODUCT = "key_product";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+    public static final String KEY_PRODUCT_CATEGORY_ID = "KEY_PRODUCT_CATEGORY_ID";
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
 
     private User mCurrentUser;
+    private int productCategoryId;
     private int productSubCategoryId;
     private int productBrandId;
 
@@ -57,6 +59,12 @@ public class ProductsListActivity extends AppCompatActivity {
         if(getIntent()!=null && getIntent().getExtras()!=null) {
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+
+                if(getIntent().getExtras().containsKey(KEY_PRODUCT_CATEGORY_ID)){
+                    productCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_CATEGORY_ID);
+                    ProductDB product = new ProductDB(this, mCurrentUser);
+                    products = product.getProductsByCategoryId(productCategoryId);
+                }
 
                 if(getIntent().getExtras().containsKey(KEY_PRODUCT_SUBCATEGORY_ID)){
                     productSubCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_SUBCATEGORY_ID);

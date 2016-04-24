@@ -46,8 +46,7 @@ public class SubCategoriesListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                startActivity(new Intent(this, CategoriesListActivity.class));
-                finish();
+                goBack();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -57,13 +56,19 @@ public class SubCategoriesListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, CategoriesListActivity.class));
-        finish();
+        goBack();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SCREEN_ORIENTATION, mScreenOrientation);
         super.onSaveInstanceState(outState);
+    }
+
+    private void goBack(){
+        Intent intent = new Intent(this, CategoriesListActivity.class);
+        intent.putExtra(CategoriesListActivity.KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
+        finish();
     }
 }

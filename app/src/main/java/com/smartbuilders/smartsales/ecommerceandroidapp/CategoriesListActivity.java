@@ -47,8 +47,6 @@ public class CategoriesListActivity extends AppCompatActivity implements
         }else{
             mTwoPane = false;
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -71,4 +69,14 @@ public class CategoriesListActivity extends AppCompatActivity implements
             finish();
         }
     }
+
+    @Override
+    public void onItemLongSelected(ProductCategory productCategory){
+        Intent intent = new Intent(CategoriesListActivity.this, ProductsListActivity.class);
+        intent.putExtra(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID, productCategory.getId());
+        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
+        finish();
+    }
+
 }

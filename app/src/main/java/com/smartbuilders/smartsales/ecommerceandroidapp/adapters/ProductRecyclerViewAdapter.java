@@ -44,6 +44,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         public TextView productShareLabel;
         public ImageView productImage;
         public TextView productSubCategory;
+        public TextView productBrand;
+        public TextView commercialPackage;
         public LinearLayout linearLayoutContent;
 
         public ViewHolder(View v) {
@@ -53,6 +55,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             productImage = (ImageView) v.findViewById(R.id.product_image);
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
             productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
+            productBrand = (TextView) v.findViewById(R.id.product_brand);
+            commercialPackage = (TextView) v.findViewById(R.id.product_comercial_package);
         }
     }
 
@@ -129,6 +133,25 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getName());
             }else{
                 holder.productSubCategory.setVisibility(TextView.GONE);
+            }
+        }
+        if(holder.productBrand!=null){
+            if(mDataset.get(position).getProductBrand()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
+                holder.productBrand.setText(mDataset.get(position).getProductBrand().getDescription());
+            }else{
+                holder.productBrand.setVisibility(TextView.GONE);
+            }
+        }
+
+        if(holder.commercialPackage!=null){
+            if(mDataset.get(position).getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
+                holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
+                                mDataset.get(position).getProductCommercialPackage().getUnits() + " " +
+                                mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
+            }else{
+                holder.commercialPackage.setVisibility(TextView.GONE);
             }
         }
 

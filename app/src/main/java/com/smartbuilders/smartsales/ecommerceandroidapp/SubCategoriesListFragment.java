@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -51,8 +52,10 @@ public class SubCategoriesListFragment extends Fragment {
             }
         }
 
+        ProductSubCategoryDB subCategoryDB = new ProductSubCategoryDB(getContext(), mCurrentUser);
+
         mCategoryAdapter = new SubCategoryAdapter(getActivity(),
-                Utils.getSubCategoriesByCategoryId(mCategoryId));
+                subCategoryDB.getActiveProductSubCategoriesByCategoryId(mCategoryId));
 
         mListView = (ListView) rootView.findViewById(R.id.categories_list);
         mListView.setAdapter(mCategoryAdapter);

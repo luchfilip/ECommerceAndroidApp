@@ -104,4 +104,5 @@
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
     <string name="title_activity_filter_options">Opciones de Filtrado</string>
     <string name="title_activity_brands_list">Marcas</string>
+    <string name="commercial_package">Empaque comercial: %1$s.</string>
 </resources>

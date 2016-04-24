@@ -3,6 +3,8 @@ package com.jasgcorp.ids.database;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsBrands;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup0;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup1;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup2;
@@ -13,6 +15,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup6;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup7;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup8;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 
 import android.content.Context;
@@ -89,21 +92,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 													.append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 
 	public static final String CREATE_ARTICULOS =
-			new StringBuffer("CREATE TABLE ARTICULOS ")
-                        .append("(IDARTICULO INTEGER DEFAULT 0 NOT NULL, ")
-                        .append("IDPARTIDA INTEGER DEFAULT 0 NOT NULL, ")
-                        .append("IDMARCA INTEGER DEFAULT 0 NOT NULL, ")
-                        .append("NOMBRE VARCHAR(255) DEFAULT NULL, ")
-                        .append("DESCRIPCION CLOB DEFAULT NULL, ")
-                        .append("USO CLOB DEFAULT NULL, ")
-                        .append("OBSERVACIONES CLOB DEFAULT NULL, ")
-                        .append("IDREFERENCIA VARCHAR(36) DEFAULT NULL, ")
-                        .append("NACIONALIDAD VARCHAR(55) DEFAULT NULL, ")
-                        .append("ACTIVO CHAR(1) DEFAULT 'V', ")
-                        .append("CODVIEJO CHAR(7) DEFAULT NULL, ")
-                        .append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
-                        .append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
-                        .append("PRIMARY KEY (IDARTICULO))").toString();
+								new StringBuffer("CREATE TABLE ARTICULOS ")
+											.append("(IDARTICULO INTEGER DEFAULT 0 NOT NULL, ")
+											.append("IDPARTIDA INTEGER DEFAULT 0 NOT NULL, ")
+											.append("IDMARCA INTEGER DEFAULT 0 NOT NULL, ")
+											.append("NOMBRE VARCHAR(255) DEFAULT NULL, ")
+											.append("DESCRIPCION CLOB DEFAULT NULL, ")
+											.append("USO CLOB DEFAULT NULL, ")
+											.append("OBSERVACIONES CLOB DEFAULT NULL, ")
+											.append("IDREFERENCIA VARCHAR(36) DEFAULT NULL, ")
+											.append("NACIONALIDAD VARCHAR(55) DEFAULT NULL, ")
+											.append("ACTIVO CHAR(1) DEFAULT 'V', ")
+											.append("CODVIEJO CHAR(7) DEFAULT NULL, ")
+											.append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
+											.append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
+											.append("PRIMARY KEY (IDARTICULO))").toString();
+
+	public static final String CREATE_BRAND =
+								new StringBuffer("CREATE TABLE BRAND ")
+											.append("(BRAND_ID INTEGER NOT NULL, ")
+											.append("NAME VARCHAR(255) DEFAULT NULL, ")
+											.append("DESCRIPTION TEXT DEFAULT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("PRIMARY KEY (BRAND_ID))").toString();
+
+	public static final String CREATE_CATEGORY =
+								new StringBuffer("CREATE TABLE CATEGORY ")
+											.append("(CATEGORY_ID INTEGER NOT NULL, ")
+											.append("NAME VARCHAR(255) DEFAULT NULL, ")
+											.append("DESCRIPTION TEXT DEFAULT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("PRIMARY KEY (CATEGORY_ID))").toString();
+
+	public static final String CREATE_SUBCATEGORY =
+								new StringBuffer("CREATE TABLE SUBCATEGORY ")
+											.append("(SUBCATEGORY_ID INTEGER NOT NULL, ")
+											.append("CATEGORY_ID INTEGER NOT NULL, ")
+											.append("NAME VARCHAR(255) DEFAULT NULL, ")
+											.append("DESCRIPTION TEXT DEFAULT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("PRIMARY KEY (SUBCATEGORY_ID))").toString();
 
 	/**
 	 * 
@@ -223,6 +251,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     e.printStackTrace();
                 }
             }
+			db.execSQL(CREATE_BRAND);
+			for(String insert : (new UtilsBrands()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			db.execSQL(CREATE_CATEGORY);
+			for(String insert : (new UtilsCategory()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			db.execSQL(CREATE_SUBCATEGORY);
+			for(String insert : (new UtilsSubCategory()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

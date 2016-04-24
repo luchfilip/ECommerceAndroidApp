@@ -20,12 +20,12 @@ public class ProductSubCategory extends ProductCategory {
         }
     };
 
-    private Integer productCategoryId;
+    private int productCategoryId;
 
     public ProductSubCategory() {
     }
 
-    public ProductSubCategory(Integer productCategoryId, Integer id, String name, String description,
+    public ProductSubCategory(int productCategoryId, int id, String name, String description,
                               String internalCode, int imageId) {
         setProductCategoryId(productCategoryId);
         setId(id);
@@ -54,6 +54,6 @@ public class ProductSubCategory extends ProductCategory {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(productCategoryId);
+        dest.writeInt(productCategoryId);
     }
 }

@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BrandAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductBrandDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsBrands;
@@ -47,7 +48,7 @@ public class BrandsListFragment extends Fragment {
             }
         }
 
-        UtilsBrands b = new UtilsBrands();
+        ProductBrandDB b = new ProductBrandDB(getContext(), mCurrentUser);
 
         mBrandAdapter = new BrandAdapter(getContext(), b.getActiveProductBrands());
 

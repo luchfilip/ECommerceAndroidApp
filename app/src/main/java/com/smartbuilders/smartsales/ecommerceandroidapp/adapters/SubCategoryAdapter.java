@@ -44,7 +44,7 @@ public class SubCategoryAdapter  extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.category_list_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.subcategory_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.categoryName.setText(mDataset.get(position).getName());

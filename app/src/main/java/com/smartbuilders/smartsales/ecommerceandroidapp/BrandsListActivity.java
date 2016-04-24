@@ -18,6 +18,12 @@ public class BrandsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brands_list);
 
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -26,8 +32,7 @@ public class BrandsListActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                startActivity(new Intent(this, FilterOptionsActivity.class));
-                finish();
+                goBack();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -37,7 +42,13 @@ public class BrandsListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, FilterOptionsActivity.class));
+        goBack();
+    }
+
+    private void goBack(){
+        Intent intent = new Intent(this, FilterOptionsActivity.class);
+        intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
         finish();
     }
 

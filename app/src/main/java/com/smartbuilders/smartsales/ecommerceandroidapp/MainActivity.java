@@ -354,13 +354,6 @@ public class MainActivity extends AppCompatActivity
             categories.add(category);
 
             loadCategoriesList(categories);
-
-            //DatabaseHelper dbHelper = new DatabaseHelper(this, mCurrentUser);
-            //SQLiteDatabase db = dbHelper.getReadableDatabase();
-            //Cursor c = db.rawQuery("select nombre from articulos", null);
-            //while(c.moveToNext()){
-            //    Log.d(TAG, c.getString(0));
-            //}
         }
     }
 
