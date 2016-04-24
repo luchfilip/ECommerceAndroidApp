@@ -109,8 +109,8 @@ public class ProductsListActivity extends AppCompatActivity {
         Spannable wordThree = new SpannableString(" ("+(products!=null?products.size():0)+" Resultados) ");
         categorySubcategoryResultsTextView.append(wordThree);
 
-        mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
-                ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS);
+        mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(ProductsListActivity.this,
+                products, true, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
         // use this setting to improve performance if you know that changes

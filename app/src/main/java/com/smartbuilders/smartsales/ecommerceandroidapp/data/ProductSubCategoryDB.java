@@ -29,13 +29,13 @@ public class ProductSubCategoryDB {
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         SQLiteDatabase db = dbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION " +
-                " FROM SUBCATEGORY WHERE ISACTIVE = 'Y'", null);
+                " FROM SUBCATEGORY WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
         while(c.moveToNext()){
             ProductSubCategory productSubCategory = new ProductSubCategory();
             productSubCategory.setId(c.getInt(1));
             productSubCategory.setProductCategoryId(c.getInt(0));
-            productSubCategory.setName(c.getString(2));
-            productSubCategory.setDescription(c.getString(3));
+            productSubCategory.setName(c.getString(2).replaceAll("\\s+", " ").trim());
+            productSubCategory.setDescription(c.getString(3).replaceAll("\\s+", " ").trim());
             categories.add(productSubCategory);
         }
         return categories;
@@ -45,13 +45,14 @@ public class ProductSubCategoryDB {
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         SQLiteDatabase db = dbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT SUBCATEGORY_ID, NAME, DESCRIPTION " +
-                " FROM SUBCATEGORY WHERE ISACTIVE = 'Y' AND CATEGORY_ID ="+categoryId, null);
+                " FROM SUBCATEGORY WHERE ISACTIVE = 'Y' AND CATEGORY_ID ="+categoryId +
+                " ORDER BY NAME ASC", null);
         while(c.moveToNext()){
             ProductSubCategory productSubCategory = new ProductSubCategory();
             productSubCategory.setId(c.getInt(0));
             productSubCategory.setProductCategoryId(categoryId);
-            productSubCategory.setName(c.getString(1));
-            productSubCategory.setDescription(c.getString(2));
+            productSubCategory.setName(c.getString(1).replaceAll("\\s+", " ").trim());
+            productSubCategory.setDescription(c.getString(2).replaceAll("\\s+", " ").trim());
             categories.add(productSubCategory);
         }
         return categories;

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -28,7 +29,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     private static final int VIEW_TYPE_COUNT = 2;
 
     private ArrayList<ProductCategory> mDataset;
-
+    private User mCurrentUser;
     private Context mContext;
     private boolean mUseDetailLayout;
 
@@ -59,9 +60,11 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityRecyclerViewAdapter(ArrayList<ProductCategory> myDataset, boolean useDetailLayout) {
+    public MainActivityRecyclerViewAdapter(ArrayList<ProductCategory> myDataset,
+                                           boolean useDetailLayout, User user) {
         mDataset = myDataset;
         mUseDetailLayout = useDetailLayout;
+        mCurrentUser = user;
     }
 
     // Create new views (invoked by the layout manager)
@@ -120,9 +123,10 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 // use this setting to improve performance if you know that changes
                 // in content do not change the layout size of the RecyclerView
                 holder.mRecyclerView.setHasFixedSize(true);
-                holder.mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
-                        Utils.getGenericProductsList(1), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST));
+                holder.mRecyclerView.setLayoutManager(
+                        new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mContext,
+                        Utils.getGenericProductsList(1), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST, mCurrentUser));
                 break;
             }
         }

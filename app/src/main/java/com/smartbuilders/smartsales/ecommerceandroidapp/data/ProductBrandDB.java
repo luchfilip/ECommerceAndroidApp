@@ -33,8 +33,8 @@ public class ProductBrandDB {
         while(c.moveToNext()){
             ProductBrand productBrand = new ProductBrand();
             productBrand.setId(c.getInt(0));
-            productBrand.setName(c.getString(1).toUpperCase());
-            productBrand.setDescription(c.getString(2).toUpperCase());
+            productBrand.setName(c.getString(1).toUpperCase().replaceAll("\\s+", " ").trim());
+            productBrand.setDescription(c.getString(2).toUpperCase().replaceAll("\\s+", " ").trim());
             productBrands.add(productBrand);
         }
         return productBrands;

@@ -29,8 +29,9 @@ public class User implements Parcelable {
         dest.writeString(serverAddress);
         dest.writeString(gcmRegistrationId);
         dest.writeString(userGroup);
+        dest.writeLong(serverUserId);
         dest.writeString(userId);
-        dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
+        //dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
     }
 
     public User(Parcel in) {
@@ -41,8 +42,9 @@ public class User implements Parcelable {
         serverAddress = in.readString();
         gcmRegistrationId = in.readString();
         userGroup = in.readString();
+        serverUserId = in.readLong();
         userId = in.readString();
-        saveDBInExternalCard = in.readByte() != 0;
+        //saveDBInExternalCard = in.readByte() != 0;
     }
 
     @Override

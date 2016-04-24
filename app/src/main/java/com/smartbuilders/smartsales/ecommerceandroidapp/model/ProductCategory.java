@@ -20,10 +20,15 @@ public class ProductCategory extends Model implements Parcelable {
         }
     };
 
-    private String internalCode;
     private int imageId;
     private String name;
     private String description;
+
+    public ProductCategory(int id, String name, String description){
+        setId(id);
+        setName(name);
+        setDescription(description);
+    }
 
     public ProductCategory(){
 
@@ -45,14 +50,6 @@ public class ProductCategory extends Model implements Parcelable {
         this.description = description;
     }
 
-    public String getInternalCode() {
-        return internalCode;
-    }
-
-    public void setInternalCode(String internalCode) {
-        this.internalCode = internalCode;
-    }
-
     public int getImageId() {
         return imageId;
     }
@@ -67,7 +64,7 @@ public class ProductCategory extends Model implements Parcelable {
     }
 
     protected ProductCategory(Parcel in) {
-        internalCode = in.readString();
+        super(in);
         imageId = in.readInt();
         name = in.readString();
         description = in.readString();
@@ -75,8 +72,8 @@ public class ProductCategory extends Model implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(internalCode);
-        dest.writeLong(imageId);
+        super.writeToParcel(dest, flags);
+        dest.writeInt(imageId);
         dest.writeString(name);
         dest.writeString(description);
     }

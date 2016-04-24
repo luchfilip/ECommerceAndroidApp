@@ -6,8 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
@@ -26,6 +28,8 @@ import java.util.Random;
  * Created by Alberto on 26/3/2016.
  */
 public class Utils {
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     public static ArrayList<Product> getGenericProductsList(int iterations){
         ArrayList<Product> products = new ArrayList<>();
@@ -213,6 +217,51 @@ public class Utils {
                 Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    /**
+     *
+     * @param fileName
+     * @param resId
+     * @param ctx
+     */
+    public static void createFileInCacheDir(String fileName, Bitmap image, Context ctx){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+        } else {
+            //path for the image file in the external storage
+            File imageFile = new File(ctx.getCacheDir() + File.separator + fileName);
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public static Bitmap getImageByFileName(Context context, User user, String fileName){
+        File folder = new File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folder.exists()) {
+            try {
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+        }
+        File imgFile = new  File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/"+fileName);
+        if(imgFile.exists()){
+            return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        }
+        return null;
     }
 
 }

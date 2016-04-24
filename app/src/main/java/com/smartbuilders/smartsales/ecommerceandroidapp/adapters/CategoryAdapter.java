@@ -56,11 +56,6 @@ public class CategoryAdapter extends BaseAdapter {
         }else{
             viewHolder.categoryDescription.setVisibility(TextView.GONE);
         }
-        if(!TextUtils.isEmpty(mDataset.get(position).getInternalCode())){
-            viewHolder.categoryInternalCode.setText(mDataset.get(position).getInternalCode());
-        }else{
-            viewHolder.categoryInternalCode.setVisibility(TextView.GONE);
-        }
         if(mDataset.get(position).getImageId()>0){
             viewHolder.categoryImage.setImageResource(mDataset.get(position).getImageId());
         }else{
@@ -78,14 +73,12 @@ public class CategoryAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView categoryName;
         public TextView categoryDescription;
-        public TextView categoryInternalCode;
         public ImageView categoryImage;
         public ImageView goToSubCategoryImage;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name_textView);
             categoryDescription = (TextView) v.findViewById(R.id.category_description_textView);
-            categoryInternalCode = (TextView) v.findViewById(R.id.category_internalCode_textView);
             categoryImage = (ImageView) v.findViewById(R.id.category_imageView);
             goToSubCategoryImage = (ImageView) v.findViewById(R.id.go_to_subcategory_img);
         }

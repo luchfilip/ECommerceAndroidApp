@@ -1,17 +1,42 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by Alberto on 7/4/2016.
  */
-public class Model {
+public class Model implements Parcelable {
 
     private int id;
     private Date created;
     private String createdBy;
     private Date updated;
     private String updatedBy;
+
+    public Model(){
+
+    }
+
+    protected Model(Parcel in) {
+        id = in.readInt();
+        createdBy = in.readString();
+        updatedBy = in.readString();
+    }
+
+    public static final Creator<Model> CREATOR = new Creator<Model>() {
+        @Override
+        public Model createFromParcel(Parcel in) {
+            return new Model(in);
+        }
+
+        @Override
+        public Model[] newArray(int size) {
+            return new Model[size];
+        }
+    };
 
     public Date getCreated() {
         return created;
@@ -51,5 +76,17 @@ public class Model {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(createdBy);
+        dest.writeString(updatedBy);
     }
 }

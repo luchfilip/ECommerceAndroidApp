@@ -23,6 +23,7 @@ public class ProductBrand extends Model implements Parcelable {
     }
 
     protected ProductBrand(Parcel in) {
+        super(in);
         name = in.readString();
         description = in.readString();
         imageId = in.readInt();
@@ -71,6 +72,7 @@ public class ProductBrand extends Model implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeInt(imageId);

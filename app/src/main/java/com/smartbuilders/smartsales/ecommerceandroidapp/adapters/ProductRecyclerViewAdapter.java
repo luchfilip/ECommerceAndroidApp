@@ -1,8 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
@@ -26,6 +29,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  * Created by Alberto on 22/3/2016.
  */
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder> {
+
+    private static final String TAG = ProductRecyclerViewAdapter.class.getSimpleName();
     public static final int REDIRECT_PRODUCT_LIST = 0;
     public static final int REDIRECT_PRODUCT_DETAILS = 1;
 
@@ -34,6 +39,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     private Context mContext;
     private boolean mUseDetailLayout;
     private int mRedirectOption;
+    private User mCurrentUser;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -61,12 +67,12 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductRecyclerViewAdapter(ArrayList<Product> myDataset, boolean useDetailLayout,
-             int redirectOption) {
+    public ProductRecyclerViewAdapter(Context context, ArrayList<Product> myDataset, boolean useDetailLayout,
+                                      int redirectOption, User user) {
         mDataset = myDataset;
-
+        mCurrentUser = user;
         this.array = myDataset.toArray(new Product[0]);
-
+        mContext = context;
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
     }
@@ -75,7 +81,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     @Override
     public ProductRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        mContext = parent.getContext();
+        //mContext = parent.getContext();
         // create a new view
         View v;
         if(mUseDetailLayout){
@@ -111,8 +117,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                     holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mContext.startActivity((new Intent(mContext, ProductDetailActivity.class)
-                                    .putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position))));
+                            Log.d(TAG, "Intent intent = new Intent(mContext, ProductDetailActivity.class);");
+                            Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                            intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                            intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position));
+                            mContext.startActivity(intent);
                         }
                     });
                 break;
@@ -120,8 +129,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                     holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mContext.startActivity((new Intent(mContext, ProductsListActivity.class)
-                                    .putExtra(ProductsListActivity.KEY_PRODUCT, mDataset.get(position))));
+                            Log.d(TAG, "Intent intent = new Intent(mContext, ProductsListActivity.class);");
+                            Intent intent = new Intent(mContext, ProductsListActivity.class);
+                            intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                            intent.putExtra(ProductsListActivity.KEY_PRODUCT, mDataset.get(position));
+                            mContext.startActivity(intent);
                         }
                     });
                 break;
@@ -155,7 +167,16 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             }
         }
 
-        holder.productImage.setImageResource(mDataset.get(position).getImageId());
+        if(mDataset.get(position).getImageFileName()!=null){
+            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
+            if(img!=null){
+                holder.productImage.setImageBitmap(img);
+            }else{
+                holder.productImage.setImageResource(mDataset.get(position).getImageId());
+            }
+        }else{
+            holder.productImage.setImageResource(mDataset.get(position).getImageId());
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -166,7 +187,17 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     private Intent createShareIntent(Product product){
         String fileName = "tmpImg.jgg";
-        Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
+        if(product.getImageFileName()!=null){
+            Bitmap productImage = Utils.getImageByFileName(mContext, mCurrentUser,
+                    product.getImageFileName());
+            if(productImage!=null){
+                Utils.createFileInCacheDir(fileName, productImage, mContext);
+            }else{
+                Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
+            }
+        }else{
+            Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
+        }
         return Utils.createShareProductIntent(mContext, product, fileName);
     }
 

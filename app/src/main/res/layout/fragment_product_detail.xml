@@ -35,6 +35,11 @@
                         android:textStyle="bold"
                         android:textColor="@android:color/black" />
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/viewpager_height"
+                        android:id="@+id/product_image" />
+
                     <android.support.v4.view.ViewPager
                         android:id="@+id/pager"
                         android:layout_width="wrap_content"
@@ -100,20 +105,20 @@
                             android:layout_marginRight="2dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Product productBrand"
                                 android:id="@+id/product_brand"
                                 android:textSize="10dp" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Comercial Package"
                                 android:id="@+id/product_comercial_package" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Price"
                                 android:id="@+id/product_price"
@@ -121,7 +126,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="PMVP"
                                 android:id="@+id/product_pmvp"
@@ -129,13 +134,13 @@
 
                             <TextView
                                 android:id="@+id/product_availability"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Availability"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Product with promotion"
                                 android:id="@+id/product_promo"

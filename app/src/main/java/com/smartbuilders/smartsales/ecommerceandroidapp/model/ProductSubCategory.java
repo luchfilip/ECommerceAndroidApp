@@ -25,14 +25,11 @@ public class ProductSubCategory extends ProductCategory {
     public ProductSubCategory() {
     }
 
-    public ProductSubCategory(int productCategoryId, int id, String name, String description,
-                              String internalCode, int imageId) {
+    public ProductSubCategory(int productCategoryId, int id, String name, String description) {
         setProductCategoryId(productCategoryId);
         setId(id);
         setName(name);
         setDescription(description);
-        setInternalCode(internalCode);
-        setImageId(imageId);
     }
 
     public long getProductCategoryId() {
@@ -49,11 +46,13 @@ public class ProductSubCategory extends ProductCategory {
     }
 
     protected ProductSubCategory(Parcel in) {
+        super(in);
         productCategoryId = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeInt(productCategoryId);
     }
 }

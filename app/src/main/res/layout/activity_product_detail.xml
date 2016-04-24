@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity"
-    tools:openDrawer="start">
+    tools:context="com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity">
 
 <!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -52,7 +51,9 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_product_detail" />
+        <include layout="@layout/content_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

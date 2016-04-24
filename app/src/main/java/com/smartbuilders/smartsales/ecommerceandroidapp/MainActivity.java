@@ -363,6 +363,6 @@ public class MainActivity extends AppCompatActivity
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(categories, true));
+        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(categories, true, mCurrentUser));
     }
 }

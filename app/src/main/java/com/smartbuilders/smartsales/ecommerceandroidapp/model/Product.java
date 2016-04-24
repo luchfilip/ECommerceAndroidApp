@@ -12,28 +12,48 @@ import java.util.ArrayList;
  */
 public class Product extends Model implements Parcelable {
 
-    private String internalCode;
     private ProductBrand productBrand;
     private int imageId = R.mipmap.ic_launcher;
     private ArrayList<Integer> imagesIds;
     private String name;
     private String description;
+    private String imageFileName;
     private ProductCategory productCategory;
     private ProductSubCategory productSubCategory;
     private ProductCommercialPackage productCommercialPackage;
 
     public Product(){
-
+        super();
     }
 
     protected Product(Parcel in) {
-        internalCode = in.readString();
+        super(in);
+        productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
         imageId = in.readInt();
         name = in.readString();
         description = in.readString();
+        imageFileName = in.readString();
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeParcelable(productBrand, flags);
+        dest.writeInt(imageId);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(imageFileName);
+        dest.writeParcelable(productCategory, flags);
+        dest.writeParcelable(productSubCategory, flags);
+        dest.writeParcelable(productCommercialPackage, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -80,12 +100,12 @@ public class Product extends Model implements Parcelable {
         this.description = description;
     }
 
-    public String getInternalCode() {
-        return internalCode;
+    public String getImageFileName() {
+        return imageFileName;
     }
 
-    public void setInternalCode(String internalCode) {
-        this.internalCode = internalCode;
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     public ProductBrand getProductBrand() {
@@ -118,21 +138,5 @@ public class Product extends Model implements Parcelable {
 
     public void setProductCommercialPackage(ProductCommercialPackage productCommercialPackage) {
         this.productCommercialPackage = productCommercialPackage;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(internalCode);
-        dest.writeInt(imageId);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeParcelable(productCategory, flags);
-        dest.writeParcelable(productSubCategory, flags);
-        dest.writeParcelable(productCommercialPackage, flags);
     }
 }

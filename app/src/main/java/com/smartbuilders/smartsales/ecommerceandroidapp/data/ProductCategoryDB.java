@@ -29,15 +29,15 @@ public class ProductCategoryDB {
     public ArrayList<ProductCategory> getActiveProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
         SQLiteDatabase db = dbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE ISACTIVE = 'Y'", null);
+        Cursor c = db.rawQuery("SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY " +
+                " WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
         while(c.moveToNext()){
             ProductCategory productCategory = new ProductCategory();
             productCategory.setId(c.getInt(0));
-            productCategory.setName(c.getString(1));
-            productCategory.setDescription(c.getString(2));
+            productCategory.setName(c.getString(1).replaceAll("\\s+", " ").trim());
+            productCategory.setDescription(c.getString(2).replaceAll("\\s+", " ").trim());
             categories.add(productCategory);
         }
         return categories;
     }
-
 }
