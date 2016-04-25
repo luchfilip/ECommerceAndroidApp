@@ -15,6 +15,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup6;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup7;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup8;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageProduct;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 
@@ -132,6 +134,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
 											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
 											.append("PRIMARY KEY (SUBCATEGORY_ID))").toString();
+
+	public static final String CREATE_MAINPAGE_SECTION =
+								new StringBuffer("CREATE TABLE MAINPAGE_SECTION ")
+										.append("(MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
+										.append("NAME VARCHAR(128) DEFAULT NULL, ")
+										.append("DESCRIPTION VARCHAR(255) DEFAULT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+										.append("PRIMARY KEY (MAINPAGE_SECTION_ID))").toString();
+
+	public static final String CREATE_MAINPAGE_PRODUCT =
+								new StringBuffer("CREATE TABLE MAINPAGE_PRODUCT ")
+										.append("(MAINPAGE_PRODUCT_ID INTEGER NOT NULL, ")
+										.append("MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
+										.append("PRODUCT_ID INTEGER NOT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+										.append("PRIMARY KEY (MAINPAGE_PRODUCT_ID))").toString();
 
 	/**
 	 * 
@@ -269,6 +287,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 			db.execSQL(CREATE_SUBCATEGORY);
 			for(String insert : (new UtilsSubCategory()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			db.execSQL(CREATE_MAINPAGE_SECTION);
+			for(String insert : (new UtilsMainPageSection()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			db.execSQL(CREATE_MAINPAGE_PRODUCT);
+			for(String insert : (new UtilsMainPageProduct()).getInserts()){
 				try{
 					db.execSQL(insert);
 				}catch(Exception e){
