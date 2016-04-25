@@ -152,7 +152,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Product with promotion"
                                 android:id="@+id/product_promo"
-                                android:textColor="@color/promo_label_color" />
+                                android:textColor="@color/promo_label_color"
+                                android:visibility="gone" />
 
                             <RatingBar
                                 android:layout_width="wrap_content"

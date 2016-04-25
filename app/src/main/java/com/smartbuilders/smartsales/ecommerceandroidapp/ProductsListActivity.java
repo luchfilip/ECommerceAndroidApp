@@ -133,6 +133,14 @@ public class ProductsListActivity extends AppCompatActivity {
                     products = product.getProductsByBrandId(productBrandId);
                     if(products!=null && !products.isEmpty()){
                         TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
+
+                        Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
+
+                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        categorySubcategoryResultsTextView.setText(word);
+
                         Spannable wordThree = new SpannableString("("+(products!=null?products.size():0)+" Resultados) ");
                         categorySubcategoryResultsTextView.append(wordThree);
                     }
@@ -145,6 +153,14 @@ public class ProductsListActivity extends AppCompatActivity {
 
                     if(products!=null && !products.isEmpty()){
                         TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
+
+                        Spannable word = new SpannableString("Buqueda: \""+productName+"\" ");
+
+                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        categorySubcategoryResultsTextView.setText(word);
+
                         Spannable wordThree = new SpannableString("("+(products!=null?products.size():0)+" Resultados) ");
                         categorySubcategoryResultsTextView.append(wordThree);
                     }
@@ -154,10 +170,14 @@ public class ProductsListActivity extends AppCompatActivity {
 
         if(products==null || products.isEmpty()){
             TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-            Spannable word = new SpannableString("No se encontraron productos para mostrar.) ");
+            Spannable word = new SpannableString("No se encontraron productos para mostrar. ");
             word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), 0,
                     word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             categorySubcategoryResultsTextView.append(word);
+        }
+
+        if(products==null){
+            products = new ArrayList<>();
         }
 
         mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,

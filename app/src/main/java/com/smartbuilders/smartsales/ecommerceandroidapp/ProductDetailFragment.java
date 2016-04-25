@@ -150,6 +150,14 @@ public class ProductDetailFragment extends Fragment {
             ((LinearLayout) view.findViewById(R.id.relatedproducts_linearlayout)).setVisibility(View.GONE);
         }
 
+        if(mProduct.getProductCommercialPackage()!=null){
+            ((TextView) view.findViewById(R.id.product_comercial_package)).setText(getContext().getString(R.string.commercial_package,
+                mProduct.getProductCommercialPackage().getUnits() + " " +
+                        mProduct.getProductCommercialPackage().getUnitDescription()));
+        }else{
+            ((TextView) view.findViewById(R.id.product_comercial_package)).setVisibility(View.GONE);
+        }
+
         ((ScrollView) view.findViewById(R.id.product_detail_main_view)).smoothScrollTo(0, 0);
 
         return view;
