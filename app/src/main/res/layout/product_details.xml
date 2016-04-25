@@ -25,22 +25,21 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/linear_layout_content">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/productDetail_max_image_Width"
+                    android:layout_height="@dimen/productDetail_max_image_Height"
                     android:id="@+id/product_image"
                     android:src="@mipmap/ic_launcher"
-                    android:layout_weight="3"
                     android:layout_gravity="center"
                     android:padding="5dp" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp">
@@ -93,7 +92,8 @@
                         android:layout_height="wrap_content"
                         android:text="Product with promotion"
                         android:id="@+id/product_promo"
-                        android:textColor="@color/promo_label_color" />
+                        android:textColor="@color/promo_label_color"
+                        android:visibility="gone" />
 
                     <RatingBar
                         android:layout_width="wrap_content"

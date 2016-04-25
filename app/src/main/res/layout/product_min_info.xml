@@ -22,7 +22,7 @@
             android:id="@+id/linear_layout_content">
             <ImageView
                 android:layout_width="@dimen/productMinInfo_max_image_Width"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/productMinInfo_max_image_Height"
                 android:id="@+id/product_image"
                 android:layout_gravity="center" />
             <View style="@style/Divider"/>
@@ -39,7 +39,7 @@
                 android:singleLine="false" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_name"
                 android:textColor="@android:color/black"

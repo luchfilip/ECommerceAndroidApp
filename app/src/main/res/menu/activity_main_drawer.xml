@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <!--<group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_shopping_cart"
             android:icon="@drawable/ic_shopping_cart_black_12dp"
@@ -20,7 +20,7 @@
         <item
             android:id="@+id/nav_statement_of_account"
             android:title="@string/statement_of_account" />
-    </group>
+    </group>-->
     <item android:title="@string/communicate">
         <menu>
             <item

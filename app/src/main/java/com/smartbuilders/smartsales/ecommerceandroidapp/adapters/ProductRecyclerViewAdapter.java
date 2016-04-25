@@ -67,12 +67,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductRecyclerViewAdapter(Context context, ArrayList<Product> myDataset, boolean useDetailLayout,
+    public ProductRecyclerViewAdapter(ArrayList<Product> myDataset, boolean useDetailLayout,
                                       int redirectOption, User user) {
         mDataset = myDataset;
         mCurrentUser = user;
         this.array = myDataset.toArray(new Product[0]);
-        mContext = context;
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
     }
@@ -81,7 +80,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     @Override
     public ProductRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        //mContext = parent.getContext();
+        mContext = parent.getContext();
         // create a new view
         View v;
         if(mUseDetailLayout){
@@ -141,8 +140,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }
         if(holder.productSubCategory!=null){
             if(mDataset.get(position).getProductSubCategory()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductSubCategory().getName())){
-                holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getName());
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductSubCategory().getDescription())){
+                holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getDescription());
             }else{
                 holder.productSubCategory.setVisibility(TextView.GONE);
             }

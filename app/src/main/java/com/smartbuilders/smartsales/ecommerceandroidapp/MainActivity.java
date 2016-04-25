@@ -29,12 +29,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -48,19 +52,27 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_CURRENT_USER = "state_current_user";
     private AccountManager mAccountManager;
     private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
     private Account mAccount;
     private NavigationView mNavigationView;
-    private Button showFiltersButton;
     private RecyclerView mRecyclerView;
+    private ProductDB productDB;
+    private ListView mListView;
+    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -96,13 +108,24 @@ public class MainActivity extends AppCompatActivity
             mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
         }
 
-        showFiltersButton = (Button) findViewById(R.id.show_filters_button);
-        showFiltersButton.setOnClickListener(new View.OnClickListener() {
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+
+        mListView = (ListView) findViewById(R.id.search_result_list);
+        mListView.setAdapter(mSearchResultAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FilterOptionsActivity.class);
-                intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-                startActivity(intent);
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Product product = (Product) adapterView.getItemAtPosition(position);
+                if (product != null) {
+                    Intent intent = new Intent(MainActivity.this, ProductsListActivity.class);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -141,8 +164,10 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                // Some code here
-                Log.d(TAG, "onQueryTextSubmit("+s+")");
+                Intent intent = new Intent(MainActivity.this, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+                startActivity(intent);
                 return false;
             }
 
@@ -150,7 +175,13 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextChange(String s) {
                 // Some code here
                 Log.d(TAG, "onQueryTextChange("+s+")");
-
+                if(s.length()>2){
+                    mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                    mSearchResultAdapter.notifyDataSetChanged();
+                }else if (s.isEmpty()){
+                    mSearchResultAdapter.setData(new ArrayList<Product>());
+                    mSearchResultAdapter.notifyDataSetChanged();
+                }
                 return false;
             }
         });
@@ -160,6 +191,8 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionExpand(MenuItem item) {
                 // Some code here
                 Log.d(TAG, "onMenuItemActionExpand(...)");
+                mListView.setVisibility(View.VISIBLE);
+                ((RecyclerView) findViewById(R.id.main_categories_list)).setVisibility(View.GONE);
                 return true;
             }
 
@@ -167,6 +200,10 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // Some code here
                 Log.d(TAG, "onMenuItemActionCollapse(...)");
+                mListView.setVisibility(View.GONE);
+                ((RecyclerView) findViewById(R.id.main_categories_list)).setVisibility(View.VISIBLE);
+                mSearchResultAdapter.setData(new ArrayList<Product>());
+                mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -191,10 +228,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //    return true;
-        //}
+        if (id == R.id.categories) {
+            Intent intent = new Intent(MainActivity.this, FilterOptionsActivity.class);
+            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -205,7 +244,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_shopping_cart) {
+        /*if (id == R.id.nav_shopping_cart) {
             Intent intent = new Intent(MainActivity.this, ShoppingCartActivity.class);
             intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
@@ -225,7 +264,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, StatementOfAccountActivity.class);
             intent.putExtra(StatementOfAccountActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
+        } else*/ if (id == R.id.nav_share) {
             try{
                 Utils.showPromptShareApp(this);
             }catch(Throwable e){
@@ -354,6 +393,8 @@ public class MainActivity extends AppCompatActivity
             categories.add(category);
 
             loadCategoriesList(categories);
+
+            productDB = new ProductDB(this, mCurrentUser);
         }
     }
 
@@ -364,5 +405,11 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(categories, true, mCurrentUser));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }

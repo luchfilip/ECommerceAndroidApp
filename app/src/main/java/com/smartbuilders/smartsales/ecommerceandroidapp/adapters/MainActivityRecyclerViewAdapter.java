@@ -125,7 +125,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 holder.mRecyclerView.setHasFixedSize(true);
                 holder.mRecyclerView.setLayoutManager(
                         new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mContext,
+                holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
                         Utils.getGenericProductsList(1), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST, mCurrentUser));
                 break;
             }

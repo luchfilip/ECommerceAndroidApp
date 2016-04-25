@@ -28,8 +28,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                startActivity(new Intent(this, OrdersListActivity.class));
-                finish();
+                goBack();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -39,7 +38,13 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, OrdersListActivity.class));
+        goBack();
+    }
+
+    private void goBack(){
+        Intent intent = new Intent(this, OrdersListActivity.class);
+        intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
         finish();
     }
 }

@@ -222,7 +222,7 @@ public class Utils {
     /**
      *
      * @param fileName
-     * @param resId
+     * @param image
      * @param ctx
      */
     public static void createFileInCacheDir(String fileName, Bitmap image, Context ctx){

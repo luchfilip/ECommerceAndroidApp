@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProductDetailFragment"
+    android:id="@+id/product_detail_main_view"
     android:orientation="vertical">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="false">
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -21,7 +23,8 @@
                 card_view:contentPadding="5dp"
                 card_view:cardElevation="2dp"
                 android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@android:color/white"
+                android:focusable="true">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -33,17 +36,20 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/product_name"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:focusable="true" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/viewpager_height"
-                        android:id="@+id/product_image" />
+                        android:id="@+id/product_image"
+                        android:focusable="false" />
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/pager"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/viewpager_height" />
+                        android:layout_height="@dimen/viewpager_height"
+                        android:focusable="false" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
@@ -51,7 +57,8 @@
                         android:layout_gravity="center_horizontal|bottom"
                         android:orientation="horizontal"
                         android:id="@+id/radiogroup"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_horizontal"
+                        android:focusable="false">
 
                         <RadioButton
                             android:layout_width="wrap_content"
@@ -94,7 +101,8 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:baselineAligned="false">
+                        android:baselineAligned="false"
+                        android:focusable="false">
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -167,7 +175,8 @@
                         android:id="@+id/product_addtocart_button"
                         android:layout_gravity="center_vertical|right"
                         android:textAppearance="@android:style/TextAppearance.Small"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:visibility="gone" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -182,7 +191,8 @@
                 card_view:contentPadding="5dp"
                 card_view:cardElevation="2dp"
                 android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@android:color/white"
+                android:focusable="false">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -216,7 +226,9 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp">
+                android:paddingBottom="2dp"
+                android:id="@+id/relatedproducts_linearlayout"
+                android:focusable="false">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -227,13 +239,15 @@
                     android:layout_marginBottom="8dp"
                     android:textStyle="bold"
                     android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp" />
+                    android:layout_marginRight="2dp"
+                    android:focusable="false" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/relatedproducts_recycler_view"
                     android:scrollbars="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="false" />
             </LinearLayout>
 
         </LinearLayout>

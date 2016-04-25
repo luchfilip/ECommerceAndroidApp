@@ -14,13 +14,20 @@ import com.jasgcorp.ids.model.User;
 public class ProductDetailActivity extends AppCompatActivity {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,6 +46,12 @@ public class ProductDetailActivity extends AppCompatActivity {
 //        toggle.syncState();
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 
 }

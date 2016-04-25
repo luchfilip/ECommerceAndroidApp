@@ -57,4 +57,21 @@ public class ProductSubCategoryDB {
         }
         return categories;
     }
+
+    public ProductSubCategory getProductSubCategoryById(int subCategoryId){
+        ArrayList<ProductSubCategory> categories = new ArrayList<>();
+        SQLiteDatabase db = dbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT CATEGORY_ID, NAME, DESCRIPTION " +
+                " FROM SUBCATEGORY WHERE ISACTIVE = 'Y' AND SUB_CATEGORY_ID ="+subCategoryId +
+                " ORDER BY NAME ASC", null);
+        if(c.moveToNext()){
+            ProductSubCategory productSubCategory = new ProductSubCategory();
+            productSubCategory.setId(subCategoryId);
+            productSubCategory.setProductCategoryId(c.getInt(0));
+            productSubCategory.setName(c.getString(1).replaceAll("\\s+", " ").trim());
+            productSubCategory.setDescription(c.getString(2).replaceAll("\\s+", " ").trim());
+            return productSubCategory;
+        }
+        return null;
+    }
 }

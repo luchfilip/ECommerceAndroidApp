@@ -30,7 +30,7 @@ public class ProductDB {
         this.dbh = new DatabaseHelper(context, user);
     }
 
-    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId){
+    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
 
         SQLiteDatabase db = dbh.getReadableDatabase();
@@ -38,26 +38,27 @@ public class ProductDB {
                 " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                 " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, S.DESCRIPTION " +
                 " FROM ARTICULOS A " +
-                    " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
+                    " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                     " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                     " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                " WHERE IDPARTIDA = "+subCategoryId + " ORDER BY A.NOMBRE ASC ", null);
+                " WHERE A.IDPARTIDA = "+subCategoryId + " ORDER BY A.NOMBRE ASC " +
+                ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
         while(c.moveToNext()){
             Product p = new Product();
             p.setId(c.getInt(0));
-            p.setName(c.getString(3));
+            p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
             p.setDescription(c.getString(4));
             p.setImageFileName(c.getString(9)+".png");
             p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13).replaceAll("\\s+", " ").trim()));
+            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16).replaceAll("\\s+", " ").trim()));
+            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18).replaceAll("\\s+", " ").trim()));
             products.add(p);
         }
         return products;
     }
 
-    public ArrayList<Product> getProductsByCategoryId(int categoryId){
+    public ArrayList<Product> getProductsByCategoryId(int categoryId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
 
         SQLiteDatabase db = dbh.getReadableDatabase();
@@ -68,18 +69,19 @@ public class ProductDB {
                 " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                 " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                 " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC", null);
+                " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC " +
+                ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
 
         while(c.moveToNext()){
             Product p = new Product();
             p.setId(c.getInt(0));
-            p.setName(c.getString(3));
+            p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
             p.setDescription(c.getString(4));
             p.setImageFileName(c.getString(9)+".png");
             p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13).replaceAll("\\s+", " ").trim()));
+            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16).replaceAll("\\s+", " ").trim()));
+            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18).replaceAll("\\s+", " ").trim()));
             products.add(p);
         }
         return products;
@@ -100,13 +102,13 @@ public class ProductDB {
         while(c.moveToNext()){
             Product p = new Product();
             p.setId(c.getInt(0));
-            p.setName(c.getString(3));
+            p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
             p.setDescription(c.getString(4));
             p.setImageFileName(c.getString(9)+".png");
             p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13).replaceAll("\\s+", " ").trim()));
+            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16).replaceAll("\\s+", " ").trim()));
+            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18).replaceAll("\\s+", " ").trim()));
             products.add(p);
         }
         return products;
@@ -123,21 +125,41 @@ public class ProductDB {
                 " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                 " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                 " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                " WHERE NOMBRE LIKE '"+name+"%' ORDER BY A.NOMBRE ASC", null);
+                " WHERE A.NOMBRE LIKE '"+name+"%' ORDER BY A.NOMBRE ASC", null);
         while(c.moveToNext()){
             Product p = new Product();
             p.setId(c.getInt(0));
-            p.setName(c.getString(3));
+            p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
             p.setDescription(c.getString(4));
             p.setImageFileName(c.getString(9)+".png");
             p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13).replaceAll("\\s+", " ").trim()));
+            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16).replaceAll("\\s+", " ").trim()));
+            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18).replaceAll("\\s+", " ").trim()));
             products.add(p);
         }
         return products;
     }
+
+    public ArrayList<Product> getLightProductsByName(String name){
+        ArrayList<Product> products = new ArrayList<>();
+
+        SQLiteDatabase db = dbh.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.NOMBRE, A.DESCRIPCION, A.CODVIEJO, S.NAME, S.DESCRIPTION " +
+                " FROM ARTICULOS A " +
+                " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
+                " WHERE A.NOMBRE LIKE '"+name+"%' ORDER BY A.NOMBRE ASC", null);
+        while(c.moveToNext()){
+            Product p = new Product();
+            p.setId(c.getInt(0));
+            p.setName(c.getString(2)+" (Cod: "+c.getString(4)+")");
+            p.setDescription(c.getString(3));
+            p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), c.getString(5), c.getString(6).replaceAll("\\s+", " ").trim()));
+            products.add(p);
+        }
+        return products;
+    }
+
 
     public Product getProductById(int id){
         SQLiteDatabase db = dbh.getReadableDatabase();
@@ -148,17 +170,17 @@ public class ProductDB {
                 " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                 " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                 " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                " WHERE IDARTICULO = "+id+" ORDER BY A.NOMBRE ASC", null);
+                " WHERE A.IDARTICULO = "+id+" ORDER BY A.NOMBRE ASC", null);
         if(c.moveToNext()){
             Product p = new Product();
             p.setId(c.getInt(0));
-            p.setName(c.getString(3));
+            p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
             p.setDescription(c.getString(4));
             p.setImageFileName(c.getString(9)+".png");
             p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+            p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13).replaceAll("\\s+", " ").trim()));
+            p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16).replaceAll("\\s+", " ").trim()));
+            p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18).replaceAll("\\s+", " ").trim()));
             return p;
         }
         return null;

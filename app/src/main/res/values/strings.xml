@@ -95,6 +95,8 @@
     <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="title_activity_product_list">Productos</string>
     <string name="title_activity_shoping_cart">Carrito de Compra</string>
+    <string name="title_activity_categories">Busqueda Por Categoría</string>
+    <string name="title_activity_sub_categories">Busqueda Por SubCategoría</string>
     <string name="title_activity_checkout">Finalizar Pedido</string>
     <string name="title_activity_order_list">Pedidos</string>
     <string name="title_activity_order_detail">Detalle del Pedido</string>
@@ -102,7 +104,7 @@
     <string name="title_activity_invoice_detail">Detalle de la Factura</string>
     <string name="title_activity_wish_list">Lista de Deseos</string>
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
-    <string name="title_activity_filter_options">Opciones de Filtrado</string>
-    <string name="title_activity_brands_list">Marcas</string>
+    <string name="title_activity_filter_options">Busqueda Por</string>
+    <string name="title_activity_brands_list">Busqueda Por Marca</string>
     <string name="commercial_package">Empaque comercial: %1$s.</string>
 </resources>

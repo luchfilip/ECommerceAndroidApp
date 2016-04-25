@@ -17,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -130,9 +132,9 @@ public class ProductDetailFragment extends Fragment {
             viewPager.setAdapter(mCustomPagerAdapter);
         }
 
-        /*if(mProduct.getProductSubCategory()!=null) {
+        if(mProduct.getProductSubCategory()!=null) {
             ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
-            ArrayList<Product> relatedProducts = productDB.getProductsBySubCategoryId(mProduct.getProductSubCategory().getId());
+            ArrayList<Product> relatedProducts = productDB.getProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), 20);
             if(relatedProducts!=null && !relatedProducts.isEmpty()){
                 RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                 // use this setting to improve performance if you know that changes
@@ -142,11 +144,13 @@ public class ProductDetailFragment extends Fragment {
                 mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
             }else{
-                ((RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view)).setVisibility(View.GONE);
+                ((LinearLayout) view.findViewById(R.id.relatedproducts_linearlayout)).setVisibility(View.GONE);
             }
         }else{
-            ((RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view)).setVisibility(View.GONE);
-        }*/
+            ((LinearLayout) view.findViewById(R.id.relatedproducts_linearlayout)).setVisibility(View.GONE);
+        }
+
+        ((ScrollView) view.findViewById(R.id.product_detail_main_view)).smoothScrollTo(0, 0);
 
         return view;
     }

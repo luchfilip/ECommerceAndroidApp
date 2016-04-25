@@ -19,6 +19,12 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_detail);
 
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(0);
     }
@@ -28,8 +34,7 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                startActivity(new Intent(this, InvoicesListActivity.class));
-                finish();
+                goBack();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -39,7 +44,13 @@ public class InvoiceDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, InvoicesListActivity.class));
+        goBack();
+    }
+
+    private void goBack(){
+        Intent intent = new Intent(this, InvoicesListActivity.class);
+        intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
         finish();
     }
 
