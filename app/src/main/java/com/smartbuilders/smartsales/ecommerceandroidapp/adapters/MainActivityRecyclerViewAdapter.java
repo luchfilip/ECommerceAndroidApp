@@ -14,8 +14,10 @@ import android.widget.ViewFlipper;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProduct;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 
 import java.util.ArrayList;
 
@@ -28,10 +30,11 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
-    private ArrayList<ProductCategory> mDataset;
+    private ArrayList<MainPageSection> mDataset;
     private User mCurrentUser;
     private Context mContext;
     private boolean mUseDetailLayout;
+    private MainPageProductDB mainPageProductDB;
 
     @Override
     public int getItemViewType(int position) {
@@ -60,7 +63,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityRecyclerViewAdapter(ArrayList<ProductCategory> myDataset,
+    public MainActivityRecyclerViewAdapter(ArrayList<MainPageSection> myDataset,
                                            boolean useDetailLayout, User user) {
         mDataset = myDataset;
         mUseDetailLayout = useDetailLayout;
@@ -72,6 +75,9 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     public MainActivityRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                     int viewType) {
         mContext = parent.getContext();
+
+        mainPageProductDB = new MainPageProductDB(mContext, mCurrentUser);
+
         // create a new view
         View v = null;
 
@@ -116,17 +122,28 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 break;
             }
             case VIEW_TYPE_RECYCLERVIEW: {
-                // - get element from your dataset at this position
-                // - replace the contents of the view with that element
-                holder.categoryName.setText(mDataset.get(position).getName());
+                ArrayList<MainPageProduct> mainPageProducts = mainPageProductDB
+                        .getActiveMainPageProductsByMainPageSectionId(mDataset.get(position).getId());
+                if(mainPageProducts != null && !mainPageProducts.isEmpty()){
+                    // - get element from your dataset at this position
+                    // - replace the contents of the view with that element
+                    holder.categoryName.setText(mDataset.get(position).getName());
 
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                holder.mRecyclerView.setHasFixedSize(true);
-                holder.mRecyclerView.setLayoutManager(
-                        new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
-                        Utils.getGenericProductsList(1), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST, mCurrentUser));
+                    // use this setting to improve performance if you know that changes
+                    // in content do not change the layout size of the RecyclerView
+                    holder.mRecyclerView.setHasFixedSize(true);
+                    holder.mRecyclerView.setLayoutManager(
+                            new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+                    ArrayList<Product> products = new ArrayList<>();
+                    for(MainPageProduct mainPageProduct : mainPageProducts){
+                        products.add(mainPageProduct.getProduct());
+                    }
+                    holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
+                            products, false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST, mCurrentUser));
+                }else{
+
+                }
                 break;
             }
         }

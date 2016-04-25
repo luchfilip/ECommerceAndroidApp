@@ -26,7 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 5;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -140,6 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("(MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
 										.append("NAME VARCHAR(128) DEFAULT NULL, ")
 										.append("DESCRIPTION VARCHAR(255) DEFAULT NULL, ")
+										.append("PRIORITY INTEGER DEFAULT NULL, ")
 										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
 										.append("PRIMARY KEY (MAINPAGE_SECTION_ID))").toString();
 
@@ -148,6 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("(MAINPAGE_PRODUCT_ID INTEGER NOT NULL, ")
 										.append("MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
 										.append("PRODUCT_ID INTEGER NOT NULL, ")
+										.append("PRIORITY INTEGER DEFAULT NULL, ")
 										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
 										.append("PRIMARY KEY (MAINPAGE_PRODUCT_ID))").toString();
 
@@ -313,8 +315,149 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 //		Log.d(TAG, "onUpgrade(SQLiteDatabase arg0, int arg1, int arg2)");
+        try{
+            db.execSQL("DROP TABLE if exists ARTICULOS");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_ARTICULOS);
+        for(String insert : (new UtilsGroup0()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup1()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup2()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup3()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup4()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup5()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup6()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup7()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup8()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        for(String insert : (new UtilsGroup9()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            db.execSQL("DROP TABLE if exists BRAND");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_BRAND);
+        for(String insert : (new UtilsBrands()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            db.execSQL("DROP TABLE if exists CATEGORY");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_CATEGORY);
+        for(String insert : (new UtilsCategory()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            db.execSQL("DROP TABLE if exists SUBCATEGORY");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_SUBCATEGORY);
+        for(String insert : (new UtilsSubCategory()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            db.execSQL("DROP TABLE if exists MAINPAGE_SECTION");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_MAINPAGE_SECTION);
+        for(String insert : (new UtilsMainPageSection()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            db.execSQL("DROP TABLE if exists MAINPAGE_PRODUCT");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_MAINPAGE_PRODUCT);
+        for(String insert : (new UtilsMainPageProduct()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 	}
 
 	@Override

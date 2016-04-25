@@ -1,9 +1,12 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
 
 import java.util.ArrayList;
 
@@ -22,5 +25,41 @@ public class MainPageSectionDB {
         this.dbh = new DatabaseHelper(context, user);
     }
 
-    public ArrayList<>
+    public ArrayList<MainPageSection> getActiveMainPageSections(){
+        ArrayList<MainPageSection> mainPageSections = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getReadableDatabase();
+            c = db.rawQuery("SELECT MAINPAGE_SECTION_ID, NAME, DESCRIPTION " +
+                    " FROM MAINPAGE_SECTION " +
+                    " WHERE ISACTIVE = 'Y' " +
+                    " ORDER BY PRIORITY ASC", null);
+            while(c.moveToNext()){
+                MainPageSection mainPageSection = new MainPageSection();
+                mainPageSection.setId(c.getInt(0));
+                mainPageSection.setName(c.getString(1));
+                mainPageSection.setDescription(c.getString(2));
+                mainPageSections.add(mainPageSection);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return mainPageSections;
+    }
 }

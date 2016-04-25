@@ -27,15 +27,36 @@ public class ProductBrandDB {
 
     public ArrayList<ProductBrand> getActiveProductBrands(){
         ArrayList<ProductBrand> productBrands = new ArrayList<>();
-        SQLiteDatabase db = dbh.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT BRAND_ID, NAME, DESCRIPTION FROM BRAND " +
-                " WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
-        while(c.moveToNext()){
-            ProductBrand productBrand = new ProductBrand();
-            productBrand.setId(c.getInt(0));
-            productBrand.setName(c.getString(1).toUpperCase().replaceAll("\\s+", " ").trim());
-            productBrand.setDescription(c.getString(2).toUpperCase().replaceAll("\\s+", " ").trim());
-            productBrands.add(productBrand);
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getReadableDatabase();
+            c = db.rawQuery("SELECT BRAND_ID, NAME, DESCRIPTION FROM BRAND " +
+                            " WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
+            while(c.moveToNext()){
+                ProductBrand productBrand = new ProductBrand();
+                productBrand.setId(c.getInt(0));
+                productBrand.setName(c.getString(1).toUpperCase());
+                productBrand.setDescription(c.getString(2).toUpperCase());
+                productBrands.add(productBrand);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
         return productBrands;
     }

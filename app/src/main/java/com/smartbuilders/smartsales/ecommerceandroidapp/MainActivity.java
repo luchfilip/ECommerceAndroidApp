@@ -37,7 +37,9 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -244,7 +246,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_shopping_cart) {
+        if (id == R.id.nav_shopping_cart) {
             Intent intent = new Intent(MainActivity.this, ShoppingCartActivity.class);
             intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
@@ -252,7 +254,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, WishListActivity.class);
             intent.putExtra(WishListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } else if (id == R.id.nav_orders) {
+        } /*else if (id == R.id.nav_orders) {
             Intent intent = new Intent(MainActivity.this, OrdersListActivity.class);
             intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
@@ -367,44 +369,20 @@ public class MainActivity extends AppCompatActivity
         }else{
             finishActivityOnResultOperationCanceledException = false;
 
-            ArrayList<ProductCategory> categories = new ArrayList<ProductCategory>();
-            ProductCategory category = new ProductCategory();
-            category.setName("Productos Recientes");
-            categories.add(category);
-
-            category = new ProductCategory();
-            category.setName("Destacados");
-            categories.add(category);
-
-            category = new ProductCategory();
-            category.setName("Ofertas");
-            categories.add(category);
-
-            category = new ProductCategory();
-            category.setName("Lo mas vendido");
-            categories.add(category);
-
-            category = new ProductCategory();
-            category.setName("Recomendados");
-            categories.add(category);
-
-            category = new ProductCategory();
-            category.setName("Promociones");
-            categories.add(category);
-
-            loadCategoriesList(categories);
+            MainPageSectionDB mainPageSectionDB = new MainPageSectionDB(MainActivity.this, mCurrentUser);
+            loadMainPage(mainPageSectionDB.getActiveMainPageSections());
 
             productDB = new ProductDB(this, mCurrentUser);
         }
     }
 
-    private void loadCategoriesList(ArrayList<ProductCategory> categories){
+    private void loadMainPage(ArrayList<MainPageSection> mainPageSections){
         mRecyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(categories, true, mCurrentUser));
+        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(mainPageSections, true, mCurrentUser));
     }
 
     @Override

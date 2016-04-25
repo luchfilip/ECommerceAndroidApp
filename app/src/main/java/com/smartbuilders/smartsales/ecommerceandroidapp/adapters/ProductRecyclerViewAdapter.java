@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -116,7 +115,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                     holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.d(TAG, "Intent intent = new Intent(mContext, ProductDetailActivity.class);");
                             Intent intent = new Intent(mContext, ProductDetailActivity.class);
                             intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                             intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position));
@@ -128,10 +126,10 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                     holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.d(TAG, "Intent intent = new Intent(mContext, ProductsListActivity.class);");
                             Intent intent = new Intent(mContext, ProductsListActivity.class);
                             intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                            intent.putExtra(ProductsListActivity.KEY_PRODUCT, mDataset.get(position));
+                            intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID,
+                                    mDataset.get(position).getProductSubCategory().getId());
                             mContext.startActivity(intent);
                         }
                     });
