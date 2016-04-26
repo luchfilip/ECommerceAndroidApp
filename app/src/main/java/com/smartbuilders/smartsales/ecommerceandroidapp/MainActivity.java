@@ -44,6 +44,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -373,6 +374,17 @@ public class MainActivity extends AppCompatActivity
             loadMainPage(mainPageSectionDB.getActiveMainPageSections());
 
             productDB = new ProductDB(this, mCurrentUser);
+            File folder = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/");//-->Android/data/package.name/files/...
+            // if the directory does not exist, create it
+            if (!folder.exists()) {
+                try {
+                    if (!folder.mkdirs()) {
+                        Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
+                    }
+                } catch (SecurityException se) {
+                    se.printStackTrace();
+                }
+            }
         }
     }
 
