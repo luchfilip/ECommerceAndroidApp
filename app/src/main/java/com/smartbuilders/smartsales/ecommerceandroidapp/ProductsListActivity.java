@@ -21,19 +21,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductGridViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -58,6 +57,8 @@ public class ProductsListActivity extends AppCompatActivity {
     private SearchResultAdapter mSearchResultAdapter;
     private ArrayList<Product> products;
     private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
+    private ProductGridViewAdapter mProductGridViewAdapter;
+    private boolean mUseGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,33 +169,17 @@ public class ProductsListActivity extends AppCompatActivity {
             }
         }
 
-        if(products==null || products.isEmpty()){
-            TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-            Spannable word = new SpannableString("No se encontraron productos para mostrar. ");
-            word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), 0,
-                    word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            categorySubcategoryResultsTextView.append(word);
-        }
-
-        if(products==null){
-            products = new ArrayList<>();
-        }
-
-        mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
-                ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
-
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
+        productDB = new ProductDB(this, mCurrentUser);
 
         EditText productsListFilter = (EditText) findViewById(R.id.products_list_filter);
         productsListFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                mProductRecyclerViewAdapter.filter(s.toString());
+                if(mUseGridView) {
+                    mProductGridViewAdapter.filter(s.toString());
+                } else {
+                    mProductRecyclerViewAdapter.filter(s.toString());
+                }
             }
 
             @Override
@@ -208,7 +193,17 @@ public class ProductsListActivity extends AppCompatActivity {
             }
         });
 
-        productDB = new ProductDB(this, mCurrentUser);
+        if(products==null || products.isEmpty()){
+            TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
+            Spannable word = new SpannableString("No se encontraron productos para mostrar. ");
+            word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), 0,
+                    word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            categorySubcategoryResultsTextView.append(word);
+        }
+
+        if(products==null){
+            products = new ArrayList<>();
+        }
 
         mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
 
@@ -231,6 +226,27 @@ public class ProductsListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if(findViewById(R.id.gridview) != null){
+            mUseGridView = true;
+            mProductGridViewAdapter = new ProductGridViewAdapter(ProductsListActivity.this, products,
+                    ProductGridViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+
+            GridView gridview = (GridView) findViewById(R.id.gridview);
+            gridview.setAdapter(mProductGridViewAdapter);
+        }else{
+            mUseGridView = false;
+            mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
+                    ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+
+            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
+
+        }
     }
 
     @Override
@@ -288,9 +304,14 @@ public class ProductsListActivity extends AppCompatActivity {
                 // Some code here
                 Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
-                ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.GONE);
+                if(mUseGridView){
+                    ((GridView) findViewById(R.id.gridview)).setVisibility(View.GONE);
+                }else{
+                    ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.GONE);
+                }
                 ((TextView) findViewById(R.id.category_subcategory_results)).setVisibility(View.GONE);
                 ((LinearLayout) findViewById(R.id.filter_linear_layout)).setVisibility(View.GONE);
+
                 return true;
             }
 
@@ -299,7 +320,11 @@ public class ProductsListActivity extends AppCompatActivity {
                 // Some code here
                 Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
-                ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.VISIBLE);
+                if(mUseGridView){
+                    ((GridView) findViewById(R.id.gridview)).setVisibility(View.VISIBLE);
+                }else{
+                    ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.VISIBLE);
+                }
                 ((TextView) findViewById(R.id.category_subcategory_results)).setVisibility(View.VISIBLE);
                 ((LinearLayout) findViewById(R.id.filter_linear_layout)).setVisibility(View.VISIBLE);
                 return true;

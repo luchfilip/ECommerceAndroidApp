@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="mainpage_name_size">25sp</dimen>
 
+    <dimen name="viewpager_height">300dp</dimen>
+
+    <dimen name="productMinInfo_cardView_Width">220dp</dimen>
+    <dimen name="productMinInfo_max_image_Width">180dp</dimen>
+    <dimen name="productMinInfo_max_image_Height">180dp</dimen>
+    <dimen name="productDetail_max_image_Width">180dp</dimen>
+    <dimen name="productDetail_max_image_Height">180dp</dimen>
+
+    <dimen name="mainpage_name_size">25sp</dimen>
+    <dimen name="productMinInfo_subcategory_text_size">14sp</dimen>
+    <dimen name="productMinInfo_product_name_text_size">15sp</dimen>
+
+    <dimen name="productDetail_productName_text_size">16sp</dimen>
+    <dimen name="productDetail_productBrand_text_size">14sp</dimen>
+    <dimen name="productDetail_productCommercialPackage_text_size">16sp</dimen>
+    <dimen name="productDetail_productPrice_text_size">16sp</dimen>
+    <dimen name="productDetail_productPMVP_text_size">16sp</dimen>
+    <dimen name="productDetail_productAvailability_text_size">16sp</dimen>
+    <dimen name="productDetail_productPromo_text_size">16sp</dimen>
+    <dimen name="productDetail_productShare_text_size">18sp</dimen>
+
+    <dimen name="related_products_label_text_size">23sp</dimen>
 </resources>

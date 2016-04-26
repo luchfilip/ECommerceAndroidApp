@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
@@ -50,6 +51,15 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+                }
+                if(!TextUtils.isEmpty(c.getString(6))) {
+                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+                }
+                if(!TextUtils.isEmpty(c.getString(8))) {
+                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+                }
                 p.setImageFileName(c.getString(9)+".png");
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
@@ -99,6 +109,15 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+                }
+                if(!TextUtils.isEmpty(c.getString(6))) {
+                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+                }
+                if(!TextUtils.isEmpty(c.getString(8))) {
+                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+                }
                 p.setImageFileName(c.getString(9)+".png");
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
@@ -146,6 +165,15 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+                }
+                if(!TextUtils.isEmpty(c.getString(6))) {
+                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+                }
+                if(!TextUtils.isEmpty(c.getString(8))) {
+                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+                }
                 p.setImageFileName(c.getString(9)+".png");
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
@@ -193,6 +221,15 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+                }
+                if(!TextUtils.isEmpty(c.getString(6))) {
+                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+                }
+                if(!TextUtils.isEmpty(c.getString(8))) {
+                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+                }
                 p.setImageFileName(c.getString(9)+".png");
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
@@ -279,6 +316,15 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+                }
+                if(!TextUtils.isEmpty(c.getString(6))) {
+                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+                }
+                if(!TextUtils.isEmpty(c.getString(8))) {
+                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+                }
                 p.setImageFileName(c.getString(9)+".png");
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
