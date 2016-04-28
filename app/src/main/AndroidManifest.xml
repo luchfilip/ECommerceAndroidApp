@@ -230,7 +230,7 @@
         <activity
             android:name=".FilterOptionsActivity"
             android:label="@string/title_activity_filter_options"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".BrandsListActivity"

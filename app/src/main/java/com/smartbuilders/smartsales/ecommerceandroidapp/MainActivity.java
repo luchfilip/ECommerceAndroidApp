@@ -41,7 +41,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
@@ -248,11 +247,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_shopping_cart) {
-            Intent intent = new Intent(MainActivity.this, ShoppingCartActivity.class);
+            Intent intent = new Intent(this, ShoppingCartActivity.class);
             intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
         } else if (id == R.id.nav_whish_list) {
-            Intent intent = new Intent(MainActivity.this, WishListActivity.class);
+            Intent intent = new Intent(this, WishListActivity.class);
             intent.putExtra(WishListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
         } /*else if (id == R.id.nav_orders) {

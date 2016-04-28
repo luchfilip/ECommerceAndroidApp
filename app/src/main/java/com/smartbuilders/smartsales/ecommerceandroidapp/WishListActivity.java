@@ -39,6 +39,8 @@ public class WishListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wish_list);
 
+
+
         wishListLines = new ArrayList<WishListLine>();
         WishListLine wl = new WishListLine();
         wl.setId(1);
