@@ -20,6 +20,18 @@ public class OrdersListActivity extends AppCompatActivity implements OrdersListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         if(findViewById(R.id.order_detail_container) != null){
             // If this view is present, then the activity should be
             // in two-pane mode.

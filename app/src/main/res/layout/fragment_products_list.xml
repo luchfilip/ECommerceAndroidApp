@@ -14,10 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/category_subcategory_results"
         android:background="@drawable/border_shadow"
-        android:paddingTop="4dp"
-        android:paddingBottom="6dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp" />
+        android:padding="4dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/product_list_result"

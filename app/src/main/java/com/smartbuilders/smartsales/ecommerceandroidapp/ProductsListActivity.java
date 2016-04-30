@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -25,14 +26,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductGridViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
@@ -63,7 +61,6 @@ public class ProductsListActivity extends AppCompatActivity
     private SearchResultAdapter mSearchResultAdapter;
     private ArrayList<Product> products;
     private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
-    private ProductGridViewAdapter mProductGridViewAdapter;
     private boolean mUseGridView;
 
     @Override
@@ -190,11 +187,7 @@ public class ProductsListActivity extends AppCompatActivity
         productsListFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(mUseGridView) {
-                    mProductGridViewAdapter.filter(s.toString());
-                } else {
-                    mProductRecyclerViewAdapter.filter(s.toString());
-                }
+                mProductRecyclerViewAdapter.filter(s.toString());
             }
 
             @Override
@@ -242,26 +235,28 @@ public class ProductsListActivity extends AppCompatActivity
             }
         });
 
+        mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
+                ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+
+        RecyclerView mRecyclerView;
+
         if(findViewById(R.id.gridview) != null){
             mUseGridView = true;
-            mProductGridViewAdapter = new ProductGridViewAdapter(ProductsListActivity.this, products,
-                    ProductGridViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
-
-            GridView gridview = (GridView) findViewById(R.id.gridview);
-            gridview.setAdapter(mProductGridViewAdapter);
+            mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(ProductsListActivity.this, 2));
         }else{
             mUseGridView = false;
-            mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
-                    ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
-
-            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
+            mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
-
         }
+
+        mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
     }
 
     @Override
@@ -320,13 +315,12 @@ public class ProductsListActivity extends AppCompatActivity
                 Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
                 if(mUseGridView){
-                    ((GridView) findViewById(R.id.gridview)).setVisibility(View.GONE);
+                    findViewById(R.id.gridview).setVisibility(View.GONE);
                 }else{
-                    ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.GONE);
+                    findViewById(R.id.product_list_result).setVisibility(View.GONE);
                 }
-                ((TextView) findViewById(R.id.category_subcategory_results)).setVisibility(View.GONE);
-                ((LinearLayout) findViewById(R.id.filter_linear_layout)).setVisibility(View.GONE);
-
+                findViewById(R.id.category_subcategory_results).setVisibility(View.GONE);
+                findViewById(R.id.filter_linear_layout).setVisibility(View.GONE);
                 return true;
             }
 
@@ -336,12 +330,12 @@ public class ProductsListActivity extends AppCompatActivity
                 Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
                 if(mUseGridView){
-                    ((GridView) findViewById(R.id.gridview)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.gridview).setVisibility(View.VISIBLE);
                 }else{
-                    ((RecyclerView) findViewById(R.id.product_list_result)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
                 }
-                ((TextView) findViewById(R.id.category_subcategory_results)).setVisibility(View.VISIBLE);
-                ((LinearLayout) findViewById(R.id.filter_linear_layout)).setVisibility(View.VISIBLE);
+                findViewById(R.id.category_subcategory_results).setVisibility(View.VISIBLE);
+                findViewById(R.id.filter_linear_layout).setVisibility(View.VISIBLE);
                 return true;
             }
         });
@@ -388,11 +382,11 @@ public class ProductsListActivity extends AppCompatActivity
             Intent intent = new Intent(this, WishListActivity.class);
             intent.putExtra(WishListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } /*else if (id == R.id.nav_orders) {
-            Intent intent = new Intent(MainActivity.this, OrdersListActivity.class);
+        } else if (id == R.id.nav_orders) {
+            Intent intent = new Intent(this, OrdersListActivity.class);
             intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } else if (id == R.id.nav_invoices_list) {
+        } else /*if (id == R.id.nav_invoices_list) {
             Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
             intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);

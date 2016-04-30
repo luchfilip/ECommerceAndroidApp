@@ -4,5 +4,5 @@
     android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CategoriesListFragment"
+    tools:context=".CategoriesListActivity"
     tools:layout="@android:layout/list_content" />

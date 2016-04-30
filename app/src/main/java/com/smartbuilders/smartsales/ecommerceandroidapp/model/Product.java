@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Product extends Model implements Parcelable {
 
     private ProductBrand productBrand;
-    private int imageId = R.mipmap.ic_launcher;
+    private int imageId = R.drawable.no_image_available;
     private ArrayList<Integer> imagesIds;
     private String name;
     private String description;

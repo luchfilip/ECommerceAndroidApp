@@ -9,11 +9,11 @@
         <item
             android:id="@+id/nav_whish_list"
             android:title="@string/whish_list" />
-        <!--<item
+        <item
             android:id="@+id/nav_orders"
             android:icon="@drawable/ic_list_black_18dp"
             android:title="@string/orders_list" />
-        <item
+        <!--<item
             android:id="@+id/nav_invoices_list"
             android:icon="@drawable/ic_list_black_18dp"
             android:title="@string/invoces_list" />

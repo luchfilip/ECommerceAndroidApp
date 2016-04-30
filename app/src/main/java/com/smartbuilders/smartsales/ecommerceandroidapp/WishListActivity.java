@@ -39,7 +39,17 @@ public class WishListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wish_list);
 
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
 
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
 
         wishListLines = new ArrayList<WishListLine>();
         WishListLine wl = new WishListLine();

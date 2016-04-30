@@ -87,11 +87,11 @@ public class FilterOptionsActivity extends AppCompatActivity
             Intent intent = new Intent(this, WishListActivity.class);
             intent.putExtra(WishListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } /*else if (id == R.id.nav_orders) {
-            Intent intent = new Intent(MainActivity.this, OrdersListActivity.class);
+        } else if (id == R.id.nav_orders) {
+            Intent intent = new Intent(this, OrdersListActivity.class);
             intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-        } else if (id == R.id.nav_invoices_list) {
+        } else /*if (id == R.id.nav_invoices_list) {
             Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
             intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
