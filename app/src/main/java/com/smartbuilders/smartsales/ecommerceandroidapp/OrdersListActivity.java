@@ -144,4 +144,10 @@ public class OrdersListActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
+    }
+
 }

@@ -175,11 +175,7 @@
         <activity
             android:name=".CheckoutActivity"
             android:label="@string/title_activity_checkout"
-            android:parentActivityName=".ShoppingCartActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ShoppingCartActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -188,11 +184,7 @@
             android:name=".OrderDetailActivity"
             android:label="@string/title_activity_order_detail"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".OrdersListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".OrdersListActivity" />
-        </activity>
+            android:parentActivityName=".OrdersListActivity" />
         <activity
             android:name=".InvoicesListActivity"
             android:label="@string/title_activity_invoice_list" />

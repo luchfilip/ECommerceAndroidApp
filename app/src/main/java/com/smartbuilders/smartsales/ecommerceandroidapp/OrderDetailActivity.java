@@ -26,6 +26,18 @@ public class OrderDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -107,5 +119,11 @@ public class OrderDetailActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }

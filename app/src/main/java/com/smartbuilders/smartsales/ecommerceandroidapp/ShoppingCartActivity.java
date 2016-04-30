@@ -40,7 +40,6 @@ public class ShoppingCartActivity extends AppCompatActivity
     private ShareActionProvider mShareActionProvider;
 
     private ArrayList<OrderLine> orderLines;
-    private NavigationView mNavigationView;
     private ListView mListView;
     private ShoppingCartAdapter mShoppingCartAdapter;
 
@@ -48,6 +47,19 @@ public class ShoppingCartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoping_cart);
+
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,8 +69,8 @@ public class ShoppingCartActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         orderLines = new ArrayList<OrderLine>();
         OrderLine orderLine = new OrderLine();
@@ -156,13 +168,18 @@ public class ShoppingCartActivity extends AppCompatActivity
             }
         });
 
-        ((Button) findViewById(R.id.proceed_to_checkout_button))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(ShoppingCartActivity.this, CheckoutActivity.class));
-                    }
-                });
+        if(findViewById(R.id.proceed_to_checkout_button) != null) {
+            ((Button) findViewById(R.id.proceed_to_checkout_button))
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ShoppingCartActivity.this, CheckoutActivity.class);
+                            intent.putExtra(CheckoutActivity.KEY_CURRENT_USER, mCurrentUser);
+                            startActivity(intent);
+
+                        }
+                    });
+        }
     }
 
     @Override
@@ -289,6 +306,12 @@ public class ShoppingCartActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 
 }
