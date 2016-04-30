@@ -1,10 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
+    tools:showIn="@layout/activity_orders_list"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".OrdersListActivity">
 
     <!--
@@ -26,16 +29,3 @@
         android:layout_weight="4" />
 
 </LinearLayout>
-
-<!--<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivityy">
-
-    <include layout="@layout/content_order_list" />
-
-</android.support.design.widget.CoordinatorLayout>-->
