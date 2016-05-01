@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -238,21 +240,44 @@ public class ProductsListActivity extends AppCompatActivity
         mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
                 ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
-        RecyclerView mRecyclerView;
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
-        if(findViewById(R.id.gridview) != null){
+        int spanCount = 2;
+
+        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             mUseGridView = true;
-            mRecyclerView = (RecyclerView) findViewById(R.id.gridview);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(ProductsListActivity.this, 2));
+        }
+
+        switch(getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) {
+            case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                switch(getResources().getDisplayMetrics().densityDpi) {
+                    case DisplayMetrics.DENSITY_LOW:
+                        break;
+                    case DisplayMetrics.DENSITY_MEDIUM:
+                    case DisplayMetrics.DENSITY_HIGH:
+                    case DisplayMetrics.DENSITY_XHIGH:
+                        mUseGridView = true;
+                        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                            spanCount = 3;
+                        }
+                    default:
+                }
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_SMALL:
+                break;
+            default:
+        }
+
+        if (mUseGridView) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(ProductsListActivity.this, spanCount));
         }else{
-            mUseGridView = false;
-            mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         }
 
@@ -314,11 +339,11 @@ public class ProductsListActivity extends AppCompatActivity
                 // Some code here
                 Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
-                if(mUseGridView){
-                    findViewById(R.id.gridview).setVisibility(View.GONE);
-                }else{
+                //if(mUseGridView){
+                //    findViewById(R.id.gridview).setVisibility(View.GONE);
+                //}else{
                     findViewById(R.id.product_list_result).setVisibility(View.GONE);
-                }
+                //}
                 findViewById(R.id.category_subcategory_results).setVisibility(View.GONE);
                 findViewById(R.id.filter_linear_layout).setVisibility(View.GONE);
                 return true;
@@ -329,11 +354,11 @@ public class ProductsListActivity extends AppCompatActivity
                 // Some code here
                 Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
-                if(mUseGridView){
-                    findViewById(R.id.gridview).setVisibility(View.VISIBLE);
-                }else{
+                //if(mUseGridView){
+                //    findViewById(R.id.gridview).setVisibility(View.VISIBLE);
+                //}else{
                     findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
-                }
+                //}
                 findViewById(R.id.category_subcategory_results).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_linear_layout).setVisibility(View.VISIBLE);
                 return true;
