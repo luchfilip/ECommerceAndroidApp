@@ -26,7 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 7;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 													.append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 
 	public static final String CREATE_ARTICULOS =
-								new StringBuffer("CREATE TABLE ARTICULOS ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS ARTICULOS ")
 											.append("(IDARTICULO INTEGER DEFAULT 0 NOT NULL, ")
 											.append("IDPARTIDA INTEGER DEFAULT 0 NOT NULL, ")
 											.append("IDMARCA INTEGER DEFAULT 0 NOT NULL, ")
@@ -111,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("PRIMARY KEY (IDARTICULO))").toString();
 
 	public static final String CREATE_BRAND =
-								new StringBuffer("CREATE TABLE BRAND ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS BRAND ")
 											.append("(BRAND_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
@@ -119,7 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("PRIMARY KEY (BRAND_ID))").toString();
 
 	public static final String CREATE_CATEGORY =
-								new StringBuffer("CREATE TABLE CATEGORY ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS CATEGORY ")
 											.append("(CATEGORY_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
@@ -127,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("PRIMARY KEY (CATEGORY_ID))").toString();
 
 	public static final String CREATE_SUBCATEGORY =
-								new StringBuffer("CREATE TABLE SUBCATEGORY ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS SUBCATEGORY ")
 											.append("(SUBCATEGORY_ID INTEGER NOT NULL, ")
 											.append("CATEGORY_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
@@ -136,7 +136,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("PRIMARY KEY (SUBCATEGORY_ID))").toString();
 
 	public static final String CREATE_MAINPAGE_SECTION =
-								new StringBuffer("CREATE TABLE MAINPAGE_SECTION ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_SECTION ")
 										.append("(MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
 										.append("NAME VARCHAR(128) DEFAULT NULL, ")
 										.append("DESCRIPTION VARCHAR(255) DEFAULT NULL, ")
@@ -145,13 +145,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("PRIMARY KEY (MAINPAGE_SECTION_ID))").toString();
 
 	public static final String CREATE_MAINPAGE_PRODUCT =
-								new StringBuffer("CREATE TABLE MAINPAGE_PRODUCT ")
+								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT ")
 										.append("(MAINPAGE_PRODUCT_ID INTEGER NOT NULL, ")
 										.append("MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
 										.append("PRODUCT_ID INTEGER NOT NULL, ")
 										.append("PRIORITY INTEGER DEFAULT NULL, ")
 										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
 										.append("PRIMARY KEY (MAINPAGE_PRODUCT_ID))").toString();
+
+    public static final String CREATE_ECOMMERCE_ORDER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
+                                        .append("(ECOMMERCE_ORDER_ID INTEGER NOT NULL, ")
+                                        .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
+                                        .append("ORDER_LINES_NUMBER INTEGER DEFAULT NULL, ")
+                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
+                                        .append("PRIMARY KEY (ECOMMERCE_ORDER_ID))").toString();
+
+    public static final String CREATE_ECOMMERCE_ORDERLINE =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE ")
+                                        .append("(ECOMMERCE_ORDERLINE_ID INTEGER NOT NULL, ")
+                                        .append("ECOMMERCE_ORDER_ID INTEGER NOT NULL, ")
+                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
+                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
+                                        .append("PRIMARY KEY (ECOMMERCE_ORDERLINE_ID))").toString();
 
 	/**
 	 * 
@@ -196,9 +225,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //			Log.i(TAG, "db.execSQL(CREATE_SCHEDULER_TABLE);");
 			db.execSQL(CREATE_SCHEDULER_TABLE);
 		}else{
-//			Log.i(TAG, "db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);");
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
-//			Log.i(TAG, "db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);");
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
             db.execSQL(CREATE_ARTICULOS);
             for(String insert : (new UtilsGroup0()).getInserts()){
@@ -311,6 +338,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					e.printStackTrace();
 				}
 			}
+            db.execSQL(CREATE_ECOMMERCE_ORDER);
+            db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
 		}
 	}
 
@@ -318,145 +347,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 //		Log.d(TAG, "onUpgrade(SQLiteDatabase arg0, int arg1, int arg2)");
         try{
-            db.execSQL("DROP TABLE if exists ARTICULOS");
+            db.execSQL(CREATE_ECOMMERCE_ORDER);
         }catch(Exception e){
             e.printStackTrace();
-        }
-        db.execSQL(CREATE_ARTICULOS);
-        for(String insert : (new UtilsGroup0()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup1()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup2()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup3()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup4()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup5()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup6()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup7()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup8()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        for(String insert : (new UtilsGroup9()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
         try{
-            db.execSQL("DROP TABLE if exists BRAND");
+            db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
         }catch(Exception e){
             e.printStackTrace();
-        }
-        db.execSQL(CREATE_BRAND);
-        for(String insert : (new UtilsBrands()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        try{
-            db.execSQL("DROP TABLE if exists CATEGORY");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        db.execSQL(CREATE_CATEGORY);
-        for(String insert : (new UtilsCategory()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        try{
-            db.execSQL("DROP TABLE if exists SUBCATEGORY");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        db.execSQL(CREATE_SUBCATEGORY);
-        for(String insert : (new UtilsSubCategory()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        try{
-            db.execSQL("DROP TABLE if exists MAINPAGE_SECTION");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        db.execSQL(CREATE_MAINPAGE_SECTION);
-        for(String insert : (new UtilsMainPageSection()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        try{
-            db.execSQL("DROP TABLE if exists MAINPAGE_PRODUCT");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        db.execSQL(CREATE_MAINPAGE_PRODUCT);
-        for(String insert : (new UtilsMainPageProduct()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
 	}
 

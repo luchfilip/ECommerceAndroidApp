@@ -21,6 +21,7 @@ public class Product extends Model implements Parcelable {
     private ProductCategory productCategory;
     private ProductSubCategory productSubCategory;
     private ProductCommercialPackage productCommercialPackage;
+    private int availability;
 
     public Product(){
         super();
@@ -36,6 +37,7 @@ public class Product extends Model implements Parcelable {
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
+        availability = in.readInt();
     }
 
     @Override
@@ -49,6 +51,7 @@ public class Product extends Model implements Parcelable {
         dest.writeParcelable(productCategory, flags);
         dest.writeParcelable(productSubCategory, flags);
         dest.writeParcelable(productCommercialPackage, flags);
+        dest.writeInt(availability);
     }
 
     @Override
@@ -138,5 +141,13 @@ public class Product extends Model implements Parcelable {
 
     public void setProductCommercialPackage(ProductCommercialPackage productCommercialPackage) {
         this.productCommercialPackage = productCommercialPackage;
+    }
+
+    public int getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(int availability) {
+        this.availability = availability;
     }
 }

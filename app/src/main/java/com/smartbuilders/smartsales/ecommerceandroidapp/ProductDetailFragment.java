@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CustomPagerAdapter;
@@ -73,8 +74,8 @@ public class ProductDetailFragment extends Fragment {
         }
 
         if(mProduct.getImageFileName()!=null){
-            ((ViewPager) view.findViewById(R.id.pager)).setVisibility(View.GONE);
-            ((RadioGroup) view.findViewById(R.id.radiogroup)).setVisibility(View.GONE);
+            view.findViewById(R.id.pager).setVisibility(View.GONE);
+            view.findViewById(R.id.radiogroup).setVisibility(View.GONE);
             Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
             if(img!=null){
                 ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
@@ -82,7 +83,7 @@ public class ProductDetailFragment extends Fragment {
                 ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
             }
         }else{
-            ((ImageView) view.findViewById(R.id.product_image)).setVisibility(View.GONE);
+            view.findViewById(R.id.product_image).setVisibility(View.GONE);
             ArrayList<Integer> imagesIds = new ArrayList<Integer>();
             imagesIds.add(mProduct.getImageId());
             imagesIds.add(mProduct.getImageId());
@@ -144,10 +145,10 @@ public class ProductDetailFragment extends Fragment {
                 mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
             }else{
-                ((LinearLayout) view.findViewById(R.id.relatedproducts_linearlayout)).setVisibility(View.GONE);
+                view.findViewById(R.id.relatedproducts_linearlayout).setVisibility(View.GONE);
             }
         }else{
-            ((LinearLayout) view.findViewById(R.id.relatedproducts_linearlayout)).setVisibility(View.GONE);
+            view.findViewById(R.id.relatedproducts_linearlayout).setVisibility(View.GONE);
         }
 
         if(mProduct.getProductCommercialPackage()!=null){
@@ -155,10 +156,32 @@ public class ProductDetailFragment extends Fragment {
                 mProduct.getProductCommercialPackage().getUnits() + " " +
                         mProduct.getProductCommercialPackage().getUnitDescription()));
         }else{
-            ((TextView) view.findViewById(R.id.product_comercial_package)).setVisibility(View.GONE);
+            view.findViewById(R.id.product_comercial_package).setVisibility(View.GONE);
         }
 
         ((ScrollView) view.findViewById(R.id.product_detail_main_view)).smoothScrollTo(0, 0);
+
+        if (view.findViewById(R.id.product_addtocart_button) != null){
+            view.findViewById(R.id.product_addtocart_button).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showEditDialog();
+                        }
+                    }
+            );
+        }
+
+        if (view.findViewById(R.id.product_addtowishlist_button) != null) {
+            view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+            );
+        }
 
         return view;
     }
@@ -214,6 +237,13 @@ public class ProductDetailFragment extends Fragment {
             Utils.createFileInCacheDir(fileName, mProduct.getImageId(), getContext());
         }
         return Utils.createShareProductIntent(getContext(), mProduct, fileName);
+    }
+
+    private void showEditDialog() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        EditQtyRequestedDialogFragment editQtyRequestedDialogFragment =
+                EditQtyRequestedDialogFragment.newInstance(mProduct);
+        editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
     }
 
 }

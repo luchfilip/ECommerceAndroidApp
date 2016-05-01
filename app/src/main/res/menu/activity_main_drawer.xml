@@ -11,7 +11,7 @@
             android:title="@string/whish_list" />
         <item
             android:id="@+id/nav_orders"
-            android:icon="@drawable/ic_list_black_18dp"
+            android:icon="@drawable/ic_view_list_black_24dp"
             android:title="@string/orders_list" />
         <!--<item
             android:id="@+id/nav_invoices_list"
@@ -31,6 +31,14 @@
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_email_black_24dp"
                 android:title="@string/contact_us" />
+        </menu>
+    </item>
+    <item android:title="@string/value_us">
+        <menu>
+            <item
+                android:id="@+id/nav_value_us"
+                android:icon="@drawable/google_play_icon"
+                android:title="@string/google_play" />
         </menu>
     </item>
     <item android:title="@string/tools">

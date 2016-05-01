@@ -3,5 +3,5 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 /**
  * Created by stein on 4/30/2016.
  */
-public class OrderLine {
+public class OrderDB {
 }
