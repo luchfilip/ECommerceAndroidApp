@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -22,10 +25,12 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<OrderLine> mDataset;
+    private User mCurrentUser;
 
-    public ShoppingCartAdapter(Context context, ArrayList<OrderLine> data) {
+    public ShoppingCartAdapter(Context context, ArrayList<OrderLine> data, User user) {
         mContext = context;
         mDataset = data;
+        mCurrentUser = user;
     }
 
     @Override
@@ -45,9 +50,19 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout./*wish_list_item*/shopping_cart_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_cart_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+
+        if(mDataset.get(position).getProduct().getImageFileName()!=null){
+            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            if(img!=null){
+                viewHolder.productImage.setImageBitmap(img);
+            }else{
+                viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            }
+        }else{
+            viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+        }
 
         viewHolder.productName.setText(mDataset.get(position).getProduct().getName());
 
@@ -58,19 +73,11 @@ public class ShoppingCartAdapter extends BaseAdapter {
             }
         });
 
-//        viewHolder.addUnit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(mContext, "addUnit", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        viewHolder.subtractUnit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(mContext, "subtractUnit", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        viewHolder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
+                mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
+                mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+
+        viewHolder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
 
         view.setTag(viewHolder);
         return view;
@@ -83,24 +90,20 @@ public class ShoppingCartAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public ImageView productImage;
         public ImageView deleteItem;
-        //public ImageView addUnit;
-        //public ImageView subtractUnit;
         public TextView productName;
-        public TextView productMinPackage;
+        public TextView productCommercialPackage;
         public TextView productPrice;
-        //public EditText qtyOrdered;
         public TextView totalLine;
+        public EditText qtyOrdered;
 
         public ViewHolder(View v) {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            //qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
             totalLine = (TextView) v.findViewById(R.id.total_line);
-            productMinPackage = (TextView) v.findViewById(R.id.product_minPackageUnit);
+            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
-            //addUnit = (ImageView) v.findViewById(R.id.add_unit_button_img);
-            //subtractUnit = (ImageView) v.findViewById(R.id.subtract_unit_button_img);
+            qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
         }
     }
 }

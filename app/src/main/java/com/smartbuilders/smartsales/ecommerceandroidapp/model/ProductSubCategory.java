@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by Alberto on 27/3/2016.
  */
-public class ProductSubCategory extends ProductCategory {
+public class ProductSubCategory extends ProductCategory implements Parcelable {
 
     public static final Parcelable.Creator<ProductSubCategory> CREATOR = new Parcelable.Creator<ProductSubCategory>() {
         @Override

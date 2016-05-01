@@ -21,6 +21,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.WishListLine;
 
 import java.io.ByteArrayOutputStream;
@@ -36,8 +38,8 @@ import java.util.ArrayList;
 public class WishListPDFCreator {
     private static final String TAG = WishListPDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<WishListLine> lines, String fileName, Context ctx){
-        Log.d(TAG, "generatePDF(ArrayList<WishListLine> lines, String fileName, Context ctx)");
+    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx){
+        Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -102,7 +104,7 @@ public class WishListPDFCreator {
                 // Defiles the relative width of the columns
                 float[] columnWidths = new float[] {30f, 150f, 50f};
                 table.setWidths(columnWidths);
-                for(WishListLine line : lines){
+                for(OrderLine line : lines){
                     Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(),
                             line.getProduct().getImageId());
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -126,8 +128,8 @@ public class WishListPDFCreator {
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
                     cell2.addElement(new Paragraph("Empaque de venta: ", font));
-                    cell2.addElement(new Paragraph("Precio: ", font));
-                    cell2.addElement(new Paragraph("Descuento (%): ", font));
+                    //cell2.addElement(new Paragraph("Precio: ", font));
+                    //cell2.addElement(new Paragraph("Descuento (%): ", font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -137,8 +139,8 @@ public class WishListPDFCreator {
                     cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
-                    cell3.addElement(new Paragraph("Cant. pedida: ", font));
-                    cell3.addElement(new Paragraph("Total Bs.: ", font));
+                    //cell3.addElement(new Paragraph("Cant. pedida: ", font));
+                    //cell3.addElement(new Paragraph("Total Bs.: ", font));
                     table.addCell(cell3);
                 }
 

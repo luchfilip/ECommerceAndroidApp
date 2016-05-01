@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CustomPagerAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -177,7 +179,12 @@ public class ProductDetailFragment extends Fragment {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
+                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
+                            if (result == null) {
+                                Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
             );
@@ -242,7 +249,7 @@ public class ProductDetailFragment extends Fragment {
     private void showEditDialog() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         EditQtyRequestedDialogFragment editQtyRequestedDialogFragment =
-                EditQtyRequestedDialogFragment.newInstance(mProduct);
+                EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser);
         editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
     }
 

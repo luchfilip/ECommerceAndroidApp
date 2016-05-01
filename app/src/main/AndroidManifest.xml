@@ -179,7 +179,7 @@
         <activity
             android:name=".OrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_activity_order_list" />
+            android:label="@string/app_name" />
         <activity
             android:name=".OrderDetailActivity"
             android:label="@string/app_name"

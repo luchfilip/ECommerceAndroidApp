@@ -26,7 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 9;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_ECOMMERCE_ORDER =
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
-                                        .append("(ECOMMERCE_ORDER_ID INTEGER NOT NULL, ")
+                                        .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
                                         .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
                                         .append("ORDER_LINES_NUMBER INTEGER DEFAULT NULL, ")
                                         .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
@@ -164,13 +164,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
                                         .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
                                         .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
-                                        .append("PRIMARY KEY (ECOMMERCE_ORDER_ID))").toString();
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
 
     public static final String CREATE_ECOMMERCE_ORDERLINE =
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE ")
-                                        .append("(ECOMMERCE_ORDERLINE_ID INTEGER NOT NULL, ")
-                                        .append("ECOMMERCE_ORDER_ID INTEGER NOT NULL, ")
+                                        .append("(ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("ECOMMERCE_ORDER_ID DEFAULT NULL, ")
                                         .append("PRODUCT_ID INTEGER NOT NULL, ")
                                         .append("QTY_REQUESTED INTEGER NOT NULL, ")
                                         .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
@@ -179,8 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
                                         .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
                                         .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
-                                        .append("PRIMARY KEY (ECOMMERCE_ORDERLINE_ID))").toString();
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
 
 	/**
 	 * 
@@ -347,7 +345,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 //		Log.d(TAG, "onUpgrade(SQLiteDatabase arg0, int arg1, int arg2)");
         try{
+            db.execSQL("DROP TABLE ECOMMERCE_ORDER");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
             db.execSQL(CREATE_ECOMMERCE_ORDER);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            db.execSQL("DROP TABLE ECOMMERCE_ORDERLINE");
         }catch(Exception e){
             e.printStackTrace();
         }

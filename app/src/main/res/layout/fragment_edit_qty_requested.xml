@@ -37,7 +37,9 @@
             android:id="@+id/qty_requested_editText"
             android:numeric="integer"
             android:paddingLeft="2dp"
-            android:paddingRight="2dp" />
+            android:paddingRight="2dp"
+            android:focusable="true"
+            android:enabled="true" />
     </LinearLayout>
 
     <LinearLayout

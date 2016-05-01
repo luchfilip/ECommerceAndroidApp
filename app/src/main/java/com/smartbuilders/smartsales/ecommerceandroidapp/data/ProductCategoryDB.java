@@ -19,7 +19,6 @@ public class ProductCategoryDB {
     private User user;
     private DatabaseHelper dbh;
 
-
     public ProductCategoryDB(Context context, User user){
         this.context = context;
         this.user = user;

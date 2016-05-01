@@ -21,6 +21,8 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.WishListLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -38,7 +40,7 @@ public class WishListActivity extends AppCompatActivity
     private User mCurrentUser;
     private ListView mListView;
     private WishListAdapter mWishListAdapter;
-    ArrayList<WishListLine> wishListLines;
+    ArrayList<OrderLine> wishListLines;
     private NavigationView mNavigationView;
     private ShareActionProvider mShareActionProvider;
 
@@ -71,64 +73,10 @@ public class WishListActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        wishListLines = new ArrayList<WishListLine>();
-        WishListLine wl = new WishListLine();
-        wl.setId(1);
-        Product p = new Product();
-        p.setName("Bomba 1/2 hp periferica pedrollo");
-        p.setImageId(R.drawable.product1);
-        wl.setProduct(p);
-        wishListLines.add(wl);
+        OrderLineDB orderLineDB = new OrderLineDB(this, mCurrentUser);
+        wishListLines = orderLineDB.getWishList();
 
-        wl = new WishListLine();
-        wl.setId(2);
-        p = new Product();
-        p.setName("Capacitador con terminal p/bomba 1/2hp");
-        p.setImageId(R.drawable.product2);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        wl = new WishListLine();
-        wl.setId(3);
-        p = new Product();
-        p.setName("Capacitor 25uf semilic");
-        p.setImageId(R.drawable.product3);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        wl = new WishListLine();
-        wl.setId(4);
-        p = new Product();
-        p.setName("Cargador de aire 100gl tm");
-        p.setImageId(R.drawable.product4);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        wl = new WishListLine();
-        wl.setId(5);
-        p = new Product();
-        p.setName("Manometro 0-90psi semilic");
-        p.setImageId(R.drawable.product5);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        wl = new WishListLine();
-        wl.setId(6);
-        p = new Product();
-        p.setName("Mini presostato 20-40 semilic");
-        p.setImageId(R.drawable.product6);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        wl = new WishListLine();
-        wl.setId(7);
-        p = new Product();
-        p.setName("Presostato 20-40 semilic");
-        p.setImageId(R.drawable.product7);
-        wl.setProduct(p);
-        wishListLines.add(wl);
-
-        mWishListAdapter = new WishListAdapter(this, wishListLines);
+        mWishListAdapter = new WishListAdapter(this, wishListLines, mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.wish_list);
         mListView.setAdapter(mWishListAdapter);

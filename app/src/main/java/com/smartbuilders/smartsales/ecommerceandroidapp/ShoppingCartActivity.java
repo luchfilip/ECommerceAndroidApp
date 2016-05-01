@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -72,92 +73,10 @@ public class ShoppingCartActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        orderLines = new ArrayList<OrderLine>();
-        OrderLine orderLine = new OrderLine();
-        Product p = new Product();
-        p.setName("Bomba 1/2 hp periferica pedrollo");
-        p.setImageId(R.drawable.product1);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
+        OrderLineDB orderLineDB = new OrderLineDB(this, mCurrentUser);
+        orderLines = orderLineDB.getShoppingCart();
 
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Capacitador con terminal p/bomba 1/2hp");
-        p.setImageId(R.drawable.product2);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Capacitor 25uf semilic");
-        p.setImageId(R.drawable.product3);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Cargador de aire 100gl tm");
-        p.setImageId(R.drawable.product4);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Manometro 0-90psi semilic");
-        p.setImageId(R.drawable.product5);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Mini presostato 20-40 semilic");
-        p.setImageId(R.drawable.product6);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Presostato 20-40 semilic");
-        p.setImageId(R.drawable.product7);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Rolinera para bomba 1/2hp");
-        p.setImageId(R.drawable.product8);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Aspersor pico blanco 3/16\" agroinplast");
-        p.setImageId(R.drawable.product9);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Aspersor oscilante bv");
-        p.setImageId(R.drawable.product10);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Aspersor plastic triple bv");
-        p.setImageId(R.drawable.product11);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        orderLine = new OrderLine();
-        p = new Product();
-        p.setName("Aspersor plastico triple chesterwood");
-        p.setImageId(R.drawable.product12);
-        orderLine.setProduct(p);
-        orderLines.add(orderLine);
-
-        mShoppingCartAdapter = new ShoppingCartAdapter(this, orderLines);
+        mShoppingCartAdapter = new ShoppingCartAdapter(this, orderLines, mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.shoppingCart_items_list);
         mListView.setAdapter(mShoppingCartAdapter);
