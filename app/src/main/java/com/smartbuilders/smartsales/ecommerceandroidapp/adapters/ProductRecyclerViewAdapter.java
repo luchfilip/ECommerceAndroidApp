@@ -51,6 +51,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         public TextView productSubCategory;
         public TextView productBrand;
         public TextView commercialPackage;
+        public TextView productAvaliability;
         public LinearLayout linearLayoutContent;
 
         public ViewHolder(View v) {
@@ -62,6 +63,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_comercial_package);
+            productAvaliability = (TextView) v.findViewById(R.id.product_availability);
         }
     }
 
@@ -173,6 +175,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             }
         }else{
             holder.productImage.setImageResource(mDataset.get(position).getImageId());
+        }
+
+        if(holder.productAvaliability!=null){
+            holder.productAvaliability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getAvailability()));
         }
     }
 

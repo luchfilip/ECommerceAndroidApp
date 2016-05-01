@@ -153,7 +153,6 @@
                                 android:id="@+id/product_availability"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/availability"
                                 android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
                                 android:textStyle="bold" />
 

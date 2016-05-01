@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -188,6 +189,11 @@ public class ProductDetailFragment extends Fragment {
                         }
                     }
             );
+        }
+
+        if(view.findViewById(R.id.product_availability)!=null){
+            ((TextView) view.findViewById(R.id.product_availability))
+                    .setText(getString(R.string.availability, mProduct.getAvailability()));
         }
 
         return view;
