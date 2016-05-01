@@ -27,6 +27,7 @@
     <string name="communicate">Comunicación</string>
     <string name="tools">Herramientas</string>
     <string name="add_to_cart">Agregar al Carrito</string>
+    <string name="add_to_wishlist">Agregar a la lista de deseos</string>
     <string name="move_to_cart">Mover al Carrito</string>
     <string name="qty_ordered_label">Cant.:</string>
     <string name="proceed_to_checkout">Proceder a Finalizar Pedido</string>
@@ -107,5 +108,6 @@
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
     <string name="commercial_package">Empaque comercial: %1$s.</string>
+    <string name="availability">Disponibilidad: %1$s.</string>
     <string name="search_by">Buscar Por...</string>
 </resources>

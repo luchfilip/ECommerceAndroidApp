@@ -13,13 +13,13 @@
     <dimen name="productMinInfo_subcategory_text_size">14sp</dimen>
     <dimen name="productMinInfo_product_name_text_size">15sp</dimen>
 
-    <dimen name="productDetail_productName_text_size">16sp</dimen>
-    <dimen name="productDetail_productBrand_text_size">14sp</dimen>
-    <dimen name="productDetail_productCommercialPackage_text_size">16sp</dimen>
-    <dimen name="productDetail_productPrice_text_size">16sp</dimen>
-    <dimen name="productDetail_productPMVP_text_size">16sp</dimen>
-    <dimen name="productDetail_productAvailability_text_size">16sp</dimen>
-    <dimen name="productDetail_productPromo_text_size">16sp</dimen>
+    <dimen name="productDetail_productName_text_size">20sp</dimen>
+    <dimen name="productDetail_productBrand_text_size">15sp</dimen>
+    <dimen name="productDetail_productCommercialPackage_text_size">17sp</dimen>
+    <dimen name="productDetail_productPrice_text_size">17sp</dimen>
+    <dimen name="productDetail_productPMVP_text_size">17sp</dimen>
+    <dimen name="productDetail_productAvailability_text_size">17sp</dimen>
+    <dimen name="productDetail_productPromo_text_size">17sp</dimen>
     <dimen name="productDetail_productShare_text_size">18sp</dimen>
 
     <dimen name="related_products_label_text_size">23sp</dimen>
