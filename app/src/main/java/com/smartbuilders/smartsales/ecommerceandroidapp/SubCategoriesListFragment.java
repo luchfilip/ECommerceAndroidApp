@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,49 +22,41 @@ public class SubCategoriesListFragment extends Fragment {
     private static final String TAG = SubCategoriesListFragment.class.getSimpleName();
     public static final String KEY_CATEGORY_ID = "key_category_id";
 
-    private ListView mListView;
-    private SubCategoryAdapter mCategoryAdapter;
-    private int mCategoryId;
     private User mCurrentUser;
 
     public SubCategoriesListFragment() {
+
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "debug: onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);
 
+        int mCategoryId = 0;
 
         if(getArguments()!=null){
             if(getArguments().containsKey(KEY_CATEGORY_ID)){
-                Log.d(TAG, "debug: getArguments().containsKey(KEY_CATEGORY_ID)");
                 mCategoryId = getArguments().getInt(KEY_CATEGORY_ID);
-                Log.d(TAG, "debug: mCategoryId: "+mCategoryId);
             }
             if(getArguments().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)){
-                Log.d(TAG, "debug: getArguments().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)");
                 mCurrentUser = getArguments().getParcelable(SubCategoriesListActivity.KEY_CURRENT_USER);
             }
         }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
             if(getActivity().getIntent().getExtras().containsKey(KEY_CATEGORY_ID)) {
-                Log.d(TAG, "debug: getActivity().getIntent().getExtras().containsKey(KEY_CATEGORY_ID)");
                 mCategoryId = getActivity().getIntent().getExtras().getInt(KEY_CATEGORY_ID);
-                Log.d(TAG, "debug: mCategoryId: "+mCategoryId);
             }
             if(getActivity().getIntent().getExtras().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)){
-                Log.d(TAG, "debug: getActivity().getIntent().getExtras().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)");
                 mCurrentUser = getActivity().getIntent().getExtras().getParcelable(SubCategoriesListActivity.KEY_CURRENT_USER);
             }
         }
 
         ProductSubCategoryDB subCategoryDB = new ProductSubCategoryDB(getContext(), mCurrentUser);
 
-        mCategoryAdapter = new SubCategoryAdapter(getActivity(),
+        SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(),
                 subCategoryDB.getActiveProductSubCategoriesByCategoryId(mCategoryId));
 
-        mListView = (ListView) rootView.findViewById(R.id.categories_list);
+        ListView mListView = (ListView) rootView.findViewById(R.id.categories_list);
         mListView.setAdapter(mCategoryAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -85,5 +76,4 @@ public class SubCategoriesListFragment extends Fragment {
         });
         return rootView;
     }
-
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -28,11 +30,13 @@ public class WishListAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
+    private OrderLineDB orderLineDB;
 
     public WishListAdapter(Context context, ArrayList<OrderLine> data, User user) {
         mContext = context;
         mDataset = data;
         mCurrentUser = user;
+        orderLineDB = new OrderLineDB(context, user);
     }
 
     @Override
@@ -89,6 +93,20 @@ public class WishListAdapter extends BaseAdapter {
             }
         });
 
+        viewHolder.moveToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String result = orderLineDB.moveOrderLineToShoppingCart(mDataset.get(position));
+                if(result == null){
+                    mDataset.remove(position);
+                    notifyDataSetChanged();
+                    Toast.makeText(mContext, "Producto movido al Carrito de compras exitosamente.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         view.setTag(viewHolder);
         return view;
     }
@@ -102,12 +120,14 @@ public class WishListAdapter extends BaseAdapter {
         public ImageView deleteItem;
         public TextView productName;
         public TextView productCommercialPackage;
+        public Button moveToCart;
 
         public ViewHolder(View v) {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
+            moveToCart = (Button) v.findViewById(R.id.move_to_cart_button);
         }
     }
 }

@@ -12,6 +12,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by stein on 4/30/2016.
@@ -37,6 +38,31 @@ public class OrderLineDB {
 
     public String addProductToWhisList(Product product){
         return addOrderLine(product, 0, WISHLIST_DOCTYPE);
+    }
+
+    public String moveOrderLineToShoppingCart(OrderLine orderLine){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("DOC_TYPE", SHOPPING_CART_DOCTYPE);
+            if(db.update ("ECOMMERCE_ORDERLINE", cv, "ECOMMERCE_ORDERLINE_ID=? AND DOC_TYPE=?",
+                    new String[]{ Integer.valueOf(orderLine.getId()).toString(), WISHLIST_DOCTYPE})<1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     public ArrayList<OrderLine> getShoppingCart(){
