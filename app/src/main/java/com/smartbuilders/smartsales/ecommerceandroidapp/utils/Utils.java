@@ -248,9 +248,21 @@ public class Utils {
     }
 
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
-        File imgFile = new  File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/"+fileName);
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                .append("/").append(user.getUserGroup()).append("/")
+                .append(user.getUserName()).append("/Data_In/").append(fileName).toString());
         if(imgFile.exists()){
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+        }
+        return null;
+    }
+
+    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                        .append("/").append(user.getUserGroup()).append("/")
+                        .append(user.getUserName()).append("/Data_In/").append(fileName).toString());
+        if(imgFile.exists()){
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 100, 100);
         }
         return null;
     }
@@ -261,12 +273,9 @@ public class Utils {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
-
         if (height > reqHeight || width > reqWidth) {
-
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
-
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.
             while ((halfHeight / inSampleSize) > reqHeight
@@ -274,7 +283,6 @@ public class Utils {
                 inSampleSize *= 2;
             }
         }
-
         return inSampleSize;
     }
 

@@ -167,7 +167,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }
 
         if(mDataset.get(position).getImageFileName()!=null){
-            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
+            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
             if(img!=null){
                 holder.productImage.setImageBitmap(img);
             }else{

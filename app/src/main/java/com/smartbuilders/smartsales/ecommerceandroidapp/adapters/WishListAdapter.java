@@ -53,7 +53,7 @@ public class WishListAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
                 viewHolder.productImage.setImageBitmap(img);
             }else{
