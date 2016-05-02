@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -63,6 +66,16 @@ public class ShoppingCartAdapter extends BaseAdapter {
         }else{
             viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
         }
+
+        viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
+                mContext.startActivity(intent);
+            }
+        });
 
         viewHolder.productName.setText(mDataset.get(position).getProduct().getName());
 

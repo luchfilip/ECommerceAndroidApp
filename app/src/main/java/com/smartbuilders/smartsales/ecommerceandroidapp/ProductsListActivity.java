@@ -321,14 +321,9 @@ public class ProductsListActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String s) {
                 // Some code here
-                Log.d(TAG, "onQueryTextChange("+s+")");
-                if(s.length()>2){
-                    mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
-                    mSearchResultAdapter.notifyDataSetChanged();
-                }else if (s.isEmpty()){
-                    mSearchResultAdapter.setData(new ArrayList<Product>());
-                    mSearchResultAdapter.notifyDataSetChanged();
-                }
+                //Log.d(TAG, "onQueryTextChange("+s+")");
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
         });
@@ -337,7 +332,7 @@ public class ProductsListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 // Some code here
-                Log.d(TAG, "onMenuItemActionExpand(...)");
+                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
                 //if(mUseGridView){
                 //    findViewById(R.id.gridview).setVisibility(View.GONE);
@@ -352,7 +347,7 @@ public class ProductsListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // Some code here
-                Log.d(TAG, "onMenuItemActionCollapse(...)");
+                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
                 //if(mUseGridView){
                 //    findViewById(R.id.gridview).setVisibility(View.VISIBLE);
@@ -366,15 +361,15 @@ public class ProductsListActivity extends AppCompatActivity
         });
 
         // Get the search close button
-        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Some code here
-                EditText et = (EditText) findViewById(R.id.search_src_text);
-                Log.d(TAG, "closeButton.setOnClickListener - et.getText(): "+et.getText());
-            }
-        });
+        //ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        //closeButton.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        // Some code here
+        //        EditText et = (EditText) findViewById(R.id.search_src_text);
+        //        Log.d(TAG, "closeButton.setOnClickListener - et.getText(): "+et.getText());
+        //    }
+        //});
 
         return true;
     }
@@ -383,7 +378,7 @@ public class ProductsListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.categories) {
+        if (id == R.id.search_by) {
             Intent intent = new Intent(ProductsListActivity.this, FilterOptionsActivity.class);
             intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);

@@ -1,17 +1,33 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.util.ArrayList;
 
 /**
  * Created by Alberto on 22/3/2016.
@@ -19,9 +35,14 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class ProductDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = ProductDetailActivity.class.getSimpleName();
+
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
+    private ProductDB productDB;
+    private ListView mListView;
+    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +72,112 @@ public class ProductDetailActivity extends AppCompatActivity
 
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        productDB = new ProductDB(this, mCurrentUser);
+
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+
+        mListView = (ListView) findViewById(R.id.search_result_list);
+        mListView.setAdapter(mSearchResultAdapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Product product = (Product) adapterView.getItemAtPosition(position);
+                if (product != null) {
+                    Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_product_detail, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // Some code here
+                Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+                startActivity(intent);
+                finish();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Some code here
+                //Log.d(TAG, "onQueryTextChange("+s+")");
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionExpand(...)");
+                mListView.setVisibility(View.VISIBLE);
+                findViewById(R.id.product_detail_main_view).setVisibility(View.GONE);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionCollapse(...)");
+                mListView.setVisibility(View.GONE);
+                findViewById(R.id.product_detail_main_view).setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+
+        // Get the search close button
+        //ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        //closeButton.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        // Some code here
+        //        EditText et = (EditText) findViewById(R.id.search_src_text);
+        //        Log.d(TAG, "closeButton.setOnClickListener - et.getText(): "+et.getText());
+        //    }
+        //});
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.search_by) {
+            Intent intent = new Intent(this, FilterOptionsActivity.class);
+            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

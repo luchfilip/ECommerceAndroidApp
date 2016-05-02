@@ -262,7 +262,7 @@ public class Utils {
                         .append("/").append(user.getUserGroup()).append("/")
                         .append(user.getUserName()).append("/Data_In/").append(fileName).toString());
         if(imgFile.exists()){
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 100, 100);
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 125, 125);
         }
         return null;
     }

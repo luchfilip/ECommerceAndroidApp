@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -48,79 +47,85 @@
                             android:textSize="@dimen/productDetailActivity_productName_text_size"
                             android:focusable="true" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/viewpager_height"
-                            android:id="@+id/product_image"
-                            android:focusable="false"
-                            android:layout_margin="4dp" />
-
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/pager"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/viewpager_height"
-                            android:focusable="false"
-                            android:visibility="gone" />
-
-                        <RadioGroup
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|bottom"
-                            android:orientation="horizontal"
-                            android:id="@+id/radiogroup"
-                            android:gravity="center_horizontal"
-                            android:focusable="false"
-                            android:visibility="gone">
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/radioButton"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:checked="true" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton2" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton3" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton4" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton5" />
-                        </RadioGroup>
-
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:baselineAligned="false"
-                            android:focusable="false">
+                            android:layout_height="match_parent">
 
                             <LinearLayout
                                 android:orientation="vertical"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="4">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/viewpager_height"
+                                    android:id="@+id/product_image"
+                                    android:focusable="false"
+                                    android:layout_margin="4dp" />
+
+                                <android.support.v4.view.ViewPager
+                                    android:id="@+id/pager"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/viewpager_height"
+                                    android:focusable="false"
+                                    android:visibility="gone"
+                                    android:padding="4dp" />
+
+                                <RadioGroup
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal|bottom"
+                                    android:orientation="horizontal"
+                                    android:id="@+id/radiogroup"
+                                    android:gravity="center_horizontal"
+                                    android:focusable="false"
+                                    android:visibility="gone">
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:id="@+id/radioButton"
+                                        android:scaleX="@integer/radioButton_scale"
+                                        android:scaleY="@integer/radioButton_scale"
+                                        android:checked="true" />
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:scaleX="@integer/radioButton_scale"
+                                        android:scaleY="@integer/radioButton_scale"
+                                        android:id="@+id/radioButton2" />
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:scaleX="@integer/radioButton_scale"
+                                        android:scaleY="@integer/radioButton_scale"
+                                        android:id="@+id/radioButton3" />
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:scaleX="@integer/radioButton_scale"
+                                        android:scaleY="@integer/radioButton_scale"
+                                        android:id="@+id/radioButton4" />
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:scaleX="@integer/radioButton_scale"
+                                        android:scaleY="@integer/radioButton_scale"
+                                        android:id="@+id/radioButton5" />
+                                </RadioGroup>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="6"
                                 android:layout_marginLeft="2dp"
                                 android:layout_marginRight="2dp">
 
@@ -176,39 +181,39 @@
                                     android:rating="2.5"
                                     android:id="@+id/product_ratingbar" />
 
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
+
+                                    <Button
+                                        style="?android:attr/buttonStyleSmall"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/add_to_wishlist"
+                                        android:id="@+id/product_addtowishlist_button"
+                                        android:textAppearance="@android:style/TextAppearance.Small"
+                                        android:layout_gravity="bottom|right"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_alignParentEnd="true" />
+
+                                    <Button
+                                        style="?android:attr/buttonStyleSmall"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/add_to_cart"
+                                        android:id="@+id/product_addtocart_button"
+                                        android:textAppearance="@android:style/TextAppearance.Small"
+                                        android:layout_gravity="bottom|right"
+                                        android:layout_above="@+id/product_addtowishlist_button"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_alignParentStart="true" />
+                                </RelativeLayout>
+
                             </LinearLayout>
 
                         </LinearLayout>
-
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="right">
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="match_parent"
-                                    android:text="@string/add_to_wishlist"
-                                    android:id="@+id/product_addtowishlist_button"
-                                    android:textAppearance="@android:style/TextAppearance.Small" />
-                            </TableRow>
-
-                            <TableRow
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="match_parent"
-                                    android:text="@string/add_to_cart"
-                                    android:id="@+id/product_addtocart_button"
-                                    android:textAppearance="@android:style/TextAppearance.Small" />
-                            </TableRow>
-                        </TableLayout>
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -242,6 +247,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/product_detail_description"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
                             android:textSize="@dimen/productDetailActivity_details_text_size"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp" />
@@ -290,5 +298,4 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:visibility="gone" />
-
 </FrameLayout>

@@ -158,7 +158,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new ShoppingCartPDFCreator().generatePDF(orderLines, fileName+".pdf", this);
+            new ShoppingCartPDFCreator().generatePDF(orderLines, fileName+".pdf", this, mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }

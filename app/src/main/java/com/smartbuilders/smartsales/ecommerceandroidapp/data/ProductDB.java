@@ -260,6 +260,9 @@ public class ProductDB {
 
     public ArrayList<Product> getLightProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
+        if(TextUtils.isEmpty(name) || name.length()<1){
+            return products;
+        }
         SQLiteDatabase db = null;
         Cursor c = null;
         try {

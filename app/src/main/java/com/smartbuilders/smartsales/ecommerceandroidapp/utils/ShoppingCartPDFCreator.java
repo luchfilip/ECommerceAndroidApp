@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
@@ -41,7 +43,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 public class ShoppingCartPDFCreator {
     private static final String TAG = ShoppingCartPDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx){
+    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
@@ -108,8 +110,14 @@ public class ShoppingCartPDFCreator {
                 float[] columnWidths = new float[] {30f, 150f, 50f};
                 table.setWidths(columnWidths);
                 for(OrderLine line : lines){
-                    Bitmap bmp = BitmapFactory.decodeResource(ctx.getResources(),
+                    Bitmap bmp = null;
+                    if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
+                        bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
+                    }
+                    if(bmp==null){
+                        bmp = BitmapFactory.decodeResource(ctx.getResources(),
                             line.getProduct().getImageId());
+                    }
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     Image productImage = Image.getInstance(stream.toByteArray());

@@ -87,7 +87,13 @@ public class WishListActivity extends AppCompatActivity
             public void onItemClick(AdapterView adapterView, View view, int position, long l) {
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
                 // if it cannot seek to that position.
-
+                OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
+                if (orderLine != null) {
+                    Intent intent = new Intent(WishListActivity.this, ProductDetailActivity.class);
+                    intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                    intent.putExtra(ProductDetailFragment.KEY_PRODUCT, orderLine.getProduct());
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -149,7 +155,7 @@ public class WishListActivity extends AppCompatActivity
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", this);
+            new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", this, mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -213,8 +213,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         } else {
             for (Product product : array) {
                 if (product.getName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || (product.getDescription()!=null && product.getDescription()
-                        .toLowerCase(Locale.getDefault()).contains(charText))) {
+                        /*|| (product.getDescription()!=null && product.getDescription().toLowerCase(Locale.getDefault()).contains(charText))*/) {
                     mDataset.add(product);
                 }
             }
