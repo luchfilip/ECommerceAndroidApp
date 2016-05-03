@@ -7,6 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity"
     tools:showIn="@layout/activity_wish_list"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <ListView

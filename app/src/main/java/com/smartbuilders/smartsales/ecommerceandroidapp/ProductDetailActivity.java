@@ -64,6 +64,14 @@ public class ProductDetailActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductDetailActivity.this,
+                        MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, mCurrentUser));
+            }
+        });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -96,6 +104,8 @@ public class ProductDetailActivity extends AppCompatActivity
                 }
             }
         });
+
+
     }
 
     @Override

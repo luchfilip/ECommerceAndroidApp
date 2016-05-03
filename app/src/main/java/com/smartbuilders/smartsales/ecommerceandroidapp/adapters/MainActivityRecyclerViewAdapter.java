@@ -140,7 +140,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                         products.add(mainPageProduct.getProduct());
                     }
                     holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
-                            products, false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_LIST, mCurrentUser));
+                            products, false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                 }else{
 
                 }
