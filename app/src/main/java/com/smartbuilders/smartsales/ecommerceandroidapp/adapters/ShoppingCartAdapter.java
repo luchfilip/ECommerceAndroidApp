@@ -1,8 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -29,11 +32,13 @@ public class ShoppingCartAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
+    private OrderLineDB orderLineDB;
 
     public ShoppingCartAdapter(Context context, ArrayList<OrderLine> data, User user) {
         mContext = context;
         mDataset = data;
         mCurrentUser = user;
+        orderLineDB = new OrderLineDB(context, user);
     }
 
     @Override
@@ -82,7 +87,22 @@ public class ShoppingCartAdapter extends BaseAdapter {
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "deleteItem", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(mContext)
+                        .setMessage("¿Está seguro que desea eliminar el producto " +
+                                mDataset.get(position).getProduct().getName() + " del carrito de compras?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                if(result == null){
+                                    mDataset.remove(position);
+                                    notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
             }
         });
 

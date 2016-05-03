@@ -1,8 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +91,22 @@ public class WishListAdapter extends BaseAdapter {
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "deleteItem", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(mContext)
+                        .setMessage("¿Está seguro que desea eliminar el producto " +
+                                mDataset.get(position).getProduct().getName() + " de la lista de deseos?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                if(result == null){
+                                    mDataset.remove(position);
+                                    notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
             }
         });
 

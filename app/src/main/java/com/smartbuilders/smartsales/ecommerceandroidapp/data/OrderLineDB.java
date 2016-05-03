@@ -65,6 +65,31 @@ public class OrderLineDB {
         return null;
     }
 
+    public String deleteOrderLine(OrderLine orderLine){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("ISACTIVE", "N");
+            if(db.update ("ECOMMERCE_ORDERLINE", cv, "ECOMMERCE_ORDERLINE_ID=?",
+                    new String[]{ Integer.valueOf(orderLine.getId()).toString()})<1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
     public ArrayList<OrderLine> getShoppingCart(){
         return getOrderLines(SHOPPING_CART_DOCTYPE);
     }
