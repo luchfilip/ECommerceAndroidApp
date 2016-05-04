@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity
                 if (product != null) {
                     Intent intent = new Intent(MainActivity.this, ProductsListActivity.class);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
                     intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                     startActivity(intent);
                 }

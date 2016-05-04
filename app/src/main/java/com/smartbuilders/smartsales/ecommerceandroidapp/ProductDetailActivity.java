@@ -99,6 +99,7 @@ public class ProductDetailActivity extends AppCompatActivity
                     Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
                     intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
                     startActivity(intent);
                     finish();
                 }

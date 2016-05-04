@@ -1,5 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,8 +23,10 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -43,6 +48,9 @@ public class ShoppingCartActivity extends AppCompatActivity
     private ArrayList<OrderLine> orderLines;
     private ListView mListView;
     private ShoppingCartAdapter mShoppingCartAdapter;
+    private ProductDB productDB;
+    private ListView mListViewSearchResults;
+    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +104,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         });
 
         if(findViewById(R.id.proceed_to_checkout_button) != null) {
-            ((Button) findViewById(R.id.proceed_to_checkout_button))
+            findViewById(R.id.proceed_to_checkout_button)
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -107,6 +115,30 @@ public class ShoppingCartActivity extends AppCompatActivity
                         }
                     });
         }
+
+        productDB = new ProductDB(this, mCurrentUser);
+
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+
+        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
+        mListViewSearchResults.setAdapter(mSearchResultAdapter);
+
+        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Product product = (Product) adapterView.getItemAtPosition(position);
+                if (product != null) {
+                    Intent intent = new Intent(ShoppingCartActivity.this, ProductsListActivity.class);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -114,8 +146,60 @@ public class ShoppingCartActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shoping_cart, menu);
 
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent intent = new Intent(ShoppingCartActivity.this, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Some code here
+                //Log.d(TAG, "onQueryTextChange("+s+")");
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionExpand(...)");
+                mListViewSearchResults.setVisibility(View.VISIBLE);
+                findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
+                findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionCollapse(...)");
+                mListViewSearchResults.setVisibility(View.GONE);
+                findViewById(R.id.shoppingCart_items_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.VISIBLE);
+                mSearchResultAdapter.setData(new ArrayList<Product>());
+                mSearchResultAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         // Retrieve the share menu item
-        MenuItem item =(MenuItem) menu.findItem(R.id.action_share);
+        MenuItem item = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider =
@@ -147,6 +231,11 @@ public class ShoppingCartActivity extends AppCompatActivity
             } else {
                 Log.d(TAG, "Share Action Provider is null?");
             }
+            return true;
+        } else if (id == R.id.search_by) {
+            Intent intent = new Intent(ShoppingCartActivity.this, FilterOptionsActivity.class);
+            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
             return true;
         }
 

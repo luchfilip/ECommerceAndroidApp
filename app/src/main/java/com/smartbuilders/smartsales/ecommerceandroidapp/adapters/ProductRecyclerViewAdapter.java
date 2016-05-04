@@ -186,7 +186,19 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
+        if(mDataset==null){
+            return 0;
+        }
         return mDataset.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        try {
+            return mDataset.get(position).getId();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private Intent createShareIntent(Product product){

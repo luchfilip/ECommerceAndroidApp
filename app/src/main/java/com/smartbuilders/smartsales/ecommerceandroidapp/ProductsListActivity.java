@@ -52,11 +52,13 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
+    public static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
 
     private User mCurrentUser;
     private int productCategoryId;
     private int productSubCategoryId;
     private int productBrandId;
+    private int productId;
     private String productName;
     private ProductDB productDB;
     private ListView mListView;
@@ -188,6 +190,10 @@ public class ProductsListActivity extends AppCompatActivity
                         categorySubcategoryResultsTextView.append(wordThree);
                     }
                 }
+
+                if(getIntent().getExtras().containsKey(KEY_PRODUCT_ID)){
+                    productId = getIntent().getExtras().getInt(KEY_PRODUCT_ID);
+                }
             }
         }
 
@@ -238,6 +244,7 @@ public class ProductsListActivity extends AppCompatActivity
                 if (product != null) {
                     Intent intent = new Intent(ProductsListActivity.this, ProductsListActivity.class);
                     intent.putExtra(KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
                     intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
                     startActivity(intent);
                     finish();
@@ -290,6 +297,15 @@ public class ProductsListActivity extends AppCompatActivity
         }
 
         mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
+
+        if(productId != 0){
+            for(int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++){
+                if(mProductRecyclerViewAdapter.getItemId(pos) == productId){
+                    mRecyclerView.scrollToPosition(pos);
+                    break;
+                }
+            }
+        }
     }
 
     @Override

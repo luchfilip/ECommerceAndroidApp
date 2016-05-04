@@ -1,18 +1,30 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.util.ArrayList;
 
 public class OrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -21,6 +33,9 @@ public class OrderDetailActivity extends AppCompatActivity
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
+    private ProductDB productDB;
+    private ListView mListViewSearchResults;
+    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +73,31 @@ public class OrderDetailActivity extends AppCompatActivity
 
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        productDB = new ProductDB(this, mCurrentUser);
+
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+
+        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
+        mListViewSearchResults.setAdapter(mSearchResultAdapter);
+
+        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Product product = (Product) adapterView.getItemAtPosition(position);
+                if (product != null) {
+                    Intent intent = new Intent(OrderDetailActivity.this, ProductsListActivity.class);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -66,6 +106,11 @@ public class OrderDetailActivity extends AppCompatActivity
             case android.R.id.home:
                 // app icon in action bar clicked; go home
                 goBack();
+                return true;
+            case R.id.search_by:
+                Intent intent = new Intent(OrderDetailActivity.this, FilterOptionsActivity.class);
+                intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,6 +173,64 @@ public class OrderDetailActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_order_detail, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent intent = new Intent(OrderDetailActivity.this, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Some code here
+                //Log.d(TAG, "onQueryTextChange("+s+")");
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionExpand(...)");
+                mListViewSearchResults.setVisibility(View.VISIBLE);
+                findViewById(R.id.main_layout).setVisibility(View.GONE);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Some code here
+                //Log.d(TAG, "onMenuItemActionCollapse(...)");
+                mListViewSearchResults.setVisibility(View.GONE);
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                mSearchResultAdapter.setData(new ArrayList<Product>());
+                mSearchResultAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
