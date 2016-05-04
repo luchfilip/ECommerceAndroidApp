@@ -14,16 +14,18 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCommercialP
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Created by Alberto on 22/4/2016.
  */
 public class ProductDB {
 
+    private String TAG = ProductDB.class.getSimpleName();
+
     private Context context;
     private User user;
     private DatabaseHelper dbh;
-
 
     public ProductDB(Context context, User user){
         this.context = context;
@@ -51,10 +53,10 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))) {
+                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
-                if(!TextUtils.isEmpty(c.getString(6))) {
+                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
                     p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
                 }
                 if(!TextUtils.isEmpty(c.getString(8))) {
@@ -109,10 +111,10 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))) {
+                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
-                if(!TextUtils.isEmpty(c.getString(6))) {
+                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
                     p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
                 }
                 if(!TextUtils.isEmpty(c.getString(8))) {
@@ -165,10 +167,10 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))) {
+                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
-                if(!TextUtils.isEmpty(c.getString(6))) {
+                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
                     p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
                 }
                 if(!TextUtils.isEmpty(c.getString(8))) {
@@ -215,16 +217,18 @@ public class ProductDB {
                     " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                     " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                     " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                    " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' ORDER BY A.NOMBRE ASC", null);
+                    " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
+                    " OR A.NOMBRE LIKE '% "+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
+                    " ORDER BY A.NOMBRE ASC", null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))) {
+                if(!TextUtils.isEmpty(c.getString(5)) && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
-                if(!TextUtils.isEmpty(c.getString(6))) {
+                if(!TextUtils.isEmpty(c.getString(6)) && c.getString(6).length()>2) {
                     p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
                 }
                 if(!TextUtils.isEmpty(c.getString(8))) {
@@ -258,25 +262,64 @@ public class ProductDB {
         return products;
     }
 
+
+
     public ArrayList<Product> getLightProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
-        if(TextUtils.isEmpty(name) || name.length()<1){
+        if(TextUtils.isEmpty(name)){
             return products;
         }
+        name = name.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        boolean isNumeric = false;
+        // Regular expression in Java to check if String is number or not
+        Pattern pattern = Pattern.compile(".*[^0-9].*");
+        if(name.length()<8 && !pattern.matcher(name).matches()){
+            isNumeric = true;
+        }
+
+        if(!isNumeric && (TextUtils.isEmpty(name) || name.length()<2)){
+            return products;
+        }
+
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.NOMBRE, A.DESCRIPCION, A.CODVIEJO, S.NAME, S.DESCRIPTION " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                     " FROM ARTICULOS A " +
                     " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                    " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' ORDER BY A.NOMBRE ASC", null);
+                    (isNumeric ? " WHERE A.CODVIEJO LIKE '"+name+"%' "
+                            : " WHERE A.NOMBRE LIKE '"+name+"%' COLLATE NOCASE " +
+                                " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " ) +
+                    (isNumeric ? " ORDER BY A.CODVIEJO ASC LIMIT 15 "
+                            : " ORDER BY A.NOMBRE ASC"), null);
+            whileStatement:
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(2)+" (Cod: "+c.getString(4)+")");
-                p.setDescription(c.getString(3));
-                p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), c.getString(5), c.getString(6)));
+                if (!isNumeric) {
+                    for(String aux : c.getString(2).replaceAll("\\s+", " ").split(" ")){
+                        p.setName(p.getName()==null ? aux : p.getName() + " " +  aux);
+                        if(aux.contains(name)){
+                            break;
+                        }
+                    }
+                    if(p.getName()==null){
+                        p.setName(c.getString(2));
+                    }
+                } else {
+                    p.setName("Cod: "+c.getString(3)+" - " + c.getString(2));
+                }
+
+                p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), c.getString(4), c.getString(5)));
+                if(!isNumeric) {
+                    for(Product aux : products){
+                        if(aux.equals(p)){
+                            continue whileStatement;
+                        }
+                    }
+                }
                 products.add(p);
             }
         } catch (Exception e) {
@@ -300,7 +343,6 @@ public class ProductDB {
         return products;
     }
 
-
     public Product getProductById(int id){
         SQLiteDatabase db = null;
         Cursor c = null;
@@ -319,10 +361,10 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))) {
+                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
-                if(!TextUtils.isEmpty(c.getString(6))) {
+                if(!TextUtils.isEmpty(c.getString(6)) && c.getString(6).length()>2) {
                     p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
                 }
                 if(!TextUtils.isEmpty(c.getString(8))) {

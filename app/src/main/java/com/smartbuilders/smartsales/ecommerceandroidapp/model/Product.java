@@ -150,4 +150,13 @@ public class Product extends Model implements Parcelable {
     public void setAvailability(int availability) {
         this.availability = availability;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        try {
+            return ((Product) o).getName().equals(getName())
+                    && ((Product) o).getProductSubCategory().equals(getProductSubCategory());
+        } catch (Exception e) { }
+        return super.equals(o);
+    }
 }

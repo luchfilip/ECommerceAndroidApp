@@ -55,4 +55,12 @@ public class ProductSubCategory extends ProductCategory implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeInt(productCategoryId);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        try {
+            return ((ProductSubCategory) o).getId() == getId();
+        } catch (Exception e) { }
+        return super.equals(o);
+    }
 }

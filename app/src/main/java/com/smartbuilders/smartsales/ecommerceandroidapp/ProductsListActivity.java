@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -311,16 +310,6 @@ public class ProductsListActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_products_list, menu);
-        //try {
-        //    SearchManager searchManager =
-        //            (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        //    MenuItem searchItem = menu.findItem(R.id.search);
-        //    SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //    searchView.setSearchableInfo(
-        //            searchManager.getSearchableInfo(getComponentName()));
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -356,13 +345,8 @@ public class ProductsListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
-                //if(mUseGridView){
-                //    findViewById(R.id.gridview).setVisibility(View.GONE);
-                //}else{
-                    findViewById(R.id.product_list_result).setVisibility(View.GONE);
-                //}
+                findViewById(R.id.product_list_result).setVisibility(View.GONE);
                 findViewById(R.id.category_subcategory_results).setVisibility(View.GONE);
                 findViewById(R.id.filter_linear_layout).setVisibility(View.GONE);
                 return true;
@@ -371,30 +355,13 @@ public class ProductsListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
-                //if(mUseGridView){
-                //    findViewById(R.id.gridview).setVisibility(View.VISIBLE);
-                //}else{
-                    findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
-                //}
+                findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
                 findViewById(R.id.category_subcategory_results).setVisibility(View.VISIBLE);
                 findViewById(R.id.filter_linear_layout).setVisibility(View.VISIBLE);
                 return true;
             }
         });
-
-        // Get the search close button
-        //ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
-        //closeButton.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        // Some code here
-        //        EditText et = (EditText) findViewById(R.id.search_src_text);
-        //        Log.d(TAG, "closeButton.setOnClickListener - et.getText(): "+et.getText());
-        //    }
-        //});
-
         return true;
     }
 
