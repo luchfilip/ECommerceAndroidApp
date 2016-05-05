@@ -157,7 +157,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
                                         .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
                                         .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
-                                        .append("ORDER_LINES_NUMBER INTEGER DEFAULT NULL, ")
                                         .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
                                         .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
                                         .append("ISACTIVE CHAR(1) DEFAULT NULL, ")

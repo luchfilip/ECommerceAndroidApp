@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +23,7 @@ public class OrderLineDB {
 
     public static final String WISHLIST_DOCTYPE = "WL";
     public static final String SHOPPING_CART_DOCTYPE = "SC";
+    public static final String FINALIZED_ORDER_DOCTYPE = "FO";
 
     private Context context;
     private User user;
@@ -91,11 +94,19 @@ public class OrderLineDB {
     }
 
     public ArrayList<OrderLine> getShoppingCart(){
-        return getOrderLines(SHOPPING_CART_DOCTYPE);
+        return getOrderLines(SHOPPING_CART_DOCTYPE, null);
     }
 
     public ArrayList<OrderLine> getWishList(){
-        return getOrderLines(WISHLIST_DOCTYPE);
+        return getOrderLines(WISHLIST_DOCTYPE, null);
+    }
+
+    public ArrayList<OrderLine> getActiveFinalizedOrderLinesByOrderId(int orderId){
+        return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
+    }
+
+    private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
+        return getOrderLines(docType, orderId);
     }
 
     private String addOrderLine(Product product, int qtyRequested, String docType) {
@@ -108,7 +119,7 @@ public class OrderLineDB {
             cv.put("SALES_PRICE", "");
             cv.put("DOC_TYPE", docType);
             cv.put("ISACTIVE", "Y");
-            cv.put("APP_VERSION", "");
+            cv.put("APP_VERSION", Utils.getAppVersionName(context));
             cv.put("APP_USER_NAME", user.getUserName());
             db.insert("ECOMMERCE_ORDERLINE", null, cv);
         } catch (Exception e){
@@ -126,7 +137,7 @@ public class OrderLineDB {
         return null;
     }
 
-    private ArrayList<OrderLine> getOrderLines(String docType) {
+    private ArrayList<OrderLine> getOrderLines(String docType, Integer orderId) {
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         SQLiteDatabase db = null;
         Cursor c = null;
@@ -146,6 +157,7 @@ public class OrderLineDB {
                     " FROM ECOMMERCE_ORDERLINE " +
                     " WHERE ISACTIVE = 'Y' " +
                         " AND DOC_TYPE = '" + docType + "' " +
+                        (orderId!=null ? " AND ECOMMERCE_ORDER_ID = "+orderId : "") +
                     " ORDER BY CREATE_TIME DESC", null);
             while(c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
@@ -179,5 +191,107 @@ public class OrderLineDB {
             orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId()));
         }
         return orderLines;
+    }
+
+    public int getOrderLineNumbersByOrderId(int orderId){
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getReadableDatabase();
+            c = db.rawQuery("SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDER_ID=? AND ISACTIVE = ?",
+                    new String[]{String.valueOf(orderId), "Y"});
+            while(c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int getActiveShoppingCartLinesNumber(){
+        return getActiveOrderLinesNumber(SHOPPING_CART_DOCTYPE);
+    }
+
+    public int getActiveWishListLinesNumber(){
+        return getActiveOrderLinesNumber(WISHLIST_DOCTYPE);
+    }
+
+    private int getActiveOrderLinesNumber(String docType) {
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getReadableDatabase();
+            c = db.rawQuery("SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE=? AND ISACTIVE = ?",
+                    new String[]{docType, "Y"});
+            while(c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("ECOMMERCE_ORDER_ID", orderId);
+            cv.put("UPDATE_TIME", "datetime('now')");
+            cv.put("DOC_TYPE", FINALIZED_ORDER_DOCTYPE);
+            return db.update("ECOMMERCE_ORDERLINE", cv, "ISACTIVE = ? AND DOC_TYPE = ?",
+                    new String[]{"Y", SHOPPING_CART_DOCTYPE});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
     }
 }

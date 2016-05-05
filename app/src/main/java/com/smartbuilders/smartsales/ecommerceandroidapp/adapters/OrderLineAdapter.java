@@ -1,6 +1,8 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
 
     private ArrayList<OrderLine> mDataset;
     private Context mContext;
+    private User mCurrentUser;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -37,8 +44,9 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OrderLineAdapter(ArrayList<OrderLine> myDataset) {
+    public OrderLineAdapter(ArrayList<OrderLine> myDataset, User user) {
         mDataset = myDataset;
+        mCurrentUser = user;
     }
 
     // Create new views (invoked by the layout manager)
@@ -61,7 +69,26 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+        if(mDataset.get(position).getProduct().getImageFileName()!=null){
+            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            if(img!=null){
+                holder.productImage.setImageBitmap(img);
+            }else{
+                holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            }
+        }else{
+            holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+        }
+
+        holder.productImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
@@ -21,10 +23,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -108,10 +112,30 @@ public class ShoppingCartActivity extends AppCompatActivity
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(ShoppingCartActivity.this, CheckoutActivity.class);
-                            intent.putExtra(CheckoutActivity.KEY_CURRENT_USER, mCurrentUser);
-                            startActivity(intent);
-
+                            new AlertDialog.Builder(ShoppingCartActivity.this)
+                                    .setMessage(R.string.proceed_to_checkout_question)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            OrderDB orderDB = new OrderDB(ShoppingCartActivity.this, mCurrentUser);
+                                            String result = orderDB.createOrderFromShoppingcart();
+                                            if(result == null){
+                                                int orderId = orderDB.getLastFinalizedOrderId();
+                                                Intent intent = new Intent(ShoppingCartActivity.this, OrderDetailActivity.class);
+                                                intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                                                intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, orderId);
+                                                startActivity(intent);
+                                                finish();
+                                            }else{
+                                                new AlertDialog.Builder(ShoppingCartActivity.this)
+                                                        .setMessage(result)
+                                                        .setNeutralButton(android.R.string.ok, null)
+                                                        .show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .show();
                         }
                     });
         }

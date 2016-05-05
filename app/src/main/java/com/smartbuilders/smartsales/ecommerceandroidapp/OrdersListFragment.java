@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class OrdersListFragment extends Fragment {
 
     private ListView mListView;
     private OrdersListAdapter mOrdersListAdapter;
+    private User mCurrentUser;
 
     public interface Callback {
         public void onItemSelected(Order order);
@@ -33,36 +36,14 @@ public class OrdersListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_orders_list, container, false);
 
-        ArrayList<Order> orders = new ArrayList<Order>();
-        Order order = new Order();
-        order.setId(1);
-        orders.add(order);
+        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
+            if(getActivity().getIntent().getExtras().containsKey(OrdersListActivity.KEY_CURRENT_USER)){
+                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(OrdersListActivity.KEY_CURRENT_USER);
+            }
+        }
 
-        order = new Order();
-        order.setId(2);
-        orders.add(order);
-
-        order = new Order();
-        order.setId(3);
-        orders.add(order);
-
-        order = new Order();
-        order.setId(4);
-        orders.add(order);
-
-        order = new Order();
-        order.setId(5);
-        orders.add(order);
-
-        order = new Order();
-        order.setId(6);
-        orders.add(order);
-
-        order = new Order();
-        order.setId(7);
-        orders.add(order);
-
-        mOrdersListAdapter = new OrdersListAdapter(getActivity(), orders);
+        mOrdersListAdapter = new OrdersListAdapter(getActivity(),
+                (new OrderDB(getContext(), mCurrentUser)).getActiveOrders());
 
         mListView = (ListView) rootView.findViewById(R.id.orders_list);
         mListView.setAdapter(mOrdersListAdapter);
@@ -79,7 +60,6 @@ public class OrdersListFragment extends Fragment {
                 }
             }
         });
-
         return rootView;
     }
 }

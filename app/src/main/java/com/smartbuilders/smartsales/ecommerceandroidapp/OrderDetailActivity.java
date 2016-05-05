@@ -42,7 +42,7 @@ public class OrderDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
-        if( savedInstanceState != null ) {
+        if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
