@@ -32,7 +32,7 @@
     <string name="add_to_wishlist">Agregar a la lista de deseos</string>
     <string name="move_to_cart">Mover al Carrito</string>
     <string name="qty_ordered_label">Cant.:</string>
-    <string name="proceed_to_checkout">Proceder a Finalizar Pedido</string>
+    <string name="proceed_to_checkout">Finalizar Pedido</string>
     <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
     <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
     <string name="search_title">Buscar</string>
