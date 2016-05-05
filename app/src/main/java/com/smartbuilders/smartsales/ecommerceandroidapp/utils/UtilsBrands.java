@@ -288,7 +288,7 @@ public class UtilsBrands {
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1014167, 'ECO', 'ECO', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009854, 'EFC', 'VENEQUIRCA C.A.', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009472, 'ELE', 'GLOBAL DAMCA', 'Y')".replaceAll("\\s+", " ").trim());
-        insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009473, 'ELI', 'PRODUCTOS A ELIMINAR           PRODUCTOS A ELIMINAR', 'Y')".replaceAll("\\s+", " ").trim());
+//        insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009473, 'ELI', 'PRODUCTOS A ELIMINAR           PRODUCTOS A ELIMINAR', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009474, 'EMP', 'MALLAS MOSQUITERO PLASTICAS    MALLAS MOSQUITEROS', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1010006, 'EMS', 'TUBERIA EMT PREMIUN', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009475, 'EMT', 'TUBOS DE ELECTRICIDAD GALVANIZ', 'Y')".replaceAll("\\s+", " ").trim());
@@ -645,7 +645,7 @@ public class UtilsBrands {
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1010134, 'VY1', 'MANGUERAS VEYANCE G1', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1010072, 'V90', 'FLUXOMETROS SLOAN', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1010064, 'V91', 'VENCERAMICA ART SUELTOS', 'Y')".replaceAll("\\s+", " ").trim());
-        insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009914, 'V92', 'VENCERAMICA X ELIMINAR', 'Y')".replaceAll("\\s+", " ").trim());
+//        insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009914, 'V92', 'VENCERAMICA X ELIMINAR', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009913, 'V93', 'LLAVE ARRESTO + CANILLA', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009848, 'V94', 'VENCERAMICA SALAS BLANCAS OPP', 'Y')".replaceAll("\\s+", " ").trim());
         insert.add("insert into BRAND (BRAND_ID, NAME, DESCRIPTION, ISACTIVE) values (1009544, 'V95', 'VENCERAMICA (Griferias; Valvulas y Repuestos)', 'Y')".replaceAll("\\s+", " ").trim());

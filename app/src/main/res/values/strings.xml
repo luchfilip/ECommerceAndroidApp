@@ -114,4 +114,5 @@
     <string name="search_by">Buscar Por...</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
+    <string name="products_availables">Artículos disponibles: %1$s.</string>
 </resources>

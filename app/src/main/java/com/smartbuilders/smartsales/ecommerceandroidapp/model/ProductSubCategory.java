@@ -21,6 +21,7 @@ public class ProductSubCategory extends ProductCategory implements Parcelable {
     };
 
     private int productCategoryId;
+    private int productsActiveQty;
 
     public ProductSubCategory() {
     }
@@ -41,6 +42,16 @@ public class ProductSubCategory extends ProductCategory implements Parcelable {
     }
 
     @Override
+    public int getProductsActiveQty() {
+        return productsActiveQty;
+    }
+
+    @Override
+    public void setProductsActiveQty(int productsActiveQty) {
+        this.productsActiveQty = productsActiveQty;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -48,12 +59,14 @@ public class ProductSubCategory extends ProductCategory implements Parcelable {
     protected ProductSubCategory(Parcel in) {
         super(in);
         productCategoryId = in.readInt();
+        productsActiveQty = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(productCategoryId);
+        dest.writeInt(productsActiveQty);
     }
 
     @Override

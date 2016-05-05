@@ -62,6 +62,9 @@ public class SubCategoryAdapter  extends BaseAdapter {
             viewHolder.categoryImage.setVisibility(ImageView.GONE);
         }
 
+        viewHolder.productsActiveQty.setText(mContext.getString(R.string.products_availables,
+                String.valueOf(mDataset.get(position).getProductsActiveQty())));
+
         view.setTag(viewHolder);
         return view;
     }
@@ -74,11 +77,13 @@ public class SubCategoryAdapter  extends BaseAdapter {
         public TextView categoryName;
         public TextView categoryDescription;
         public ImageView categoryImage;
+        public TextView productsActiveQty;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name_textView);
             categoryDescription = (TextView) v.findViewById(R.id.category_description_textView);
             categoryImage = (ImageView) v.findViewById(R.id.category_imageView);
+            productsActiveQty = (TextView) v.findViewById(R.id.products_active_qty);
         }
     }
 }

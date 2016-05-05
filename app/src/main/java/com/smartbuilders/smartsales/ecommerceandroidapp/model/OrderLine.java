@@ -82,4 +82,14 @@ public class OrderLine extends Model implements Parcelable {
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        try{
+            return ((OrderLine) o).getId() == getId();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return super.equals(o);
+    }
 }

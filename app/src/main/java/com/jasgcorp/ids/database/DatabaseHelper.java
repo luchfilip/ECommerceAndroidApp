@@ -17,6 +17,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup8;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageProduct;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductAvailability;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 
@@ -26,7 +27,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 11;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -108,7 +109,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("CODVIEJO CHAR(7) DEFAULT NULL, ")
 											.append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
 											.append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
+											.append("LAST_RECEIVED_DATE DATETIME DEFAULT NULL, ")
 											.append("PRIMARY KEY (IDARTICULO))").toString();
+
+	public static final String CREATE_PRODUCT_AVAILABILITY =
+									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_AVAILABILITY ")
+											.append("(PRODUCT_ID INTEGER NOT NULL, ")
+											.append("AVAILABILITY INTEGER DEFAULT 0 NOT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
+											.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+											.append("PRIMARY KEY (PRODUCT_ID, ISACTIVE))").toString();
 
 	public static final String CREATE_BRAND =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS BRAND ")
@@ -337,6 +348,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
+			db.execSQL(CREATE_PRODUCT_AVAILABILITY);
+			for(String insert : (new UtilsProductAvailability()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -344,24 +363,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 //		Log.d(TAG, "onUpgrade(SQLiteDatabase arg0, int arg1, int arg2)");
         try{
-            db.execSQL("DROP TABLE ECOMMERCE_ORDER");
+            db.execSQL("DROP TABLE PRODUCT_AVAILABILITY");
         }catch(Exception e){
             e.printStackTrace();
         }
         try{
-            db.execSQL(CREATE_ECOMMERCE_ORDER);
+            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+		for(String insert : (new UtilsProductAvailability()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+        try{
+            db.execSQL("DROP TABLE BRAND");
         }catch(Exception e){
             e.printStackTrace();
         }
         try{
-            db.execSQL("DROP TABLE ECOMMERCE_ORDERLINE");
+            db.execSQL(CREATE_BRAND);
         }catch(Exception e){
             e.printStackTrace();
         }
-        try{
-            db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
-        }catch(Exception e){
-            e.printStackTrace();
+        for(String insert : (new UtilsBrands()).getInserts()){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
 	}
 

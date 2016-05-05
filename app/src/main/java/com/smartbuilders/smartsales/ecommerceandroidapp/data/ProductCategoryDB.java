@@ -31,13 +31,21 @@ public class ProductCategoryDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY " +
-                    " WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
+            c = db.rawQuery("SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
+                    " FROM CATEGORY C " +
+                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
+                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                    " WHERE C.ISACTIVE = 'Y' " +
+                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION " +
+                    " ORDER BY C.NAME ASC", null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
                 productCategory.setName(c.getString(1));
                 productCategory.setDescription(c.getString(2));
+                productCategory.setProductsActiveQty(c.getInt(3));
                 categories.add(productCategory);
             }
         } catch (Exception e) {

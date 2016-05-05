@@ -187,9 +187,17 @@ public class OrderLineDB {
             }
         }
         ProductDB productDB = new ProductDB(context, user);
+        ArrayList<OrderLine> orderLinesToDelete = new ArrayList<>();
         for(OrderLine orderLine : orderLines) {
             orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId()));
+            if(orderLine.getProduct()==null){
+                orderLinesToDelete.add(orderLine);
+            }
         }
+        if(!orderLinesToDelete.isEmpty()){
+            orderLines.removeAll(orderLinesToDelete);
+        }
+
         return orderLines;
     }
 

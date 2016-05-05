@@ -11,6 +11,7 @@ public class ProductBrand extends Model implements Parcelable {
     private String name;
     private String description;
     private int imageId;
+    private int productsActiveQty;
 
     public ProductBrand(){
 
@@ -27,6 +28,7 @@ public class ProductBrand extends Model implements Parcelable {
         name = in.readString();
         description = in.readString();
         imageId = in.readInt();
+        productsActiveQty = in.readInt();
     }
 
     public static final Creator<ProductBrand> CREATOR = new Creator<ProductBrand>() {
@@ -65,6 +67,14 @@ public class ProductBrand extends Model implements Parcelable {
         this.imageId = imageId;
     }
 
+    public int getProductsActiveQty() {
+        return productsActiveQty;
+    }
+
+    public void setProductsActiveQty(int productsActiveQty) {
+        this.productsActiveQty = productsActiveQty;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -76,5 +86,6 @@ public class ProductBrand extends Model implements Parcelable {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeInt(imageId);
+        dest.writeInt(productsActiveQty);
     }
 }

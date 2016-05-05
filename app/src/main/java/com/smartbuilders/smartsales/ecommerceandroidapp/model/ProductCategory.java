@@ -23,6 +23,7 @@ public class ProductCategory extends Model implements Parcelable {
     private int imageId;
     private String name;
     private String description;
+    private int productsActiveQty;
 
     public ProductCategory(int id, String name, String description){
         setId(id);
@@ -58,6 +59,14 @@ public class ProductCategory extends Model implements Parcelable {
         this.imageId = imageId;
     }
 
+    public int getProductsActiveQty() {
+        return productsActiveQty;
+    }
+
+    public void setProductsActiveQty(int productsActiveQty) {
+        this.productsActiveQty = productsActiveQty;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -68,6 +77,7 @@ public class ProductCategory extends Model implements Parcelable {
         imageId = in.readInt();
         name = in.readString();
         description = in.readString();
+        productsActiveQty = in.readInt();
     }
 
     @Override
@@ -76,6 +86,7 @@ public class ProductCategory extends Model implements Parcelable {
         dest.writeInt(imageId);
         dest.writeString(name);
         dest.writeString(description);
+        dest.writeInt(productsActiveQty);
     }
 
 }

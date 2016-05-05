@@ -31,13 +31,20 @@ public class ProductBrandDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT BRAND_ID, NAME, DESCRIPTION FROM BRAND " +
-                            " WHERE ISACTIVE = 'Y' ORDER BY NAME ASC", null);
+            c = db.rawQuery("SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(*) " +
+                        " FROM BRAND B " +
+                            " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = 'V' " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                            " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
+                        " WHERE B.ISACTIVE = 'Y' " +
+                        " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
+                        " ORDER BY B.NAME ASC ", null);
             while(c.moveToNext()){
                 ProductBrand productBrand = new ProductBrand();
                 productBrand.setId(c.getInt(0));
                 productBrand.setName(c.getString(1).toUpperCase());
                 productBrand.setDescription(c.getString(2).toUpperCase());
+                productBrand.setProductsActiveQty(c.getInt(3));
                 productBrands.add(productBrand);
             }
         } catch (Exception e) {

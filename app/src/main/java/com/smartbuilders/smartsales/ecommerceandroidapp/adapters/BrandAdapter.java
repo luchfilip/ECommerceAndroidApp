@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,6 +87,9 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder.brandImage.setVisibility(ImageView.GONE);
         }
 
+        viewHolder.productsActiveQty.setText(mContext.getString(R.string.products_availables,
+                String.valueOf(mDataset.get(position).getProductsActiveQty())));
+
         view.setTag(viewHolder);
         return view;
     }
@@ -139,11 +144,13 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
         public TextView brandName;
         public TextView brandDescription;
         public ImageView brandImage;
+        public TextView productsActiveQty;
 
         public ViewHolder(View v) {
             brandName = (TextView) v.findViewById(R.id.brand_name_tv);
             brandDescription = (TextView) v.findViewById(R.id.brand_description_tv);
             brandImage = (ImageView) v.findViewById(R.id.brand_imageView);
+            productsActiveQty = (TextView) v.findViewById(R.id.products_active_qty);
         }
     }
 }
