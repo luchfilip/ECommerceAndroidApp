@@ -8,14 +8,11 @@ import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by stein on 4/30/2016.
@@ -46,14 +43,42 @@ public class OrderLineDB {
         return addOrderLine(product, 0, WISHLIST_DOCTYPE);
     }
 
-    public String moveOrderLineToShoppingCart(OrderLine orderLine){
+    public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){
         SQLiteDatabase db = null;
         try {
             db = dbh.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put("DOC_TYPE", SHOPPING_CART_DOCTYPE);
+            cv.put("QTY_REQUESTED", qtyRequested);
+            cv.put("CREATE_TIME", "datetime('now')");
             if(db.update ("ECOMMERCE_ORDERLINE", cv, "ECOMMERCE_ORDERLINE_ID=? AND DOC_TYPE=?",
                     new String[]{ Integer.valueOf(orderLine.getId()).toString(), WISHLIST_DOCTYPE})<1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public String updateQtyRequested(OrderLine orderLine, int qtyRequested){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("QTY_REQUESTED", qtyRequested);
+            cv.put("UPDATE_TIME", "datetime('now')");
+            if(db.update ("ECOMMERCE_ORDERLINE", cv, "ECOMMERCE_ORDERLINE_ID=?",
+                    new String[]{ Integer.valueOf(orderLine.getId()).toString()})<1) {
                 return "No se actualizó el registro en la base de datos.";
             }
         } catch (Exception e){

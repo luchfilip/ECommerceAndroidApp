@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -88,8 +90,8 @@ public class ShoppingCartAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage("¿Está seguro que desea eliminar el producto " +
-                                mDataset.get(position).getProduct().getName() + " del carrito de compras?")
+                        .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
+                                mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = orderLineDB.deleteOrderLine(mDataset.get(position));
@@ -111,6 +113,53 @@ public class ShoppingCartAdapter extends BaseAdapter {
                 mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
 
         viewHolder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
+
+        viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(mContext);
+                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+
+                ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
+                        .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));
+
+                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    int qtyRequested = Integer
+                                            .valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString());
+                                    String result = orderLineDB.updateQtyRequested(mDataset.get(position), qtyRequested);
+                                    if(result == null){
+                                        mDataset.get(position).setQuantityOrdered(qtyRequested);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    }
+                                    dialog.dismiss();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                );
+                dialog.setTitle(mDataset.get(position).getProduct().getName());
+                dialog.show();
+            }
+        });
 
         view.setTag(viewHolder);
         return view;

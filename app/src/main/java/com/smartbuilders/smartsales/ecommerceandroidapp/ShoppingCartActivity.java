@@ -141,6 +141,8 @@ public class ShoppingCartActivity extends AppCompatActivity
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
 
+
+
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && findViewById(R.id.company_logo_name)!=null
                 && findViewById(R.id.shoppingCart_items_list)!=null
@@ -148,6 +150,9 @@ public class ShoppingCartActivity extends AppCompatActivity
             findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
             findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
             findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.total_lines))
+                    .setText(getString(R.string.order_lines_numer, String.valueOf(mOrderLines.size())));
         }
     }
 

@@ -120,4 +120,8 @@
     <string name="order_date">Fecha de creación: %1$s.</string>
     <string name="order_lines_numer">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
+    <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compras.</string>
+    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de deseos?</string>
+    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compras?</string>
+    <string name="accept">Aceptar</string>
 </resources>

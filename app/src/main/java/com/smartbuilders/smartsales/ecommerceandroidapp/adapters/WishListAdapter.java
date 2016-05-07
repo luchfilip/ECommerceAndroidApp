@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,8 +94,7 @@ public class WishListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage("¿Está seguro que desea eliminar el producto " +
-                                mDataset.get(position).getProduct().getName() + " de la lista de deseos?")
+                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question, mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = orderLineDB.deleteOrderLine(mDataset.get(position));
@@ -113,14 +114,46 @@ public class WishListAdapter extends BaseAdapter {
         viewHolder.moveToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String result = orderLineDB.moveOrderLineToShoppingCart(mDataset.get(position));
-                if(result == null){
-                    mDataset.remove(position);
-                    notifyDataSetChanged();
-                    Toast.makeText(mContext, "Producto movido al Carrito de compras exitosamente.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                }
+                // custom dialog
+                final Dialog dialog = new Dialog(mContext);
+                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+
+                ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
+                        .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));
+
+                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    }
+                );
+                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                int qtyRequested = Integer
+                                        .valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString());
+                                String result = orderLineDB.moveOrderLineToShoppingCart(mDataset.get(position), qtyRequested);
+                                if(result == null){
+                                    mDataset.remove(position);
+                                    notifyDataSetChanged();
+                                    Toast.makeText(mContext, R.string.product_moved_to_shopping_cart, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                }
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                );
+                dialog.setTitle(mDataset.get(position).getProduct().getName());
+                dialog.show();
             }
         });
 

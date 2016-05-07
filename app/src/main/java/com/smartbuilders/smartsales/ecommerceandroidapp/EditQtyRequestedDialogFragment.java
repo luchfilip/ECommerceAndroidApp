@@ -62,7 +62,7 @@ public class EditQtyRequestedDialogFragment extends DialogFragment {
                                     .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
                             String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
                             if(result == null){
-                                Toast.makeText(getContext(), "Producto agregado al Carrito de Compras",
+                                Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
                                         Toast.LENGTH_LONG).show();
                                 dismiss();
                             } else {
