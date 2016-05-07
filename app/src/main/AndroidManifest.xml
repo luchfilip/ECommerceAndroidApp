@@ -30,8 +30,8 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:supportsRtl="true"
+        android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
@@ -39,7 +39,6 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -64,7 +63,6 @@
         </activity>
         <activity
             android:name=".ProductsListActivity"
-            android:label="@string/app_name"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
@@ -90,7 +88,6 @@
         </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
 
             <meta-data
@@ -147,45 +144,33 @@
         <activity
             android:name=".CategoriesListActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".FilterOptionsActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".FilterOptionsActivity" />
         </activity>
         <activity
             android:name=".SubCategoriesListActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".CategoriesListActivity"
             android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CategoriesListActivity" />
         </activity>
         <activity
             android:name=".ShoppingCartActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/app_name" >
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
         </activity>
         <activity
             android:name=".CheckoutActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OrdersListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/app_name" >
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
         </activity>
         <activity
             android:name=".OrderDetailActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".OrdersListActivity" >
             <meta-data
@@ -205,8 +190,7 @@
         </activity>
         <activity
             android:name=".WishListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/app_name" >
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
@@ -227,16 +211,11 @@
 
         <activity
             android:name=".FilterOptionsActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".BrandsListActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".FilterOptionsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".FilterOptionsActivity" />
+            android:label="@string/app_name" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".BrandsListActivity" />

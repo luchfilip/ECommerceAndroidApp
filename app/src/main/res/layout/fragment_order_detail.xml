@@ -20,14 +20,18 @@
             android:text="Numero de Pedido"
             android:id="@+id/order_number_tv"
             android:textColor="@android:color/black"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Fecha de Creación:"
-            android:id="@+id/textView9"
-            android:padding="5dp" />
+            android:id="@+id/order_date_tv"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/order_lines"
@@ -39,10 +43,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Líneas totales:"
-            android:id="@+id/textView5"
+            android:id="@+id/order_lines_number_tv"
             android:layout_gravity="right"
             android:padding="5dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"

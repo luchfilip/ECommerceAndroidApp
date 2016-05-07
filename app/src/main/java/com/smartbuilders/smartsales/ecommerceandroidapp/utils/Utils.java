@@ -1,31 +1,30 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
-import android.view.Display;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -33,104 +32,6 @@ import java.util.Random;
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
-
-    public static ArrayList<Product> getGenericProductsList(int iterations){
-        ArrayList<Product> products = new ArrayList<>();
-        Product p;
-        ProductCategory productCategory = new ProductCategory();
-        productCategory.setName("Nombre del grupo");
-        ProductSubCategory productSubCategory = new ProductSubCategory();
-        productSubCategory.setName("Nombre de la partida");
-        for(int i = 0; i<iterations; i++) {
-            p = new Product();
-            p.setName("Bomba 1/2 hp periferica pedrollo");
-            p.setImageId(R.drawable.product1);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Capacitador con terminal p/bomba 1/2hp");
-            p.setImageId(R.drawable.product2);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Capacitor 25uf semilic");
-            p.setImageId(R.drawable.product3);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Cargador de aire 100gl tm");
-            p.setImageId(R.drawable.product4);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Manometro 0-90psi semilic");
-            p.setImageId(R.drawable.product5);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Mini presostato 20-40 semilic");
-            p.setImageId(R.drawable.product6);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Presostato 20-40 semilic");
-            p.setImageId(R.drawable.product7);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Rolinera para bomba 1/2hp");
-            p.setImageId(R.drawable.product8);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Aspersor pico blanco 3/16\" agroinplast");
-            p.setImageId(R.drawable.product9);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Aspersor oscilante bv");
-            p.setImageId(R.drawable.product10);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Aspersor plastic triple bv");
-            p.setImageId(R.drawable.product11);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-
-            p = new Product();
-            p.setName("Aspersor plastico triple chesterwood");
-            p.setImageId(R.drawable.product12);
-            p.setProductCategory(productCategory);
-            p.setProductSubCategory(productSubCategory);
-            products.add(p);
-        }
-        if(iterations==1){
-            Collections.shuffle(products, new Random(System.nanoTime()));
-        }
-        return products;
-    }
 
     /**
      *
@@ -319,6 +220,52 @@ public class Utils {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, final User user,
+                                             boolean goToHome){
+        for(int i = 0; i < toolbar.getChildCount(); i++){
+            View view = toolbar.getChildAt(i);
+            if(view instanceof TextView){
+                TextView tv = (TextView) view;
+                if(tv.getText().equals(toolbar.getTitle().toString())){
+                    if (goToHome) {
+                        tv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                context.startActivity(new Intent(context,
+                                        MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                            }
+                        });
+                    }
+                    tv.setTextSize(22);
+                    tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "MyriadPro-Bold.otf"));
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void setCustomActionbarTitle(final Activity activity, ActionBar actionBar,
+                                               final User user, boolean goToHome){
+        if(actionBar!=null){
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            View customView = activity.getLayoutInflater().inflate(R.layout.actionbar_title, null);
+            TextView customTitle = (TextView) customView.findViewById(R.id.actionbarTitle);
+            if(goToHome) {
+                customTitle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
+                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                    }
+                });
+            }
+            customTitle.setTextSize(22);
+            customTitle.setTypeface(Typeface.createFromAsset(activity.getAssets(), "MyriadPro-Bold.otf"));
+            actionBar.setCustomView(customView);
+        }
     }
 
 }

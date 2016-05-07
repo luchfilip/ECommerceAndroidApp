@@ -61,6 +61,8 @@ public class OrdersListActivity extends AppCompatActivity
         try {
             if(findViewById(R.id.toolbar) != null) {
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                toolbar.setTitle(R.string.app_name);
+                Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
                 setSupportActionBar(toolbar);
 
                 toolbar.setOnClickListener(new View.OnClickListener() {
@@ -106,27 +108,27 @@ public class OrdersListActivity extends AppCompatActivity
 
         productDB = new ProductDB(this, mCurrentUser);
 
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
 
-        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Product product = (Product) adapterView.getItemAtPosition(position);
-                if (product != null) {
-                    Intent intent = new Intent(OrdersListActivity.this, ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-                    startActivity(intent);
-                }
-            }
-        });
+//        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+//                // if it cannot seek to that position.
+//                Product product = (Product) adapterView.getItemAtPosition(position);
+//                if (product != null) {
+//                    Intent intent = new Intent(OrdersListActivity.this, ProductsListActivity.class);
+//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
+//                    startActivity(intent);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -223,7 +225,7 @@ public class OrdersListActivity extends AppCompatActivity
             public boolean onQueryTextChange(String s) {
                 // Some code here
                 //Log.d(TAG, "onQueryTextChange("+s+")");
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrdersListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -236,6 +238,8 @@ public class OrdersListActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.orders_list).setVisibility(View.GONE);
+                mSearchResultAdapter.setData(new ArrayList<Product>(), OrdersListActivity.this);
+                mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
 
@@ -245,8 +249,6 @@ public class OrdersListActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.orders_list).setVisibility(View.VISIBLE);
-                mSearchResultAdapter.setData(new ArrayList<Product>());
-                mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
         });

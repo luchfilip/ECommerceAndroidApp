@@ -8,20 +8,14 @@ import android.os.Parcelable;
  */
 public class Order extends Model implements Parcelable {
 
-    private String orderNumber;
     private int orderLineNumbers;
-
 
     public Order() {
 
     }
 
     public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
+        return String.valueOf(getId());
     }
 
     public int getOrderLineNumbers() {
@@ -34,14 +28,12 @@ public class Order extends Model implements Parcelable {
 
     protected Order(Parcel in) {
         super(in);
-        orderNumber = in.readString();
         orderLineNumbers = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(orderNumber);
         dest.writeInt(orderLineNumbers);
     }
 

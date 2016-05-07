@@ -9,6 +9,8 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by stein on 4/24/2016.
@@ -38,8 +40,7 @@ public class ProductCategoryDB {
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
                     " WHERE C.ISACTIVE = 'Y' " +
-                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION " +
-                    " ORDER BY C.NAME ASC", null);
+                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ", null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
@@ -48,6 +49,18 @@ public class ProductCategoryDB {
                 productCategory.setProductsActiveQty(c.getInt(3));
                 categories.add(productCategory);
             }
+            Collections.sort(categories, new Comparator<ProductCategory>() {
+                @Override
+                public int compare(ProductCategory lhs, ProductCategory rhs) {
+                    try{
+                        return Integer.valueOf(lhs.getName()).compareTo(Integer.valueOf(rhs.getName()));
+                    }catch(Exception e){}
+                    try{
+                        return lhs.getName().compareTo(rhs.getName());
+                    }catch(Exception e){}
+                    return 0;
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

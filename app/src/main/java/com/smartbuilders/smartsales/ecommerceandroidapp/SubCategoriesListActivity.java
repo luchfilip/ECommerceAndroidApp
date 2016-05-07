@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class SubCategoriesListActivity extends AppCompatActivity {
 
@@ -44,6 +45,7 @@ public class SubCategoriesListActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        Utils.setCustomActionbarTitle(this, getSupportActionBar(), mCurrentUser, true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

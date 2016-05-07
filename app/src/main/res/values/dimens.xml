@@ -41,4 +41,6 @@
 
     <dimen name="related_products_label_text_size">18sp</dimen>
 
+    <dimen name="appBarTitleSize">25sp</dimen>
+
 </resources>

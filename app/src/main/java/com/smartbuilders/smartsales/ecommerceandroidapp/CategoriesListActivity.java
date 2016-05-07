@@ -3,11 +3,10 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class CategoriesListActivity extends AppCompatActivity implements
         CategoriesListFragment.Callback {
@@ -54,12 +53,11 @@ public class CategoriesListActivity extends AppCompatActivity implements
             mTwoPane = false;
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Utils.setCustomActionbarTitle(this, getSupportActionBar(), mCurrentUser, true);
     }
 
     @Override
     public void onItemSelected(ProductCategory productCategory) {
-        Log.d(TAG, "mTwoPane: "+mTwoPane);
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putInt(SubCategoriesListFragment.KEY_CATEGORY_ID, productCategory.getId());
@@ -88,34 +86,9 @@ public class CategoriesListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                goBack();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        goBack();
-    }
-
-    private void goBack(){
-        Intent intent = new Intent(this, FilterOptionsActivity.class);
-        intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-        startActivity(intent);
-        finish();
     }
 
 }

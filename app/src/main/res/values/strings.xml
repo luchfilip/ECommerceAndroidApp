@@ -112,7 +112,12 @@
     <string name="commercial_package">Empaque comercial: %1$s.</string>
     <string name="availability">Disponibilidad: %1$s.</string>
     <string name="search_by">Buscar Por...</string>
+    <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
+    <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
+    <string name="order_number">Número de pedido: %1$s.</string>
+    <string name="order_date">Fecha de creación: %1$s.</string>
+    <string name="order_lines_numer">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
 </resources>

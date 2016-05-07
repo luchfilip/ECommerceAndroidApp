@@ -290,7 +290,7 @@ public class ProductDB {
             isNumeric = true;
         }
 
-        if(!isNumeric && (TextUtils.isEmpty(name) || name.length()<2)){
+        if(!isNumeric && (TextUtils.isEmpty(name) || name.length()<1)){
             return products;
         }
 
@@ -304,9 +304,9 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
                     (isNumeric ? " WHERE A.CODVIEJO LIKE '"+name+"%' "
                             : " WHERE A.NOMBRE LIKE '"+name+"%' COLLATE NOCASE " +
-                                " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " ) +
-                    (isNumeric ? " ORDER BY A.CODVIEJO ASC LIMIT 15 "
-                            : " ORDER BY A.NOMBRE ASC"), null);
+                            (name.length() > 1 ? " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " : "")) +
+                    (isNumeric ? " ORDER BY A.CODVIEJO ASC LIMIT 15"
+                            : (name.length()==1 ? " ORDER BY A.NOMBRE ASC LIMIT 50" : " ORDER BY A.NOMBRE ASC")), null);
             whileStatement:
             while(c.moveToNext()){
                 Product p = new Product();

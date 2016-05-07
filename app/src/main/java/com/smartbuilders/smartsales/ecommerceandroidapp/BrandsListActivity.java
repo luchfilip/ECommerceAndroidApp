@@ -1,11 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class BrandsListActivity extends AppCompatActivity {
 
@@ -30,32 +29,7 @@ public class BrandsListActivity extends AppCompatActivity {
             }
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                goBack();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        goBack();
-    }
-
-    private void goBack(){
-        Intent intent = new Intent(this, FilterOptionsActivity.class);
-        intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-        startActivity(intent);
-        finish();
+        Utils.setCustomActionbarTitle(this, getSupportActionBar(), mCurrentUser, true);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
  * Created by stein on 4/23/2016.
  */
 public class ProductBrandDB {
+
+    private static final String TAG = ProductDB.class.getSimpleName();
 
     private Context context;
     private User user;
@@ -31,15 +34,16 @@ public class ProductBrandDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(*) " +
+            c = db.rawQuery("SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                         " FROM BRAND B " +
                             " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = 'V' " +
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
-                            " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " WHERE B.ISACTIVE = 'Y' " +
                         " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
                         " ORDER BY B.NAME ASC ", null);
             while(c.moveToNext()){
+                //Log.d(TAG, "name: "+c.getString(1)+", description: "+c.getString(2));
                 ProductBrand productBrand = new ProductBrand();
                 productBrand.setId(c.getInt(0));
                 productBrand.setName(c.getString(1).toUpperCase());

@@ -12,8 +12,6 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * Created by Alberto on 26/3/2016.

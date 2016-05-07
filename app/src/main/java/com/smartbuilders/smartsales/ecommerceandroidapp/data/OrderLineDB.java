@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
@@ -20,6 +21,8 @@ import java.util.Date;
  * Created by stein on 4/30/2016.
  */
 public class OrderLineDB {
+
+    private static final String TAG = OrderLineDB.class.getSimpleName();
 
     public static final String WISHLIST_DOCTYPE = "WL";
     public static final String SHOPPING_CART_DOCTYPE = "SC";
@@ -143,22 +146,12 @@ public class OrderLineDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            //.append("(ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-            //        .append("ECOMMERCE_ORDER_ID DEFAULT NULL, ")
-            //        .append("PRODUCT_ID INTEGER NOT NULL, ")
-            //        .append("QTY_REQUESTED INTEGER NOT NULL, ")
-            //        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
-            //        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-            //        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-            //        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-            //        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-            //        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+
             c = db.rawQuery("SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED " +
                     " FROM ECOMMERCE_ORDERLINE " +
-                    " WHERE ISACTIVE = 'Y' " +
-                        " AND DOC_TYPE = '" + docType + "' " +
+                    " WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
                         (orderId!=null ? " AND ECOMMERCE_ORDER_ID = "+orderId : "") +
-                    " ORDER BY CREATE_TIME DESC", null);
+                    " ORDER BY CREATE_TIME DESC", new String[]{"Y", docType});
             while(c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
                 orderLine.setId(c.getInt(0));
@@ -202,12 +195,13 @@ public class OrderLineDB {
     }
 
     public int getOrderLineNumbersByOrderId(int orderId){
+        Log.d(TAG, "getOrderLineNumbersByOrderId("+orderId+")");
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDER_ID=? AND ISACTIVE = ?",
-                    new String[]{String.valueOf(orderId), "Y"});
+            c = db.rawQuery("SELECT COUNT(ECOMMERCE_ORDERLINE_ID) FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDER_ID="+orderId+" AND ISACTIVE = ?",
+                    new String[]{"Y"});
             while(c.moveToNext()){
                 return c.getInt(0);
             }

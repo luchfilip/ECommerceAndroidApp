@@ -13,8 +13,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrdersListAdapt
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 
-import java.util.ArrayList;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -43,7 +41,7 @@ public class OrdersListFragment extends Fragment {
         }
 
         mOrdersListAdapter = new OrdersListAdapter(getActivity(),
-                (new OrderDB(getContext(), mCurrentUser)).getActiveOrders());
+                (new OrderDB(getContext(), mCurrentUser)).getActiveOrders(), mCurrentUser);
 
         mListView = (ListView) rootView.findViewById(R.id.orders_list);
         mListView.setAdapter(mOrdersListAdapter);

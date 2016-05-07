@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -91,6 +90,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
         setSupportActionBar(toolbar);
 
         mAccountManager = AccountManager.get(this);
@@ -108,27 +109,7 @@ public class MainActivity extends AppCompatActivity
             mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
         }
 
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
-
         mListView = (ListView) findViewById(R.id.search_result_list);
-        mListView.setAdapter(mSearchResultAdapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Product product = (Product) adapterView.getItemAtPosition(position);
-                if (product != null) {
-                    Intent intent = new Intent(MainActivity.this, ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                    startActivity(intent);
-                }
-            }
-        });
     }
 
     @Override
@@ -174,7 +155,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextChange(String s) {
                 // Some code here
                 //Log.d(TAG, "onQueryTextChange("+s+")");
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), MainActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -196,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
                 findViewById(R.id.main_categories_list).setVisibility(View.VISIBLE);
-                mSearchResultAdapter.setData(new ArrayList<Product>());
+                mSearchResultAdapter.setData(new ArrayList<Product>(), MainActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -365,6 +346,10 @@ public class MainActivity extends AppCompatActivity
             loadMainPage(mainPageSectionDB.getActiveMainPageSections());
 
             productDB = new ProductDB(this, mCurrentUser);
+
+            mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+            mListView.setAdapter(mSearchResultAdapter);
+
             File folder = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/");//-->Android/data/package.name/files/...
             // if the directory does not exist, create it
             if (!folder.exists()) {

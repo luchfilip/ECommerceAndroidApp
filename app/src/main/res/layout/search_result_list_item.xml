@@ -17,13 +17,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/product_name_textView"
+            android:id="@+id/title_textView"
             android:textColor="@color/label_color" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/product_group_textView"
+            android:id="@+id/subTitle_textView"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="right"
             android:textColor="@color/colorPrimary"

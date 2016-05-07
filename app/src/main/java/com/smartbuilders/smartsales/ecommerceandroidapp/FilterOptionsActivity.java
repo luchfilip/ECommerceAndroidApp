@@ -35,6 +35,8 @@ public class FilterOptionsActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +62,7 @@ public class FilterOptionsActivity extends AppCompatActivity
             }
         }
 
-        ((Button) findViewById(R.id.search_by_category_button))
+        findViewById(R.id.search_by_category_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -70,7 +72,7 @@ public class FilterOptionsActivity extends AppCompatActivity
                     }
                 });
 
-        ((Button) findViewById(R.id.search_by_brand_button))
+        findViewById(R.id.search_by_brand_button)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -8,28 +8,30 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Número de pedido:"
         android:id="@+id/order_number_tv"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fecha de Creación:"
-        android:id="@+id/date_ordered_tv" />
+        android:id="@+id/order_date_tv"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cantidad de lineas:"
-        android:id="@+id/orderLinesNumber_tv"
+        android:id="@+id/order_lines_number_tv"
         android:layout_gravity="right"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sub Total:"
         android:id="@+id/total_lines_tv"
         android:layout_gravity="right"
         android:textColor="@android:color/black"
@@ -39,7 +41,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Impuestos:"
         android:id="@+id/total_tax_lines"
         android:layout_gravity="right"
         android:textColor="@android:color/black"
@@ -49,7 +50,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total:"
         android:id="@+id/grand_total"
         android:layout_gravity="right"
         android:textColor="@android:color/black"

@@ -62,6 +62,8 @@ public class ProductDetailActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -83,29 +85,28 @@ public class ProductDetailActivity extends AppCompatActivity
 
         productDB = new ProductDB(this, mCurrentUser);
 
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>());
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.search_result_list);
         mListView.setAdapter(mSearchResultAdapter);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Product product = (Product) adapterView.getItemAtPosition(position);
-                if (product != null) {
-                    Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
-
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+//                // if it cannot seek to that position.
+//                Product product = (Product) adapterView.getItemAtPosition(position);
+//                if (product != null) {
+//                    Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
+//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            }
+//        });
 
     }
 
@@ -137,7 +138,7 @@ public class ProductDetailActivity extends AppCompatActivity
             public boolean onQueryTextChange(String s) {
                 // Some code here
                 //Log.d(TAG, "onQueryTextChange("+s+")");
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s));
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ProductDetailActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -150,6 +151,8 @@ public class ProductDetailActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
                 findViewById(R.id.product_detail_main_view).setVisibility(View.GONE);
+                mSearchResultAdapter.setData(new ArrayList<Product>(), ProductDetailActivity.this);
+                mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
 
