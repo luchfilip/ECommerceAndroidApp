@@ -17,7 +17,10 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 
@@ -265,6 +268,55 @@ public class Utils {
             customTitle.setTextSize(22);
             customTitle.setTypeface(Typeface.createFromAsset(activity.getAssets(), "MyriadPro-Bold.otf"));
             actionBar.setCustomView(customView);
+        }
+    }
+
+    /**
+     *
+     * @param itemId
+     * @param context
+     * @param user
+     */
+    public static void navigationItemSelectedBehave(int itemId, Context context, User user) {
+        switch (itemId){
+            case R.id.nav_shopping_cart:
+                context.startActivity(new Intent(context, ShoppingCartActivity.class)
+                        .putExtra(ShoppingCartActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+            break;
+            case R.id.nav_whish_list:
+                context.startActivity(new Intent(context, WishListActivity.class)
+                        .putExtra(WishListActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+            break;
+            case R.id.nav_orders:
+                context.startActivity(new Intent(context, OrdersListActivity.class)
+                        .putExtra(OrdersListActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+            break;
+            //case R.id.nav_invoices_list:
+            //    Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
+            //    intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);
+            //    startActivity(intent);
+            //break;
+            //case R.id.nav_statement_of_account:
+            //    Intent intent = new Intent(MainActivity.this, StatementOfAccountActivity.class);
+            //    intent.putExtra(StatementOfAccountActivity.KEY_CURRENT_USER, mCurrentUser);
+            //    startActivity(intent);
+            //break;
+            case R.id.nav_share:
+                try{
+                    showPromptShareApp(context);
+                }catch(Throwable e){
+                    e.printStackTrace();
+                }
+            break;
+            case R.id.nav_send:
+            break;
+            case R.id.nav_manage:
+            break;
+            case R.id.nav_report_error:
+            break;
         }
     }
 

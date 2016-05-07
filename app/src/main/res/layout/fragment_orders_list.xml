@@ -5,10 +5,26 @@
     android:orientation="vertical"
     tools:context=".OrdersListActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_grey"
+        android:id="@+id/company_logo_name"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/company_logo_name"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/orders_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         style="@style/orders_list_style"
         android:background="@android:color/white" />
 

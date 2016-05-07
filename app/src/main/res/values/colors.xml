@@ -15,4 +15,5 @@
     <color name="label_color">#333333</color>
     <color name="febeca_light_blue">#64c2f4</color>
     <color name="grey">#CCCCCC</color>
+    <color name="light_grey">#eeeeee</color>
 </resources>
