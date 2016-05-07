@@ -203,12 +203,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.search_by) {
+        /*if (id == R.id.search_by) {
             Intent intent = new Intent(MainActivity.this, FilterOptionsActivity.class);
             intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

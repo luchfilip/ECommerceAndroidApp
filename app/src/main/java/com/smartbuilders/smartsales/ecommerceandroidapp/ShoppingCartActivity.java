@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,12 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -40,16 +40,12 @@ import java.util.ArrayList;
 public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static String TAG = ShoppingCartActivity.class.getSimpleName();
-
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
 
-    private ArrayList<OrderLine> orderLines;
-    private ListView mListView;
-    private ShoppingCartAdapter mShoppingCartAdapter;
+    private ArrayList<OrderLine> mOrderLines;
     private ProductDB productDB;
     private ListView mListViewSearchResults;
     private SearchResultAdapter mSearchResultAdapter;
@@ -69,6 +65,11 @@ public class ShoppingCartActivity extends AppCompatActivity
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
+        }
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,19 +94,12 @@ public class ShoppingCartActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        OrderLineDB orderLineDB = new OrderLineDB(this, mCurrentUser);
-        orderLines = orderLineDB.getShoppingCart();
+        mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingCart();
 
-        mShoppingCartAdapter = new ShoppingCartAdapter(this, orderLines, mCurrentUser);
-
-        mListView = (ListView) findViewById(R.id.shoppingCart_items_list);
-        mListView.setAdapter(mShoppingCartAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
+        if(findViewById(R.id.shoppingCart_items_list) != null) {
+            ((ListView) findViewById(R.id.shoppingCart_items_list))
+                    .setAdapter(new ShoppingCartAdapter(this, mOrderLines, mCurrentUser));
+        }
 
         if(findViewById(R.id.proceed_to_checkout_button) != null) {
             findViewById(R.id.proceed_to_checkout_button)
@@ -173,8 +167,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ShoppingCartActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -184,11 +176,12 @@ public class ShoppingCartActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
                 findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.GONE);
+                }
                 mSearchResultAdapter.setData(new ArrayList<Product>(), ShoppingCartActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
@@ -196,29 +189,24 @@ public class ShoppingCartActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.shoppingCart_items_list).setVisibility(View.VISIBLE);
                 findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
+                }
                 return true;
             }
         });
 
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.action_share);
-
         // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        mShareActionProvider =  (ShareActionProvider) MenuItemCompat
+                .getActionProvider(menu.findItem(R.id.action_share));
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        if (orderLines != null) {
+        if (mOrderLines != null && mOrderLines.size() > 0) {
             new CreateShareIntentThread().start();
-            //mShareActionProvider.setShareIntent(createShareProductIntent());
-        } else {
-            Log.d(TAG, "Share Action Provider is null?");
         }
         return true;
     }
@@ -232,16 +220,10 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            if (orderLines != null) {
+            if (mOrderLines != null && mOrderLines.size() > 0) {
+                mShareActionProvider.setShareHistoryFileName(null);
                 mShareActionProvider.setShareIntent(createShareProductIntent());
-            } else {
-                Log.d(TAG, "Share Action Provider is null?");
             }
-            return true;
-        } else if (id == R.id.search_by) {
-            Intent intent = new Intent(ShoppingCartActivity.this, FilterOptionsActivity.class);
-            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-            startActivity(intent);
             return true;
         }
 
@@ -261,7 +243,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new ShoppingCartPDFCreator().generatePDF(orderLines, fileName+".pdf", this, mCurrentUser);
+            new ShoppingCartPDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }

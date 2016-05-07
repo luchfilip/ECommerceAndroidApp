@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -53,6 +55,11 @@ public class OrdersListActivity extends AppCompatActivity
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
+        }
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
         }
 
         try {
@@ -218,6 +225,9 @@ public class OrdersListActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.orders_list).setVisibility(View.GONE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.GONE);
+                }
                 mSearchResultAdapter.setData(new ArrayList<Product>(), OrdersListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
@@ -229,28 +239,14 @@ public class OrdersListActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.orders_list).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
+                }
                 return true;
             }
         });
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.search_by) {
-            Intent intent = new Intent(OrdersListActivity.this, FilterOptionsActivity.class);
-            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

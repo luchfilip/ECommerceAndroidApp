@@ -212,6 +212,7 @@ public class ProductDetailFragment extends Fragment {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (mProduct != null) {
+            mShareActionProvider.setShareHistoryFileName(null);
             mShareActionProvider.setShareIntent(createShareIntent());
         } else {
             Log.d(TAG, "Share Action Provider is null?");

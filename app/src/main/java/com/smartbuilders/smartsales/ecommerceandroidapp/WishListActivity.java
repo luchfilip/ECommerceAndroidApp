@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -65,6 +67,11 @@ public class WishListActivity extends AppCompatActivity
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
+        }
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -157,6 +164,9 @@ public class WishListActivity extends AppCompatActivity
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.wish_list).setVisibility(View.GONE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.GONE);
+                }
                 mSearchResultAdapter.setData(new ArrayList<Product>(), WishListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
@@ -166,12 +176,15 @@ public class WishListActivity extends AppCompatActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.wish_list).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
+                }
                 return true;
             }
         });
 
         // Retrieve the share menu item
-        MenuItem item =(MenuItem) menu.findItem(R.id.action_share);
+        MenuItem item = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider =
@@ -181,16 +194,12 @@ public class WishListActivity extends AppCompatActivity
         // like when the user selects a new piece of data they might like to share.
         if (wishListLines != null) {
             new CreateShareIntentThread().start();
-            //mShareActionProvider.setShareIntent(createShareProductIntent());
-        } else {
-            Log.d(TAG, "Share Action Provider is null?");
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected(...)");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -200,14 +209,7 @@ public class WishListActivity extends AppCompatActivity
         if (id == R.id.action_share) {
             if (wishListLines != null) {
                 mShareActionProvider.setShareIntent(createShareProductIntent());
-            } else {
-                Log.d(TAG, "Share Action Provider is null?");
             }
-            return true;
-        } else if (id == R.id.search_by) {
-            Intent intent = new Intent(WishListActivity.this, FilterOptionsActivity.class);
-            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -51,6 +53,11 @@ public class OrderDetailActivity extends AppCompatActivity
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
+        }
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -90,11 +97,11 @@ public class OrderDetailActivity extends AppCompatActivity
                 // app icon in action bar clicked; go home
                 goBack();
                 return true;
-            case R.id.search_by:
+            /*case R.id.search_by:
                 Intent intent = new Intent(OrderDetailActivity.this, FilterOptionsActivity.class);
                 intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
                 startActivity(intent);
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -198,6 +205,9 @@ public class OrderDetailActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.GONE);
+                }
                 mSearchResultAdapter.setData(new ArrayList<Product>(), OrderDetailActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
@@ -209,6 +219,9 @@ public class OrderDetailActivity extends AppCompatActivity
                 //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
+                }
                 return true;
             }
         });

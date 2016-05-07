@@ -142,12 +142,12 @@ public class ProductDetailActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.search_by) {
+        /*if (id == R.id.search_by) {
             Intent intent = new Intent(this, FilterOptionsActivity.class);
             intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
