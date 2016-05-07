@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/touch_selector"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/product_image"
+        android:layout_gravity="center|top"
+        android:layout_margin="4dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_name"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_vertical" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_item_button_img"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_highlight_off_black"
+                android:layout_marginLeft="4dp"
+                android:layout_marginBottom="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_commercial_package"
+            android:textAppearance="@android:style/TextAppearance.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_price"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/discount"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/total_line"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:visibility="gone" />
+
+        <View style="@style/Divider"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qty_ordered_label"
+                android:id="@+id/textView"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/qty_ordered"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+
+        </LinearLayout>-->
+
+    </LinearLayout>
+</LinearLayout>

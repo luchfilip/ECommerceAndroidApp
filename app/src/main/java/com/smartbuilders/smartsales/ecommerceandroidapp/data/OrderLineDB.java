@@ -23,7 +23,9 @@ public class OrderLineDB {
 
     public static final String WISHLIST_DOCTYPE = "WL";
     public static final String SHOPPING_CART_DOCTYPE = "SC";
+    public static final String SHOPPING_SALE_DOCTYPE = "SS";
     public static final String FINALIZED_ORDER_DOCTYPE = "FO";
+    public static final String FINALIZED_SALES_ORDER_DOCTYPE = "FSO";
 
     private Context context;
     private User user;
@@ -123,6 +125,10 @@ public class OrderLineDB {
 
     public ArrayList<OrderLine> getShoppingCart(){
         return getOrderLines(SHOPPING_CART_DOCTYPE, null);
+    }
+
+    public ArrayList<OrderLine> getShoppingSale(){
+        return getOrderLines(SHOPPING_SALE_DOCTYPE, null);
     }
 
     public ArrayList<OrderLine> getWishList(){
@@ -290,7 +296,15 @@ public class OrderLineDB {
         return 0;
     }
 
+    public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int orderId) {
+        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_SALES_ORDER_DOCTYPE, SHOPPING_SALE_DOCTYPE);
+    }
+
     public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
+        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOCTYPE, SHOPPING_CART_DOCTYPE);
+    }
+
+    private int moveOrderLinesToOrderByOrderId(int orderId, String newDocType, String currentDocType) {
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
@@ -298,9 +312,9 @@ public class OrderLineDB {
             ContentValues cv = new ContentValues();
             cv.put("ECOMMERCE_ORDER_ID", orderId);
             cv.put("UPDATE_TIME", "datetime('now')");
-            cv.put("DOC_TYPE", FINALIZED_ORDER_DOCTYPE);
+            cv.put("DOC_TYPE", newDocType);
             return db.update("ECOMMERCE_ORDERLINE", cv, "ISACTIVE = ? AND DOC_TYPE = ?",
-                    new String[]{"Y", SHOPPING_CART_DOCTYPE});
+                    new String[]{"Y", currentDocType});
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

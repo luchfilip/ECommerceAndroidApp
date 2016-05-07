@@ -26,18 +26,19 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingCartPDFCreator;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingSalePDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
-public class ShoppingCartActivity extends AppCompatActivity
+public class ShoppingSaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
@@ -53,7 +54,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shoping_cart);
+        setContentView(R.layout.activity_shopping_sale);
 
         if( savedInstanceState != null ) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
@@ -80,7 +81,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ShoppingCartActivity.this,
+                startActivity(new Intent(ShoppingSaleActivity.this,
                         MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, mCurrentUser));
             }
         });
@@ -94,11 +95,11 @@ public class ShoppingCartActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingCart();
+        mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingSale();
 
-        if(findViewById(R.id.shoppingCart_items_list) != null) {
-            ((ListView) findViewById(R.id.shoppingCart_items_list))
-                    .setAdapter(new ShoppingCartAdapter(this, mOrderLines, mCurrentUser));
+        if(findViewById(R.id.shoppingSale_items_list) != null) {
+            ((ListView) findViewById(R.id.shoppingSale_items_list))
+                    .setAdapter(new ShoppingSaleAdapter(this, mOrderLines, mCurrentUser));
         }
 
         if(findViewById(R.id.proceed_to_checkout_button) != null) {
@@ -106,22 +107,22 @@ public class ShoppingCartActivity extends AppCompatActivity
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new AlertDialog.Builder(ShoppingCartActivity.this)
+                            new AlertDialog.Builder(ShoppingSaleActivity.this)
                                     .setMessage(R.string.proceed_to_checkout_question)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            OrderDB orderDB = new OrderDB(ShoppingCartActivity.this, mCurrentUser);
-                                            String result = orderDB.createOrderFromShoppingCart();
+                                            OrderDB orderDB = new OrderDB(ShoppingSaleActivity.this, mCurrentUser);
+                                            String result = orderDB.createOrderFromShoppingSale();
                                             if(result == null){
-                                                int orderId = orderDB.getLastFinalizedOrderId();
-                                                Intent intent = new Intent(ShoppingCartActivity.this, OrderDetailActivity.class);
-                                                intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                                intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, orderId);
+                                                int salesOrderId = orderDB.getLastFinalizedSalesOrderId();
+                                                Intent intent = new Intent(ShoppingSaleActivity.this, SalesOrderDetailActivity.class);
+                                                intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                                                intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, salesOrderId);
                                                 startActivity(intent);
                                                 finish();
                                             }else{
-                                                new AlertDialog.Builder(ShoppingCartActivity.this)
+                                                new AlertDialog.Builder(ShoppingSaleActivity.this)
                                                         .setMessage(result)
                                                         .setNeutralButton(android.R.string.ok, null)
                                                         .show();
@@ -145,21 +146,22 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && findViewById(R.id.company_logo_name)!=null
-                && findViewById(R.id.shoppingCart_items_list)!=null
-                && findViewById(R.id.shoppingCart_data_linearLayout)!=null) {
+                && findViewById(R.id.shoppingSale_items_list)!=null
+                && findViewById(R.id.shoppingSale_data_linearLayout)!=null) {
             findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
-            findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+            findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
+            findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
         } else {
             ((TextView) findViewById(R.id.total_lines))
                     .setText(getString(R.string.order_lines_numer, String.valueOf(mOrderLines.size())));
         }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_shopping_cart, menu);
+        getMenuInflater().inflate(R.menu.menu_shopping_sale, menu);
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -172,7 +174,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(ShoppingCartActivity.this, ProductsListActivity.class);
+                Intent intent = new Intent(ShoppingSaleActivity.this, ProductsListActivity.class);
                 intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
                 startActivity(intent);
@@ -181,7 +183,7 @@ public class ShoppingCartActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ShoppingCartActivity.this);
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ShoppingSaleActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -191,8 +193,8 @@ public class ShoppingCartActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.VISIBLE);
-                findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
-                findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+                findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
+                findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
                 if(findViewById(R.id.title_textView) != null) {
                     findViewById(R.id.title_textView).setVisibility(View.GONE);
                 }
@@ -200,7 +202,7 @@ public class ShoppingCartActivity extends AppCompatActivity
                         && findViewById(R.id.company_logo_name)!=null) {
                     findViewById(R.id.company_logo_name).setVisibility(View.GONE);
                 }
-                mSearchResultAdapter.setData(new ArrayList<Product>(), ShoppingCartActivity.this);
+                mSearchResultAdapter.setData(new ArrayList<Product>(), ShoppingSaleActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -208,8 +210,8 @@ public class ShoppingCartActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.GONE);
-                findViewById(R.id.shoppingCart_items_list).setVisibility(View.VISIBLE);
-                findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.VISIBLE);
+                findViewById(R.id.shoppingSale_items_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.VISIBLE);
                 if(findViewById(R.id.title_textView) != null) {
                     findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
                 }
@@ -253,7 +255,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     private Intent createShareProductIntent(){
-        String fileName = "OrdenDePedido";
+        String fileName = "Cotizacion";
         String subject = "";
         String message = "";
 
@@ -265,7 +267,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new ShoppingCartPDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
+            new ShoppingSalePDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -280,7 +282,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     class CreateShareIntentThread extends Thread {
         public void run() {
             final Intent shareIntent = createShareProductIntent();
-            ShoppingCartActivity.this.runOnUiThread(new Runnable() {
+            ShoppingSaleActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mShareActionProvider.setShareIntent(shareIntent);

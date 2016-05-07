@@ -18,12 +18,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <TextView
-            android:text="@string/title_activity_shopping_cart"
+            android:text="@string/title_activity_shopping_sale"
             android:id="@+id/title_textView"
             style="@style/title_style" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_shopping_cart" />
+    <include layout="@layout/content_shopping_sale" />
 
 </android.support.design.widget.CoordinatorLayout>

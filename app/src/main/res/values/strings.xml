@@ -16,6 +16,7 @@
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Carrito de Compra</string>
+    <string name="shopping_sale">Carrito de Venta</string>
     <string name="whish_list">Lista de deseos</string>
     <string name="orders_list">Pedidos</string>
     <string name="invoces_list">Facturas</string>
@@ -33,6 +34,7 @@
     <string name="move_to_cart">Mover al Carrito</string>
     <string name="qty_ordered_label">Cant.:</string>
     <string name="proceed_to_checkout">Finalizar Pedido</string>
+    <string name="proceed_to_checkout_shopping_sale">Finalizar Cotización</string>
     <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
     <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
     <string name="search_title">Buscar</string>
@@ -97,7 +99,7 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="title_activity_product_list">Productos</string>
-    <string name="title_activity_shoping_cart">Carrito de Compra</string>
+    <string name="title_activity_shopping_cart">Carrito de Compra</string>
     <string name="title_activity_categories">Busqueda Por Categoría</string>
     <string name="title_activity_sub_categories">Busqueda Por SubCategoría</string>
     <string name="title_activity_checkout">Finalizar Pedido</string>
@@ -122,6 +124,9 @@
     <string name="products_availables">Artículos disponibles: %1$s.</string>
     <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compras.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de deseos?</string>
-    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compras?</string>
+    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compra?</string>
+    <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s del carrito de venta?</string>
     <string name="accept">Aceptar</string>
+    <string name="title_activity_shopping_sale">Carrito de Venta</string>
+    <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
 </resources>

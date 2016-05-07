@@ -20,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -284,6 +285,11 @@ public class Utils {
                         .putExtra(ShoppingCartActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
             break;
+            case R.id.nav_shopping_sale:
+                context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                        .putExtra(ShoppingSaleActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                break;
             case R.id.nav_whish_list:
                 context.startActivity(new Intent(context, WishListActivity.class)
                         .putExtra(WishListActivity.KEY_CURRENT_USER, user)

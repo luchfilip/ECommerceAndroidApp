@@ -28,7 +28,15 @@ public class OrderDB {
         this.dbh = new DatabaseHelper(context, user);
     }
 
-    public String createOrderFromShoppingcart(){
+    public String createOrderFromShoppingCart(){
+        return createOrder(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+    }
+
+    public String createOrderFromShoppingSale(){
+        return createOrder(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+    }
+
+    public String createOrder(String docType){
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         if(orderLineDB.getActiveShoppingCartLinesNumber()>0){
             SQLiteDatabase db = null;
@@ -48,15 +56,15 @@ public class OrderDB {
                 //        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
                 ContentValues cv = new ContentValues();
                 cv.put("DOC_STATUS", "CO");
-                cv.put("DOC_TYPE", OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+                cv.put("DOC_TYPE", docType);
                 cv.put("APP_VERSION", Utils.getAppVersionName(context));
                 cv.put("APP_USER_NAME", user.getUserName());
                 cv.put("ISACTIVE", "Y");
                 if(db.insert("ECOMMERCE_ORDER", null, cv) <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }
-                c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ?",
-                        new String[]{"Y"});
+                c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                        new String[]{"Y", docType});
                 if(c.moveToNext()){
                     orderId = c.getInt(0);
                 }
@@ -79,25 +87,48 @@ public class OrderDB {
                     }
                 }
             }
-            if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
-                try {
-                    db = dbh.getWritableDatabase();
-                    if(db.delete("ECOMMERCE_ORDER", "ECOMMERCE_ORDER_ID = ?", new String[]{String.valueOf(orderId)}) <= 0){
-                        return "Error 003 - No se insertó el pedido en la base de datos.";
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                    return e.getMessage();
-                } finally {
-                    if(db != null) {
-                        try {
-                            db.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            if(docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE)){
+                if(orderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(orderId)<=0){
+                    try {
+                        db = dbh.getWritableDatabase();
+                        if(db.delete("ECOMMERCE_ORDER", "ECOMMERCE_ORDER_ID = ?", new String[]{String.valueOf(orderId)}) <= 0){
+                            return "Error 003 - No se insertó la cotizacion en la base de datos.";
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        return e.getMessage();
+                    } finally {
+                        if(db != null) {
+                            try {
+                                db.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
+                    return "Error 002 - No se insertó la cotizacion en la base de datos.";
                 }
-                return "Error 002 - No se insertó el pedido en la base de datos.";
+            } else if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
+                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
+                    try {
+                        db = dbh.getWritableDatabase();
+                        if(db.delete("ECOMMERCE_ORDER", "ECOMMERCE_ORDER_ID = ?", new String[]{String.valueOf(orderId)}) <= 0){
+                            return "Error 003 - No se insertó el pedido en la base de datos.";
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        return e.getMessage();
+                    } finally {
+                        if(db != null) {
+                            try {
+                                db.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    return "Error 002 - No se insertó el pedido en la base de datos.";
+                }
             }
         }else{
             return "No existen productos en el Carrito de compras.";
@@ -106,12 +137,20 @@ public class OrderDB {
     }
 
     public int getLastFinalizedOrderId(){
+        return getLastOrderIdByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+    }
+
+    public int getLastFinalizedSalesOrderId() {
+        return getLastOrderIdByDocType(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+    }
+
+    private int getLastOrderIdByDocType(String docType){
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ?",
-                    new String[]{"Y"});
+            c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                    new String[]{"Y", docType});
             if(c.moveToNext()){
                 return c.getInt(0);
             }

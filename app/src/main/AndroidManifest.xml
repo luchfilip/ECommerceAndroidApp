@@ -30,8 +30,8 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:supportsRtl="true"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
@@ -43,13 +43,15 @@
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:host="@string/company_host_name" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
@@ -59,7 +61,6 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
-
         </activity>
         <activity
             android:name=".ProductsListActivity"
@@ -67,15 +68,17 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
 
-            <!-- -->
-            <!--<intent-filter>
+            <!--  -->
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
 
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-            <!-- -->
+            <!--  -->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -88,12 +91,10 @@
         </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
-
         </activity>
         <activity
             android:name="com.jasgcorp.ids.AuthenticatorActivity"
@@ -145,16 +146,14 @@
             android:name=".CategoriesListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SubCategoriesListActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ShoppingCartActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
@@ -164,15 +163,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OrdersListActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
         </activity>
         <activity
             android:name=".OrderDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".OrdersListActivity" >
+            android:parentActivityName=".OrdersListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
@@ -183,23 +182,21 @@
         <activity
             android:name=".InvoiceDetailActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".InvoicesListActivity" >
+            android:parentActivityName=".InvoicesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InvoicesListActivity" />
         </activity>
         <activity
             android:name=".WishListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ProductsListActivity" />
         </activity>
         <activity
             android:name=".StatementOfAccountActivity"
-            android:label="@string/app_name"  />
-
+            android:label="@string/app_name" />
         <activity android:name=".SearchResultsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -209,18 +206,27 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
         <activity
             android:name=".FilterOptionsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".BrandsListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".BrandsListActivity" />
         </activity>
+        <activity
+            android:name=".ShoppingSaleActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ProductsListActivity" />
+        </activity>
+        <activity
+            android:name=".SalesOrderDetailActivity"
+            android:label="@string/title_activity_sales_order_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
