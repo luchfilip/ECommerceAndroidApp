@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itextpdf.text.ExceptionConverter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;

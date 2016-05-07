@@ -21,9 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -148,23 +146,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
-//        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-//                // if it cannot seek to that position.
-//                Product product = (Product) adapterView.getItemAtPosition(position);
-//                if (product != null) {
-//                    Intent intent = new Intent(ShoppingCartActivity.this, ProductsListActivity.class);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -244,7 +225,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected(...)");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.

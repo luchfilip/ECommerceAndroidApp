@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.InvoiceLineAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.InvoiceLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -11,13 +11,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
@@ -112,23 +109,6 @@ public class OrdersListActivity extends AppCompatActivity
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
-//        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-//                // if it cannot seek to that position.
-//                Product product = (Product) adapterView.getItemAtPosition(position);
-//                if (product != null) {
-//                    Intent intent = new Intent(OrdersListActivity.this, ProductsListActivity.class);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
     }
 
     @Override

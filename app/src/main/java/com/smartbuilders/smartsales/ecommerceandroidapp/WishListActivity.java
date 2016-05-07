@@ -122,23 +122,6 @@ public class WishListActivity extends AppCompatActivity
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
-//        mListViewSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-//                // if it cannot seek to that position.
-//                Product product = (Product) adapterView.getItemAtPosition(position);
-//                if (product != null) {
-//                    Intent intent = new Intent(WishListActivity.this, ProductsListActivity.class);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -166,8 +149,6 @@ public class WishListActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), WishListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -177,8 +158,6 @@ public class WishListActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.wish_list).setVisibility(View.GONE);
                 mSearchResultAdapter.setData(new ArrayList<Product>(), WishListActivity.this);
@@ -188,8 +167,6 @@ public class WishListActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.wish_list).setVisibility(View.VISIBLE);
                 return true;

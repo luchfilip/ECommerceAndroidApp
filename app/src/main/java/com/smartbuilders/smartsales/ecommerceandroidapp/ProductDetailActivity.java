@@ -12,13 +12,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
@@ -89,25 +85,6 @@ public class ProductDetailActivity extends AppCompatActivity
 
         mListView = (ListView) findViewById(R.id.search_result_list);
         mListView.setAdapter(mSearchResultAdapter);
-
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-//                // if it cannot seek to that position.
-//                Product product = (Product) adapterView.getItemAtPosition(position);
-//                if (product != null) {
-//                    Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-//                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//        });
-
     }
 
     @Override
@@ -125,7 +102,6 @@ public class ProductDetailActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                // Some code here
                 Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
                 intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
@@ -136,8 +112,6 @@ public class ProductDetailActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ProductDetailActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -147,8 +121,6 @@ public class ProductDetailActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
                 findViewById(R.id.product_detail_main_view).setVisibility(View.GONE);
                 mSearchResultAdapter.setData(new ArrayList<Product>(), ProductDetailActivity.this);
@@ -158,25 +130,11 @@ public class ProductDetailActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
                 findViewById(R.id.product_detail_main_view).setVisibility(View.VISIBLE);
                 return true;
             }
         });
-
-        // Get the search close button
-        //ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
-        //closeButton.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        // Some code here
-        //        EditText et = (EditText) findViewById(R.id.search_src_text);
-        //        Log.d(TAG, "closeButton.setOnClickListener - et.getText(): "+et.getText());
-        //    }
-        //});
-
         return true;
     }
 
