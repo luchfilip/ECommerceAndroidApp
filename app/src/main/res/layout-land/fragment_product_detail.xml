@@ -165,7 +165,6 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Product with promotion"
                                     android:id="@+id/product_promo"
                                     android:textColor="@color/promo_label_color"
                                     android:textSize="@dimen/productDetailActivity_productPromo_text_size"
@@ -180,45 +179,32 @@
                                     android:rating="2.5"
                                     android:id="@+id/product_ratingbar" />
 
-                                <RelativeLayout
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
                                     android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="bottom">
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/add_to_wishlist"
+                                    android:id="@+id/product_addtowishlist_button"
+                                    android:textAppearance="@android:style/TextAppearance.Small"
+                                    android:layout_gravity="bottom|right" />
 
-                                    <Button
-                                        style="?android:attr/buttonStyleSmall"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/add_to_wishlist"
-                                        android:id="@+id/product_addtowishlist_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small"
-                                        android:layout_gravity="bottom|right" />
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/add_to_shopping_cart"
+                                    android:id="@+id/product_addtoshoppingcart_button"
+                                    android:textAppearance="@android:style/TextAppearance.Small"
+                                    android:layout_gravity="bottom|right" />
 
-                                    <Button
-                                        style="?android:attr/buttonStyleSmall"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/add_to_shopping_sales"
-                                        android:id="@+id/product_addtoshoppingsales_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small"
-                                        android:layout_alignParentBottom="true"
-                                        android:layout_alignParentLeft="true"
-                                        android:layout_alignParentStart="true" />
-
-                                    <Button
-                                        style="?android:attr/buttonStyleSmall"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/add_to_shopping_cart"
-                                        android:id="@+id/product_addtoshoppingcart_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small"
-                                        android:layout_gravity="bottom|right"
-                                        android:layout_above="@+id/product_addtoshoppingsales_button"
-                                        android:layout_alignParentLeft="true"
-                                        android:layout_alignParentStart="true" />
-
-                                </RelativeLayout>
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/add_to_shopping_sales"
+                                    android:id="@+id/product_addtoshoppingsales_button"
+                                    android:textAppearance="@android:style/TextAppearance.Small"
+                                    android:layout_gravity="bottom|right" />
 
                             </LinearLayout>
 
@@ -256,9 +242,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/product_detail_description"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
                             android:textSize="@dimen/productDetailActivity_details_text_size"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp" />
