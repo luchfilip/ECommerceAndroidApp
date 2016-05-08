@@ -11,8 +11,9 @@
     <string name="share">COMPARTIR</string>
     <string name="title_activity_product_detail">Detalle del Producto</string>
     <string name="related_products">Productos Relacionados</string>
+    <string name="related_shopping_products">Clientes que compraron este producto también compraron</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="product_details_label">Detalles</string>
+    <string name="product_details_label">Detalles del Producto</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Carrito de Compra</string>

@@ -18,6 +18,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageProduct;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductAvailability;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 
@@ -120,6 +121,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
 											.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
 											.append("PRIMARY KEY (PRODUCT_ID, ISACTIVE))").toString();
+
+	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
+									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
+											.append("(PRODUCT_ID INTEGER NOT NULL, ")
+											.append("PRODUCT_RELATED_ID INTEGER NOT NULL, ")
+											.append("PRIORITY INTEGER DEFAULT 0 NOT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))").toString();
 
 	public static final String CREATE_BRAND =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS BRAND ")
@@ -356,46 +365,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					e.printStackTrace();
 				}
 			}
+			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
+			for(String insert : (new UtilsProductShoppingRelated()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-//		Log.d(TAG, "onUpgrade(SQLiteDatabase arg0, int arg1, int arg2)");
-        try{
-            db.execSQL("DROP TABLE PRODUCT_AVAILABILITY");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-		for(String insert : (new UtilsProductAvailability()).getInserts()){
+		db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
+		for(String insert : (new UtilsProductShoppingRelated()).getInserts()){
 			try{
 				db.execSQL(insert);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
-        try{
-            db.execSQL("DROP TABLE BRAND");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            db.execSQL(CREATE_BRAND);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        for(String insert : (new UtilsBrands()).getInserts()){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
 	}
 
 	@Override

@@ -133,10 +133,22 @@ public class ProductDetailFragment extends Fragment {
 
             viewPager.setAdapter(mCustomPagerAdapter);
         }
+        ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
+        ArrayList<Product> relatedProducts = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
+        if(relatedProducts!=null && !relatedProducts.isEmpty()){
+            RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
+                    ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+        }else{
+            view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
+        }
 
         if(mProduct.getProductSubCategory()!=null) {
-            ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
-            ArrayList<Product> relatedProducts = productDB.getProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), 20);
+            relatedProducts = productDB.getProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), 20);
             if(relatedProducts!=null && !relatedProducts.isEmpty()){
                 RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                 // use this setting to improve performance if you know that changes
@@ -152,6 +164,7 @@ public class ProductDetailFragment extends Fragment {
             view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
         }
 
+
         if(mProduct.getProductCommercialPackage()!=null){
             ((TextView) view.findViewById(R.id.product_comercial_package)).setText(getContext().getString(R.string.commercial_package,
                 mProduct.getProductCommercialPackage().getUnits() + " " +
@@ -164,12 +177,12 @@ public class ProductDetailFragment extends Fragment {
 
         if (view.findViewById(R.id.product_addtoshoppingsales_button) != null){
             view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            showEditDialog(OrderLineDB.SHOPPING_SALE_DOCTYPE);
-                        }
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showEditDialog(OrderLineDB.SHOPPING_SALE_DOCTYPE);
                     }
+                }
             );
         }
 
@@ -186,17 +199,17 @@ public class ProductDetailFragment extends Fragment {
 
         if (view.findViewById(R.id.product_addtowishlist_button) != null) {
             view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
-                            if (result == null) {
-                                Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                            }
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
+                        if (result == null) {
+                            Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                         }
                     }
+                }
             );
         }
 
@@ -214,7 +227,7 @@ public class ProductDetailFragment extends Fragment {
         inflater.inflate(R.menu.productdetailfragment, menu);
 
         // Retrieve the share menu item
-        MenuItem item =(MenuItem) menu.findItem(R.id.action_share);
+        MenuItem item = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider =
@@ -242,7 +255,6 @@ public class ProductDetailFragment extends Fragment {
             mShareActionProvider.setShareIntent(createShareIntent());
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -268,6 +280,4 @@ public class ProductDetailFragment extends Fragment {
                 EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser, docType);
         editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
     }
-
 }
-
