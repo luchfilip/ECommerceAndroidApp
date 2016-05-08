@@ -203,8 +203,20 @@
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
                                     android:layout_width="match_parent"
-                                    android:text="@string/add_to_cart"
-                                    android:id="@+id/product_addtocart_button"
+                                    android:text="@string/add_to_shopping_cart"
+                                    android:id="@+id/product_addtoshoppingcart_button"
+                                    android:textAppearance="@android:style/TextAppearance.Small" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="match_parent"
+                                    android:text="@string/add_to_shopping_sales"
+                                    android:id="@+id/product_addtoshoppingsales_button"
                                     android:textAppearance="@android:style/TextAppearance.Small" />
                             </TableRow>
                         </TableLayout>

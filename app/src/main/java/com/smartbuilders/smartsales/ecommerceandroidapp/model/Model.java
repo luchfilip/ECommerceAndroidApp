@@ -14,7 +14,6 @@ public class Model implements Parcelable {
     private Date created;
     private String createdBy;
     private Date updated;
-    private String updatedBy;
 
     public Model(){
 
@@ -23,7 +22,14 @@ public class Model implements Parcelable {
     protected Model(Parcel in) {
         id = in.readInt();
         createdBy = in.readString();
-        updatedBy = in.readString();
+        try{
+            Long date = in.readLong();
+            setCreated(date > 0 ? new Date(date) : null);
+        }catch(Exception ex){ ex.printStackTrace(); }
+        try{
+            Long date = in.readLong();
+            setUpdated(date > 0 ? new Date(date) : null);
+        }catch(Exception ex){ ex.printStackTrace(); }
     }
 
     public static final Creator<Model> CREATOR = new Creator<Model>() {
@@ -62,14 +68,6 @@ public class Model implements Parcelable {
         this.updated = updated;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
     public int getId() {
         return id;
     }
@@ -87,6 +85,7 @@ public class Model implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(createdBy);
-        dest.writeString(updatedBy);
+        dest.writeLong(created != null ? created.getTime() : -1);
+        dest.writeLong(updated != null ? updated.getTime() : -1);
     }
 }

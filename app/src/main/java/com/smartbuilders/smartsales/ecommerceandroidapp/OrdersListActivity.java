@@ -122,7 +122,7 @@ public class OrdersListActivity extends AppCompatActivity
     public void onItemSelected(Order order) {
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
+            args.putParcelable(OrderDetailActivity.KEY_ORDER, order);
             args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
 
             OrderDetailFragment fragment = new OrderDetailFragment();
@@ -133,7 +133,7 @@ public class OrdersListActivity extends AppCompatActivity
                     .commit();
         }else{
             Intent intent = new Intent(OrdersListActivity.this, OrderDetailActivity.class);
-            intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, order.getId());
+            intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
             intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
             finish();

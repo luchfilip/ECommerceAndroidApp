@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
@@ -115,10 +114,9 @@ public class ShoppingSaleActivity extends AppCompatActivity
                                             OrderDB orderDB = new OrderDB(ShoppingSaleActivity.this, mCurrentUser);
                                             String result = orderDB.createOrderFromShoppingSale();
                                             if(result == null){
-                                                int salesOrderId = orderDB.getLastFinalizedSalesOrderId();
                                                 Intent intent = new Intent(ShoppingSaleActivity.this, SalesOrderDetailActivity.class);
                                                 intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                                intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, salesOrderId);
+                                                intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, orderDB.getLastFinalizedSalesOrder());
                                                 startActivity(intent);
                                                 finish();
                                             }else{

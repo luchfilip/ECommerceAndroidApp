@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -30,10 +31,13 @@ import java.util.ArrayList;
 public class OrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_ORDER_ID = "key_order_id";
+    public static final String KEY_ORDER = "key_order";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+    public static final String STATE_ORDER = "state_order";
+
     private User mCurrentUser;
+    private Order mOrder;
     private ProductDB productDB;
     private ListView mListViewSearchResults;
     private SearchResultAdapter mSearchResultAdapter;
@@ -47,11 +51,17 @@ public class OrderDetailActivity extends AppCompatActivity
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+            if(savedInstanceState.containsKey(STATE_ORDER)){
+                mOrder = savedInstanceState.getParcelable(STATE_ORDER);
+            }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+            if(getIntent().getExtras().containsKey(KEY_ORDER)){
+                mOrder = getIntent().getExtras().getParcelable(KEY_ORDER);
             }
         }
 
@@ -97,11 +107,6 @@ public class OrderDetailActivity extends AppCompatActivity
                 // app icon in action bar clicked; go home
                 goBack();
                 return true;
-            /*case R.id.search_by:
-                Intent intent = new Intent(OrderDetailActivity.this, FilterOptionsActivity.class);
-                intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-                startActivity(intent);
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -197,6 +202,7 @@ public class OrderDetailActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putParcelable(STATE_ORDER, mOrder);
         super.onSaveInstanceState(outState);
     }
 }

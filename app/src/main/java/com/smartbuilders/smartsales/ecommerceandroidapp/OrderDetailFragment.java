@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 public class OrderDetailFragment extends Fragment {
 
     private User mCurrentUser;
-    private int orderId;
+    private Order mOrder;
 
     public OrderDetailFragment() {
     }
@@ -33,8 +34,8 @@ public class OrderDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
         if(getArguments()!=null){
-            if(getArguments().containsKey(OrderDetailActivity.KEY_ORDER_ID)){
-                orderId = getArguments().getInt(OrderDetailActivity.KEY_ORDER_ID);
+            if(getArguments().containsKey(OrderDetailActivity.KEY_ORDER)){
+                mOrder = getArguments().getParcelable(OrderDetailActivity.KEY_ORDER);
             }
             if(getArguments().containsKey(OrderDetailActivity.KEY_CURRENT_USER)){
                 mCurrentUser = getArguments().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
@@ -43,14 +44,13 @@ public class OrderDetailFragment extends Fragment {
             if(getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_CURRENT_USER)){
                 mCurrentUser = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
             }
-
-            if(getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER_ID)){
-                orderId = getActivity().getIntent().getExtras().getInt(OrderDetailActivity.KEY_ORDER_ID);
+            if(getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER)){
+                mOrder = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_ORDER);
             }
         }
 
         ArrayList<OrderLine> orderLines = new OrderLineDB(getContext(), mCurrentUser)
-                .getActiveFinalizedOrderLinesByOrderId(orderId);
+                .getActiveFinalizedOrderLinesByOrderId(mOrder.getId());
 
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
         // use this setting to improve performance if you know that changes
@@ -61,6 +61,12 @@ public class OrderDetailFragment extends Fragment {
 
         ((TextView) rootView.findViewById(R.id.order_lines_number_tv))
                 .setText(getContext().getString(R.string.order_lines_numer, String.valueOf(orderLines.size())));
+
+        ((TextView) rootView.findViewById(R.id.order_number_tv))
+                .setText(getContext().getString(R.string.order_number, mOrder.getOrderNumber()));
+
+        ((TextView) rootView.findViewById(R.id.order_date_tv))
+                .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
 
         return rootView;
     }

@@ -92,7 +92,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             }
         });
 
-        holder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered, String.valueOf(mDataset.get(position).getQuantityOrdered())));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

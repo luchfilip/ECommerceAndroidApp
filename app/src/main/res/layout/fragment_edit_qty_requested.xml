@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/main_layout"
     android:layout_height="wrap_content">
 
     <TextView
@@ -60,7 +61,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_to_cart"
+            android:text="@string/add_to_shopping_cart"
             android:id="@+id/addtoshoppingcart_dialog_qty_requested_button" />
     </LinearLayout>
 

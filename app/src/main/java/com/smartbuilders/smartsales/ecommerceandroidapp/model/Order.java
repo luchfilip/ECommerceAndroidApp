@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+
 /**
  * Created by Alberto on 5/4/2016.
  */
@@ -35,6 +37,13 @@ public class Order extends Model implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(orderLineNumbers);
+    }
+
+    public String getCreatedStringFormat(){
+        try {
+            return DateFormat.getDateTimeInstance().format(getCreated());
+        } catch (Exception e) { }
+        return null;
     }
 
     @Override

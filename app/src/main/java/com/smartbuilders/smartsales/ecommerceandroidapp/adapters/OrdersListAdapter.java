@@ -50,7 +50,7 @@ public class OrdersListAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
 
         viewHolder.orderNumber.setText(mContext.getString(R.string.order_number, mDataset.get(position).getOrderNumber()));
-        viewHolder.orderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreated().toString()));
+        viewHolder.orderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
         viewHolder.orderLinesNumber.setText(mContext.getString(R.string.order_lines_numer,
                 String.valueOf(mDataset.get(position).getOrderLineNumbers())));
 

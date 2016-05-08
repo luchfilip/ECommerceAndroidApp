@@ -29,10 +29,11 @@
     <string name="value_us">Valoranos</string>
     <string name="google_play">Google Play</string>
     <string name="tools">Herramientas</string>
-    <string name="add_to_cart">Agregar al Carrito</string>
+    <string name="add_to_shopping_cart">Agregar al Carrito de Compra</string>
+    <string name="add_to_shopping_sales">Agregar al Carrito de Venta</string>
     <string name="add_to_wishlist">Agregar a la lista de deseos</string>
     <string name="move_to_cart">Mover al Carrito</string>
-    <string name="qty_ordered_label">Cant.:</string>
+    <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar Pedido</string>
     <string name="proceed_to_checkout_shopping_sale">Finalizar Cotización</string>
     <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
@@ -122,11 +123,13 @@
     <string name="order_date">Fecha de creación: %1$s.</string>
     <string name="order_lines_numer">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
-    <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compras.</string>
+    <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compra.</string>
+    <string name="product_moved_to_shopping_sale">Producto trasladado al carrito de venta.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de deseos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compra?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s del carrito de venta?</string>
     <string name="accept">Aceptar</string>
     <string name="title_activity_shopping_sale">Carrito de Venta</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
+    <string name="qty_ordered">Cantidad pedida: %1$s.</string>
 </resources>

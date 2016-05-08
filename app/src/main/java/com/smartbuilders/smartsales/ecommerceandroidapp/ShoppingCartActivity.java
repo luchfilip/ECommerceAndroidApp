@@ -114,10 +114,9 @@ public class ShoppingCartActivity extends AppCompatActivity
                                             OrderDB orderDB = new OrderDB(ShoppingCartActivity.this, mCurrentUser);
                                             String result = orderDB.createOrderFromShoppingCart();
                                             if(result == null){
-                                                int orderId = orderDB.getLastFinalizedOrderId();
                                                 Intent intent = new Intent(ShoppingCartActivity.this, OrderDetailActivity.class);
                                                 intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                                intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, orderId);
+                                                intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
                                                 startActivity(intent);
                                                 finish();
                                             }else{

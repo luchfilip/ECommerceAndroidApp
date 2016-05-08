@@ -21,7 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class SalesOrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_SALES_ORDER_ID = "key_sales_order_id";
+    public static final String KEY_SALES_ORDER = "key_sales_order";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
 

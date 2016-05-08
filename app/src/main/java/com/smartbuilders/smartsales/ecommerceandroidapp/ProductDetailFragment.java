@@ -162,12 +162,23 @@ public class ProductDetailFragment extends Fragment {
 
         ((ScrollView) view.findViewById(R.id.product_detail_main_view)).smoothScrollTo(0, 0);
 
-        if (view.findViewById(R.id.product_addtocart_button) != null){
-            view.findViewById(R.id.product_addtocart_button).setOnClickListener(
+        if (view.findViewById(R.id.product_addtoshoppingsales_button) != null){
+            view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showEditDialog();
+                            showEditDialog(OrderLineDB.SHOPPING_SALE_DOCTYPE);
+                        }
+                    }
+            );
+        }
+
+        if (view.findViewById(R.id.product_addtoshoppingcart_button) != null){
+            view.findViewById(R.id.product_addtoshoppingcart_button).setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showEditDialog(OrderLineDB.SHOPPING_CART_DOCTYPE);
                         }
                     }
             );
@@ -251,10 +262,10 @@ public class ProductDetailFragment extends Fragment {
         return Utils.createShareProductIntent(getContext(), mProduct, fileName);
     }
 
-    private void showEditDialog() {
+    private void showEditDialog(String docType) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         EditQtyRequestedDialogFragment editQtyRequestedDialogFragment =
-                EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser);
+                EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser, docType);
         editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
     }
 

@@ -41,6 +41,10 @@ public class OrderLineDB {
         return addOrderLine(product, qtyRequested, SHOPPING_CART_DOCTYPE);
     }
 
+    public String addProductToShoppingSale(Product product, int qtyRequested){
+        return addOrderLine(product, qtyRequested, SHOPPING_SALE_DOCTYPE);
+    }
+
     public String addProductToWhisList(Product product){
         return addOrderLine(product, 0, WISHLIST_DOCTYPE);
     }
@@ -226,7 +230,6 @@ public class OrderLineDB {
     }
 
     public int getOrderLineNumbersByOrderId(int orderId){
-        Log.d(TAG, "getOrderLineNumbersByOrderId("+orderId+")");
         SQLiteDatabase db = null;
         Cursor c = null;
         try {

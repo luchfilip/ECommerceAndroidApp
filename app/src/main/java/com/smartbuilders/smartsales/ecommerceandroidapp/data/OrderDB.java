@@ -10,8 +10,10 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by stein on 4/30/2016.
@@ -44,16 +46,6 @@ public class OrderDB {
             int orderId = 0;
             try {
                 db = dbh.getWritableDatabase();
-                //new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
-                //        .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                //        .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
-                //        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
-                //        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-                //        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-                //        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-                //        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-                //        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                //        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
                 ContentValues cv = new ContentValues();
                 cv.put("DOC_STATUS", "CO");
                 cv.put("DOC_TYPE", docType);
@@ -136,23 +128,34 @@ public class OrderDB {
         return null;
     }
 
-    public int getLastFinalizedOrderId(){
-        return getLastOrderIdByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+    public Order getLastFinalizedOrder(){
+        return getLastOrderByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
     }
 
-    public int getLastFinalizedSalesOrderId() {
-        return getLastOrderIdByDocType(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+    public Order getLastFinalizedSalesOrder() {
+        return getLastOrderByDocType(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
     }
 
-    private int getLastOrderIdByDocType(String docType){
+    private Order getLastOrderByDocType(String docType){
         SQLiteDatabase db = null;
         Cursor c = null;
+        Order order = new Order();
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+            c = db.rawQuery("SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
+                        " ISACTIVE, CREATE_TIME, UPDATE_TIME, APP_VERSION, APP_USER_NAME " +
+                    " FROM ECOMMERCE_ORDER " +
+                    " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)",
                     new String[]{"Y", docType});
             if(c.moveToNext()){
-                return c.getInt(0);
+                order.setId(c.getInt(0));
+                try{
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(5)).getTime()));
+                }catch(ParseException ex){
+                    try {
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(5)).getTime()));
+                    } catch (ParseException e) { }
+                }catch(Exception ex){ }
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -172,7 +175,7 @@ public class OrderDB {
                 }
             }
         }
-        return 0;
+        return order;
     }
 
     /**
@@ -191,8 +194,13 @@ public class OrderDB {
             while(c.moveToNext()){
                 Order order = new Order();
                 order.setId(c.getInt(0));
-                order.setCreated(new Date(c.getLong(5)));
-                order.setUpdated(new Date(c.getLong(6)));
+                try{
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(4)).getTime()));
+                }catch(ParseException ex){
+                    try {
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(4)).getTime()));
+                    } catch (ParseException e) { }
+                }catch(Exception ex){ }
                 activeOrders.add(order);
             }
         } catch (Exception e) {
