@@ -44,9 +44,8 @@ public class BrandsListFragment extends Fragment {
             }
         }
 
-        ProductBrandDB b = new ProductBrandDB(getContext(), mCurrentUser);
-
-        mBrandAdapter = new BrandAdapter(getContext(), b.getActiveProductBrands());
+        mBrandAdapter = new BrandAdapter(getContext(),
+                new ProductBrandDB(getContext(), mCurrentUser).getActiveProductBrands());
 
         ListView lv = (ListView) rootView.findViewById(R.id.brands_list);
         lv.setAdapter(mBrandAdapter);

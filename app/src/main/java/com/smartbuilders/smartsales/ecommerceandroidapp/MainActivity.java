@@ -153,8 +153,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), MainActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -164,8 +162,6 @@ public class MainActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListView.setVisibility(View.VISIBLE);
                 findViewById(R.id.main_categories_list).setVisibility(View.GONE);
                 return true;
@@ -173,8 +169,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListView.setVisibility(View.GONE);
                 findViewById(R.id.main_categories_list).setVisibility(View.VISIBLE);
                 mSearchResultAdapter.setData(new ArrayList<Product>(), MainActivity.this);
@@ -194,23 +188,6 @@ public class MainActivity extends AppCompatActivity
         //    }
         //});
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        /*if (id == R.id.search_by) {
-            Intent intent = new Intent(MainActivity.this, FilterOptionsActivity.class);
-            intent.putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser);
-            startActivity(intent);
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

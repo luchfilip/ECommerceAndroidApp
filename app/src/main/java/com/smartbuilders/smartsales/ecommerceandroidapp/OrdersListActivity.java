@@ -101,9 +101,14 @@ public class OrdersListActivity extends AppCompatActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if(savedInstanceState == null){
+                Bundle args = new Bundle();
+                args.putParcelable(OrderDetailActivity.KEY_ORDER, null);
+                args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+
+                OrderDetailFragment orderDetailFragment = new OrderDetailFragment();
+                orderDetailFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.order_detail_container, new OrderDetailFragment(),
-                                ORDERDETAIL_FRAGMENT_TAG)
+                        .add(R.id.order_detail_container, orderDetailFragment, ORDERDETAIL_FRAGMENT_TAG)
                         .commit();
             }
         }else{
@@ -175,8 +180,6 @@ public class OrdersListActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrdersListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -186,8 +189,6 @@ public class OrdersListActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.orders_list).setVisibility(View.GONE);
                 if(findViewById(R.id.title_textView) != null) {
@@ -200,8 +201,6 @@ public class OrdersListActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.orders_list).setVisibility(View.VISIBLE);
                 if(findViewById(R.id.title_textView) != null) {

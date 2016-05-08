@@ -139,7 +139,7 @@ public class OrderDB {
     private Order getLastOrderByDocType(String docType){
         SQLiteDatabase db = null;
         Cursor c = null;
-        Order order = new Order();
+        Order order = null;
         try {
             db = dbh.getReadableDatabase();
             c = db.rawQuery("SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
@@ -148,6 +148,7 @@ public class OrderDB {
                     " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)",
                     new String[]{"Y", docType});
             if(c.moveToNext()){
+                order = new Order();
                 order.setId(c.getInt(0));
                 try{
                     order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(5)).getTime()));

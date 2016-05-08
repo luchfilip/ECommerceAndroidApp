@@ -75,14 +75,6 @@ public class OrderDetailActivity extends AppCompatActivity
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OrderDetailActivity.this,
-                        MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, mCurrentUser));
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -160,8 +152,6 @@ public class OrderDetailActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                // Some code here
-                //Log.d(TAG, "onQueryTextChange("+s+")");
                 mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrderDetailActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
@@ -171,8 +161,6 @@ public class OrderDetailActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionExpand(...)");
                 mListViewSearchResults.setVisibility(View.VISIBLE);
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
                 if(findViewById(R.id.title_textView) != null) {
@@ -185,8 +173,6 @@ public class OrderDetailActivity extends AppCompatActivity
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Some code here
-                //Log.d(TAG, "onMenuItemActionCollapse(...)");
                 mListViewSearchResults.setVisibility(View.GONE);
                 findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                 if(findViewById(R.id.title_textView) != null) {
