@@ -28,11 +28,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
-public class OrdersListActivity extends AppCompatActivity
-        implements OrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
+public class SalesOrdersListActivity extends AppCompatActivity
+        implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private boolean mTwoPane;
-    private static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
+    private static final String SALES_ORDERDETAIL_FRAGMENT_TAG = "SALES_ORDERDETAIL_FRAGMENT_TAG";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
@@ -43,7 +43,7 @@ public class OrdersListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orders_list);
+        setContentView(R.layout.activity_sales_orders_list);
 
         if( savedInstanceState != null ) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
@@ -90,13 +90,13 @@ public class OrdersListActivity extends AppCompatActivity
             // fragment transaction.
             if(savedInstanceState == null){
                 Bundle args = new Bundle();
-                args.putParcelable(OrderDetailActivity.KEY_ORDER, null);
-                args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, null);
+                args.putParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
 
-                OrderDetailFragment orderDetailFragment = new OrderDetailFragment();
-                orderDetailFragment.setArguments(args);
+                SalesOrderDetailFragment salesOrderDetailFragment = new SalesOrderDetailFragment();
+                salesOrderDetailFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.order_detail_container, orderDetailFragment, ORDERDETAIL_FRAGMENT_TAG)
+                        .add(R.id.order_detail_container, salesOrderDetailFragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
                         .commit();
             }
         }else{
@@ -109,28 +109,6 @@ public class OrdersListActivity extends AppCompatActivity
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
-    }
-
-    @Override
-    public void onItemSelected(Order order) {
-        if(mTwoPane){
-            Bundle args = new Bundle();
-            args.putParcelable(OrderDetailActivity.KEY_ORDER, order);
-            args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-
-            OrderDetailFragment fragment = new OrderDetailFragment();
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.order_detail_container, fragment, ORDERDETAIL_FRAGMENT_TAG)
-                    .commit();
-        }else{
-            Intent intent = new Intent(OrdersListActivity.this, OrderDetailActivity.class);
-            intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
-            intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-            startActivity(intent);
-            finish();
-        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -159,7 +137,7 @@ public class OrdersListActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(OrdersListActivity.this, ProductsListActivity.class);
+                Intent intent = new Intent(SalesOrdersListActivity.this, ProductsListActivity.class);
                 intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
                 startActivity(intent);
@@ -168,7 +146,7 @@ public class OrdersListActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrdersListActivity.this);
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), SalesOrdersListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return false;
             }
@@ -178,11 +156,11 @@ public class OrdersListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.VISIBLE);
-                findViewById(R.id.orders_list).setVisibility(View.GONE);
+                findViewById(R.id.sales_orders_list).setVisibility(View.GONE);
                 if(findViewById(R.id.title_textView) != null) {
                     findViewById(R.id.title_textView).setVisibility(View.GONE);
                 }
-                mSearchResultAdapter.setData(new ArrayList<Product>(), OrdersListActivity.this);
+                mSearchResultAdapter.setData(new ArrayList<Product>(), SalesOrdersListActivity.this);
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -190,7 +168,7 @@ public class OrdersListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 mListViewSearchResults.setVisibility(View.GONE);
-                findViewById(R.id.orders_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.sales_orders_list).setVisibility(View.VISIBLE);
                 if(findViewById(R.id.title_textView) != null) {
                     findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
                 }
@@ -199,6 +177,28 @@ public class OrdersListActivity extends AppCompatActivity
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onItemSelected(Order order) {
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
+            args.putParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+
+            OrderDetailFragment fragment = new OrderDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.sales_order_detail_container, fragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
+                    .commit();
+        }else{
+            Intent intent = new Intent(SalesOrdersListActivity.this, SalesOrderDetailActivity.class);
+            intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
+            intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override

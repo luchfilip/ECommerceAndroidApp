@@ -19,6 +19,7 @@
     <string name="shopping_sale">Carrito de Venta</string>
     <string name="whish_list">Lista de deseos</string>
     <string name="orders_list">Pedidos</string>
+    <string name="sales_orders_list">Cotizaciones</string>
     <string name="invoces_list">Facturas</string>
     <string name="statement_of_account">Estado de Cuenta</string>
     <string name="invite">Invitar amigos</string>
@@ -119,9 +120,11 @@
     <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
+    <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
     <string name="order_number">Número de pedido: %1$s.</string>
+    <string name="sales_order_number">Número de cotización: %1$s.</string>
     <string name="order_date">Fecha de creación: %1$s.</string>
-    <string name="order_lines_numer">Cantidad de líneas: %1$s.</string>
+    <string name="order_lines_number">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
     <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compra.</string>
     <string name="product_moved_to_shopping_sale">Producto trasladado al carrito de venta.</string>
@@ -132,4 +135,5 @@
     <string name="title_activity_shopping_sale">Carrito de Venta</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cantidad pedida: %1$s.</string>
+    <string name="title_activity_sales_orders_list">Cotizaciones</string>
 </resources>

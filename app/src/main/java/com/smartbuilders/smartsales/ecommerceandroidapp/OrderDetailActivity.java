@@ -112,7 +112,7 @@ public class OrderDetailActivity extends AppCompatActivity
 
     private void goBack(){
         Intent intent = new Intent(this, OrdersListActivity.class);
-        intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
+        intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
         startActivity(intent);
         finish();
     }

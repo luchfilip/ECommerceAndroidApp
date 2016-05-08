@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SalesOrderDetailActivityFragment extends Fragment {
+public class ShoppingSaleFragment extends Fragment {
 
-    public SalesOrderDetailActivityFragment() {
+    public ShoppingSaleFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
+        return inflater.inflate(R.layout.fragment_shopping_sale, container, false);
     }
 }

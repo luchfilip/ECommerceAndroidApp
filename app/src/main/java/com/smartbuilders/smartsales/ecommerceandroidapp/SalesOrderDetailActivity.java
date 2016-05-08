@@ -1,22 +1,32 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.util.ArrayList;
 
 public class SalesOrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,8 +34,13 @@ public class SalesOrderDetailActivity extends AppCompatActivity
     public static final String KEY_SALES_ORDER = "key_sales_order";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+    public static final String STATE_SALES_ORDER = "state_sales_order";
 
     private User mCurrentUser;
+    private Order mOrder;
+    private ProductDB productDB;
+    private ListView mListViewSearchResults;
+    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +51,17 @@ public class SalesOrderDetailActivity extends AppCompatActivity
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+            if(savedInstanceState.containsKey(STATE_SALES_ORDER)){
+                mOrder = savedInstanceState.getParcelable(STATE_SALES_ORDER);
+            }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+            if(getIntent().getExtras().containsKey(STATE_SALES_ORDER)){
+                mOrder = getIntent().getExtras().getParcelable(STATE_SALES_ORDER);
             }
         }
 
@@ -63,6 +84,37 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        productDB = new ProductDB(this, mCurrentUser);
+
+        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+
+        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
+        mListViewSearchResults.setAdapter(mSearchResultAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                goBack();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        goBack();
+    }
+
+    private void goBack(){
+        Intent intent = new Intent(this, SalesOrdersListActivity.class);
+        intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
+        startActivity(intent);
+        finish();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -73,6 +125,71 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_sales_order_detail, menu);
+
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Intent intent = new Intent(SalesOrderDetailActivity.this, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), SalesOrderDetailActivity.this);
+                mSearchResultAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mListViewSearchResults.setVisibility(View.VISIBLE);
+                findViewById(R.id.main_layout).setVisibility(View.GONE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.GONE);
+                }
+                mSearchResultAdapter.setData(new ArrayList<Product>(), SalesOrderDetailActivity.this);
+                mSearchResultAdapter.notifyDataSetChanged();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mListViewSearchResults.setVisibility(View.GONE);
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                if(findViewById(R.id.title_textView) != null) {
+                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putParcelable(STATE_SALES_ORDER, mOrder);
+        super.onSaveInstanceState(outState);
     }
 
 }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrderLineAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
@@ -21,56 +21,56 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class OrderDetailFragment extends Fragment {
+public class SalesOrderDetailFragment extends Fragment {
 
     private User mCurrentUser;
     private Order mOrder;
 
-    public OrderDetailFragment() {
+    public SalesOrderDetailFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_order_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
 
         if (getArguments() != null) {
-            if (getArguments().containsKey(OrderDetailActivity.KEY_ORDER)) {
-                mOrder = getArguments().getParcelable(OrderDetailActivity.KEY_ORDER);
+            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
+                mOrder = getArguments().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
-            if (getArguments().containsKey(OrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getArguments().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
+            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_CURRENT_USER)) {
+                mCurrentUser = getArguments().getParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER);
             }
         } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
+            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_CURRENT_USER)) {
+                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER);
             }
-            if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER)) {
-                mOrder = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_ORDER);
+            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
+                mOrder = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
         }
 
         if (mOrder == null) {
-            mOrder = (new OrderDB(getContext(), mCurrentUser)).getLastFinalizedOrder();
+            mOrder = (new OrderDB(getContext(), mCurrentUser)).getLastFinalizedSalesOrder();
         }
         if (mOrder != null) {
             ArrayList<OrderLine> orderLines = new OrderLineDB(getContext(), mCurrentUser)
-                    .getActiveFinalizedOrderLinesByOrderId(mOrder.getId());
+                    .getActiveFinalizedSalesOrderLinesByOrderId(mOrder.getId());
 
-            RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
+            RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerView.setAdapter(new OrderLineAdapter(orderLines, mCurrentUser));
+            mRecyclerView.setAdapter(new SalesOrderLineAdapter(orderLines, mCurrentUser));
 
-            ((TextView) rootView.findViewById(R.id.order_lines_number_tv))
+            ((TextView) rootView.findViewById(R.id.sales_order_lines_number_tv))
                     .setText(getContext().getString(R.string.order_lines_number, String.valueOf(orderLines.size())));
 
-            ((TextView) rootView.findViewById(R.id.order_number_tv))
-                    .setText(getContext().getString(R.string.order_number, mOrder.getOrderNumber()));
+            ((TextView) rootView.findViewById(R.id.sales_order_number_tv))
+                    .setText(getContext().getString(R.string.sales_order_number, mOrder.getOrderNumber()));
 
-            ((TextView) rootView.findViewById(R.id.order_date_tv))
+            ((TextView) rootView.findViewById(R.id.sales_order_date_tv))
                     .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
         }
         return rootView;

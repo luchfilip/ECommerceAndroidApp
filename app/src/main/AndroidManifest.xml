@@ -225,8 +225,18 @@
         </activity>
         <activity
             android:name=".SalesOrderDetailActivity"
-            android:label="@string/title_activity_sales_order_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ProductsListActivity" />
+        </activity>
+        <activity
+            android:name=".SalesOrdersListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".ProductsListActivity" />
+        </activity>
     </application>
 
 </manifest>

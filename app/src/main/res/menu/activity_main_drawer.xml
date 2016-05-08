@@ -17,6 +17,10 @@
             android:id="@+id/nav_shopping_sale"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="@string/shopping_sale" />
+        <item
+            android:id="@+id/nav_sales_orders"
+            android:icon="@drawable/ic_view_list_black_24dp"
+            android:title="@string/sales_orders_list" />
         <!--<item
             android:id="@+id/nav_invoices_list"
             android:icon="@drawable/ic_list_black_18dp"

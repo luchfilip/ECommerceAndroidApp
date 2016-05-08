@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
-    android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment"
+    android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:layout="@layout/fragment_shopping_sale" />
+    tools:layout="@layout/fragment_sales_orders_list" />

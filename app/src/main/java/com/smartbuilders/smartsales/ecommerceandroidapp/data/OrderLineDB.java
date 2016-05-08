@@ -143,6 +143,10 @@ public class OrderLineDB {
         return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
     }
 
+    public ArrayList<OrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId){
+        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOCTYPE, orderId);
+    }
+
     private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
         return getOrderLines(docType, orderId);
     }

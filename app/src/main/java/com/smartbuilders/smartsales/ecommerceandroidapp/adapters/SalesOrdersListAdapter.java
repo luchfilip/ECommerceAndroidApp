@@ -17,13 +17,13 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 7/4/2016.
  */
-public class OrdersListAdapter extends BaseAdapter {
+public class SalesOrdersListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<Order> mDataset;
     private OrderLineDB orderLineDB;
 
-    public OrdersListAdapter(Context context, ArrayList<Order> data, User user) {
+    public SalesOrdersListAdapter(Context context, ArrayList<Order> data, User user) {
         mContext = context;
         mDataset = data;
         orderLineDB = new OrderLineDB(context, user);
@@ -46,12 +46,12 @@ public class OrdersListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.order_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.sales_order_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
-        viewHolder.orderNumber.setText(mContext.getString(R.string.order_number, mDataset.get(position).getOrderNumber()));
-        viewHolder.orderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
-        viewHolder.orderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
+        viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number, mDataset.get(position).getOrderNumber()));
+        viewHolder.salesOrderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
+        viewHolder.salesOrderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getOrderLineNumbers())));
 
         view.setTag(viewHolder);
@@ -63,14 +63,14 @@ public class OrdersListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView orderNumber;
-        public TextView orderDate;
-        public TextView orderLinesNumber;
+        public TextView salesOrderNumber;
+        public TextView salesOrderDate;
+        public TextView salesOrderLinesNumber;
 
         public ViewHolder(View v) {
-            orderNumber = (TextView) v.findViewById(R.id.order_number_tv);
-            orderDate = (TextView) v.findViewById(R.id.order_date_tv);
-            orderLinesNumber = (TextView) v.findViewById(R.id.order_lines_number_tv);
+            salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
+            salesOrderDate = (TextView) v.findViewById(R.id.sales_order_date_tv);
+            salesOrderLinesNumber = (TextView) v.findViewById(R.id.sales_order_lines_number_tv);
         }
     }
 }

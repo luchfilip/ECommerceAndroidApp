@@ -143,7 +143,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
         } else {
             ((TextView) findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_numer, String.valueOf(mOrderLines.size())));
+                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
         }
     }
 

@@ -19,6 +19,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
@@ -300,6 +301,12 @@ public class Utils {
                         .putExtra(OrdersListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
             break;
+            case R.id.nav_sales_orders:
+                context.startActivity(new Intent(context, SalesOrdersListActivity.class)
+                        .putExtra(SalesOrdersListActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+            break;
+
             //case R.id.nav_invoices_list:
             //    Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
             //    intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);

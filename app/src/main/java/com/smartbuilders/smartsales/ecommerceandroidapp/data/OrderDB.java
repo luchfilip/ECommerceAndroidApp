@@ -179,27 +179,35 @@ public class OrderDB {
         return order;
     }
 
+    public ArrayList<Order> getActiveSalesOrders(){
+        return getActiveOrders(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+    }
+
+    public ArrayList<Order> getActiveOrders(){
+        return getActiveOrders(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+    }
+
     /**
      *
      * @return
      */
-    public ArrayList<Order> getActiveOrders(){
+    private ArrayList<Order> getActiveOrders(String docType){
         ArrayList<Order> activeOrders = new ArrayList<>();
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
             c = db.query("ECOMMERCE_ORDER", new String[]{"ECOMMERCE_ORDER_ID", "CB_PARTNER_ID",
-                    "DOC_STATUS", "DOC_TYPE", "CREATE_TIME", "UPDATE_TIME", "APP_VERSION",
-                    "APP_USER_NAME"}, "ISACTIVE = ?", new String[]{"Y"}, null, null, "CREATE_TIME DESC");
+                    "DOC_STATUS", "CREATE_TIME", "UPDATE_TIME", "APP_VERSION",
+                    "APP_USER_NAME"}, "ISACTIVE = ? AND DOC_TYPE = ?", new String[]{"Y", docType}, null, null, "CREATE_TIME DESC");
             while(c.moveToNext()){
                 Order order = new Order();
                 order.setId(c.getInt(0));
                 try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(4)).getTime()));
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(3)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(4)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(3)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
                 activeOrders.add(order);

@@ -93,13 +93,13 @@ public class ShoppingSaleActivity extends AppCompatActivity
                     .setAdapter(new ShoppingSaleAdapter(this, mOrderLines, mCurrentUser));
         }
 
-        if(findViewById(R.id.proceed_to_checkout_button) != null) {
-            findViewById(R.id.proceed_to_checkout_button)
+        if(findViewById(R.id.proceed_to_checkout_shopping_sale_button) != null) {
+            findViewById(R.id.proceed_to_checkout_shopping_sale_button)
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             new AlertDialog.Builder(ShoppingSaleActivity.this)
-                                    .setMessage(R.string.proceed_to_checkout_question)
+                                    .setMessage(R.string.proceed_to_checkout_quoatation_question)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -132,8 +132,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
 
-
-
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && findViewById(R.id.company_logo_name)!=null
                 && findViewById(R.id.shoppingSale_items_list)!=null
@@ -143,7 +141,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
             findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
         } else {
             ((TextView) findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_numer, String.valueOf(mOrderLines.size())));
+                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
         }
 
     }
