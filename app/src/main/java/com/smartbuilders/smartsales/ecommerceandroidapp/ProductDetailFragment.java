@@ -146,10 +146,10 @@ public class ProductDetailFragment extends Fragment {
                 mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
             }else{
-                view.findViewById(R.id.relatedproducts_linearlayout).setVisibility(View.GONE);
+                view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
             }
         }else{
-            view.findViewById(R.id.relatedproducts_linearlayout).setVisibility(View.GONE);
+            view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
         }
 
         if(mProduct.getProductCommercialPackage()!=null){
