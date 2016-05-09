@@ -49,6 +49,7 @@ public class ProductDB {
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = " + productId +
+                    " WHERE A.IDARTICULO <> " + productId +
                     " ORDER BY R.TIMES DESC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){

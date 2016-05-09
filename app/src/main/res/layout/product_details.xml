@@ -67,38 +67,12 @@
                         android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_price"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/productDetailCardView_productPrice_text_size"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:id="@+id/product_pmvp"
-                        android:textSize="@dimen/productDetailCardView_productPMVP_text_size"
-                        android:visibility="gone" />
-
-                    <TextView
                         android:id="@+id/product_availability"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"
                         android:textSize="@dimen/productDetailCardView_productAvailability_text_size" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Product with promotion"
-                        android:id="@+id/product_promo"
-                        android:textColor="@color/promo_label_color"
-                        android:visibility="gone"
-                        android:textSize="@dimen/productDetailCardView_productPromo_text_size" />
 
                     <RatingBar
                         android:layout_width="wrap_content"
