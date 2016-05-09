@@ -263,7 +263,8 @@ public class Utils {
                     @Override
                     public void onClick(View v) {
                         activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
-                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     }
                 });
             }

@@ -37,7 +37,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 14;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -450,6 +450,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
+		try{
+			db.execSQL("DROP TABLE PRODUCT_SHOPPING_RELATED");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
 		for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
 			try{
