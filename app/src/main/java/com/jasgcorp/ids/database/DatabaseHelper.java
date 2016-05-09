@@ -18,7 +18,16 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsGroup9;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageProduct;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductAvailability;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated0;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated1;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated2;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated3;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated4;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated5;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated6;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated7;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated8;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated9;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 
@@ -28,7 +37,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 12;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -126,8 +135,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
 											.append("(PRODUCT_ID INTEGER NOT NULL, ")
 											.append("PRODUCT_RELATED_ID INTEGER NOT NULL, ")
-											.append("PRIORITY INTEGER DEFAULT 0 NOT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+											.append("TIMES INTEGER DEFAULT 0 NOT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
 											.append("PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))").toString();
 
 	public static final String CREATE_BRAND =
@@ -366,7 +375,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				}
 			}
 			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
-			for(String insert : (new UtilsProductShoppingRelated()).getInserts()){
+			for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
+				try{
+					db.execSQL(insert);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
 				try{
 					db.execSQL(insert);
 				}catch(Exception e){
@@ -379,7 +451,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
-		for(String insert : (new UtilsProductShoppingRelated()).getInserts()){
+		for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
+			try{
+				db.execSQL(insert);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
 			try{
 				db.execSQL(insert);
 			}catch(Exception e){
