@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,8 +17,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false">
+                android:layout_height="wrap_content" >
 
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -35,7 +35,7 @@
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content" >
 
                         <TextView
                             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                             android:textStyle="bold"
                             android:textColor="@android:color/black"
                             android:textSize="@dimen/productDetailActivity_productName_text_size"
-                            android:focusable="true" />
+                            android:focusable="false" />
 
                         <LinearLayout
                             android:orientation="horizontal"
@@ -89,35 +89,40 @@
                                         android:id="@+id/radioButton"
                                         android:scaleX="@integer/radioButton_scale"
                                         android:scaleY="@integer/radioButton_scale"
-                                        android:checked="true" />
+                                        android:checked="true"
+                                        android:focusable="false" />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:scaleX="@integer/radioButton_scale"
                                         android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton2" />
+                                        android:id="@+id/radioButton2"
+                                        android:focusable="false" />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:scaleX="@integer/radioButton_scale"
                                         android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton3" />
+                                        android:id="@+id/radioButton3"
+                                        android:focusable="false" />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:scaleX="@integer/radioButton_scale"
                                         android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton4" />
+                                        android:id="@+id/radioButton4"
+                                        android:focusable="false" />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:scaleX="@integer/radioButton_scale"
                                         android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton5" />
+                                        android:id="@+id/radioButton5"
+                                        android:focusable="false" />
                                 </RadioGroup>
                             </LinearLayout>
 
@@ -133,13 +138,15 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/product_brand"
-                                    android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
+                                    android:textSize="@dimen/productDetailActivity_productBrand_text_size"
+                                    android:focusable="false" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
-                                    android:id="@+id/product_comercial_package" />
+                                    android:id="@+id/product_comercial_package"
+                                    android:focusable="false" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -147,21 +154,24 @@
                                     android:id="@+id/product_price"
                                     android:textSize="@dimen/productDetailActivity_productPrice_text_size"
                                     android:textStyle="bold"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:focusable="false" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/product_pmvp"
                                     android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:focusable="false" />
 
                                 <TextView
                                     android:id="@+id/product_availability"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:focusable="false" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -169,7 +179,8 @@
                                     android:id="@+id/product_promo"
                                     android:textColor="@color/promo_label_color"
                                     android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:focusable="false" />
 
                                 <RatingBar
                                     android:layout_width="wrap_content"
@@ -178,7 +189,8 @@
                                     android:progressTint="@color/ratingbar_progress"
                                     android:numStars="5"
                                     android:rating="2.5"
-                                    android:id="@+id/product_ratingbar" />
+                                    android:id="@+id/product_ratingbar"
+                                    android:focusable="false" />
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -187,7 +199,8 @@
                                     android:text="@string/add_to_wishlist"
                                     android:id="@+id/product_addtowishlist_button"
                                     android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:layout_gravity="bottom|right" />
+                                    android:layout_gravity="bottom|right"
+                                    android:focusable="false" />
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -230,14 +243,16 @@
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:focusable="false">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/product_details_label"
                             android:textSize="@dimen/productDetailActivity_details_label_text_size"
-                            android:textColor="@color/label_color" />
+                            android:textColor="@color/label_color"
+                            android:focusable="false" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -245,7 +260,8 @@
                             android:id="@+id/product_detail_description"
                             android:textSize="@dimen/productDetailActivity_details_text_size"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp" />
+                            android:layout_marginRight="10dp"
+                            android:focusable="false" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 

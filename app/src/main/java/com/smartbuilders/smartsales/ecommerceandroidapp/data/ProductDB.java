@@ -42,12 +42,12 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                         " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                         " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+ //AND PA.AVAILABILITY>0 " +
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = " + productId +
                     " WHERE A.IDARTICULO <> " + productId +
                     " ORDER BY R.TIMES DESC " +
@@ -66,7 +66,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -104,12 +104,12 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'"+// AND PA.AVAILABILITY>0 " +
                     " WHERE A.IDPARTIDA = "+subCategoryId + " ORDER BY A.NOMBRE ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){
@@ -126,7 +126,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -164,12 +164,12 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
                     " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
 
@@ -187,7 +187,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -225,12 +225,12 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
                     " WHERE A.IDMARCA = "+brandId+" ORDER BY A.NOMBRE ASC", null);
             while(c.moveToNext()){
                 Product p = new Product();
@@ -246,7 +246,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -284,12 +284,12 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +// AND PA.AVAILABILITY>0 " +
                     " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " OR A.NOMBRE LIKE '% "+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " ORDER BY A.NOMBRE ASC", null);
@@ -307,7 +307,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -336,8 +336,6 @@ public class ProductDB {
         return products;
     }
 
-
-
     public ArrayList<Product> getLightProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
         if(TextUtils.isEmpty(name)){
@@ -363,7 +361,7 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
                     (isNumeric ? " WHERE A.CODVIEJO LIKE '"+name+"%' "
                             : " WHERE A.NOMBRE LIKE '"+name+"%' COLLATE NOCASE " +
                             (name.length() > 1 ? " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " : "")) +
@@ -425,7 +423,8 @@ public class ProductDB {
             db = dbh.getReadableDatabase();
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                             " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                            " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
+                            " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                             " FROM ARTICULOS A " +
                                 " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                                 " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
@@ -446,7 +445,7 @@ public class ProductDB {
                 if(!TextUtils.isEmpty(c.getString(8))) {
                     p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
                 }
-                p.setImageFileName(c.getString(9)+".png");
+                p.setImageFileName(c.getString(20));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                 p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));

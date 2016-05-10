@@ -1,7 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
-
 import java.util.ArrayList;
 
 /**
