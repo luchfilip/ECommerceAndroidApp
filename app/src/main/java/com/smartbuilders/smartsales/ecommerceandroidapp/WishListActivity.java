@@ -45,7 +45,6 @@ public class WishListActivity extends AppCompatActivity
     private ListView mListView;
     private WishListAdapter mWishListAdapter;
     ArrayList<OrderLine> wishListLines;
-    private NavigationView mNavigationView;
     private ShareActionProvider mShareActionProvider;
     private ProductDB productDB;
     private ListView mListViewSearchResults;
@@ -84,8 +83,14 @@ public class WishListActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        try{
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(mCurrentUser.getUserName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         OrderLineDB orderLineDB = new OrderLineDB(this, mCurrentUser);
         wishListLines = orderLineDB.getWishList();

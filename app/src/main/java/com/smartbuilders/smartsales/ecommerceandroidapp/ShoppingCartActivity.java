@@ -85,6 +85,12 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        try{
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(mCurrentUser.getUserName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingCart();
 
@@ -131,8 +137,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
         mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
-
 
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && findViewById(R.id.company_logo_name)!=null
@@ -234,7 +238,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             if (mOrderLines != null && mOrderLines.size() > 0) {
-                mShareActionProvider.setShareHistoryFileName(null);
+                //mShareActionProvider.setShareHistoryFileName(null);
                 mShareActionProvider.setShareIntent(createShareProductIntent());
             }
             return true;

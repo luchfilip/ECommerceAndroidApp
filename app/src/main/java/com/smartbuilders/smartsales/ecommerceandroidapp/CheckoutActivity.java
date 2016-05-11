@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -49,6 +50,12 @@ public class CheckoutActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        try{
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(mCurrentUser.getUserName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

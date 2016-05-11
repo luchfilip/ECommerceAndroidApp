@@ -137,4 +137,5 @@
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cantidad pedida: %1$s.</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
+    <string name="product_put_in_wishlist">Producto agregado a la lista de deseos.</string>
 </resources>

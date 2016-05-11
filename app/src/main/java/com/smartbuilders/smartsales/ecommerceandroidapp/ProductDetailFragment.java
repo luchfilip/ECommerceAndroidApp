@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -173,8 +172,6 @@ public class ProductDetailFragment extends Fragment {
             view.findViewById(R.id.product_comercial_package).setVisibility(View.GONE);
         }
 
-        ((ScrollView) view.findViewById(R.id.product_detail_main_view)).smoothScrollTo(0, 0);
-
         if (view.findViewById(R.id.product_addtoshoppingsales_button) != null){
             view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -204,7 +201,7 @@ public class ProductDetailFragment extends Fragment {
                     public void onClick(View v) {
                         String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
                         if (result == null) {
-                            Toast.makeText(getContext(), "Producto agregado a la lista de deseos.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                         }
@@ -236,7 +233,7 @@ public class ProductDetailFragment extends Fragment {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (mProduct != null) {
-            mShareActionProvider.setShareHistoryFileName(null);
+            //mShareActionProvider.setShareHistoryFileName(null);
             mShareActionProvider.setShareIntent(createShareIntent());
         } else {
             Log.d(TAG, "Share Action Provider is null?");

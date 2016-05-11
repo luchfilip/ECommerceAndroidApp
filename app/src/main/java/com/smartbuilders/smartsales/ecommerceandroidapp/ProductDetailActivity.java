@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
@@ -68,8 +69,14 @@ public class ProductDetailActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        try{
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(mCurrentUser.getUserName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         productDB = new ProductDB(this, mCurrentUser);
 
