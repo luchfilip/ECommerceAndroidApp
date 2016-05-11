@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -134,6 +135,8 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     holder.mRecyclerView.setHasFixedSize(true);
                     holder.mRecyclerView.setLayoutManager(
                             new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+                    //holder.mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 8));
 
                     ArrayList<Product> products = new ArrayList<>();
                     for(MainPageProduct mainPageProduct : mainPageProducts){

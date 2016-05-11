@@ -157,19 +157,20 @@ public class Utils {
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                 .append("/").append(user.getUserGroup()).append("/")
-                .append(user.getUserName()).append("/Data_In/").append(fileName).toString());
+                .append(user.getUserName()).append("/Data_In/original/").append(fileName).toString());
         if(imgFile.exists()){
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+            return BitmapFactory.decodeFile(imgFile.getAbsolutePath()); //decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+        }else{
+            return getThumbByFileName(context, user, fileName);
         }
-        return null;
     }
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                         .append("/").append(user.getUserGroup()).append("/")
-                        .append(user.getUserName()).append("/Data_In/").append(fileName).toString());
+                        .append(user.getUserName()).append("/Data_In/thumb/").append(fileName).toString());
         if(imgFile.exists()){
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 125, 125);
+            return BitmapFactory.decodeFile(imgFile.getAbsolutePath()); //decodeSampledBitmap(imgFile.getAbsolutePath(), 125, 125);
         }
         return null;
     }

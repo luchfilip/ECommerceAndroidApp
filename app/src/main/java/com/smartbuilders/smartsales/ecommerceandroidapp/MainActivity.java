@@ -292,12 +292,23 @@ public class MainActivity extends AppCompatActivity
             mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
             mListView.setAdapter(mSearchResultAdapter);
 
-            File folder = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/");//-->Android/data/package.name/files/...
+            File folderThumb = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
             // if the directory does not exist, create it
-            if (!folder.exists()) {
+            if (!folderThumb.exists()) {
                 try {
-                    if (!folder.mkdirs()) {
-                        Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
+                    if (!folderThumb.mkdirs()) {
+                        Log.w(TAG, "Failed to create folder: " + folderThumb.getPath() + ".");
+                    }
+                } catch (SecurityException se) {
+                    se.printStackTrace();
+                }
+            }
+            File folderOriginal = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/original/");//-->Android/data/package.name/files/...
+            // if the directory does not exist, create it
+            if (!folderOriginal.exists()) {
+                try {
+                    if (!folderOriginal.mkdirs()) {
+                        Log.w(TAG, "Failed to create folder: " + folderOriginal.getPath() + ".");
                     }
                 } catch (SecurityException se) {
                     se.printStackTrace();
