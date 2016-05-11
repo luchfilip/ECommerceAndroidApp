@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
@@ -39,6 +40,7 @@ public class OrdersListActivity extends AppCompatActivity
     private ProductDB productDB;
     private ListView mListViewSearchResults;
     private SearchResultAdapter mSearchResultAdapter;
+    private ArrayList<Order> activeOrders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,12 @@ public class OrdersListActivity extends AppCompatActivity
             }
         }
 
-        if(findViewById(R.id.order_detail_container) != null){
+        if(activeOrders == null){
+            activeOrders = (new OrderDB(this, mCurrentUser)).getActiveOrders();
+        }
+
+        if(findViewById(R.id.order_detail_container) != null && activeOrders!=null
+                && activeOrders.size()>0){
             // If this view is present, then the activity should be
             // in two-pane mode.
             mTwoPane = true;
@@ -137,6 +144,14 @@ public class OrdersListActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
+    }
+
+    @Override
+    public ArrayList<Order> getActiveOrders(User user) {
+        if(activeOrders==null){
+            activeOrders = (new OrderDB(this, user)).getActiveOrders();
+        }
+        return activeOrders;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

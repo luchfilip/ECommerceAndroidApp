@@ -193,33 +193,40 @@
                                     android:id="@+id/product_ratingbar"
                                     android:focusable="false" />
 
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
+                                <LinearLayout
+                                    android:orientation="vertical"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/add_to_wishlist"
-                                    android:id="@+id/product_addtowishlist_button"
-                                    android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:layout_gravity="bottom|right"
-                                    android:focusable="false" />
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="bottom"
+                                    android:gravity="bottom">
 
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/add_to_shopping_cart"
-                                    android:id="@+id/product_addtoshoppingcart_button"
-                                    android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:layout_gravity="bottom|right" />
+                                    <Button
+                                        style="?android:attr/buttonStyleSmall"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/add_to_wishlist"
+                                        android:id="@+id/product_addtowishlist_button"
+                                        android:textAppearance="@android:style/TextAppearance.Small"
+                                        android:layout_gravity="bottom|right"
+                                        android:focusable="false" />
 
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/add_to_shopping_sales"
-                                    android:id="@+id/product_addtoshoppingsales_button"
-                                    android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:layout_gravity="bottom|right" />
+                                    <Button
+                                        style="?android:attr/buttonStyleSmall"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/add_to_shopping_cart"
+                                        android:id="@+id/product_addtoshoppingcart_button"
+                                        android:textAppearance="@android:style/TextAppearance.Small" />
+
+                                    <Button
+                                        style="?android:attr/buttonStyleSmall"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/add_to_shopping_sales"
+                                        android:id="@+id/product_addtoshoppingsales_button"
+                                        android:textAppearance="@android:style/TextAppearance.Small" />
+                                </LinearLayout>
 
                             </LinearLayout>
 
