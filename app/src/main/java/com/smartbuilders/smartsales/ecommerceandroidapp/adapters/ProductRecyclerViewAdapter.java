@@ -149,7 +149,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         if(holder.productBrand!=null){
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
-                holder.productBrand.setText(mDataset.get(position).getProductBrand().getDescription());
+                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                        mDataset.get(position).getProductBrand().getDescription()));
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
             }

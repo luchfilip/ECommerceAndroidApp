@@ -70,7 +70,8 @@ public class ProductDetailFragment extends Fragment {
         }
 
         if(mProduct.getProductBrand()!=null && mProduct.getProductBrand().getDescription()!=null){
-            ((TextView) view.findViewById(R.id.product_brand)).setText(mProduct.getProductBrand().getDescription());
+            ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
+                    mProduct.getProductBrand().getDescription()));
         }
 
         if(mProduct.getImageFileName()!=null){

@@ -115,7 +115,7 @@
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
     <string name="commercial_package">Empaque comercial: %1$s.</string>
-    <string name="availability">Disponibilidad: %1$s.</string>
+    <string name="availability">Disponibilidad: %1$s</string>
     <string name="search_by">Buscar Por...</string>
     <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
     <string name="search_by_brand">BUSCAR POR MARCA</string>
@@ -138,4 +138,7 @@
     <string name="qty_ordered">Cantidad pedida: %1$s.</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a la lista de deseos.</string>
+    <string name="brand_detail">Marca: %1$s.</string>
+    <string name="my_purchases">Mis Compras</string>
+    <string name="my_sales">Mis Ventas</string>
 </resources>

@@ -292,7 +292,8 @@ public class MainActivity extends AppCompatActivity
             mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
             mListView.setAdapter(mSearchResultAdapter);
 
-            File folderThumb = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
+            File folderThumb = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()
+                    +"/"+mCurrentUser.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
             // if the directory does not exist, create it
             if (!folderThumb.exists()) {
                 try {
@@ -303,7 +304,8 @@ public class MainActivity extends AppCompatActivity
                     se.printStackTrace();
                 }
             }
-            File folderOriginal = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()+"/"+mCurrentUser.getUserName()+"/Data_In/original/");//-->Android/data/package.name/files/...
+            File folderOriginal = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()
+                    +"/"+mCurrentUser.getUserName()+"/Data_In/original/");//-->Android/data/package.name/files/...
             // if the directory does not exist, create it
             if (!folderOriginal.exists()) {
                 try {
@@ -323,7 +325,7 @@ public class MainActivity extends AppCompatActivity
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(mainPageSections, true, mCurrentUser));
+        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, /*true,*/ mCurrentUser));
     }
 
     @Override

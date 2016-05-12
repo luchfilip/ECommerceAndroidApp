@@ -39,7 +39,7 @@ public class MainPageProductDB {
             c = db.rawQuery("SELECT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_SECTION_ID, M.PRODUCT_ID, " +
                         " A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, A.OBSERVACIONES, " +
                         " A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, A.EMPAQUE_COMERCIAL, " +
-                        " B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, S.DESCRIPTION " +
+                        " B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, S.DESCRIPTION, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
@@ -54,9 +54,9 @@ public class MainPageProductDB {
                 mainPageProduct.setProductId(c.getInt(2));
                 Product p = new Product();
                 p.setId(c.getInt(2));
-                p.setName(c.getString(5)+" (Cod: "+c.getString(11)+")");
+                p.setName(c.getString(5));
                 p.setDescription(c.getString(6));
-                p.setImageFileName(c.getString(11)+".png");
+                p.setImageFileName(c.getString(21));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(12), c.getString(13)));
                 p.setProductBrand(new ProductBrand(c.getInt(4), c.getString(14), c.getString(15)));
                 p.setProductCategory(new ProductCategory(c.getInt(16), c.getString(17), c.getString(18)));

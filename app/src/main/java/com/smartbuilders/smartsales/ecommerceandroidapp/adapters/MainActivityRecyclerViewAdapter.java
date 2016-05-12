@@ -1,13 +1,16 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,14 +30,17 @@ import java.util.ArrayList;
  */
 public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityRecyclerViewAdapter.ViewHolder> {
 
+    private static final String TAG = MainActivityRecyclerViewAdapter.class.getSimpleName();
+
     private static final int VIEW_TYPE_VIEWFLIPPER = 0;
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
+    private Activity mActivity;
     private ArrayList<MainPageSection> mDataset;
     private User mCurrentUser;
     private Context mContext;
-    private boolean mUseDetailLayout;
+//    private boolean mUseDetailLayout;
     private MainPageProductDB mainPageProductDB;
 
     @Override
@@ -64,10 +70,11 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityRecyclerViewAdapter(ArrayList<MainPageSection> myDataset,
-                                           boolean useDetailLayout, User user) {
+    public MainActivityRecyclerViewAdapter(Activity activity, ArrayList<MainPageSection> myDataset,
+                                           /*boolean useDetailLayout,*/ User user) {
+        mActivity = activity;
         mDataset = myDataset;
-        mUseDetailLayout = useDetailLayout;
+//        mUseDetailLayout = useDetailLayout;
         mCurrentUser = user;
     }
 
@@ -89,13 +96,13 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 break;
             }
             case VIEW_TYPE_RECYCLERVIEW: {
-                if(mUseDetailLayout){
+//                if(mUseDetailLayout){
+//                    v = LayoutInflater.from(parent.getContext())
+//                            .inflate(R.layout.category_product_list, parent, false);
+//                }else{
                     v = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.category_product_list, parent, false);
-                }else{
-                    v = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.category_product_list, parent, false);
-                }
+//                }
                 break;
             }
         }
@@ -133,10 +140,26 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     // use this setting to improve performance if you know that changes
                     // in content do not change the layout size of the RecyclerView
                     holder.mRecyclerView.setHasFixedSize(true);
-                    holder.mRecyclerView.setLayoutManager(
-                            new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                    //holder.mRecyclerView.setLayoutManager(
+                    //       new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-                    //holder.mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 8));
+                    int spanCount = 2;
+                    try {
+                        int measuredWidth;
+                        WindowManager w = mActivity.getWindowManager();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                            Point size = new Point();
+                            w.getDefaultDisplay().getSize(size);
+                            measuredWidth = size.x;
+                        } else {
+                            measuredWidth = w.getDefaultDisplay().getWidth();
+                        }
+                        spanCount = (int) (measuredWidth / mActivity.getResources().getDimension(R.dimen.productMinInfo_cardView_Width));
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    holder.mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, spanCount));
 
                     ArrayList<Product> products = new ArrayList<>();
                     for(MainPageProduct mainPageProduct : mainPageProducts){

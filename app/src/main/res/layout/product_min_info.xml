@@ -24,7 +24,7 @@
             android:layout_gravity="center" />
         <View style="@style/Divider"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/product_subcategory"
             android:textSize="@dimen/productMinInfo_subcategory_text_size"
@@ -33,7 +33,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="2dp"
             android:textColor="@color/product_subcategory"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:lines="1" />
 
         <TextView
             android:layout_width="match_parent"
@@ -44,7 +45,8 @@
             android:layout_marginTop="2dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:textSize="@dimen/productMinInfo_product_name_text_size" />
+            android:textSize="@dimen/productMinInfo_product_name_text_size"
+            android:lines="2" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
