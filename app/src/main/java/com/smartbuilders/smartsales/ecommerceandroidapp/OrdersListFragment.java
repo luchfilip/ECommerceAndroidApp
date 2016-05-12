@@ -42,7 +42,6 @@ public class OrdersListFragment extends Fragment {
             }
         }
 
-
         mOrdersListAdapter = new OrdersListAdapter(getActivity(), ((Callback) getActivity()).getActiveOrders(mCurrentUser), mCurrentUser);
 
         mListView = (ListView) rootView.findViewById(R.id.orders_list);

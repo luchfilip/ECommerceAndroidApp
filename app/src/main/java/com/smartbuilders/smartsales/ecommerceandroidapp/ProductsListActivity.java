@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,25 +12,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -42,7 +32,6 @@ public class ProductsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
     private static final String TAG = ProductsListActivity.class.getSimpleName();
-    public static final String KEY_PRODUCT = "key_product";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     public static final String KEY_PRODUCT_CATEGORY_ID = "KEY_PRODUCT_CATEGORY_ID";
@@ -57,14 +46,9 @@ public class ProductsListActivity extends AppCompatActivity
     private int productBrandId;
     private int productId;
     private String productName;
-//    private ProductDB productDB;
-//    private ListView mListView;
-//    private SearchResultAdapter mSearchResultAdapter;
     private ArrayList<Product> products;
     private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
     private boolean mUseGridView;
-//    private boolean isSearchListVisible;
-//    private EditText searchEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,15 +164,6 @@ public class ProductsListActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(TAG, "query: " + query);
-        }
-
-//        productDB = new ProductDB(this, mCurrentUser);
-
         if(products==null){
             products = new ArrayList<>();
         }
@@ -199,11 +174,6 @@ public class ProductsListActivity extends AppCompatActivity
                     word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             categorySubcategoryResultsTextView.append(word);
         }
-
-//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
-//
-//        mListView = (ListView) findViewById(R.id.search_result_list);
-//        mListView.setAdapter(mSearchResultAdapter);
 
         mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(products, true,
                 ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
@@ -277,61 +247,6 @@ public class ProductsListActivity extends AppCompatActivity
                 }
             });
         }
-
-//        if(findViewById(R.id.search_bar_linear_layout)!=null){
-//            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    startActivity(new Intent(ProductsListActivity.this, FilterOptionsActivity.class)
-//                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-//                }
-//            });
-//            searchEditText = (EditText) findViewById(R.id.search_product_editText);
-//            searchEditText.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                    if(!isSearchListVisible){
-//                        isSearchListVisible = true;
-//                        mListView.setVisibility(View.VISIBLE);
-//                        findViewById(R.id.product_list_result).setVisibility(View.GONE);
-//                        findViewById(R.id.category_subcategory_results).setVisibility(View.GONE);
-//                    }
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    if(TextUtils.isEmpty(s)){
-//                        isSearchListVisible = false;
-//                        mListView.setVisibility(View.GONE);
-//                        findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
-//                        findViewById(R.id.category_subcategory_results).setVisibility(View.VISIBLE);
-//                    }else{
-//                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()),
-//                                ProductsListActivity.this);
-//                        mSearchResultAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//
-//                }
-//            });
-//            searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//                @Override
-//                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                    if(actionId == EditorInfo.IME_ACTION_SEARCH
-//                            && !TextUtils.isEmpty(searchEditText.getText())){
-//                        Intent intent = new Intent(ProductsListActivity.this, ProductsListActivity.class);
-//                        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
-//                        startActivity(intent);
-//                        return true;
-//                    }
-//                    return false;
-//                }
-//            });
-//        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -351,15 +266,11 @@ public class ProductsListActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-//        if(searchEditText!=null && !TextUtils.isEmpty(searchEditText.getText())){
-//            searchEditText.setText("");
-//        }else{
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
-//        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

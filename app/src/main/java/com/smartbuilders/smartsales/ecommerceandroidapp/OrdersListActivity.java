@@ -1,30 +1,21 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -37,9 +28,6 @@ public class OrdersListActivity extends AppCompatActivity
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
-//    private ProductDB productDB;
-//    private ListView mListViewSearchResults;
-//    private SearchResultAdapter mSearchResultAdapter;
     private ArrayList<Order> activeOrders;
 
     @Override
@@ -47,7 +35,7 @@ public class OrdersListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
-        if( savedInstanceState != null ) {
+        if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
@@ -116,13 +104,6 @@ public class OrdersListActivity extends AppCompatActivity
             mTwoPane = false;
         }
 
-//        productDB = new ProductDB(this, mCurrentUser);
-//
-//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
-//
-//        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
-//        mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,64 +161,6 @@ public class OrdersListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_orders_list, menu);
-//
-//        /*SearchManager searchManager =
-//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        final MenuItem searchItem = menu.findItem(R.id.search);
-//        final SearchView searchView =
-//                (SearchView) MenuItemCompat.getActionView(searchItem);
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                Intent intent = new Intent(OrdersListActivity.this, ProductsListActivity.class);
-//                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-//                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
-//                startActivity(intent);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrdersListActivity.this);
-//                mSearchResultAdapter.notifyDataSetChanged();
-//                return false;
-//            }
-//        });
-//
-//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                mListViewSearchResults.setVisibility(View.VISIBLE);
-//                findViewById(R.id.orders_list).setVisibility(View.GONE);
-//                if(findViewById(R.id.title_textView) != null) {
-//                    findViewById(R.id.title_textView).setVisibility(View.GONE);
-//                }
-//                mSearchResultAdapter.setData(new ArrayList<Product>(), OrdersListActivity.this);
-//                mSearchResultAdapter.notifyDataSetChanged();
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                mListViewSearchResults.setVisibility(View.GONE);
-//                findViewById(R.id.orders_list).setVisibility(View.VISIBLE);
-//                if(findViewById(R.id.title_textView) != null) {
-//                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
-//                }
-//                return true;
-//            }
-//        });*/
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -1,33 +1,25 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
-import java.util.ArrayList;
-
+/**
+ * Jesus Sarco, 12.05.2016
+ */
 public class OrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,9 +30,6 @@ public class OrderDetailActivity extends AppCompatActivity
 
     private User mCurrentUser;
     private Order mOrder;
-//    private ProductDB productDB;
-//    private ListView mListViewSearchResults;
-//    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +79,6 @@ public class OrderDetailActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-//        productDB = new ProductDB(this, mCurrentUser);
-//
-//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
-//
-//        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
-//        mListViewSearchResults.setAdapter(mSearchResultAdapter);
-
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -145,69 +127,10 @@ public class OrderDetailActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_order_detail, menu);
-
-        /*SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchItem = menu.findItem(R.id.search);
-        final SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(OrderDetailActivity.this, ProductsListActivity.class);
-                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
-                startActivity(intent);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), OrderDetailActivity.this);
-                mSearchResultAdapter.notifyDataSetChanged();
-                return false;
-            }
-        });
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                mListViewSearchResults.setVisibility(View.VISIBLE);
-                findViewById(R.id.main_layout).setVisibility(View.GONE);
-                if(findViewById(R.id.title_textView) != null) {
-                    findViewById(R.id.title_textView).setVisibility(View.GONE);
-                }
-                mSearchResultAdapter.setData(new ArrayList<Product>(), OrderDetailActivity.this);
-                mSearchResultAdapter.notifyDataSetChanged();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                mListViewSearchResults.setVisibility(View.GONE);
-                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                if(findViewById(R.id.title_textView) != null) {
-                    findViewById(R.id.title_textView).setVisibility(View.VISIBLE);
-                }
-                return true;
-            }
-        });*/
-
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

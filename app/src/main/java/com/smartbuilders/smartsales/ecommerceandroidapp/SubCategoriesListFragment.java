@@ -51,10 +51,8 @@ public class SubCategoriesListFragment extends Fragment {
             }
         }
 
-        ProductSubCategoryDB subCategoryDB = new ProductSubCategoryDB(getContext(), mCurrentUser);
-
         SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(),
-                subCategoryDB.getActiveProductSubCategoriesByCategoryId(mCategoryId));
+                (new ProductSubCategoryDB(getContext(), mCurrentUser)).getActiveProductSubCategoriesByCategoryId(mCategoryId));
 
         ListView mListView = (ListView) rootView.findViewById(R.id.categories_list);
         mListView.setAdapter(mCategoryAdapter);

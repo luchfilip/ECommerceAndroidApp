@@ -11,7 +11,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class CategoriesListActivity extends AppCompatActivity implements
         CategoriesListFragment.Callback {
 
-    private static final String TAG = CategoriesListActivity.class.getSimpleName();
     private static final String SUBCATEGORYFRAGMENT_TAG = "SUBCATEGORYFRAGMENT_TAG";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";

@@ -11,7 +11,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class SubCategoriesListActivity extends AppCompatActivity {
 
-    private final String TAG = SubCategoriesListActivity.class.getSimpleName();
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     private final String STATE_SCREEN_ORIENTATION = "state_orientation";
