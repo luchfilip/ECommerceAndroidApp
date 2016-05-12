@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                 mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
         try{
             ((TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(mCurrentUser.getUserName());
+                    .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
         }catch(Exception e){
             e.printStackTrace();
         }

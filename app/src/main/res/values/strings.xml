@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Configuraciones</string>
+    <string name="action_setting">Configuración</string>
     <string name="search">Buscar</string>
     <string name="categories">Categorías</string>
     <string name="filter">Filtrar</string>
@@ -116,7 +116,7 @@
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
     <string name="commercial_package">Empaque comercial: %1$s.</string>
     <string name="availability">Disponibilidad: %1$s</string>
-    <string name="search_by">Buscar Por</string>
+    <string name="search_by">BUSCAR POR</string>
     <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
     <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string name="quantity_label">Cantidad:</string>
@@ -127,8 +127,8 @@
     <string name="order_date">Fecha de creación: %1$s.</string>
     <string name="order_lines_number">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
-    <string name="product_moved_to_shopping_cart">Producto trasladado al carrito de compra.</string>
-    <string name="product_moved_to_shopping_sale">Producto trasladado al carrito de venta.</string>
+    <string name="product_moved_to_shopping_cart">Agregado al carrito de compra.</string>
+    <string name="product_moved_to_shopping_sale">Agregado al carrito de venta.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de deseos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compra?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s del carrito de venta?</string>
@@ -143,4 +143,6 @@
     <string name="my_sales">Mis Ventas</string>
     <string name="ranking_label">Valoración:</string>
     <string name="no_results_founds">No se encontraron resultados.</string>
+    <string name="welcome_user">Bienvenido %1$s</string>
+    <string name="delete_recent_search">¿Desea eliminar la busqueda "%1$s" del historial de busqueda?</string>
 </resources>

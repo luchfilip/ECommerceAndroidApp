@@ -48,7 +48,7 @@ public class FilterOptionsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         try{
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(mCurrentUser.getUserName());
+                    .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -32,7 +32,7 @@ public class ProductCategory extends Model implements Parcelable {
     }
 
     public ProductCategory(){
-
+        super();
     }
 
     public String getName() {

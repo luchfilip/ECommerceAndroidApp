@@ -6,6 +6,16 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/delete_recent_search_img"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/places_ic_clear"
+        android:visibility="gone"
+        android:layout_marginRight="4dp"
+        android:layout_marginLeft="4dp" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"

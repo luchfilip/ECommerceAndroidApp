@@ -35,6 +35,7 @@ import java.util.ArrayList;
 public class ProductDetailFragment extends Fragment {
 
     private static final String TAG = ProductDetailFragment.class.getSimpleName();
+    private static final String STATE_CURRENT_USER = "state_current_user";
 
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
@@ -48,17 +49,26 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
-                mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+        }
+
+        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
             if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_CURRENT_USER)){
                 mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ProductDetailActivity.KEY_CURRENT_USER);
             }
+            if(getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
+                mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
+            }
         }
+
+        ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
+
+        mProduct = productDB.getProductById(mProduct.getId());
 
         ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
@@ -80,7 +90,6 @@ public class ProductDetailFragment extends Fragment {
             }
         }
 
-        ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
         ArrayList<Product> relatedProducts = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
         if(relatedProducts!=null && !relatedProducts.isEmpty()){
             RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
@@ -224,5 +233,11 @@ public class ProductDetailFragment extends Fragment {
         EditQtyRequestedDialogFragment editQtyRequestedDialogFragment =
                 EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser, docType);
         editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }

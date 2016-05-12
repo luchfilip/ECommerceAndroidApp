@@ -30,8 +30,6 @@ import java.util.ArrayList;
  */
 public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainActivityRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = MainActivityRecyclerViewAdapter.class.getSimpleName();
-
     private static final int VIEW_TYPE_VIEWFLIPPER = 0;
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
     private static final int VIEW_TYPE_COUNT = 2;
@@ -40,7 +38,6 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     private ArrayList<MainPageSection> mDataset;
     private User mCurrentUser;
     private Context mContext;
-//    private boolean mUseDetailLayout;
     private MainPageProductDB mainPageProductDB;
 
     @Override
@@ -71,10 +68,9 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MainActivityRecyclerViewAdapter(Activity activity, ArrayList<MainPageSection> myDataset,
-                                           /*boolean useDetailLayout,*/ User user) {
+                                           User user) {
         mActivity = activity;
         mDataset = myDataset;
-//        mUseDetailLayout = useDetailLayout;
         mCurrentUser = user;
     }
 
@@ -96,13 +92,8 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 break;
             }
             case VIEW_TYPE_RECYCLERVIEW: {
-//                if(mUseDetailLayout){
-//                    v = LayoutInflater.from(parent.getContext())
-//                            .inflate(R.layout.category_product_list, parent, false);
-//                }else{
-                    v = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.category_product_list, parent, false);
-//                }
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.category_product_list, parent, false);
                 break;
             }
         }

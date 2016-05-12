@@ -1,7 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +12,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BrandsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 
 import java.util.ArrayList;
 
@@ -27,11 +33,16 @@ public class SearchResultAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList mDataset;
     private User mCurrentUser;
+    private RecentSearchDB recentSearchDB;
 
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
+        recentSearchDB = new RecentSearchDB(context, user);
         if(data!=null){
             data = new ArrayList();
+        }
+        if(data.isEmpty()){
+            data = recentSearchDB.getRecentSearches(30);
         }
         mDataset = data;
         mCurrentUser = user;
@@ -83,6 +94,9 @@ public class SearchResultAdapter extends BaseAdapter {
             view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    recentSearchDB.insertRecentSearch(((Product) mDataset.get(position)).getName(),
+                            ((Product) mDataset.get(position)).getId(),
+                            ((Product) mDataset.get(position)).getProductSubCategory().getId());
                     goToProductList((Product) mDataset.get(position));
                 }
             });
@@ -115,6 +129,27 @@ public class SearchResultAdapter extends BaseAdapter {
                     }
                 });
             }
+        }else if(mDataset.get(position) instanceof RecentSearch){
+            viewHolder.title.setPadding(0, 11, 0, 11);
+            viewHolder.title.setText(((RecentSearch) mDataset.get(position)).getTextToSearch());
+            viewHolder.subTitle.setVisibility(TextView.GONE);
+            viewHolder.title.setTextSize(16);
+            viewHolder.deleteRecentSearchImage.setVisibility(View.INVISIBLE);
+            viewHolder.deleteRecentSearchImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setMessage(mContext.getString(R.string.delete_recent_search,
+                                    ((RecentSearch) mDataset.get(position)).getTextToSearch()))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    recentSearchDB.deleteRecentSearchById(((RecentSearch) mDataset.get(position)).getId());
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .show();
+                }
+            });
         }
 
         view.setTag(viewHolder);
@@ -137,11 +172,13 @@ public class SearchResultAdapter extends BaseAdapter {
         public TextView title;
         public TextView subTitle;
         public ImageView goToSearchImage;
+        public ImageView deleteRecentSearchImage;
 
         public ViewHolder(View v) {
             title = (TextView) v.findViewById(R.id.title_textView);
             subTitle = (TextView) v.findViewById(R.id.subTitle_textView);
             goToSearchImage = (ImageView) v.findViewById(R.id.go_to_search_result_img);
+            deleteRecentSearchImage = (ImageView) v.findViewById(R.id.delete_recent_search_img);
         }
     }
 }

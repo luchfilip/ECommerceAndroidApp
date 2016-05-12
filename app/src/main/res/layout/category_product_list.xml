@@ -10,7 +10,7 @@
     card_view:contentPadding="5dp"
     card_view:cardElevation="2dp"
     android:layout_margin="5dp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="@color/category_product_card_color"
     android:focusable="false">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/category_name"
             android:textSize="@dimen/mainpage_name_size"
-            android:textStyle="bold"
+            android:textStyle="bold|italic"
             android:layout_marginLeft="5dp" />
 
         <android.support.v7.widget.RecyclerView

@@ -14,7 +14,7 @@ public class ProductBrand extends Model implements Parcelable {
     private int productsActiveQty;
 
     public ProductBrand(){
-
+        super();
     }
 
     public ProductBrand(int id, String name, String description){

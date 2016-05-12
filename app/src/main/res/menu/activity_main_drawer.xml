@@ -57,7 +57,7 @@
                 android:title="@string/google_play" />
         </menu>
     </item>
-    <item android:title="@string/tools">
+    <item android:title="@string/action_setting">
         <menu>
             <item
                 android:id="@+id/nav_manage"

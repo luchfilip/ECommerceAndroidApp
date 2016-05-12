@@ -60,6 +60,7 @@
         android:layout_height="wrap_content"
         android:text="@string/search_by"
         android:id="@+id/search_by_button"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

@@ -21,8 +21,6 @@ import java.util.regex.Pattern;
  */
 public class ProductDB {
 
-    private String TAG = ProductDB.class.getSimpleName();
-
     private Context context;
     private User user;
     private DatabaseHelper dbh;

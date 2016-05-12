@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 
-import java.util.ArrayList;
-
 /**
  * Created by Alberto on 23/3/2016.
  */
@@ -28,29 +26,29 @@ public class Product extends Model implements Parcelable {
 
     protected Product(Parcel in) {
         super(in);
-        productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
         imageId = in.readInt();
         name = in.readString();
         description = in.readString();
         imageFileName = in.readString();
+        availability = in.readInt();
+        productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
-        availability = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeParcelable(productBrand, flags);
         dest.writeInt(imageId);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(imageFileName);
+        dest.writeInt(availability);
+        dest.writeParcelable(productBrand, flags);
         dest.writeParcelable(productCategory, flags);
         dest.writeParcelable(productSubCategory, flags);
         dest.writeParcelable(productCommercialPackage, flags);
-        dest.writeInt(availability);
     }
 
     @Override

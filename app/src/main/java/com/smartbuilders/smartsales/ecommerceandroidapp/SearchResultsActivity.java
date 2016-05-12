@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -112,6 +113,8 @@ public class SearchResultsActivity extends AppCompatActivity
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if(actionId == EditorInfo.IME_ACTION_SEARCH
                             && !TextUtils.isEmpty(searchEditText.getText())){
+                        new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                                .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                         Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
                         intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                         intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());

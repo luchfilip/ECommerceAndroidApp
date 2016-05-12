@@ -189,7 +189,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_ECOMMERCE_ORDERLINE =
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE ")
                                         .append("(ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                                        .append("ECOMMERCE_ORDER_ID DEFAULT NULL, ")
+                                        .append("ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, ")
                                         .append("PRODUCT_ID INTEGER NOT NULL, ")
                                         .append("QTY_REQUESTED INTEGER NOT NULL, ")
                                         .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
@@ -199,6 +199,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
                                         .append("APP_VERSION VARCHAR(128) NOT NULL, ")
                                         .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+	public static final String CREATE_RECENT_SEARCH =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS RECENT_SEARCH ")
+										.append("(RECENT_SEARCH_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+										.append("TEXT_TO_SEARCH TEXT NOT NULL, ")
+										.append("PRODUCT_ID INTEGER DEFAULT NULL, ")
+										.append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
+										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 
 	/**
 	 * 
@@ -387,213 +395,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		try{
-			db.execSQL("DROP TABLE MAINPAGE_PRODUCT");
+			db.execSQL("DROP TABLE RECENT_SEARCH");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		db.execSQL(CREATE_MAINPAGE_PRODUCT);
-		for(String insert : (new UtilsMainPageProduct()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-        try{
-            db.execSQL("DROP TABLE ARTICULOS");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-		db.execSQL(CREATE_ARTICULOS);
-		for(String insert : (new UtilsProducts()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProducts2()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-        try{
-            db.execSQL("DROP TABLE BRAND");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-		db.execSQL(CREATE_BRAND);
-		for(String insert : (new UtilsBrands()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE CATEGORY");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_CATEGORY);
-		for(String insert : (new UtilsCategory()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE SUBCATEGORY");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_SUBCATEGORY);
-		for(String insert : (new UtilsSubCategory()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE MAINPAGE_SECTION");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_MAINPAGE_SECTION);
-		for(String insert : (new UtilsMainPageSection()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE MAINPAGE_PRODUCT");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_MAINPAGE_PRODUCT);
-		for(String insert : (new UtilsMainPageProduct()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE ECOMMERCE_ORDER");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_ECOMMERCE_ORDER);
-
-		try{
-			db.execSQL("DROP TABLE ECOMMERCE_ORDERLINE");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
-
-		try{
-			db.execSQL("DROP TABLE PRODUCT_AVAILABILITY");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-		for(String insert : (new UtilsProductAvailability()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		try{
-			db.execSQL("DROP TABLE PRODUCT_SHOPPING_RELATED");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
-		for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
+		db.execSQL(CREATE_RECENT_SEARCH);
 	}
 
 	@Override

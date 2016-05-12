@@ -24,6 +24,7 @@ public class ProductSubCategory extends ProductCategory implements Parcelable {
     private int productsActiveQty;
 
     public ProductSubCategory() {
+        super();
     }
 
     public ProductSubCategory(int productCategoryId, int id, String name, String description) {

@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,8 +23,6 @@ import java.util.Set;
  * Created by Alberto on 9/4/2016.
  */
 public class BrandAdapter extends BaseAdapter implements SectionIndexer {
-
-    private static final String TAG = BrandAdapter.class.getSimpleName();
 
     private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
