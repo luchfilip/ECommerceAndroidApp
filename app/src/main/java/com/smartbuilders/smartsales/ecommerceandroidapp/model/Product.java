@@ -14,7 +14,6 @@ public class Product extends Model implements Parcelable {
 
     private ProductBrand productBrand;
     private int imageId = R.drawable.no_image_available;
-    private ArrayList<Integer> imagesIds;
     private String name;
     private String description;
     private String imageFileName;
@@ -125,14 +124,6 @@ public class Product extends Model implements Parcelable {
 
     public void setImageId(int imageId) {
         this.imageId = imageId;
-    }
-
-    public ArrayList<Integer> getImagesIds() {
-        return imagesIds;
-    }
-
-    public void setImagesIds(ArrayList<Integer> imagesIds) {
-        this.imagesIds = imagesIds;
     }
 
     public ProductCommercialPackage getProductCommercialPackage() {

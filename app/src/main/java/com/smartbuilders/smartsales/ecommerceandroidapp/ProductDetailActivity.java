@@ -37,9 +37,9 @@ public class ProductDetailActivity extends AppCompatActivity
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
-    private ProductDB productDB;
-    private ListView mListView;
-    private SearchResultAdapter mSearchResultAdapter;
+//    private ProductDB productDB;
+//    private ListView mListView;
+//    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,64 +78,82 @@ public class ProductDetailActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        productDB = new ProductDB(this, mCurrentUser);
+//        productDB = new ProductDB(this, mCurrentUser);
+//
+//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+//
+//        mListView = (ListView) findViewById(R.id.search_result_list);
+//        mListView.setAdapter(mSearchResultAdapter);
 
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+        if(findViewById(R.id.search_bar_linear_layout)!=null){
+            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ProductDetailActivity.this, FilterOptionsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
 
-        mListView = (ListView) findViewById(R.id.search_result_list);
-        mListView.setAdapter(mSearchResultAdapter);
+            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ProductDetailActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+        }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_product_detail, menu);
-
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchItem = menu.findItem(R.id.search);
-        final SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
-                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
-                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
-                startActivity(intent);
-                finish();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ProductDetailActivity.this);
-                mSearchResultAdapter.notifyDataSetChanged();
-                return false;
-            }
-        });
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                mListView.setVisibility(View.VISIBLE);
-                findViewById(R.id.product_detail_main_view).setVisibility(View.GONE);
-                mSearchResultAdapter.setData(new ArrayList<Product>(), ProductDetailActivity.this);
-                mSearchResultAdapter.notifyDataSetChanged();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                mListView.setVisibility(View.GONE);
-                findViewById(R.id.product_detail_main_view).setVisibility(View.VISIBLE);
-                return true;
-            }
-        });
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_product_detail, menu);
+//
+//        /*SearchManager searchManager =
+//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        final MenuItem searchItem = menu.findItem(R.id.search);
+//        final SearchView searchView =
+//                (SearchView) MenuItemCompat.getActionView(searchItem);
+//        searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(getComponentName()));
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                Intent intent = new Intent(ProductDetailActivity.this, ProductsListActivity.class);
+//                intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+//                intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, s);
+//                startActivity(intent);
+//                finish();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                mSearchResultAdapter.setData(productDB.getLightProductsByName(s), ProductDetailActivity.this);
+//                mSearchResultAdapter.notifyDataSetChanged();
+//                return false;
+//            }
+//        });
+//
+//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                mListView.setVisibility(View.VISIBLE);
+//                findViewById(R.id.product_detail_main_view).setVisibility(View.GONE);
+//                mSearchResultAdapter.setData(new ArrayList<Product>(), ProductDetailActivity.this);
+//                mSearchResultAdapter.notifyDataSetChanged();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                mListView.setVisibility(View.GONE);
+//                findViewById(R.id.product_detail_main_view).setVisibility(View.VISIBLE);
+//                return true;
+//            }
+//        });*/
+//        return true;
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

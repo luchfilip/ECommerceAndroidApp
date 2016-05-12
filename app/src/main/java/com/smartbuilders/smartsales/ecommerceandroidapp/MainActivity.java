@@ -9,13 +9,10 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
@@ -23,12 +20,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -58,9 +60,11 @@ public class MainActivity extends AppCompatActivity
     private Account mAccount;
     private NavigationView mNavigationView;
     private RecyclerView mRecyclerView;
-    private ProductDB productDB;
-    private ListView mListView;
-    private SearchResultAdapter mSearchResultAdapter;
+//    private ProductDB productDB;
+//    private ListView mListView;
+//    private SearchResultAdapter mSearchResultAdapter;
+//    private boolean isSearchListVisible;
+//    private EditText searchEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +109,68 @@ public class MainActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState != null) {
-            mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-        }
+//        mListView = (ListView) findViewById(R.id.search_result_list);
 
-        mListView = (ListView) findViewById(R.id.search_result_list);
+        if(findViewById(R.id.search_bar_linear_layout)!=null){
+            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+
+            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+
+//            searchEditText = (EditText) findViewById(R.id.search_product_editText);
+//            searchEditText.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    if(!isSearchListVisible){
+//                        mListView.setVisibility(View.VISIBLE);
+//                        findViewById(R.id.main_categories_list).setVisibility(View.GONE);
+//                        isSearchListVisible = true;
+//                    }
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    if(TextUtils.isEmpty(s)){
+//                        isSearchListVisible = false;
+//                        mListView.setVisibility(View.GONE);
+//                        findViewById(R.id.main_categories_list).setVisibility(View.VISIBLE);
+//                    }else{
+//                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), MainActivity.this);
+//                        mSearchResultAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//
+//                }
+//            });
+//            searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//                @Override
+//                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                    if(actionId == EditorInfo.IME_ACTION_SEARCH
+//                            && !TextUtils.isEmpty(searchEditText.getText())){
+//                        Intent intent = new Intent(MainActivity.this, ProductsListActivity.class);
+//                        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+//                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
+//                        startActivity(intent);
+//                        return true;
+//                    }
+//                    return false;
+//                }
+//            });
+        }
     }
 
     @Override
@@ -120,12 +181,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+//        if(searchEditText!=null && !TextUtils.isEmpty(searchEditText.getText())){
+//            searchEditText.setText("");
+//        }else{
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+//        }
     }
 
     @Override
@@ -133,7 +198,7 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        SearchManager searchManager =
+        /*SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView =
@@ -175,7 +240,7 @@ public class MainActivity extends AppCompatActivity
                 mSearchResultAdapter.notifyDataSetChanged();
                 return true;
             }
-        });
+        });*/
 
         // Get the search close button
         //ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
@@ -287,10 +352,12 @@ public class MainActivity extends AppCompatActivity
             MainPageSectionDB mainPageSectionDB = new MainPageSectionDB(MainActivity.this, mCurrentUser);
             loadMainPage(mainPageSectionDB.getActiveMainPageSections());
 
-            productDB = new ProductDB(this, mCurrentUser);
-
-            mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
-            mListView.setAdapter(mSearchResultAdapter);
+//            productDB = new ProductDB(this, mCurrentUser);
+//
+//            if(mSearchResultAdapter==null){
+//                mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+//                mListView.setAdapter(mSearchResultAdapter);
+//            }
 
             File folderThumb = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()
                     +"/"+mCurrentUser.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...

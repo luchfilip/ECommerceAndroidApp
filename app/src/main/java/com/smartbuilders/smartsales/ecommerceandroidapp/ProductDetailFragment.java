@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
@@ -18,12 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CustomPagerAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
@@ -75,64 +72,14 @@ public class ProductDetailFragment extends Fragment {
         }
 
         if(mProduct.getImageFileName()!=null){
-            view.findViewById(R.id.pager).setVisibility(View.GONE);
-            view.findViewById(R.id.radiogroup).setVisibility(View.GONE);
             Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
             if(img!=null){
                 ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
             }else{
                 ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
             }
-        }else{
-            view.findViewById(R.id.product_image).setVisibility(View.GONE);
-            ArrayList<Integer> imagesIds = new ArrayList<Integer>();
-            imagesIds.add(mProduct.getImageId());
-            imagesIds.add(mProduct.getImageId());
-            imagesIds.add(mProduct.getImageId());
-            imagesIds.add(mProduct.getImageId());
-            imagesIds.add(mProduct.getImageId());
-            mProduct.setImagesIds(imagesIds);
-
-            CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(getContext(), mProduct.getImagesIds());
-
-            ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-
-            final RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup);
-            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    switch (position){
-                        case 0:
-                            radioGroup.check(R.id.radioButton);
-                            break;
-                        case 1:
-                            radioGroup.check(R.id.radioButton2);
-                            break;
-                        case 2:
-                            radioGroup.check(R.id.radioButton3);
-                            break;
-                        case 3:
-                            radioGroup.check(R.id.radioButton4);
-                            break;
-                        case 4:
-                            radioGroup.check(R.id.radioButton5);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-            viewPager.setAdapter(mCustomPagerAdapter);
         }
+
         ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
         ArrayList<Product> relatedProducts = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
         if(relatedProducts!=null && !relatedProducts.isEmpty()){

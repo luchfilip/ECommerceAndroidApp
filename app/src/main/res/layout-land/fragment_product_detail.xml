@@ -53,79 +53,13 @@
                             android:layout_height="match_parent"
                             android:baselineAligned="false">
 
-                            <LinearLayout
-                                android:orientation="vertical"
+                            <ImageView
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="4">
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/viewpager_height"
-                                    android:id="@+id/product_image"
-                                    android:focusable="false"
-                                    android:layout_margin="4dp" />
-
-                                <android.support.v4.view.ViewPager
-                                    android:id="@+id/pager"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/viewpager_height"
-                                    android:focusable="false"
-                                    android:visibility="gone"
-                                    android:padding="4dp" />
-
-                                <RadioGroup
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal|bottom"
-                                    android:orientation="horizontal"
-                                    android:id="@+id/radiogroup"
-                                    android:gravity="center_horizontal"
-                                    android:focusable="false"
-                                    android:visibility="gone">
-
-                                    <RadioButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:id="@+id/radioButton"
-                                        android:scaleX="@integer/radioButton_scale"
-                                        android:scaleY="@integer/radioButton_scale"
-                                        android:checked="true"
-                                        android:focusable="false" />
-
-                                    <RadioButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:scaleX="@integer/radioButton_scale"
-                                        android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton2"
-                                        android:focusable="false" />
-
-                                    <RadioButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:scaleX="@integer/radioButton_scale"
-                                        android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton3"
-                                        android:focusable="false" />
-
-                                    <RadioButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:scaleX="@integer/radioButton_scale"
-                                        android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton4"
-                                        android:focusable="false" />
-
-                                    <RadioButton
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:scaleX="@integer/radioButton_scale"
-                                        android:scaleY="@integer/radioButton_scale"
-                                        android:id="@+id/radioButton5"
-                                        android:focusable="false" />
-                                </RadioGroup>
-                            </LinearLayout>
+                                android:layout_height="@dimen/viewpager_height"
+                                android:id="@+id/product_image"
+                                android:focusable="false"
+                                android:layout_margin="4dp"
+                                android:layout_weight="4" />
 
                             <LinearLayout
                                 android:orientation="vertical"
@@ -150,37 +84,11 @@
                                     android:focusable="false" />
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_price"
-                                    android:textSize="@dimen/productDetailActivity_productPrice_text_size"
-                                    android:textStyle="bold"
-                                    android:visibility="gone"
-                                    android:focusable="false" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_pmvp"
-                                    android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone"
-                                    android:focusable="false" />
-
-                                <TextView
                                     android:id="@+id/product_availability"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
                                     android:textStyle="bold"
-                                    android:focusable="false" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_promo"
-                                    android:textColor="@color/promo_label_color"
-                                    android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone"
                                     android:focusable="false" />
 
                                 <RatingBar
@@ -354,10 +262,10 @@
             </LinearLayout>
     </ScrollView>
 
-    <ListView
+    <!--<ListView
         android:id="@+id/search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:visibility="gone" />
+        android:visibility="gone" />-->
 </FrameLayout>

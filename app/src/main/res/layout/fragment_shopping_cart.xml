@@ -84,12 +84,12 @@
             android:layout_marginRight="5dp" />
     </LinearLayout>
 
-    <ListView
+    <!--<ListView
         android:id="@+id/search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
 
 </LinearLayout>

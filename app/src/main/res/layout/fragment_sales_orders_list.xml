@@ -28,11 +28,11 @@
         style="@style/orders_list_style"
         android:background="@android:color/white" />
 
-    <ListView
+    <!--<ListView
         android:id="@+id/search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:visibility="gone"/>
+        android:visibility="gone"/>-->
 
 </LinearLayout>

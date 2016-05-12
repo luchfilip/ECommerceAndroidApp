@@ -38,9 +38,9 @@ public class OrderDetailActivity extends AppCompatActivity
 
     private User mCurrentUser;
     private Order mOrder;
-    private ProductDB productDB;
-    private ListView mListViewSearchResults;
-    private SearchResultAdapter mSearchResultAdapter;
+//    private ProductDB productDB;
+//    private ListView mListViewSearchResults;
+//    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +90,30 @@ public class OrderDetailActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        productDB = new ProductDB(this, mCurrentUser);
+//        productDB = new ProductDB(this, mCurrentUser);
+//
+//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+//
+//        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
+//        mListViewSearchResults.setAdapter(mSearchResultAdapter);
 
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+        if(findViewById(R.id.search_bar_linear_layout)!=null){
+            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(OrderDetailActivity.this, FilterOptionsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
 
-        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
-        mListViewSearchResults.setAdapter(mSearchResultAdapter);
+            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(OrderDetailActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+        }
     }
 
     @Override
@@ -133,12 +151,12 @@ public class OrderDetailActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_order_detail, menu);
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_order_detail, menu);
 
-        SearchManager searchManager =
+        /*SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView =
@@ -186,10 +204,10 @@ public class OrderDetailActivity extends AppCompatActivity
                 }
                 return true;
             }
-        });
+        });*/
 
-        return super.onCreateOptionsMenu(menu);
-    }
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

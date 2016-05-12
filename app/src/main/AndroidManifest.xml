@@ -58,49 +58,22 @@
                 <data android:pathPattern="/.*" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
         </activity>
+
         <activity
             android:name=".ProductsListActivity"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" />
 
-            <!--  -->
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            -->
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <!--  -->
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-
-            <!-- enable the search dialog to send searches to ProductsListActivity -->
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
         <activity
             android:name=".ProductDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name="com.jasgcorp.ids.AuthenticatorActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.WithActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:theme="@style/AppTheme.WithActionBar" />
 
         <provider
             android:name=".providers.CachedFileProvider"
@@ -147,96 +120,78 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".SubCategoriesListActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".ShoppingCartActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".CheckoutActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".OrdersListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".OrderDetailActivity"
             android:parentActivityName=".OrdersListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".InvoicesListActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".InvoiceDetailActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".InvoicesListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".InvoicesListActivity" />
-        </activity>
+            android:parentActivityName=".InvoicesListActivity"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".WishListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".StatementOfAccountActivity"
-            android:label="@string/app_name" />
-        <activity android:name=".SearchResultsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" />
 
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name=".SearchResultsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".FilterOptionsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".BrandsListActivity"
-            android:label="@string/app_name">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".BrandsListActivity" />
-        </activity>
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ShoppingSaleActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SalesOrderDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SalesOrdersListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".ProductsListActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

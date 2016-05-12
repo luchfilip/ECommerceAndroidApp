@@ -159,7 +159,8 @@ public class Utils {
                 .append("/").append(user.getUserGroup()).append("/")
                 .append(user.getUserName()).append("/Data_In/original/").append(fileName).toString());
         if(imgFile.exists()){
-            return BitmapFactory.decodeFile(imgFile.getAbsolutePath()); //decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
         }else{
             return getThumbByFileName(context, user, fileName);
         }
@@ -170,7 +171,8 @@ public class Utils {
                         .append("/").append(user.getUserGroup()).append("/")
                         .append(user.getUserName()).append("/Data_In/thumb/").append(fileName).toString());
         if(imgFile.exists()){
-            return BitmapFactory.decodeFile(imgFile.getAbsolutePath()); //decodeSampledBitmap(imgFile.getAbsolutePath(), 125, 125);
+            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
         }
         return null;
     }

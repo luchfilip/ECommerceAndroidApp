@@ -46,9 +46,9 @@ public class ShoppingSaleActivity extends AppCompatActivity
     private ShareActionProvider mShareActionProvider;
 
     private ArrayList<OrderLine> mOrderLines;
-    private ProductDB productDB;
-    private ListView mListViewSearchResults;
-    private SearchResultAdapter mSearchResultAdapter;
+//    private ProductDB productDB;
+//    private ListView mListViewSearchResults;
+//    private SearchResultAdapter mSearchResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +131,12 @@ public class ShoppingSaleActivity extends AppCompatActivity
                     });
         }
 
-        productDB = new ProductDB(this, mCurrentUser);
-
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
-
-        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
-        mListViewSearchResults.setAdapter(mSearchResultAdapter);
+//        productDB = new ProductDB(this, mCurrentUser);
+//
+//        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+//
+//        mListViewSearchResults = (ListView) findViewById(R.id.search_result_list);
+//        mListViewSearchResults.setAdapter(mSearchResultAdapter);
 
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && findViewById(R.id.company_logo_name)!=null
@@ -150,6 +150,23 @@ public class ShoppingSaleActivity extends AppCompatActivity
                     .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
         }
 
+        if(findViewById(R.id.search_bar_linear_layout)!=null) {
+            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ShoppingSaleActivity.this, FilterOptionsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+
+            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+        }
     }
 
     @Override
@@ -157,7 +174,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shopping_sale, menu);
 
-        SearchManager searchManager =
+        /*SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView =
@@ -215,7 +232,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
                 }
                 return true;
             }
-        });
+        });*/
 
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider =  (ShareActionProvider) MenuItemCompat

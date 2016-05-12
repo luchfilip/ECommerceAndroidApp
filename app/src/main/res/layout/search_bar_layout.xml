@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@color/colorPrimaryDark"
+    android:id="@+id/search_bar_linear_layout"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:baselineAligned="false"
+    app:layout_scrollFlags="scroll|enterAlways">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:background="@drawable/searchbox_bg"
+        android:foregroundGravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginRight="3dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/lateral_menu_bg_color"
+            android:hint="@string/search"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textColorHint="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:id="@+id/search_product_editText"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:enabled="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_search" />
+
+    </LinearLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_by"
+        android:id="@+id/search_by_button"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>

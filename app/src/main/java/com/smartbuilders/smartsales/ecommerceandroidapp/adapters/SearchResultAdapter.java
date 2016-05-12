@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -29,9 +30,8 @@ public class SearchResultAdapter extends BaseAdapter {
 
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
-        if(data!=null && data.isEmpty()){
-            data.add(context.getString(R.string.search_by_category));
-            data.add(context.getString(R.string.search_by_brand));
+        if(data!=null){
+            data = new ArrayList();
         }
         mDataset = data;
         mCurrentUser = user;
@@ -39,6 +39,7 @@ public class SearchResultAdapter extends BaseAdapter {
 
     public void setData(ArrayList data, Context context){
         if(data!=null && data.isEmpty()){
+            data.add(context.getString(R.string.no_results_founds));
             data.add(context.getString(R.string.search_by_category));
             data.add(context.getString(R.string.search_by_brand));
         }
@@ -86,13 +87,16 @@ public class SearchResultAdapter extends BaseAdapter {
                 }
             });
         }else if(mDataset.get(position) instanceof String){
-            viewHolder.title.setTextSize(18);
             viewHolder.title.setPadding(0, 12, 0, 12);
-            viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
             viewHolder.title.setText((String) mDataset.get(position));
             viewHolder.subTitle.setVisibility(TextView.GONE);
 
-            if(mDataset.get(position).equals(mContext.getString(R.string.search_by_category))) {
+            if(mDataset.get(position).equals(mContext.getString(R.string.no_results_founds))){
+                viewHolder.title.setTextSize(17);
+                viewHolder.goToSearchImage.setVisibility(View.INVISIBLE);
+            }else if(mDataset.get(position).equals(mContext.getString(R.string.search_by_category))) {
+                viewHolder.title.setTextSize(18);
+                viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -101,6 +105,8 @@ public class SearchResultAdapter extends BaseAdapter {
                     }
                 });
             } else if (mDataset.get(position).equals(mContext.getString(R.string.search_by_brand))) {
+                viewHolder.title.setTextSize(18);
+                viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -130,10 +136,12 @@ public class SearchResultAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView title;
         public TextView subTitle;
+        public ImageView goToSearchImage;
 
         public ViewHolder(View v) {
             title = (TextView) v.findViewById(R.id.title_textView);
             subTitle = (TextView) v.findViewById(R.id.subTitle_textView);
+            goToSearchImage = (ImageView) v.findViewById(R.id.go_to_search_result_img);
         }
     }
 }

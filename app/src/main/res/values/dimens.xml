@@ -14,8 +14,8 @@
     <item name="radioButton_scale" format="float" type="integer">0.5</item>
     <dimen name="viewpager_height">200dp</dimen>
     <dimen name="mainpage_name_size">20sp</dimen>
-    <dimen name="productMinInfo_subcategory_text_size">12sp</dimen>
-    <dimen name="productMinInfo_product_name_text_size">14sp</dimen>
+    <dimen name="productMinInfo_subcategory_text_size">11sp</dimen>
+    <dimen name="productMinInfo_product_name_text_size">13sp</dimen>
 
     <dimen name="productDetailCardView_productName_text_size">12sp</dimen>
     <dimen name="productDetailCardView_productBrand_text_size">10sp</dimen>

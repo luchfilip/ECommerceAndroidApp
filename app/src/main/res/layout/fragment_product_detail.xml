@@ -54,128 +54,40 @@
                             android:focusable="false"
                             android:layout_margin="4dp" />
 
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/pager"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/viewpager_height"
-                            android:focusable="false"
-                            android:visibility="gone" />
-
-                        <RadioGroup
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|bottom"
-                            android:orientation="horizontal"
-                            android:id="@+id/radiogroup"
-                            android:gravity="center_horizontal"
-                            android:focusable="false"
-                            android:visibility="gone">
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/radioButton"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:checked="true" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton2" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton3" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton4" />
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleX="@integer/radioButton_scale"
-                                android:scaleY="@integer/radioButton_scale"
-                                android:id="@+id/radioButton5" />
-                        </RadioGroup>
-
                         <LinearLayout
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:baselineAligned="false"
                             android:focusable="false">
 
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="2dp">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/product_brand"
+                                android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_brand"
-                                    android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
+                                android:id="@+id/product_comercial_package" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
-                                    android:id="@+id/product_comercial_package" />
+                            <TextView
+                                android:id="@+id/product_availability"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_price"
-                                    android:textSize="@dimen/productDetailActivity_productPrice_text_size"
-                                    android:textStyle="bold"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_pmvp"
-                                    android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/product_availability"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Product with promotion"
-                                    android:id="@+id/product_promo"
-                                    android:textColor="@color/promo_label_color"
-                                    android:textSize="@dimen/productDetailActivity_productPromo_text_size"
-                                    android:visibility="gone" />
-
-                                <RatingBar
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    style="?android:attr/ratingBarStyleSmall"
-                                    android:progressTint="@color/ratingbar_progress"
-                                    android:numStars="5"
-                                    android:rating="2.5"
-                                    android:id="@+id/product_ratingbar" />
-
-                            </LinearLayout>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?android:attr/ratingBarStyleSmall"
+                                android:progressTint="@color/ratingbar_progress"
+                                android:numStars="5"
+                                android:rating="2.5"
+                                android:id="@+id/product_ratingbar" />
 
                         </LinearLayout>
 
@@ -343,11 +255,11 @@
             </LinearLayout>
     </ScrollView>
 
-    <ListView
+    <!--<ListView
         android:id="@+id/search_result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:visibility="gone" />
+        android:visibility="gone" />-->
 
 </FrameLayout>
