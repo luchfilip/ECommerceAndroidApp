@@ -40,7 +40,8 @@ public class OrderDB {
 
     public String createOrder(String docType){
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
-        if(orderLineDB.getActiveShoppingCartLinesNumber()>0){
+        if((docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
+                || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)){
             SQLiteDatabase db = null;
             Cursor c = null;
             int orderId = 0;

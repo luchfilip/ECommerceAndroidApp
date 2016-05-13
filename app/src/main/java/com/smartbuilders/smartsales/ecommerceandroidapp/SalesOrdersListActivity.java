@@ -85,8 +85,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             activeOrders = (new OrderDB(this, mCurrentUser)).getActiveSalesOrders();
         }
 
-        if(findViewById(R.id.order_detail_container) != null && activeOrders!=null
-                && activeOrders.size()>0){
+        if(findViewById(R.id.sales_order_detail_container) != null){
             // If this view is present, then the activity should be
             // in two-pane mode.
             mTwoPane = true;
@@ -101,7 +100,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                 SalesOrderDetailFragment salesOrderDetailFragment = new SalesOrderDetailFragment();
                 salesOrderDetailFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.order_detail_container, salesOrderDetailFragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
+                        .add(R.id.sales_order_detail_container, salesOrderDetailFragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
                         .commit();
             }
         }else{
@@ -151,7 +150,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
             args.putParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
 
-            OrderDetailFragment fragment = new OrderDetailFragment();
+            SalesOrderDetailFragment fragment = new SalesOrderDetailFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()

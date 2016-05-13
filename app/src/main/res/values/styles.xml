@@ -69,7 +69,7 @@
     </style>
 
     <style name="title_style">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>

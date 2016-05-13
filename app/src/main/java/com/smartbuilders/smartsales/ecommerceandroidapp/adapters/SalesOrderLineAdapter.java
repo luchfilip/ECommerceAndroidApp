@@ -36,12 +36,18 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         public TextView productName;
         public ImageView productImage;
         public TextView qtyOrdered;
+        public TextView productPrice;
+        public TextView productTax;
+        public TextView totalLineAmount;
 
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
+            productPrice = (TextView) v.findViewById(R.id.product_price_textView);
+            productTax = (TextView) v.findViewById(R.id.product_tax_percentage_textView);
+            totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
         }
     }
 
@@ -92,7 +98,15 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             }
         });
 
-        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered, String.valueOf(mDataset.get(position).getQuantityOrdered())));
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
+                String.valueOf(mDataset.get(position).getQuantityOrdered())));
+        holder.productPrice.setText(mContext.getString(R.string.order_price_label,
+                String.valueOf(mDataset.get(position).getPrice())));
+        holder.productTax.setText(mContext.getString(R.string.order_tax_amount,
+                String.valueOf(mDataset.get(position).getTaxPercentage())));
+        holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                String.valueOf(mDataset.get(position).getSubTotalAmount())));
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

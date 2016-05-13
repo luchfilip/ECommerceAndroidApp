@@ -147,4 +147,14 @@
     <string name="delete_recent_search">¿Desea eliminar la busqueda "%1$s" del historial de busqueda?</string>
     <string name="delete_search_historical">Borrar historial</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
+    <string name="price_label">Precio:</string>
+    <string name="tax_label">(%) Impuesto:</string>
+    <string name="total_line_amount_label">Sub-Total:</string>
+    <string name="order_price_label">Precio: %1$s</string>
+    <string name="order_sub_total_amount">Sub-Total: %1$s</string>
+    <string name="order_sub_total_line_amount">Sub-Total línea: %1$s</string>
+    <string name="order_tax_amount">Impuestos: %1$s</string>
+    <string name="order_total_amount">Total: %1$s</string>
+    <string name="order_lines_title">Líneas del Pedido</string>
+    <string name="sales_order_lines_title">Líneas de la Cotización</string>
 </resources>

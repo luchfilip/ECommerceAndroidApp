@@ -12,6 +12,8 @@ public class OrderLine extends Model implements Parcelable {
     private int quantityOrdered;
     private double price;
     private Currency currency;
+    private double taxPercentage;
+    private double subTotalAmount;
 
     public OrderLine(){
 
@@ -23,6 +25,8 @@ public class OrderLine extends Model implements Parcelable {
         quantityOrdered = in.readInt();
         price = in.readDouble();
         currency = in.readParcelable(Currency.class.getClassLoader());
+        taxPercentage = in.readDouble();
+        subTotalAmount = in.readDouble();
     }
 
     @Override
@@ -32,6 +36,8 @@ public class OrderLine extends Model implements Parcelable {
         dest.writeInt(quantityOrdered);
         dest.writeDouble(price);
         dest.writeParcelable(currency, flags);
+        dest.writeDouble(taxPercentage);
+        dest.writeDouble(subTotalAmount);
     }
 
     @Override
@@ -81,6 +87,22 @@ public class OrderLine extends Model implements Parcelable {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public double getTaxPercentage() {
+        return taxPercentage;
+    }
+
+    public void setTaxPercentage(double taxPercentage) {
+        this.taxPercentage = taxPercentage;
+    }
+
+    public double getSubTotalAmount() {
+        return subTotalAmount;
+    }
+
+    public void setSubTotalAmount(double subTotalAmount) {
+        this.subTotalAmount = subTotalAmount;
     }
 
     @Override

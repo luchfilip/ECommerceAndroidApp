@@ -28,7 +28,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 26;
+	private static final int DATABASE_VERSION = 27;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -390,6 +390,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				}
 			}
 		}
+		try{
+			db.execSQL("DROP TABLE RECENT_SEARCH");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		db.execSQL(CREATE_RECENT_SEARCH);
 	}
 
 	@Override

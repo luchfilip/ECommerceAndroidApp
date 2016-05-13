@@ -81,8 +81,7 @@ public class OrdersListActivity extends AppCompatActivity
             activeOrders = (new OrderDB(this, mCurrentUser)).getActiveOrders();
         }
 
-        if(findViewById(R.id.order_detail_container) != null && activeOrders!=null
-                && activeOrders.size()>0){
+        if(findViewById(R.id.order_detail_container) != null){
             // If this view is present, then the activity should be
             // in two-pane mode.
             mTwoPane = true;

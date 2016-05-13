@@ -72,6 +72,19 @@ public class SalesOrderDetailFragment extends Fragment {
 
             ((TextView) rootView.findViewById(R.id.sales_order_date_tv))
                     .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
+
+            if(rootView.findViewById(R.id.sales_order_sub_total_tv) != null) {
+                ((TextView) rootView.findViewById(R.id.sales_order_sub_total_tv))
+                        .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mOrder.getSubTotalAmount())));
+            }
+            if(rootView.findViewById(R.id.sales_order_total_tv) != null) {
+                ((TextView) rootView.findViewById(R.id.sales_order_total_tv))
+                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mOrder.getTotalAmount())));
+            }
+            if(rootView.findViewById(R.id.sales_order_tax_tv) != null) {
+                ((TextView) rootView.findViewById(R.id.sales_order_tax_tv))
+                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mOrder.getTaxAmount())));
+            }
         }
         return rootView;
     }

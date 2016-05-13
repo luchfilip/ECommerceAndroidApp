@@ -108,9 +108,9 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
-                mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
-                mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+//        viewHolder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
+//                mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
+//                mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
 
         viewHolder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
 
@@ -173,7 +173,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productCommercialPackage;
+//        public TextView productCommercialPackage;
         public TextView productPrice;
         public TextView totalLine;
         public EditText qtyOrdered;
@@ -182,7 +182,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             totalLine = (TextView) v.findViewById(R.id.total_line);
-            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+//            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);

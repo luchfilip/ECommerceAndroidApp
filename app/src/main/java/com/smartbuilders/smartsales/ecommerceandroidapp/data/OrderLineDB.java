@@ -272,6 +272,10 @@ public class OrderLineDB {
         return getActiveOrderLinesNumber(WISHLIST_DOCTYPE);
     }
 
+    public int getActiveShoppingSalesLinesNumber(){
+        return getActiveOrderLinesNumber(SHOPPING_SALE_DOCTYPE);
+    }
+
     private int getActiveOrderLinesNumber(String docType) {
         SQLiteDatabase db = null;
         Cursor c = null;
