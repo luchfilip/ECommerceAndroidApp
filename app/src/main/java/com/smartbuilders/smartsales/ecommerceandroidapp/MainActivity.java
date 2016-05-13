@@ -128,6 +128,14 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
+            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+
 //            searchEditText = (EditText) findViewById(R.id.search_product_editText);
 //            searchEditText.addTextChangedListener(new TextWatcher() {
 //                @Override

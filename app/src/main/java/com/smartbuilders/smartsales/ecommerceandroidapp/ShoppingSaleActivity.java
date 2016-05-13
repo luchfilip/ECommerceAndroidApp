@@ -141,6 +141,14 @@ public class ShoppingSaleActivity extends AppCompatActivity
                             .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
+
+            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
         }
     }
 
