@@ -39,6 +39,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> mOrderLines;
@@ -124,18 +125,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
                     });
         }
 
-        if ((mOrderLines==null || mOrderLines.size()==0)
-                && findViewById(R.id.company_logo_name)!=null
-                && findViewById(R.id.shoppingSale_items_list)!=null
-                && findViewById(R.id.shoppingSale_data_linearLayout)!=null) {
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
-            findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
-        } else {
-            ((TextView) findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
-        }
-
         if(findViewById(R.id.search_bar_linear_layout)!=null) {
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,6 +142,22 @@ public class ShoppingSaleActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if ((mOrderLines==null || mOrderLines.size()==0)
+                && findViewById(R.id.company_logo_name)!=null
+                && findViewById(R.id.shoppingSale_items_list)!=null
+                && findViewById(R.id.shoppingSale_data_linearLayout)!=null) {
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
+            findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.total_lines))
+                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+        }
+        super.onResume();
     }
 
     @Override

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShoppingSaleFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,47 +30,55 @@
         android:layout_weight="1"
         style="@style/shoppingSale_list_style"
         android:background="@android:color/white" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/total_lines"
-        android:layout_gravity="right"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="5dp"
-        android:textColor="@android:color/black" />
-
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/subTotalAmount_tv"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:visibility="gone" />
+        android:gravity="bottom"
+        android:id="@+id/shoppingSale_data_linearLayout">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/taxesAmount_tv"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/total_lines"
+            android:layout_gravity="right"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/totalAmount_tv"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:visibility="gone" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/subTotalAmount_tv"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/proceed_to_checkout_shopping_sale"
-        android:id="@+id/proceed_to_checkout_shopping_sale_button"
-        android:layout_gravity="right"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/taxesAmount_tv"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/totalAmount_tv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/proceed_to_checkout_shopping_sale"
+            android:id="@+id/proceed_to_checkout_shopping_sale_button"
+            android:layout_gravity="right"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

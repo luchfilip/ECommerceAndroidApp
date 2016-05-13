@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SalesOrdersListActivity">
+    tools:context=".SalesOrdersListActivity"
+    android:background="@android:color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +26,5 @@
         android:id="@+id/sales_orders_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/orders_list_style"
-        android:background="@android:color/white" />
+        style="@style/orders_list_style" />
 </LinearLayout>
