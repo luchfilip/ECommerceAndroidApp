@@ -1,18 +1,23 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +30,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAda
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -79,7 +85,7 @@ public class SearchResultsActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         mListView = (ListView) findViewById(R.id.search_result_list);
-        mSearchResultAdapter = new SearchResultAdapter(this, new ArrayList<Product>(), mCurrentUser);
+        mSearchResultAdapter = new SearchResultAdapter(this, null, mCurrentUser);
         mListView.setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
@@ -99,7 +105,11 @@ public class SearchResultsActivity extends AppCompatActivity
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                    if(TextUtils.isEmpty(s)){
+                        mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                    }else{
+                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                    }
                     mSearchResultAdapter.notifyDataSetChanged();
                 }
 
@@ -134,6 +144,40 @@ public class SearchResultsActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_search_results, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.delete_all_recent_searches) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.delete_all_recent_searches_question))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            (new RecentSearchDB(SearchResultsActivity.this, mCurrentUser))
+                                    .deleteAllRecentSearches();
+                            mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                            mSearchResultAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

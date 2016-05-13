@@ -62,7 +62,7 @@ public class RecentSearchDB {
         SQLiteDatabase db = null;
         try {
             db = dbh.getWritableDatabase();
-            db.delete("RECENT_SEARCH", "RECENT_SEARCH_ID", new String[]{String.valueOf(recentSearchId)});
+            db.delete("RECENT_SEARCH", "RECENT_SEARCH_ID = ?", new String[]{String.valueOf(recentSearchId)});
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -118,4 +118,21 @@ public class RecentSearchDB {
         return recentSearches;
     }
 
+    public void deleteAllRecentSearches(){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            db.delete("RECENT_SEARCH", null, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

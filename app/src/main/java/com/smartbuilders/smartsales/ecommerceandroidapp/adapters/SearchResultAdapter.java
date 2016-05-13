@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 
 import java.util.ArrayList;
@@ -38,18 +39,21 @@ public class SearchResultAdapter extends BaseAdapter {
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
         recentSearchDB = new RecentSearchDB(context, user);
-        if(data!=null){
-            data = new ArrayList();
-        }
-        if(data.isEmpty()){
+        if(data == null){
             data = recentSearchDB.getRecentSearches(30);
+        }else if(data.isEmpty()){
+            data.add(context.getString(R.string.no_results_founds));
+            data.add(context.getString(R.string.search_by_category));
+            data.add(context.getString(R.string.search_by_brand));
         }
         mDataset = data;
         mCurrentUser = user;
     }
 
     public void setData(ArrayList data, Context context){
-        if(data!=null && data.isEmpty()){
+        if(data == null){
+            data = recentSearchDB.getRecentSearches(30);
+        }else if(data.isEmpty()){
             data.add(context.getString(R.string.no_results_founds));
             data.add(context.getString(R.string.search_by_category));
             data.add(context.getString(R.string.search_by_brand));
@@ -131,23 +135,49 @@ public class SearchResultAdapter extends BaseAdapter {
             }
         }else if(mDataset.get(position) instanceof RecentSearch){
             viewHolder.title.setPadding(0, 11, 0, 11);
+            viewHolder.title.setTextSize(14);
             viewHolder.title.setText(((RecentSearch) mDataset.get(position)).getTextToSearch());
+
             viewHolder.subTitle.setVisibility(TextView.GONE);
-            viewHolder.title.setTextSize(16);
-            viewHolder.deleteRecentSearchImage.setVisibility(View.INVISIBLE);
+
+            viewHolder.goToSearchImage.setImageResource(android.R.drawable.ic_menu_recent_history);
+
+            viewHolder.deleteRecentSearchImage.setVisibility(View.VISIBLE);
             viewHolder.deleteRecentSearchImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new AlertDialog.Builder(mContext)
-                            .setMessage(mContext.getString(R.string.delete_recent_search,
-                                    ((RecentSearch) mDataset.get(position)).getTextToSearch()))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    recentSearchDB.deleteRecentSearchById(((RecentSearch) mDataset.get(position)).getId());
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null)
-                            .show();
+                        .setMessage(mContext.getString(R.string.delete_recent_search,
+                                ((RecentSearch) mDataset.get(position)).getTextToSearch()))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                recentSearchDB.deleteRecentSearchById(((RecentSearch) mDataset.get(position)).getId());
+                                mDataset.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+                }
+            });
+
+            view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(((RecentSearch) mDataset.get(position)).getProductId()>0 &&
+                            ((RecentSearch) mDataset.get(position)).getSubcategoryId()>0) {
+                        Product product = new Product();
+                        product.setId(((RecentSearch) mDataset.get(position)).getProductId());
+                        ProductSubCategory productSubCategory = new ProductSubCategory();
+                        productSubCategory.setId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
+                        product.setProductSubCategory(productSubCategory);
+                        goToProductList(product);
+                    }else{
+                        Intent intent = new Intent(mContext, ProductsListActivity.class);
+                        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch());
+                        mContext.startActivity(intent);
+                    }
                 }
             });
         }
