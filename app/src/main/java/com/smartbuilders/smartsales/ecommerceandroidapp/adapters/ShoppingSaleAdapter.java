@@ -65,7 +65,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sale_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
             Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
@@ -120,6 +120,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                 final Dialog dialog = new Dialog(mContext);
                 dialog.setContentView(R.layout.fragment_edit_qty_requested);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.price_label);
 
                 dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
                         new View.OnClickListener() {
@@ -135,11 +136,21 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                double oldValue = mDataset.get(position).getPrice();
                                 try {
-
+                                    mDataset.get(position).setPrice(Double.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
+                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
+                                    if(result == null){
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    }
                                     dialog.dismiss();
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    mDataset.get(position).setPrice(oldValue);
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
                                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -169,6 +180,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                 final Dialog dialog = new Dialog(mContext);
                 dialog.setContentView(R.layout.fragment_edit_qty_requested);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.tax_label);
 
                 dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
                         new View.OnClickListener() {
@@ -184,11 +196,21 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                double oldValue = mDataset.get(position).getTaxPercentage();
                                 try {
-
+                                    mDataset.get(position).setTaxPercentage(Double.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
+                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
+                                    if(result == null){
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    }
                                     dialog.dismiss();
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    mDataset.get(position).setTaxPercentage(oldValue);
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
                                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -219,6 +241,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                 dialog.setContentView(R.layout.fragment_edit_qty_requested);
 
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.qty_ordered_label);
+
 
                 dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
                         new View.OnClickListener() {
@@ -234,12 +258,12 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                int oldValue = mDataset.get(position).getQuantityOrdered();
                                 try {
-                                    int qtyRequested = Integer
-                                            .valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString());
-                                    String result = orderLineDB.updateQtyRequested(mDataset.get(position), qtyRequested);
+                                    mDataset.get(position).setQuantityOrdered(Integer.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
+                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
                                     if(result == null){
-                                        mDataset.get(position).setQuantityOrdered(qtyRequested);
                                         notifyDataSetChanged();
                                     } else {
                                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
@@ -247,6 +271,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                                     dialog.dismiss();
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    mDataset.get(position).setQuantityOrdered(oldValue);
+                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
                                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -268,6 +294,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             }
         });
 
+        viewHolder.totalLineAmount.setText(String.valueOf(mDataset.get(position).getTotalLineAmount()));
 
         view.setTag(viewHolder);
         return view;
@@ -297,5 +324,16 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
         }
+    }
+
+    private double getTotalLine(OrderLine orderLine){
+        double totalLine = 0;
+        try {
+            totalLine = (orderLine.getPrice() * orderLine.getQuantityOrdered())
+                    + (orderLine.getPrice() * orderLine.getQuantityOrdered() * (orderLine.getTaxPercentage()/100));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalLine;
     }
 }

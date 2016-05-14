@@ -142,12 +142,11 @@ public class ShoppingCartAdapter extends BaseAdapter {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                int oldValue = mDataset.get(position).getQuantityOrdered();
                                 try {
-                                    int qtyRequested = Integer
-                                            .valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString());
-                                    String result = orderLineDB.updateQtyRequested(mDataset.get(position), qtyRequested);
+                                    mDataset.get(position).setQuantityOrdered(Integer.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
                                     if(result == null){
-                                        mDataset.get(position).setQuantityOrdered(qtyRequested);
                                         notifyDataSetChanged();
                                     } else {
                                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
@@ -155,6 +154,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
                                     dialog.dismiss();
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    mDataset.get(position).setQuantityOrdered(oldValue);
                                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }

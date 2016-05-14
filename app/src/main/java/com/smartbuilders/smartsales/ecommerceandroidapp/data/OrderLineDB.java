@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
@@ -18,8 +17,6 @@ import java.util.ArrayList;
  * Created by stein on 4/30/2016.
  */
 public class OrderLineDB {
-
-    private static final String TAG = OrderLineDB.class.getSimpleName();
 
     public static final String WISHLIST_DOCTYPE = "WL";
     public static final String SHOPPING_CART_DOCTYPE = "SC";
@@ -76,12 +73,15 @@ public class OrderLineDB {
         return null;
     }
 
-    public String updateQtyRequested(OrderLine orderLine, int qtyRequested){
+    public String updateOrderLine(OrderLine orderLine){
         SQLiteDatabase db = null;
         try {
             db = dbh.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put("QTY_REQUESTED", qtyRequested);
+            cv.put("QTY_REQUESTED", orderLine.getQuantityOrdered());
+            cv.put("SALES_PRICE", orderLine.getPrice());
+            cv.put("TAX_PERCENTAGE", orderLine.getTaxPercentage());
+            cv.put("TOTAL_LINE", orderLine.getTotalLineAmount());
             cv.put("UPDATE_TIME", "datetime('now')");
             if(db.update ("ECOMMERCE_ORDERLINE", cv, "ECOMMERCE_ORDERLINE_ID=?",
                     new String[]{ Integer.valueOf(orderLine.getId()).toString()})<1) {
@@ -185,8 +185,7 @@ public class OrderLineDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-
-            c = db.rawQuery("SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED " +
+            c = db.rawQuery("SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_ORDERLINE " +
                     " WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
                         (orderId!=null ? " AND ECOMMERCE_ORDER_ID = "+orderId : "") +
@@ -197,6 +196,9 @@ public class OrderLineDB {
                 Product product = new Product();
                 product.setId(c.getInt(1));
                 orderLine.setQuantityOrdered(c.getInt(2));
+                orderLine.setPrice(c.getDouble(3));
+                orderLine.setTaxPercentage(c.getDouble(4));
+                orderLine.setTotalLineAmount(c.getDouble(5));
                 orderLine.setProduct(product);
                 orderLines.add(orderLine);
             }

@@ -28,7 +28,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 27;
+	private static final int DATABASE_VERSION = 28;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -193,6 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("PRODUCT_ID INTEGER NOT NULL, ")
                                         .append("QTY_REQUESTED INTEGER NOT NULL, ")
                                         .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
+										.append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
+										.append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
                                         .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
                                         .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
                                         .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
@@ -401,11 +403,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		try{
-			db.execSQL("DROP TABLE RECENT_SEARCH");
+			db.execSQL("DROP TABLE ECOMMERCE_ORDER");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		db.execSQL(CREATE_RECENT_SEARCH);
+		db.execSQL(CREATE_ECOMMERCE_ORDER);
+
+        try{
+            db.execSQL("DROP TABLE ECOMMERCE_ORDERLINE");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
 	}
 
 	@Override
