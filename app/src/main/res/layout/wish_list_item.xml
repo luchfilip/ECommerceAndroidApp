@@ -3,16 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/touch_selector"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/wish_list_item_image_width"
+        android:layout_height="@dimen/wish_list_item_image_height"
         android:id="@+id/product_image"
         android:layout_gravity="center|top"
         android:layout_margin="4dp" />
@@ -43,24 +38,28 @@
                 android:layout_gravity="right"
                 android:src="@drawable/ic_highlight_off_black"
                 android:layout_marginLeft="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/product_commercial_package"
-            android:textAppearance="@android:style/TextAppearance.Small" />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
-            android:text="@string/move_to_cart"
+            android:text="@string/move_to_shopping_cart"
             android:id="@+id/move_to_cart_button"
             android:layout_gravity="center_vertical|right"
             android:textAppearance="@android:style/TextAppearance.Small"
-            android:gravity="center_vertical" />
+            android:gravity="bottom" />
 
     </LinearLayout>
 </LinearLayout>

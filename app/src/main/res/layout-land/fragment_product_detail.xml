@@ -77,14 +77,16 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/product_brand"
                                     android:textSize="@dimen/productDetailActivity_productBrand_text_size"
-                                    android:focusable="false" />
+                                    android:focusable="false"
+                                    android:textColor="@color/colorPrimaryDark" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
                                     android:id="@+id/product_comercial_package"
-                                    android:focusable="false" />
+                                    android:focusable="false"
+                                    android:textColor="@color/colorPrimaryDark" />
 
                                 <TextView
                                     android:id="@+id/product_availability"
@@ -92,7 +94,8 @@
                                     android:layout_height="wrap_content"
                                     android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
                                     android:textStyle="bold"
-                                    android:focusable="false" />
+                                    android:focusable="false"
+                                    android:textColor="@color/colorPrimaryDark" />
 
                                 <RatingBar
                                     android:layout_width="wrap_content"
@@ -174,13 +177,14 @@
                             android:focusable="false" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/product_detail_description"
                             android:textSize="@dimen/productDetailActivity_details_text_size"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:focusable="false" />
+                            android:focusable="false"
+                            android:textColor="@color/colorPrimaryDark" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 

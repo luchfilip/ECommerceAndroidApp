@@ -34,7 +34,7 @@
     <string name="add_to_shopping_cart">Agregar al Carrito de Compra</string>
     <string name="add_to_shopping_sales">Agregar al Carrito de Venta</string>
     <string name="add_to_wishlist">Agregar a la lista de deseos</string>
-    <string name="move_to_cart">Mover al Carrito</string>
+    <string name="move_to_shopping_cart">Mover al Carrito de Compras</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar Pedido</string>
     <string name="proceed_to_checkout_shopping_sale">Finalizar Cotización</string>

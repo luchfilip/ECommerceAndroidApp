@@ -49,4 +49,7 @@
     <dimen name="shopping_cart_item_image_width">90dp</dimen>
     <dimen name="shopping_cart_item_image_height">90dp</dimen>
 
+    <dimen name="wish_list_item_image_width">90dp</dimen>
+    <dimen name="wish_list_item_image_height">90dp</dimen>
+
 </resources>

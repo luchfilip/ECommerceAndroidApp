@@ -54,7 +54,8 @@
             android:id="@+id/subTotalAmount_tv"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="match_parent"
@@ -62,7 +63,8 @@
             android:id="@+id/taxesAmount_tv"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="match_parent"
@@ -70,7 +72,8 @@
             android:id="@+id/totalAmount_tv"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
             android:layout_width="wrap_content"

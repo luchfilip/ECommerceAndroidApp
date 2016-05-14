@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/order_date_tv"
             android:padding="5dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="wrap_content"
