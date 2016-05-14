@@ -68,7 +68,7 @@ public class ProductDetailFragment extends Fragment {
 
         ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
 
-        mProduct = productDB.getProductById(mProduct.getId());
+        mProduct = productDB.getProductById(mProduct.getId(), true);
 
         ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 

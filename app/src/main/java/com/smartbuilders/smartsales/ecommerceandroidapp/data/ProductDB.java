@@ -414,7 +414,7 @@ public class ProductDB {
         return products;
     }
 
-    public Product getProductById(int id){
+    public Product getProductById(int id, boolean useProductCode){
         SQLiteDatabase db = null;
         Cursor c = null;
         try {
@@ -432,7 +432,7 @@ public class ProductDB {
             if(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
+                p.setName(c.getString(3) + (useProductCode ? " (Cod: "+c.getString(9)+")" : ""));
                 p.setDescription(c.getString(4));
                 if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                     p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));

@@ -51,7 +51,8 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="2dp"
-        android:paddingBottom="2dp" />
+        android:paddingBottom="2dp"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:layout_width="match_parent"
@@ -60,7 +61,8 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="2dp"
-        android:paddingBottom="2dp" />
+        android:paddingBottom="2dp"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:layout_width="match_parent"
@@ -70,5 +72,6 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="2dp"
-        android:paddingBottom="2dp" />
+        android:paddingBottom="2dp"
+        android:textColor="@color/colorPrimaryDark" />
 </LinearLayout>
