@@ -52,7 +52,7 @@ public class OrdersListAdapter extends BaseAdapter {
         viewHolder.orderNumber.setText(mContext.getString(R.string.order_number, mDataset.get(position).getOrderNumber()));
         viewHolder.orderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
         viewHolder.orderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
-                String.valueOf(mDataset.get(position).getOrderLineNumbers())));
+                String.valueOf(mDataset.get(position).getOrderLinesNumber())));
 
         view.setTag(viewHolder);
         return view;

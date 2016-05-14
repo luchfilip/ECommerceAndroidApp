@@ -39,8 +39,8 @@
         android:paddingBottom="3dp">
 
         <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="@dimen/shopping_sale_item_image_width"
+            android:layout_height="@dimen/shopping_sale_item_image_height"
             android:id="@+id/product_image"
             android:layout_gravity="center"
             android:layout_margin="10dp" />
@@ -176,7 +176,7 @@
                     android:ems="10"
                     android:id="@+id/total_line_amount"
                     android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:focusable="false"
@@ -187,7 +187,9 @@
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:layout_marginTop="2dp"
                     android:paddingRight="5dp"
-                    android:paddingTop="5dp" />
+                    android:paddingTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="right" />
 
             </LinearLayout>-->
 

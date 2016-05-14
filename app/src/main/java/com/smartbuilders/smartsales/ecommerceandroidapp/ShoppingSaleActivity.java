@@ -162,11 +162,38 @@ public class ShoppingSaleActivity extends AppCompatActivity
             findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
             findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
         } else {
-            ((TextView) findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+            fillFields();
         }
         super.onResume();
     }
+
+    public void fillFields(){
+        if(findViewById(R.id.total_lines)!=null) {
+            ((TextView) findViewById(R.id.total_lines))
+                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+        }
+        double subTotal=0, tax=0, total=0;
+        for(OrderLine orderLine : mOrderLines){
+            subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
+            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
+            total += subTotal + tax;
+        }
+        if(findViewById(R.id.subTotalAmount_tv)!=null){
+            ((TextView) findViewById(R.id.subTotalAmount_tv))
+                    .setText(getString(R.string.order_sub_total_amount, String.valueOf(subTotal)));
+        }
+
+        if(findViewById(R.id.taxesAmount_tv)!=null){
+            ((TextView) findViewById(R.id.taxesAmount_tv))
+                    .setText(getString(R.string.order_tax_amount, String.valueOf(tax)));
+        }
+
+        if(findViewById(R.id.totalAmount_tv)!=null){
+            ((TextView) findViewById(R.id.totalAmount_tv))
+                    .setText(getString(R.string.order_total_amount, String.valueOf(total)));
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -256,5 +283,4 @@ public class ShoppingSaleActivity extends AppCompatActivity
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         super.onSaveInstanceState(outState);
     }
-
 }

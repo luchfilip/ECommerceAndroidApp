@@ -32,4 +32,11 @@
     <dimen name="productDetailActivity_productShare_text_size">17sp</dimen>
 
     <dimen name="related_products_label_text_size">23sp</dimen>
+
+    <dimen name="shopping_sale_item_image_width">120dp</dimen>
+    <dimen name="shopping_sale_item_image_height">120dp</dimen>
+
+    <dimen name="shopping_cart_item_image_width">120dp</dimen>
+    <dimen name="shopping_cart_item_image_height">120dp</dimen>
+
 </resources>

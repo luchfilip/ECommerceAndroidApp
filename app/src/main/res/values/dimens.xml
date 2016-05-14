@@ -43,4 +43,10 @@
 
     <dimen name="appBarTitleSize">25sp</dimen>
 
+    <dimen name="shopping_sale_item_image_width">90dp</dimen>
+    <dimen name="shopping_sale_item_image_height">90dp</dimen>
+
+    <dimen name="shopping_cart_item_image_width">90dp</dimen>
+    <dimen name="shopping_cart_item_image_height">90dp</dimen>
+
 </resources>

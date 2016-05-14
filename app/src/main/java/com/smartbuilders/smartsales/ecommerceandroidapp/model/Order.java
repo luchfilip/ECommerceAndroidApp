@@ -10,7 +10,7 @@ import java.text.DateFormat;
  */
 public class Order extends Model implements Parcelable {
 
-    private int orderLineNumbers;
+    private int orderLinesNumber;
     private double subTotalAmount;
     private double taxAmount;
     private double totalAmount;
@@ -23,12 +23,12 @@ public class Order extends Model implements Parcelable {
         return String.valueOf(getId());
     }
 
-    public int getOrderLineNumbers() {
-        return orderLineNumbers;
+    public int getOrderLinesNumber() {
+        return orderLinesNumber;
     }
 
-    public void setOrderLineNumbers(int orderLineNumbers) {
-        this.orderLineNumbers = orderLineNumbers;
+    public void setOrderLinesNumber(int orderLinesNumber) {
+        this.orderLinesNumber = orderLinesNumber;
     }
 
     public double getSubTotalAmount() {
@@ -57,7 +57,7 @@ public class Order extends Model implements Parcelable {
 
     protected Order(Parcel in) {
         super(in);
-        orderLineNumbers = in.readInt();
+        orderLinesNumber = in.readInt();
         subTotalAmount = in.readDouble();
         taxAmount = in.readDouble();
         totalAmount = in.readDouble();
@@ -66,7 +66,7 @@ public class Order extends Model implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeInt(orderLineNumbers);
+        dest.writeInt(orderLinesNumber);
         dest.writeDouble(subTotalAmount);
         dest.writeDouble(taxAmount);
         dest.writeDouble(totalAmount);

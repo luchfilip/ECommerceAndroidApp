@@ -28,7 +28,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 28;
+	private static final int DATABASE_VERSION = 30;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -178,6 +178,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
                                         .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
                                         .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
+                                        .append("ORDERLINES_NUMBER INTEGER DEFAULT 0, ")
+                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("TAX DOUBLE DEFAULT 0, ")
+                                        .append("TOTAL DOUBLE DEFAULT 0, ")
                                         .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
                                         .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
                                         .append("ISACTIVE CHAR(1) DEFAULT NULL, ")

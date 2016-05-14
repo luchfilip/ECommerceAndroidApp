@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.sql.Timestamp;
@@ -31,27 +32,40 @@ public class OrderDB {
     }
 
     public String createOrderFromShoppingCart(){
-        return createOrder(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+        return createOrder(OrderLineDB.FINALIZED_ORDER_DOCTYPE,
+                (new OrderLineDB(context, user)).getShoppingCart());
     }
 
     public String createOrderFromShoppingSale(){
-        return createOrder(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+        return createOrder(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
+                (new OrderLineDB(context, user)).getShoppingSale());
     }
 
-    public String createOrder(String docType){
+    public String createOrder(String docType, ArrayList<OrderLine> orderLines){
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
-        if((docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
+        if(orderLines != null
+                && (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
                 || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)){
             SQLiteDatabase db = null;
             Cursor c = null;
             int orderId = 0;
             try {
                 db = dbh.getWritableDatabase();
+                double subTotal=0, tax=0, total=0;
+                for(OrderLine orderLine : orderLines){
+                    subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
+                    tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
+                    total += subTotal + tax;
+                }
                 ContentValues cv = new ContentValues();
                 cv.put("DOC_STATUS", "CO");
                 cv.put("DOC_TYPE", docType);
                 cv.put("APP_VERSION", Utils.getAppVersionName(context));
                 cv.put("APP_USER_NAME", user.getUserName());
+                cv.put("ORDERLINES_NUMBER", orderLines.size());
+                cv.put("SUB_TOTAL", subTotal);
+                cv.put("TAX", tax);
+                cv.put("TOTAL", total);
                 cv.put("ISACTIVE", "Y");
                 if(db.insert("ECOMMERCE_ORDER", null, cv) <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
@@ -144,7 +158,8 @@ public class OrderDB {
         try {
             db = dbh.getReadableDatabase();
             c = db.rawQuery("SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
-                        " ISACTIVE, CREATE_TIME, UPDATE_TIME, APP_VERSION, APP_USER_NAME " +
+                        " ISACTIVE, CREATE_TIME, UPDATE_TIME, APP_VERSION, APP_USER_NAME, " +
+                        " ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
                     " FROM ECOMMERCE_ORDER " +
                     " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)",
                     new String[]{"Y", docType});
@@ -158,6 +173,10 @@ public class OrderDB {
                         order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(5)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
+                order.setOrderLinesNumber(c.getInt(9));
+                order.setSubTotalAmount(c.getDouble(10));
+                order.setTaxAmount(c.getDouble(11));
+                order.setTotalAmount(c.getDouble(12));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -190,6 +209,7 @@ public class OrderDB {
 
     /**
      *
+     * @param docType
      * @return
      */
     private ArrayList<Order> getActiveOrders(String docType){
@@ -198,9 +218,11 @@ public class OrderDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
+
             c = db.query("ECOMMERCE_ORDER", new String[]{"ECOMMERCE_ORDER_ID", "CB_PARTNER_ID",
-                    "DOC_STATUS", "CREATE_TIME", "UPDATE_TIME", "APP_VERSION",
-                    "APP_USER_NAME"}, "ISACTIVE = ? AND DOC_TYPE = ?", new String[]{"Y", docType}, null, null, "CREATE_TIME DESC");
+                    "DOC_STATUS", "CREATE_TIME", "UPDATE_TIME", "APP_VERSION", "APP_USER_NAME",
+                    "ORDERLINES_NUMBER", "SUB_TOTAL", "TAX", "TOTAL"},
+                    "ISACTIVE = ? AND DOC_TYPE = ?", new String[]{"Y", docType}, null, null, "CREATE_TIME DESC");
             while(c.moveToNext()){
                 Order order = new Order();
                 order.setId(c.getInt(0));
@@ -211,6 +233,10 @@ public class OrderDB {
                         order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(3)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
+                order.setOrderLinesNumber(c.getInt(7));
+                order.setSubTotalAmount(c.getDouble(8));
+                order.setTaxAmount(c.getDouble(9));
+                order.setTotalAmount(c.getDouble(10));
                 activeOrders.add(order);
             }
         } catch (Exception e) {
@@ -233,9 +259,38 @@ public class OrderDB {
         }
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         for(Order order : activeOrders){
-            order.setOrderLineNumbers(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+            order.setOrderLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
         }
         return activeOrders;
+    }
+
+    public String updateOrder(Order order){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("ORDERLINES_NUMBER", order.getOrderLinesNumber());
+            cv.put("SUB_TOTAL", order.getSubTotalAmount());
+            cv.put("TAX", order.getTaxAmount());
+            cv.put("TOTAL", order.getTotalAmount());
+            cv.put("UPDATE_TIME", "datetime('now')");
+            if(db.update ("ECOMMERCE_ORDER", cv, "ECOMMERCE_ORDER_ID=?",
+                    new String[]{ Integer.valueOf(order.getId()).toString()})<1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
 }

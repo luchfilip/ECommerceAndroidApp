@@ -53,24 +53,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/subTotalAmount_tv"
             android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:visibility="gone" />
+            android:layout_marginLeft="5dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/taxesAmount_tv"
             android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:visibility="gone" />
+            android:layout_marginLeft="5dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/totalAmount_tv"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone" />
+            android:layout_marginRight="5dp" />
 
         <Button
             android:layout_width="wrap_content"
