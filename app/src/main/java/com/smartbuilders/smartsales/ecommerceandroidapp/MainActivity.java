@@ -43,6 +43,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -371,11 +372,13 @@ public class MainActivity extends AppCompatActivity
             // if the directory does not exist, create it
             if (!folderThumb.exists()) {
                 try {
-                    if (!folderThumb.mkdirs()) {
+                    if (!folderThumb.createNewFile()) {
                         Log.w(TAG, "Failed to create folder: " + folderThumb.getPath() + ".");
                     }
                 } catch (SecurityException se) {
                     se.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             File folderOriginal = new File(getExternalFilesDir(null)+"/"+mCurrentUser.getUserGroup()
@@ -383,11 +386,13 @@ public class MainActivity extends AppCompatActivity
             // if the directory does not exist, create it
             if (!folderOriginal.exists()) {
                 try {
-                    if (!folderOriginal.mkdirs()) {
+                    if (!folderOriginal.createNewFile()) {
                         Log.w(TAG, "Failed to create folder: " + folderOriginal.getPath() + ".");
                     }
                 } catch (SecurityException se) {
                     se.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
