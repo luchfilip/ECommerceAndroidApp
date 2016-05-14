@@ -157,4 +157,7 @@
     <string name="order_total_amount">Total: %1$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
+    <string name="price_title">Precio</string>
+    <string name="tax_title">(%) Impuesto</string>
+    <string name="qty_ordered_title">Cantidad pedida</string>
 </resources>

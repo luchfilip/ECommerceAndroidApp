@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,12 +34,14 @@ import java.util.ArrayList;
 public class WishListAdapter extends BaseAdapter {
 
     private Context mContext;
+    private Activity mActivity;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
 
-    public WishListAdapter(Context context, ArrayList<OrderLine> data, User user) {
+    public WishListAdapter(Context context, Activity activity, ArrayList<OrderLine> data, User user) {
         mContext = context;
+        mActivity = activity;
         mDataset = data;
         mCurrentUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -153,6 +157,17 @@ public class WishListAdapter extends BaseAdapter {
                     }
                 );
                 dialog.setTitle(mDataset.get(position).getProduct().getName());
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            mActivity.getWindow().setSoftInputMode(
+                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 dialog.show();
             }
         });

@@ -90,7 +90,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
 
         if(findViewById(R.id.shoppingSale_items_list) != null) {
             ((ListView) findViewById(R.id.shoppingSale_items_list))
-                    .setAdapter(new ShoppingSaleAdapter(this, mOrderLines, mCurrentUser));
+                    .setAdapter(new ShoppingSaleAdapter(this, this, mOrderLines, mCurrentUser));
         }
 
         if(findViewById(R.id.proceed_to_checkout_shopping_sale_button) != null) {

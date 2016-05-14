@@ -87,7 +87,7 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         if(findViewById(R.id.shoppingCart_items_list) != null) {
             ((ListView) findViewById(R.id.shoppingCart_items_list))
-                    .setAdapter(new ShoppingCartAdapter(this, mOrderLines, mCurrentUser));
+                    .setAdapter(new ShoppingCartAdapter(this, this, mOrderLines, mCurrentUser));
         }
 
         if(findViewById(R.id.proceed_to_checkout_button) != null) {

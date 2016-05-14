@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,12 +34,14 @@ import java.util.ArrayList;
 public class ShoppingSaleAdapter extends BaseAdapter {
 
     private Context mContext;
+    private Activity mActivity;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
 
-    public ShoppingSaleAdapter(Context context, ArrayList<OrderLine> data, User user) {
+    public ShoppingSaleAdapter(Context context, Activity activity, ArrayList<OrderLine> data, User user) {
         mContext = context;
+        mActivity = activity;
         mDataset = data;
         mCurrentUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -108,12 +112,105 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             }
         });
 
-//        viewHolder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
-//                mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
-//                mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+        viewHolder.productPrice.setText(String.valueOf(mDataset.get(position).getPrice()));
+        viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(mContext);
+                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+
+                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+
+                                    dialog.dismiss();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                );
+                dialog.setTitle(R.string.price_title);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            mActivity.getWindow().setSoftInputMode(
+                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        viewHolder.productTaxPercentage.setText(String.valueOf(mDataset.get(position).getTaxPercentage()));
+        viewHolder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(mContext);
+                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+
+                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+
+                                    dialog.dismiss();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                );
+                dialog.setTitle(R.string.tax_title);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            mActivity.getWindow().setSoftInputMode(
+                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
 
         viewHolder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
-
         viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,8 +218,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                 final Dialog dialog = new Dialog(mContext);
                 dialog.setContentView(R.layout.fragment_edit_qty_requested);
 
-                ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                        .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));
+                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
 
                 dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
                         new View.OnClickListener() {
@@ -156,10 +252,22 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                             }
                         }
                 );
-                dialog.setTitle(mDataset.get(position).getProduct().getName());
+                dialog.setTitle(R.string.qty_ordered_title);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            mActivity.getWindow().setSoftInputMode(
+                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 dialog.show();
             }
         });
+
 
         view.setTag(viewHolder);
         return view;
@@ -173,17 +281,19 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-//        public TextView productCommercialPackage;
-        public TextView productPrice;
         public TextView totalLine;
         public EditText qtyOrdered;
+        public EditText productPrice;
+        public EditText productTaxPercentage;
+        public EditText totalLineAmount;
 
         public ViewHolder(View v) {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             totalLine = (TextView) v.findViewById(R.id.total_line);
-//            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
-            productPrice = (TextView) v.findViewById(R.id.product_price);
+            productPrice = (EditText) v.findViewById(R.id.product_price);
+            productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
+            totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
         }

@@ -84,7 +84,7 @@ public class WishListActivity extends AppCompatActivity
 
         wishListLines = (new OrderLineDB(this, mCurrentUser)).getWishList();
 
-        mWishListAdapter = new WishListAdapter(this, wishListLines, mCurrentUser);
+        mWishListAdapter = new WishListAdapter(this, this, wishListLines, mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.wish_list);
         mListView.setAdapter(mWishListAdapter);
