@@ -138,9 +138,9 @@ public class ShoppingCartPDFCreator {
                     cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-                    cell2.addElement(new Paragraph("Empaque de venta: ", font));
-                    cell2.addElement(new Paragraph("Precio: ", font));
-                    cell2.addElement(new Paragraph("Descuento (%): ", font));
+                    //cell2.addElement(new Paragraph("Empaque de venta: ", font));
+                    //cell2.addElement(new Paragraph("Precio: ", font));
+                    //cell2.addElement(new Paragraph("Descuento (%): ", font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -151,7 +151,7 @@ public class ShoppingCartPDFCreator {
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell3.addElement(new Paragraph("Cant. pedida: ", font));
-                    cell3.addElement(new Paragraph("Total Bs.: ", font));
+                    //cell3.addElement(new Paragraph("Total Bs.: ", font));
                     table.addCell(cell3);
                 }
 

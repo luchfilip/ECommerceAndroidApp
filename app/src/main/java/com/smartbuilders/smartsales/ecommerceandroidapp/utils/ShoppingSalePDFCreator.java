@@ -24,6 +24,7 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
 import java.io.ByteArrayOutputStream;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 public class ShoppingSalePDFCreator {
     private static final String TAG = ShoppingSalePDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
+    public File generatePDF(Order order, ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
@@ -134,9 +135,8 @@ public class ShoppingSalePDFCreator {
                     cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-                    cell2.addElement(new Paragraph("Empaque de venta: ", font));
-                    cell2.addElement(new Paragraph("Precio: ", font));
-                    cell2.addElement(new Paragraph("Descuento (%): ", font));
+                    cell2.addElement(new Paragraph("Precio: "+line.getPrice(), font));
+                    cell2.addElement(new Paragraph("(%) Impuesto: "+line.getTaxPercentage(), font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -146,12 +146,21 @@ public class ShoppingSalePDFCreator {
                     cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
-                    cell3.addElement(new Paragraph("Cant. pedida: ", font));
-                    cell3.addElement(new Paragraph("Total Bs.: ", font));
+                    cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
+                    cell3.addElement(new Paragraph("Total linea: "+line.getTotalLineAmount(), font));
                     table.addCell(cell3);
                 }
 
                 document.add(table);
+                document.add(new Phrase("\n"));
+                document.add(new Phrase("\n"));
+
+                document.add(new Phrase("Sub-Total: "+order.getSubTotalAmount()));
+                document.add(new Phrase("\n"));
+                document.add(new Phrase("Impuestos: "+order.getTaxAmount()));
+                document.add(new Phrase("\n"));
+                document.add(new Phrase("Total: "+order.getTotalAmount()));
+                document.add(new Phrase("\n"));
 
                 document.close();
 

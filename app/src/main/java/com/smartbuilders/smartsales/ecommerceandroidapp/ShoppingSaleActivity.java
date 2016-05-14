@@ -41,7 +41,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
     public static final String STATE_CURRENT_USER = "state_current_user";
 
     private User mCurrentUser;
-    private ShareActionProvider mShareActionProvider;
+    //private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> mOrderLines;
 
     @Override
@@ -200,7 +200,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shopping_sale, menu);
 
-        // Get the provider and hold onto it to set/change the share intent.
+        /*// Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider =  (ShareActionProvider) MenuItemCompat
                 .getActionProvider(menu.findItem(R.id.action_share));
 
@@ -208,7 +208,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
         // like when the user selects a new piece of data they might like to share.
         if (mOrderLines != null && mOrderLines.size() > 0) {
             new CreateShareIntentThread().start();
-        }
+        }*/
         return true;
     }
 
@@ -219,19 +219,19 @@ public class ShoppingSaleActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        /*//noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             if (mOrderLines != null && mOrderLines.size() > 0) {
                 //mShareActionProvider.setShareHistoryFileName(null);
                 mShareActionProvider.setShareIntent(createShareProductIntent());
             }
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareProductIntent(){
+    /*private Intent createShareProductIntent(){
         String fileName = "Cotizacion";
         String subject = "";
         String message = "";
@@ -266,7 +266,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
                 }
             });
         }
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
