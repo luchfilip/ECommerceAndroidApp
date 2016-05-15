@@ -150,13 +150,20 @@ public class ShoppingCartPDFCreator {
                     cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
-                    cell3.addElement(new Paragraph("Cant. pedida: ", font));
+                    cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
                     //cell3.addElement(new Paragraph("Total Bs.: ", font));
                     table.addCell(cell3);
                 }
 
                 document.add(table);
 
+                document.add(new Phrase("\n"));
+                try {
+                    document.add(new Phrase("Lineas totales: "+lines.size()));
+                    document.add(new Phrase("\n"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 document.close();
 
                 // Create a reader

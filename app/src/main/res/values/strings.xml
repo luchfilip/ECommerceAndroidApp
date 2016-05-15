@@ -160,4 +160,5 @@
     <string name="price_title">Precio</string>
     <string name="tax_title">(%) Impuesto</string>
     <string name="qty_ordered_title">Cantidad pedida</string>
+    <string name="related_products_by_brand_title">Más productos de la marca %1$s</string>
 </resources>

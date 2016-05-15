@@ -9,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -101,6 +102,28 @@ public class ProductDetailFragment extends Fragment {
                     ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
         }else{
             view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
+        }
+
+        if(mProduct.getProductBrand()!=null) {
+            relatedProducts = productDB.getProductsByBrandId(mProduct.getProductBrand().getId(), 50);
+            if(relatedProducts!=null && !relatedProducts.isEmpty()){
+                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_products_by_brand_recycler_view);
+                // use this setting to improve performance if you know that changes
+                // in content do not change the layout size of the RecyclerView
+                mRecyclerView.setHasFixedSize(true);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
+                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
+                        .setText(getString(R.string.related_products_by_brand_title,
+                                !TextUtils.isEmpty(mProduct.getProductBrand().getDescription())
+                                        ? mProduct.getProductBrand().getDescription()
+                                        : mProduct.getProductBrand().getName()));
+            }else{
+                view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
+            }
+        }else{
+            view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
         }
 
         if(mProduct.getProductSubCategory()!=null) {
