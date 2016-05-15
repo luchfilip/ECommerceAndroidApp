@@ -54,20 +54,20 @@ public class ProductDB {
                 Product p = new Product();
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3));
-                p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                }
-                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                }
-                if(!TextUtils.isEmpty(c.getString(8))) {
-                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
-                }
+//                p.setDescription(c.getString(4));
+//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(8))) {
+//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+//                }
                 p.setImageFileName(c.getString(20));
-                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
+//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
+//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                 p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                 p.setAvailability(c.getInt(19));
                 products.add(p);
@@ -93,7 +93,7 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId, Integer limit){
+    public ArrayList<Product> getRelatedProductsBySubCategoryId(int subCategoryId, int productId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
         SQLiteDatabase db = null;
         Cursor c = null;
@@ -107,27 +107,29 @@ public class ProductDB {
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'"+// AND PA.AVAILABILITY>0 " +
-                    " WHERE A.IDPARTIDA = "+subCategoryId + " ORDER BY A.NOMBRE ASC " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'" +
+                    " WHERE A.IDPARTIDA = "+subCategoryId +
+                        " AND A.IDARTICULO <> " + productId +
+                    " ORDER BY A.NOMBRE ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
-                p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                }
-                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                }
-                if(!TextUtils.isEmpty(c.getString(8))) {
-                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
-                }
+                p.setName(c.getString(3));
+//                p.setDescription(c.getString(4));
+//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(8))) {
+//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+//                }
                 p.setImageFileName(c.getString(20));
-                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
+//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
+//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                 p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                 p.setAvailability(c.getInt(19));
                 products.add(p);
@@ -153,7 +155,7 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getProductsByBrandId(int brandId, Integer limit){
+    public ArrayList<Product> getRelatedProductsByBrandId(int brandId, int productId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
         SQLiteDatabase db = null;
         Cursor c = null;
@@ -164,12 +166,74 @@ public class ProductDB {
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                     " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
                     " FROM ARTICULOS A " +
-                    " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-                    " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                    " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                    " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'"+
-                    " WHERE B.BRAND_ID = "+brandId + " ORDER BY A.NOMBRE ASC " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'"+
+                    " WHERE B.BRAND_ID = "+brandId +
+                        " AND A.IDARTICULO <> " + productId +
+                    " ORDER BY A.NOMBRE ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
+            while(c.moveToNext()){
+                Product p = new Product();
+                p.setId(c.getInt(0));
+                p.setName(c.getString(3));
+//                p.setDescription(c.getString(4));
+//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
+//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
+//                }
+//                if(!TextUtils.isEmpty(c.getString(8))) {
+//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
+//                }
+                p.setImageFileName(c.getString(20));
+//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
+                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
+//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
+                p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
+                p.setAvailability(c.getInt(19));
+                products.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            if(db!=null){
+                try {
+                    db.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId){
+        ArrayList<Product> products = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor c = null;
+        try {
+            db = dbh.getReadableDatabase();
+            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
+                    " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
+                    " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                    " FROM ARTICULOS A " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'" +
+                    " WHERE A.IDPARTIDA = "+subCategoryId +
+                    " ORDER BY A.NOMBRE ASC ", null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -213,7 +277,7 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getProductsByCategoryId(int categoryId, Integer limit){
+    public ArrayList<Product> getProductsByCategoryId(int categoryId){
         ArrayList<Product> products = new ArrayList<>();
         SQLiteDatabase db = null;
         Cursor c = null;
@@ -227,9 +291,8 @@ public class ProductDB {
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
-                    " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC " +
-                    ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
+                    " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC ", null);
 
             while(c.moveToNext()){
                 Product p = new Product();
@@ -347,7 +410,7 @@ public class ProductDB {
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +// AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
                     " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " OR A.NOMBRE LIKE '% "+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " ORDER BY A.NOMBRE ASC", null);

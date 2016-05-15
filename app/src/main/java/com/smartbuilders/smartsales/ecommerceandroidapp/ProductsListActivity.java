@@ -28,6 +28,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
+/**
+ * Jesus Sarco
+ */
 public class ProductsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
@@ -67,7 +70,7 @@ public class ProductsListActivity extends AppCompatActivity
 
                 if(getIntent().getExtras().containsKey(KEY_PRODUCT_CATEGORY_ID)){
                     productCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_CATEGORY_ID);
-                    products = new ProductDB(this, mCurrentUser).getProductsByCategoryId(productCategoryId, null);
+                    products = new ProductDB(this, mCurrentUser).getProductsByCategoryId(productCategoryId);
 
                     if(products!=null && !products.isEmpty()){
                         TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
@@ -83,7 +86,7 @@ public class ProductsListActivity extends AppCompatActivity
 
                 if(getIntent().getExtras().containsKey(KEY_PRODUCT_SUBCATEGORY_ID)){
                     productSubCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_SUBCATEGORY_ID);
-                    products = new ProductDB(this, mCurrentUser).getProductsBySubCategoryId(productSubCategoryId, null);
+                    products = new ProductDB(this, mCurrentUser).getProductsBySubCategoryId(productSubCategoryId);
 
                     if(products!=null && !products.isEmpty()){
                         TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);

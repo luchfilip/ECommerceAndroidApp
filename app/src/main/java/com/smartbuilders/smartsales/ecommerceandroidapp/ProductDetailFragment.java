@@ -105,7 +105,7 @@ public class ProductDetailFragment extends Fragment {
         }
 
         if(mProduct.getProductBrand()!=null) {
-            relatedProducts = productDB.getProductsByBrandId(mProduct.getProductBrand().getId(), 50);
+            relatedProducts = productDB.getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
             if(relatedProducts!=null && !relatedProducts.isEmpty()){
                 RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_products_by_brand_recycler_view);
                 // use this setting to improve performance if you know that changes
@@ -127,7 +127,7 @@ public class ProductDetailFragment extends Fragment {
         }
 
         if(mProduct.getProductSubCategory()!=null) {
-            relatedProducts = productDB.getProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), 20);
+            relatedProducts = productDB.getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 20);
             if(relatedProducts!=null && !relatedProducts.isEmpty()){
                 RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                 // use this setting to improve performance if you know that changes
