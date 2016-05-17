@@ -2,8 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrderDetailActivity">
-    <item android:id="@+id/search"
-        android:title="@string/search_title"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="collapseActionView|ifRoom" />
+    <item
+        android:id="@+id/action_share"
+        app:showAsAction="ifRoom"
+        android:title="@string/share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
 </menu>
