@@ -196,7 +196,7 @@ public class Utils {
         return inSampleSize;
     }
 
-    private static Bitmap decodeSampledBitmap(String pathName,
+    public static Bitmap decodeSampledBitmap(String pathName,
                                        int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions

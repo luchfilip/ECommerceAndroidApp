@@ -47,7 +47,7 @@ public class ShoppingCartPDFCreator {
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
-        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+        /*if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
         } else {
             //path for the PDF file in the external storage
@@ -59,13 +59,13 @@ public class ShoppingCartPDFCreator {
             }
         }
         //create a new document
-        Document document = new Document(PageSize.LETTER, 50/*left*/, 50/*right*/, 70/*top*/, 40/*bottom*/);
+        Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
 
         if(pdfFile != null){
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                PdfWriter.getInstance(document, baos/*new FileOutputStream(pdfFile)*/);
+                PdfWriter.getInstance(document, baos);
                 document.open();
 
                 try{
@@ -185,7 +185,7 @@ public class ShoppingCartPDFCreator {
             }
         }else{
             Log.d(TAG, "pdfFile is null");
-        }
+        }*/
         return pdfFile;
     }
 

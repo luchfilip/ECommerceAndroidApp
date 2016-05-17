@@ -17,7 +17,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-        <include layout="@layout/search_bar_layout" />
+       <!-- <include layout="@layout/search_bar_layout" />-->
 
         <TextView
             android:text="@string/title_activity_wish_list"

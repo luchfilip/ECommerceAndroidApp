@@ -43,7 +43,7 @@ public class ShoppingSalePDFCreator {
     public File generatePDF(Order order, ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
-        //check if external storage is available so that we can dump our PDF file there
+        /*//check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
         } else {
@@ -56,13 +56,13 @@ public class ShoppingSalePDFCreator {
             }
         }
         //create a new document
-        Document document = new Document(PageSize.LETTER, 50/*left*/, 50/*right*/, 70/*top*/, 40/*bottom*/);
+        Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
 
         if(pdfFile != null){
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                PdfWriter.getInstance(document, baos/*new FileOutputStream(pdfFile)*/);
+                PdfWriter.getInstance(document, baos);
                 document.open();
 
                 try{
@@ -183,7 +183,7 @@ public class ShoppingSalePDFCreator {
             }
         }else{
             Log.d(TAG, "pdfFile is null");
-        }
+        }*/
         return pdfFile;
     }
 

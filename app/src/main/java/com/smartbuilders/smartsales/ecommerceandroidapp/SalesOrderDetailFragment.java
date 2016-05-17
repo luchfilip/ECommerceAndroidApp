@@ -8,7 +8,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -162,8 +161,8 @@ public class SalesOrderDetailFragment extends Fragment {
 
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+        //shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+        //        + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
     }
 

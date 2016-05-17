@@ -43,7 +43,7 @@ public class WishListPDFCreator {
     public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
-        //check if external storage is available so that we can dump our PDF file there
+        /*//check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, "External Storage not available or you don't have permission to write", Toast.LENGTH_LONG).show();
         } else {
@@ -56,20 +56,20 @@ public class WishListPDFCreator {
             }
         }
         //create a new document
-        Document document = new Document(PageSize.LETTER, 50/*left*/, 50/*right*/, 70/*top*/, 40/*bottom*/);
+        Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
 
-        if(pdfFile != null){
+        /*if(pdfFile != null){
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                PdfWriter.getInstance(document, baos/*new FileOutputStream(pdfFile)*/);
+                PdfWriter.getInstance(document, baos);
                 document.open();
 
                 try{
                     //the company logo is stored in the assets which is read only
                     //get the logo and print on the document
-                    InputStream inputStream = inputStream = ctx.getAssets().open("logoFebeca.jpeg");
-                    Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+                    InputStream inputStream = ctx.getAssets().open("logoFebeca.jpeg");
+                    Bitmap bmp =  BitmapFactory.decodeStream(inputStream);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     Image companyLogo = Image.getInstance(stream.toByteArray());
@@ -170,7 +170,8 @@ public class WishListPDFCreator {
             }
         }else{
             Log.d(TAG, "pdfFile is null");
-        }
+        }*/
+        Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }
 }

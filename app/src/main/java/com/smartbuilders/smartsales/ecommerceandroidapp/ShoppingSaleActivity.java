@@ -3,16 +3,13 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +21,8 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingSalePDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -43,6 +39,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
     private User mCurrentUser;
     //private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> mOrderLines;
+    private Order mOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +84,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
         }
 
         mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingSale();
+        mOrder = new Order();
 
         if(findViewById(R.id.shoppingSale_items_list) != null) {
             ((ListView) findViewById(R.id.shoppingSale_items_list))
@@ -125,31 +123,31 @@ public class ShoppingSaleActivity extends AppCompatActivity
                     });
         }
 
-        if(findViewById(R.id.search_bar_linear_layout)!=null) {
-            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ShoppingSaleActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
-
-            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
-
-            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
-        }
+        //if(findViewById(R.id.search_bar_linear_layout)!=null) {
+        //    findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            startActivity(new Intent(ShoppingSaleActivity.this, FilterOptionsActivity.class)
+        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+        //        }
+        //    });
+        //
+        //    findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
+        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+        //        }
+        //    });
+        //
+        //    findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
+        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+        //        }
+        //    });
+        //}
     }
 
     @Override
@@ -200,73 +198,71 @@ public class ShoppingSaleActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shopping_sale, menu);
 
-        /*// Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =  (ShareActionProvider) MenuItemCompat
-                .getActionProvider(menu.findItem(R.id.action_share));
+        // Get the provider and hold onto it to set/change the share intent.
+        //mShareActionProvider =  (ShareActionProvider) MenuItemCompat
+        //        .getActionProvider(menu.findItem(R.id.action_share));
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        if (mOrderLines != null && mOrderLines.size() > 0) {
-            new CreateShareIntentThread().start();
-        }*/
+        //if (mOrderLines != null && mOrderLines.size() > 0) {
+        //    new CreateShareIntentThread().start();
+        //}
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        /*//noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            if (mOrderLines != null && mOrderLines.size() > 0) {
-                //mShareActionProvider.setShareHistoryFileName(null);
-                mShareActionProvider.setShareIntent(createShareProductIntent());
-            }
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            //case R.id.action_share:
+            //    if (mOrderLines != null && mOrderLines.size() > 0) {
+            //        mShareActionProvider.setShareIntent(createShareSalesOrderIntent());
+            //    }
+            //    return true;
+            case R.id.search:
+                startActivity(new Intent(this, SearchResultsActivity.class)
+                        .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    /*private Intent createShareProductIntent(){
-        String fileName = "Cotizacion";
-        String subject = "";
-        String message = "";
+    //private Intent createShareSalesOrderIntent(){
+    //    String fileName = "Cotizacion";
+    //    String subject = "";
+    //    String message = "";
+    //
+    //    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    //    shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    //    // need this to prompts email client only
+    //    shareIntent.setType("message/rfc822");
+    //    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+    //    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+    //
+    //    try{
+    //        new ShoppingSalePDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf", this, mCurrentUser);
+    //    }catch(Exception e){
+    //        e.printStackTrace();
+    //    }
+    //
+    //    //Add the attachment by specifying a reference to our custom ContentProvider
+    //    //and the specific file of interest
+    //    shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+    //            + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+    //    return shareIntent;
+    //}
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        // need this to prompts email client only
-        shareIntent.setType("message/rfc822");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-        try{
-            new ShoppingSalePDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        //Add the attachment by specifying a reference to our custom ContentProvider
-        //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
-        return shareIntent;
-    }
-
-    class CreateShareIntentThread extends Thread {
-        public void run() {
-            final Intent shareIntent = createShareProductIntent();
-            ShoppingSaleActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mShareActionProvider.setShareIntent(shareIntent);
-                }
-            });
-        }
-    }*/
+    //class CreateShareIntentThread extends Thread {
+    //    public void run() {
+    //        final Intent shareIntent = createShareSalesOrderIntent();
+    //        ShoppingSaleActivity.this.runOnUiThread(new Runnable() {
+    //            @Override
+    //            public void run() {
+    //                mShareActionProvider.setShareIntent(shareIntent);
+    //            }
+    //        });
+    //    }
+    //}
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

@@ -111,7 +111,7 @@ public class WishListActivity extends AppCompatActivity
             mListView.setVisibility(View.VISIBLE);
         }
 
-        if(findViewById(R.id.search_bar_linear_layout)!=null) {
+        /*if(findViewById(R.id.search_bar_linear_layout)!=null) {
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -135,7 +135,7 @@ public class WishListActivity extends AppCompatActivity
                             .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
-        }
+        }*/
     }
 
     @Override
@@ -167,10 +167,13 @@ public class WishListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            if (wishListLines != null && wishListLines.size() > 0) {
+            /*if (wishListLines != null && wishListLines.size() > 0) {
                 mShareActionProvider.setShareIntent(createShareProductIntent());
-            }
+            }*/
             return true;
+        } else if (id == R.id.search){
+            startActivity(new Intent(WishListActivity.this, SearchResultsActivity.class)
+                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -189,14 +192,14 @@ public class WishListActivity extends AppCompatActivity
 
         try{
             new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", this, mCurrentUser);
-        }catch(Exception e){
+        }catch(Exception e) {
             e.printStackTrace();
         }
 
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+        //shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+        //        + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
     }
 
