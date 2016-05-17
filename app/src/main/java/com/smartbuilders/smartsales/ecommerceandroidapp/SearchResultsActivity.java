@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -29,11 +27,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-
-import java.util.ArrayList;
 
 /**
  * Jesus Sarco 12.05.2016
@@ -97,6 +91,8 @@ public class SearchResultsActivity extends AppCompatActivity
                 }
             });
             searchEditText = (EditText) findViewById(R.id.search_product_editText);
+            searchEditText.setFocusable(true);
+            searchEditText.setFocusableInTouchMode(true);
             searchEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -132,6 +128,18 @@ public class SearchResultsActivity extends AppCompatActivity
                         return true;
                     }
                     return false;
+                }
+            });
+
+            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                            .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
+                    Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
+                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
+                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
+                    startActivity(intent);
                 }
             });
         }

@@ -78,7 +78,7 @@
     <string name="log_clean_succesfully">The Log was clean successfully.</string>
     <string name="sync_in_progress">Synchronization in progress</string>
     <string name="alarm_already_set">Error creating Alarm, Alarm already set.</string>
-    <string name="wait_please">Wait Please</string>
+    <string name="wait_please">Espere por favor</string>
     <string name="authenticating_user">Authenticating User</string>
     <string name="mandatory_fields_empty">You need to fill all the mandatory fields.</string>
     <string name="user_already_registered">User already registered in the application.</string>
@@ -149,6 +149,7 @@
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
     <string name="price_label">Precio:</string>
     <string name="tax_label">(%) Impuesto:</string>
+    <string name="total_label">Total:</string>
     <string name="total_line_amount_label">Sub-Total:</string>
     <string name="order_price_label">Precio: %1$s</string>
     <string name="order_sub_total_amount">Sub-Total: %1$s</string>
@@ -161,4 +162,7 @@
     <string name="tax_title">(%) Impuesto</string>
     <string name="qty_ordered_title">Cantidad pedida</string>
     <string name="related_products_by_brand_title">Más productos de la marca %1$s</string>
+    <string name="loading">Cargando</string>
+    <string name="buy">Comprar</string>
+    <string name="sell">Vender</string>
 </resources>

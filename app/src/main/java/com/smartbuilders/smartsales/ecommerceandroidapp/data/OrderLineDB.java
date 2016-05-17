@@ -35,15 +35,15 @@ public class OrderLineDB {
     }
 
     public String addProductToShoppingCart(Product product, int qtyRequested){
-        return addOrderLine(product, qtyRequested, SHOPPING_CART_DOCTYPE);
+        return addOrderLine(product, qtyRequested, 0, 0, SHOPPING_CART_DOCTYPE);
     }
 
-    public String addProductToShoppingSale(Product product, int qtyRequested){
-        return addOrderLine(product, qtyRequested, SHOPPING_SALE_DOCTYPE);
+    public String addProductToShoppingSale(Product product, int qtyRequested, double productPrice, double productTaxPercentage){
+        return addOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE);
     }
 
     public String addProductToWhisList(Product product){
-        return addOrderLine(product, 0, WISHLIST_DOCTYPE);
+        return addOrderLine(product, 0, 0, 0, WISHLIST_DOCTYPE);
     }
 
     public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){
@@ -151,14 +151,16 @@ public class OrderLineDB {
         return getOrderLines(docType, orderId);
     }
 
-    private String addOrderLine(Product product, int qtyRequested, String docType) {
+    private String addOrderLine(Product product, int qtyRequested, double productPrice,
+                                double productTaxPercentage, String docType) {
         SQLiteDatabase db = null;
         try {
             db = dbh.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put("PRODUCT_ID", product.getId());
             cv.put("QTY_REQUESTED", qtyRequested);
-            cv.put("SALES_PRICE", "");
+            cv.put("SALES_PRICE", productPrice);
+            cv.put("TAX_PERCENTAGE", productTaxPercentage);
             cv.put("DOC_TYPE", docType);
             cv.put("ISACTIVE", "Y");
             cv.put("APP_VERSION", Utils.getAppVersionName(context));

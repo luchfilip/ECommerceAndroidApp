@@ -1,9 +1,39 @@
-<resources>>
+<resources>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="MainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:theme">@style/Theme.MaterialMainButton</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
+    <style name="Theme.MaterialMainButton" parent="AppTheme">
+        <item name="colorAccent">@color/colorPrimaryMedium</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored" >
+        <item name="android:theme">@style/Theme.MaterialGoldenButton</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
+    <style name="Theme.MaterialGoldenButton" parent="AppTheme">
+        <item name="colorAccent">@color/golden_medium</item>
+        <item name="colorButtonNormal">@color/golden</item>
+    </style>
+
+    <style name="GreyButtonAppTheme" parent="Widget.AppCompat.Button.Colored" >
+        <item name="android:theme">@style/Theme.MaterialGreyButton</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
+    <style name="Theme.MaterialGreyButton" parent="AppTheme">
+        <item name="colorAccent">@color/grey_medium</item>
+        <item name="colorButtonNormal">@color/grey</item>
     </style>
 </resources>

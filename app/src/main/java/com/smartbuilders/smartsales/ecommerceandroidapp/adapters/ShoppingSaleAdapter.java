@@ -118,11 +118,11 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.price_label);
 
-                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                dialog.findViewById(R.id.cancel_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -131,8 +131,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         }
                 );
 
-                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -178,11 +178,11 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.tax_label);
 
-                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                dialog.findViewById(R.id.cancel_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -191,8 +191,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         }
                 );
 
-                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -238,13 +238,13 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
 
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.qty_ordered_label);
 
 
-                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                dialog.findViewById(R.id.cancel_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -253,8 +253,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         }
                 );
 
-                ((Button) dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
+                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

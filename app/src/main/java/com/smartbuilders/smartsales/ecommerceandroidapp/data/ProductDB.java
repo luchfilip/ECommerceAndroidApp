@@ -37,15 +37,12 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+                    " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+ //AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = " + productId +
                     " WHERE A.IDARTICULO <> " + productId +
                     " ORDER BY R.TIMES DESC " +
@@ -53,23 +50,11 @@ public class ProductDB {
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(3));
-//                p.setDescription(c.getString(4));
-//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(8))) {
-//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
-//                }
-                p.setImageFileName(c.getString(20));
-//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                p.setAvailability(c.getInt(19));
+                p.setName(c.getString(1));
+                p.setImageFileName(c.getString(2));
+                p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
+                p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
+                p.setAvailability(c.getInt(10));
                 products.add(p);
             }
         } catch (Exception e) {
@@ -99,15 +84,12 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                    " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                    " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+                    " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'" +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
                     " WHERE A.IDPARTIDA = "+subCategoryId +
                         " AND A.IDARTICULO <> " + productId +
                     " ORDER BY A.NOMBRE ASC " +
@@ -115,23 +97,11 @@ public class ProductDB {
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(3));
-//                p.setDescription(c.getString(4));
-//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(8))) {
-//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
-//                }
-                p.setImageFileName(c.getString(20));
-//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                p.setAvailability(c.getInt(19));
+                p.setName(c.getString(1));
+                p.setImageFileName(c.getString(2));
+                p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
+                p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
+                p.setAvailability(c.getInt(10));
                 products.add(p);
             }
         } catch (Exception e) {
@@ -161,15 +131,12 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                    " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                    " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+                    " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'"+
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
                     " WHERE B.BRAND_ID = "+brandId +
                         " AND A.IDARTICULO <> " + productId +
                     " ORDER BY A.NOMBRE ASC " +
@@ -177,23 +144,11 @@ public class ProductDB {
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
-                p.setName(c.getString(3));
-//                p.setDescription(c.getString(4));
-//                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-//                    p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-//                }
-//                if(!TextUtils.isEmpty(c.getString(8))) {
-//                    p.setDescription(p.getDescription()+".\nNacionalidad: "+c.getString(8));
-//                }
-                p.setImageFileName(c.getString(20));
-//                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-//                p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                p.setAvailability(c.getInt(19));
+                p.setName(c.getString(1));
+                p.setImageFileName(c.getString(2));
+                p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
+                p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
+                p.setAvailability(c.getInt(10));
                 products.add(p);
             }
         } catch (Exception e) {

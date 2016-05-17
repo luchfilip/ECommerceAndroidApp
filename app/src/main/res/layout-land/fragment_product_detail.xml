@@ -53,7 +53,7 @@
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:baselineAligned="false">
 
                             <ImageView
@@ -67,8 +67,8 @@
                             <LinearLayout
                                 android:orientation="vertical"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="6"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
                                 android:layout_marginLeft="2dp"
                                 android:layout_marginRight="2dp">
 
@@ -100,7 +100,7 @@
                                 <RatingBar
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    style="?android:attr/ratingBarStyleSmall"
+                                    style="@style/Widget.AppCompat.RatingBar.Indicator"
                                     android:progressTint="@color/ratingbar_progress"
                                     android:numStars="5"
                                     android:rating="2.5"
@@ -116,30 +116,26 @@
                                     android:gravity="bottom">
 
                                     <Button
-                                        style="?android:attr/buttonStyleSmall"
+                                        style="@style/MainButtonAppTheme"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/buy"
+                                        android:id="@+id/product_addtoshoppingcart_button" />
+
+                                    <Button
+                                        style="@style/GoldenButtonAppTheme"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/sell"
+                                        android:id="@+id/product_addtoshoppingsales_button" />
+
+                                    <Button
+                                        style="@style/GreyButtonAppTheme"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:text="@string/add_to_wishlist"
                                         android:id="@+id/product_addtowishlist_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small"
-                                        android:layout_gravity="bottom|right"
                                         android:focusable="false" />
-
-                                    <Button
-                                        style="?android:attr/buttonStyleSmall"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/add_to_shopping_cart"
-                                        android:id="@+id/product_addtoshoppingcart_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small" />
-
-                                    <Button
-                                        style="?android:attr/buttonStyleSmall"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/add_to_shopping_sales"
-                                        android:id="@+id/product_addtoshoppingsales_button"
-                                        android:textAppearance="@android:style/TextAppearance.Small" />
                                 </LinearLayout>
 
                             </LinearLayout>

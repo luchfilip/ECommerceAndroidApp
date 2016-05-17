@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
@@ -38,10 +39,14 @@ public class ProductDetailFragment extends Fragment {
     private static final String TAG = ProductDetailFragment.class.getSimpleName();
     private static final String STATE_CURRENT_USER = "state_current_user";
 
+    private ProgressDialog waitPlease;
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
     public static final String KEY_PRODUCT = "key_product";
     private User mCurrentUser;
+    private ArrayList<Product> relatedProductsByShopping;
+    private ArrayList<Product> relatedProductsByBrandId;
+    private ArrayList<Product> relatedProductsBySubCategoryId;
 
     public ProductDetailFragment() {
     }
@@ -50,7 +55,7 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
@@ -67,133 +72,166 @@ public class ProductDetailFragment extends Fragment {
             }
         }
 
-        ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
-
-        mProduct = productDB.getProductById(mProduct.getId(), true);
-
-        ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
-
-        if(mProduct.getDescription()!=null){
-            ((TextView) view.findViewById(R.id.product_detail_description)).setText(mProduct.getDescription());
-        }
-
-        if(mProduct.getProductBrand()!=null && mProduct.getProductBrand().getDescription()!=null){
-            ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
-                    mProduct.getProductBrand().getDescription()));
-        }
-
-        if(mProduct.getImageFileName()!=null){
-            Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
-            if(img!=null){
-                ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
-            }else{
-                ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
-            }
-        }
-
-        ArrayList<Product> relatedProducts = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
-        if(relatedProducts!=null && !relatedProducts.isEmpty()){
-            RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-            mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
-                    ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
-        }else{
-            view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
-        }
-
-        if(mProduct.getProductBrand()!=null) {
-            relatedProducts = productDB.getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
-            if(relatedProducts!=null && !relatedProducts.isEmpty()){
-                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_products_by_brand_recycler_view);
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                mRecyclerView.setHasFixedSize(true);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
-                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
-                ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
-                        .setText(getString(R.string.related_products_by_brand_title,
-                                !TextUtils.isEmpty(mProduct.getProductBrand().getDescription())
-                                        ? mProduct.getProductBrand().getDescription()
-                                        : mProduct.getProductBrand().getName()));
-            }else{
-                view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
-            }
-        }else{
-            view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
-        }
-
-        if(mProduct.getProductSubCategory()!=null) {
-            relatedProducts = productDB.getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 20);
-            if(relatedProducts!=null && !relatedProducts.isEmpty()){
-                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                mRecyclerView.setHasFixedSize(true);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProducts, false,
-                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
-            }else{
-                view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
-            }
-        }else{
-            view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
-        }
-
-
-        if(mProduct.getProductCommercialPackage()!=null){
-            ((TextView) view.findViewById(R.id.product_comercial_package)).setText(getContext().getString(R.string.commercial_package,
-                mProduct.getProductCommercialPackage().getUnits() + " " +
-                        mProduct.getProductCommercialPackage().getUnitDescription()));
-        }else{
-            view.findViewById(R.id.product_comercial_package).setVisibility(View.GONE);
-        }
-
-        if (view.findViewById(R.id.product_addtoshoppingsales_button) != null){
-            view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showEditDialog(OrderLineDB.SHOPPING_SALE_DOCTYPE);
-                    }
+        waitPlease = ProgressDialog.show(getActivity(), getString(R.string.loading), getString(R.string.wait_please), true, false);
+        new Thread() {
+            @Override
+            public void run() {
+                ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
+                try {
+                    mProduct = productDB.getProductById(mProduct.getId(), true);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            );
-        }
+                try {
+                    relatedProductsByShopping = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if(mProduct.getProductBrand()!=null) {
+                        relatedProductsByBrandId = productDB.getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if(mProduct.getProductSubCategory()!=null) {
+                        relatedProductsBySubCategoryId = productDB.getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-        if (view.findViewById(R.id.product_addtoshoppingcart_button) != null){
-            view.findViewById(R.id.product_addtoshoppingcart_button).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            showEditDialog(OrderLineDB.SHOPPING_CART_DOCTYPE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
+
+                            if (mProduct.getDescription() != null) {
+                                ((TextView) view.findViewById(R.id.product_detail_description)).setText(mProduct.getDescription());
+                            }
+
+                            if (mProduct.getProductBrand() != null && mProduct.getProductBrand().getDescription() != null) {
+                                ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
+                                        mProduct.getProductBrand().getDescription()));
+                            }
+
+                            if (mProduct.getImageFileName() != null) {
+                                Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                if (img != null) {
+                                    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
+                                } else {
+                                    ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
+                                }
+                            }
+
+                            if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {
+                                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                mRecyclerView.setHasFixedSize(true);
+                                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsByShopping, false,
+                                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                            } else {
+                                view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
+                            }
+
+                            if (relatedProductsByBrandId != null && !relatedProductsByBrandId.isEmpty()) {
+                                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_products_by_brand_recycler_view);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                mRecyclerView.setHasFixedSize(true);
+                                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsByBrandId, false,
+                                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+
+                                ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
+                                        .setText(getString(R.string.related_products_by_brand_title,
+                                                !TextUtils.isEmpty(mProduct.getProductBrand().getDescription())
+                                                        ? mProduct.getProductBrand().getDescription()
+                                                        : mProduct.getProductBrand().getName()));
+                            } else {
+                                view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
+                            }
+
+                            if (relatedProductsBySubCategoryId != null && !relatedProductsBySubCategoryId.isEmpty()) {
+                                RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                mRecyclerView.setHasFixedSize(true);
+                                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsBySubCategoryId, false,
+                                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                            } else {
+                                view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
+                            }
+
+                            if (mProduct.getProductCommercialPackage() != null) {
+                                ((TextView) view.findViewById(R.id.product_comercial_package)).setText(getContext().getString(R.string.commercial_package,
+                                        mProduct.getProductCommercialPackage().getUnits() + " " +
+                                                mProduct.getProductCommercialPackage().getUnitDescription()));
+                            } else {
+                                view.findViewById(R.id.product_comercial_package).setVisibility(View.GONE);
+                            }
+
+                            if (view.findViewById(R.id.product_addtoshoppingsales_button) != null) {
+                                view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            addToShoppingSale();
+                                        }
+                                    }
+                                );
+                            }
+
+                            if (view.findViewById(R.id.product_addtoshoppingcart_button) != null) {
+                                view.findViewById(R.id.product_addtoshoppingcart_button).setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            addToShoppingCart();
+                                        }
+                                    }
+                                );
+                            }
+
+                            if (view.findViewById(R.id.product_addtowishlist_button) != null) {
+                                view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
+                                            if (result == null) {
+                                                Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    }
+                                );
+                            }
+
+                            if (view.findViewById(R.id.product_availability) != null) {
+                                ((TextView) view.findViewById(R.id.product_availability))
+                                        .setText(getString(R.string.availability, mProduct.getAvailability()));
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                waitPlease.dismiss();
+                                waitPlease.cancel();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-            );
-        }
-
-        if (view.findViewById(R.id.product_addtowishlist_button) != null) {
-            view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
-                        if (result == null) {
-                            Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            );
-        }
-
-        if(view.findViewById(R.id.product_availability)!=null){
-            ((TextView) view.findViewById(R.id.product_availability))
-                    .setText(getString(R.string.availability, mProduct.getAvailability()));
-        }
+                });
+            }
+        }.start();
 
         return view;
     }
@@ -251,11 +289,18 @@ public class ProductDetailFragment extends Fragment {
         return Utils.createShareProductIntent(getContext(), mProduct, fileName);
     }
 
-    private void showEditDialog(String docType) {
+    private void addToShoppingCart() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        EditQtyRequestedDialogFragment editQtyRequestedDialogFragment =
-                EditQtyRequestedDialogFragment.newInstance(mProduct, mCurrentUser, docType);
-        editQtyRequestedDialogFragment.show(fm, "fragment_edit_name");
+        DialogAddToShoppingCartFragment addToShoppingCartFragment =
+                DialogAddToShoppingCartFragment.newInstance(mProduct, mCurrentUser);
+        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+    }
+
+    private void addToShoppingSale() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DialogAddToShoppingSaleFragment addToShoppingSaleFragment =
+                DialogAddToShoppingSaleFragment.newInstance(mProduct, mCurrentUser);
+        addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
     }
 
     @Override

@@ -120,12 +120,12 @@ public class WishListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_edit_qty_requested);
+                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
 
                 ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                         .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));
 
-                dialog.findViewById(R.id.cancel_dialog_qty_requested_button).setOnClickListener(
+                dialog.findViewById(R.id.cancel_button).setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -133,7 +133,7 @@ public class WishListAdapter extends BaseAdapter {
                         }
                     }
                 );
-                dialog.findViewById(R.id.addtoshoppingcart_dialog_qty_requested_button).setOnClickListener(
+                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

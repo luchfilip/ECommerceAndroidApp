@@ -43,8 +43,8 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:id="@+id/search_product_editText"
-            android:focusableInTouchMode="true"
-            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             android:enabled="true" />
 
         <ImageView
