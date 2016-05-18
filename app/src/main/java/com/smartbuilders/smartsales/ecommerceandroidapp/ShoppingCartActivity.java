@@ -203,7 +203,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     //    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
     //
     //    try{
-    //        new ShoppingCartPDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
+    //        new OrderDetailPDFCreator().generatePDF(mOrderLines, fileName+".pdf", this, mCurrentUser);
     //    }catch(Exception e){
     //        e.printStackTrace();
     //    }

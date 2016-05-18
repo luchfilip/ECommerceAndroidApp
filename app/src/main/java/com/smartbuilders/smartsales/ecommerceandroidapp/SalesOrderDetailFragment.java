@@ -23,8 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingCartPDFCreator;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingSalePDFCreator;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.SalesOrderDetailPDFCreator;
 
 import java.util.ArrayList;
 
@@ -154,15 +153,16 @@ public class SalesOrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new ShoppingSalePDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf", getContext(), mCurrentUser);
+            new SalesOrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf",
+                    getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }
 
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
-        //shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-        //        + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
     }
 

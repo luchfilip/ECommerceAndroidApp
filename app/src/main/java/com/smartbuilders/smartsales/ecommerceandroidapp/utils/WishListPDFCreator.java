@@ -23,9 +23,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.WishListLine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,8 +41,8 @@ public class WishListPDFCreator {
     public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
-        /*//check if external storage is available so that we can dump our PDF file there
-        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+        //check if external storage is available so that we can dump our PDF file there
+        /*if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, "External Storage not available or you don't have permission to write", Toast.LENGTH_LONG).show();
         } else {
             //path for the PDF file in the external storage
@@ -58,7 +56,7 @@ public class WishListPDFCreator {
         //create a new document
         Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
 
-        /*if(pdfFile != null){
+        if(pdfFile != null){
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

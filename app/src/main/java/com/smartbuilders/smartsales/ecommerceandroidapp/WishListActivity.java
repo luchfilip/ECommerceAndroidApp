@@ -198,8 +198,8 @@ public class WishListActivity extends AppCompatActivity
 
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
-        //shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-        //        + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
     }
 

@@ -240,7 +240,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
     //    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
     //
     //    try{
-    //        new ShoppingSalePDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf", this, mCurrentUser);
+    //        new SalesOrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf", this, mCurrentUser);
     //    }catch(Exception e){
     //        e.printStackTrace();
     //    }

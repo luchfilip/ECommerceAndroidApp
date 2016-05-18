@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -21,7 +22,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ShoppingCartPDFCreator;
+import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.OrderDetailPDFCreator;
 
 import java.util.ArrayList;
 
@@ -138,15 +140,15 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new ShoppingCartPDFCreator().generatePDF(mOrderLines, fileName+".pdf", getContext(), mCurrentUser);
+            new OrderDetailPDFCreator().generatePDF(mOrderLines, fileName+".pdf", getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }
 
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
-        //shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-        //        + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
     }
 

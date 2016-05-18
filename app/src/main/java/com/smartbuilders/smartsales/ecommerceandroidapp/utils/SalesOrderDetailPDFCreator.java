@@ -1,17 +1,8 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,25 +16,31 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.Section;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
-
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by Alberto on 6/4/2016.
  */
-public class ShoppingCartPDFCreator {
-    private static final String TAG = ShoppingCartPDFCreator.class.getSimpleName();
+public class SalesOrderDetailPDFCreator {
+    private static final String TAG = SalesOrderDetailPDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
+    public File generatePDF(Order order, ArrayList<OrderLine> lines, String fileName, Context ctx, User user) {
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
@@ -97,7 +94,7 @@ public class ShoppingCartPDFCreator {
                 document.add(new Phrase("\n"));
 
 
-                Paragraph title = new Paragraph(new Phrase(20, "Orden de Pedido", new Font(bf, 15f)));
+                Paragraph title = new Paragraph(new Phrase(20, "Cotización", new Font(bf, 15f)));
                 title.setAlignment(Element.ALIGN_CENTER);
                 document.add(title);
 
@@ -138,9 +135,8 @@ public class ShoppingCartPDFCreator {
                     cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-                    //cell2.addElement(new Paragraph("Empaque de venta: ", font));
-                    //cell2.addElement(new Paragraph("Precio: ", font));
-                    //cell2.addElement(new Paragraph("Descuento (%): ", font));
+                    cell2.addElement(new Paragraph("Precio: "+line.getPrice(), font));
+                    cell2.addElement(new Paragraph("(%) Impuesto: "+line.getTaxPercentage(), font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -151,19 +147,21 @@ public class ShoppingCartPDFCreator {
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
-                    //cell3.addElement(new Paragraph("Total Bs.: ", font));
+                    cell3.addElement(new Paragraph("Total linea: "+line.getTotalLineAmount(), font));
                     table.addCell(cell3);
                 }
 
                 document.add(table);
-
                 document.add(new Phrase("\n"));
-                try {
-                    document.add(new Phrase("Lineas totales: "+lines.size()));
-                    document.add(new Phrase("\n"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                document.add(new Phrase("\n"));
+
+                document.add(new Phrase("Sub-Total: "+order.getSubTotalAmount()));
+                document.add(new Phrase("\n"));
+                document.add(new Phrase("Impuestos: "+order.getTaxAmount()));
+                document.add(new Phrase("\n"));
+                document.add(new Phrase("Total: "+order.getTotalAmount()));
+                document.add(new Phrase("\n"));
+
                 document.close();
 
                 // Create a reader
@@ -186,6 +184,7 @@ public class ShoppingCartPDFCreator {
         }else{
             Log.d(TAG, "pdfFile is null");
         }*/
+        Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }
 

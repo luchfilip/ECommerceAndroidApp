@@ -24,7 +24,6 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
 import java.io.ByteArrayOutputStream;
@@ -37,14 +36,14 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 6/4/2016.
  */
-public class ShoppingSalePDFCreator {
-    private static final String TAG = ShoppingSalePDFCreator.class.getSimpleName();
+public class OrderDetailPDFCreator {
+    private static final String TAG = OrderDetailPDFCreator.class.getSimpleName();
 
-    public File generatePDF(Order order, ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
+    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
-        /*//check if external storage is available so that we can dump our PDF file there
-        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+        //check if external storage is available so that we can dump our PDF file there
+        /*if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
         } else {
             //path for the PDF file in the external storage
@@ -94,7 +93,7 @@ public class ShoppingSalePDFCreator {
                 document.add(new Phrase("\n"));
 
 
-                Paragraph title = new Paragraph(new Phrase(20, "Cotización", new Font(bf, 15f)));
+                Paragraph title = new Paragraph(new Phrase(20, "Orden de Pedido", new Font(bf, 15f)));
                 title.setAlignment(Element.ALIGN_CENTER);
                 document.add(title);
 
@@ -135,8 +134,9 @@ public class ShoppingSalePDFCreator {
                     cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-                    cell2.addElement(new Paragraph("Precio: "+line.getPrice(), font));
-                    cell2.addElement(new Paragraph("(%) Impuesto: "+line.getTaxPercentage(), font));
+                    //cell2.addElement(new Paragraph("Empaque de venta: ", font));
+                    //cell2.addElement(new Paragraph("Precio: ", font));
+                    //cell2.addElement(new Paragraph("Descuento (%): ", font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -147,21 +147,19 @@ public class ShoppingSalePDFCreator {
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
-                    cell3.addElement(new Paragraph("Total linea: "+line.getTotalLineAmount(), font));
+                    //cell3.addElement(new Paragraph("Total Bs.: ", font));
                     table.addCell(cell3);
                 }
 
                 document.add(table);
-                document.add(new Phrase("\n"));
-                document.add(new Phrase("\n"));
 
-                document.add(new Phrase("Sub-Total: "+order.getSubTotalAmount()));
                 document.add(new Phrase("\n"));
-                document.add(new Phrase("Impuestos: "+order.getTaxAmount()));
-                document.add(new Phrase("\n"));
-                document.add(new Phrase("Total: "+order.getTotalAmount()));
-                document.add(new Phrase("\n"));
-
+                try {
+                    document.add(new Phrase("Lineas totales: "+lines.size()));
+                    document.add(new Phrase("\n"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 document.close();
 
                 // Create a reader
@@ -184,6 +182,7 @@ public class ShoppingSalePDFCreator {
         }else{
             Log.d(TAG, "pdfFile is null");
         }*/
+        Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }
 
