@@ -11,7 +11,10 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -231,23 +234,35 @@ public class Utils {
     }
 
     public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, final User user,
-                                             boolean goToHome){
-        for(int i = 0; i < toolbar.getChildCount(); i++){
-            View view = toolbar.getChildAt(i);
-            if(view instanceof TextView){
-                TextView tv = (TextView) view;
-                if(tv.getText().equals(toolbar.getTitle().toString())){
-                    if (goToHome) {
-                        tv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                context.startActivity(new Intent(context,
-                                        MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
-                            }
-                        });
+                                             final boolean goToHome){
+        toolbar.setTitle("");
+        if (goToHome) {
+            for(int i = 0; i < toolbar.getChildCount(); i++){
+                View view = toolbar.getChildAt(i);
+                /*if(view instanceof TextView){
+                    TextView tv = (TextView) view;
+                    if(tv.getText().equals(toolbar.getTitle().toString())){
+                        if (goToHome) {
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    context.startActivity(new Intent(context,
+                                            MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                                }
+                            });
+                        }
+                        tv.setTextSize(22);
+                        tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "MyriadPro-Bold.otf"));
+                        break;
                     }
-                    tv.setTextSize(22);
-                    tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "MyriadPro-Bold.otf"));
+                }else*/ if(view instanceof ImageView){
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            context.startActivity(new Intent(context,
+                                    MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                        }
+                    });
                     break;
                 }
             }
@@ -260,9 +275,22 @@ public class Utils {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
             View customView = activity.getLayoutInflater().inflate(R.layout.actionbar_title, null);
-            TextView customTitle = (TextView) customView.findViewById(R.id.actionbarTitle);
+            //TextView customTitle = (TextView) customView.findViewById(R.id.actionbarTitle);
+            //if(goToHome) {
+            //    customTitle.setOnClickListener(new View.OnClickListener() {
+            //        @Override
+            //        public void onClick(View v) {
+            //            activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
+            //                    MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user)
+            //                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            //        }
+            //    });
+            //}
+            //customTitle.setTextSize(22);
+            //customTitle.setTypeface(Typeface.createFromAsset(activity.getAssets(), "MyriadPro-Bold.otf"));
+            ImageView customLogo = (ImageView) customView.findViewById(R.id.actionbarLogo);
             if(goToHome) {
-                customTitle.setOnClickListener(new View.OnClickListener() {
+                customLogo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
@@ -271,8 +299,6 @@ public class Utils {
                     }
                 });
             }
-            customTitle.setTextSize(22);
-            customTitle.setTypeface(Typeface.createFromAsset(activity.getAssets(), "MyriadPro-Bold.otf"));
             actionBar.setCustomView(customView);
         }
     }

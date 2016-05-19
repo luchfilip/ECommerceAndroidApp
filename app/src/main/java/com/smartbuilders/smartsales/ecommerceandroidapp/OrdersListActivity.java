@@ -58,20 +58,17 @@ public class OrdersListActivity extends AppCompatActivity
                     .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
         }
 
-        if(findViewById(R.id.toolbar) != null) {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle(R.string.app_name);
-            Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
-            setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle(R.string.app_name);
+        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        setSupportActionBar(toolbar);
 
-            if(findViewById(R.id.drawer_layout) != null) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                drawer.setDrawerListener(toggle);
-                toggle.syncState();
-            }
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
         if(findViewById(R.id.nav_view) != null) {
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);

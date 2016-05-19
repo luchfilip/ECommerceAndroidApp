@@ -44,7 +44,7 @@ public class ProductDetailActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
+        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -103,5 +103,22 @@ public class ProductDetailActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        startActivity(new Intent(ProductDetailActivity.this,
+                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, mCurrentUser));
+                        return true;
+                    }
+                });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

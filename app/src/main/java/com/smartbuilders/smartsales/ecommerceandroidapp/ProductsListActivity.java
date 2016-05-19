@@ -109,7 +109,7 @@ public class ProductsListActivity extends AppCompatActivity
                     public void run() {
                         try {
                             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                            toolbar.setTitle(R.string.app_name);
+                            //toolbar.setTitle(R.string.app_name);
                             Utils.setCustomToolbarTitle(ProductsListActivity.this, toolbar, mCurrentUser, true);
                             setSupportActionBar(toolbar);
 
