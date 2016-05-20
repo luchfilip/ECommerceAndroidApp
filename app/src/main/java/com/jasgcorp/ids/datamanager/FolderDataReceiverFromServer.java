@@ -49,7 +49,7 @@ public class FolderDataReceiverFromServer extends Thread {
 		this.serverAddress = user.getServerAddress();
 		this.authToken = user.getAuthToken();
 		this.serverUserId = user.getServerUserId();
-		this.folder = new File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/");//-->Android/data/package.name/files/...
+		this.folder = new File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
 		// if the directory does not exist, create it
 		if (!folder.exists()) {
 		    try{
