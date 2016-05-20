@@ -23,6 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
@@ -100,7 +101,7 @@ public class Utils {
         shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - "
                 + "http://www.febeca.com:8080/products/compra/");
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName));
+                + CachedFileProvider.AUTHORITY + File.separator + fileName));
         return shareIntent;
     }
 
@@ -159,7 +160,7 @@ public class Utils {
 
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                .append("/").append(user.getUserGroup()).append("/")
+                .append(File.separator).append(user.getUserGroup()).append(File.separator)
                 .append(user.getUserName()).append("/Data_In/original/").append(fileName).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -171,7 +172,7 @@ public class Utils {
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                        .append("/").append(user.getUserGroup()).append("/")
+                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
                         .append(user.getUserName()).append("/Data_In/thumb/").append(fileName).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -337,11 +338,10 @@ public class Utils {
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
             break;
 
-            //case R.id.nav_invoices_list:
-            //    Intent intent = new Intent(MainActivity.this, InvoicesListActivity.class);
-            //    intent.putExtra(InvoicesListActivity.KEY_CURRENT_USER, mCurrentUser);
-            //    startActivity(intent);
-            //break;
+            case R.id.nav_settings:
+                context.startActivity(new Intent(context, SettingsActivity.class)
+                        .putExtra(SettingsActivity.KEY_CURRENT_USER, user));
+            break;
             //case R.id.nav_statement_of_account:
             //    Intent intent = new Intent(MainActivity.this, StatementOfAccountActivity.class);
             //    intent.putExtra(StatementOfAccountActivity.KEY_CURRENT_USER, mCurrentUser);
@@ -356,11 +356,40 @@ public class Utils {
             break;
             case R.id.nav_send:
             break;
-            case R.id.nav_manage:
-            break;
             case R.id.nav_report_error:
             break;
         }
     }
 
+    public static void createImageFiles(Context context, User user){
+        File folderThumb = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/Data_In/thumb/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folderThumb.exists()) {
+            try {
+                if (!folderThumb.createNewFile()) {
+                    Log.w(TAG, "Failed to create folder: " + folderThumb.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        File folderOriginal = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/Data_In/original/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folderOriginal.exists()) {
+            try {
+                if (!folderOriginal.createNewFile()) {
+                    Log.w(TAG, "Failed to create folder: " + folderOriginal.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

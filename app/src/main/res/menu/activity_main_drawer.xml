@@ -60,9 +60,9 @@
     <item android:title="@string/action_setting">
         <menu>
             <item
-                android:id="@+id/nav_manage"
+                android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="@string/manage" />
+                android:title="@string/settings" />
             <item
                 android:id="@+id/nav_report_error"
                 android:icon="@drawable/ic_report_problem_black_24dp"
