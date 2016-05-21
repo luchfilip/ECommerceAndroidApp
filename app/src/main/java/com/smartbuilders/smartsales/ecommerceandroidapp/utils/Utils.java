@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -159,9 +160,13 @@ public class Utils {
     }
 
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                 .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                .append(user.getUserName()).append("/Data_In/original/").append(fileName).toString());
+                .append(user.getUserName()).append("/Data_In/original/")
+                .append(fileName.replace(".png", ".jpg")).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
@@ -171,9 +176,13 @@ public class Utils {
     }
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                         .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                        .append(user.getUserName()).append("/Data_In/thumb/").append(fileName).toString());
+                        .append(user.getUserName()).append("/Data_In/thumb/")
+                        .append(fileName.replace(".png", ".jpg")).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);

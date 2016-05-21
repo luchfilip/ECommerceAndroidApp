@@ -357,8 +357,11 @@ public class FolderDataReceiverFromServer extends Thread {
 				e.printStackTrace();
 			}
 			if(dataReceived.has("4")){
-				ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.ungzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP), 
-												folder.getPath().toString()+"/"+dataReceived.getString("2"));
+				//ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.ungzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP),
+				//								folder.getPath().toString()+"/"+dataReceived.getString("2"));
+
+				ApplicationUtilities.saveToFile(Base64.decode(dataReceived.getString("4"), Base64.GZIP),
+						folder.getPath().toString()+"/"+dataReceived.getString("2"));
 				
 				//TODO: aqui se debe ir procesando el archivo de datos recibidos. Si hay algun problema al procesarlo se envia un 
 				//mensaje de error al servidor y se guarda en el log de errores.

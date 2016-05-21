@@ -1,10 +1,13 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.camera2.CameraManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,6 +22,10 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 
 import java.util.List;
 
@@ -37,6 +44,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+
+    private User mCurrentUser;
+    private static Account mAccount;
+    private static AccountManager mAccountManager;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -85,6 +96,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
+
+                if(preference.getKey().equals("server_address")){
+                    mAccountManager.setUserData(mAccount,
+                            AccountGeneral.USERDATA_SERVER_ADDRESS,
+                            stringValue);
+                }
             }
             return true;
         }
@@ -124,6 +141,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
+        if(mCurrentUser != null){
+            mAccountManager = AccountManager.get(getApplicationContext());
+            final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_acount_type));
+            for(Account account : availableAccounts){
+                if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())){
+                    mAccount = account;
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -243,6 +283,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+            bindPreferenceSummaryToValue(findPreference("server_address"));
         }
 
         @Override
@@ -254,5 +295,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }

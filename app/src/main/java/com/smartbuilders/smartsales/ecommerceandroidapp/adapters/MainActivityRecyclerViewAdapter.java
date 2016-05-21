@@ -112,7 +112,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                 //for(int i=0; i<5; i++) {
                 //    setFlipperImage(holder.mViewFlipper, R.drawable.febeca);
                 //}
-                //setFlipperImage(holder.mViewFlipper, R.drawable.banner0);
+                setFlipperImage(holder.mViewFlipper, R.drawable.banner);
                 setFlipperImage(holder.mViewFlipper, R.drawable.banner1);
                 setFlipperImage(holder.mViewFlipper, R.drawable.banner2);
                 setFlipperImage(holder.mViewFlipper, R.drawable.banner3);
@@ -169,9 +169,11 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
 
     private void setFlipperImage(ViewFlipper viewFlipper, int res) {
         ImageView image = new ImageView(mContext);
-        image.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
-        image.setBackgroundResource(res);
+        image.setImageResource(res);
+        image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        image.setAdjustViewBounds(true);
+        //image.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        //        LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
         viewFlipper.addView(image);
     }
 
