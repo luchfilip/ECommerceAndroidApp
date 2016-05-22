@@ -2,8 +2,12 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -23,6 +32,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Alberto on 22/3/2016.
@@ -167,13 +177,16 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             }
         }
 
-        if(mDataset.get(position).getImageFileName()!=null){
-            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
+        if(!TextUtils.isEmpty(mDataset.get(position).getImageFileName())){
+            Picasso.with(mContext).load("http://192.168.88.34:8089/ImagesServlet/GetThumbImage?fileName=" +
+                    mDataset.get(position).getImageFileName()).into(holder.productImage);
+
+            /*Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
             if(img!=null){
                 holder.productImage.setImageBitmap(img);
             }else{
                 holder.productImage.setImageResource(mDataset.get(position).getImageId());
-            }
+            }*/
         }else{
             holder.productImage.setImageResource(mDataset.get(position).getImageId());
         }

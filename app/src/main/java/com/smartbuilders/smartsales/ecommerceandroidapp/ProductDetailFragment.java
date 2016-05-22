@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +30,13 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
@@ -117,13 +125,16 @@ public class ProductDetailFragment extends Fragment {
                                         mProduct.getProductBrand().getDescription()));
                             }
 
-                            if (mProduct.getImageFileName() != null) {
-                                Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
-                                if (img != null) {
-                                    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
-                                } else {
-                                    ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
-                                }
+                            if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
+                                Picasso.with(getContext()).load("http://192.168.88.34:8089/ImagesServlet/GetOriginalImage?fileName=" +
+                                        mProduct.getImageFileName()).into((ImageView) view.findViewById(R.id.product_image));
+
+                                //Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                //if (img != null) {
+                                //    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
+                                //} else {
+                                //    ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
+                                //}
                             }
 
                             if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {

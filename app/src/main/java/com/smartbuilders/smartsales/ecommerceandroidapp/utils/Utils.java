@@ -166,7 +166,7 @@ public class Utils {
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                 .append(File.separator).append(user.getUserGroup()).append(File.separator)
                 .append(user.getUserName()).append("/Data_In/original/")
-                .append(fileName.replace(".png", ".jpg")).toString());
+                .append(fileName).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
@@ -182,7 +182,7 @@ public class Utils {
         File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                         .append(File.separator).append(user.getUserGroup()).append(File.separator)
                         .append(user.getUserName()).append("/Data_In/thumb/")
-                        .append(fileName.replace(".png", ".jpg")).toString());
+                        .append(fileName).toString());
         if(imgFile.exists()){
             //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);

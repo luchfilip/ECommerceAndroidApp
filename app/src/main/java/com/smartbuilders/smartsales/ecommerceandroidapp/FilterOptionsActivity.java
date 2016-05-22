@@ -33,6 +33,12 @@ public class FilterOptionsActivity extends AppCompatActivity
             }
         }
 
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
