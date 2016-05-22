@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -71,13 +73,15 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
-            if(img!=null){
-                holder.productImage.setImageBitmap(img);
-            }else{
-                holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
-            }
+        if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
+            Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
+                    mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
+            //Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            //if(img!=null){
+            //    holder.productImage.setImageBitmap(img);
+            //}else{
+            //    holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            //}
         }else{
             holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
         }

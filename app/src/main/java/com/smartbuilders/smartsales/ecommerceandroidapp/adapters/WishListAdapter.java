@@ -25,6 +25,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -68,12 +69,14 @@ public class WishListAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
-            if(img!=null){
-                viewHolder.productImage.setImageBitmap(img);
-            }else{
-                viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
-            }
+            Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
+                    mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(viewHolder.productImage);
+            //Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            //if(img!=null){
+            //    viewHolder.productImage.setImageBitmap(img);
+            //}else{
+            //    viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            //}
         }else{
             viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
         }

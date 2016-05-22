@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -159,36 +164,36 @@ public class Utils {
         }
     }
 
-    public static Bitmap getImageByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
-            return null;
-        }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                .append(user.getUserName()).append("/Data_In/original/")
-                .append(fileName).toString());
-        if(imgFile.exists()){
-            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
-        }else{
-            return getThumbByFileName(context, user, fileName);
-        }
-    }
+//    public static Bitmap getImageByFileName(Context context, User user, String fileName){
+//        if(TextUtils.isEmpty(fileName)){
+//            return null;
+//        }
+//        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+//                .append(File.separator).append(user.getUserGroup()).append(File.separator)
+//                .append(user.getUserName()).append("/Data_In/original/")
+//                .append(fileName).toString());
+//        if(imgFile.exists()){
+//            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+//        }else{
+//            return getThumbByFileName(context, user, fileName);
+//        }
+//    }
 
-    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
-            return null;
-        }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                        .append(user.getUserName()).append("/Data_In/thumb/")
-                        .append(fileName).toString());
-        if(imgFile.exists()){
-            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
-        }
-        return null;
-    }
+//    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
+//        if(TextUtils.isEmpty(fileName)){
+//            return null;
+//        }
+//        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+//                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
+//                        .append(user.getUserName()).append("/Data_In/thumb/")
+//                        .append(fileName).toString());
+//        if(imgFile.exists()){
+//            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+//        }
+//        return null;
+//    }
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {

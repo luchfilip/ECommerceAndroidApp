@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
 
-    private User mCurrentUser;
+    private static User mCurrentUser;
     private static Account mAccount;
     private static AccountManager mAccountManager;
 
@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
-
+                mCurrentUser.setServerAddress(stringValue);
                 if(preference.getKey().equals("server_address")){
                     mAccountManager.setUserData(mAccount,
                             AccountGeneral.USERDATA_SERVER_ADDRESS,

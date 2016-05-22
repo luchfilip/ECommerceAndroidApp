@@ -25,10 +25,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 33;
+	private static final int DATABASE_VERSION = 36;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -414,6 +415,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_ARTICULOS);
 		for(String insert : (new UtilsProducts()).getInserts()){
 			try{
+				if(insert.contains(".png") || insert.contains("2011007")){
+					Log.d(TAG, insert);
+				}
 				db.execSQL(insert);
 			}catch(Exception e){
 				e.printStackTrace();

@@ -3,8 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -29,15 +27,12 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecycler
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -126,9 +121,9 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                Picasso.with(getContext()).load("http://192.168.88.34:8089/ImagesServlet/GetOriginalImage?fileName=" +
-                                        mProduct.getImageFileName()).into((ImageView) view.findViewById(R.id.product_image));
-
+                                Log.d(TAG, "mProduct.getImageFileName(): "+mProduct.getImageFileName());
+                                Picasso.with(getContext()).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" +
+                                        mProduct.getImageFileName()).error(R.drawable.ic_error_black_48dp).into((ImageView) view.findViewById(R.id.product_image));
                                 //Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
                                 //if (img != null) {
                                 //    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
@@ -287,8 +282,17 @@ public class ProductDetailFragment extends Fragment {
     private Intent createShareIntent(){
         String fileName = "tmpImg.jgg";
         if(mProduct.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageByFileName(getContext(), mCurrentUser,
-                    mProduct.getImageFileName());
+            GetFileFromServlet thumbByFileName = new GetFileFromServlet(mCurrentUser.getServerAddress() +
+                    "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + mProduct.getImageFileName());
+            Bitmap productImage = null;
+            try {
+                productImage = thumbByFileName.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             if(productImage!=null){
                 Utils.createFileInCacheDir(fileName, productImage, getContext());
             }else{
