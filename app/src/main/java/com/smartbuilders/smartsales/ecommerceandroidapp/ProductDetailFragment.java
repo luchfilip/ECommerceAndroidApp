@@ -121,7 +121,6 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                Log.d(TAG, "mProduct.getImageFileName(): "+mProduct.getImageFileName());
                                 Picasso.with(getContext()).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" +
                                         mProduct.getImageFileName()).error(R.drawable.ic_error_black_48dp).into((ImageView) view.findViewById(R.id.product_image));
                                 //Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
