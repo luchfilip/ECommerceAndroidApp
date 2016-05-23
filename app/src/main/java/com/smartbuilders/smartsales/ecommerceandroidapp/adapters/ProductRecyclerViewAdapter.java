@@ -171,15 +171,17 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }
 
         if(!TextUtils.isEmpty(mDataset.get(position).getImageFileName())){
-            Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-                    mDataset.get(position).getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
-
-            //Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
-            //if(img!=null){
-            //    holder.productImage.setImageBitmap(img);
-            //}else{
-            //    holder.productImage.setImageResource(mDataset.get(position).getImageId());
-            //}
+            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
+            //        mDataset.get(position).getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
+            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
+            if(img!=null){
+                holder.productImage.setImageBitmap(img);
+            }else{
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(mDataset.get(position).getImageFileName(), true,
+                                holder.productImage, mCurrentUser, mContext);
+                getFileFromServlet.execute();
+            }
         }else{
             holder.productImage.setImageResource(mDataset.get(position).getImageId());
         }
@@ -211,15 +213,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     private Intent createShareIntent(Product product){
         String fileName = "tmpImg.jgg";
         if(product.getImageFileName()!=null){
-            GetFileFromServlet thumbByFileName = new GetFileFromServlet(mCurrentUser.getServerAddress() +
-                    "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + product.getImageFileName());
-            Bitmap productImage = null;
-            try {
-                productImage = thumbByFileName.execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            Bitmap productImage = Utils.getImageByFileName(mContext, mCurrentUser, product.getImageFileName());
+            if(productImage==null){
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(product.getImageFileName(), false, null, mCurrentUser, mContext);
+                getFileFromServlet.execute();
             }
             if(productImage!=null){
                 Utils.createFileInCacheDir(fileName, productImage, mContext);

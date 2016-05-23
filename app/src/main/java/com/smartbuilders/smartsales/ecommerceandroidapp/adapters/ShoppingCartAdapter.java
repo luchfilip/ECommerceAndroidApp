@@ -24,6 +24,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -69,14 +70,17 @@ public class ShoppingCartAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-                    mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(viewHolder.productImage);
-            //Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
-            //if(img!=null){
-            //    viewHolder.productImage.setImageBitmap(img);
-            //}else{
-            //    viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
-            //}
+            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
+            //        mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(viewHolder.productImage);
+            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            if(img!=null){
+                viewHolder.productImage.setImageBitmap(img);
+            }else{
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(mDataset.get(position).getProduct().getImageFileName(),
+                                true, viewHolder.productImage, mCurrentUser, mContext);
+                getFileFromServlet.execute();
+            }
         }else{
             viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
         }

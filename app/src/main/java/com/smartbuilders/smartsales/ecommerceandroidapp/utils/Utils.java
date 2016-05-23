@@ -164,36 +164,94 @@ public class Utils {
         }
     }
 
-//    public static Bitmap getImageByFileName(Context context, User user, String fileName){
-//        if(TextUtils.isEmpty(fileName)){
-//            return null;
-//        }
-//        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-//                .append(File.separator).append(user.getUserGroup()).append(File.separator)
-//                .append(user.getUserName()).append("/Data_In/original/")
-//                .append(fileName).toString());
-//        if(imgFile.exists()){
-//            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
-//        }else{
-//            return getThumbByFileName(context, user, fileName);
-//        }
-//    }
+    /**
+     *
+     * @param fileName
+     * @param image
+     * @param ctx
+     */
+    public static void createFileInThumbDir(String fileName, Bitmap image, User user, Context ctx){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+        } else {
+            //path for the image file in the external storage
+            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/thumb/")
+                    .append(fileName).toString());
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
-//    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
-//        if(TextUtils.isEmpty(fileName)){
-//            return null;
-//        }
-//        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-//                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
-//                        .append(user.getUserName()).append("/Data_In/thumb/")
-//                        .append(fileName).toString());
-//        if(imgFile.exists()){
-//            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
-//        }
-//        return null;
-//    }
+    /**
+     *
+     * @param fileName
+     * @param image
+     * @param ctx
+     */
+    public static void createFileInOriginalDir(String fileName, Bitmap image, User user, Context ctx){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+        } else {
+            //path for the image file in the external storage
+            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/original/")
+                    .append(fileName).toString());
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public static Bitmap getImageByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                .append(user.getUserName()).append("/Data_In/original/")
+                .append(fileName).toString());
+        if(imgFile.exists()){
+            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+        }else{
+            return getThumbByFileName(context, user, fileName);
+        }
+    }
+
+    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                        .append(user.getUserName()).append("/Data_In/thumb/")
+                        .append(fileName).toString());
+        if(imgFile.exists()){
+            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+        }
+        return null;
+    }
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -381,13 +439,11 @@ public class Utils {
         // if the directory does not exist, create it
         if (!folderThumb.exists()) {
             try {
-                if (!folderThumb.createNewFile()) {
+                if (!folderThumb.mkdirs()) {
                     Log.w(TAG, "Failed to create folder: " + folderThumb.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         File folderOriginal = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
@@ -395,13 +451,11 @@ public class Utils {
         // if the directory does not exist, create it
         if (!folderOriginal.exists()) {
             try {
-                if (!folderOriginal.createNewFile()) {
+                if (!folderOriginal.mkdirs()) {
                     Log.w(TAG, "Failed to create folder: " + folderOriginal.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 

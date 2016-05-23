@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -74,14 +75,17 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
         if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
-            Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-                    mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
-            //Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
-            //if(img!=null){
-            //    holder.productImage.setImageBitmap(img);
-            //}else{
-            //    holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
-            //}
+            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
+            //        mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
+            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            if(img!=null){
+                holder.productImage.setImageBitmap(img);
+            }else{
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(mDataset.get(position).getProduct().getImageFileName(),
+                                true, holder.productImage, mCurrentUser, mContext);
+                getFileFromServlet.execute();
+            }
         }else{
             holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
         }

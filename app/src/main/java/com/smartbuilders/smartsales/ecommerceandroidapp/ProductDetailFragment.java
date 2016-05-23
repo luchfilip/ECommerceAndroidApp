@@ -121,14 +121,17 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                Picasso.with(getContext()).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" +
-                                        mProduct.getImageFileName()).error(R.drawable.ic_error_black_48dp).into((ImageView) view.findViewById(R.id.product_image));
-                                //Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
-                                //if (img != null) {
-                                //    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
-                                //} else {
-                                //    ((ImageView) view.findViewById(R.id.product_image)).setImageResource(mProduct.getImageId());
-                                //}
+                                //Picasso.with(getContext()).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" +
+                                //        mProduct.getImageFileName()).error(R.drawable.ic_error_black_48dp).into((ImageView) view.findViewById(R.id.product_image));
+                                Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                if(img!=null){
+                                    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
+                                }else{
+                                    GetFileFromServlet getFileFromServlet =
+                                            new GetFileFromServlet(mProduct.getImageFileName(), false,
+                                                    (ImageView) view.findViewById(R.id.product_image), mCurrentUser, getContext());
+                                    getFileFromServlet.execute();
+                                }
                             }
 
                             if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {
@@ -281,17 +284,12 @@ public class ProductDetailFragment extends Fragment {
     private Intent createShareIntent(){
         String fileName = "tmpImg.jgg";
         if(mProduct.getImageFileName()!=null){
-            GetFileFromServlet thumbByFileName = new GetFileFromServlet(mCurrentUser.getServerAddress() +
-                    "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + mProduct.getImageFileName());
-            Bitmap productImage = null;
-            try {
-                productImage = thumbByFileName.execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            Bitmap productImage = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+            if(productImage==null){
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(mProduct.getImageFileName(), false, null, mCurrentUser, getContext());
+                getFileFromServlet.execute();
             }
-
             if(productImage!=null){
                 Utils.createFileInCacheDir(fileName, productImage, getContext());
             }else{
