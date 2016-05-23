@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.jasgcorp.ids.model.User;
@@ -12,6 +13,9 @@ import com.jasgcorp.ids.model.User;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -19,6 +23,8 @@ import java.net.URLConnection;
  * Created by stein on 22/5/2016.
  */
 public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
+
+    private static final String TAG = GetFileFromServlet.class.getSimpleName();
 
     private String url;
     private ImageView mImageView;
@@ -75,6 +81,8 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
                     decodeStream(stream, null, bmOptions);
         } catch (IOException e1) {
             e1.printStackTrace();
+        } catch (NullPointerException e) {
+          e.printStackTrace();
         } finally {
             if(stream!=null){
                 try {
@@ -96,13 +104,22 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
 
         try {
             HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setConnectTimeout(2000);
+            httpConnection.setConnectTimeout(1500);
             httpConnection.setRequestMethod("GET");
             httpConnection.connect();
-
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 stream = httpConnection.getInputStream();
+            } else {
+                Log.w(TAG, "httpConnection.getResponseCode(): " + httpConnection.getResponseCode());
             }
+        } catch (SocketTimeoutException e) {
+            Log.w(TAG, "SocketTimeoutException, " + e.getMessage());
+        } catch (SocketException e) {
+            Log.w(TAG, "SocketException, " + e.getMessage());
+        } catch(MalformedURLException e){
+            Log.e(TAG, "MalformedURLException, " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException, " + e.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

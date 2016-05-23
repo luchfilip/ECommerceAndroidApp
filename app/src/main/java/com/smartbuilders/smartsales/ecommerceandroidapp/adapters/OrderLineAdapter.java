@@ -18,7 +18,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 

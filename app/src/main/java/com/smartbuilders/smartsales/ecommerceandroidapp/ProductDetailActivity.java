@@ -8,8 +8,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -44,7 +44,6 @@ public class ProductDetailActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -61,32 +60,6 @@ public class ProductDetailActivity extends AppCompatActivity
                     .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
         }catch(Exception e){
             e.printStackTrace();
-        }
-
-        if(findViewById(R.id.search_bar_linear_layout)!=null){
-            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ProductDetailActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
-
-            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ProductDetailActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
-
-            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ProductDetailActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
         }
     }
 
@@ -106,16 +79,18 @@ public class ProductDetailActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_product_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        startActivity(new Intent(ProductDetailActivity.this,
-                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, mCurrentUser));
-                        return true;
-                    }
-                });
+            case R.id.search:
+                startActivity(new Intent(this, SearchResultsActivity.class)
+                        .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -6,18 +6,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
@@ -36,10 +32,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -131,9 +123,12 @@ public class Utils {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
+                fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
                 Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -157,9 +152,12 @@ public class Utils {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
+                fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
                 Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -173,7 +171,8 @@ public class Utils {
     public static void createFileInThumbDir(String fileName, Bitmap image, User user, Context ctx){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            //Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the image file in the external storage
             File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
@@ -186,9 +185,12 @@ public class Utils {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
+                fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -202,7 +204,8 @@ public class Utils {
     public static void createFileInOriginalDir(String fileName, Bitmap image, User user, Context ctx){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            //Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the image file in the external storage
             File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
@@ -215,9 +218,12 @@ public class Utils {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
+                fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
     }

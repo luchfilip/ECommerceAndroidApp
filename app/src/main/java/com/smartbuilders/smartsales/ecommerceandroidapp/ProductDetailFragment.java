@@ -29,10 +29,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A placeholder fragment containing a simple view.
