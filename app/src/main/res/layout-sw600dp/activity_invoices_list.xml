@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
-    android:orientation="horizontal"
-    tools:context=".InvoicesListActivity">
+    android:orientation="horizontal">
 
     <!--
     This layout is a two-pane layout for the Items master/detail flow.

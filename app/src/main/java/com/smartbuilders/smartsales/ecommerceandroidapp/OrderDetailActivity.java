@@ -60,7 +60,6 @@ public class OrderDetailActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -78,32 +77,6 @@ public class OrderDetailActivity extends AppCompatActivity
         }catch(Exception e){
             e.printStackTrace();
         }
-
-        //if(findViewById(R.id.search_bar_linear_layout)!=null){
-        //    findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrderDetailActivity.this, FilterOptionsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrderDetailActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrderDetailActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //}
     }
 
     @Override
@@ -116,10 +89,6 @@ public class OrderDetailActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                // app icon in action bar clicked; go home
-                goBack();
-                return true;
             case R.id.search:
                 startActivity(new Intent(this, SearchResultsActivity.class)
                         .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
@@ -131,15 +100,12 @@ public class OrderDetailActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        goBack();
-    }
-
-    private void goBack(){
-        Intent intent = new Intent(this, OrdersListActivity.class);
-        intent.putExtra(OrdersListActivity.KEY_CURRENT_USER, mCurrentUser);
-        startActivity(intent);
-        finish();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

@@ -28,4 +28,7 @@
     <style name="brands_list_style">
 
     </style>
+    <style name="list_item_style">
+        <item name="android:background">@drawable/list_item_selector</item>
+    </style>
 </resources>

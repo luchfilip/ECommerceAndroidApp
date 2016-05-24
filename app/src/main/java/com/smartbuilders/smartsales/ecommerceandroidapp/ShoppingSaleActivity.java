@@ -37,7 +37,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
     public static final String STATE_CURRENT_USER = "state_current_user";
 
     private User mCurrentUser;
-    //private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> mOrderLines;
     private Order mOrder;
 
@@ -64,7 +63,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -122,32 +120,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
                         }
                     });
         }
-
-        //if(findViewById(R.id.search_bar_linear_layout)!=null) {
-        //    findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(ShoppingSaleActivity.this, FilterOptionsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(ShoppingSaleActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //}
     }
 
     @Override
@@ -197,27 +169,12 @@ public class ShoppingSaleActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shopping_sale, menu);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        //mShareActionProvider =  (ShareActionProvider) MenuItemCompat
-        //        .getActionProvider(menu.findItem(R.id.action_share));
-
-        // Attach an intent to this ShareActionProvider. You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        //if (mOrderLines != null && mOrderLines.size() > 0) {
-        //    new CreateShareIntentThread().start();
-        //}
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //case R.id.action_share:
-            //    if (mOrderLines != null && mOrderLines.size() > 0) {
-            //        mShareActionProvider.setShareIntent(createShareSalesOrderIntent());
-            //    }
-            //    return true;
             case R.id.search:
                 startActivity(new Intent(this, SearchResultsActivity.class)
                         .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
@@ -227,48 +184,20 @@ public class ShoppingSaleActivity extends AppCompatActivity
         }
     }
 
-    //private Intent createShareSalesOrderIntent(){
-    //    String fileName = "Cotizacion";
-    //    String subject = "";
-    //    String message = "";
-    //
-    //    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-    //    shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-    //    // need this to prompts email client only
-    //    shareIntent.setType("message/rfc822");
-    //    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-    //    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-    //
-    //    try{
-    //        new SalesOrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf", this, mCurrentUser);
-    //    }catch(Exception e){
-    //        e.printStackTrace();
-    //    }
-    //
-    //    //Add the attachment by specifying a reference to our custom ContentProvider
-    //    //and the specific file of interest
-    //    shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-    //            + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
-    //    return shareIntent;
-    //}
-
-    //class CreateShareIntentThread extends Thread {
-    //    public void run() {
-    //        final Intent shareIntent = createShareSalesOrderIntent();
-    //        ShoppingSaleActivity.this.runOnUiThread(new Runnable() {
-    //            @Override
-    //            public void run() {
-    //                mShareActionProvider.setShareIntent(shareIntent);
-    //            }
-    //        });
-    //    }
-    //}
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

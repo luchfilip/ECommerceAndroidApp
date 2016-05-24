@@ -97,4 +97,7 @@
         <item name="android:textColor">@color/button_text_color</item>
         <item name="android:layout_height">@dimen/button_height</item>
     </style>
+    <style name="list_item_style">
+        <item name="android:background">@drawable/touch_selector</item>
+    </style>
 </resources>

@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +18,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
  * Created by Alberto on 26/3/2016.
  */
 public class CategoriesListFragment extends Fragment {
-
-    private final String TAG = CategoriesListFragment.class.getSimpleName();
 
     private ListView mListView;
     private CategoryAdapter mCategoryAdapter;
@@ -78,6 +77,10 @@ public class CategoriesListFragment extends Fragment {
                 return true;
             }
         });
+
+        //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //    rootView.setElevation(10f);
+        //}
 
         return rootView;
     }

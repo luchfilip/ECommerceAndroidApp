@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when a row is being pressed, but hasn't yet been activated (finger down) -->
+    <item android:state_pressed="true" android:drawable="@drawable/list_arrow_pressed">
+        <ripple android:color="@color/grey" />
+    </item>
+    <item android:state_activated="true" android:drawable="@drawable/list_arrow_activated"  />
+    <item android:drawable="@drawable/list_inactive_right_border" />
+</selector>

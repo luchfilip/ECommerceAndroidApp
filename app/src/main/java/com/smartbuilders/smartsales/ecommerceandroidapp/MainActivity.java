@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 
@@ -12,7 +11,6 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
