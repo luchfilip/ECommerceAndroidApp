@@ -37,13 +37,14 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = " + productId +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE A.IDARTICULO <> " + productId +
                     " ORDER BY R.TIMES DESC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
@@ -84,12 +85,13 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE A.IDPARTIDA = "+subCategoryId +
                         " AND A.IDARTICULO <> " + productId +
                     " ORDER BY A.NOMBRE ASC " +
@@ -131,12 +133,13 @@ public class ProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, B.BRAND_ID, " +
+            c = db.rawQuery("SELECT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, PA.AVAILABILITY " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE B.BRAND_ID = "+brandId +
                         " AND A.IDARTICULO <> " + productId +
                     " ORDER BY A.NOMBRE ASC " +
@@ -181,12 +184,13 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y'" +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE A.IDPARTIDA = "+subCategoryId +
                     " ORDER BY A.NOMBRE ASC ", null);
             while(c.moveToNext()){
@@ -241,12 +245,13 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC ", null);
 
             while(c.moveToNext()){
@@ -301,12 +306,13 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE A.IDMARCA = "+brandId+" ORDER BY A.NOMBRE ASC", null);
             while(c.moveToNext()){
                 Product p = new Product();
@@ -360,12 +366,13 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                     " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " OR A.NOMBRE LIKE '% "+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
                     " ORDER BY A.NOMBRE ASC", null);
@@ -500,12 +507,13 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                             " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                             " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                            " S.DESCRIPTION, PA.AVAILABILITY, A.NOMBRE_ARCHIVO_IMAGEN " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME " +
                             " FROM ARTICULOS A " +
                                 " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                                 " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                                 " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
                                 " LEFT JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
+                                " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                             " WHERE A.IDARTICULO = "+id+" ORDER BY A.NOMBRE ASC", null);
             if(c.moveToNext()){
                 Product p = new Product();

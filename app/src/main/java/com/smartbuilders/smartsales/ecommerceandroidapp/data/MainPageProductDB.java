@@ -33,9 +33,10 @@ public class MainPageProductDB {
         try {
             db = dbh.getReadableDatabase();
             c = db.rawQuery("SELECT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_SECTION_ID, M.PRODUCT_ID, " +
-                        " A.NOMBRE, A.NOMBRE_ARCHIVO_IMAGEN, PA.AVAILABILITY " +
+                        " A.NOMBRE, PI.FILE_NAME, PA.AVAILABILITY " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = M.PRODUCT_ID AND PI.PRIORITY = 1 " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO " +
                     " WHERE M.ISACTIVE = 'Y' AND M.MAINPAGE_SECTION_ID = " + mainPageSectionId +
                     " ORDER BY M.PRIORITY ASC", null);

@@ -23,13 +23,16 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppi
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 36;
+	private static final int DATABASE_VERSION = 37;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -112,7 +115,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
 											.append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
 											.append("LAST_RECEIVED_DATE DATE DEFAULT NULL, ")
-                                            .append("NOMBRE_ARCHIVO_IMAGEN VARCHAR(255) DEFAULT NULL, ")
 											.append("PRIMARY KEY (IDARTICULO))").toString();
 
 	public static final String CREATE_PRODUCT_AVAILABILITY =
@@ -123,6 +125,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
 											.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
 											.append("PRIMARY KEY (PRODUCT_ID, ISACTIVE))").toString();
+
+	public static final String CREATE_PRODUCT_IMAGE =
+									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE ")
+											.append("(PRODUCT_IMAGE_ID INTEGER PRIMARY KEY, ")
+                                            .append("PRODUCT_ID INTEGER NOT NULL, ")
+											.append("FILE_NAME VARCHAR(255) NOT NULL, ")
+                                            .append("PRIORITY INTEGER NOT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
+											.append("UPDATE_TIME DATETIME DEFAULT NULL)").toString();
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
 									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
@@ -275,6 +287,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     e.printStackTrace();
                 }
             }
+            db.execSQL(CREATE_PRODUCT_IMAGE);
+            Cursor c = null;
+            ArrayList<String> productImageInserts = new ArrayList<>();
+            try {
+                c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
+                int i =0;
+                while (c.moveToNext()){
+                    productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
+                            " values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (c != null) {
+                   c.close();
+                }
+            }
+            for(String insert : productImageInserts){
+                try{
+                    db.execSQL(insert);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
 			db.execSQL(CREATE_BRAND);
 			for(String insert : (new UtilsBrands()).getInserts()){
 				try{
@@ -415,9 +452,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_ARTICULOS);
 		for(String insert : (new UtilsProducts()).getInserts()){
 			try{
-				if(insert.contains(".png") || insert.contains("2011007")){
-					Log.d(TAG, insert);
-				}
 				db.execSQL(insert);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -430,6 +464,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				e.printStackTrace();
 			}
 		}
+
+        db.execSQL(CREATE_PRODUCT_IMAGE);
+        Cursor c = null;
+        ArrayList<String> productImageInserts = new ArrayList<>();
+        try {
+            c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
+            int i =0;
+            while (c.moveToNext()){
+                productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
+                        " values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        for(String insert : productImageInserts){
+            try{
+                db.execSQL(insert);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 	}
 
 	@Override
