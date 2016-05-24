@@ -71,12 +71,8 @@ public class OrderDetailActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        try{
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
     }
 
     @Override

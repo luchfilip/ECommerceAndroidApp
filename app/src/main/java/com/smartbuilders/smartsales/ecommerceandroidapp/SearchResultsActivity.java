@@ -63,7 +63,6 @@ public class SearchResultsActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
         setSupportActionBar(toolbar);
 

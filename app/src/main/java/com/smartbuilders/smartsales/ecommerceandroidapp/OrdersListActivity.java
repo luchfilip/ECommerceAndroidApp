@@ -5,15 +5,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -59,7 +56,6 @@ public class OrdersListActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -105,32 +101,6 @@ public class OrdersListActivity extends AppCompatActivity
         }else{
             mTwoPane = false;
         }
-
-        //if(findViewById(R.id.search_bar_linear_layout)!=null){
-        //    findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrdersListActivity.this, FilterOptionsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrdersListActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //
-        //    findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            startActivity(new Intent(OrdersListActivity.this, SearchResultsActivity.class)
-        //                    .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-        //        }
-        //    });
-        //}
     }
 
     @Override
@@ -206,5 +176,4 @@ public class OrdersListActivity extends AppCompatActivity
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         super.onSaveInstanceState(outState);
     }
-
 }
