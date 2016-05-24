@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +49,12 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if(mImageView!=null && bitmap!=null){
-            mImageView.setImageBitmap(bitmap);
+        if(mImageView!=null){
+            if(bitmap!=null) {
+                mImageView.setImageBitmap(bitmap);
+            } else {
+                mImageView.setImageResource(R.drawable.no_image_available);
+            }
         }
         if(bitmap!=null && mContext!=null && mUser!=null) {
             if(mIsThumb) {
