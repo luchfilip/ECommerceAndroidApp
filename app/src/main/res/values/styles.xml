@@ -42,32 +42,44 @@
         -->
     </style>
 
-    <style name="categories_list_style">
+    <style name="categories_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
 
+    <style name="sub_categories_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="categories_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="sub_categories_list_style">
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="shoppingCart_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="shoppingSale_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="wish_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="invoices_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="orders_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="brands_list_style">
-
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="title_style">
@@ -99,5 +111,11 @@
     </style>
     <style name="list_item_style">
         <item name="android:background">@drawable/touch_selector</item>
+    </style>
+    <style name="image_button_style">
+    </style>
+
+    <style name="go_to_arrow_style">
+        <item name="android:visibility">visible</item>
     </style>
 </resources>

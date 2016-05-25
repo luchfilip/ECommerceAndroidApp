@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,14 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-
-import java.util.ArrayList;
 
 /**
  * Jesus Sarco
@@ -31,7 +30,6 @@ public class OrdersListActivity extends AppCompatActivity
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
-    private ArrayList<Order> activeOrders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +74,7 @@ public class OrdersListActivity extends AppCompatActivity
             }
         }
 
-        if(activeOrders == null){
-            activeOrders = (new OrderDB(this, mCurrentUser)).getActiveOrders();
-        }
+
 
         if(findViewById(R.id.order_detail_container) != null){
             // If this view is present, then the activity should be
@@ -88,18 +84,23 @@ public class OrdersListActivity extends AppCompatActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if(savedInstanceState == null){
-                Bundle args = new Bundle();
-                args.putParcelable(OrderDetailActivity.KEY_ORDER, null);
-                args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-
-                OrderDetailFragment orderDetailFragment = new OrderDetailFragment();
-                orderDetailFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.order_detail_container, orderDetailFragment, ORDERDETAIL_FRAGMENT_TAG)
-                        .commit();
+                        .add(R.id.order_detail_container, new OrderDetailFragment(),
+                                ORDERDETAIL_FRAGMENT_TAG).commit();
             }
         }else{
             mTwoPane = false;
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mTwoPane) {
+            ListView lv = (ListView) findViewById(R.id.orders_list);
+            if (lv != null && lv.getAdapter().getCount()>0) {
+                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            }
         }
     }
 
@@ -142,14 +143,6 @@ public class OrdersListActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-    }
-
-    @Override
-    public ArrayList<Order> getActiveOrders(User user) {
-        if(activeOrders==null){
-            activeOrders = (new OrderDB(this, user)).getActiveOrders();
-        }
-        return activeOrders;
     }
 
     @Override

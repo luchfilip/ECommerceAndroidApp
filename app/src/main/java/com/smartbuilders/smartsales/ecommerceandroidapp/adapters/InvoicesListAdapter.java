@@ -26,7 +26,10 @@ public class InvoicesListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mDataset.size();
+        if (mDataset!=null) {
+            return mDataset.size();
+        }
+        return 0;
     }
 
     @Override

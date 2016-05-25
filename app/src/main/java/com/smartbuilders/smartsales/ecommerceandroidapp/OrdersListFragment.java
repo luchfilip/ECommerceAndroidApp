@@ -10,9 +10,8 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -20,12 +19,10 @@ import java.util.ArrayList;
 public class OrdersListFragment extends Fragment {
 
     private ListView mListView;
-    private OrdersListAdapter mOrdersListAdapter;
     private User mCurrentUser;
 
     public interface Callback {
         public void onItemSelected(Order order);
-        public ArrayList<Order> getActiveOrders(User user);
     }
 
     public OrdersListFragment() {
@@ -42,10 +39,8 @@ public class OrdersListFragment extends Fragment {
             }
         }
 
-        mOrdersListAdapter = new OrdersListAdapter(getActivity(), ((Callback) getActivity()).getActiveOrders(mCurrentUser), mCurrentUser);
-
         mListView = (ListView) rootView.findViewById(R.id.orders_list);
-        mListView.setAdapter(mOrdersListAdapter);
+        mListView.setAdapter(new OrdersListAdapter(getActivity(), (new OrderDB(getContext(), mCurrentUser)).getActiveOrders(), mCurrentUser));
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

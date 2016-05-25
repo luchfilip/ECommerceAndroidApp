@@ -31,7 +31,7 @@ public class SubCategoriesListFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sub_categories_list, container, false);
 
         int mCategoryId = 0;
 
@@ -54,7 +54,7 @@ public class SubCategoriesListFragment extends Fragment {
         SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(),
                 (new ProductSubCategoryDB(getContext(), mCurrentUser)).getActiveProductSubCategoriesByCategoryId(mCategoryId));
 
-        ListView mListView = (ListView) rootView.findViewById(R.id.categories_list);
+        ListView mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
         mListView.setAdapter(mCategoryAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

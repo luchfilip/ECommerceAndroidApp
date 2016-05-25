@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="categories_style">
+        <item name="android:background">@color/grey_medium</item>
+    </style>
+
+    <style name="sub_categories__style">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
     <style name="categories_list_style">
         <item name="android:choiceMode">singleChoice</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="shoppingCart_list_style">
@@ -30,5 +39,9 @@
     </style>
     <style name="list_item_style">
         <item name="android:background">@drawable/list_item_selector</item>
+    </style>
+
+    <style name="go_to_arrow_style">
+        <item name="android:visibility">gone</item>
     </style>
 </resources>

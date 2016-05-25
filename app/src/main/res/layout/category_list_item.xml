@@ -47,6 +47,7 @@
         android:id="@+id/go_to_subcategory_img"
         android:layout_weight="1"
         android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        style="@style/go_to_arrow_style"
         android:layout_gravity="center_vertical" />
 
 </LinearLayout>

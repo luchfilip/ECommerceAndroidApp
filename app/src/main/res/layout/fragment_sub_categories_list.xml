@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    style="@style/sub_categories_style" >
 
     <ListView
-        android:id="@+id/categories_list"
+        android:id="@+id/sub_categories_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white" />
+        style="@style/sub_categories_list_style" />
 </FrameLayout>

@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrderLineAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -63,9 +62,6 @@ public class SalesOrderDetailFragment extends Fragment {
             }
         }
 
-        if (mOrder == null) {
-            mOrder = (new OrderDB(getContext(), mCurrentUser)).getLastFinalizedSalesOrder();
-        }
         if (mOrder != null) {
             mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
                     .getActiveFinalizedSalesOrderLinesByOrderId(mOrder.getId());

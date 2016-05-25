@@ -228,6 +228,35 @@ public class Utils {
         }
     }
 
+    public static File getFileImageByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                .append(user.getUserName()).append("/Data_In/original/")
+                .append(fileName).toString());
+        if(imgFile.exists()){
+            return imgFile;
+        }else{
+            return getFileThumbByFileName(context, user, fileName);
+        }
+    }
+
+    public static File getFileThumbByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                .append(user.getUserName()).append("/Data_In/thumb/")
+                .append(fileName).toString());
+        if(imgFile.exists()){
+            return imgFile;
+        }
+        return null;
+    }
+
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName)){
             return null;

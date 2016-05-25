@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +54,8 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
             if(bitmap!=null) {
                 mImageView.setImageBitmap(bitmap);
             } else {
-                mImageView.setImageResource(R.drawable.no_image_available);
+                Picasso.with(mContext).load(R.drawable.no_image_available).into(mImageView);
+                //mImageView.setImageResource(R.drawable.no_image_available);
             }
         }
         if(bitmap!=null && mContext!=null && mUser!=null) {

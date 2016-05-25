@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,14 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-
-import java.util.ArrayList;
 
 /**
  * Jesus Sarco, 12.05.2016
@@ -32,7 +31,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
     private boolean mTwoPane;
     private User mCurrentUser;
-    private ArrayList<Order> activeOrders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +75,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         }
 
-        if(activeOrders==null) {
-            activeOrders = (new OrderDB(this, mCurrentUser)).getActiveSalesOrders();
-        }
-
         if(findViewById(R.id.sales_order_detail_container) != null){
             // If this view is present, then the activity should be
             // in two-pane mode.
@@ -89,18 +83,23 @@ public class SalesOrdersListActivity extends AppCompatActivity
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if(savedInstanceState == null){
-                Bundle args = new Bundle();
-                args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, null);
-                args.putParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-
-                SalesOrderDetailFragment salesOrderDetailFragment = new SalesOrderDetailFragment();
-                salesOrderDetailFragment.setArguments(args);
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.sales_order_detail_container, salesOrderDetailFragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
-                        .commit();
+                        .add(R.id.sales_order_detail_container, new SalesOrderDetailFragment(),
+                                SALES_ORDERDETAIL_FRAGMENT_TAG).commit();
             }
         }else{
             mTwoPane = false;
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mTwoPane) {
+            ListView lv = (ListView) findViewById(R.id.sales_orders_list);
+            if (lv != null && lv.getAdapter().getCount()>0) {
+                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            }
         }
     }
 
@@ -140,14 +139,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public ArrayList<Order> getActiveOrders(User user) {
-        if(activeOrders==null){
-            activeOrders = (new OrderDB(this, user)).getActiveSalesOrders();
-        }
-        return activeOrders;
     }
 
     @Override

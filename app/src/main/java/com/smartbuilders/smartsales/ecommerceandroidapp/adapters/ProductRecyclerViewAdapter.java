@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
@@ -49,24 +49,28 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
-        public TextView productShareLabel;
         public ImageView productImage;
         public TextView productSubCategory;
         public TextView productBrand;
         public TextView commercialPackage;
         public TextView productAvaliability;
         public LinearLayout linearLayoutContent;
+        public ImageView shareImageView;
+        public ImageView favoriteImageView;
+        public ImageView addToShoppingCartImageView;
 
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productShareLabel = (TextView) v.findViewById(R.id.product_share);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
             productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_comercial_package);
             productAvaliability = (TextView) v.findViewById(R.id.product_availability);
+            shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
+            favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
+            addToShoppingCartImageView = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
         }
     }
 
@@ -106,14 +110,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getName());
-        if(holder.productShareLabel!=null){
-            holder.productShareLabel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mContext.startActivity(createShareIntent(mDataset.get(position)));
-                }
-            });
-        }
+
         if(holder.linearLayoutContent != null){
             switch (mRedirectOption){
                 case REDIRECT_PRODUCT_DETAILS:
@@ -173,9 +170,9 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         if(!TextUtils.isEmpty(mDataset.get(position).getImageFileName())){
             //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
             //        mDataset.get(position).getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
-            Bitmap img = Utils.getThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
+            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
             if(img!=null){
-                holder.productImage.setImageBitmap(img);
+                Picasso.with(mContext).load(img).into(holder.productImage);
             }else{
                 GetFileFromServlet getFileFromServlet =
                         new GetFileFromServlet(mDataset.get(position).getImageFileName(), true,
@@ -189,6 +186,33 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         if(holder.productAvaliability!=null){
             holder.productAvaliability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));
+        }
+
+        if(holder.shareImageView!=null) {
+            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(createShareIntent(mDataset.get(position)));
+                }
+            });
+        }
+
+        if(holder.favoriteImageView!=null) {
+            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        if(holder.addToShoppingCartImageView!=null) {
+            holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 
