@@ -20,6 +20,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
  */
 public class DialogAddToShoppingSaleFragment extends DialogFragment {
 
+    private static final String STATE_CURRENT_PRODUCT = "STATE_CURRENT_PRODUCT";
+    private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
+
     private EditText mEditText;
     private Product mProduct;
     private User mUser;
@@ -38,6 +41,15 @@ public class DialogAddToShoppingSaleFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_CURRENT_PRODUCT)){
+                mProduct = savedInstanceState.getParcelable(STATE_CURRENT_PRODUCT);
+            }
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
         final View view = inflater.inflate(R.layout.fragment_add_to_shopping_sale, container);
         mEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
@@ -91,10 +103,19 @@ public class DialogAddToShoppingSaleFragment extends DialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mUser);
+        outState.putParcelable(STATE_CURRENT_PRODUCT, mProduct);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
         try {
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            if (getActivity()!=null && getActivity().getWindow()!=null) {
+                getActivity().getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

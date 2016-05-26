@@ -20,6 +20,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
  */
 public class DialogAddToShoppingCartFragment extends DialogFragment {
 
+    private static final String STATE_CURRENT_PRODUCT = "STATE_CURRENT_PRODUCT";
+    private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
+
     private EditText mEditText;
     private Product mProduct;
     private User mUser;
@@ -38,6 +41,15 @@ public class DialogAddToShoppingCartFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_CURRENT_PRODUCT)){
+                mProduct = savedInstanceState.getParcelable(STATE_CURRENT_PRODUCT);
+            }
+            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
+                mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+        }
+
         final View view = inflater.inflate(R.layout.fragment_add_to_shopping_cart, container);
         mEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
@@ -45,45 +57,54 @@ public class DialogAddToShoppingCartFragment extends DialogFragment {
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismiss();
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
                 }
+            }
         );
 
         view.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            int qtyRequested = Integer
-                                    .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                            String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
-                            if(result == null){
-                                Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
-                                        Toast.LENGTH_LONG).show();
-                                dismiss();
-                            } else {
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int qtyRequested = Integer
+                                .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
+                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
+                        if(result == null){
+                            Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
+                                    Toast.LENGTH_LONG).show();
+                            dismiss();
+                        } else {
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
+            }
         );
         getDialog().setTitle(mProduct.getName());
         return view;
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mUser);
+        outState.putParcelable(STATE_CURRENT_PRODUCT, mProduct);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
         try {
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            if(getActivity()!=null && getActivity().getWindow()!=null){
+                getActivity().getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

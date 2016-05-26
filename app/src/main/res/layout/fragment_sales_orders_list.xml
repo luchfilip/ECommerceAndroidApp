@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SalesOrdersListActivity"
-    android:background="@android:color/white">
+    style="@style/sales_orders_style" >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +24,7 @@
     <ListView
         android:id="@+id/sales_orders_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="@style/orders_list_style" />
+        android:layout_height="wrap_content"
+        style="@style/sales_orders_list_style" />
+
 </LinearLayout>
