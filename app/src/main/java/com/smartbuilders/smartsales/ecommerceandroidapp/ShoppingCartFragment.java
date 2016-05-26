@@ -40,47 +40,45 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(WishListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(WishListActivity.KEY_CURRENT_USER);
+            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_CURRENT_USER)){
+                mCurrentUser = getActivity().getIntent().getExtras()
+                        .getParcelable(ShoppingCartActivity.KEY_CURRENT_USER);
             }
         }
 
         mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
         mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mCurrentUser);
 
-        ((ListView) view.findViewById(R.id.shoppingCart_items_list))
-                .setAdapter(mShoppingCartAdapter);
+        ((ListView) view.findViewById(R.id.shoppingCart_items_list)).setAdapter(mShoppingCartAdapter);
 
-        if(view.findViewById(R.id.proceed_to_checkout_button) != null) {
-            view.findViewById(R.id.proceed_to_checkout_button)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new AlertDialog.Builder(getContext())
-                                    .setMessage(R.string.proceed_to_checkout_question)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
-                                            String result = orderDB.createOrderFromShoppingCart();
-                                            if(result == null){
-                                                Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                                                intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                                intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
-                                                startActivity(intent);
-                                            }else{
-                                                new AlertDialog.Builder(getContext())
-                                                        .setMessage(result)
-                                                        .setNeutralButton(android.R.string.ok, null)
-                                                        .show();
-                                            }
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
-                        }
-                    });
-        }
+        view.findViewById(R.id.proceed_to_checkout_button)
+            .setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.proceed_to_checkout_question)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
+                                String result = orderDB.createOrderFromShoppingCart();
+                                if(result == null){
+                                    Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+                                    intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+                                    intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
+                                    startActivity(intent);
+                                }else{
+                                    new AlertDialog.Builder(getContext())
+                                            .setMessage(result)
+                                            .setNeutralButton(android.R.string.ok, null)
+                                            .show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+                }
+            });
 
         if ((mOrderLines==null || mOrderLines.size()==0)
                 && view.findViewById(R.id.company_logo_name)!=null

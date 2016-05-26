@@ -1,7 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,9 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +18,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
@@ -34,15 +31,23 @@ import java.util.ArrayList;
  */
 public class ShoppingSaleAdapter extends BaseAdapter {
 
+    public static final int FOCUS_PRICE = 1;
+    public static final int FOCUS_TAX_PERCENTAGE = 2;
+    public static final int FOCUS_QTY_ORDERED = 3;
+
     private Context mContext;
-    private Activity mActivity;
+    private ShoppingSaleFragment mShoppingSaleFragment;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
 
-    public ShoppingSaleAdapter(Context context, Activity activity, ArrayList<OrderLine> data, User user) {
+    public interface Callback {
+        public void updateSalesOrderLine(OrderLine orderLine, int focus);
+    }
+
+    public ShoppingSaleAdapter(Context context, ShoppingSaleFragment shoppingSaleFragment, ArrayList<OrderLine> data, User user) {
         mContext = context;
-        mActivity = activity;
+        mShoppingSaleFragment = shoppingSaleFragment;
         mDataset = data;
         mCurrentUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -125,59 +130,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
-                final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
-                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
-                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.price_label);
-
-                dialog.findViewById(R.id.cancel_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        }
-                );
-
-                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                double oldValue = mDataset.get(position).getPrice();
-                                try {
-                                    mDataset.get(position).setPrice(Double.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
-                                    if(result == null){
-                                        notifyDataSetChanged();
-                                    } else {
-                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                    }
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    mDataset.get(position).setPrice(oldValue);
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }
-                );
-                dialog.setTitle(R.string.price_title);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            mActivity.getWindow().setSoftInputMode(
-                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                dialog.show();
+                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_PRICE);
             }
         });
 
@@ -185,59 +138,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
-                final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
-                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
-                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.tax_label);
-
-                dialog.findViewById(R.id.cancel_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        }
-                );
-
-                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                double oldValue = mDataset.get(position).getTaxPercentage();
-                                try {
-                                    mDataset.get(position).setTaxPercentage(Double.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
-                                    if(result == null){
-                                        notifyDataSetChanged();
-                                    } else {
-                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                    }
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    mDataset.get(position).setTaxPercentage(oldValue);
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }
-                );
-                dialog.setTitle(R.string.tax_title);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            mActivity.getWindow().setSoftInputMode(
-                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                dialog.show();
+                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_TAX_PERCENTAGE);
             }
         });
 
@@ -245,61 +146,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
-                final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
-
-                dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
-                ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.qty_ordered_label);
-
-
-                dialog.findViewById(R.id.cancel_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        }
-                );
-
-                ((Button) dialog.findViewById(R.id.add_to_shopping_cart_button)).setText(R.string.accept);
-                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                int oldValue = mDataset.get(position).getQuantityOrdered();
-                                try {
-                                    mDataset.get(position).setQuantityOrdered(Integer.valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString()));
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    String result = orderLineDB.updateOrderLine(mDataset.get(position));
-                                    if(result == null){
-                                        notifyDataSetChanged();
-                                    } else {
-                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                    }
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    mDataset.get(position).setQuantityOrdered(oldValue);
-                                    mDataset.get(position).setTotalLineAmount(getTotalLine(mDataset.get(position)));
-                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }
-                );
-                dialog.setTitle(R.string.qty_ordered_title);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            mActivity.getWindow().setSoftInputMode(
-                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                dialog.show();
+                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_QTY_ORDERED);
             }
         });
 
@@ -335,14 +182,8 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         }
     }
 
-    private double getTotalLine(OrderLine orderLine){
-        double totalLine = 0;
-        try {
-            totalLine = (orderLine.getPrice() * orderLine.getQuantityOrdered())
-                    + (orderLine.getPrice() * orderLine.getQuantityOrdered() * (orderLine.getTaxPercentage()/100));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return totalLine;
+    public void setData(ArrayList<OrderLine> salesOrderLines) {
+        this.mDataset = salesOrderLines;
+        notifyDataSetChanged();
     }
 }

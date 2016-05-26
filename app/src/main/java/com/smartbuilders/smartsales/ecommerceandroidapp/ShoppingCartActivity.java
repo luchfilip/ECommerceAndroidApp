@@ -63,8 +63,6 @@ public class ShoppingCartActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-
-
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,19 +7,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -74,96 +67,10 @@ public class ShoppingSaleActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        try{
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
-        mOrderLines = (new OrderLineDB(this, mCurrentUser)).getShoppingSale();
-        mOrder = new Order();
-
-        if(findViewById(R.id.shoppingSale_items_list) != null) {
-            ((ListView) findViewById(R.id.shoppingSale_items_list))
-                    .setAdapter(new ShoppingSaleAdapter(this, this, mOrderLines, mCurrentUser));
-        }
-
-        if(findViewById(R.id.proceed_to_checkout_shopping_sale_button) != null) {
-            findViewById(R.id.proceed_to_checkout_shopping_sale_button)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new AlertDialog.Builder(ShoppingSaleActivity.this)
-                                    .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            OrderDB orderDB = new OrderDB(ShoppingSaleActivity.this, mCurrentUser);
-                                            String result = orderDB.createOrderFromShoppingSale();
-                                            if(result == null){
-                                                Intent intent = new Intent(ShoppingSaleActivity.this, SalesOrderDetailActivity.class);
-                                                intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                                intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, orderDB.getLastFinalizedSalesOrder());
-                                                startActivity(intent);
-                                                finish();
-                                            }else{
-                                                new AlertDialog.Builder(ShoppingSaleActivity.this)
-                                                        .setMessage(result)
-                                                        .setNeutralButton(android.R.string.ok, null)
-                                                        .show();
-                                            }
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
-                        }
-                    });
-        }
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
     }
-
-    @Override
-    protected void onResume() {
-        if ((mOrderLines==null || mOrderLines.size()==0)
-                && findViewById(R.id.company_logo_name)!=null
-                && findViewById(R.id.shoppingSale_items_list)!=null
-                && findViewById(R.id.shoppingSale_data_linearLayout)!=null) {
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
-            findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
-        } else {
-            fillFields();
-        }
-        super.onResume();
-    }
-
-    public void fillFields(){
-        if(findViewById(R.id.total_lines)!=null) {
-            ((TextView) findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
-        }
-        double subTotal=0, tax=0, total=0;
-        for(OrderLine orderLine : mOrderLines){
-            subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
-            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
-            total += subTotal + tax;
-        }
-        if(findViewById(R.id.subTotalAmount_tv)!=null){
-            ((TextView) findViewById(R.id.subTotalAmount_tv))
-                    .setText(getString(R.string.order_sub_total_amount, String.valueOf(subTotal)));
-        }
-
-        if(findViewById(R.id.taxesAmount_tv)!=null){
-            ((TextView) findViewById(R.id.taxesAmount_tv))
-                    .setText(getString(R.string.order_tax_amount, String.valueOf(tax)));
-        }
-
-        if(findViewById(R.id.totalAmount_tv)!=null){
-            ((TextView) findViewById(R.id.totalAmount_tv))
-                    .setText(getString(R.string.order_total_amount, String.valueOf(total)));
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
