@@ -1,7 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +18,11 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.WishListFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,14 +32,18 @@ import java.util.ArrayList;
 public class WishListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private Activity mActivity;
+    private WishListFragment mWishListFragment;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
 
-    public WishListAdapter(Context context, Activity activity, ArrayList<OrderLine> data, User user) {
+    public interface Callback {
+        public void moveToShoppingCart(OrderLine orderLine);
+    }
+
+    public WishListAdapter(Context context, WishListFragment wishListFragment, ArrayList<OrderLine> data, User user) {
         mContext = context;
-        mActivity = activity;
+        mWishListFragment = wishListFragment;
         mDataset = data;
         mCurrentUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -128,62 +128,19 @@ public class WishListAdapter extends BaseAdapter {
         viewHolder.moveToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
-                final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
-
-                ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                        .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));
-
-                dialog.findViewById(R.id.cancel_button).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    }
-                );
-                dialog.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                int qtyRequested = Integer
-                                        .valueOf(((EditText) dialog.findViewById(R.id.qty_requested_editText)).getText().toString());
-                                String result = orderLineDB.moveOrderLineToShoppingCart(mDataset.get(position), qtyRequested);
-                                if(result == null){
-                                    mDataset.remove(position);
-                                    notifyDataSetChanged();
-                                    Toast.makeText(mContext, R.string.product_moved_to_shopping_cart, Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                }
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
-                );
-                dialog.setTitle(mDataset.get(position).getProduct().getName());
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            mActivity.getWindow().setSoftInputMode(
-                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                dialog.show();
+                if (mDataset.get(position) != null) {
+                    ((Callback) mWishListFragment).moveToShoppingCart(mDataset.get(position));
+                }
             }
         });
 
         view.setTag(viewHolder);
         return view;
+    }
+
+    public void setData(ArrayList<OrderLine> wishListLines) {
+        mDataset = wishListLines;
+        notifyDataSetChanged();
     }
 
     /**

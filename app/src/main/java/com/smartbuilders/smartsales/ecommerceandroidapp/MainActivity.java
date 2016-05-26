@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
 
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
         }

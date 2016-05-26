@@ -91,7 +91,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.search:
                 startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

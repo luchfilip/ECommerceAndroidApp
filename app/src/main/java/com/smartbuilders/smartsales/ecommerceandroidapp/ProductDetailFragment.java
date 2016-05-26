@@ -301,15 +301,15 @@ public class ProductDetailFragment extends Fragment {
 
     private void addToShoppingCart() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogAddToShoppingCartFragment addToShoppingCartFragment =
-                DialogAddToShoppingCartFragment.newInstance(mProduct, mCurrentUser);
+        DialogAddToShoppingCart addToShoppingCartFragment =
+                DialogAddToShoppingCart.newInstance(mProduct, mCurrentUser);
         addToShoppingCartFragment.show(fm, "fragment_edit_name");
     }
 
     private void addToShoppingSale() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogAddToShoppingSaleFragment addToShoppingSaleFragment =
-                DialogAddToShoppingSaleFragment.newInstance(mProduct, mCurrentUser);
+        DialogAddToShoppingSale addToShoppingSaleFragment =
+                DialogAddToShoppingSale.newInstance(mProduct, mCurrentUser);
         addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
     }
 

@@ -26,7 +26,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -133,7 +132,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
+                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
 
                 ((TextView) dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                         .setText(mContext.getString(R.string.availability, mDataset.get(position).getProduct().getAvailability()));

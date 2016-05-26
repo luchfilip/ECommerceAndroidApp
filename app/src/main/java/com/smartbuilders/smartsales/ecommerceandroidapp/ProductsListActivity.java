@@ -222,7 +222,7 @@ public class ProductsListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
 
@@ -230,7 +230,7 @@ public class ProductsListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
             });
         }

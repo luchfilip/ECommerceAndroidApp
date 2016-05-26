@@ -26,7 +26,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -128,7 +127,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
+                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.price_label);
 
@@ -188,7 +187,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
+                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.tax_label);
 
@@ -248,7 +247,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // custom dialog
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.fragment_add_to_shopping_cart);
+                dialog.setContentView(R.layout.dialog_add_to_shopping_cart);
 
                 dialog.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
                 ((TextView) dialog.findViewById(R.id.qty_label_textView)).setText(R.string.qty_ordered_label);

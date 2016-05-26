@@ -18,7 +18,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 /**
  * Created by stein on 5/1/2016.
  */
-public class DialogAddToShoppingSaleFragment extends DialogFragment {
+public class DialogAddToShoppingCart extends DialogFragment {
 
     private static final String STATE_CURRENT_PRODUCT = "STATE_CURRENT_PRODUCT";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
@@ -27,12 +27,12 @@ public class DialogAddToShoppingSaleFragment extends DialogFragment {
     private Product mProduct;
     private User mUser;
 
-    public DialogAddToShoppingSaleFragment() {
+    public DialogAddToShoppingCart() {
         // Empty constructor required for DialogFragment
     }
 
-    public static DialogAddToShoppingSaleFragment newInstance(Product product, User user){
-        DialogAddToShoppingSaleFragment editQtyRequestedDialogFragment = new DialogAddToShoppingSaleFragment();
+    public static DialogAddToShoppingCart newInstance(Product product, User user){
+        DialogAddToShoppingCart editQtyRequestedDialogFragment = new DialogAddToShoppingCart();
         editQtyRequestedDialogFragment.mProduct = product;
         editQtyRequestedDialogFragment.mUser = user;
         return editQtyRequestedDialogFragment;
@@ -50,42 +50,31 @@ public class DialogAddToShoppingSaleFragment extends DialogFragment {
             }
         }
 
-        final View view = inflater.inflate(R.layout.fragment_add_to_shopping_sale, container);
+        final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
         mEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismiss();
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
                 }
+            }
         );
 
-        view.findViewById(R.id.add_to_shopping_sale_button).setOnClickListener(
+        view.findViewById(R.id.add_to_shopping_cart_button).setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         int qtyRequested = Integer
                                 .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                        double productPrice = 0;
-                        try {
-                            productPrice = Double
-                                    .valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString());
-                        } catch (Exception e) { }
-                        double productTaxPercentage = 0;
-                        try {
-                            productTaxPercentage = Double
-                                    .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString());
-                        } catch (Exception e) { }
-                        String result = (new OrderLineDB(getContext(), mUser))
-                                .addProductToShoppingSale(mProduct, qtyRequested, productPrice, productTaxPercentage);
+                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
                         if(result == null){
-                            Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
+                            Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
                                     Toast.LENGTH_LONG).show();
                             dismiss();
                         } else {
@@ -112,7 +101,7 @@ public class DialogAddToShoppingSaleFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         try {
-            if (getActivity()!=null && getActivity().getWindow()!=null) {
+            if(getActivity()!=null && getActivity().getWindow()!=null){
                 getActivity().getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             }

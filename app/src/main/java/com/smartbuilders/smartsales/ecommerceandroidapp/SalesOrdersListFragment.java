@@ -22,7 +22,7 @@ public class SalesOrdersListFragment extends Fragment {
     private User mCurrentUser;
 
     public interface Callback {
-        public void onItemSelected(Order order);
+        public void onItemSelected(Order order, int selectedItemPosition);
     }
 
     public SalesOrdersListFragment() {
@@ -51,7 +51,7 @@ public class SalesOrdersListFragment extends Fragment {
                 // if it cannot seek to that position.
                 Order order = (Order) adapterView.getItemAtPosition(position);
                 if (order != null) {
-                    ((Callback) getActivity()).onItemSelected(order);
+                    ((Callback) getActivity()).onItemSelected(order, position);
                 }
             }
         });

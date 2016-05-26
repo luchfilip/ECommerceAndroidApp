@@ -28,9 +28,11 @@ public class SalesOrdersListActivity extends AppCompatActivity
     private static final String SALES_ORDERDETAIL_FRAGMENT_TAG = "SALES_ORDERDETAIL_FRAGMENT_TAG";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
 
     private boolean mTwoPane;
     private User mCurrentUser;
+    private int mCurrentSelectedItemPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if( savedInstanceState != null ) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+            if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
+                mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
             }
         }
 
@@ -97,8 +102,10 @@ public class SalesOrdersListActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.sales_orders_list);
-            if (lv != null && lv.getAdapter().getCount()>0) {
-                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            if (lv != null && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
+                    && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
+                lv.performItemClick(lv.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
+                        mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
             }
         }
     }
@@ -115,7 +122,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.search:
                 startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -142,7 +149,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(Order order) {
+    public void onItemSelected(Order order, int selectedItemPosition) {
+        mCurrentSelectedItemPosition = selectedItemPosition;
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
@@ -166,6 +174,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putInt(STATE_CURRENT_SELECTED_ITEM_POSITION, mCurrentSelectedItemPosition);
         super.onSaveInstanceState(outState);
     }
 }
