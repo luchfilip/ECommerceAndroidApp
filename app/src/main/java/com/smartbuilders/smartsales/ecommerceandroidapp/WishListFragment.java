@@ -29,8 +29,7 @@ import java.util.ArrayList;
  */
 public class WishListFragment extends Fragment implements WishListAdapter.Callback {
 
-    public static final String STATE_CURRENT_USER = "state_current_user";
-    public static final String STATE_DIALOG_MOVE_TO_SHOPPING_CART = "STATE_DIALOG_MOVE_TO_SHOPPING_CART";
+    private static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> wishListLines;
@@ -178,5 +177,11 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 }
             });
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }

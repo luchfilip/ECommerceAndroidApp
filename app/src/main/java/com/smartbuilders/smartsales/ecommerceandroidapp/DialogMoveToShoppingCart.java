@@ -51,7 +51,7 @@ public class DialogMoveToShoppingCart extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_move_to_shopping_cart, container);
 
-        ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
+        ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
@@ -76,7 +76,7 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart, Toast.LENGTH_SHORT).show();
                             ((WishListFragment) getTargetFragment()).reloadWishList();
                         } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            throw new Exception(result);
                         }
                         dismiss();
                     } catch (Exception e) {

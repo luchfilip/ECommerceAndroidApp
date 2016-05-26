@@ -7,8 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
 /**
@@ -43,13 +47,45 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_update_qty_ordered, container);
 
-        getDialog().setTitle("");
+        ((TextView) view.findViewById(R.id.product_availability_textView))
+                .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
+
+        view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        view.findViewById(R.id.accept_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int oldValue = mOrderLine.getQuantityOrdered();
+                try {
+                    mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                    String result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
+                    if(result == null){
+                        ((ShoppingCartFragment) getTargetFragment()).reloadShoppingCart();
+                    } else {
+                        throw new Exception(result);
+                    }
+                    dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mOrderLine.setQuantityOrdered(oldValue);
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        getDialog().setTitle(mOrderLine.getProduct().getName());
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mUser);
+        outState.putParcelable(STATE_CURRENT_ORDERLINE, mOrderLine);
         super.onSaveInstanceState(outState);
     }
 
