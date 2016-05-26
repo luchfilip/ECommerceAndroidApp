@@ -170,8 +170,6 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
         image.setImageResource(res);
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         image.setAdjustViewBounds(true);
-        //image.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-        //        LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
         viewFlipper.addView(image);
     }
 

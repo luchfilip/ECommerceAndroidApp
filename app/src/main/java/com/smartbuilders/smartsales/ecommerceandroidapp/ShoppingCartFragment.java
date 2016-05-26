@@ -29,7 +29,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private ShoppingCartAdapter mShoppingCartAdapter;
     private ArrayList<OrderLine> mOrderLines;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,7 +106,13 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     }
 
     public void reloadShoppingCart(){
-        mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getWishList();
+        mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();
         mShoppingCartAdapter.setData(mOrderLines);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        super.onSaveInstanceState(outState);
     }
 }
