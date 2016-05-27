@@ -3,7 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +21,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -70,22 +71,34 @@ public class ShoppingCartAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_cart_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-            //        mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(viewHolder.productImage);
-            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
+                    mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
-                viewHolder.productImage.setImageBitmap(img);
+                Picasso.with(mContext)
+                        .load(img).error(R.drawable.no_image_available).into(viewHolder.productImage);
             }else{
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(mDataset.get(position).getProduct().getImageFileName(),
-                                true, viewHolder.productImage, mCurrentUser, mContext);
-                getFileFromServlet.execute();
+                Picasso.with(mContext)
+                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
+                                + mDataset.get(position).getProduct().getImageFileName())
+                        .error(R.drawable.no_image_available)
+                        .into(viewHolder.productImage, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
+                                        ((BitmapDrawable) viewHolder.productImage.getDrawable()).getBitmap(),
+                                        mCurrentUser, mContext);
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
             }
         }else{
-            viewHolder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            viewHolder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
         viewHolder.productImage.setOnClickListener(new View.OnClickListener() {

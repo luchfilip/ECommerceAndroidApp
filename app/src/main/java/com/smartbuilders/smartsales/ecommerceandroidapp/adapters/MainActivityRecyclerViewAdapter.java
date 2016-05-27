@@ -130,9 +130,6 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     // use this setting to improve performance if you know that changes
                     // in content do not change the layout size of the RecyclerView
                     holder.mRecyclerView.setHasFixedSize(true);
-                    //holder.mRecyclerView.setLayoutManager(
-                    //       new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-
                     int spanCount = 2;
                     try {
                         int measuredWidth;
@@ -157,8 +154,6 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     }
                     holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mFragmentActivity,
                             products, false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
-                }else{
-
                 }
                 break;
             }

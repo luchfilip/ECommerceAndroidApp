@@ -2,7 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,9 +16,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -73,20 +75,33 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+
         if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
-            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-            //        mDataset.get(position).getProduct().getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
-            Bitmap img = Utils.getImageByFileName(mContext, mCurrentUser, mDataset.get(position).getProduct().getImageFileName());
+            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
+                    mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
-                holder.productImage.setImageBitmap(img);
+                Picasso.with(mContext)
+                        .load(img).error(R.drawable.no_image_available).into(holder.productImage);
             }else{
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(mDataset.get(position).getProduct().getImageFileName(),
-                                true, holder.productImage, mCurrentUser, mContext);
-                getFileFromServlet.execute();
+                Picasso.with(mContext)
+                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
+                                + mDataset.get(position).getProduct().getImageFileName())
+                        .error(R.drawable.no_image_available)
+                        .into(holder.productImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
+                                        ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
+                                        mCurrentUser, mContext);
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
             }
         }else{
-            holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+            holder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
         holder.productImage.setOnClickListener(new View.OnClickListener() {

@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
@@ -30,13 +32,13 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
 
 /**
  * Created by Alberto on 22/3/2016.
  */
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = ProductRecyclerViewAdapter.class.getSimpleName();
     public static final int REDIRECT_PRODUCT_LIST = 0;
     public static final int REDIRECT_PRODUCT_DETAILS = 1;
 
@@ -102,10 +104,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.product_min_info, parent, false);
         }
-        // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -172,19 +172,29 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }
 
         if(!TextUtils.isEmpty(mDataset.get(position).getImageFileName())){
-            //Picasso.with(mContext).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" +
-            //        mDataset.get(position).getImageFileName()).error(R.drawable.ic_error_black_48dp).into(holder.productImage);
             File img = Utils.getFileThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
             if(img!=null){
-                Picasso.with(mContext).load(img).into(holder.productImage);
+                Picasso.with(mContext).load(img).error(R.drawable.no_image_available).into(holder.productImage);
             }else{
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(mDataset.get(position).getImageFileName(), true,
-                                holder.productImage, mCurrentUser, mContext);
-                getFileFromServlet.execute();
+                Picasso.with(mContext)
+                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
+                                + mDataset.get(position).getImageFileName())
+                        .error(R.drawable.no_image_available)
+                        .into(holder.productImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Utils.createFileInThumbDir(mDataset.get(position).getImageFileName(),
+                                        ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
+                                        mCurrentUser, mContext);
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
             }
         }else{
-            holder.productImage.setImageResource(mDataset.get(position).getImageId());
+            holder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
         if(holder.productAvaliability!=null){
@@ -262,21 +272,28 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     private void createShareIntent(Product product){
-        String fileName = "tmpImg.jgg";
+        String fileName = "tmpImg.jpg";
         if(product.getImageFileName()!=null){
             Bitmap productImage = Utils.getImageByFileName(mContext, mCurrentUser, product.getImageFileName());
             if(productImage==null){
+                //Si el archivo no existe entonces se descarga
                 GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(product.getImageFileName(), false, null, mCurrentUser, mContext);
-                getFileFromServlet.execute();
+                        new GetFileFromServlet(product.getImageFileName(), false, mCurrentUser, mContext);
+                try {
+                    productImage = getFileFromServlet.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
             if(productImage!=null){
                 Utils.createFileInCacheDir(fileName, productImage, mContext);
             }else{
-                Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
+                Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, mContext);
             }
         }else{
-            Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
+            Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, mContext);
         }
         mContext.startActivity(Utils.createShareProductIntent(mContext, product, fileName));
     }

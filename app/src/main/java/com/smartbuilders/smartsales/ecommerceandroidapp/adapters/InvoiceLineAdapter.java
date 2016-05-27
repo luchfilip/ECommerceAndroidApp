@@ -61,7 +61,7 @@ public class InvoiceLineAdapter extends RecyclerView.Adapter<InvoiceLineAdapter.
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productImage.setImageResource(mDataset.get(position).getProduct().getImageId());
+        holder.productImage.setImageResource(R.drawable.no_image_available);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

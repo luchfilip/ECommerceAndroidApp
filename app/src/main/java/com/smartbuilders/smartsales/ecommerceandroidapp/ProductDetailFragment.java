@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -29,8 +30,12 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -90,14 +95,16 @@ public class ProductDetailFragment extends Fragment {
                 }
                 try {
                     if(mProduct.getProductBrand()!=null) {
-                        relatedProductsByBrandId = productDB.getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
+                        relatedProductsByBrandId = productDB
+                                .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
                     if(mProduct.getProductSubCategory()!=null) {
-                        relatedProductsBySubCategoryId = productDB.getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
+                        relatedProductsBySubCategoryId = productDB
+                                .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -119,17 +126,41 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                //Picasso.with(getContext()).load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" +
-                                //        mProduct.getImageFileName()).error(R.drawable.ic_error_black_48dp).into((ImageView) view.findViewById(R.id.product_image));
-                                Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                File img = Utils.getFileImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
                                 if(img!=null){
-                                    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(img);
+                                    Picasso.with(getContext())
+                                            .load(img).error(R.drawable.no_image_available)
+                                            .into((ImageView) view.findViewById(R.id.product_image));
                                 }else{
-                                    GetFileFromServlet getFileFromServlet =
-                                            new GetFileFromServlet(mProduct.getImageFileName(), false,
-                                                    (ImageView) view.findViewById(R.id.product_image), mCurrentUser, getContext());
-                                    getFileFromServlet.execute();
+                                    Picasso.with(getContext())
+                                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
+                                                + mProduct.getImageFileName())
+                                        .error(R.drawable.no_image_available)
+                                        .into((ImageView) view.findViewById(R.id.product_image), new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                Utils.createFileInOriginalDir(mProduct.getImageFileName(),
+                                                        ((BitmapDrawable)((ImageView) view.findViewById(R.id.product_image)).getDrawable()).getBitmap(),
+                                                        mCurrentUser, getContext());
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                File img = Utils.getFileThumbByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                                if(img!=null){
+                                                    Picasso.with(getContext())
+                                                            .load(img).error(R.drawable.no_image_available)
+                                                            .into((ImageView) view.findViewById(R.id.product_image));
+                                                }else{
+                                                    ((ImageView) view.findViewById(R.id.product_image))
+                                                            .setImageResource(R.drawable.no_image_available);
+                                                }
+                                            }
+                                        });
                                 }
+                            } else {
+                                ((ImageView) view.findViewById(R.id.product_image))
+                                        .setImageResource(R.drawable.no_image_available);
                             }
 
                             if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {
@@ -280,21 +311,28 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private Intent createShareIntent(){
-        String fileName = "tmpImg.jgg";
+        String fileName = "tmpImg.jpg";
         if(mProduct.getImageFileName()!=null){
             Bitmap productImage = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
             if(productImage==null){
+                //Si el archivo no existe entonces se descarga
                 GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(mProduct.getImageFileName(), false, null, mCurrentUser, getContext());
-                getFileFromServlet.execute();
+                        new GetFileFromServlet(mProduct.getImageFileName(), false, mCurrentUser, getContext());
+                try {
+                    productImage = getFileFromServlet.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
             if(productImage!=null){
                 Utils.createFileInCacheDir(fileName, productImage, getContext());
             }else{
-                Utils.createFileInCacheDir(fileName, mProduct.getImageId(), getContext());
+                Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, getContext());
             }
         }else{
-            Utils.createFileInCacheDir(fileName, mProduct.getImageId(), getContext());
+            Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, getContext());
         }
         return Utils.createShareProductIntent(getContext(), mProduct, fileName);
     }

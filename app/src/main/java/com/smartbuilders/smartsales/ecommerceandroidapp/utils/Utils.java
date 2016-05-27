@@ -221,7 +221,6 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                //Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -238,9 +237,8 @@ public class Utils {
                 .append(fileName).toString());
         if(imgFile.exists()){
             return imgFile;
-        }else{
-            return getFileThumbByFileName(context, user, fileName);
         }
+        return null;
     }
 
     public static File getFileThumbByFileName(Context context, User user, String fileName){
@@ -266,11 +264,9 @@ public class Utils {
                 .append(user.getUserName()).append("/Data_In/original/")
                 .append(fileName).toString());
         if(imgFile.exists()){
-            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
-        }else{
-            return getThumbByFileName(context, user, fileName);
         }
+        return null;
     }
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
@@ -282,7 +278,6 @@ public class Utils {
                         .append(user.getUserName()).append("/Data_In/thumb/")
                         .append(fileName).toString());
         if(imgFile.exists()){
-            //return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
         }
         return null;
@@ -347,23 +342,7 @@ public class Utils {
         if (goToHome) {
             for(int i = 0; i < toolbar.getChildCount(); i++){
                 View view = toolbar.getChildAt(i);
-                /*if(view instanceof TextView){
-                    TextView tv = (TextView) view;
-                    if(tv.getText().equals(toolbar.getTitle().toString())){
-                        if (goToHome) {
-                            tv.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    context.startActivity(new Intent(context,
-                                            MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
-                                }
-                            });
-                        }
-                        tv.setTextSize(22);
-                        tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "MyriadPro-Bold.otf"));
-                        break;
-                    }
-                }else*/ if(view instanceof ImageView){
+                if(view instanceof ImageView){
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -383,19 +362,6 @@ public class Utils {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
             View customView = activity.getLayoutInflater().inflate(R.layout.actionbar_title, null);
-            //TextView customTitle = (TextView) customView.findViewById(R.id.actionbarTitle);
-            //if(goToHome) {
-            //    customTitle.setOnClickListener(new View.OnClickListener() {
-            //        @Override
-            //        public void onClick(View v) {
-            //            activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
-            //                    MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user)
-            //                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            //        }
-            //    });
-            //}
-            //customTitle.setTextSize(22);
-            //customTitle.setTypeface(Typeface.createFromAsset(activity.getAssets(), "MyriadPro-Bold.otf"));
             ImageView customLogo = (ImageView) customView.findViewById(R.id.actionbarLogo);
             if(goToHome) {
                 customLogo.setOnClickListener(new View.OnClickListener() {

@@ -6,11 +6,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,19 +26,15 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
     private static final String TAG = GetFileFromServlet.class.getSimpleName();
 
     private String url;
-    private ImageView mImageView;
     private String mFileName;
     private Context mContext;
     private User mUser;
     private boolean mIsThumb;
 
-    public GetFileFromServlet(String fileName, boolean isThumb, ImageView imageView, User user, Context context) {
-        if (isThumb) {
-            url = user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName;
-        } else {
-            url = user.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + fileName;
-        }
-        mImageView = imageView;
+    public GetFileFromServlet(String fileName, boolean isThumb, User user, Context context) {
+        url = user.getServerAddress() + "/IntelligentDataSynchronizer/"
+                + (isThumb ? "GetThumbImage" : "GetOriginalImage")
+                + "?fileName=" + fileName;
         mFileName = fileName;
         mContext = context;
         mUser = user;
@@ -50,14 +43,6 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if(mImageView!=null){
-            if(bitmap!=null) {
-                mImageView.setImageBitmap(bitmap);
-            } else {
-                Picasso.with(mContext).load(R.drawable.no_image_available).into(mImageView);
-                //mImageView.setImageResource(R.drawable.no_image_available);
-            }
-        }
         if(bitmap!=null && mContext!=null && mUser!=null) {
             if(mIsThumb) {
                 Utils.createFileInThumbDir(mFileName, bitmap, mUser, mContext);
@@ -68,7 +53,7 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(Void... urls) {
+    protected Bitmap doInBackground(Void ... voids) {
         return downloadImage(url);
     }
 
@@ -111,7 +96,7 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
 
         try {
             HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setConnectTimeout(1500);
+            httpConnection.setConnectTimeout(1200);
             httpConnection.setRequestMethod("GET");
             httpConnection.connect();
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {

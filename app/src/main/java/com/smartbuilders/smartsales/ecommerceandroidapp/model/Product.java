@@ -11,7 +11,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.R;
 public class Product extends Model implements Parcelable {
 
     private ProductBrand productBrand;
-    private int imageId = R.drawable.no_image_available;
     private String name;
     private String description;
     private String imageFileName;
@@ -27,7 +26,6 @@ public class Product extends Model implements Parcelable {
 
     protected Product(Parcel in) {
         super(in);
-        imageId = in.readInt();
         name = in.readString();
         description = in.readString();
         imageFileName = in.readString();
@@ -42,7 +40,6 @@ public class Product extends Model implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeInt(imageId);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(imageFileName);
@@ -117,14 +114,6 @@ public class Product extends Model implements Parcelable {
 
     public void setProductBrand(ProductBrand productBrand) {
         this.productBrand = productBrand;
-    }
-
-    public int getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
     }
 
     public ProductCommercialPackage getProductCommercialPackage() {

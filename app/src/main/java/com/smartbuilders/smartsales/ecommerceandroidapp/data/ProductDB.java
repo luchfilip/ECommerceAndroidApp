@@ -324,7 +324,7 @@ public class ProductDB {
                         " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
                     " WHERE A.IDMARCA = "+brandId+" ORDER BY A.NOMBRE ASC", null);
@@ -461,7 +461,7 @@ public class ProductDB {
             c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+// AND PA.AVAILABILITY>0 " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
                     (isNumeric ? " WHERE A.CODVIEJO LIKE '"+name+"%' "
                             : " WHERE A.NOMBRE LIKE '"+name+"%' COLLATE NOCASE " +
                             (name.length() > 1 ? " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " : "")) +
