@@ -138,7 +138,7 @@ public class ProductDetailFragment extends Fragment {
                                 // in content do not change the layout size of the RecyclerView
                                 mRecyclerView.setHasFixedSize(true);
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsByShopping, false,
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getActivity(), relatedProductsByShopping, false,
                                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                             } else {
                                 view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class ProductDetailFragment extends Fragment {
                                 // in content do not change the layout size of the RecyclerView
                                 mRecyclerView.setHasFixedSize(true);
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsByBrandId, false,
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getActivity(), relatedProductsByBrandId, false,
                                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
 
                                 ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
@@ -168,7 +168,7 @@ public class ProductDetailFragment extends Fragment {
                                 // in content do not change the layout size of the RecyclerView
                                 mRecyclerView.setHasFixedSize(true);
                                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(relatedProductsBySubCategoryId, false,
+                                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getActivity(), relatedProductsBySubCategoryId, false,
                                         ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                             } else {
                                 view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
@@ -209,7 +209,7 @@ public class ProductDetailFragment extends Fragment {
                                     new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWhisList(mProduct);
+                                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct);
                                             if (result == null) {
                                                 Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
                                             } else {

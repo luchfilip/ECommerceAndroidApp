@@ -42,8 +42,31 @@ public class OrderLineDB {
         return addOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE);
     }
 
-    public String addProductToWhisList(Product product){
+    public String addProductToWishList(Product product){
         return addOrderLine(product, 0, 0, 0, WISHLIST_DOCTYPE);
+    }
+
+    public String removeProductFromWishList(Product product){
+        SQLiteDatabase db = null;
+        try {
+            db = dbh.getWritableDatabase();
+            if(db.delete ("ECOMMERCE_ORDERLINE", "DOC_TYPE=? AND PRODUCT_ID=? ",
+                    new String[]{ WISHLIST_DOCTYPE, String.valueOf(product.getId()) } ) < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            if(db != null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){

@@ -13,8 +13,9 @@
     <item android:title="@string/my_purchases">
         <menu>
             <item
-                android:id="@+id/nav_whish_list"
-                android:title="@string/whish_list" />
+                android:id="@+id/nav_wish_list"
+                android:icon="@drawable/ic_favorite_black_24dp"
+                android:title="@string/wish_list" />
             <item
                 android:id="@+id/nav_shopping_cart"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"

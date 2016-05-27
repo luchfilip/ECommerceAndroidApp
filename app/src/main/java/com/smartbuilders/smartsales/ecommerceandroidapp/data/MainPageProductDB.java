@@ -32,12 +32,13 @@ public class MainPageProductDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_SECTION_ID, M.PRODUCT_ID, " +
-                        " A.NOMBRE, PI.FILE_NAME, PA.AVAILABILITY " +
+            c = db.rawQuery("SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_SECTION_ID, M.PRODUCT_ID, " +
+                        " A.NOMBRE, PI.FILE_NAME, PA.AVAILABILITY, OL.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = M.PRODUCT_ID AND PI.PRIORITY = 1 " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO " +
+                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
                     " WHERE M.ISACTIVE = 'Y' AND M.MAINPAGE_SECTION_ID = " + mainPageSectionId +
                     " ORDER BY M.PRIORITY ASC", null);
             while(c.moveToNext()){
@@ -50,6 +51,7 @@ public class MainPageProductDB {
                 p.setName(c.getString(3));
                 p.setImageFileName(c.getString(4));
                 p.setAvailability(c.getInt(5));
+                p.setFavorite(c.getInt(6)>0);
                 mainPageProduct.setProduct(p);
                 mainPageProducts.add(mainPageProduct);
             }

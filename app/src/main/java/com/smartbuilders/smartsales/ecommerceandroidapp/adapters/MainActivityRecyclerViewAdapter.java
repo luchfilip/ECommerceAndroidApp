@@ -1,9 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +32,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
-    private Activity mActivity;
+    private FragmentActivity mFragmentActivity;
     private ArrayList<MainPageSection> mDataset;
     private User mCurrentUser;
     private Context mContext;
@@ -65,9 +65,9 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityRecyclerViewAdapter(Activity activity, ArrayList<MainPageSection> myDataset,
+    public MainActivityRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<MainPageSection> myDataset,
                                            User user) {
-        mActivity = activity;
+        mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
     }
@@ -136,7 +136,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     int spanCount = 2;
                     try {
                         int measuredWidth;
-                        WindowManager w = mActivity.getWindowManager();
+                        WindowManager w = mFragmentActivity.getWindowManager();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
                             Point size = new Point();
                             w.getDefaultDisplay().getSize(size);
@@ -144,7 +144,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                         } else {
                             measuredWidth = w.getDefaultDisplay().getWidth();
                         }
-                        spanCount = (int) (measuredWidth / mActivity.getResources().getDimension(R.dimen.productMinInfo_cardView_Width));
+                        spanCount = (int) (measuredWidth / mFragmentActivity.getResources().getDimension(R.dimen.productMinInfo_cardView_Width));
                     } catch (Exception e){
                         e.printStackTrace();
                     }
@@ -155,7 +155,7 @@ public class MainActivityRecyclerViewAdapter extends RecyclerView.Adapter<MainAc
                     for(MainPageProduct mainPageProduct : mainPageProducts){
                         products.add(mainPageProduct.getProduct());
                     }
-                    holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(
+                    holder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mFragmentActivity,
                             products, false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                 }else{
 

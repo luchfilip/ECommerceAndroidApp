@@ -20,7 +20,7 @@
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Carrito de Compra</string>
     <string name="shopping_sale">Carrito de Venta</string>
-    <string name="whish_list">Lista de deseos</string>
+    <string name="wish_list">Lista de deseos</string>
     <string name="orders_list">Pedidos</string>
     <string name="sales_orders_list">Cotizaciones</string>
     <string name="invoces_list">Facturas</string>

@@ -2,6 +2,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,17 +13,19 @@ import android.widget.TextView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -36,8 +40,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     public static final int REDIRECT_PRODUCT_LIST = 0;
     public static final int REDIRECT_PRODUCT_DETAILS = 1;
 
+    private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
-    private Product[] array;
     private Context mContext;
     private boolean mUseDetailLayout;
     private int mRedirectOption;
@@ -75,11 +79,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductRecyclerViewAdapter(ArrayList<Product> myDataset, boolean useDetailLayout,
-                                      int redirectOption, User user) {
+    public ProductRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
+                                      boolean useDetailLayout, int redirectOption, User user) {
+        mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
-        this.array = myDataset.toArray(new Product[0]);
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
     }
@@ -192,25 +196,48 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(createShareIntent(mDataset.get(position)));
+                createShareIntent(mDataset.get(position));
                 }
             });
         }
 
         if(holder.favoriteImageView!=null) {
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+            if(mDataset.get(position).isFavorite()){
+                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String result = removeFromWishList(mDataset.get(position));
+                        if (result == null) {
+                            mDataset.get(position).setFavorite(false);
+                            notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }else{
+                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String result = addToWishList(mDataset.get(position));
+                        if (result == null) {
+                            mDataset.get(position).setFavorite(true);
+                            notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
         }
 
         if(holder.addToShoppingCartImageView!=null) {
             holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    addToShoppingCart(mDataset.get(position));
                 }
             });
         }
@@ -234,7 +261,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }
     }
 
-    private Intent createShareIntent(Product product){
+    private void createShareIntent(Product product){
         String fileName = "tmpImg.jgg";
         if(product.getImageFileName()!=null){
             Bitmap productImage = Utils.getImageByFileName(mContext, mCurrentUser, product.getImageFileName());
@@ -251,22 +278,24 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }else{
             Utils.createFileInCacheDir(fileName, product.getImageId(), mContext);
         }
-        return Utils.createShareProductIntent(mContext, product, fileName);
+        mContext.startActivity(Utils.createShareProductIntent(mContext, product, fileName));
     }
 
-    public void filter (String charText){
-        charText = charText.toLowerCase(Locale.getDefault());
-        mDataset.clear();
-        if (charText.length() == 0) {
-            mDataset.addAll(Arrays.asList(array));
-        } else {
-            for (Product product : array) {
-                if (product.getName().toLowerCase(Locale.getDefault()).contains(charText)
-                        /*|| (product.getDescription()!=null && product.getDescription().toLowerCase(Locale.getDefault()).contains(charText))*/) {
-                    mDataset.add(product);
-                }
-            }
-        }
-        notifyDataSetChanged();
+    private void addToShoppingCart(Product product) {
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        FragmentManager fm = mFragmentActivity.getSupportFragmentManager();
+        DialogAddToShoppingCart addToShoppingCartFragment =
+                DialogAddToShoppingCart.newInstance(product, mCurrentUser);
+        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+    }
+
+    private String addToWishList(Product product) {
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        return (new OrderLineDB(mContext, mCurrentUser)).addProductToWishList(product);
+    }
+
+    private String removeFromWishList(Product product) {
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        return (new OrderLineDB(mContext, mCurrentUser)).removeProductFromWishList(product);
     }
 }

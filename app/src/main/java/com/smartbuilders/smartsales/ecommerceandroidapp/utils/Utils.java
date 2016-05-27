@@ -429,7 +429,7 @@ public class Utils {
                         .putExtra(ShoppingSaleActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
                 break;
-            case R.id.nav_whish_list:
+            case R.id.nav_wish_list:
                 context.startActivity(new Intent(context, WishListActivity.class)
                         .putExtra(WishListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
