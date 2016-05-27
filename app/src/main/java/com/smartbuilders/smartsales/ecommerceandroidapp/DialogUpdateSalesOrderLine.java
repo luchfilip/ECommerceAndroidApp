@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
@@ -104,7 +105,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                         e.printStackTrace();
                         mOrderLine.setTaxPercentage(0);
                     }
-                    mOrderLine.setTotalLineAmount(getTotalLine(mOrderLine));
+                    mOrderLine.setTotalLineAmount(OrderLineBR.getTotalLine(mOrderLine));
                     String result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
                     if(result == null){
                         ((ShoppingSaleFragment) getTargetFragment()).reloadShoppingSale();
@@ -133,17 +134,6 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
         getDialog().setTitle(mOrderLine.getProduct().getName());
         return view;
-    }
-
-    private double getTotalLine(OrderLine orderLine){
-        double totalLine = 0;
-        try {
-            totalLine = (orderLine.getPrice() * orderLine.getQuantityOrdered())
-                    + (orderLine.getPrice() * orderLine.getQuantityOrdered() * (orderLine.getTaxPercentage()/100));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return totalLine;
     }
 
     @Override

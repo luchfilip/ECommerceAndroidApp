@@ -75,6 +75,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                     intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                                     intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, orderDB.getLastFinalizedSalesOrder());
                                     startActivity(intent);
+                                    getActivity().finish();
                                 }else{
                                     new AlertDialog.Builder(getContext())
                                             .setMessage(result)

@@ -1,29 +1,5 @@
 <resources>
 
-    <style name="shoppingCart_list_style">
-
-    </style>
-
-    <style name="shoppingSale_list_style">
-
-    </style>
-
-    <style name="wish_list_style">
-
-    </style>
-
-    <style name="invoices_list_style">
-        <item name="android:choiceMode">singleChoice</item>
-    </style>
-
-    <style name="orders_list_style">
-        <item name="android:choiceMode">singleChoice</item>
-    </style>
-
-    <style name="brands_list_style">
-
-    </style>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->

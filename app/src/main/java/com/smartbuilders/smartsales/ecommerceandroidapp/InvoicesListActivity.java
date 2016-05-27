@@ -56,7 +56,6 @@ public class InvoicesListActivity extends AppCompatActivity implements InvoicesL
             Intent intent = new Intent(InvoicesListActivity.this, InvoiceDetailActivity.class);
             intent.putExtra(InvoiceDetailActivity.KEY_INVOICE_ID, invoice.getId());
             startActivity(intent);
-            finish();
         }
     }
 

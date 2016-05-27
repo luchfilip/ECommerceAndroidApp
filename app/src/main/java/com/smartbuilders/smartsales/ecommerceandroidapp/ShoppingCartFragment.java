@@ -67,6 +67,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                                     intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
                                     startActivity(intent);
+                                    getActivity().finish();
                                 }else{
                                     new AlertDialog.Builder(getContext())
                                             .setMessage(result)

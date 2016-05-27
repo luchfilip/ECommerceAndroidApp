@@ -51,7 +51,6 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, InvoicesListActivity.class);
         intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
         startActivity(intent);
-        finish();
     }
 
 }

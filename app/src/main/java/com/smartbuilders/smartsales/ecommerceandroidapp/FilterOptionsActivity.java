@@ -71,7 +71,6 @@ public class FilterOptionsActivity extends AppCompatActivity
                     public void onClick(View v) {
                         startActivity(new Intent(FilterOptionsActivity.this,
                                 CategoriesListActivity.class).putExtra(CategoriesListActivity.KEY_CURRENT_USER, mCurrentUser));
-                        finish();
                     }
                 });
 
@@ -81,7 +80,6 @@ public class FilterOptionsActivity extends AppCompatActivity
                     public void onClick(View v) {
                         startActivity(new Intent(FilterOptionsActivity.this,
                                 BrandsListActivity.class).putExtra(BrandsListActivity.KEY_CURRENT_USER, mCurrentUser));
-                        finish();
                     }
                 });
     }

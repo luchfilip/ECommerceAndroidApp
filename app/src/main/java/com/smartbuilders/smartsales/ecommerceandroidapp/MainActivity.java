@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
     private User mCurrentUser;
     private Account mAccount;
     private NavigationView mNavigationView;
-    private RecyclerView mRecyclerView;
     private ProgressDialog waitPlease;
 
     @Override
@@ -119,6 +118,72 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+
+        waitPlease = ProgressDialog.show(this, getString(R.string.loading),
+                getString(R.string.wait_please), true, false);
+        new Thread() {
+            @Override
+            public void run() {
+
+                try {
+                    final Account availableAccounts[] = mAccountManager
+                            .getAccountsByType(getString(R.string.authenticator_acount_type));
+                    if (availableAccounts != null && availableAccounts.length > 0) {
+                        //Se carga la lista de los usuarios del panel izquierdo
+                        //String[] accountsNames = new String[availableAccounts.length];
+                        //for (int i = 0; i < availableAccounts.length; i++) {
+                        //    accountsNames[i] = mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_GROUP) +
+                        //            ": " + mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_NAME);
+                        //}
+
+                        if (mCurrentUser != null) {
+                            for (int i = 0; i < availableAccounts.length; i++) {
+                                if (mAccountManager.getUserData(availableAccounts[i],
+                                        AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())) {
+                                    loadUserData(availableAccounts[i]);
+                                    break;
+                                }
+                            }
+                        } else {
+                            loadUserData(availableAccounts[0]);
+                        }
+                    }
+
+                    if (mAccount == null) {
+                        addNewAccount(getString(R.string.authenticator_acount_type),
+                                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                        finishActivityOnResultOperationCanceledException = true;
+                    } else {
+                        finishActivityOnResultOperationCanceledException = false;
+                        final MainPageSectionDB mainPageSectionDB =
+                                new MainPageSectionDB(MainActivity.this, mCurrentUser);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadMainPage(mainPageSectionDB.getActiveMainPageSections());
+                            }
+                        });
+
+                        Utils.createImageFiles(MainActivity.this, mCurrentUser);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                waitPlease.dismiss();
+                                waitPlease.cancel();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     @Override
@@ -203,84 +268,13 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        waitPlease = ProgressDialog.show(this, getString(R.string.loading),
-                getString(R.string.wait_please), true, false);
-        new Thread() {
-            @Override
-            public void run() {
-
-                try {
-                    final Account availableAccounts[] = mAccountManager
-                            .getAccountsByType(getString(R.string.authenticator_acount_type));
-                    if (availableAccounts != null && availableAccounts.length > 0) {
-                        //Se carga la lista de los usuarios del panel izquierdo
-                        //String[] accountsNames = new String[availableAccounts.length];
-                        //for (int i = 0; i < availableAccounts.length; i++) {
-                        //    accountsNames[i] = mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_GROUP) +
-                        //            ": " + mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_NAME);
-                        //}
-
-                        if (mCurrentUser != null) {
-                            for (int i = 0; i < availableAccounts.length; i++) {
-                                if (mAccountManager.getUserData(availableAccounts[i],
-                                        AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())) {
-                                    loadUserData(availableAccounts[i]);
-                                    break;
-                                }
-                            }
-                        } else {
-                            loadUserData(availableAccounts[0]);
-                        }
-                    }
-
-                    if (mAccount == null) {
-                        addNewAccount(getString(R.string.authenticator_acount_type),
-                                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-                        finishActivityOnResultOperationCanceledException = true;
-                    } else {
-                        finishActivityOnResultOperationCanceledException = false;
-                        final MainPageSectionDB mainPageSectionDB =
-                                new MainPageSectionDB(MainActivity.this, mCurrentUser);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadMainPage(mainPageSectionDB.getActiveMainPageSections());
-                            }
-                        });
-
-                        Utils.createImageFiles(MainActivity.this, mCurrentUser);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                waitPlease.dismiss();
-                                waitPlease.cancel();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
     private void loadMainPage(ArrayList<MainPageSection> mainPageSections){
-        mRecyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
     }
 
     @Override

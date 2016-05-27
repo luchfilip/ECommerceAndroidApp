@@ -63,7 +63,6 @@ public class BrandsListFragment extends Fragment {
                     intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, productBrand.getId());
                     startActivity(intent);
-                    getActivity().finish();
                 }
             }
         });

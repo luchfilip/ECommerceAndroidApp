@@ -147,7 +147,6 @@ public class OrdersListActivity extends AppCompatActivity
             intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
             intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
-            finish();
         }
     }
 

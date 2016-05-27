@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -179,11 +180,19 @@ public class OrderLineDB {
         SQLiteDatabase db = null;
         try {
             db = dbh.getWritableDatabase();
+            OrderLine ol = new OrderLine();
+            ol.setProduct(product);
+            ol.setPrice(productPrice);
+            ol.setQuantityOrdered(qtyRequested);
+            ol.setTaxPercentage(productTaxPercentage);
+            ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
+
             ContentValues cv = new ContentValues();
-            cv.put("PRODUCT_ID", product.getId());
-            cv.put("QTY_REQUESTED", qtyRequested);
-            cv.put("SALES_PRICE", productPrice);
-            cv.put("TAX_PERCENTAGE", productTaxPercentage);
+            cv.put("PRODUCT_ID", ol.getProduct().getId());
+            cv.put("QTY_REQUESTED", ol.getQuantityOrdered());
+            cv.put("SALES_PRICE", ol.getPrice());
+            cv.put("TAX_PERCENTAGE", ol.getTaxPercentage());
+            cv.put("TOTAL_LINE", ol.getTotalLineAmount());
             cv.put("DOC_TYPE", docType);
             cv.put("ISACTIVE", "Y");
             cv.put("APP_VERSION", Utils.getAppVersionName(context));
@@ -265,7 +274,8 @@ public class OrderLineDB {
         Cursor c = null;
         try {
             db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT COUNT(ECOMMERCE_ORDERLINE_ID) FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDER_ID="+orderId+" AND ISACTIVE = ?",
+            c = db.rawQuery("SELECT COUNT(ECOMMERCE_ORDERLINE_ID) FROM ECOMMERCE_ORDERLINE " +
+                    " WHERE ECOMMERCE_ORDER_ID="+orderId+" AND ISACTIVE = ?",
                     new String[]{"Y"});
             while(c.moveToNext()){
                 return c.getInt(0);

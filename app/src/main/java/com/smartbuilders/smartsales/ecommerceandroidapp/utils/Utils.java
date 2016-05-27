@@ -388,27 +388,27 @@ public class Utils {
             case R.id.nav_shopping_cart:
                 context.startActivity(new Intent(context, ShoppingCartActivity.class)
                         .putExtra(ShoppingCartActivity.KEY_CURRENT_USER, user)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_shopping_sale:
                 context.startActivity(new Intent(context, ShoppingSaleActivity.class)
                         .putExtra(ShoppingSaleActivity.KEY_CURRENT_USER, user)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;
             case R.id.nav_wish_list:
                 context.startActivity(new Intent(context, WishListActivity.class)
                         .putExtra(WishListActivity.KEY_CURRENT_USER, user)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_orders:
                 context.startActivity(new Intent(context, OrdersListActivity.class)
                         .putExtra(OrdersListActivity.KEY_CURRENT_USER, user)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_sales_orders:
                 context.startActivity(new Intent(context, SalesOrdersListActivity.class)
                         .putExtra(SalesOrdersListActivity.KEY_CURRENT_USER, user)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY));
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
 
             case R.id.nav_settings:
