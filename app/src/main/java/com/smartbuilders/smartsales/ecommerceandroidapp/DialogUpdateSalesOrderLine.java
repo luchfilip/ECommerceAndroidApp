@@ -60,24 +60,46 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             }
         });
 
+        try {
+            ((EditText) view.findViewById(R.id.qty_requested_editText))
+                    .setText(String.valueOf(mOrderLine.getQuantityOrdered()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            ((EditText) view.findViewById(R.id.product_price_editText))
+                    .setText(String.valueOf(mOrderLine.getPrice()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            ((EditText) view.findViewById(R.id.product_tax_editText))
+                    .setText(String.valueOf(mOrderLine.getTaxPercentage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         view.findViewById(R.id.accept_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     try {
-                        mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                        mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view
+                                .findViewById(R.id.qty_requested_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mOrderLine.setQuantityOrdered(0);
                     }
                     try {
-                        mOrderLine.setPrice(Double.valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString()));
+                        mOrderLine.setPrice(Double.valueOf(((EditText) view
+                                .findViewById(R.id.product_price_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mOrderLine.setPrice(0);
                     }
                     try {
-                        mOrderLine.setTaxPercentage(Double.valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString()));
+                        mOrderLine.setTaxPercentage(Double.valueOf(((EditText) view
+                                .findViewById(R.id.product_tax_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mOrderLine.setTaxPercentage(0);
