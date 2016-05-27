@@ -220,7 +220,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         String result = removeFromWishList(mDataset.get(position));
                         if (result == null) {
                             mDataset.get(position).setFavorite(false);
-                            notifyDataSetChanged();
+                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
@@ -234,7 +234,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         String result = addToWishList(mDataset.get(position));
                         if (result == null) {
                             mDataset.get(position).setFavorite(true);
-                            notifyDataSetChanged();
+                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
