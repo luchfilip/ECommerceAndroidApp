@@ -1,13 +1,12 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,19 +16,24 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
- * Jesus Sarco,
+ * Jesus Sarco, 27.05.2016
  */
-public class WishListActivity extends AppCompatActivity
+public class ZoomImageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
+
+    public static final String KEY_IMAGE_FILE_NAME = "KEY_IMAGE_FILE_NAME";
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
+
     private User mCurrentUser;
+    private String mImageFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wish_list);
+        setContentView(R.layout.activity_zoom_image);
 
         if( savedInstanceState != null ) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
@@ -41,11 +45,9 @@ public class WishListActivity extends AppCompatActivity
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
-        }
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
+            if(getIntent().getExtras().containsKey(KEY_IMAGE_FILE_NAME)){
+                mImageFileName = getIntent().getExtras().getString(KEY_IMAGE_FILE_NAME);
+            }
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -66,7 +68,7 @@ public class WishListActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_wishlist, menu);
+        getMenuInflater().inflate(R.menu.menu_zoom_image, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -92,6 +94,8 @@ public class WishListActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putString(STATE_IMAGE_FILE_NAME, mImageFileName);
         super.onSaveInstanceState(outState);
     }
+
 }

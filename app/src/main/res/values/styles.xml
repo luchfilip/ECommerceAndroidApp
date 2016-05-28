@@ -59,7 +59,7 @@
     </style>
 
     <style name="orders_style">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/grey_medium</item>
     </style>
 
     <style name="sales_orders_list_style">
@@ -67,7 +67,7 @@
     </style>
 
     <style name="sales_orders_style">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/grey_medium</item>
     </style>
 
     <style name="sub_categories_list_style">

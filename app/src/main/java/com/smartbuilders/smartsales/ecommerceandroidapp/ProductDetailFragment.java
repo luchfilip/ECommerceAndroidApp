@@ -163,6 +163,15 @@ public class ProductDetailFragment extends Fragment {
                                         .setImageResource(R.drawable.no_image_available);
                             }
 
+                             view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+                                     startActivity((new Intent(getContext(), ZoomImageActivity.class)
+                                         .putExtra(ZoomImageActivity.KEY_CURRENT_USER, mCurrentUser)
+                                         .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
+                                 }
+                             });
+
                             if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {
                                 RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
                                 // use this setting to improve performance if you know that changes

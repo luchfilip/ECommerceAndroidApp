@@ -135,7 +135,8 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/add_to_wishlist"
                                         android:id="@+id/product_addtowishlist_button"
-                                        android:focusable="false" />
+                                        android:focusable="false"
+                                        android:visibility="gone" />
                                 </LinearLayout>
 
                             </LinearLayout>
