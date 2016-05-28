@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,22 +41,23 @@ public class ZoomImageFragment extends Fragment {
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
             if(getActivity().getIntent().getExtras().containsKey(ZoomImageActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ZoomImageActivity.KEY_CURRENT_USER);
+                mCurrentUser = getActivity().getIntent().getExtras()
+                        .getParcelable(ZoomImageActivity.KEY_CURRENT_USER);
             }
             if(getActivity().getIntent().getExtras().containsKey(ZoomImageActivity.KEY_IMAGE_FILE_NAME)){
-                mImageFileName = getActivity().getIntent().getExtras().getString(ZoomImageActivity.KEY_IMAGE_FILE_NAME);
+                mImageFileName = getActivity().getIntent().getExtras()
+                        .getString(ZoomImageActivity.KEY_IMAGE_FILE_NAME);
             }
         }
 
-
         View view;
-
         Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mImageFileName);
         if (img != null) {
             TouchImageView touchImageView = new TouchImageView(getContext());
             touchImageView.setImageBitmap(img);
             touchImageView.setMaxZoom(4f);
             view = touchImageView;
+            view.setBackgroundColor(Color.WHITE);
         } else {
             img = Utils.getThumbByFileName(getContext(), mCurrentUser, mImageFileName);
             if (img != null) {
@@ -63,6 +65,7 @@ public class ZoomImageFragment extends Fragment {
                 touchImageView.setImageBitmap(img);
                 touchImageView.setMaxZoom(4f);
                 view = touchImageView;
+                view.setBackgroundColor(Color.WHITE);
             }else{
                 view = inflater.inflate(R.layout.fragment_zoom_image, container, false);
             }

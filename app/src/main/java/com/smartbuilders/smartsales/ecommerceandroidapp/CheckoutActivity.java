@@ -38,7 +38,6 @@ public class CheckoutActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 
@@ -50,12 +49,8 @@ public class CheckoutActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        try{
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
     }
 
     @Override
@@ -78,7 +73,6 @@ public class CheckoutActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

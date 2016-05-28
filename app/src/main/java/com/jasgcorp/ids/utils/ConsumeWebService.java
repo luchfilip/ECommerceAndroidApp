@@ -80,18 +80,24 @@ public class ConsumeWebService {
 			response = envelope.getResponse();
 			Log.i(TAG, "transport time: "+(System.currentTimeMillis() - timeBefore)+"ms");
         } catch(ConnectException e){
+			Log.e(TAG, "ConnectException");
         	e.printStackTrace();
         	return retry(e);
         } catch(SocketTimeoutException e){
+			Log.e(TAG, "SocketTimeoutException");
 			e.printStackTrace();
 			throw e;
         } catch(SocketException e){
+			Log.e(TAG, "SocketException");
         	e.printStackTrace();
         	return retry(e);
         } catch(IOException e){
+			Log.e(TAG, "IOException");
         	e.printStackTrace();
-       		return retry(e);
+            throw e;
+       		//return retry(e);
         } catch(Exception e){
+			Log.e(TAG, "Exception");
 			e.printStackTrace();
 			throw e;
 		}

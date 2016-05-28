@@ -3,32 +3,10 @@ package com.jasgcorp.ids.database;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsBrands;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProducts;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProducts2;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageProduct;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsMainPageSection;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductAvailability;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated0;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated1;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated2;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated3;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated4;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated5;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated6;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated7;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated8;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsProductShoppingRelated9;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.UtilsSubCategory;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
@@ -261,241 +239,186 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-//		Log.d(TAG, "onCreate(SQLiteDatabase arg0)");
 		if(this.dataBaseName.equals(DATABASE_NAME)){
-//			Log.i(TAG, "db.execSQL(CREATE_LOG_TABLE);");
 			db.execSQL(CREATE_LOG_TABLE);
-//			Log.i(TAG, "db.execSQL(CREATE_USER_TABLE);");
 			db.execSQL(CREATE_USER_TABLE);
-//			Log.i(TAG, "db.execSQL(CREATE_SCHEDULER_TABLE);");
 			db.execSQL(CREATE_SCHEDULER_TABLE);
 		}else{
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
             db.execSQL(CREATE_ARTICULOS);
-            for(String insert : (new UtilsProducts()).getInserts()){
-                try{
-                    db.execSQL(insert);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-            for(String insert : (new UtilsProducts2()).getInserts()){
-                try{
-                    db.execSQL(insert);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
+			//for(String insert : (new UtilsProducts()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProducts2()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
             db.execSQL(CREATE_PRODUCT_IMAGE);
-            Cursor c = null;
-            ArrayList<String> productImageInserts = new ArrayList<>();
-            try {
-                c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
-                int i =0;
-                while (c.moveToNext()){
-                    productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
-                            " values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (c != null) {
-                   c.close();
-                }
-            }
-            for(String insert : productImageInserts){
-                try{
-                    db.execSQL(insert);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
+			//Cursor c = null;
+			//ArrayList<String> productImageInserts = new ArrayList<>();
+			//try {
+			//	c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
+			//	int i =0;
+			//	while (c.moveToNext()){
+			//		productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
+			//				" values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
+			//	}
+			//} catch (Exception e) {
+			//	e.printStackTrace();
+			//} finally {
+			//	if (c != null) {
+			//	   c.close();
+			//	}
+			//}
+			//for(String insert : productImageInserts){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 
 			db.execSQL(CREATE_BRAND);
-			for(String insert : (new UtilsBrands()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsBrands()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 			db.execSQL(CREATE_CATEGORY);
-			for(String insert : (new UtilsCategory()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsCategory()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 			db.execSQL(CREATE_SUBCATEGORY);
-			for(String insert : (new UtilsSubCategory()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsSubCategory()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 			db.execSQL(CREATE_MAINPAGE_SECTION);
-			for(String insert : (new UtilsMainPageSection()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsMainPageSection()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 			db.execSQL(CREATE_MAINPAGE_PRODUCT);
-			for(String insert : (new UtilsMainPageProduct()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsMainPageProduct()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
 			db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-			for(String insert : (new UtilsProductAvailability()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsProductAvailability()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
 			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
-			for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
-				try{
-					db.execSQL(insert);
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			//for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			//for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
+			//	try{
+			//		db.execSQL(insert);
+			//	}catch(Exception e){
+			//		e.printStackTrace();
+			//	}
+			//}
+			db.execSQL(CREATE_RECENT_SEARCH);
 		}
-		try{
-			db.execSQL("DROP TABLE RECENT_SEARCH");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_RECENT_SEARCH);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-		try{
-			db.execSQL("DROP TABLE ARTICULOS");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		db.execSQL(CREATE_ARTICULOS);
-		for(String insert : (new UtilsProducts()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		for(String insert : (new UtilsProducts2()).getInserts()){
-			try{
-				db.execSQL(insert);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
 
-        db.execSQL(CREATE_PRODUCT_IMAGE);
-        Cursor c = null;
-        ArrayList<String> productImageInserts = new ArrayList<>();
-        try {
-            c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
-            int i =0;
-            while (c.moveToNext()){
-                productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
-                        " values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-        for(String insert : productImageInserts){
-            try{
-                db.execSQL(insert);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
 	}
 
 	@Override
 	public void onOpen(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		super.onOpen(db);
-//		Log.d(TAG, "onOpen(SQLiteDatabase db)");
 	}
 	
 //	/**

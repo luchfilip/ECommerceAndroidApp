@@ -1,6 +1,8 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 
@@ -11,8 +13,12 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -157,6 +163,8 @@ public class MainActivity extends AppCompatActivity
                         finishActivityOnResultOperationCanceledException = false;
                         final MainPageSectionDB mainPageSectionDB =
                                 new MainPageSectionDB(MainActivity.this, mCurrentUser);
+
+                        Utils.loadDataFromWS(MainActivity.this, mCurrentUser);
 
                         runOnUiThread(new Runnable() {
                             @Override

@@ -20,22 +20,22 @@ public class InvoicesListActivity extends AppCompatActivity implements InvoicesL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoices_list);
 
-        if(findViewById(R.id.invoice_detail_container) != null){
-            // If this view is present, then the activity should be
-            // in two-pane mode.
-            mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.invoice_detail_container, new InvoiceDetailFragment(),
-                                INVOICEDETAIL_FRAGMENT_TAG)
-                        .commit();
-            }
-        }else{
-            mTwoPane = false;
-        }
+//        if(findViewById(R.id.invoice_detail_container) != null){
+//            // If this view is present, then the activity should be
+//            // in two-pane mode.
+//            mTwoPane = true;
+//            // In two-pane mode, show the detail view in this activity by
+//            // adding or replacing the detail fragment using a
+//            // fragment transaction.
+//            if(savedInstanceState == null){
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.invoice_detail_container, new InvoiceDetailFragment(),
+//                                INVOICEDETAIL_FRAGMENT_TAG)
+//                        .commit();
+//            }
+//        }else{
+//            mTwoPane = false;
+//        }
 
         getSupportActionBar().setElevation(0);
     }
@@ -43,15 +43,15 @@ public class InvoicesListActivity extends AppCompatActivity implements InvoicesL
     @Override
     public void onItemSelected(Invoice invoice) {
         if(mTwoPane){
-            Bundle args = new Bundle();
-            args.putInt(InvoiceDetailActivity.KEY_INVOICE_ID, invoice.getId());
-
-            InvoiceDetailFragment fragment = new InvoiceDetailFragment();
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.invoice_detail_container, fragment, INVOICEDETAIL_FRAGMENT_TAG)
-                    .commit();
+            //Bundle args = new Bundle();
+            //args.putInt(InvoiceDetailActivity.KEY_INVOICE_ID, invoice.getId());
+            //
+            //InvoiceDetailFragment fragment = new InvoiceDetailFragment();
+            //fragment.setArguments(args);
+            //
+            //getSupportFragmentManager().beginTransaction()
+            //        .replace(R.id.invoice_detail_container, fragment, INVOICEDETAIL_FRAGMENT_TAG)
+            //        .commit();
         }else{
             Intent intent = new Intent(InvoicesListActivity.this, InvoiceDetailActivity.class);
             intent.putExtra(InvoiceDetailActivity.KEY_INVOICE_ID, invoice.getId());

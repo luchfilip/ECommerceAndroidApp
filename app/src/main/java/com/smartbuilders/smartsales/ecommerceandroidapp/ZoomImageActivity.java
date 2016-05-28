@@ -82,6 +82,16 @@ public class ZoomImageActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -97,5 +107,4 @@ public class ZoomImageActivity extends AppCompatActivity
         outState.putString(STATE_IMAGE_FILE_NAME, mImageFileName);
         super.onSaveInstanceState(outState);
     }
-
 }
