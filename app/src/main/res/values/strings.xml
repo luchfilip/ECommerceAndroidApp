@@ -14,7 +14,7 @@
     <string name="title_activity_product_detail">Detalle del Producto</string>
     <string name="related_products">Productos Relacionados</string>
     <string name="related_shopping_products">Clientes que compraron este producto también compraron</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Iniciar Sesión</string>
     <string name="product_details_label">Detalles del Producto</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
@@ -86,16 +86,16 @@
     <string name="user_already_registered">User already registered in the application.</string>
     <string name="error_server_address_ioexception">The connection couldn\'t be established</string>
     <string name="error_server_address_malformedurlexception">The URL is not in a valid form</string>
-    <string name="server_address">Server Address</string>
-    <string name="user_name">User Name</string>
-    <string name="sync_user_group">Synchronization User Group</string>
-    <string name="password">Password</string>
+    <string name="server_address">Dirección del servidor</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="sync_user_group">Grupo de sincronización</string>
+    <string name="password">Contraseña</string>
     <string name="company_host_name">www.febeca.com</string>
 
     <!-- Strings related to login -->
     <string name="prompt_rif">R.I.F.</string>
     <string name="prompt_client_code">Client code</string>
-    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in">Iniciar Sesión</string>
     <string name="error_invalid_rif">This R.I.F. is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_client_code">This client code is incorrect</string>
@@ -228,4 +228,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="settings">Configuraciones</string>
+    <string name="welcome_message_login_activity">Bienvenido al catálogo dígital</string>
 </resources>

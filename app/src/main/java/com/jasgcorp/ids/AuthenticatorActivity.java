@@ -63,6 +63,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAccountManager = AccountManager.get(getBaseContext());
 
         String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
@@ -131,7 +132,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void submit() {
-        final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
+        //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
+        final String userGroup 		= "catalogo";
         final String userName 		= ((TextView) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((TextView) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= ((TextView) findViewById(R.id.server_address)).getText().toString();

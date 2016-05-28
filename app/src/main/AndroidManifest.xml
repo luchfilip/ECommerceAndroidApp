@@ -71,7 +71,8 @@
         <activity
             android:name="com.jasgcorp.ids.AuthenticatorActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.WithActionBar" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
 
         <provider
             android:name=".providers.CachedFileProvider"
