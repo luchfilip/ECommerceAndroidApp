@@ -467,7 +467,45 @@ public class Utils {
         }
     }
 
-    public static void loadDataFromWS(Context context, User user) {
+    public static boolean appRequireInitialLoad(Context context, User user) {
+        Cursor c = null;
+        DatabaseHelper dbh;
+        SQLiteDatabase db = null;
+        try{
+            dbh = new DatabaseHelper(context, user);
+            db = dbh.getWritableDatabase();
+            String[] tables = new String[]{"ARTICULOS", "BRAND", "Category", "MAINPAGE_PRODUCT_ID",
+                    "MAINPAGE_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
+
+            for (String table : tables){
+                c = db.rawQuery("select count(*) from " + table, null);
+                if(c.moveToNext() && c.getInt(0)==0) {
+                    return true;
+                }
+                c.close();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c!=null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (db!=null) {
+                try {
+                    db.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void loadInitialDataFromWS(Context context, User user) {
         long initTime = System.currentTimeMillis();
         Cursor c = null;
         DatabaseHelper dbh;
@@ -616,45 +654,6 @@ public class Utils {
                     e.getMessage();
                 }
             }
-
-            //c = getDataFromWS(context, "select * from ECommerce_Order", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("ECOMMERCE_ORDER", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
-
-            //c = getDataFromWS(context, "select * from ECommerce_OrderLine", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("ECOMMERCE_ORDERLINE", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
-
-            //c = getDataFromWS(context, "select * from Recent_Search", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("RECENT_SEARCH", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -677,10 +676,10 @@ public class Utils {
     }
 
     public static Cursor getDataFromWS(final Context context, final String sql, final User user){
-        try {
-            return new AsyncTask<Void, Void, Cursor>() {
-                @Override
-                protected Cursor doInBackground(Void... voids) {
+//        try {
+//            return new AsyncTask<Void, Void, Cursor>() {
+//                @Override
+//                protected Cursor doInBackground(Void... voids) {
                     try {
                         return context.getContentResolver().query(DataBaseContentProvider
                                         .REMOTE_DB_URI.buildUpon()
@@ -694,11 +693,11 @@ public class Utils {
                         e.printStackTrace();
                     }
                     return null;
-                }
-            }.execute().get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+//                }
+//            }.execute().get();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 }

@@ -184,6 +184,54 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkInitialLoad();
+    }
+
+    /**
+     * Verifica si tiene que realizar la carga inicial de las tablas de la aplicacion
+     */
+    private void checkInitialLoad() {
+        if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
+            waitPlease = ProgressDialog.show(this, getString(R.string.loading_data),
+                    getString(R.string.wait_please), true, false);
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        Utils.loadInitialDataFromWS(MainActivity.this, mCurrentUser);
+                        final MainPageSectionDB mainPageSectionDB =
+                                new MainPageSectionDB(MainActivity.this, mCurrentUser);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadMainPage(mainPageSectionDB.getActiveMainPageSections());
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+
+                    } finally {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    waitPlease.dismiss();
+                                    waitPlease.cancel();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            }.start();
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);

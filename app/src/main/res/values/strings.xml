@@ -165,6 +165,7 @@
     <string name="qty_ordered_title">Cantidad pedida</string>
     <string name="related_products_by_brand_title">Más productos de la marca %1$s</string>
     <string name="loading">Cargando</string>
+    <string name="loading_data">Cargando Datos</string>
     <string name="buy">Comprar</string>
     <string name="sell">Vender</string>
     <string name="title_activity_settings">Configuraciones</string>
