@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -533,32 +534,6 @@ public class Utils {
             c.close();
             c=null;
 
-            //c = getDataFromWS(context, "select * from ECommerce_Order", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("ECOMMERCE_ORDER", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
-
-            //c = getDataFromWS(context, "select * from ECommerce_OrderLine", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("ECOMMERCE_ORDERLINE", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
-
             c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY " +
                     " from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
             while (c.moveToNext()) {
@@ -594,7 +569,7 @@ public class Utils {
             c=null;
 
             c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME " +
-                    " from Product_Availability where ISACTIVE = 'Y'", user);
+                    " from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
             while (c.moveToNext()) {
                 try {
                     cv.clear();
@@ -627,35 +602,6 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES " +
-                    " from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'", user);
-            while (c.moveToNext()) {
-                try {
-                    cv.clear();
-                    cv.put("PRODUCT_ID", c.getInt(0));
-                    cv.put("PRODUCT_RELATED_ID", c.getInt(1));
-                    cv.put("TIMES", c.getInt(2));
-                    db.insertWithOnConflict("PRODUCT_SHOPPING_RELATED", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                }catch(Exception e){
-                    e.getMessage();
-                }
-            }
-            c.close();
-            c=null;
-
-            //c = getDataFromWS(context, "select * from Recent_Search", user);
-            //while (c.moveToNext()) {
-            //    try {
-            //        cv.clear();
-            //        cv.put("", "");
-            //        db.insertWithOnConflict("RECENT_SEARCH", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-            //    }catch(Exception e){
-            //        e.getMessage();
-            //    }
-            //}
-            //c.close();
-            //c=null;
-
             c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION " +
                     " from SUBCATEGORY where ISACTIVE = 'Y'", user);
             while (c.moveToNext()) {
@@ -670,6 +616,45 @@ public class Utils {
                     e.getMessage();
                 }
             }
+
+            //c = getDataFromWS(context, "select * from ECommerce_Order", user);
+            //while (c.moveToNext()) {
+            //    try {
+            //        cv.clear();
+            //        cv.put("", "");
+            //        db.insertWithOnConflict("ECOMMERCE_ORDER", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            //    }catch(Exception e){
+            //        e.getMessage();
+            //    }
+            //}
+            //c.close();
+            //c=null;
+
+            //c = getDataFromWS(context, "select * from ECommerce_OrderLine", user);
+            //while (c.moveToNext()) {
+            //    try {
+            //        cv.clear();
+            //        cv.put("", "");
+            //        db.insertWithOnConflict("ECOMMERCE_ORDERLINE", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            //    }catch(Exception e){
+            //        e.getMessage();
+            //    }
+            //}
+            //c.close();
+            //c=null;
+
+            //c = getDataFromWS(context, "select * from Recent_Search", user);
+            //while (c.moveToNext()) {
+            //    try {
+            //        cv.clear();
+            //        cv.put("", "");
+            //        db.insertWithOnConflict("RECENT_SEARCH", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            //    }catch(Exception e){
+            //        e.getMessage();
+            //    }
+            //}
+            //c.close();
+            //c=null;
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -691,14 +676,29 @@ public class Utils {
         }
     }
 
-    private static Cursor getDataFromWS(Context context, String sql, User user){
-        return context.getContentResolver().query(DataBaseContentProvider
-                        .REMOTE_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(),
-                null,
-                sql,
-                null,
-                null);
+    public static Cursor getDataFromWS(final Context context, final String sql, final User user){
+        try {
+            return new AsyncTask<Void, Void, Cursor>() {
+                @Override
+                protected Cursor doInBackground(Void... voids) {
+                    try {
+                        return context.getContentResolver().query(DataBaseContentProvider
+                                        .REMOTE_DB_URI.buildUpon()
+                                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                                        .build(),
+                                null,
+                                sql,
+                                null,
+                                null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

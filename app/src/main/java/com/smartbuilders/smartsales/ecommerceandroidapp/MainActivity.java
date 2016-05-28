@@ -1,8 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 
@@ -13,12 +11,8 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -130,18 +124,10 @@ public class MainActivity extends AppCompatActivity
         new Thread() {
             @Override
             public void run() {
-
                 try {
                     final Account availableAccounts[] = mAccountManager
                             .getAccountsByType(getString(R.string.authenticator_acount_type));
                     if (availableAccounts != null && availableAccounts.length > 0) {
-                        //Se carga la lista de los usuarios del panel izquierdo
-                        //String[] accountsNames = new String[availableAccounts.length];
-                        //for (int i = 0; i < availableAccounts.length; i++) {
-                        //    accountsNames[i] = mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_GROUP) +
-                        //            ": " + mAccountManager.getUserData(availableAccounts[i], AccountGeneral.USERDATA_USER_NAME);
-                        //}
-
                         if (mCurrentUser != null) {
                             for (int i = 0; i < availableAccounts.length; i++) {
                                 if (mAccountManager.getUserData(availableAccounts[i],
@@ -164,16 +150,19 @@ public class MainActivity extends AppCompatActivity
                         final MainPageSectionDB mainPageSectionDB =
                                 new MainPageSectionDB(MainActivity.this, mCurrentUser);
 
-                        Utils.loadDataFromWS(MainActivity.this, mCurrentUser);
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 loadMainPage(mainPageSectionDB.getActiveMainPageSections());
+
+                                Bundle settingsBundle = new Bundle();
+                                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                                ContentResolver.requestSync(mAccount, getString(R.string.sync_adapter_content_authority), settingsBundle);
+
+                                Utils.createImageFiles(MainActivity.this, mCurrentUser);
                             }
                         });
-
-                        Utils.createImageFiles(MainActivity.this, mCurrentUser);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

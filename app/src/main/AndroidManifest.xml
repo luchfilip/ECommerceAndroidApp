@@ -125,6 +125,24 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.jasgcorp.ids.scheduler.AlarmReceiver.Action" />
+            </intent-filter>
+        </receiver>
+        <!-- Para revisar el estado de la sincronizacion automatica cuando cambia
+        el tipo de conexion de red. Ya sea que se apague o encienda el wi-fi, se conecte
+        a una red de wi-fi, etc. -->
+        <receiver
+            android:name="com.jasgcorp.ids.system.broadcastreceivers.NetworkReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".CategoriesListActivity"
             android:theme="@style/AppTheme.NoActionBar"
