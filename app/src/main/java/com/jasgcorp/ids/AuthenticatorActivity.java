@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,6 +133,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void submit() {
+        try {
+            if(getWindow()!=null){
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
         final String userGroup 		= "catalogo";
         final String userName 		= ((TextView) findViewById(R.id.accountName)).getText().toString();

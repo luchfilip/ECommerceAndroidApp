@@ -178,7 +178,6 @@ public class Utils {
     public static void createFileInThumbDir(String fileName, Bitmap image, User user, Context ctx){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            //Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
             Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the image file in the external storage
@@ -196,7 +195,6 @@ public class Utils {
             } catch (IOException e1) {
                 e1.printStackTrace();
                 createImageFiles(ctx, user);
-                //Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -212,7 +210,6 @@ public class Utils {
     public static void createFileInOriginalDir(String fileName, Bitmap image, User user, Context ctx){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            //Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
             Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the image file in the external storage
@@ -229,6 +226,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
+                createImageFiles(ctx, user);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -519,7 +517,7 @@ public class Utils {
                     " USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
                     " UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE " +
                     " from ARTICULOS where ACTIVO = 'V'", user);
-            String insertSentence = new String("INSERT INTO ARTICULOS (IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            String insertSentence = new String("INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0),
@@ -534,7 +532,7 @@ public class Utils {
             c=null;
 
             c = getDataFromWS(context, "select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
+            insertSentence = new String("INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
@@ -546,7 +544,7 @@ public class Utils {
             c=null;
 
             c = getDataFromWS(context, "select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
+            insertSentence = new String("INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
@@ -557,9 +555,8 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY " +
-                    " from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
@@ -570,9 +567,8 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY " +
-                    " from MAINPAGE_SECTION where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_SECTION where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
@@ -583,9 +579,8 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME " +
-                    " from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
@@ -596,9 +591,8 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY " +
-                    " from PRODUCT_IMAGE where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
@@ -609,13 +603,24 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION " +
-                    " from SUBCATEGORY where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
                     db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
+                    e.getMessage();
+                }
+            }
+            c.close();
+            c=null;
+
+            c = getDataFromWS(context, "select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
+            while (c.moveToNext()) {
+                try {
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
+                } catch(Exception e) {
                     e.getMessage();
                 }
             }
