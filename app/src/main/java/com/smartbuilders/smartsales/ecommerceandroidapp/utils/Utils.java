@@ -1,17 +1,14 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -579,11 +576,11 @@ public class Utils {
             c.close();
             c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME) VALUES (?, ?, ?, ?)");
+            c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
             while (c.moveToNext()) {
                 try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1)});
                 }catch(Exception e){
                     e.getMessage();
                 }

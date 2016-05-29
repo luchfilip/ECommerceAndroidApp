@@ -215,7 +215,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		//	: (getDBDirectory(context, DATABASE_NAME)==USING_INTERNAL_STORAGE ? DATABASE_NAME : context.getExternalFilesDir(null).getAbsolutePath()+"/"+DATABASE_NAME)
 		//	, null, DATABASE_VERSION);
 		this.dataBaseName = DATABASE_NAME;
-//    	Log.d(TAG, "DatabaseHelper("+DATABASE_NAME+")");
 	}
 	
 	/**
@@ -234,7 +233,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		//	: (getDBDirectory(context, dataBaseName)==USING_INTERNAL_STORAGE ? dataBaseName : context.getExternalFilesDir(null).getAbsolutePath()+"/"+dataBaseName)
 		//	, null, DATABASE_VERSION);
 		this.dataBaseName = ApplicationUtilities.getDatabaseNameByUser(user);
-//    	Log.d(TAG, "DatabaseHelper("+user+", "+dataBaseName+")");
 	}
 	
 	@Override
@@ -247,166 +245,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
             db.execSQL(CREATE_ARTICULOS);
-			//for(String insert : (new UtilsProducts()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProducts2()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
             db.execSQL(CREATE_PRODUCT_IMAGE);
-			//Cursor c = null;
-			//ArrayList<String> productImageInserts = new ArrayList<>();
-			//try {
-			//	c = db.rawQuery("select IDARTICULO, CODVIEJO from articulos", null);
-			//	int i =0;
-			//	while (c.moveToNext()){
-			//		productImageInserts.add("insert into PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) " +
-			//				" values ("+(++i)+", "+c.getInt(0)+", '"+c.getString(1)+".jpg', 1)");
-			//	}
-			//} catch (Exception e) {
-			//	e.printStackTrace();
-			//} finally {
-			//	if (c != null) {
-			//	   c.close();
-			//	}
-			//}
-			//for(String insert : productImageInserts){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-
 			db.execSQL(CREATE_BRAND);
-			//for(String insert : (new UtilsBrands()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_CATEGORY);
-			//for(String insert : (new UtilsCategory()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_SUBCATEGORY);
-			//for(String insert : (new UtilsSubCategory()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_MAINPAGE_SECTION);
-			//for(String insert : (new UtilsMainPageSection()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_MAINPAGE_PRODUCT);
-			//for(String insert : (new UtilsMainPageProduct()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
 			db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-			//for(String insert : (new UtilsProductAvailability()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
-			//for(String insert : (new UtilsProductShoppingRelated0()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated1()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated2()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated3()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated4()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated5()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated6()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated7()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated8()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
-			//for(String insert : (new UtilsProductShoppingRelated9()).getInserts()){
-			//	try{
-			//		db.execSQL(insert);
-			//	}catch(Exception e){
-			//		e.printStackTrace();
-			//	}
-			//}
 			db.execSQL(CREATE_RECENT_SEARCH);
 		}
 	}
