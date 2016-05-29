@@ -153,17 +153,9 @@ public class OrderDB {
     }
 
     private Order getLastOrderByDocType(String docType){
-        //SQLiteDatabase db = null;
         Cursor c = null;
         Order order = null;
         try {
-            //db = dbh.getReadableDatabase();
-            //c = db.rawQuery("SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
-            //            " ISACTIVE, CREATE_TIME, UPDATE_TIME, APP_VERSION, APP_USER_NAME, " +
-            //            " ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
-            //        " FROM ECOMMERCE_ORDER " +
-            //        " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)",
-            //        new String[]{"Y", docType});
             String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
                     " FROM ECOMMERCE_ORDER " +
                     " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
@@ -195,13 +187,6 @@ public class OrderDB {
                     e.printStackTrace();
                 }
             }
-            //if(db != null) {
-            //    try {
-            //        db.close();
-            //    } catch (Exception e) {
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return order;
     }
@@ -221,15 +206,10 @@ public class OrderDB {
      */
     private ArrayList<Order> getActiveOrders(String docType){
         ArrayList<Order> activeOrders = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
-            //c = db.query("ECOMMERCE_ORDER", new String[]{"ECOMMERCE_ORDER_ID", "CB_PARTNER_ID",
-            //        "DOC_STATUS", "CREATE_TIME", "UPDATE_TIME", "APP_VERSION", "APP_USER_NAME",
-            //        "ORDERLINES_NUMBER", "SUB_TOTAL", "TAX", "TOTAL"},
-            //        "ISACTIVE = ? AND DOC_TYPE = ?", new String[]{"Y", docType}, null, null, "CREATE_TIME DESC");
-            String sql = "SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
+            String sql = "SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+                    " APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
                     " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
@@ -260,13 +240,6 @@ public class OrderDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         for(Order order : activeOrders){
@@ -274,43 +247,5 @@ public class OrderDB {
         }
         return activeOrders;
     }
-
-    //public String updateOrder(Order order){
-    //    //SQLiteDatabase db = null;
-    //    try {
-    //        //db = dbh.getWritableDatabase();
-    //        //ContentValues cv = new ContentValues();
-    //        //cv.put("ORDERLINES_NUMBER", order.getOrderLinesNumber());
-    //        //cv.put("SUB_TOTAL", order.getSubTotalAmount());
-    //        //cv.put("TAX", order.getTaxAmount());
-    //        //cv.put("TOTAL", order.getTotalAmount());
-    //        //cv.put("UPDATE_TIME", "datetime('now')");
-    //        //if(db.update ("ECOMMERCE_ORDER", cv, "ECOMMERCE_ORDER_ID=?",
-    //        //        new String[]{ Integer.valueOf(order.getId()).toString()})<1) {
-    //        //    return "No se actualizó el registro en la base de datos.";
-    //        //}
-    //        if(context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-    //                .build(), null,
-    //                "UPDATE ECOMMERCE_ORDER SET ORDERLINES_NUMBER = ?, SUB_TOTAL = ?, TAX = ?, TOTAL = ?, UPDATE_TIME = ? WHERE ECOMMERCE_ORDER_ID = ?",
-    //                new String[]{String.valueOf(order.getOrderLinesNumber()), String.valueOf(order.getSubTotalAmount()),
-    //                        String.valueOf(order.getTaxAmount()), String.valueOf(order.getTotalAmount()), "datetime('now')" ,
-    //                        String.valueOf(order.getId())}) < 1){
-    //            return "No se actualizó el registro en la base de datos.";
-    //        }
-    //    } catch (Exception e){
-    //        e.printStackTrace();
-    //        return e.getMessage();
-    //    } //finally {
-    //    //    if(db != null) {
-    //    //        try {
-    //    //            db.close();
-    //    //        } catch (Exception e) {
-    //    //            e.printStackTrace();
-    //    //        }
-    //    //    }
-    //    //}
-    //    return null;
-    //}
 
 }

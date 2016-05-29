@@ -20,7 +20,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * http://developer.android.com/guide/topics/providers/content-provider-creating.html
@@ -28,8 +27,7 @@ import android.util.Log;
  *
  */
 public class DataBaseContentProvider extends ContentProvider implements OnAccountsUpdateListener {
-	
-	private static final String TAG = DataBaseContentProvider.class.getSimpleName();
+
 	public static final String AUTHORITY = "com.smartbuilders.smartsales.providers.Syncadapter";
 	
 	public static final String KEY_USER_ID 						= "com.jasgcorp.ids.providers.DataBaseContentProvider.USER_ID";
@@ -80,9 +78,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	@Override
 	public boolean onCreate() {
 		//TODO: manejar permisos en el manifest para mejorar la seguridad
-		Log.d(TAG, "onCreate()");
         if(dbHelper == null) {
-            Log.d(TAG, "Crear la instanciacion del dbHelper");
 		    dbHelper = new DatabaseHelper(getContext());
         }
 		mAccountManager = AccountManager.get(getContext());
@@ -92,15 +88,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		Cursor response = null;
+		Cursor response;
 		switch (uriMatcher.match(uri)) {
 	    	case INTERNAL_DB:
-	    		//SQLiteDatabase db;
 	    		if(uri.getQueryParameter(KEY_USER_ID)!=null){
-	    			//User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-	    			//db = new DatabaseHelper(getContext(), user).getReadableDatabase();
                     if (mUserReadableDB==null) {
-                        Log.v(TAG, "Tomar la base de datos especifica del usuario.");
                         mUserReadableDB = new DatabaseHelper(getContext(), ApplicationUtilities
                                 .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
                     }
@@ -111,7 +103,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                     }
                     response = mIDSReadableDB.rawQuery(selection, selectionArgs);
 	    		}
-                //response = db.rawQuery(selection, selectionArgs);
 			break;
 	        case REMOTE_DB:
 	        	response = execQueryRemoteDB(uri, selection);
@@ -127,24 +118,18 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 		int response = 0;
 		switch (uriMatcher.match(uri)) {
 	    	case INTERNAL_DB:
-	    		//SQLiteDatabase db;
 	    		if(uri.getQueryParameter(KEY_USER_ID)!=null){
-	    			//User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-	    			//db = new DatabaseHelper(getContext(), user).getReadableDatabase();
 					if(mUserWriteableDB==null){
-                        Log.v(TAG, "Tomar la base de datos especifica del usuario.");
                         mUserWriteableDB = new DatabaseHelper(getContext(), ApplicationUtilities
                                 .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
                     }
                     mUserWriteableDB.execSQL(selection, selectionArgs);
 	    		}else{
-	    			//db = dbHelper.getWritableDatabase();
                     if(mIDSWriteableDB==null){
                         mIDSWriteableDB = dbHelper.getWritableDatabase();
                     }
                     mIDSWriteableDB.execSQL(selection, selectionArgs);
 	    		}
-    			//db.execSQL(selection, selectionArgs);
 	    		response = 1;
 			break;
 	        case REMOTE_DB:
@@ -153,7 +138,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	        case DROP_USER_DB:
 	        	if(uri.getQueryParameter(KEY_USER_DB_NAME)!=null
 					&& uri.getQueryParameter(KEY_USER_SAVE_DB_EXTERNAL_CARD)!=null){
-	    			Log.v(TAG, "Borrar la base de datos especifica del usuario.");
 	    			getContext().deleteDatabase(uri.getQueryParameter(KEY_USER_DB_NAME));
 	    		}else{
 	    			throw new IllegalArgumentException("Incomplete URI " + uri);
@@ -184,12 +168,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	 * @throws SocketException 
 	 */
 	private Cursor execQueryRemoteDB(Uri uri, String sql) {
-		Cursor cursor = null;
+		Cursor cursor;
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			Log.d(TAG, "execQueryRemoteDB("+sql+")");
 			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
@@ -203,7 +186,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			try {
 				Object result = a.getWSResponse();
 				if(result instanceof SoapPrimitive){
-					cursor = ApplicationUtilities.parseJsonCursorToCursor(((SoapPrimitive) result).toString());
+					cursor = ApplicationUtilities.parseJsonCursorToCursor(result.toString());
 				}else if (result !=null){
 					throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), ClassCastException.");
 				}else{
@@ -224,13 +207,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	 * @return
 	 */
 	private int execUpdateRemoteDB(Uri uri, String sql){
-		int rowsAffected = 0;
+		int rowsAffected;
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			Log.d(TAG, "execUpdateRemoteDB("+user+", "+sql+")");
-			
 			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
@@ -244,7 +225,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			try {
 				Object result = a.getWSResponse();
 				if(result instanceof SoapPrimitive){
-					rowsAffected = Integer.valueOf(((SoapPrimitive) result).toString());
+					rowsAffected = Integer.valueOf(result.toString());
 				}else if (result==null){
 					throw new NullPointerException("Error while executing execUpdateRemoteDB("+user+", "+sql+"), result is null.");
 				}else{

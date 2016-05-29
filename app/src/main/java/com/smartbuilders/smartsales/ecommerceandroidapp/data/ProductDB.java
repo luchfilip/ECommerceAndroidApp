@@ -2,10 +2,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
@@ -24,20 +22,16 @@ public class ProductDB {
 
     private Context context;
     private User user;
-    //private DatabaseHelper dbh;
 
     public ProductDB(Context context, User user){
         this.context = context;
         this.user = user;
-        //this.dbh = new DatabaseHelper(context, user);
     }
 
     public ArrayList<Product> getRelatedShoppingProductsByProductId(int productId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                     " PA.AVAILABILITY, OL.PRODUCT_ID " +
@@ -54,19 +48,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
-            //        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-            //        " PA.AVAILABILITY, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
-            //            " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = " + productId +
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE A.IDARTICULO <> " + productId +
-            //        " ORDER BY R.TIMES DESC " +
-            //        ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -88,23 +69,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getRelatedProductsBySubCategoryId(int subCategoryId, int productId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                     " PA.AVAILABILITY, OL.PRODUCT_ID " +
@@ -121,19 +93,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
-            //        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-            //        " PA.AVAILABILITY, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE A.IDPARTIDA = "+subCategoryId +
-            //            " AND A.IDARTICULO <> " + productId +
-            //        " ORDER BY A.NOMBRE ASC " +
-            //        ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -155,23 +114,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getRelatedProductsByBrandId(int brandId, int productId, Integer limit){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
                     " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                     " PA.AVAILABILITY, OL.PRODUCT_ID " +
@@ -188,19 +138,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.NOMBRE, PI.FILE_NAME, B.BRAND_ID, " +
-            //        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-            //        " PA.AVAILABILITY, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE B.BRAND_ID = "+brandId +
-            //            " AND A.IDARTICULO <> " + productId +
-            //        " ORDER BY A.NOMBRE ASC " +
-            //        ((limit!=null && limit>0) ? " LIMIT " + limit : ""), null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -222,23 +159,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -255,19 +183,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-            //        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-            //        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-            //        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE A.IDPARTIDA = "+subCategoryId +
-            //        " ORDER BY A.NOMBRE ASC ", null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -301,23 +216,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getProductsByCategoryId(int categoryId){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -333,19 +239,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-            //        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-            //        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-            //        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE S.CATEGORY_ID = "+categoryId + " ORDER BY A.NOMBRE ASC ", null);
-
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -379,23 +272,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getProductsByBrandId(int brandId){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -411,18 +295,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-            //        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-            //        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-            //        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE A.IDMARCA = "+brandId+" ORDER BY A.NOMBRE ASC", null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -456,23 +328,14 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public ArrayList<Product> getProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -490,20 +353,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-            //        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-            //        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-            //        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
-            //            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //        " WHERE A.NOMBRE LIKE '"+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
-            //        " OR A.NOMBRE LIKE '% "+name.replaceAll("\\s+", " ").trim()+"%' COLLATE NOCASE " +
-            //        " ORDER BY A.NOMBRE ASC", null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -537,13 +386,6 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
@@ -566,10 +408,8 @@ public class ProductDB {
             return products;
         }
 
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                     " FROM ARTICULOS A " +
                     " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
@@ -582,15 +422,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
-            //        " FROM ARTICULOS A " +
-            //            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' "+
-            //        (isNumeric ? " WHERE A.CODVIEJO LIKE '"+name+"%' "
-            //                : " WHERE A.NOMBRE LIKE '"+name+"%' COLLATE NOCASE " +
-            //                (name.length() > 1 ? " OR A.NOMBRE LIKE '% "+name+"%' COLLATE NOCASE " : "")) +
-            //        (isNumeric ? " ORDER BY A.CODVIEJO ASC LIMIT 15"
-            //                : (name.length()==1 ? " ORDER BY A.NOMBRE ASC LIMIT 50" : " ORDER BY A.NOMBRE ASC")), null);
             whileStatement:
             while(c.moveToNext()){
                 Product p = new Product();
@@ -629,22 +460,13 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return products;
     }
 
     public Product getProductById(int id, boolean useProductCode){
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                     " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                     " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -660,18 +482,6 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-            //                " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-            //                " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-            //                " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-            //                " FROM ARTICULOS A " +
-            //                    " INNER JOIN BRAND B ON B.BRAND_ID = IDMARCA AND B.ISACTIVE = 'Y' " +
-            //                    " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = 'Y' " +
-            //                    " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = 'Y' " +
-            //                    " LEFT JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' " +
-            //                    " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = 1 " +
-            //                    " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = '" + OrderLineDB.WISHLIST_DOCTYPE + "' " +
-            //                " WHERE A.IDARTICULO = "+id+" ORDER BY A.NOMBRE ASC", null);
             if(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -705,13 +515,6 @@ public class ProductDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return null;
     }

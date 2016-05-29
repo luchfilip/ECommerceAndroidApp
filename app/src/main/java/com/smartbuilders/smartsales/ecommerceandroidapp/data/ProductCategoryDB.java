@@ -2,9 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
@@ -20,20 +18,16 @@ public class ProductCategoryDB {
 
     private Context context;
     private User user;
-    //private DatabaseHelper dbh;
 
     public ProductCategoryDB(Context context, User user){
         this.context = context;
         this.user = user;
-        //this.dbh = new DatabaseHelper(context, user);
     }
 
     public ArrayList<ProductCategory> getActiveProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
-        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            //db = dbh.getReadableDatabase();
             String sql = "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
                     " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
@@ -43,12 +37,6 @@ public class ProductCategoryDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);
-            //c = db.rawQuery("SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
-            //        " FROM CATEGORY C " +
-            //            " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
-            //            " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-            //        " WHERE C.ISACTIVE = 'Y' " +
-            //        " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ", null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
@@ -79,13 +67,6 @@ public class ProductCategoryDB {
                     e.printStackTrace();
                 }
             }
-            //if(db!=null){
-            //    try {
-            //        db.close();
-            //    } catch (Exception e){
-            //        e.printStackTrace();
-            //    }
-            //}
         }
         return categories;
     }

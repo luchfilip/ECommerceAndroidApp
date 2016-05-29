@@ -457,8 +457,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	}
 	
 	/**
-	 * 
-	 * @param serverAddress
+	 *
 	 * @param uri
 	 * @return
 	 */
