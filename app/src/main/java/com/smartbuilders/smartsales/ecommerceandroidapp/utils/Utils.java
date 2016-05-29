@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -194,6 +195,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
+                createImageFiles(ctx, user);
                 //Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -510,7 +512,6 @@ public class Utils {
         Cursor c = null;
         DatabaseHelper dbh;
         SQLiteDatabase db = null;
-        ContentValues cv = new ContentValues();;
         try{
             dbh = new DatabaseHelper(context, user);
             db = dbh.getWritableDatabase();
@@ -518,23 +519,13 @@ public class Utils {
                     " USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
                     " UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE " +
                     " from ARTICULOS where ACTIVO = 'V'", user);
+            String insertSentence = new String("INSERT INTO ARTICULOS (IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("IDARTICULO", c.getInt(0));
-                    cv.put("IDPARTIDA", c.getInt(1));
-                    cv.put("IDMARCA", c.getInt(2));
-                    cv.put("NOMBRE", c.getString(3));
-                    cv.put("DESCRIPCION", c.getString(4));
-                    cv.put("USO", c.getString(5));
-                    cv.put("OBSERVACIONES", c.getString(6));
-                    cv.put("IDREFERENCIA", c.getString(7));
-                    cv.put("NACIONALIDAD", c.getString(8));
-                    cv.put("CODVIEJO", c.getString(9));
-                    cv.put("UNIDADVENTA_COMERCIAL", c.getInt(10));
-                    cv.put("EMPAQUE_COMERCIAL", c.getString(11));
-                    cv.put("LAST_RECEIVED_DATE", c.getString(12));
-                    db.insertWithOnConflict("ARTICULOS", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0),
+                            c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5),
+                            c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10),
+                            c.getString(11), c.getString(12)});
                 } catch(Exception e) {
                     e.getMessage();
                 }
@@ -543,13 +534,10 @@ public class Utils {
             c=null;
 
             c = getDataFromWS(context, "select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("BRAND_ID", c.getInt(0));
-                    cv.put("NAME", c.getString(1));
-                    cv.put("DESCRIPTION", c.getString(2));
-                    db.insertWithOnConflict("BRAND", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -558,13 +546,10 @@ public class Utils {
             c=null;
 
             c = getDataFromWS(context, "select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("CATEGORY_ID", c.getInt(0));
-                    cv.put("NAME", c.getString(1));
-                    cv.put("DESCRIPTION", c.getString(2));
-                    db.insertWithOnConflict("CATEGORY", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -574,14 +559,10 @@ public class Utils {
 
             c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY " +
                     " from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("MAINPAGE_PRODUCT_ID", c.getInt(0));
-                    cv.put("MAINPAGE_SECTION_ID", c.getInt(1));
-                    cv.put("PRODUCT_ID", c.getInt(2));
-                    cv.put("PRIORITY", c.getInt(3));
-                    db.insertWithOnConflict("MAINPAGE_PRODUCT", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -591,14 +572,10 @@ public class Utils {
 
             c = getDataFromWS(context, "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY " +
                     " from MAINPAGE_SECTION where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("MAINPAGE_SECTION_ID", c.getInt(0));
-                    cv.put("NAME", c.getString(1));
-                    cv.put("DESCRIPTION", c.getString(2));
-                    cv.put("PRIORITY", c.getInt(3));
-                    db.insertWithOnConflict("MAINPAGE_SECTION", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -608,14 +585,10 @@ public class Utils {
 
             c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME " +
                     " from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY, CREATE_TIME, UPDATE_TIME) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("PRODUCT_ID", c.getInt(0));
-                    cv.put("AVAILABILITY", c.getInt(1));
-                    cv.put("CREATE_TIME", c.getString(2));
-                    cv.put("UPDATE_TIME", c.getString(3));
-                    db.insertWithOnConflict("PRODUCT_AVAILABILITY", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -625,14 +598,10 @@ public class Utils {
 
             c = getDataFromWS(context, "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY " +
                     " from PRODUCT_IMAGE where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("PRODUCT_IMAGE_ID", c.getInt(0));
-                    cv.put("PRODUCT_ID", c.getInt(1));
-                    cv.put("FILE_NAME", c.getString(2));
-                    cv.put("PRIORITY", c.getInt(3));
-                    db.insertWithOnConflict("PRODUCT_IMAGE", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -642,14 +611,10 @@ public class Utils {
 
             c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION " +
                     " from SUBCATEGORY where ISACTIVE = 'Y'", user);
+            insertSentence = new String("INSERT INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
             while (c.moveToNext()) {
                 try {
-                    cv.clear();
-                    cv.put("SUBCATEGORY_ID", c.getInt(0));
-                    cv.put("CATEGORY_ID", c.getInt(1));
-                    cv.put("NAME", c.getString(2));
-                    cv.put("DESCRIPTION", c.getString(3));
-                    db.insertWithOnConflict("SUBCATEGORY", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
                 }catch(Exception e){
                     e.getMessage();
                 }
@@ -676,28 +641,18 @@ public class Utils {
     }
 
     public static Cursor getDataFromWS(final Context context, final String sql, final User user){
-//        try {
-//            return new AsyncTask<Void, Void, Cursor>() {
-//                @Override
-//                protected Cursor doInBackground(Void... voids) {
-                    try {
-                        return context.getContentResolver().query(DataBaseContentProvider
-                                        .REMOTE_DB_URI.buildUpon()
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                                        .build(),
-                                null,
-                                sql,
-                                null,
-                                null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-//                }
-//            }.execute().get();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
+        try {
+            return context.getContentResolver().query(DataBaseContentProvider
+                            .REMOTE_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                            .build(),
+                    null,
+                    sql,
+                    null,
+                    null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -159,8 +159,6 @@ public class MainActivity extends AppCompatActivity
                                 settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                                 settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                                 ContentResolver.requestSync(mAccount, getString(R.string.sync_adapter_content_authority), settingsBundle);
-
-                                Utils.createImageFiles(MainActivity.this, mCurrentUser);
                             }
                         });
                     }
@@ -190,7 +188,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Verifica si tiene que realizar la carga inicial de las tablas de la aplicacion
+     * Verifica si tiene que
      */
     private void checkInitialLoad() {
         if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
@@ -201,9 +199,9 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     try {
                         Utils.loadInitialDataFromWS(MainActivity.this, mCurrentUser);
+                        Utils.createImageFiles(MainActivity.this, mCurrentUser);
                         final MainPageSectionDB mainPageSectionDB =
                                 new MainPageSectionDB(MainActivity.this, mCurrentUser);
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
