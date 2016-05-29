@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 
 import java.util.ArrayList;
@@ -19,28 +20,35 @@ public class ProductCategoryDB {
 
     private Context context;
     private User user;
-    private DatabaseHelper dbh;
+    //private DatabaseHelper dbh;
 
     public ProductCategoryDB(Context context, User user){
         this.context = context;
         this.user = user;
-        this.dbh = new DatabaseHelper(context, user);
+        //this.dbh = new DatabaseHelper(context, user);
     }
 
     public ArrayList<ProductCategory> getActiveProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
-        SQLiteDatabase db = null;
+        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            db = dbh.getReadableDatabase();
-            c = db.rawQuery("SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
+            //db = dbh.getReadableDatabase();
+            String sql = "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
-                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
-                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-                        //" INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = 'Y' " +
-                        //" INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = 'Y' AND PA.AVAILABILITY>0 " +
+                    " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
+                    " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
                     " WHERE C.ISACTIVE = 'Y' " +
-                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ", null);
+                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ";
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, null, null);
+            //c = db.rawQuery("SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
+            //        " FROM CATEGORY C " +
+            //            " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
+            //            " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
+            //        " WHERE C.ISACTIVE = 'Y' " +
+            //        " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ", null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
@@ -71,13 +79,13 @@ public class ProductCategoryDB {
                     e.printStackTrace();
                 }
             }
-            if(db!=null){
-                try {
-                    db.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+            //if(db!=null){
+            //    try {
+            //        db.close();
+            //    } catch (Exception e){
+            //        e.printStackTrace();
+            //    }
+            //}
         }
         return categories;
     }

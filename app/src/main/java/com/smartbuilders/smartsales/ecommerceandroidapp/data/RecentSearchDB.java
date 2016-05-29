@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ public class RecentSearchDB {
 
     private Context context;
     private User user;
-    private DatabaseHelper dbh;
+    //private DatabaseHelper dbh;
 
     public RecentSearchDB(Context context, User user){
         this.context = context;
         this.user = user;
-        this.dbh = new DatabaseHelper(context, user);
+        //this.dbh = new DatabaseHelper(context, user);
     }
 
     /**
@@ -33,25 +34,29 @@ public class RecentSearchDB {
      * @param subCategoryId
      */
     public void insertRecentSearch(String text, int productId, int subCategoryId){
-        SQLiteDatabase db = null;
+        //SQLiteDatabase db = null;
         try {
-            db = dbh.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("PRODUCT_ID", productId);
-            cv.put("SUBCATEGORY_ID", subCategoryId);
-            cv.put("TEXT_TO_SEARCH", text);
-            db.insert("RECENT_SEARCH", null, cv);
+            //db = dbh.getWritableDatabase();
+            //ContentValues cv = new ContentValues();
+            //cv.put("PRODUCT_ID", productId);
+            //cv.put("SUBCATEGORY_ID", subCategoryId);
+            //cv.put("TEXT_TO_SEARCH", text);
+            //db.insert("RECENT_SEARCH", null, cv);
+            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, "INSERT INTO RECENT_SEARCH (PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH) VALUES (?, ?, ?)",
+                    new String[]{String.valueOf(productId), String.valueOf(subCategoryId), text});
         } catch (Exception e){
             e.printStackTrace();
-        } finally {
-            if(db != null) {
-                try {
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        } //finally {
+        //    if(db != null) {
+        //        try {
+        //            db.close();
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        }
+        //    }
+        //}
     }
 
     /**
@@ -59,21 +64,24 @@ public class RecentSearchDB {
      * @param recentSearchId
      */
     public void deleteRecentSearchById(int recentSearchId){
-        SQLiteDatabase db = null;
+        //SQLiteDatabase db = null;
         try {
-            db = dbh.getWritableDatabase();
-            db.delete("RECENT_SEARCH", "RECENT_SEARCH_ID = ?", new String[]{String.valueOf(recentSearchId)});
+            //db = dbh.getWritableDatabase();
+            //db.delete("RECENT_SEARCH", "RECENT_SEARCH_ID = ?", new String[]{String.valueOf(recentSearchId)});
+            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?", new String[]{String.valueOf(recentSearchId)});
         } catch (Exception e){
             e.printStackTrace();
-        } finally {
-            if(db != null) {
-                try {
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        } //finally {
+        //    if(db != null) {
+        //        try {
+        //            db.close();
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        }
+        //    }
+        //}
     }
 
     /**
@@ -83,12 +91,16 @@ public class RecentSearchDB {
      */
     public ArrayList<RecentSearch> getRecentSearches(int limit){
         ArrayList<RecentSearch> recentSearches = new ArrayList<>();
-        SQLiteDatabase db = null;
+        //SQLiteDatabase db = null;
         Cursor c = null;
         try {
-            db = dbh.getReadableDatabase();
-            c = db.query("RECENT_SEARCH", new String[]{"TEXT_TO_SEARCH", "PRODUCT_ID",
-                    "SUBCATEGORY_ID", "RECENT_SEARCH_ID"}, null, null, null, null, "CREATE_TIME desc");
+            //db = dbh.getReadableDatabase();
+            String sql = "SELECT TEXT_TO_SEARCH, PRODUCT_ID, SUBCATEGORY_ID, RECENT_SEARCH_ID FROM RECENT_SEARCH ORDER BY CREATE_TIME desc" ;
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, null, null);
+            //c = db.query("RECENT_SEARCH", new String[]{"TEXT_TO_SEARCH", "PRODUCT_ID",
+            //        "SUBCATEGORY_ID", "RECENT_SEARCH_ID"}, null, null, null, null, "CREATE_TIME desc");
             while(c.moveToNext()){
                 RecentSearch recentSearch = new RecentSearch();
                 recentSearch.setId(c.getInt(3));
@@ -107,32 +119,35 @@ public class RecentSearchDB {
                     e.printStackTrace();
                 }
             }
-            if (db != null) {
-                try {
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            //if (db != null) {
+            //    try {
+            //        db.close();
+            //    } catch (Exception e) {
+            //        e.printStackTrace();
+            //    }
+            //}
         }
         return recentSearches;
     }
 
     public void deleteAllRecentSearches(){
-        SQLiteDatabase db = null;
+        //SQLiteDatabase db = null;
         try {
-            db = dbh.getWritableDatabase();
-            db.delete("RECENT_SEARCH", null, null);
+            //db = dbh.getWritableDatabase();
+            //db.delete("RECENT_SEARCH", null, null);
+            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, "DELETE FROM RECENT_SEARCH", null);
         } catch (Exception e){
             e.printStackTrace();
-        } finally {
-            if(db != null) {
-                try {
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        } //finally {
+        //    if(db != null) {
+        //        try {
+        //            db.close();
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        }
+        //    }
+        //}
     }
 }

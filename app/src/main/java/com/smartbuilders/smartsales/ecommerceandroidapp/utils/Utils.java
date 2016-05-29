@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -231,57 +232,73 @@ public class Utils {
     }
 
     public static File getFileImageByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
+        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
             return null;
         }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                .append(user.getUserName()).append("/Data_In/original/")
-                .append(fileName).toString());
-        if(imgFile.exists()){
-            return imgFile;
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/original/")
+                    .append(fileName).toString());
+            if(imgFile.exists()){
+                return imgFile;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     public static File getFileThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
+        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
             return null;
         }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                .append(user.getUserName()).append("/Data_In/thumb/")
-                .append(fileName).toString());
-        if(imgFile.exists()){
-            return imgFile;
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/thumb/")
+                    .append(fileName).toString());
+            if(imgFile.exists()){
+                return imgFile;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
+        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
             return null;
         }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                .append(user.getUserName()).append("/Data_In/original/")
-                .append(fileName).toString());
-        if(imgFile.exists()){
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/original/")
+                    .append(fileName).toString());
+            if(imgFile.exists()){
+                return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName)){
+        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
             return null;
         }
-        File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                        .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                        .append(user.getUserName()).append("/Data_In/thumb/")
-                        .append(fileName).toString());
-        if(imgFile.exists()){
-            return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                            .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                            .append(user.getUserName()).append("/Data_In/thumb/")
+                            .append(fileName).toString());
+            if(imgFile.exists()){
+                return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -466,16 +483,13 @@ public class Utils {
 
     public static boolean appRequireInitialLoad(Context context, User user) {
         Cursor c = null;
-        DatabaseHelper dbh;
-        SQLiteDatabase db = null;
         try{
-            dbh = new DatabaseHelper(context, user);
-            db = dbh.getWritableDatabase();
-            String[] tables = new String[]{"ARTICULOS", "BRAND", "Category", "MAINPAGE_PRODUCT_ID",
+            String[] tables = new String[]{"ARTICULOS", "BRAND", "Category", "MAINPAGE_PRODUCT",
                     "MAINPAGE_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
-
             for (String table : tables){
-                c = db.rawQuery("select count(*) from " + table, null);
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                        .build(), null, "select count(*) from " + table, null, null);
                 if(c.moveToNext() && c.getInt(0)==0) {
                     return true;
                 }
@@ -491,147 +505,356 @@ public class Utils {
                     e.printStackTrace();
                 }
             }
-            if (db!=null) {
-                try {
-                    db.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return false;
     }
 
     public static void loadInitialDataFromWS(Context context, User user) {
         long initTime = System.currentTimeMillis();
-        Cursor c = null;
+
         DatabaseHelper dbh;
         SQLiteDatabase db = null;
         try{
             dbh = new DatabaseHelper(context, user);
             db = dbh.getWritableDatabase();
-            c = getDataFromWS(context, "select IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, " +
+            Cursor c = null;
+            SQLiteStatement statement = null;
+            try{
+                c = getDataFromWS(context, "select IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, " +
                     " USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
                     " UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE " +
                     " from ARTICULOS where ACTIVO = 'V'", user);
-            String insertSentence = new String("INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0),
-                            c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5),
-                            c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10),
-                            c.getString(11), c.getString(12)});
-                } catch(Exception e) {
-                    e.getMessage();
+                statement = db.compileStatement("INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, " +
+                        " IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, " +
+                        " CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) " +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.bindLong(3, c.getLong(2));
+                    statement.bindString(4, c.getString(3));
+                    statement.bindString(5, c.getString(4));
+                    statement.bindString(6, c.getString(5));
+                    statement.bindString(7, c.getString(6));
+                    statement.bindString(8, c.getString(7));
+                    statement.bindString(9, c.getString(8));
+                    statement.bindString(10, c.getString(9));
+                    statement.bindLong(11, c.getLong(10));
+                    statement.bindString(12, c.getString(11));
+                    statement.bindString(13, c.getString(12));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindString(2, c.getString(1));
+                    statement.bindString(3, c.getString(2));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindString(2, c.getString(1));
+                    statement.bindString(3, c.getString(2));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, " +
+                        " PRIORITY from MAINPAGE_PRODUCT where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, " +
+                        " MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.bindLong(3, c.getLong(2));
+                    statement.bindLong(4, c.getLong(3));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_SECTION where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY " +
+                        " from MAINPAGE_SECTION where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, " +
+                        " NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindString(2, c.getString(1));
+                    statement.bindString(3, c.getString(2));
+                    statement.bindLong(4, c.getLong(3));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select PRODUCT_ID, AVAILABILITY from PRODUCT_AVAILABILITY where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY " +
+                        " from PRODUCT_IMAGE where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, " +
+                        " PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.bindString(3, c.getString(2));
+                    statement.bindLong(4, c.getLong(3));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2), c.getString(3)});
-                }catch(Exception e){
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION " +
+                        " from SUBCATEGORY where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, " +
+                        " CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.bindString(3, c.getString(2));
+                    statement.bindString(4, c.getString(3));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    statement = null;
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    c = null;
                 }
             }
-            c.close();
-            c=null;
 
-            c = getDataFromWS(context, "select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'", user);
-            insertSentence = new String("INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
-            while (c.moveToNext()) {
-                try {
-                    db.execSQL(insertSentence, new String[]{c.getString(0), c.getString(1), c.getString(2)});
-                } catch(Exception e) {
-                    e.getMessage();
+            try {
+                c = getDataFromWS(context, "select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from " +
+                        " PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'", user);
+                statement = db.compileStatement("INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED " +
+                        " (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
+                db.beginTransaction();
+                while (c.moveToNext()) {
+                    statement.clearBindings();
+                    statement.bindLong(1, c.getLong(0));
+                    statement.bindLong(2, c.getLong(1));
+                    statement.bindLong(3, c.getLong(2));
+                    statement.execute();
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(statement!=null){
+                    try {
+                        statement.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(c!=null){
+                    try {
+                        c.close();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
-            if (c!=null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
             if (db!=null) {
                 try {
                     db.close();
@@ -644,14 +867,9 @@ public class Utils {
 
     public static Cursor getDataFromWS(final Context context, final String sql, final User user){
         try {
-            return context.getContentResolver().query(DataBaseContentProvider
-                            .REMOTE_DB_URI.buildUpon()
+            return context.getContentResolver().query(DataBaseContentProvider.REMOTE_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                            .build(),
-                    null,
-                    sql,
-                    null,
-                    null);
+                            .build(), null, sql, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

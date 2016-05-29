@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
@@ -312,12 +313,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadMainPage(ArrayList<MainPageSection> mainPageSections){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_categories_list);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
+        ListView listView = (ListView) findViewById(R.id.main_categories_list);
+        listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
     }
 
     @Override

@@ -46,6 +46,10 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	private static final int DROP_USER_DB 			= 3;
 	private static final UriMatcher uriMatcher;
 	private static DatabaseHelper dbHelper;
+    private static SQLiteDatabase mUserReadableDB;
+    private static SQLiteDatabase mUserWriteableDB;
+    private static SQLiteDatabase mIDSReadableDB;
+    private static SQLiteDatabase mIDSWriteableDB;
 	private AccountManager mAccountManager;
 	
 	static{
@@ -76,7 +80,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	@Override
 	public boolean onCreate() {
 		//TODO: manejar permisos en el manifest para mejorar la seguridad
-		dbHelper = new DatabaseHelper(getContext());
+		Log.d(TAG, "onCreate()");
+        if(dbHelper == null) {
+            Log.d(TAG, "Crear la instanciacion del dbHelper");
+		    dbHelper = new DatabaseHelper(getContext());
+        }
 		mAccountManager = AccountManager.get(getContext());
 		mAccountManager.addOnAccountsUpdatedListener(this, null, false);
 		return true;
@@ -87,15 +95,23 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 		Cursor response = null;
 		switch (uriMatcher.match(uri)) {
 	    	case INTERNAL_DB:
-	    		SQLiteDatabase db;
+	    		//SQLiteDatabase db;
 	    		if(uri.getQueryParameter(KEY_USER_ID)!=null){
-	    			Log.v(TAG, "Tomar la base de datos especifica del usuario.");
-	    			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-	    			db = new DatabaseHelper(getContext(), user).getReadableDatabase();
+	    			//User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
+	    			//db = new DatabaseHelper(getContext(), user).getReadableDatabase();
+                    if (mUserReadableDB==null) {
+                        Log.v(TAG, "Tomar la base de datos especifica del usuario.");
+                        mUserReadableDB = new DatabaseHelper(getContext(), ApplicationUtilities
+                                .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
+                    }
+                    response = mUserReadableDB.rawQuery(selection, selectionArgs);
 	    		}else{
-	    			db = dbHelper.getReadableDatabase();
+                    if(mIDSReadableDB==null) {
+                        mIDSReadableDB = dbHelper.getReadableDatabase();
+                    }
+                    response = mIDSReadableDB.rawQuery(selection, selectionArgs);
 	    		}
-	    		response = db.rawQuery(selection, selectionArgs);
+                //response = db.rawQuery(selection, selectionArgs);
 			break;
 	        case REMOTE_DB:
 	        	response = execQueryRemoteDB(uri, selection);
@@ -111,15 +127,24 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 		int response = 0;
 		switch (uriMatcher.match(uri)) {
 	    	case INTERNAL_DB:
-	    		SQLiteDatabase db;
+	    		//SQLiteDatabase db;
 	    		if(uri.getQueryParameter(KEY_USER_ID)!=null){
-	    			Log.v(TAG, "Tomar la base de datos especifica del usuario.");
-	    			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-	    			db = new DatabaseHelper(getContext(), user).getReadableDatabase();
+	    			//User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
+	    			//db = new DatabaseHelper(getContext(), user).getReadableDatabase();
+					if(mUserWriteableDB==null){
+                        Log.v(TAG, "Tomar la base de datos especifica del usuario.");
+                        mUserWriteableDB = new DatabaseHelper(getContext(), ApplicationUtilities
+                                .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
+                    }
+                    mUserWriteableDB.execSQL(selection, selectionArgs);
 	    		}else{
-	    			db = dbHelper.getWritableDatabase();
+	    			//db = dbHelper.getWritableDatabase();
+                    if(mIDSWriteableDB==null){
+                        mIDSWriteableDB = dbHelper.getWritableDatabase();
+                    }
+                    mIDSWriteableDB.execSQL(selection, selectionArgs);
 	    		}
-    			db.execSQL(selection, selectionArgs);
+    			//db.execSQL(selection, selectionArgs);
 	    		response = 1;
 			break;
 	        case REMOTE_DB:
@@ -140,7 +165,12 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 		return response;
 	}
 
-	@Override
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        return super.bulkInsert(uri, values);
+    }
+
+    @Override
 	public void onAccountsUpdated(final Account[] accounts) {
 	    //Removes content associated with accounts that are not currently in the device
 	    ApplicationUtilities.cleanUsersData(getContext());
