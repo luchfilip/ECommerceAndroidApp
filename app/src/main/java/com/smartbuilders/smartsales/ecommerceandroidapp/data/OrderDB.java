@@ -1,11 +1,8 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
@@ -24,12 +21,10 @@ public class OrderDB {
 
     private Context context;
     private User user;
-    private DatabaseHelper dbh;
 
     public OrderDB(Context context, User user){
         this.context = context;
         this.user = user;
-        this.dbh = new DatabaseHelper(context, user);
     }
 
     public String createOrderFromShoppingCart(){
@@ -47,32 +42,33 @@ public class OrderDB {
         if(orderLines != null
                 && (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
                 || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)){
-            SQLiteDatabase db = null;
             Cursor c = null;
             int orderId = 0;
             try {
-                db = dbh.getWritableDatabase();
                 double subTotal=0, tax=0, total=0;
                 for(OrderLine orderLine : orderLines){
                     subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
                     tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
                     total += subTotal + tax;
                 }
-                ContentValues cv = new ContentValues();
-                cv.put("DOC_STATUS", "CO");
-                cv.put("DOC_TYPE", docType);
-                cv.put("APP_VERSION", Utils.getAppVersionName(context));
-                cv.put("APP_USER_NAME", user.getUserName());
-                cv.put("ORDERLINES_NUMBER", orderLines.size());
-                cv.put("SUB_TOTAL", subTotal);
-                cv.put("TAX", tax);
-                cv.put("TOTAL", total);
-                cv.put("ISACTIVE", "Y");
-                if(db.insert("ECOMMERCE_ORDER", null, cv) <= 0){
+
+                int rowsAffected = context.getContentResolver()
+                        .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                null,
+                                "INSERT INTO ECOMMERCE_ORDER (DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
+                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                new String[]{"CO", docType, Utils.getAppVersionName(context), user.getUserName(),
+                                        String.valueOf(orderLines.size()), String.valueOf(subTotal), String.valueOf(tax),
+                                        String.valueOf(total), "Y"});
+                if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }
-                c = db.rawQuery("SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
-                        new String[]{"Y", docType});
+
+                String sql = "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                        .build(), null, sql, new String[]{"Y", docType}, null);
                 if(c.moveToNext()){
                     orderId = c.getInt(0);
                 }
@@ -87,53 +83,40 @@ public class OrderDB {
                         e.printStackTrace();
                     }
                 }
-                if(db != null) {
-                    try {
-                        db.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             }
             if(docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE)){
                 if(orderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(orderId)<=0){
                     try {
-                        db = dbh.getWritableDatabase();
-                        if(db.delete("ECOMMERCE_ORDER", "ECOMMERCE_ORDER_ID = ?", new String[]{String.valueOf(orderId)}) <= 0){
-                            return "Error 003 - No se insertó la cotizacion en la base de datos.";
+                        int rowsAffected = context.getContentResolver()
+                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                        null,
+                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
+                                        new String[]{String.valueOf(orderId)});
+                        if(rowsAffected <= 0){
+                            return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
                         }
                     } catch (Exception e){
                         e.printStackTrace();
                         return e.getMessage();
-                    } finally {
-                        if(db != null) {
-                            try {
-                                db.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
                     }
-                    return "Error 002 - No se insertó la cotizacion en la base de datos.";
+                    return "Error 002 - No se insertó la cotización en la base de datos.";
                 }
             } else if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
                 if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
                     try {
-                        db = dbh.getWritableDatabase();
-                        if(db.delete("ECOMMERCE_ORDER", "ECOMMERCE_ORDER_ID = ?", new String[]{String.valueOf(orderId)}) <= 0){
-                            return "Error 003 - No se insertó el pedido en la base de datos.";
+                        int rowsAffected = context.getContentResolver()
+                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                        null,
+                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
+                                        new String[]{String.valueOf(orderId)});
+                        if(rowsAffected <= 0){
+                            return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
                         }
                     } catch (Exception e){
                         e.printStackTrace();
                         return e.getMessage();
-                    } finally {
-                        if(db != null) {
-                            try {
-                                db.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
                     }
                     return "Error 002 - No se insertó el pedido en la base de datos.";
                 }
