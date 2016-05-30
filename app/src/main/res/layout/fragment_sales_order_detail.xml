@@ -43,28 +43,36 @@
         android:paddingBottom="2dp"
         android:layout_marginRight="5dp" />
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sales_order_sub_total_tv"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:textColor="@color/colorPrimaryDark" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sales_order_sub_total_tv"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sales_order_tax_tv"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sales_order_tax_tv"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:textColor="@color/colorPrimaryDark" />
-
-    <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sales_order_total_tv"
         android:textAppearance="@android:style/TextAppearance.Medium"
@@ -72,5 +80,7 @@
         android:paddingRight="5dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:textColor="@color/colorPrimaryDark" />
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_gravity="right"
+        android:textStyle="bold" />
 </LinearLayout>

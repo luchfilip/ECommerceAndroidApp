@@ -342,7 +342,7 @@ public class ProductDetailFragment extends Fragment {
         }else{
             Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, getContext());
         }
-        return Utils.createShareProductIntent(getContext(), mProduct, fileName);
+        return Utils.createShareProductIntent(mProduct, fileName);
     }
 
     private void addToShoppingCart() {

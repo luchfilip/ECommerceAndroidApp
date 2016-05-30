@@ -31,7 +31,8 @@
                 android:id="@+id/product_name"
                 android:textColor="@android:color/black"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp" />
+                android:paddingBottom="2dp"
+                android:textStyle="bold" />
 
             <TableLayout
                 android:layout_width="match_parent"

@@ -92,12 +92,11 @@ public class Utils {
 
     /**
      *
-     * @param ctx
      * @param product
      * @param fileName
      * @return
      */
-    public static Intent createShareProductIntent(Context ctx, Product product, String fileName){
+    public static Intent createShareProductIntent(Product product, String fileName){
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");
@@ -118,7 +117,7 @@ public class Utils {
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
-        } else {
+        } else if (fileName!=null && ctx!=null){
             //path for the image file in the external storage
             File imageFile = new File(ctx.getCacheDir() + File.separator + fileName);
             try {
@@ -148,7 +147,7 @@ public class Utils {
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
-        } else {
+        } else if (fileName!=null && image!=null && ctx!=null){
             //path for the image file in the external storage
             File imageFile = new File(ctx.getCacheDir() + File.separator + fileName);
             try {
@@ -177,7 +176,8 @@ public class Utils {
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else {
+        } else if (fileName!=null && image!=null && user!=null && ctx!=null
+                && ctx.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
             File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
                     .append(File.separator).append(user.getUserGroup()).append(File.separator)
@@ -209,7 +209,8 @@ public class Utils {
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else {
+        } else if (fileName!=null && image!=null && user!=null && ctx!=null
+                && ctx.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
             File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
                     .append(File.separator).append(user.getUserGroup()).append(File.separator)
@@ -232,7 +233,8 @@ public class Utils {
     }
 
     public static File getFileImageByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
             return null;
         }
         try {
@@ -250,7 +252,8 @@ public class Utils {
     }
 
     public static File getFileThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
             return null;
         }
         try {
@@ -268,7 +271,8 @@ public class Utils {
     }
 
     public static Bitmap getImageByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
             return null;
         }
         try {
@@ -286,7 +290,8 @@ public class Utils {
     }
 
     public static Bitmap getThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || user==null || fileName==null){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
             return null;
         }
         try {

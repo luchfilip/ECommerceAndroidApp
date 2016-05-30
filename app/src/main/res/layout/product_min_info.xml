@@ -41,19 +41,20 @@
                 android:id="@+id/product_image"
                 android:layout_gravity="center" />
 
-            <View style="@style/Divider"/>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/product_subcategory"
-                android:textSize="@dimen/productMinInfo_subcategory_text_size"
+                android:id="@+id/product_availability"
+                android:textSize="@dimen/productMinInfo_availability_text_size"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/product_subcategory"
+                android:textColor="@color/product_availability"
                 android:singleLine="false"
-                android:lines="1" />
+                android:lines="1"
+                android:layout_marginBottom="2dp" />
+
+            <View style="@style/Divider"/>
 
         </LinearLayout>
 

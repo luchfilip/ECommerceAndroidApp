@@ -56,7 +56,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         // each data item is just a string in this case
         public TextView productName;
         public ImageView productImage;
-        public TextView productSubCategory;
+        //public TextView productSubCategory;
         public TextView productBrand;
         public TextView commercialPackage;
         public TextView productAvaliability;
@@ -70,7 +70,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
-            productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
+            //productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_comercial_package);
             productAvaliability = (TextView) v.findViewById(R.id.product_availability);
@@ -142,14 +142,14 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 break;
             }
         }
-        if(holder.productSubCategory!=null){
-            if(mDataset.get(position).getProductSubCategory()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductSubCategory().getDescription())){
-                holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getDescription());
-            }else{
-                holder.productSubCategory.setVisibility(TextView.GONE);
-            }
-        }
+        //if(holder.productSubCategory!=null){
+        //    if(mDataset.get(position).getProductSubCategory()!=null
+        //            && !TextUtils.isEmpty(mDataset.get(position).getProductSubCategory().getDescription())){
+        //        holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getDescription());
+        //    }else{
+        //        holder.productSubCategory.setVisibility(TextView.GONE);
+        //    }
+        //}
         if(holder.productBrand!=null){
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
@@ -200,6 +200,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         if(holder.productAvaliability!=null){
             holder.productAvaliability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));
+        }else{
+            holder.productAvaliability.setVisibility(View.VISIBLE);
         }
 
         if(holder.shareImageView!=null) {
@@ -295,7 +297,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         }else{
             Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, mContext);
         }
-        mContext.startActivity(Utils.createShareProductIntent(mContext, product, fileName));
+        mContext.startActivity(Utils.createShareProductIntent(product, fileName));
     }
 
     private void addToShoppingCart(Product product) {

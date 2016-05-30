@@ -190,7 +190,7 @@ public class SalesOrderDetailPDFCreator {
         }
 
         PdfPTable headerTable = new PdfPTable(2);
-        headerTable.setWidths(new float[] {260f, 260f});
+        headerTable.setWidths(new float[] {280f, 280f});
 
         PdfPCell clientDataCell = new PdfPCell();
         clientDataCell.setPadding(3);
@@ -210,8 +210,17 @@ public class SalesOrderDetailPDFCreator {
         headerTable.addCell(SalesOrderDataCell);
         document.add(headerTable);
 
+        PdfPTable salesOrderNumberTable = new PdfPTable(1);
+        salesOrderNumberTable.setWidths(new float[] {560f});
+        PdfPCell salesOrderNumberCell = new PdfPCell();
+        salesOrderNumberCell.setPadding(3);
+        salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
+        salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + order.getOrderNumber(), fontBold));
+        salesOrderNumberTable.addCell(salesOrderNumberCell);
+        document.add(headerTable);
+
         document.add(new Phrase("\n"));
-        document.add(new Phrase("COTIZACIÓN No.: " + order.getOrderNumber(), fontBold));
         document.add(new Phrase("\n"));
     }
 
