@@ -89,11 +89,11 @@ public class SalesOrderDetailFragment extends Fragment {
             }
             if(rootView.findViewById(R.id.sales_order_total_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_total_tv))
-                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mOrder.getTotalAmount())));
+                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mOrder.getTruncatedTotalAmount())));
             }
             if(rootView.findViewById(R.id.sales_order_tax_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_tax_tv))
-                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mOrder.getTaxAmount())));
+                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mOrder.getTruncatedTaxAmount())));
             }
         }
         return rootView;

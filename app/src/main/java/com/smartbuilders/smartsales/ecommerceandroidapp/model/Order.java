@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 
 /**
@@ -43,6 +44,10 @@ public class Order extends Model implements Parcelable {
         return taxAmount;
     }
 
+    public double getTruncatedTaxAmount(){
+        return new BigDecimal(taxAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
     public void setTaxAmount(double taxAmount) {
         this.taxAmount = taxAmount;
     }
@@ -53,6 +58,10 @@ public class Order extends Model implements Parcelable {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public double getTruncatedTotalAmount() {
+        return new BigDecimal(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     protected Order(Parcel in) {

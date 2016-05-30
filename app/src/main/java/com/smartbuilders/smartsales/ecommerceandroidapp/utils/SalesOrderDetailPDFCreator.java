@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -59,7 +57,7 @@ public class SalesOrderDetailPDFCreator {
             }
         }
         //create a new document
-        Document document = new Document(PageSize.LETTER, 50, 50, 125, 40);
+        Document document = new Document(PageSize.LETTER, 40, 40, 125, 40);
 
         if(pdfFile != null){
             try {
@@ -218,9 +216,8 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + order.getOrderNumber(), fontBold));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
-        document.add(headerTable);
+        document.add(salesOrderNumberTable);
 
-        document.add(new Phrase("\n"));
         document.add(new Phrase("\n"));
     }
 
@@ -312,26 +309,30 @@ public class SalesOrderDetailPDFCreator {
     }
 
     private void addSalesOrderFooter(Document document, Order order) throws DocumentException, IOException {
-        BaseFont bf;
         Font font;
         try{
-            bf = BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
-                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED);
+                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
             }catch(Exception e) {
                 e.printStackTrace();
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
+                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
             }
         }
-        font = new Font(bf, 9f);
-        document.add(new Phrase("Sub-Total: "+order.getSubTotalAmount(), font));
-        document.add(new Phrase("\n"));
-        document.add(new Phrase("Impuestos: "+order.getTaxAmount(), font));
-        document.add(new Phrase("\n"));
-        document.add(new Phrase("Total: "+order.getTotalAmount(), font));
-        document.add(new Phrase("\n"));
+
+        PdfPTable salesOrderNumberTable = new PdfPTable(1);
+        salesOrderNumberTable.setWidths(new float[] {560f});
+        PdfPCell salesOrderNumberCell = new PdfPCell();
+        salesOrderNumberCell.setPadding(3);
+        salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
+        salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        salesOrderNumberCell.addElement(new Paragraph("Sub-Total: "+order.getSubTotalAmount(), font));
+        salesOrderNumberCell.addElement(new Paragraph("Impuestos: "+order.getTruncatedTaxAmount(), font));
+        salesOrderNumberCell.addElement(new Paragraph("Total: "+order.getTruncatedTotalAmount(), font));
+        salesOrderNumberTable.addCell(salesOrderNumberCell);
+        document.add(salesOrderNumberTable);
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {

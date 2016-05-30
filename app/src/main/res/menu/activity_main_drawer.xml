@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<group android:checkableBehavior="single">-->
-        <!--&lt;!&ndash;<item-->
-            <!--android:id="@+id/nav_invoices_list"-->
-            <!--android:icon="@drawable/ic_list_black_18dp"-->
-            <!--android:title="@string/invoces_list" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_statement_of_account"-->
-            <!--android:title="@string/statement_of_account" />&ndash;&gt;-->
-    <!--</group>-->
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_wish_list"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/wish_list" />
+    </group>
     <item android:title="@string/my_purchases">
         <menu>
-            <item
-                android:id="@+id/nav_wish_list"
-                android:icon="@drawable/ic_favorite_black_24dp"
-                android:title="@string/wish_list" />
+
             <item
                 android:id="@+id/nav_shopping_cart"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"
