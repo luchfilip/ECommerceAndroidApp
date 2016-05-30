@@ -43,7 +43,7 @@ public class OrderDetailPDFCreator {
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
-        /*if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
         } else {
             //path for the PDF file in the external storage
@@ -111,8 +111,7 @@ public class OrderDetailPDFCreator {
                         bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
                     }
                     if(bmp==null){
-                        bmp = BitmapFactory.decodeResource(ctx.getResources(),
-                            line.getProduct().getImageId());
+                        bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
                     }
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -181,7 +180,7 @@ public class OrderDetailPDFCreator {
             }
         }else{
             Log.d(TAG, "pdfFile is null");
-        }*/
+        }
         Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }

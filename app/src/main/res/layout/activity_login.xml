@@ -51,7 +51,9 @@
                 android:singleLine="true"
                 android:inputType="textUri"
                 android:textColor="@android:color/white"
-                android:textColorHint="@color/material_grey_50" />
+                android:textColorHint="@color/material_grey_50"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <EditText
                 android:id="@+id/user_group"
@@ -63,7 +65,9 @@
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/material_grey_50"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <EditText
                 android:id="@+id/accountName"
@@ -74,7 +78,9 @@
                 android:singleLine="true"
                 android:inputType="text"
                 android:textColor="@android:color/white"
-                android:textColorHint="@color/material_grey_50" />
+                android:textColorHint="@color/material_grey_50"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <EditText
                 android:id="@+id/accountPassword"
@@ -85,7 +91,9 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textColorHint="@color/material_grey_50" />
+                android:textColorHint="@color/material_grey_50"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <Button
                 android:id="@+id/submit"

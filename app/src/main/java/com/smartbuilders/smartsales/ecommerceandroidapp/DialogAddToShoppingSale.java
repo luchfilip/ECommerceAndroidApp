@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,6 +115,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
             if (getActivity()!=null && getActivity().getWindow()!=null) {
                 getActivity().getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                ((InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
             }
         } catch (Exception e) {
             e.printStackTrace();

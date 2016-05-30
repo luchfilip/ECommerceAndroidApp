@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 
 import java.io.ByteArrayOutputStream;
@@ -42,7 +45,7 @@ public class WishListPDFCreator {
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
-        /*if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Toast.makeText(ctx, "External Storage not available or you don't have permission to write", Toast.LENGTH_LONG).show();
         } else {
             //path for the PDF file in the external storage
@@ -110,8 +113,7 @@ public class WishListPDFCreator {
                         bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
                     }
                     if(bmp==null){
-                        bmp = BitmapFactory.decodeResource(ctx.getResources(),
-                                line.getProduct().getImageId());
+                        bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
                     }
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -135,8 +137,6 @@ public class WishListPDFCreator {
                     cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
                     cell2.addElement(new Paragraph(line.getProduct().getName(), font));
                     cell2.addElement(new Paragraph("Empaque de venta: ", font));
-                    //cell2.addElement(new Paragraph("Precio: ", font));
-                    //cell2.addElement(new Paragraph("Descuento (%): ", font));
                     table.addCell(cell2);
 
                     PdfPCell cell3 = new PdfPCell();
@@ -146,8 +146,6 @@ public class WishListPDFCreator {
                     cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
                     cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
-                    //cell3.addElement(new Paragraph("Cant. pedida: ", font));
-                    //cell3.addElement(new Paragraph("Total Bs.: ", font));
                     table.addCell(cell3);
                 }
 
@@ -168,7 +166,7 @@ public class WishListPDFCreator {
             }
         }else{
             Log.d(TAG, "pdfFile is null");
-        }*/
+        }
         Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }

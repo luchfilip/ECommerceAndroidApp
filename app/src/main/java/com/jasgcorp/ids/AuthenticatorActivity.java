@@ -13,6 +13,7 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,9 +136,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit() {
         try {
-            if(getWindow()!=null){
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            }
+            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

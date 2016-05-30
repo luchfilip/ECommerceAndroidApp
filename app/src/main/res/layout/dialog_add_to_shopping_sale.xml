@@ -56,7 +56,8 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:paddingTop="5dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusableInTouchMode="true" />
         </TableRow>
 
         <TableRow
@@ -90,7 +91,8 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:paddingTop="5dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusableInTouchMode="true" />
         </TableRow>
 
         <TableRow
@@ -123,7 +125,8 @@
                 android:background="@color/golden"
                 android:layout_marginTop="4dp"
                 android:paddingTop="5dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusableInTouchMode="true" />
         </TableRow>
 
     </TableLayout>

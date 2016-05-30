@@ -44,7 +44,8 @@
             android:paddingRight="2dp"
             android:focusable="true"
             android:enabled="true"
-            android:layout_marginLeft="2dp" />
+            android:layout_marginLeft="2dp"
+            android:focusableInTouchMode="true" />
     </LinearLayout>
 
     <LinearLayout

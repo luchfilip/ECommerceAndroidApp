@@ -154,11 +154,10 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 loadMainPage(mainPageSectionDB.getActiveMainPageSections());
-
-                                Bundle settingsBundle = new Bundle();
-                                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                                ContentResolver.requestSync(mAccount, getString(R.string.sync_adapter_content_authority), settingsBundle);
+                                //Bundle settingsBundle = new Bundle();
+                                //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                                //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                                //ContentResolver.requestSync(mAccount, getString(R.string.sync_adapter_content_authority), settingsBundle);
                             }
                         });
                     }

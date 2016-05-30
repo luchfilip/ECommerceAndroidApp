@@ -128,7 +128,6 @@ public class SalesOrderDetailFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             if (mOrderLines != null && mOrderLines.size() > 0) {
-                //mShareActionProvider.setShareHistoryFileName(null);
                 mShareActionProvider.setShareIntent(createShareProductIntent());
             }
             return true;
