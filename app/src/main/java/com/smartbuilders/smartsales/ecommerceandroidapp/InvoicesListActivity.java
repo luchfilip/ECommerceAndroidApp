@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Invoice;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 public class InvoicesListActivity extends AppCompatActivity implements InvoicesListFragment.Callback {
 

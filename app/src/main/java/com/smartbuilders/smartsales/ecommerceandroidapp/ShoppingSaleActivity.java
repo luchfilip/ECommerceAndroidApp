@@ -14,11 +14,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-
-import java.util.ArrayList;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Jesus Sarco 12.05.2016
@@ -30,8 +27,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
     public static final String STATE_CURRENT_USER = "state_current_user";
 
     private User mCurrentUser;
-    private ArrayList<OrderLine> mOrderLines;
-    private Order mOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

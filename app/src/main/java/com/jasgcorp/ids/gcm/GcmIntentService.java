@@ -2,7 +2,7 @@ package com.jasgcorp.ids.gcm;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 

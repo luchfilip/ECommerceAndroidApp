@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
 /**
  * Created by Alberto on 22/3/2016.
  */

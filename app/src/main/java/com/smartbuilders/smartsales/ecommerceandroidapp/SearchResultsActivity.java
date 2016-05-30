@@ -28,6 +28,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAda
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Jesus Sarco 12.05.2016

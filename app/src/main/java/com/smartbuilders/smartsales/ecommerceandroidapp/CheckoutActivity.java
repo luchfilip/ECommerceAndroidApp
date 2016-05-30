@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 public class CheckoutActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

@@ -23,6 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.OrderDetailPDFCreator;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 

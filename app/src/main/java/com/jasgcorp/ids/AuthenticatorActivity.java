@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;

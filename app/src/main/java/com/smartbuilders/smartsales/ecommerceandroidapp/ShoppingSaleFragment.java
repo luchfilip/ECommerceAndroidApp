@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAda
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.ArrayList;
 
@@ -94,10 +95,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         taxesAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
         totalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
 
-        if ((mOrderLines==null || mOrderLines.size()==0)
-                && view.findViewById(R.id.company_logo_name)!=null
-                && view.findViewById(R.id.shoppingSale_items_list)!=null
-                && view.findViewById(R.id.shoppingSale_data_linearLayout)!=null) {
+        if (mOrderLines==null || mOrderLines.size()==0) {
             view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
             view.findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
             view.findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);

@@ -15,8 +15,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +31,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRec
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.ArrayList;
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Jesus Sarco, 12.05.2016

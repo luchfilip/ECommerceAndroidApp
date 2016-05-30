@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.ArrayList;
 

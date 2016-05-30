@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -144,7 +144,7 @@ public class ShoppingCartAdapter extends BaseAdapter {
         viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mShoppingCartFragment).updateQtyOrdered(mDataset.get(position));
+                mShoppingCartFragment.updateQtyOrdered(mDataset.get(position));
             }
         });
 

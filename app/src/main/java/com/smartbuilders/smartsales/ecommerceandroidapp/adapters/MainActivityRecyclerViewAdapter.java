@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProduct;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;

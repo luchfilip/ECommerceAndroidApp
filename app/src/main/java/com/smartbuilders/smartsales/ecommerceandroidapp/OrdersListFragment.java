@@ -12,13 +12,15 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class OrdersListFragment extends Fragment {
 
-    private ListView mListView;
     private User mCurrentUser;
 
     public interface Callback {
@@ -39,21 +41,24 @@ public class OrdersListFragment extends Fragment {
             }
         }
 
-        mListView = (ListView) rootView.findViewById(R.id.orders_list);
-        mListView.setAdapter(new OrdersListAdapter(getActivity(), (new OrderDB(getContext(), mCurrentUser)).getActiveOrders(), mCurrentUser));
+        ArrayList<Order> activeOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveOrders();
+        if (activeOrders!=null && !activeOrders.isEmpty()) {
+            ListView listView = (ListView) rootView.findViewById(R.id.orders_list);
+            listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders , mCurrentUser));
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Order order = (Order) adapterView.getItemAtPosition(position);
-                if (order != null) {
-                    ((Callback) getActivity()).onItemSelected(order, position);
+                @Override
+                public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                    // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                    // if it cannot seek to that position.
+                    Order order = (Order) adapterView.getItemAtPosition(position);
+                    if (order != null) {
+                        ((Callback) getActivity()).onItemSelected(order, position);
+                    }
                 }
-            }
-        });
+            });
+        }
         return rootView;
     }
 }

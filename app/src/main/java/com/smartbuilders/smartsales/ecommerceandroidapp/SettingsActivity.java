@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.hardware.camera2.CameraManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,10 +21,11 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
+
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.List;
 

@@ -24,7 +24,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;

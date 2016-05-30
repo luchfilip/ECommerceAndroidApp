@@ -16,7 +16,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BrandsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;

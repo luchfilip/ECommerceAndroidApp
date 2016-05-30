@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.smartbuilders.smartsales.ecommerceandroidapp">
-
-    <uses-sdk tools:overrideLibrary="com.skyfishjy.library" />
+    package="com.smartbuilders.smartsales.ecommerceandroidapp.febeca">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -40,7 +38,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -61,11 +59,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProductsListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ProductDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -75,7 +73,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <provider
-            android:name=".providers.CachedFileProvider"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider"
             android:authorities="com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider"
             android:exported="true"
             android:multiprocess="true" />
@@ -145,74 +143,73 @@
         </receiver>
 
         <activity
-            android:name=".CategoriesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SubCategoriesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SubCategoriesListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ShoppingCartActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".CheckoutActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CheckoutActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".OrdersListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".OrderDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.OrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".InvoicesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.InvoicesListActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".InvoiceDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.InvoiceDetailActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".InvoicesListActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".WishListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".StatementOfAccountActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.StatementOfAccountActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SearchResultsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FilterOptionsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.FilterOptionsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".BrandsListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.BrandsListActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ShoppingSaleActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SalesOrderDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SalesOrdersListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ZoomImageActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ZoomImageActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
     </application>

@@ -12,10 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -83,14 +85,14 @@ public class OrdersListActivity extends AppCompatActivity
             // If this view is present, then the activity should be
             // in two-pane mode.
             mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.order_detail_container, new OrderDetailFragment(),
-                                ORDERDETAIL_FRAGMENT_TAG).commit();
-            }
+            //// In two-pane mode, show the detail view in this activity by
+            //// adding or replacing the detail fragment using a
+            //// fragment transaction.
+            //if(savedInstanceState == null){
+            //    getSupportFragmentManager().beginTransaction()
+            //            .add(R.id.order_detail_container, new OrderDetailFragment(),
+            //                    ORDERDETAIL_FRAGMENT_TAG).commit();
+            //}
         }else{
             mTwoPane = false;
         }
@@ -101,10 +103,26 @@ public class OrdersListActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.orders_list);
-            if (lv != null && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
+            if (lv != null && lv.getAdapter()!=null
+                    && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
                     && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
                 lv.performItemClick(lv.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
                         mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ListView lv = (ListView) findViewById(R.id.orders_list);
+        if(lv != null && (lv.getAdapter()==null || lv.getAdapter().getCount()==0)){
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            if(mTwoPane){
+                findViewById(R.id.fragment_order_list).setVisibility(View.GONE);
+                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.orders_list).setVisibility(View.GONE);
             }
         }
     }

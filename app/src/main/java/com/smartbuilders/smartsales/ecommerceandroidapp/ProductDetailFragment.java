@@ -30,6 +30,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -297,10 +298,7 @@ public class ProductDetailFragment extends Fragment {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (mProduct != null) {
-            //mShareActionProvider.setShareHistoryFileName(null);
             mShareActionProvider.setShareIntent(createShareIntent());
-        } else {
-            Log.d(TAG, "Share Action Provider is null?");
         }
     }
 

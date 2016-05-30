@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.jasgcorp.ids.model.User;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
 public class StatementOfAccountActivity extends AppCompatActivity {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";

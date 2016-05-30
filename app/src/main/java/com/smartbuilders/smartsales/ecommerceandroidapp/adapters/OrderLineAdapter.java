@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Callback;
@@ -114,7 +114,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             }
         });
 
-        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered, String.valueOf(mDataset.get(position).getQuantityOrdered())));
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
+                String.valueOf(mDataset.get(position).getQuantityOrdered())));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

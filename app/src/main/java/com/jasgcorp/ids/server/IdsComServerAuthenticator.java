@@ -6,7 +6,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;

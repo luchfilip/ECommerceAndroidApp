@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.TouchImageView;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Created by stein on 27/5/2016.
@@ -22,7 +23,6 @@ public class ZoomImageFragment extends Fragment {
 
     private User mCurrentUser;
     private String mImageFileName;
-
 
     public ZoomImageFragment() {
     }

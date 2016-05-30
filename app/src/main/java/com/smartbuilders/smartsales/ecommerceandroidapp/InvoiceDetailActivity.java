@@ -7,6 +7,8 @@ import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
 public class InvoiceDetailActivity extends AppCompatActivity {
 
     public static final String KEY_INVOICE_ID = "KEY_INVOICE_ID";

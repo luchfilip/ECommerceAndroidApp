@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -144,7 +144,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_PRICE);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_PRICE);
             }
         });
 
@@ -152,7 +152,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_TAX_PERCENTAGE);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_TAX_PERCENTAGE);
             }
         });
 
@@ -160,7 +160,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mShoppingSaleFragment).updateSalesOrderLine(mDataset.get(position), FOCUS_QTY_ORDERED);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_QTY_ORDERED);
             }
         });
 

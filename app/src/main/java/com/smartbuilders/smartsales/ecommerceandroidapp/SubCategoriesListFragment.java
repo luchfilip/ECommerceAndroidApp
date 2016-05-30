@@ -13,6 +13,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Created by Alberto on 26/3/2016.

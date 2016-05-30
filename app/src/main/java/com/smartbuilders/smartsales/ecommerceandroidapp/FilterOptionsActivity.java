@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 public class FilterOptionsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,7 +41,6 @@ public class FilterOptionsActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle(R.string.app_name);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
         setSupportActionBar(toolbar);
 

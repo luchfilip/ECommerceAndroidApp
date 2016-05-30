@@ -1,7 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +12,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -78,10 +77,6 @@ public class CategoriesListFragment extends Fragment {
                 return true;
             }
         });
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            rootView.setElevation(10f);
-        }
 
         return rootView;
     }

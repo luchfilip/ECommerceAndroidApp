@@ -3,7 +3,7 @@ package com.jasgcorp.ids.system.broadcastreceivers;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

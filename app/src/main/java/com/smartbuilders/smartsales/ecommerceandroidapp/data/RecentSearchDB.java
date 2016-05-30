@@ -92,7 +92,7 @@ public class RecentSearchDB {
         try {
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, "DELETE FROM RECENT_SEARCH", null);
+                    .build(), null, "DELETE FROM RECENT_SEARCH", new String[0]);
         } catch (Exception e){
             e.printStackTrace();
         }

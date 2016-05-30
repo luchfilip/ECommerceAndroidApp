@@ -3,8 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
-
 /**
  * Created by Alberto on 23/3/2016.
  */

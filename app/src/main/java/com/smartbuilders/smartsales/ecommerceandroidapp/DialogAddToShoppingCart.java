@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Created by stein on 5/1/2016.
@@ -23,7 +24,6 @@ public class DialogAddToShoppingCart extends DialogFragment {
     private static final String STATE_CURRENT_PRODUCT = "STATE_CURRENT_PRODUCT";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
-    private EditText mEditText;
     private Product mProduct;
     private User mUser;
 
@@ -51,8 +51,7 @@ public class DialogAddToShoppingCart extends DialogFragment {
         }
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
-        mEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
-
+        
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 

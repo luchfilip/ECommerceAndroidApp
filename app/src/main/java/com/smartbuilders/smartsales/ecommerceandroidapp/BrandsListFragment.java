@@ -20,6 +20,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BrandAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductBrandDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * A placeholder fragment containing a simple view.

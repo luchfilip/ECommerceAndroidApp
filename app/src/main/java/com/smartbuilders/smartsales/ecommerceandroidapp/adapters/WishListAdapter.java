@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -142,7 +142,7 @@ public class WishListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {
-                    ((Callback) mWishListFragment).moveToShoppingCart(mDataset.get(position));
+                    mWishListFragment.moveToShoppingCart(mDataset.get(position));
                 }
             }
         });

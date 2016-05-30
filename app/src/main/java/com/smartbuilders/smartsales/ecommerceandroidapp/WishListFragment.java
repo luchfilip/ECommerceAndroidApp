@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.WishListPDFCreator;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import java.util.ArrayList;
 
@@ -59,14 +60,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         wishListLines = (new OrderLineDB(getActivity(), mCurrentUser)).getWishList();
 
-        if ((wishListLines==null || wishListLines.size()==0)
-                && view.findViewById(R.id.company_logo_name)!=null) {
-            if (view.findViewById(R.id.company_logo_name)!=null) {
-                view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            }
-            if (view.findViewById(R.id.wish_list) != null) {
-                view.findViewById(R.id.wish_list).setVisibility(View.VISIBLE);
-            }
+        if (wishListLines==null || wishListLines.size()==0) {
+            view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.wish_list).setVisibility(View.GONE);
         } else {
             mWishListAdapter = new WishListAdapter(getContext(), this, wishListLines, mCurrentUser);
 
@@ -134,9 +130,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            /*if (wishListLines != null && wishListLines.size() > 0) {
+            if (wishListLines != null && wishListLines.size() > 0) {
                 mShareActionProvider.setShareIntent(createShareProductIntent());
-            }*/
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

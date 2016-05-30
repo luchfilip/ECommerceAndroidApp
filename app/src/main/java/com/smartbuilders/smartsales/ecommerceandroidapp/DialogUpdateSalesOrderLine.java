@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAda
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Created by stein on 26/5/2016.

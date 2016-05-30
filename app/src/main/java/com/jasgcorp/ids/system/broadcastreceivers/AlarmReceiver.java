@@ -1,7 +1,7 @@
 package com.jasgcorp.ids.system.broadcastreceivers;
 
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;

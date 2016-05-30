@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 /**
  * Jesus Sarco, 12.05.2016
@@ -69,29 +71,23 @@ public class SalesOrdersListActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if(findViewById(R.id.nav_view) != null) {
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            try{
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                        .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
         if(findViewById(R.id.sales_order_detail_container) != null){
             // If this view is present, then the activity should be
             // in two-pane mode.
             mTwoPane = true;
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.sales_order_detail_container, new SalesOrderDetailFragment(),
-                                SALES_ORDERDETAIL_FRAGMENT_TAG).commit();
-            }
+            //// In two-pane mode, show the detail view in this activity by
+            //// adding or replacing the detail fragment using a
+            //// fragment transaction.
+            //if(savedInstanceState == null){
+            //    getSupportFragmentManager().beginTransaction()
+            //            .add(R.id.sales_order_detail_container, new SalesOrderDetailFragment(),
+            //                    SALES_ORDERDETAIL_FRAGMENT_TAG).commit();
+            //}
         }else{
             mTwoPane = false;
         }
@@ -102,10 +98,26 @@ public class SalesOrdersListActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.sales_orders_list);
-            if (lv != null && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
+            if (lv != null && lv.getAdapter()!=null
+                    && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
                     && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
                 lv.performItemClick(lv.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
                         mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ListView lv = (ListView) findViewById(R.id.sales_orders_list);
+        if(lv != null && (lv.getAdapter()==null || lv.getAdapter().getCount()==0)){
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            if(mTwoPane){
+                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
+                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.sales_orders_list).setVisibility(View.GONE);
             }
         }
     }
