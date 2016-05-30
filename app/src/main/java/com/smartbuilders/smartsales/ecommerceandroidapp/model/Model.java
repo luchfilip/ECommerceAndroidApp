@@ -76,6 +76,10 @@ public class Model implements Parcelable {
         this.id = id;
     }
 
+    public String getOrderNumber() {
+        return String.format("%06d", getId());
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -137,7 +137,7 @@
     <string name="accept">Aceptar</string>
     <string name="title_activity_shopping_sale">Carrito de Venta</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
-    <string name="qty_ordered">Cantidad pedida: %1$s.</string>
+    <string name="qty_ordered">Cant. pedida: %1$s.</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a la lista de deseos.</string>
     <string name="brand_detail">Marca: %1$s.</string>
@@ -155,7 +155,7 @@
     <string name="total_line_amount_label">Sub-Total:</string>
     <string name="order_price_label">Precio: %1$s</string>
     <string name="order_sub_total_amount">Sub-Total: %1$s</string>
-    <string name="order_sub_total_line_amount">Sub-Total línea: %1$s</string>
+    <string name="order_sub_total_line_amount">Sub-Total: %1$s</string>
     <string name="order_tax_amount">Impuestos: %1$s</string>
     <string name="order_total_amount">Total: %1$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>

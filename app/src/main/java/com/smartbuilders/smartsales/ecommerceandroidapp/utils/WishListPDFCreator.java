@@ -75,7 +75,7 @@ public class WishListPDFCreator {
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     Image companyLogo = Image.getInstance(stream.toByteArray());
                     companyLogo.setAbsolutePosition(50,680);
-                    companyLogo.scalePercent(12);
+                    companyLogo.scalePercent(60);
                     document.add(companyLogo);
                 }catch(Exception e){
                     e.printStackTrace();
@@ -105,7 +105,7 @@ public class WishListPDFCreator {
 
                 PdfPTable table = new PdfPTable(3);
                 // Defiles the relative width of the columns
-                float[] columnWidths = new float[] {30f, 150f, 50f};
+                float[] columnWidths = new float[] {30f, 150f, 100f};
                 table.setWidths(columnWidths);
                 for(OrderLine line : lines){
                     Bitmap bmp = null;
