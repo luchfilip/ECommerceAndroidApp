@@ -39,7 +39,8 @@ public class WishListAdapter extends BaseAdapter {
     private OrderLineDB orderLineDB;
 
     public interface Callback {
-        public void moveToShoppingCart(OrderLine orderLine);
+        public void addToShoppingCart(OrderLine orderLine);
+        public void addToShoppingSale(OrderLine orderLine);
     }
 
     public WishListAdapter(Context context, WishListFragment wishListFragment, ArrayList<OrderLine> data, User user) {
@@ -138,14 +139,31 @@ public class WishListAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.moveToCart.setOnClickListener(new View.OnClickListener() {
+        viewHolder.addToShoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {
-                    mWishListFragment.moveToShoppingCart(mDataset.get(position));
+                    mWishListFragment.addToShoppingCart(mDataset.get(position));
                 }
             }
         });
+
+        viewHolder.addToShoppingSale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDataset.get(position) != null) {
+                    mWishListFragment.addToShoppingSale(mDataset.get(position));
+                }
+            }
+        });
+
+        if (mDataset.get(position).getProduct().getProductBrand() != null
+                && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
+            viewHolder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+        } else {
+            viewHolder.productBrand.setVisibility(View.INVISIBLE);
+        }
 
         view.setTag(viewHolder);
         return view;
@@ -165,14 +183,18 @@ public class WishListAdapter extends BaseAdapter {
         public ImageView deleteItem;
         public TextView productName;
         public TextView productCommercialPackage;
-        public Button moveToCart;
+        public TextView productBrand;
+        public Button addToShoppingCart;
+        public Button addToShoppingSale;
 
         public ViewHolder(View v) {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            productBrand = (TextView) v.findViewById(R.id.product_brand);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
-            moveToCart = (Button) v.findViewById(R.id.move_to_cart_button);
+            addToShoppingCart = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
+            addToShoppingSale = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
         }
     }
 }

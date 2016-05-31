@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import android.widget.ListView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.WishListPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -89,12 +92,23 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     @Override
-    public void moveToShoppingCart(OrderLine orderLine) {
-        DialogMoveToShoppingCart dialogMoveToShoppingCart =
-                DialogMoveToShoppingCart.newInstance(orderLine, mCurrentUser);
-        dialogMoveToShoppingCart.setTargetFragment(this, 0);
-        dialogMoveToShoppingCart.show(getActivity().getSupportFragmentManager(),
-                DialogMoveToShoppingCart.class.getSimpleName());
+    public void addToShoppingCart(OrderLine orderLine) {
+        Product product = (new ProductDB(getContext(), mCurrentUser))
+                .getProductById(orderLine.getProduct().getId(), false);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DialogAddToShoppingCart addToShoppingCartFragment =
+                DialogAddToShoppingCart.newInstance(product, mCurrentUser);
+        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Override
+    public void addToShoppingSale(OrderLine orderLine) {
+        Product product = (new ProductDB(getContext(), mCurrentUser))
+                .getProductById(orderLine.getProduct().getId(), false);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DialogAddToShoppingSale addToShoppingSaleFragment =
+                DialogAddToShoppingSale.newInstance(product, mCurrentUser);
+        addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
     }
 
     public void reloadWishList(){

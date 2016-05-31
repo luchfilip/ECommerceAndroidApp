@@ -20,7 +20,7 @@
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Carrito de Compra</string>
     <string name="shopping_sale">Carrito de Venta</string>
-    <string name="wish_list">Lista de deseos</string>
+    <string name="wish_list">Lista de favoritos</string>
     <string name="orders_list">Pedidos</string>
     <string name="sales_orders_list">Cotizaciones</string>
     <string name="invoces_list">Facturas</string>
@@ -35,7 +35,7 @@
     <string name="tools">Herramientas</string>
     <string name="add_to_shopping_cart">Agregar al Carrito de Compra</string>
     <string name="add_to_shopping_sales">Agregar al Carrito de Venta</string>
-    <string name="add_to_wishlist">Agregar a la lista de deseos</string>
+    <string name="add_to_wishlist">Agregar a la lista de favoritos</string>
     <string name="move_to_shopping_cart">Mover al Carrito de Compras</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar Pedido</string>
@@ -112,7 +112,7 @@
     <string name="title_activity_order_detail">Detalle del Pedido</string>
     <string name="title_activity_invoice_list">Facturas</string>
     <string name="title_activity_invoice_detail">Detalle de la Factura</string>
-    <string name="title_activity_wish_list">Lista de Deseos</string>
+    <string name="title_activity_wish_list">Lista de Favoritos</string>
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
@@ -131,7 +131,7 @@
     <string name="products_availables">Artículos disponibles: %1$s.</string>
     <string name="product_moved_to_shopping_cart">Agregado al carrito de compra.</string>
     <string name="product_moved_to_shopping_sale">Agregado al carrito de venta.</string>
-    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de deseos?</string>
+    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compra?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s del carrito de venta?</string>
     <string name="accept">Aceptar</string>
@@ -139,7 +139,7 @@
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cant. pedida: %1$s</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
-    <string name="product_put_in_wishlist">Producto agregado a la lista de deseos.</string>
+    <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
     <string name="brand_detail">Marca: %1$s.</string>
     <string name="my_purchases">Mis Compras</string>
     <string name="my_sales">Mis Ventas</string>
