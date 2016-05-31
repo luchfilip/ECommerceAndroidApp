@@ -217,11 +217,11 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (mProduct.getProductCommercialPackage() != null) {
-                                ((TextView) view.findViewById(R.id.product_comercial_package)).setText(getContext().getString(R.string.commercial_package,
+                                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
                                         mProduct.getProductCommercialPackage().getUnits() + " " +
                                                 mProduct.getProductCommercialPackage().getUnitDescription()));
                             } else {
-                                view.findViewById(R.id.product_comercial_package).setVisibility(View.GONE);
+                                view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);
                             }
 
                             if (view.findViewById(R.id.product_addtoshoppingsales_button) != null) {

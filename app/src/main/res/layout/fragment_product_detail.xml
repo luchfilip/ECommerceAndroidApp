@@ -65,7 +65,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
-                            android:id="@+id/product_comercial_package"
+                            android:id="@+id/product_commercial_package"
                             android:textColor="@color/colorPrimaryDark" />
 
                         <TextView

@@ -72,7 +72,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
             //productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
-            commercialPackage = (TextView) v.findViewById(R.id.product_comercial_package);
+            commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productAvaliability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);

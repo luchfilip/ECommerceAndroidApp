@@ -38,12 +38,16 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
+        public TextView productBrand;
+        public TextView productCommercialPackage;
         public ImageView productImage;
         public TextView qtyOrdered;
 
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
         }
@@ -102,6 +106,22 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
+        }
+
+        if (mDataset.get(position).getProduct().getProductCommercialPackage() != null) {
+            holder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
+                    (mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
+                            (mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()))));
+        } else {
+            holder.productCommercialPackage.setVisibility(View.INVISIBLE);
+        }
+
+        if (mDataset.get(position).getProduct().getProductBrand() != null
+                && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
+            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+        } else {
+            holder.productBrand.setVisibility(View.INVISIBLE);
         }
 
         holder.productImage.setOnClickListener(new View.OnClickListener() {
