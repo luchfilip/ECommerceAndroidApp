@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.itextpdf.text.log.SysoCounter;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
@@ -26,10 +27,11 @@ public class MainPageSectionDB {
         ArrayList<MainPageSection> mainPageSections = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT MAINPAGE_SECTION_ID, NAME, DESCRIPTION " +
-                    " FROM MAINPAGE_SECTION " +
-                    " WHERE ISACTIVE = 'Y' " +
-                    " ORDER BY PRIORITY ASC";
+            String sql = "SELECT DISTINCT MS.MAINPAGE_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
+                    " FROM MAINPAGE_SECTION MS " +
+                        " INNER JOIN MAINPAGE_PRODUCT MP ON MP.MAINPAGE_SECTION_ID = MS.MAINPAGE_SECTION_ID AND MP.ISACTIVE = 'Y' " +
+                    " WHERE MS.ISACTIVE = 'Y' " +
+                    " ORDER BY MS.PRIORITY ASC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, null, null);

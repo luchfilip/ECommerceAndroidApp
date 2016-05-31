@@ -98,32 +98,6 @@ public class TableDataReceiverFromServer extends Thread {
 		}
 		sync = false;
 	}
-
-	public static Cursor getDataFromWS(final Context context, final String sql, final User user){
-		try {
-			return new AsyncTask<Void, Void, Cursor>() {
-				@Override
-				protected Cursor doInBackground(Void... voids) {
-					try {
-						return context.getContentResolver().query(DataBaseContentProvider
-										.REMOTE_DB_URI.buildUpon()
-										.appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-										.build(),
-								null,
-								sql,
-								null,
-								null);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return null;
-				}
-			}.execute().get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 	
 	/**
 	 * Devuelve los 
