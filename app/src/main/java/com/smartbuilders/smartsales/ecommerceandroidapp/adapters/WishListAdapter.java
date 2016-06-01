@@ -114,9 +114,8 @@ public class WishListAdapter extends BaseAdapter {
 
         viewHolder.productName.setText(mDataset.get(position).getProduct().getName());
 
-        viewHolder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package,
-                mDataset.get(position).getProduct().getProductCommercialPackage().getUnits() + " " +
-                mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getProduct().getAvailability()));
 
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,7 +181,7 @@ public class WishListAdapter extends BaseAdapter {
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productCommercialPackage;
+        public TextView productAvailability;
         public TextView productBrand;
         public Button addToShoppingCart;
         public Button addToShoppingSale;
@@ -190,7 +189,7 @@ public class WishListAdapter extends BaseAdapter {
         public ViewHolder(View v) {
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             addToShoppingCart = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);

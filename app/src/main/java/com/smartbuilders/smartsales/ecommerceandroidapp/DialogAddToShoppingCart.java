@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,18 @@ public class DialogAddToShoppingCart extends DialogFragment {
                 }
             }
         );
+
+        if(view.findViewById(R.id.product_commercial_package) != null){
+            if(mProduct.getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
+                        mProduct.getProductCommercialPackage().getUnits() + " " +
+                                mProduct.getProductCommercialPackage().getUnitDescription()));
+            }else{
+                view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
+            }
+        }
+
         getDialog().setTitle(mProduct.getName());
         return view;
     }

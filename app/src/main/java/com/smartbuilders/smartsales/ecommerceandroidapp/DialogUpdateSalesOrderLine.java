@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,6 +123,17 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                 }
             }
         });
+
+        if(view.findViewById(R.id.product_commercial_package) != null){
+            if(mOrderLine.getProduct()!=null && mOrderLine.getProduct().getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
+                        mOrderLine.getProduct().getProductCommercialPackage().getUnits() + " " +
+                                mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
+            }else{
+                view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
+            }
+        }
 
         switch (mFocus) {
             case ShoppingSaleAdapter.FOCUS_PRICE:

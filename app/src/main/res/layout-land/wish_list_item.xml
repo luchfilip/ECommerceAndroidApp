@@ -60,19 +60,27 @@
             android:textColor="@color/product_availability"
             android:textStyle="bold" />
 
-        <Button
-            style="@style/MainButtonAppTheme"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/buy"
-            android:id="@+id/product_addtoshoppingcart_button" />
+            android:layout_height="match_parent">
 
-        <Button
-            style="@style/GoldenButtonAppTheme"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/sell"
-            android:id="@+id/product_addtoshoppingsales_button" />
+            <Button
+                style="@style/MainButtonAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:text="@string/buy"
+                android:id="@+id/product_addtoshoppingcart_button"
+                android:layout_weight="1" />
+
+            <Button
+                style="@style/GoldenButtonAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:text="@string/sell"
+                android:id="@+id/product_addtoshoppingsales_button"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

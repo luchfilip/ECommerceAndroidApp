@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -102,10 +103,38 @@ public class Utils {
     /**
      *
      * @param product
-     * @param fileName
+     * @param context
+     * @param user
      * @return
      */
-    public static Intent createShareProductIntent(Product product, String fileName){
+    public static Intent createShareProductIntent(Product product, Context context, User user){
+        String fileName = "tmpImg.jpg";
+        if(product.getImageFileName()!=null){
+            Bitmap productImage = Utils.getImageByFileName(context, user, product.getImageFileName());
+            if(productImage==null){
+                //Si el archivo no existe entonces se descarga
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(product.getImageFileName(), false, user, context);
+                try {
+                    productImage = getFileFromServlet.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(productImage==null){
+                productImage = Utils.getThumbByFileName(context, user, product.getImageFileName());
+            }
+            if(productImage!=null){
+                createFileInCacheDir(fileName, productImage, context);
+            }else{
+                createFileInCacheDir(fileName, R.drawable.no_image_available, context);
+            }
+        }else{
+            createFileInCacheDir(fileName, R.drawable.no_image_available, context);
+        }
+
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");

@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,14 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +26,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecycler
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.squareup.picasso.Callback;
@@ -37,14 +33,12 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ProductDetailFragment extends Fragment {
 
-    private static final String TAG = ProductDetailFragment.class.getSimpleName();
     private static final String STATE_CURRENT_USER = "state_current_user";
 
     private ProgressDialog waitPlease;
@@ -299,7 +293,8 @@ public class ProductDetailFragment extends Fragment {
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
         if (mProduct != null) {
-            mShareActionProvider.setShareIntent(createShareIntent());
+            //mShareActionProvider.setShareIntent(createShareIntent());
+            mShareActionProvider.setShareIntent(Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser));
         }
     }
 
@@ -312,37 +307,10 @@ public class ProductDetailFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            mShareActionProvider.setShareIntent(createShareIntent());
+            mShareActionProvider.setShareIntent(Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser));
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private Intent createShareIntent(){
-        String fileName = "tmpImg.jpg";
-        if(mProduct.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
-            if(productImage==null){
-                //Si el archivo no existe entonces se descarga
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(mProduct.getImageFileName(), false, mCurrentUser, getContext());
-                try {
-                    productImage = getFileFromServlet.execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(productImage!=null){
-                Utils.createFileInCacheDir(fileName, productImage, getContext());
-            }else{
-                Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, getContext());
-            }
-        }else{
-            Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, getContext());
-        }
-        return Utils.createShareProductIntent(mProduct, fileName);
     }
 
     private void addToShoppingCart() {

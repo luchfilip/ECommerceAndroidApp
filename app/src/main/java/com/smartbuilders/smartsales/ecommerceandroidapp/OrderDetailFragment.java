@@ -115,7 +115,7 @@ public class OrderDetailFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             if (mOrderLines != null && mOrderLines.size() > 0) {
-                mShareActionProvider.setShareIntent(createShareProductIntent());
+                mShareActionProvider.setShareIntent(createShareOrderIntent());
             }
             return true;
         }
@@ -123,7 +123,7 @@ public class OrderDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareProductIntent(){
+    private Intent createShareOrderIntent(){
         String fileName = "Pedido";
         String subject = "";
         String message = "";
@@ -150,7 +150,7 @@ public class OrderDetailFragment extends Fragment {
 
     class CreateShareIntentThread extends Thread {
         public void run() {
-            final Intent shareIntent = createShareProductIntent();
+            final Intent shareIntent = createShareOrderIntent();
             try {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

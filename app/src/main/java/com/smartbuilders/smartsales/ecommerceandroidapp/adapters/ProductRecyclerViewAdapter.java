@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
@@ -29,7 +27,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.GetFileFromServlet;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
@@ -56,10 +53,9 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         // each data item is just a string in this case
         public TextView productName;
         public ImageView productImage;
-        //public TextView productSubCategory;
         public TextView productBrand;
         public TextView commercialPackage;
-        public TextView productAvaliability;
+        public TextView productAvailability;
         public LinearLayout linearLayoutContent;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
@@ -70,10 +66,9 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
-            //productSubCategory = (TextView) v.findViewById(R.id.product_subcategory);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
-            productAvaliability = (TextView) v.findViewById(R.id.product_availability);
+            productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImageView = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
@@ -142,14 +137,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 break;
             }
         }
-        //if(holder.productSubCategory!=null){
-        //    if(mDataset.get(position).getProductSubCategory()!=null
-        //            && !TextUtils.isEmpty(mDataset.get(position).getProductSubCategory().getDescription())){
-        //        holder.productSubCategory.setText(mDataset.get(position).getProductSubCategory().getDescription());
-        //    }else{
-        //        holder.productSubCategory.setVisibility(TextView.GONE);
-        //    }
-        //}
+
         if(holder.productBrand!=null){
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
@@ -197,18 +185,18 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             holder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
-        if(holder.productAvaliability!=null){
-            holder.productAvaliability.setText(mContext.getString(R.string.availability,
+        if(holder.productAvailability !=null){
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));
         }else{
-            holder.productAvaliability.setVisibility(View.VISIBLE);
+            holder.productAvailability.setVisibility(View.VISIBLE);
         }
 
         if(holder.shareImageView!=null) {
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                createShareIntent(mDataset.get(position));
+                Utils.createShareProductIntent(mDataset.get(position), mContext, mCurrentUser);
                 }
             });
         }
@@ -271,33 +259,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         } catch (Exception e) {
             return 0;
         }
-    }
-
-    private void createShareIntent(Product product){
-        String fileName = "tmpImg.jpg";
-        if(product.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageByFileName(mContext, mCurrentUser, product.getImageFileName());
-            if(productImage==null){
-                //Si el archivo no existe entonces se descarga
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(product.getImageFileName(), false, mCurrentUser, mContext);
-                try {
-                    productImage = getFileFromServlet.execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(productImage!=null){
-                Utils.createFileInCacheDir(fileName, productImage, mContext);
-            }else{
-                Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, mContext);
-            }
-        }else{
-            Utils.createFileInCacheDir(fileName, R.drawable.no_image_available, mContext);
-        }
-        mContext.startActivity(Utils.createShareProductIntent(product, fileName));
     }
 
     private void addToShoppingCart(Product product) {
