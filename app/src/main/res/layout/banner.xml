@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:flipInterval="4000"
         android:inAnimation="@anim/slide_in_right"
-        android:outAnimation="@anim/slide_in_left"
-        android:background="@android:color/white" >
+        android:outAnimation="@anim/slide_in_left">
 
     </ViewFlipper>
 

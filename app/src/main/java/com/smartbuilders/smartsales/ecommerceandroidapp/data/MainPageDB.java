@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandsPromotionSection;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,14 @@ public class MainPageDB {
 
         mainPageList.add(BannerSectionDB.getBannerSection());
 
+        ProductBrandsPromotionSection productBrandsPromotionSection = new ProductBrandsPromotionSection();
+        ArrayList<ProductBrand> productBrands = (new ProductBrandDB(mContext, mUser)).getActiveProductBrands();
+        productBrandsPromotionSection.setProductBrands(productBrands);
+        mainPageList.add(productBrandsPromotionSection);
+
         mainPageList.addAll((new MainPageSectionDB(mContext, mUser)).getActiveMainPageSections());
+
+
 
         return mainPageList;
     }

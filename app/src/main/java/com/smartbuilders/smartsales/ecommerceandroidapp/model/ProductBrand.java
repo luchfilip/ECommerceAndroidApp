@@ -11,6 +11,7 @@ public class ProductBrand extends Model implements Parcelable {
     private String name;
     private String description;
     private int imageId;
+    private String imageFileName;
     private int productsActiveQty;
 
     public ProductBrand(){
@@ -28,6 +29,7 @@ public class ProductBrand extends Model implements Parcelable {
         name = in.readString();
         description = in.readString();
         imageId = in.readInt();
+        imageFileName = in.readString();
         productsActiveQty = in.readInt();
     }
 
@@ -67,6 +69,14 @@ public class ProductBrand extends Model implements Parcelable {
         this.imageId = imageId;
     }
 
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
+    }
+
     public int getProductsActiveQty() {
         return productsActiveQty;
     }
@@ -86,6 +96,7 @@ public class ProductBrand extends Model implements Parcelable {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeInt(imageId);
+        dest.writeString(imageFileName);
         dest.writeInt(productsActiveQty);
     }
 }

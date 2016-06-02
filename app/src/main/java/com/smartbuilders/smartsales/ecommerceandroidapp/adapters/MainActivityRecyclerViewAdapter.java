@@ -2,13 +2,16 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -17,6 +20,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Banner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandsPromotionSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ViewIdGenerator;
 
 import java.util.ArrayList;
 
@@ -27,10 +32,12 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
 
     private static final int VIEW_TYPE_VIEWFLIPPER = 0;
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
+    private static final int VIEW_TYPE_VIEWPAGER = 2;
 
     private FragmentActivity mFragmentActivity;
     private ArrayList<Object> mDataset;
     private User mCurrentUser;
+    private DisplayMetrics metrics;
 
     @Override
     public int getItemViewType(int position) {
@@ -38,6 +45,8 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
             return VIEW_TYPE_VIEWFLIPPER;
         } else if (mDataset.get(position) instanceof MainPageSection) {
             return VIEW_TYPE_RECYCLERVIEW;
+        } else if (mDataset.get(position) instanceof ProductBrandsPromotionSection) {
+            return VIEW_TYPE_VIEWPAGER;
         }
         return -1;
     }
@@ -46,11 +55,13 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         public TextView categoryName;
         public RecyclerView mRecyclerView;
         public ViewFlipper mViewFlipper;
+        public ViewPager mViewPager;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name);
             mRecyclerView = (RecyclerView) v.findViewById(R.id.product_list);
             mViewFlipper = (ViewFlipper) v.findViewById(R.id.banner_flipper);
+            mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
         }
     }
 
@@ -60,6 +71,8 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
+        metrics = new DisplayMetrics();
+        fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
     }
 
     @Override
@@ -67,16 +80,18 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         // create a new view
         View view = null;
         switch (getItemViewType(position)) {
-            case VIEW_TYPE_VIEWFLIPPER: {
+            case VIEW_TYPE_VIEWFLIPPER:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.banner, parent, false);
                 break;
-            }
-            case VIEW_TYPE_RECYCLERVIEW: {
+            case VIEW_TYPE_RECYCLERVIEW:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.category_product_list, parent, false);
                 break;
-            }
+            case VIEW_TYPE_VIEWPAGER:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_pager_layout, parent, false);
+                break;
         }
 
         if (view != null) {
@@ -130,6 +145,22 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                     }
                     break;
                 }
+                case VIEW_TYPE_VIEWPAGER:
+                    ProductBrandsPromotionSection productBrandsPromotionSection =
+                            (ProductBrandsPromotionSection) mDataset.get(position);
+                    if(productBrandsPromotionSection!=null && productBrandsPromotionSection.getProductBrands()!=null
+                            && !productBrandsPromotionSection.getProductBrands().isEmpty()) {
+                        viewHolder.mViewPager.setId(ViewIdGenerator.generateViewId());
+                        viewHolder.mViewPager.setClipToPadding(false);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, 600);
+                        viewHolder.mViewPager.setLayoutParams(lp);
+                        viewHolder.mViewPager.setPageMargin(12);
+                        ProductBrandsPromotionAdapter productBrandsPromotionAdapter =
+                                new ProductBrandsPromotionAdapter(mFragmentActivity.getSupportFragmentManager());
+                        productBrandsPromotionAdapter.setData(productBrandsPromotionSection.getProductBrands());
+                        viewHolder.mViewPager.setAdapter(productBrandsPromotionAdapter);
+                    }
+                    break;
             }
 
             view.setTag(viewHolder);
