@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class ProductsListFragment extends Fragment {
 
     private static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private ProgressDialog waitPlease;
     private User mCurrentUser;
@@ -40,6 +41,8 @@ public class ProductsListFragment extends Fragment {
     private String productName;
     private ArrayList<Product> products;
     private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
+    private LinearLayoutManager linearLayoutManager;
+    private int mRecyclerViewCurrentFirstPosition;
 
     public ProductsListFragment() {
     }
@@ -52,6 +55,9 @@ public class ProductsListFragment extends Fragment {
         if( savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
         }
 
@@ -147,21 +153,24 @@ public class ProductsListFragment extends Fragment {
                             mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(getActivity(), products, true,
                                     ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
-                            RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
+                            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
                             // use this setting to improve performance if you know that changes
                             // in content do not change the layout size of the RecyclerView
-                            mRecyclerView.setHasFixedSize(true);
+                            recyclerView.setHasFixedSize(true);
                             if (useGridView()) {
-                                mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
+                                linearLayoutManager = new GridLayoutManager(getContext(), getSpanCount());
                             }else{
-                                mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                linearLayoutManager = new LinearLayoutManager(getContext());
                             }
-                            mRecyclerView.setAdapter(mProductRecyclerViewAdapter);
+                            recyclerView.setLayoutManager(linearLayoutManager);
+                            recyclerView.setAdapter(mProductRecyclerViewAdapter);
 
-                            if(!products.isEmpty() && productId != 0){
-                                for(int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++){
-                                    if(mProductRecyclerViewAdapter.getItemId(pos) == productId){
-                                        mRecyclerView.scrollToPosition(pos);
+                            if (mRecyclerViewCurrentFirstPosition!=0) {
+                                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                            } else if(!products.isEmpty() && productId != 0) {
+                                for (int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++) {
+                                    if (mProductRecyclerViewAdapter.getItemId(pos) == productId) {
+                                        recyclerView.scrollToPosition(pos);
                                         break;
                                     }
                                 }
@@ -238,6 +247,13 @@ public class ProductsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        if (linearLayoutManager instanceof GridLayoutManager) {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                    linearLayoutManager.findFirstVisibleItemPosition());
+        } else {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                    linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+        }
         super.onSaveInstanceState(outState);
     }
 }

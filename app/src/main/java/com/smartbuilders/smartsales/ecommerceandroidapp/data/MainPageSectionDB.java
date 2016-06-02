@@ -3,10 +3,10 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.itextpdf.text.log.SysoCounter;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 
 import java.util.ArrayList;
 
@@ -53,6 +53,48 @@ public class MainPageSectionDB {
                 }
             }
         }
+
+        if(mainPageSections!=null && !mainPageSections.isEmpty()) {
+            for(MainPageSection mainPageSection : mainPageSections){
+                mainPageSection.setProducts(getActiveMainPageProductsByMainPageSectionId(mainPageSection.getId()));
+            }
+        }
         return mainPageSections;
+    }
+
+    private ArrayList<Product> getActiveMainPageProductsByMainPageSectionId(int mainPageSectionId){
+        ArrayList<Product> mainPageProducts = new ArrayList<>();
+        Cursor c = null;
+        try {
+            String sql = "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_SECTION_ID, M.PRODUCT_ID " +
+                    " FROM MAINPAGE_PRODUCT M " +
+                    " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID " +
+                    " WHERE M.ISACTIVE = 'Y' AND M.MAINPAGE_SECTION_ID = " + mainPageSectionId +
+                    " ORDER BY M.PRIORITY ASC";
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, null, null);
+            while(c.moveToNext()){
+                Product p = new Product();
+                p.setId(c.getInt(2));
+                mainPageProducts.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ProductDB productDB = new ProductDB(context, user);
+        for (int i = 0; i < mainPageProducts.size(); i++){
+            mainPageProducts.set(i, productDB.getProductById(mainPageProducts.get(i).getId(), false));
+        }
+        return mainPageProducts;
     }
 }

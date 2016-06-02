@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by Alberto on 25/4/2016.
  */
@@ -11,6 +13,7 @@ public class MainPageSection extends Model implements Parcelable {
     private String name;
     private String description;
     private int priority;
+    private ArrayList<Product> products;
 
     public MainPageSection() {
 
@@ -21,6 +24,7 @@ public class MainPageSection extends Model implements Parcelable {
         name = in.readString();
         description = in.readString();
         priority = in.readInt();
+        products = in.createTypedArrayList(Product.CREATOR);
     }
 
     @Override
@@ -29,6 +33,7 @@ public class MainPageSection extends Model implements Parcelable {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeInt(priority);
+        dest.writeTypedList(products);
     }
 
     @Override
@@ -70,5 +75,13 @@ public class MainPageSection extends Model implements Parcelable {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 }

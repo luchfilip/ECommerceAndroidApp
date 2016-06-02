@@ -14,22 +14,19 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -41,15 +38,20 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+
     private AccountManager mAccountManager;
     private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
     private Account mAccount;
     private NavigationView mNavigationView;
     private ProgressDialog waitPlease;
+    // save index and top position
+    int mListViewIndex;
+    int mListViewTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,12 @@ public class MainActivity extends AppCompatActivity
         if( savedInstanceState != null ) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+            }
+            if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+            }
+            if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
             }
         }
 
@@ -70,10 +78,10 @@ public class MainActivity extends AppCompatActivity
             String combine = scheme+":"+fullPath; //combine to get a full URI
             String url = null;//declare variable to hold final URL
             if(combine!=null){//if combine variable is not empty then navigate to that full path
-                Log.d(TAG, "combine: "+combine);
+                //Log.d(TAG, "combine: "+combine);
                 //url = combine;
             } else{//else open main page
-                Log.e(TAG, "combine is null");
+                //Log.e(TAG, "combine is null");
                 //url = "http://www.example.com";
             }
         }
@@ -147,13 +155,13 @@ public class MainActivity extends AppCompatActivity
                         finishActivityOnResultOperationCanceledException = true;
                     } else {
                         finishActivityOnResultOperationCanceledException = false;
-                        final MainPageSectionDB mainPageSectionDB =
-                                new MainPageSectionDB(MainActivity.this, mCurrentUser);
+                        final MainPageDB mainPageDB =
+                                new MainPageDB(MainActivity.this, mCurrentUser);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                loadMainPage(mainPageSectionDB.getActiveMainPageSections());
+                                loadMainPage(mainPageDB.getMainPageList());
                                 //Bundle settingsBundle = new Bundle();
                                 //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                                 //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -199,12 +207,11 @@ public class MainActivity extends AppCompatActivity
                     try {
                         Utils.loadInitialDataFromWS(MainActivity.this, mCurrentUser);
                         Utils.createImageFiles(MainActivity.this, mCurrentUser);
-                        final MainPageSectionDB mainPageSectionDB =
-                                new MainPageSectionDB(MainActivity.this, mCurrentUser);
+                        final MainPageDB mainPageDB = new MainPageDB(MainActivity.this, mCurrentUser);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                loadMainPage(mainPageSectionDB.getActiveMainPageSections());
+                                loadMainPage(mainPageDB.getMainPageList());
                             }
                         });
                     } catch (Exception e) {
@@ -226,12 +233,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }.start();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
     }
 
     @Override
@@ -310,14 +311,24 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void loadMainPage(ArrayList<MainPageSection> mainPageSections){
+    private void loadMainPage(ArrayList<Object> mainPageSections){
         ListView listView = (ListView) findViewById(R.id.main_categories_list);
         listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
+        listView.setSelectionFromTop(mListViewIndex, mListViewTop);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        try {
+            ListView listView = (ListView) findViewById(R.id.main_categories_list);
+            outState.putInt(STATE_LISTVIEW_INDEX, listView.getFirstVisiblePosition());
+            outState.putInt(STATE_LISTVIEW_TOP,
+                    (listView.getChildAt(0) == null) ? 0 : (listView.getChildAt(0).getTop() - listView.getPaddingTop()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onSaveInstanceState(outState);
     }
+
 }

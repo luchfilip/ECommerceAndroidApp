@@ -196,7 +196,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Utils.createShareProductIntent(mDataset.get(position), mContext, mCurrentUser);
+                    mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
+                            mDataset.get(position), mContext, mCurrentUser), mContext.getString(R.string.share_image)));
                 }
             });
         }

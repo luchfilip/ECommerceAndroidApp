@@ -108,6 +108,7 @@ public class Utils {
      * @return
      */
     public static Intent createShareProductIntent(Product product, Context context, User user){
+        Log.d(TAG, "createShareProductIntent - user.getServerAddress(): "+user.getServerAddress());
         String fileName = "tmpImg.jpg";
         if(product.getImageFileName()!=null){
             Bitmap productImage = Utils.getImageByFileName(context, user, product.getImageFileName());
