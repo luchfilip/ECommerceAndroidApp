@@ -16,7 +16,7 @@ public class BannerSectionDB {
 
         ArrayList<Banner> banners = new ArrayList<>();
         Banner banner = new Banner();
-        banner.setImageResId(R.drawable.banner0);
+        banner.setImageResId(R.drawable.banner);
         banners.add(banner);
 
         banner = new Banner();
