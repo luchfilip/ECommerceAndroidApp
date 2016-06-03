@@ -39,15 +39,14 @@
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SplashScreen"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/SplashTheme.NoActionBar" >
+            android:theme="@style/SplashTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -64,7 +63,6 @@
                 <data android:pathPattern="/.*" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -130,20 +128,21 @@
                 <category android:name="com.smartbuilders.smartsales.ecommerceandroidapp" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
                 <action android:name="com.jasgcorp.ids.scheduler.AlarmReceiver.Action" />
             </intent-filter>
         </receiver>
-        <!-- Para revisar el estado de la sincronizacion automatica cuando cambia
+        <!--
+        Para revisar el estado de la sincronizacion automatica cuando cambia
         el tipo de conexion de red. Ya sea que se apague o encienda el wi-fi, se conecte
-        a una red de wi-fi, etc. -->
+        a una red de wi-fi, etc.
+        -->
         <receiver
             android:name="com.jasgcorp.ids.system.broadcastreceivers.NetworkReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

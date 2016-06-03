@@ -42,7 +42,7 @@
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
 
-    <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored" >
+    <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialGoldenButton</item>
         <item name="android:textColor">@color/button_text_color</item>
     </style>
@@ -52,7 +52,7 @@
         <item name="colorButtonNormal">@color/golden</item>
     </style>
 
-    <style name="GreyButtonAppTheme" parent="Widget.AppCompat.Button.Colored" >
+    <style name="GreyButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialGreyButton</item>
         <item name="android:textColor">@color/button_text_color</item>
     </style>
