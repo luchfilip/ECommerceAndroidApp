@@ -112,7 +112,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                 case VIEW_TYPE_RECYCLERVIEW: {
                     MainPageSection mainPageSection = (MainPageSection) mDataset.get(position);
 
-                    if(mainPageSection.getProducts() != null && !mainPageSection.getProducts().isEmpty()){
+                    if(mainPageSection!=null && mainPageSection.getProducts()!=null && !mainPageSection.getProducts().isEmpty()){
                         // - get element from your dataset at this position
                         // - replace the contents of the view with that element
                         viewHolder.categoryName.setText(mainPageSection.getName());

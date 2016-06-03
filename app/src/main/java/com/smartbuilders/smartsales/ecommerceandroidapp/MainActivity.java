@@ -1,17 +1,15 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.OperationCanceledException;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -20,11 +18,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.jasgcorp.ids.syncadapter.SyncAdapter;
+import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -38,27 +41,74 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
-    private AccountManager mAccountManager;
-    private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
-    private Account mAccount;
-    private NavigationView mNavigationView;
     private ProgressDialog waitPlease;
     // save index and top position
     int mListViewIndex;
     int mListViewTop;
+
+    private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent!=null && intent.getAction()!=null){
+                Bundle extras = intent.getExtras();
+                if(extras!=null){
+                    if(extras.containsKey(SyncAdapter.USER_ID)
+                            && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
+                        if(intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
+                                || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+                                || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
+                                || intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
+                                || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
+                            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
+                                loadData();
+                            }else{
+                                if (waitPlease!=null && waitPlease.isShowing()) {
+                                    waitPlease.dismiss();
+                                    waitPlease.cancel();
+                                }
+                                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                                findViewById(R.id.main_categories_list).setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try{
+            IntentFilter intentFilter = new IntentFilter(SyncAdapter.SYNCHRONIZATION_STARTED);
+            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_CANCELED);
+            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_PROGRESS);
+            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_FINISHED);
+            intentFilter.addAction(SyncAdapter.AUTHENTICATOR_EXCEPTION);
+            intentFilter.addAction(SyncAdapter.GENERAL_EXCEPTION);
+            intentFilter.addAction(SyncAdapter.IO_EXCEPTION);
+            intentFilter.addAction(SyncAdapter.OPERATION_CANCELED_EXCEPTION);
+            intentFilter.addAction(SyncAdapter.XML_PULL_PARSE_EXCEPTION);
+            getApplicationContext().registerReceiver(syncAdapterReceiver, intentFilter);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if( savedInstanceState != null ) {
+        if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
@@ -67,6 +117,12 @@ public class MainActivity extends AppCompatActivity
             }
             if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
                 mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
+                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
             }
         }
 
@@ -90,85 +146,126 @@ public class MainActivity extends AppCompatActivity
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
         setSupportActionBar(toolbar);
 
-        mAccountManager = AccountManager.get(this);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        if(findViewById(R.id.search_bar_linear_layout)!=null){
-            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
-            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
+        checkInitialLoad();
 
-            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
-                }
-            });
+        findViewById(R.id.exit_app_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        findViewById(R.id.reTry_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
+                findViewById(R.id.main_categories_list).setVisibility(View.GONE);
+                checkInitialLoad();
+            }
+        });
+    }
+
+
+    /**
+     * Verifica si tiene que
+     */
+    private void checkInitialLoad() {
+        if (waitPlease!=null && waitPlease.isShowing()){
+            waitPlease.dismiss();
+            waitPlease.cancel();
         }
 
+        if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
+            Account[] accounts = AccountManager.get(this)
+                    .getAccountsByType(getString(R.string.authenticator_acount_type));
+            if(accounts!=null && accounts.length>0){
+                if(NetworkConnectionUtilities.isOnline(this)
+                        && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
+                    waitPlease = ProgressDialog.show(this, getString(R.string.loading_data),
+                            getString(R.string.wait_please), true, false);
+                    if(!ApplicationUtilities.isSyncActive(accounts[0], getString(R.string.sync_adapter_content_authority))){
+                        Log.d(TAG, "!ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
+                        Bundle settingsBundle = new Bundle();
+                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                        ContentResolver.requestSync(accounts[0], getString(R.string.sync_adapter_content_authority), settingsBundle);
+                    }else{
+                        Log.d(TAG, "ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
+                    }
+                } else {
+                    //show network connection unavailable error.
+                    Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
+                    //TODO: mostrar en pantalla error de conexion
+                }
+            }else{
+                startActivity(new Intent(this, SplashScreen.class));
+                finish();
+            }
+        } else if (mCurrentUser!=null) {
+            loadData();
+        } else {
+            startActivity(new Intent(this, SplashScreen.class));
+            finish();
+        }
+    }
+
+    private void loadData(){
+        if(waitPlease!=null && waitPlease.isShowing()){
+            waitPlease.dismiss();
+            waitPlease.cancel();
+        }
         waitPlease = ProgressDialog.show(this, getString(R.string.loading),
                 getString(R.string.wait_please), true, false);
         new Thread() {
             @Override
             public void run() {
                 try {
-                    final Account availableAccounts[] = mAccountManager
-                            .getAccountsByType(getString(R.string.authenticator_acount_type));
-                    if (availableAccounts != null && availableAccounts.length > 0) {
-                        if (mCurrentUser != null) {
-                            for (int i = 0; i < availableAccounts.length; i++) {
-                                if (mAccountManager.getUserData(availableAccounts[i],
-                                        AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())) {
-                                    loadUserData(availableAccounts[i]);
-                                    break;
-                                }
+                    final MainPageDB mainPageDB = new MainPageDB(MainActivity.this, mCurrentUser);
+                    Utils.createImageFiles(MainActivity.this, mCurrentUser);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(findViewById(R.id.search_bar_linear_layout)!=null){
+                                findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
+                                                .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                                    }
+                                });
+
+                                findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                                                .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                                    }
+                                });
+
+                                findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                                                .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                                    }
+                                });
                             }
-                        } else {
-                            loadUserData(availableAccounts[0]);
+
+                            loadMainPage(mainPageDB.getMainPageList());
                         }
-                    }
-
-                    if (mAccount == null) {
-                        addNewAccount(getString(R.string.authenticator_acount_type),
-                                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-                        finishActivityOnResultOperationCanceledException = true;
-                    } else {
-                        finishActivityOnResultOperationCanceledException = false;
-                        final MainPageDB mainPageDB =
-                                new MainPageDB(MainActivity.this, mCurrentUser);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadMainPage(mainPageDB.getMainPageList());
-                                //Bundle settingsBundle = new Bundle();
-                                //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                                //settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                                //ContentResolver.requestSync(mAccount, getString(R.string.sync_adapter_content_authority), settingsBundle);
-                            }
-                        });
-                    }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -186,53 +283,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }.start();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkInitialLoad();
-    }
-
-    /**
-     * Verifica si tiene que
-     */
-    private void checkInitialLoad() {
-        if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
-            waitPlease = ProgressDialog.show(this, getString(R.string.loading_data),
-                    getString(R.string.wait_please), true, false);
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        Utils.loadInitialDataFromWS(MainActivity.this, mCurrentUser);
-                        Utils.createImageFiles(MainActivity.this, mCurrentUser);
-                        final MainPageDB mainPageDB = new MainPageDB(MainActivity.this, mCurrentUser);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadMainPage(mainPageDB.getMainPageList());
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-                    } finally {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    waitPlease.dismiss();
-                                    waitPlease.cancel();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                }
-            }.start();
-        }
     }
 
     @Override
@@ -254,66 +304,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Add new account to the account manager
-     * @param accountType
-     * @param authTokenType
-     */
-    private void addNewAccount(String accountType, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(accountType,
-                authTokenType, null, null, this, new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    Bundle bnd = future.getResult();
-                    if(bnd!=null && bnd.containsKey(AccountManager.KEY_ACCOUNT_NAME)){
-                        String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
-                                .getString(AccountGeneral.USERDATA_USER_ID);
-                        final Account availableAccounts[] = mAccountManager
-                                .getAccountsByType(getString(R.string.authenticator_acount_type));
-                        if (availableAccounts!=null && availableAccounts.length>0) {
-                            for(Account account : availableAccounts){
-                                if(mAccountManager.getUserData(account,
-                                        AccountGeneral.USERDATA_USER_ID).equals(userId)){
-                                    mCurrentUser = ApplicationUtilities
-                                            .getUserByIdFromAccountManager(getApplicationContext(), userId);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } catch(OperationCanceledException e){
-                    if(finishActivityOnResultOperationCanceledException){
-                        finish();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, null);
-    }
-
-    private void loadUserData(Account account){
-        ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
-        mAccount = account;
-        mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
-                mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    ((TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name))
-                            .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     private void loadMainPage(ArrayList<Object> mainPageSections){
         ListView listView = (ListView) findViewById(R.id.main_categories_list);
         listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
+        listView.setVisibility(View.VISIBLE);
         listView.setSelectionFromTop(mListViewIndex, mListViewTop);
     }
 
@@ -331,4 +325,20 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try{
+            unregisterReceiver(syncAdapterReceiver);
+        }catch(Exception e){ }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(waitPlease!=null && waitPlease.isShowing()){
+            waitPlease.dismiss();
+            waitPlease.cancel();
+        }
+        super.onDestroy();
+    }
 }

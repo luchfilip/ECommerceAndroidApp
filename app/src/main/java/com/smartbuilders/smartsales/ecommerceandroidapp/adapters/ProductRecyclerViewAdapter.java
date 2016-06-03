@@ -106,6 +106,10 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if(mDataset==null || mDataset.get(position) == null){
+            System.out.println("onBindViewHolder(...),  mDataset==null || mDataset.get(position) == null");
+            return;
+        }
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getName());
