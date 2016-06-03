@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -466,11 +467,11 @@ public class Utils {
                 context.startActivity(new Intent(context, SettingsActivity.class)
                         .putExtra(SettingsActivity.KEY_CURRENT_USER, user));
             break;
-            //case R.id.nav_statement_of_account:
-            //    Intent intent = new Intent(MainActivity.this, StatementOfAccountActivity.class);
-            //    intent.putExtra(StatementOfAccountActivity.KEY_CURRENT_USER, mCurrentUser);
-            //    startActivity(intent);
-            //break;
+            case R.id.nav_business_partners:
+                context.startActivity(new Intent(context, BusinessPartnersActivity.class)
+                        .putExtra(BusinessPartnersActivity.KEY_CURRENT_USER, user)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            break;
             case R.id.nav_share:
                 try{
                     showPromptShareApp(context);

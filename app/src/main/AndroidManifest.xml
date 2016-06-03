@@ -218,6 +218,14 @@
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ZoomImageActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.RegisterBusinessPartnerActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>
