@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.ProductBrandPromotionFragment;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class ProductBrandsPromotionAdapter extends FragmentStatePagerAdapter {
 
     private List<ProductBrand> mProductBrands;
+    private User mCurrentUser;
 
     public ProductBrandsPromotionAdapter(FragmentManager fm){
         super(fm);
@@ -25,10 +27,14 @@ public class ProductBrandsPromotionAdapter extends FragmentStatePagerAdapter {
         this.mProductBrands = productBrands;
     }
 
+    public void setUser(User user) {
+        mCurrentUser = user;
+    }
+
     @Override
     public Fragment getItem(int position) {
         try {
-            return ProductBrandPromotionFragment.getInstance(mProductBrands.get(position));
+            return ProductBrandPromotionFragment.getInstance(mProductBrands.get(position), mCurrentUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,6 +53,6 @@ public class ProductBrandsPromotionAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public float getPageWidth (int position) {
-        return 0.93f;
+        return 0.90f;
     }
 }

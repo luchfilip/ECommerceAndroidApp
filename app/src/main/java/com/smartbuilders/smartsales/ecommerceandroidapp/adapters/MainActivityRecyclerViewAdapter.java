@@ -152,12 +152,19 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                             && !productBrandsPromotionSection.getProductBrands().isEmpty()) {
                         viewHolder.mViewPager.setId(ViewIdGenerator.generateViewId());
                         viewHolder.mViewPager.setClipToPadding(false);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, 600);
+                        int height = 0;
+                        if(metrics.widthPixels < metrics.heightPixels){
+                            height = (int) (metrics.heightPixels / 3.5);
+                        } else {
+                            height = (int) (metrics.widthPixels / 3.5);
+                        }
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);
                         viewHolder.mViewPager.setPageMargin(12);
                         ProductBrandsPromotionAdapter productBrandsPromotionAdapter =
                                 new ProductBrandsPromotionAdapter(mFragmentActivity.getSupportFragmentManager());
                         productBrandsPromotionAdapter.setData(productBrandsPromotionSection.getProductBrands());
+                        productBrandsPromotionAdapter.setUser(mCurrentUser);
                         viewHolder.mViewPager.setAdapter(productBrandsPromotionAdapter);
                     }
                     break;
