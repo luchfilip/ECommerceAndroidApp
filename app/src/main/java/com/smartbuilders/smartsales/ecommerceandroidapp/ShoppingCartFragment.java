@@ -26,7 +26,10 @@ import java.util.ArrayList;
 public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback {
 
     private static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
+
     private User mCurrentUser;
+    private int mSalesOrderId;
     private ShoppingCartAdapter mShoppingCartAdapter;
     private ArrayList<OrderLine> mOrderLines;
 
@@ -38,6 +41,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+            if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
+                mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+            }
         }
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
@@ -45,16 +51,24 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 mCurrentUser = getActivity().getIntent().getExtras()
                         .getParcelable(ShoppingCartActivity.KEY_CURRENT_USER);
             }
+            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
+                mSalesOrderId = getActivity().getIntent().getExtras()
+                        .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
+            }
         }
 
-        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
+        if (mSalesOrderId>0) {
+            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getSalesOrderLines(mSalesOrderId);
+        }else {
+            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
+        }
 
         if (mOrderLines==null || mOrderLines.size()==0) {
             view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
             view.findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
             view.findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
         } else {
-            mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mCurrentUser);
+            mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
 
             ((ListView) view.findViewById(R.id.shoppingCart_items_list)).setAdapter(mShoppingCartAdapter);
 
@@ -68,7 +82,12 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
-                                            String result = orderDB.createOrderFromShoppingCart();
+                                            String result;
+                                            if (mSalesOrderId > 0) {
+                                                result = orderDB.createOrderFromOrderLines(mOrderLines);
+                                            } else {
+                                                result = orderDB.createOrderFromShoppingCart();
+                                            }
                                             if(result == null){
                                                 Intent intent = new Intent(getContext(), OrderDetailActivity.class);
                                                 intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
@@ -96,20 +115,23 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void updateQtyOrdered(OrderLine orderLine) {
         DialogUpdateQuantityOrdered dialogUpdateQuantityOrdered =
-                DialogUpdateQuantityOrdered.newInstance(orderLine, mCurrentUser);
+                DialogUpdateQuantityOrdered.newInstance(orderLine, mSalesOrderId <= 0, mCurrentUser);
         dialogUpdateQuantityOrdered.setTargetFragment(this, 0);
         dialogUpdateQuantityOrdered.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateQuantityOrdered.class.getSimpleName());
     }
 
     public void reloadShoppingCart(){
-        mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();
+        if (mSalesOrderId <= 0){
+            mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();
+        }
         mShoppingCartAdapter.setData(mOrderLines);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         super.onSaveInstanceState(outState);
     }
 }

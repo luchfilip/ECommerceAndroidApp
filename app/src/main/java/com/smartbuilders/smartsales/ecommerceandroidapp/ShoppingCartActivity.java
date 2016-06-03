@@ -24,9 +24,13 @@ public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+    public static final String KEY_SALES_ORDER_ID = "KEY_SALES_ORDER_ID";
+
     public static final String STATE_CURRENT_USER = "state_current_user";
+    public static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
 
     private User mCurrentUser;
+    private int mSalesOrderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +41,17 @@ public class ShoppingCartActivity extends AppCompatActivity
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+            if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
+                mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+            }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
                 mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
+            }
+            if(getIntent().getExtras().containsKey(KEY_SALES_ORDER_ID)){
+                mSalesOrderId = getIntent().getExtras().getInt(KEY_SALES_ORDER_ID);
             }
         }
 
@@ -107,6 +117,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         super.onSaveInstanceState(outState);
     }
 }

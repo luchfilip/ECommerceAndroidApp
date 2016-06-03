@@ -2,14 +2,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import com.jasgcorp.ids.model.User;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,16 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jasgcorp.ids.syncadapter.SyncAdapter;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -41,8 +30,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
@@ -54,54 +41,6 @@ public class MainActivity extends AppCompatActivity
     int mListViewIndex;
     int mListViewTop;
 
-    private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent!=null && intent.getAction()!=null){
-                Bundle extras = intent.getExtras();
-                if(extras!=null){
-                    if(extras.containsKey(SyncAdapter.USER_ID)
-                            && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
-                        if(intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
-                                || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
-                                || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
-                                || intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
-                                || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
-                            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
-                                loadData();
-                            }else{
-                                if (waitPlease!=null && waitPlease.isShowing()) {
-                                    waitPlease.dismiss();
-                                    waitPlease.cancel();
-                                }
-                                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
-                                findViewById(R.id.main_categories_list).setVisibility(View.GONE);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        try{
-            IntentFilter intentFilter = new IntentFilter(SyncAdapter.SYNCHRONIZATION_STARTED);
-            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_CANCELED);
-            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_PROGRESS);
-            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_FINISHED);
-            intentFilter.addAction(SyncAdapter.AUTHENTICATOR_EXCEPTION);
-            intentFilter.addAction(SyncAdapter.GENERAL_EXCEPTION);
-            intentFilter.addAction(SyncAdapter.IO_EXCEPTION);
-            intentFilter.addAction(SyncAdapter.OPERATION_CANCELED_EXCEPTION);
-            intentFilter.addAction(SyncAdapter.XML_PULL_PARSE_EXCEPTION);
-            getApplicationContext().registerReceiver(syncAdapterReceiver, intentFilter);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,74 +97,32 @@ public class MainActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
-        checkInitialLoad();
-
-        findViewById(R.id.exit_app_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        findViewById(R.id.reTry_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-                findViewById(R.id.main_categories_list).setVisibility(View.GONE);
-                checkInitialLoad();
-            }
-        });
-    }
-
-
-    /**
-     * Verifica si tiene que
-     */
-    private void checkInitialLoad() {
-        if (waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
-        }
-
-        if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
-            Account[] accounts = AccountManager.get(this)
-                    .getAccountsByType(getString(R.string.authenticator_acount_type));
-            if(accounts!=null && accounts.length>0){
-                if(NetworkConnectionUtilities.isOnline(this)
-                        && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
-                    waitPlease = ProgressDialog.show(this, getString(R.string.loading_data),
-                            getString(R.string.wait_please), true, false);
-                    if(!ApplicationUtilities.isSyncActive(accounts[0], getString(R.string.sync_adapter_content_authority))){
-                        Log.d(TAG, "!ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
-                        Bundle settingsBundle = new Bundle();
-                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                        ContentResolver.requestSync(accounts[0], getString(R.string.sync_adapter_content_authority), settingsBundle);
-                    }else{
-                        Log.d(TAG, "ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
-                    }
-                } else {
-                    //show network connection unavailable error.
-                    Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
-                    //TODO: mostrar en pantalla error de conexion
+        if(findViewById(R.id.search_bar_linear_layout)!=null){
+            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
+                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
                 }
-            }else{
-                startActivity(new Intent(this, SplashScreen.class));
-                finish();
-            }
-        } else if (mCurrentUser!=null) {
-            loadData();
-        } else {
-            startActivity(new Intent(this, SplashScreen.class));
-            finish();
-        }
-    }
+            });
 
-    private void loadData(){
-        if(waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
+            findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
+
+            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                }
+            });
         }
+
         waitPlease = ProgressDialog.show(this, getString(R.string.loading),
                 getString(R.string.wait_please), true, false);
         new Thread() {
@@ -233,36 +130,9 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 try {
                     final MainPageDB mainPageDB = new MainPageDB(MainActivity.this, mCurrentUser);
-                    Utils.createImageFiles(MainActivity.this, mCurrentUser);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(findViewById(R.id.search_bar_linear_layout)!=null){
-                                findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
-                                                .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
-                                    }
-                                });
-
-                                findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                                                .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
-                                    }
-                                });
-
-                                findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                                                .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
-                                    }
-                                });
-                            }
-
                             loadMainPage(mainPageDB.getMainPageList());
                         }
                     });
@@ -323,14 +193,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try{
-            unregisterReceiver(syncAdapterReceiver);
-        }catch(Exception e){ }
     }
 
     @Override

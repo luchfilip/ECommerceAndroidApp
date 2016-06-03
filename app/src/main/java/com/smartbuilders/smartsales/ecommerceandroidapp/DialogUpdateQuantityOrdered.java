@@ -28,11 +28,13 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private OrderLine mOrderLine;
+    private boolean mIsShoppingCart;
     private User mUser;
 
-    public static DialogUpdateQuantityOrdered newInstance(OrderLine orderLine, User user){
+    public static DialogUpdateQuantityOrdered newInstance(OrderLine orderLine, boolean isShoppingCart, User user){
         DialogUpdateQuantityOrdered dialogUpdateQuantityOrdered = new DialogUpdateQuantityOrdered();
         dialogUpdateQuantityOrdered.mUser = user;
+        dialogUpdateQuantityOrdered.mIsShoppingCart = isShoppingCart;
         dialogUpdateQuantityOrdered.mOrderLine = orderLine;
         return dialogUpdateQuantityOrdered;
     }
@@ -67,7 +69,10 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
                 int oldValue = mOrderLine.getQuantityOrdered();
                 try {
                     mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
-                    String result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
+                    String result = null;
+                    if (mIsShoppingCart) {
+                        result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
+                    }
                     if(result == null){
                         ((ShoppingCartFragment) getTargetFragment()).reloadShoppingCart();
                     } else {

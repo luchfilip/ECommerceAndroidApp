@@ -41,7 +41,7 @@ public class SalesOrderDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
 
@@ -94,6 +94,18 @@ public class SalesOrderDetailFragment extends Fragment {
             if(rootView.findViewById(R.id.sales_order_tax_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_tax_tv))
                         .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mOrder.getTruncatedTaxAmount())));
+            }
+            if(rootView.findViewById(R.id.create_order_button)!=null){
+                rootView.findViewById(R.id.create_order_button)
+                        .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
+                        intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
+                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mOrder.getId());
+                        startActivity(intent);
+                    }
+                });
             }
         }
         return rootView;

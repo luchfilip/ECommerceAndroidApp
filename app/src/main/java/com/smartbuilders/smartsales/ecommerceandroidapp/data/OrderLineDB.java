@@ -31,16 +31,20 @@ public class OrderLineDB {
         this.user = user;
     }
 
+    public String addOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
+        return addOrderLine(orderLine.getProduct(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_ORDER_DOCTYPE, orderId);
+    }
+
     public String addProductToShoppingCart(Product product, int qtyRequested){
-        return addOrderLine(product, qtyRequested, 0, 0, SHOPPING_CART_DOCTYPE);
+        return addOrderLine(product, qtyRequested, 0, 0, SHOPPING_CART_DOCTYPE, null);
     }
 
     public String addProductToShoppingSale(Product product, int qtyRequested, double productPrice, double productTaxPercentage){
-        return addOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE);
+        return addOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE, null);
     }
 
     public String addProductToWishList(Product product){
-        return addOrderLine(product, 0, 0, 0, WISHLIST_DOCTYPE);
+        return addOrderLine(product, 0, 0, 0, WISHLIST_DOCTYPE, null);
     }
 
     public String removeProductFromWishList(Product product){
@@ -125,6 +129,10 @@ public class OrderLineDB {
         return getOrderLines(SHOPPING_SALE_DOCTYPE, null);
     }
 
+    public ArrayList<OrderLine> getSalesOrderLines(Integer salesOrderId){
+        return getOrderLines(FINALIZED_SALES_ORDER_DOCTYPE, salesOrderId);
+    }
+
     public ArrayList<OrderLine> getWishList(){
         return getOrderLines(WISHLIST_DOCTYPE, null);
     }
@@ -142,7 +150,7 @@ public class OrderLineDB {
     }
 
     private String addOrderLine(Product product, int qtyRequested, double productPrice,
-                                double productTaxPercentage, String docType) {
+                                double productTaxPercentage, String docType, Integer orderId) {
         try {
             OrderLine ol = new OrderLine();
             ol.setProduct(product);
@@ -152,15 +160,16 @@ public class OrderLineDB {
             ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
 
             String sql = "INSERT INTO ECOMMERCE_ORDERLINE (PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, " +
-                    " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_ORDER_ID, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                     null, sql,
                     new String[]{String.valueOf(ol.getProduct().getId()),
                                 String.valueOf(ol.getQuantityOrdered()), String.valueOf(ol.getPrice()),
                                 String.valueOf(ol.getTaxPercentage()), String.valueOf(ol.getTotalLineAmount()),
-                                docType, "Y", Utils.getAppVersionName(context), user.getUserName()});
+                                docType, (orderId==null ? null : String.valueOf(orderId)), "Y",
+                                Utils.getAppVersionName(context), user.getUserName()});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();

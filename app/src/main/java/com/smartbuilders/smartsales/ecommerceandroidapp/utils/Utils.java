@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -19,11 +17,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -35,17 +30,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 
-import net.iharder.Base64;
-
-import org.codehaus.jettison.json.JSONArray;
-import org.ksoap2.serialization.SoapPrimitive;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -550,215 +538,5 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    public static void loadInitialDataFromWS(Context context, User user) {
-        long initTime = System.currentTimeMillis();
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, " +
-                            " USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
-                            " UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE " +
-                            " from ARTICULOS where ACTIVO = 'V'",
-                    "INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, " +
-                            " IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, " +
-                            " CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_SECTION where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO MAINPAGE_SECTION (MAINPAGE_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "SELECT PRODUCT_ID, AVAILABILITY FROM PRODUCT_AVAILABILITY WHERE ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            execRemoteQueryAndInsert(context, user,
-                    "select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
-    }
-
-    /**
-     *
-     * @param context
-     * @param user
-     * @param sql
-     * @param insertSentence
-     */
-    private static void execRemoteQueryAndInsert(Context context, User user, String sql, String insertSentence) {
-        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-        parameters.put("authToken", user.getAuthToken());
-        parameters.put("userId", user.getServerUserId());
-        parameters.put("sql", sql);
-        ConsumeWebService a = new ConsumeWebService(context,
-                                                    user.getServerAddress(),
-                                                    "/IntelligentDataSynchronizer/services/ManageRemoteDBAccess?wsdl",
-                                                    "executeQuery",
-                                                    "urn:executeQuery",
-                                                    parameters);
-        try {
-            Object result = a.getWSResponse();
-            if(result instanceof SoapPrimitive){
-                insertDataFromWSResultData(result.toString(), insertSentence, context, user);
-            }else if (result !=null){
-                throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), ClassCastException.");
-            }else{
-                throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), result is null.");
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-  /**
-     *
-     * @param data
-     * @param insertSentence
-     * @param context
-     * @param user
-     * @throws Exception
-     */
-    public static void insertDataFromWSResultData(String data, String insertSentence, Context context, User user) throws Exception{
-        int counterEntireCompressedData = 0;
-        int counter = 0;
-        JSONArray jsonArray = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(data, Base64.GZIP)));
-        Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-        if(keys.hasNext()){
-            int columnCount = 0;
-            JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-            try{
-                counter = 1;
-                Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-                while(keysTemp.hasNext()){
-                    keysTemp.next();
-                    columnCount++;
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-            int columnIndex;
-            SQLiteDatabase db = null;
-            SQLiteStatement statement = null;
-            try {
-                db = (new DatabaseHelper(context, user)).getWritableDatabase();
-
-                statement = db.compileStatement(insertSentence);
-                db.beginTransaction();
-                //Se itera a traves de la data
-                while (counter <= jsonArray2.length()) {
-                    if (++counter >= jsonArray2.length()) {
-                        if (keys.hasNext()) {
-                            counter = 0;
-                            jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-                            if (jsonArray2.length() < 1) {
-                                break;
-                            }
-                        } else {
-                            if (++counterEntireCompressedData >= jsonArray.length()) {
-                                break;
-                            } else {
-                                counter = 0;
-                                keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-                                jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-                                if (jsonArray2.length() < 1) {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    //Se prepara la data que se insertara
-                    statement.clearBindings();
-                    for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                        try {
-                            //data que se insertara
-                            statement.bindString(columnIndex, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    statement.execute();
-                    //Fin de preparacion de la data que se insertara
-                }
-                db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if(statement!=null) {
-                    try {
-                        statement.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (db!=null) {
-                    try {
-                        db.endTransaction();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        db.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 }

@@ -27,21 +27,26 @@ public class OrderDB {
         this.user = user;
     }
 
+    public String createOrderFromOrderLines(ArrayList<OrderLine> orderLines){
+        return createOrder(OrderLineDB.FINALIZED_ORDER_DOCTYPE, orderLines, true);
+    }
+
     public String createOrderFromShoppingCart(){
         return createOrder(OrderLineDB.FINALIZED_ORDER_DOCTYPE,
-                (new OrderLineDB(context, user)).getShoppingCart());
+                (new OrderLineDB(context, user)).getShoppingCart(), false);
     }
 
     public String createOrderFromShoppingSale(){
         return createOrder(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
-                (new OrderLineDB(context, user)).getShoppingSale());
+                (new OrderLineDB(context, user)).getShoppingSale(), false);
     }
 
-    public String createOrder(String docType, ArrayList<OrderLine> orderLines){
+    public String createOrder(String docType, ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         if(orderLines != null
                 && (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
-                || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)){
+                || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)
+                || insertOrderLinesInDB){
             Cursor c = null;
             int orderId = 0;
             try {
@@ -85,40 +90,52 @@ public class OrderDB {
                 }
             }
             if(docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE)){
-                if(orderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(orderId)<=0){
-                    try {
-                        int rowsAffected = context.getContentResolver()
-                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                        null,
-                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
-                                        new String[]{String.valueOf(orderId)});
-                        if(rowsAffected <= 0){
-                            return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        return e.getMessage();
+                if (insertOrderLinesInDB) {
+                    for (OrderLine orderLine : orderLines) {
+                        orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
                     }
-                    return "Error 002 - No se insertó la cotización en la base de datos.";
+                } else {
+                    if(orderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(orderId)<=0){
+                        try {
+                            int rowsAffected = context.getContentResolver()
+                                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                            null,
+                                            "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
+                                            new String[]{String.valueOf(orderId)});
+                            if(rowsAffected <= 0){
+                                return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            return e.getMessage();
+                        }
+                        return "Error 002 - No se insertó la cotización en la base de datos.";
+                    }
                 }
             } else if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
-                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
-                    try {
-                        int rowsAffected = context.getContentResolver()
-                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                        null,
-                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
-                                        new String[]{String.valueOf(orderId)});
-                        if(rowsAffected <= 0){
-                            return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        return e.getMessage();
+                if (insertOrderLinesInDB) {
+                    for (OrderLine orderLine : orderLines) {
+                        orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
                     }
-                    return "Error 002 - No se insertó el pedido en la base de datos.";
+                } else {
+                    if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
+                        try {
+                            int rowsAffected = context.getContentResolver()
+                                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                            null,
+                                            "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
+                                            new String[]{String.valueOf(orderId)});
+                            if(rowsAffected <= 0){
+                                return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            return e.getMessage();
+                        }
+                        return "Error 002 - No se insertó el pedido en la base de datos.";
+                    }
                 }
             }
         }else{
@@ -193,7 +210,7 @@ public class OrderDB {
         try {
             String sql = "SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
                     " APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
-                    " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
+                    " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", docType}, null);

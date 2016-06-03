@@ -230,8 +230,9 @@
     <string name="settings">Configuraciones</string>
     <string name="welcome_message_login_activity">Ahora Febeca está en tus manos</string>
     <string name="share_image">Compartir Imagen</string>
-    <string name="error_loading_data">Ha ocurrido un error mientras se cargaban los datos, por favor revise su conexión a internet.</string>
+    <string name="error_loading_data">Ha ocurrido un error mientras se cargaban los datos, por favor revise su conexión a internet y vuelva a intentarlo.</string>
     <string name="re_try">Re-Intentar</string>
     <string name="cancel">Cancelar</string>
     <string name="exit">Salir</string>
+    <string name="create_order">Crear Pedido</string>
 </resources>

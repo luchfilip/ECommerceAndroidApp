@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -22,6 +23,8 @@ import android.widget.Toast;
  *
  */
 public class NetworkReceiver extends BroadcastReceiver {
+
+    private static final String TAG = NetworkReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,6 +41,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                         .getAccountsByType(context.getString(R.string.authenticator_acount_type));
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(account, DataBaseContentProvider.AUTHORITY)){
+                        Log.d(TAG, "ContentResolver.requestSync("+account.name+", DataBaseContentProvider.AUTHORITY, settingsBundle);");
                         ContentResolver.requestSync(account, DataBaseContentProvider.AUTHORITY, settingsBundle);
                     }
                 }

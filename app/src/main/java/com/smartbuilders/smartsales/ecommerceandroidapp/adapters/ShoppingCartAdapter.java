@@ -37,15 +37,18 @@ public class ShoppingCartAdapter extends BaseAdapter {
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
+    private boolean mIsShoppingCart;
 
     public interface Callback {
-        public void updateQtyOrdered(OrderLine orderLine);
+        void updateQtyOrdered(OrderLine orderLine);
     }
 
-    public ShoppingCartAdapter(Context context, ShoppingCartFragment shoppingCartFragment, ArrayList<OrderLine> data, User user) {
+    public ShoppingCartAdapter(Context context, ShoppingCartFragment shoppingCartFragment,
+                               ArrayList<OrderLine> data, boolean isShoppingCart, User user) {
         mContext = context;
         mShoppingCartFragment = shoppingCartFragment;
         mDataset = data;
+        mIsShoppingCart = isShoppingCart;
         mCurrentUser = user;
         orderLineDB = new OrderLineDB(context, user);
     }
@@ -121,7 +124,10 @@ public class ShoppingCartAdapter extends BaseAdapter {
                                 mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                String result = null;
+                                if(mIsShoppingCart){
+                                    result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                }
                                 if(result == null){
                                     mDataset.remove(position);
                                     notifyDataSetChanged();
