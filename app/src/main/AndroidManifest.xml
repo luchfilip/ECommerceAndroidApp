@@ -38,14 +38,20 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden">
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SplashScreen"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/SplashTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -58,6 +64,7 @@
                 <data android:pathPattern="/.*" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar"
