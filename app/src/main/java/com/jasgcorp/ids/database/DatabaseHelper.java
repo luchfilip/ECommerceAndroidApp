@@ -205,6 +205,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
 										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 
+	public static final String CREATE_BUSINESS_PARTNER =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER ")
+										.append("(BUSINESS_PARTNER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+										.append("NAME TEXT DEFAULT NULL, ")
+										.append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+										.append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+                                        .append("ADDRESS TEXT DEFAULT NULL, ")
+										.append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+										.append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+										.append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+										.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+										.append("APP_VERSION VARCHAR(128) NOT NULL, ")
+										.append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
 	/**
 	 * 
 	 * @param context
@@ -256,12 +272,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_PRODUCT_AVAILABILITY);
 			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
 			db.execSQL(CREATE_RECENT_SEARCH);
+			db.execSQL(CREATE_BUSINESS_PARTNER);
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-
+		db.execSQL(CREATE_BUSINESS_PARTNER);
 	}
 
 	@Override

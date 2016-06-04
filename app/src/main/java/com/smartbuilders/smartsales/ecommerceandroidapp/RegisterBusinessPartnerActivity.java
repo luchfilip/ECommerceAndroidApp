@@ -1,9 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -41,16 +41,15 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
             }
         }
 
-        ActionBar ab = getSupportActionBar();
-        ab.setHomeButtonEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setElevation(0f);
-
-        Utils.setCustomActionbarTitle(this, getSupportActionBar(), mCurrentUser, true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final EditText businessPartnerName = (EditText) findViewById(R.id.business_partner_name_editText);
         final EditText businessPartnerCommercialName = (EditText) findViewById(R.id.business_partner_commercial_name_editText);
-        final EditText businessPartnertaxId = (EditText) findViewById(R.id.business_partner_tax_id_editText);
+        final EditText businessPartnerTaxId = (EditText) findViewById(R.id.business_partner_tax_id_editText);
+        final EditText businessPartnerAddress = (EditText) findViewById(R.id.business_partner_address_editText);
         final EditText businessPartnerContactName = (EditText) findViewById(R.id.business_partner_contact_person_name_editText);
         final EditText businessPartnerEmailAddress = (EditText) findViewById(R.id.business_partner_email_address_editText);
         final EditText businessPartnerPhoneNumber = (EditText) findViewById(R.id.business_partner_phone_number_editText);
@@ -64,7 +63,8 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
                         result = (new BusinessPartnerDB(RegisterBusinessPartnerActivity.this, mCurrentUser))
                                 .registerBusinessPartner(businessPartnerName.getText().toString(),
                                                         businessPartnerCommercialName.getText().toString(),
-                                                        businessPartnertaxId.getText().toString(),
+                                                        businessPartnerTaxId.getText().toString(),
+                                                        businessPartnerAddress.getText().toString(),
                                                         businessPartnerContactName.getText().toString(),
                                                         businessPartnerEmailAddress.getText().toString(),
                                                         businessPartnerPhoneNumber.getText().toString());

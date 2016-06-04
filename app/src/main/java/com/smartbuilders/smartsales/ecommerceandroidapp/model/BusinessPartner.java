@@ -9,8 +9,12 @@ import android.os.Parcelable;
 public class BusinessPartner extends Model implements Parcelable {
 
     private String name;
+    private String commercialName;
     private String taxId;
     private String address;
+    private String contactPerson;
+    private String emailAddress;
+    private String phoneNumber;
 
     public BusinessPartner () {
 
@@ -19,16 +23,24 @@ public class BusinessPartner extends Model implements Parcelable {
     protected BusinessPartner(Parcel in) {
         super(in);
         name = in.readString();
+        commercialName = in.readString();
         taxId = in.readString();
         address = in.readString();
+        contactPerson = in.readString();
+        emailAddress = in.readString();
+        phoneNumber = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(name);
+        dest.writeString(commercialName);
         dest.writeString(taxId);
         dest.writeString(address);
+        dest.writeString(contactPerson);
+        dest.writeString(emailAddress);
+        dest.writeString(phoneNumber);
     }
 
     @Override
@@ -56,6 +68,14 @@ public class BusinessPartner extends Model implements Parcelable {
         this.name = name;
     }
 
+    public String getCommercialName() {
+        return commercialName;
+    }
+
+    public void setCommercialName(String commercialName) {
+        this.commercialName = commercialName;
+    }
+
     public String getTaxId() {
         return taxId;
     }
@@ -70,5 +90,29 @@ public class BusinessPartner extends Model implements Parcelable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
