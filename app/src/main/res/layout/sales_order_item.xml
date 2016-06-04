@@ -20,7 +20,7 @@
         android:id="@+id/sales_order_date_tv"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/colorPrimaryDark" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"

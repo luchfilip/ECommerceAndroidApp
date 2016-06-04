@@ -59,14 +59,14 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/product_brand"
                             android:textSize="@dimen/productDetailActivity_productBrand_text_size"
-                            android:textColor="@color/colorPrimaryDark" />
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
                             android:id="@+id/product_commercial_package"
-                            android:textColor="@color/colorPrimaryDark" />
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/product_availability"

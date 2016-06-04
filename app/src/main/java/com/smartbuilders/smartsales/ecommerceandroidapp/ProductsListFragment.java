@@ -145,7 +145,7 @@ public class ProductsListFragment extends Fragment {
                             if(products.isEmpty()){
                                 TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                 Spannable word = new SpannableString("No se encontraron productos para mostrar. ");
-                                word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimaryDark)), 0,
+                                word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)), 0,
                                         word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 categorySubcategoryResultsTextView.append(word);
                             }

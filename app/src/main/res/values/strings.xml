@@ -239,4 +239,6 @@
     <string name="create_order">Crear Pedido</string>
     <string name="title_activity_register_customer">RegisterCustomerActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="business_partner_name_label">Nombre Comercial:</string>
+    <string name="save">Guardar</string>
 </resources>
