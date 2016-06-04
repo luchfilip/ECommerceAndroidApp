@@ -252,5 +252,6 @@
     <string name="email_address_label">Correo Electrónico:</string>
     <string name="phone_number_label">Número de Teléfono:</string>
     <string name="title_activity_register_business_partner">Registrar Cliente</string>
-
+    <string name="business_partner_updated_successfully">Cliente actualizado exitosamente.</string>
+    <string name="update">Actualizar</string>
 </resources>

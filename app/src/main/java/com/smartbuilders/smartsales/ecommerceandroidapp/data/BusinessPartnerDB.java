@@ -80,6 +80,28 @@ public class BusinessPartnerDB {
         return null;
     }
 
+    public String updateBusinessPartner(BusinessPartner businessPartner){
+        try {
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null,
+                    "UPDATE BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
+                            " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
+                            " where BUSINESS_PARTNER_ID = ? ",
+                    new String[]{businessPartner.getName(), businessPartner.getCommercialName(),
+                            businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
+                            businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
+                            mUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId())});
+            if (rowsAffected <= 0){
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
     public String deactivateBusinessPartner(BusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

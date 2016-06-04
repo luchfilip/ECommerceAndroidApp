@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -93,6 +94,19 @@ public class BusinessPartnertsFragment extends Fragment {
                 return true;
             }
         });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
+                if (businessPartner != null) {
+                    startActivity(new Intent(getContext(), RegisterBusinessPartnerActivity.class)
+                    .putExtra(RegisterBusinessPartnerActivity.KEY_CURRENT_USER, mCurrentUser)
+                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner));
+                }
+            }
+        });
+
         return rootView;
     }
 
