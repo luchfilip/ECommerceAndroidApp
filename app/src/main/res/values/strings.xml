@@ -254,4 +254,6 @@
     <string name="title_activity_register_business_partner">Registrar Cliente</string>
     <string name="business_partner_updated_successfully">Cliente actualizado exitosamente.</string>
     <string name="update">Actualizar</string>
+    <string name="update_business_partner">Actualizar Cliente</string>
+    <string name="title_activity_business_partners_list">Clientes Registrados</string>
 </resources>

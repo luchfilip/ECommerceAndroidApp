@@ -5,10 +5,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
@@ -72,14 +75,68 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
 
         if (mBusinessPartner!=null){
             businessPartnerName.setText(mBusinessPartner.getName());
+            businessPartnerName.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setName(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             businessPartnerCommercialName.setText(mBusinessPartner.getCommercialName());
+            businessPartnerCommercialName.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setCommercialName(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             businessPartnerTaxId.setText(mBusinessPartner.getTaxId());
             businessPartnerTaxId.setEnabled(false);
+
             businessPartnerAddress.setText(mBusinessPartner.getAddress());
+            businessPartnerAddress.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setAddress(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             businessPartnerContactPerson.setText(mBusinessPartner.getContactPerson());
+            businessPartnerContactPerson.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setContactPerson(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             businessPartnerEmailAddress.setText(mBusinessPartner.getEmailAddress());
+            businessPartnerEmailAddress.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setEmailAddress(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             businessPartnerPhoneNumber.setText(mBusinessPartner.getPhoneNumber());
+            businessPartnerPhoneNumber.addTextChangedListener(new TextWatcher(){
+                public void afterTextChanged(Editable s) {
+                    mBusinessPartner.setPhoneNumber(s.toString());
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void onTextChanged(CharSequence s, int start, int before, int count){}
+            });
+
             saveButton.setText(getString(R.string.update));
+
+            if (findViewById(R.id.title_textView)!=null) {
+                ((TextView) findViewById(R.id.title_textView))
+                        .setText(getString(R.string.update_business_partner));
+            }
         }
 
         if (saveButton!=null) {
@@ -90,7 +147,8 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
                     if (mBusinessPartner!=null) {
                         String result = businessPartnerDB.updateBusinessPartner(mBusinessPartner);
                         if (result==null){
-                            Toast.makeText(RegisterBusinessPartnerActivity.this, getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterBusinessPartnerActivity.this,
+                                    getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(RegisterBusinessPartnerActivity.this, String.valueOf(result), Toast.LENGTH_LONG).show();
                         }
@@ -103,14 +161,13 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
                         businessPartner.setContactPerson(businessPartnerContactPerson.getText().toString());
                         businessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
                         businessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
-
                         String result = BusinessPartnerBR.validateBusinessPartner(businessPartner,
                                 RegisterBusinessPartnerActivity.this, mCurrentUser);
                         if (result==null) {
                             result = businessPartnerDB.registerBusinessPartner(businessPartner);
                             if (result==null){
-                                startActivity(new Intent(RegisterBusinessPartnerActivity.this, BusinessPartnersActivity.class)
-                                        .putExtra(BusinessPartnersActivity.KEY_CURRENT_USER, mCurrentUser)
+                                startActivity(new Intent(RegisterBusinessPartnerActivity.this, BusinessPartnersListActivity.class)
+                                        .putExtra(BusinessPartnersListActivity.KEY_CURRENT_USER, mCurrentUser)
                                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                                 finish();
                             } else {

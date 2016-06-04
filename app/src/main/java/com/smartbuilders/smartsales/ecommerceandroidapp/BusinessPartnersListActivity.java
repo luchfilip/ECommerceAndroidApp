@@ -20,7 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 /**
  * Jesus Sarco, 03.06.2016
  */
-public class BusinessPartnersActivity extends AppCompatActivity
+public class BusinessPartnersListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
@@ -32,7 +32,7 @@ public class BusinessPartnersActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_partners);
+        setContentView(R.layout.activity_business_partners_list);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
@@ -66,7 +66,7 @@ public class BusinessPartnersActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(BusinessPartnersActivity.this, RegisterBusinessPartnerActivity.class)
+                startActivity(new Intent(BusinessPartnersListActivity.this, RegisterBusinessPartnerActivity.class)
                         .putExtra(RegisterBusinessPartnerActivity.KEY_CURRENT_USER, mCurrentUser));
             }
         });

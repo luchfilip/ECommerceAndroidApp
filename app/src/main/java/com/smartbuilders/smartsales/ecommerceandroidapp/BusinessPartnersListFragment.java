@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class BusinessPartnertsFragment extends Fragment {
+public class BusinessPartnersListFragment extends Fragment {
 
     public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     private static final String STATE_CURRENT_USER = "state_current_user";
@@ -38,7 +38,7 @@ public class BusinessPartnertsFragment extends Fragment {
     private BusinessPartnerDB businessPartnerDB;
     private BusinessPartnertsListAdapter businessPartnertsListAdapter;
 
-    public BusinessPartnertsFragment() {
+    public BusinessPartnersListFragment() {
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BusinessPartnertsFragment extends Fragment {
 
         businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
 
-        View rootView = inflater.inflate(R.layout.fragment_business_partners, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
 
         mListView = (ListView) rootView.findViewById(R.id.business_partnerts_list);
         businessPartnertsListAdapter = new BusinessPartnertsListAdapter(getContext(), new ArrayList<BusinessPartner>());
