@@ -128,6 +128,7 @@
     <string name="order_number">Número de pedido: %1$s.</string>
     <string name="sales_order_number">Número de cotización: %1$s.</string>
     <string name="order_date">Fecha de creación: %1$s.</string>
+    <string name="tax_id">RIF: %1$s.</string>
     <string name="order_lines_number">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
     <string name="product_moved_to_shopping_cart">Agregado al carrito de compra.</string>

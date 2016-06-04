@@ -12,6 +12,9 @@ public class BusinessPartner extends Model implements Parcelable {
     private String taxId;
     private String address;
 
+    public BusinessPartner () {
+
+    }
 
     protected BusinessPartner(Parcel in) {
         super(in);
@@ -44,4 +47,28 @@ public class BusinessPartner extends Model implements Parcelable {
             return new BusinessPartner[size];
         }
     };
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
