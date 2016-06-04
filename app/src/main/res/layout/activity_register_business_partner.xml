@@ -22,10 +22,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/business_partner_name_label"
-                android:id="@+id/business_partner_name_textView"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/business_partner_commercial_name_label"
+                android:id="@+id/business_partner_commercial_name_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -36,10 +38,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView8"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/business_partner_name_label"
+                android:id="@+id/business_partner_name_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -50,10 +54,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView9"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/business_oartner_tax_id_label"
+                android:id="@+id/business_partner_tax_id_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -64,24 +70,28 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView16"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/contact_person_label"
+                android:id="@+id/business_partner_contact_person_name_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/business_partner_conctac_person_name_editText"
+                android:id="@+id/business_partner_contact_person_name_editText"
                 android:inputType="text" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView14"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/email_address_label"
+                android:id="@+id/business_partner_email_address_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -93,10 +103,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView15"
-                android:layout_margin="8dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:text="@string/phone_number_label"
+                android:id="@+id/business_partner_phone_number_textView"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="match_parent"

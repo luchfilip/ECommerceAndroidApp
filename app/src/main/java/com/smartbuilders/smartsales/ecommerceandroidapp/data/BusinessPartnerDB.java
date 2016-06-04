@@ -54,4 +54,10 @@ public class BusinessPartnerDB {
         return activeBusinessPartners;
     }
 
+    public String registerBusinessPartner(String name, String commercialName, String taxId,
+                                          String contactPerson, String emailAddress, String phoneNumber){
+
+        return null;
+    }
+
 }
