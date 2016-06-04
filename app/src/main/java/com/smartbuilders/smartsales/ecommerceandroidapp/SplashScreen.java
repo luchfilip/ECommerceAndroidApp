@@ -43,10 +43,8 @@ public class SplashScreen extends AppCompatActivity {
             if(intent!=null && intent.getAction()!=null){
                 Bundle extras = intent.getExtras();
                 if(extras!=null){
-                    Log.d(TAG, "syncAdapterReceiver.onReceive()");
                     if(extras.containsKey(SyncAdapter.USER_ID)
                             && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
-                        Log.d(TAG, "extras.containsKey(SyncAdapter.USER_ID) && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())");
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
                             if (waitPlease==null || !waitPlease.isShowing()){
@@ -54,8 +52,10 @@ public class SplashScreen extends AppCompatActivity {
                                     waitPlease.dismiss();
                                     waitPlease = null;
                                 }
-                                waitPlease = ProgressDialog.show(context, getString(R.string.loading_data),
-                                        getString(R.string.wait_please), true, false);
+                                if(!isFinishing()){
+                                    waitPlease = ProgressDialog.show(SplashScreen.this, getString(R.string.loading_data),
+                                            getString(R.string.wait_please), true, false);
+                                }
                             }
                             findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
@@ -73,8 +73,6 @@ public class SplashScreen extends AppCompatActivity {
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
                             }
                         }
-                    }else{
-                        Log.e(TAG, "!extras.containsKey(SyncAdapter.USER_ID) || !extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId()");
                     }
                 }
             }

@@ -9,6 +9,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -21,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,52 +67,56 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAccountManager = AccountManager.get(getBaseContext());
+        if (Utils.getCurrentUser(getApplicationContext())!=null) {
+            finish();
+        } else {
+            mAccountManager = AccountManager.get(getBaseContext());
 
-        String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
-            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+            String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
+            String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+            mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+            if (mAuthTokenType == null)
+                mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-        if(accountType!=null && accountName!=null){
-            for(Account account : mAccountManager.getAccountsByType(accountType)){
-                if(account.name.equals(accountName)){
-                    mAccount = account;
-                    user = new User(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                    user.setServerUserId(Long.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
-                    user.setUserName(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
-                    user.setUserPass(mAccountManager.getPassword(account));
-                    user.setServerAddress(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS));
-                    user.setUserGroup(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP));
-                    user.setSaveDBInExternalCard(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
-                    break;
+            if(accountType!=null && accountName!=null){
+                for(Account account : mAccountManager.getAccountsByType(accountType)){
+                    if(account.name.equals(accountName)){
+                        mAccount = account;
+                        user = new User(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+                        user.setServerUserId(Long.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
+                        user.setUserName(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
+                        user.setUserPass(mAccountManager.getPassword(account));
+                        user.setServerAddress(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS));
+                        user.setUserGroup(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP));
+                        user.setSaveDBInExternalCard(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
+                        break;
+                    }
                 }
-            }
-            if(user!=null){
-                ((TextView) findViewById(R.id.accountName)).setEnabled(false);
-                ((TextView) findViewById(R.id.server_address)).setEnabled(false);
-                ((TextView) findViewById(R.id.user_group)).setEnabled(false);
+                if(user!=null){
+                    ((TextView) findViewById(R.id.accountName)).setEnabled(false);
+                    ((TextView) findViewById(R.id.server_address)).setEnabled(false);
+                    ((TextView) findViewById(R.id.user_group)).setEnabled(false);
 
-                ((TextView) findViewById(R.id.accountName)).setText(accountName);
-                ((TextView) findViewById(R.id.accountPassword)).setText(user.getUserPass());
-                ((TextView) findViewById(R.id.server_address)).setText(user.getServerAddress());
-                ((TextView) findViewById(R.id.user_group)).setText(user.getUserGroup());
-            }
-        } else if (savedInstanceState != null) {
+                    ((TextView) findViewById(R.id.accountName)).setText(accountName);
+                    ((TextView) findViewById(R.id.accountPassword)).setText(user.getUserPass());
+                    ((TextView) findViewById(R.id.server_address)).setText(user.getServerAddress());
+                    ((TextView) findViewById(R.id.user_group)).setText(user.getUserGroup());
+                }
+            } else if (savedInstanceState != null) {
 
-            ((TextView) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
-            ((TextView) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USERPASS));
-            ((TextView) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVERADDRESS));
-            ((TextView) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USERGROUP));
+                ((TextView) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
+                ((TextView) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USERPASS));
+                ((TextView) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVERADDRESS));
+                ((TextView) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USERGROUP));
+            }
+
+            findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submit();
+                }
+            });
         }
-
-        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
     }
 
     @Override

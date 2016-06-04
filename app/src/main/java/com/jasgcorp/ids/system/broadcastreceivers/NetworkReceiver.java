@@ -41,8 +41,8 @@ public class NetworkReceiver extends BroadcastReceiver {
                         .getAccountsByType(context.getString(R.string.authenticator_acount_type));
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(account, DataBaseContentProvider.AUTHORITY)){
-                        Log.d(TAG, "ContentResolver.requestSync("+account.name+", DataBaseContentProvider.AUTHORITY, settingsBundle);");
-                        ContentResolver.requestSync(account, DataBaseContentProvider.AUTHORITY, settingsBundle);
+                        Log.d(TAG, "ContentResolver.requestSync("+account.name+", "+context.getString(R.string.sync_adapter_content_authority)+", settingsBundle);");
+                        ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
                     }
                 }
             } catch (Exception e) {

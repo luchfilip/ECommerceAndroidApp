@@ -1,5 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +21,10 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
+import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -479,7 +484,9 @@ public class Utils {
                     e.printStackTrace();
                 }
             break;
-            case R.id.nav_send:
+            case R.id.nav_my_company:
+                context.startActivity(new Intent(context, CompanyActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_report_error:
             break;
@@ -539,5 +546,20 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static User getCurrentUser(Context context) {
+        try {
+            AccountManager accountManager = AccountManager.get(context);
+            final Account availableAccounts[] = accountManager
+                    .getAccountsByType(context.getString(R.string.authenticator_acount_type));
+            if (availableAccounts!=null && availableAccounts.length>0) {
+                return ApplicationUtilities.getUserByIdFromAccountManager(context,
+                        accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

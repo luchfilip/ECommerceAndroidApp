@@ -2,10 +2,12 @@
     <string name="app_name">Febeca C.A.</string>
     <string name="label"></string>
 
-    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider</string>
+    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca</string>
+    <string name="authenticator_acount_type">com.smartbuilders.smartsales.auth.febeca</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_setting">Configuración</string>
     <string name="search">Buscar</string>
     <string name="categories">Categorías</string>
@@ -21,6 +23,7 @@
     <string name="shopping_cart">Carrito de Compra</string>
     <string name="shopping_sale">Carrito de Venta</string>
     <string name="wish_list">Lista de favoritos</string>
+    <string name="my_company">Mi Compañía</string>
     <string name="orders_list">Pedidos</string>
     <string name="business_partners">Clientes</string>
     <string name="sales_orders_list">Cotizaciones</string>
@@ -48,10 +51,6 @@
     <string name="external_storage_unavailable">El almacenamiento externo no se encuentra disponible o no se tiene permiso para escribir.</string>
     <string name="company_name">Febeca C.A.</string>
     <string name="brands">Marcas</string>
-
-
-    <string name="authenticator_acount_type">com.smartbuilders.smartsales.auth</string>
-    <!--<string name="sync_adapter_content_authority">com.smartbuilders.smartsales.syncadapter</string>-->
 
     <string name="new_user_authorized">New User Authorized</string>
     <string name="error_validating_user_return_null">Error validating user, query return null.</string>
@@ -256,4 +255,5 @@
     <string name="update">Actualizar</string>
     <string name="update_business_partner">Actualizar Cliente</string>
     <string name="title_activity_business_partners_list">Clientes Registrados</string>
+    <string name="title_activity_company">CompanyActivity</string>
 </resources>

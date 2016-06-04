@@ -9,7 +9,6 @@
     </group>
     <item android:title="@string/my_purchases">
         <menu>
-
             <item
                 android:id="@+id/nav_shopping_cart"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"
@@ -57,6 +56,9 @@
     </item>
     <item android:title="@string/action_setting">
         <menu>
+            <item
+                android:id="@+id/nav_my_company"
+                android:title="@string/my_company" />
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"

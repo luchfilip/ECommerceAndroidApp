@@ -90,7 +90,7 @@
             tools:ignore="ExportedContentProvider" />
         <provider
             android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"
-            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider"
+            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca"
             android:exported="false"
             android:syncable="true"
             tools:ignore="ExportedContentProvider" />
@@ -221,12 +221,16 @@
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.RegisterBusinessPartnerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity"
+            android:label="@string/title_activity_company"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

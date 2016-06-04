@@ -36,7 +36,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	private static final String TAG = SynchronizerContentProvider.class.getSimpleName();
 	
 	public static final String AUTHORITY =
-            "com.smartbuilders.smartsales.providers.SynchronizerContentProvider";
+            "com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca";
 	
 	private static final Uri CONTENT_URI 					= Uri.parse("content://"+AUTHORITY);
 	
