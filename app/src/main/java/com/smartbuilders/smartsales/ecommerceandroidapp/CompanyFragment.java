@@ -11,9 +11,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CompanyActivityFragment extends Fragment {
+public class CompanyFragment extends Fragment {
 
-    public CompanyActivityFragment() {
+    public CompanyFragment() {
     }
 
     @Override
