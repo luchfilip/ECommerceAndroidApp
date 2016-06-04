@@ -1,11 +1,15 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnertsListAdapter;
@@ -30,6 +34,8 @@ public class BusinessPartnertsFragment extends Fragment {
     int mListViewIndex;
     int mListViewTop;
     private User mCurrentUser;
+    private BusinessPartnerDB businessPartnerDB;
+    private BusinessPartnertsListAdapter businessPartnertsListAdapter;
 
     public BusinessPartnertsFragment() {
     }
@@ -56,13 +62,44 @@ public class BusinessPartnertsFragment extends Fragment {
             }
         }
 
+        businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
+
         View rootView = inflater.inflate(R.layout.fragment_business_partners, container, false);
 
         mListView = (ListView) rootView.findViewById(R.id.business_partnerts_list);
-        ArrayList<BusinessPartner> businessPartners = (new BusinessPartnerDB(getContext(), mCurrentUser)).getActiveBusinessPartners();
-        mListView.setAdapter(new BusinessPartnertsListAdapter(getContext(), businessPartners, mCurrentUser));
+        businessPartnertsListAdapter = new BusinessPartnertsListAdapter(getContext(), new ArrayList<BusinessPartner>());
+        mListView.setAdapter(businessPartnertsListAdapter);
 
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
+                if (businessPartner != null) {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(getString(R.string.delete_business_partner, businessPartner.getCommercialName()))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String result = businessPartnerDB.deactivateBusinessPartner(businessPartner);
+                                    if (result==null) {
+                                        businessPartnertsListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
+                                    } else {
+                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .show();
+                }
+                return true;
+            }
+        });
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        businessPartnertsListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
+        super.onResume();
     }
 
     @Override

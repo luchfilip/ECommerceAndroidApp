@@ -1,17 +1,21 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.BusinessPartnerBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -54,30 +58,37 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
         final EditText businessPartnerEmailAddress = (EditText) findViewById(R.id.business_partner_email_address_editText);
         final EditText businessPartnerPhoneNumber = (EditText) findViewById(R.id.business_partner_phone_number_editText);
 
-        if (findViewById(R.id.save_button)!=null) {
-            findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
+        Button saveButton = (Button) findViewById(R.id.save_button);
+        if (saveButton!=null) {
+            saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String result = null;
-                    try {
+                    BusinessPartner businessPartner = new BusinessPartner();
+                    businessPartner.setName(businessPartnerName.getText().toString());
+                    businessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
+                    businessPartner.setTaxId(businessPartnerTaxId.getText().toString());
+                    businessPartner.setAddress(businessPartnerAddress.getText().toString());
+                    businessPartner.setContactPerson(businessPartnerContactName.getText().toString());
+                    businessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
+                    businessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
+
+                    String result = BusinessPartnerBR.validateBusinessPartner(businessPartner,
+                            RegisterBusinessPartnerActivity.this, mCurrentUser);
+                    if (result==null) {
                         result = (new BusinessPartnerDB(RegisterBusinessPartnerActivity.this, mCurrentUser))
-                                .registerBusinessPartner(businessPartnerName.getText().toString(),
-                                                        businessPartnerCommercialName.getText().toString(),
-                                                        businessPartnerTaxId.getText().toString(),
-                                                        businessPartnerAddress.getText().toString(),
-                                                        businessPartnerContactName.getText().toString(),
-                                                        businessPartnerEmailAddress.getText().toString(),
-                                                        businessPartnerPhoneNumber.getText().toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        result = e.getMessage();
-                    }
-                    if (result==null){
-                        startActivity(new Intent(RegisterBusinessPartnerActivity.this, BusinessPartnersActivity.class)
-                                .putExtra(BusinessPartnersActivity.KEY_CURRENT_USER, mCurrentUser));
-                        finish();
+                                .registerBusinessPartner(businessPartner);
+                        if (result==null){
+                            startActivity(new Intent(RegisterBusinessPartnerActivity.this, BusinessPartnersActivity.class)
+                                    .putExtra(BusinessPartnersActivity.KEY_CURRENT_USER, mCurrentUser));
+                            finish();
+                        } else {
+                            Toast.makeText(RegisterBusinessPartnerActivity.this, String.valueOf(result), Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(RegisterBusinessPartnerActivity.this, String.valueOf(result), Toast.LENGTH_LONG).show();
+                        new AlertDialog.Builder(RegisterBusinessPartnerActivity.this)
+                                .setMessage(result)
+                                .setNeutralButton(R.string.accept, null)
+                                .show();
                     }
                 }
             });
