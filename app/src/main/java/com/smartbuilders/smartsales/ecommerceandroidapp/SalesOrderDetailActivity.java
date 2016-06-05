@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -29,7 +29,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
     public static final String STATE_SALES_ORDER = "state_sales_order";
 
     private User mCurrentUser;
-    private Order mOrder;
+    private SalesOrder mSalesOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +40,13 @@ public class SalesOrderDetailActivity extends AppCompatActivity
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_SALES_ORDER)){
-                mOrder = savedInstanceState.getParcelable(STATE_SALES_ORDER);
+                mSalesOrder = savedInstanceState.getParcelable(STATE_SALES_ORDER);
             }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(STATE_SALES_ORDER)){
-                mOrder = getIntent().getExtras().getParcelable(STATE_SALES_ORDER);
+            if(getIntent().getExtras().containsKey(KEY_SALES_ORDER)){
+                mSalesOrder = getIntent().getExtras().getParcelable(KEY_SALES_ORDER);
             }
         }
 
@@ -110,7 +110,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_SALES_ORDER, mOrder);
+        outState.putParcelable(STATE_SALES_ORDER, mSalesOrder);
         super.onSaveInstanceState(outState);
     }
 }

@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 
 import java.util.ArrayList;
@@ -49,6 +48,9 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
         View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
+        viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
+        viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
+        viewHolder.shoppingSaleSubTotal.setText(mContext.getString(R.string.order_sub_total_amount, mDataset.get(position).getSubTotalAmount()));
 
         view.setTag(viewHolder);
         return view;

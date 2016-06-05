@@ -117,7 +117,7 @@ public class SalesOrderLineDB {
             ol.setTotalLineAmount(SalesOrderLineBR.getTotalLine(ol));
 
             String sql = "INSERT INTO ECOMMERCE_SALES_ORDERLINE (PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, " +
-                    " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_ORDER_ID, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
+                    " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
@@ -250,7 +250,7 @@ public class SalesOrderLineDB {
         return orderLines;
     }
 
-    public int getOrderLineNumbersByOrderId(int salesOrderId){
+    public int getOrderLineNumbersBySalesOrderId(int salesOrderId){
         Cursor c = null;
         try {
             String sql = "SELECT COUNT(ECOMMERCE_SALES_ORDERLINE_ID) FROM ECOMMERCE_SALES_ORDERLINE " +

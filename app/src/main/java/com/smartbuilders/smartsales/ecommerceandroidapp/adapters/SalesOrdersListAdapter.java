@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 
 import java.util.ArrayList;
@@ -21,12 +19,10 @@ public class SalesOrdersListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<SalesOrder> mDataset;
-    private OrderLineDB orderLineDB;
 
-    public SalesOrdersListAdapter(Context context, ArrayList<SalesOrder> data, User user) {
+    public SalesOrdersListAdapter(Context context, ArrayList<SalesOrder> data) {
         mContext = context;
         mDataset = data;
-        orderLineDB = new OrderLineDB(context, user);
     }
 
     @Override

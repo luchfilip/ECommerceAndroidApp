@@ -151,7 +151,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     .replace(R.id.sales_order_detail_container, fragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
-            Intent intent = new Intent(SalesOrdersListActivity.this, SalesOrderDetailActivity.class);
+            Intent intent = new Intent(this, SalesOrderDetailActivity.class);
             intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
             startActivity(intent);
         }

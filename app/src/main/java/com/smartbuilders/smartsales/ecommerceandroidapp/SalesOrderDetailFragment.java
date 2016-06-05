@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class SalesOrderDetailFragment extends Fragment {
 
     private User mCurrentUser;
-    private SalesOrder mOrder;
+    private SalesOrder mSalesOrder;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<SalesOrderLine> mOrderLines;
 
@@ -52,17 +52,17 @@ public class SalesOrderDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
-                mOrder = getArguments().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
+                mSalesOrder = getArguments().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
         } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
             if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
-                mOrder = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
+                mSalesOrder = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
         }
 
-        if (mOrder != null) {
+        if (mSalesOrder != null) {
             mOrderLines = new SalesOrderLineDB(getContext(), mCurrentUser)
-                    .getActiveFinalizedSalesOrderLinesByOrderId(mOrder.getId());
+                    .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId());
 
             RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
             // use this setting to improve performance if you know that changes
@@ -72,25 +72,25 @@ public class SalesOrderDetailFragment extends Fragment {
             mRecyclerView.setAdapter(new SalesOrderLineAdapter(mOrderLines, mCurrentUser));
 
             ((TextView) rootView.findViewById(R.id.sales_order_lines_number_tv))
-                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrder.getLinesNumber())));
+                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
 
             ((TextView) rootView.findViewById(R.id.sales_order_number_tv))
-                    .setText(getContext().getString(R.string.sales_order_number, mOrder.getOrderNumber()));
+                    .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getOrderNumber()));
 
             ((TextView) rootView.findViewById(R.id.sales_order_date_tv))
-                    .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
+                    .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
 
             if(rootView.findViewById(R.id.sales_order_sub_total_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_sub_total_tv))
-                        .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mOrder.getSubTotalAmount())));
+                        .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
             }
             if(rootView.findViewById(R.id.sales_order_total_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_total_tv))
-                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mOrder.getTruncatedTotalAmount())));
+                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
             }
             if(rootView.findViewById(R.id.sales_order_tax_tv) != null) {
                 ((TextView) rootView.findViewById(R.id.sales_order_tax_tv))
-                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mOrder.getTruncatedTaxAmount())));
+                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
             }
             if(rootView.findViewById(R.id.create_order_button)!=null){
                 rootView.findViewById(R.id.create_order_button)
@@ -98,7 +98,7 @@ public class SalesOrderDetailFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mOrder.getId());
+                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
                         startActivity(intent);
                     }
                 });
@@ -157,7 +157,7 @@ public class SalesOrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new SalesOrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName+".pdf",
+            new SalesOrderDetailPDFCreator().generatePDF(mSalesOrder, mOrderLines, fileName+".pdf",
                     getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
