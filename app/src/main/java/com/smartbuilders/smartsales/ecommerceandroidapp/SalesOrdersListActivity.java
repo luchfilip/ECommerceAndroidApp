@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -28,8 +28,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String SALES_ORDERDETAIL_FRAGMENT_TAG = "SALES_ORDERDETAIL_FRAGMENT_TAG";
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
+
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
 
     private boolean mTwoPane;
@@ -42,19 +41,12 @@ public class SalesOrdersListActivity extends AppCompatActivity
         setContentView(R.layout.activity_sales_orders_list);
 
         if( savedInstanceState != null ) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
                 mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
             }
         }
 
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         if(findViewById(R.id.title_textView) != null){
             ((TextView) findViewById(R.id.title_textView))
@@ -62,7 +54,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,21 +68,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
-        if(findViewById(R.id.sales_order_detail_container) != null){
-            // If this view is present, then the activity should be
-            // in two-pane mode.
-            mTwoPane = true;
-            //// In two-pane mode, show the detail view in this activity by
-            //// adding or replacing the detail fragment using a
-            //// fragment transaction.
-            //if(savedInstanceState == null){
-            //    getSupportFragmentManager().beginTransaction()
-            //            .add(R.id.sales_order_detail_container, new SalesOrderDetailFragment(),
-            //                    SALES_ORDERDETAIL_FRAGMENT_TAG).commit();
-            //}
-        }else{
-            mTwoPane = false;
-        }
+        mTwoPane = findViewById(R.id.sales_order_detail_container) != null;
     }
 
     @Override
@@ -133,8 +111,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                startActivity(new Intent(this, SearchResultsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -154,19 +131,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void onItemSelected(Order order, int selectedItemPosition) {
+    public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition) {
         mCurrentSelectedItemPosition = selectedItemPosition;
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
-            args.putParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+            args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
 
             SalesOrderDetailFragment fragment = new SalesOrderDetailFragment();
             fragment.setArguments(args);
@@ -176,15 +152,13 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     .commit();
         }else{
             Intent intent = new Intent(SalesOrdersListActivity.this, SalesOrderDetailActivity.class);
-            intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, order);
-            intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
+            intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
             startActivity(intent);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putInt(STATE_CURRENT_SELECTED_ITEM_POSITION, mCurrentSelectedItemPosition);
         super.onSaveInstanceState(outState);
     }

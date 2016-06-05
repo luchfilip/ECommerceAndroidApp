@@ -13,10 +13,11 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -25,15 +26,16 @@ import java.util.ArrayList;
  */
 public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
+    private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
 
     private User mCurrentUser;
-    private ArrayList<OrderLine> mOrderLines;
+    private ArrayList<SalesOrderLine> mOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
     private TextView totalLines;
     private TextView subTotalAmount;
     private TextView taxesAmount;
     private TextView totalAmount;
+    private int mCurrentBusinessPartnerId;
 
     public ShoppingSaleFragment() {
     }
@@ -41,21 +43,24 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState!=null) {
+            if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
+                mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+            }
+        }
+
+        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
+            if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
+                mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
+                        .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+            }
+        }
+
         final View view = inflater.inflate(R.layout.fragment_shopping_sale, container, false);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ShoppingSaleActivity.KEY_CURRENT_USER);
-            }
-        }
-
-        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingSale();
+        mOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
         mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), this, mOrderLines, mCurrentUser);
 
         ((ListView) view.findViewById(R.id.shoppingSale_items_list)).setAdapter(mShoppingSaleAdapter);
@@ -69,12 +74,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
-                                String result = orderDB.createOrderFromShoppingSale();
+                                SalesOrderDB salesOrderDB = new SalesOrderDB(getContext(), mCurrentUser);
+                                String result = salesOrderDB.createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId);
                                 if(result == null){
                                     Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
-                                    intent.putExtra(SalesOrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
-                                    intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, orderDB.getLastFinalizedSalesOrder());
+                                    intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrderDB.getLastFinalizedSalesOrder());
                                     startActivity(intent);
                                     getActivity().finish();
                                 }else{
@@ -107,7 +111,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     public void fillFields(){
         double subTotal=0, tax=0, total=0;
-        for(OrderLine orderLine : mOrderLines){
+        for(SalesOrderLine orderLine : mOrderLines){
             subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
             tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
             total += subTotal + tax;
@@ -119,7 +123,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     @Override
-    public void updateSalesOrderLine(OrderLine orderLine, int focus) {
+    public void updateSalesOrderLine(SalesOrderLine orderLine, int focus) {
         DialogUpdateSalesOrderLine dialogUpdateSalesOrderLine =
                 DialogUpdateSalesOrderLine.newInstance(orderLine, mCurrentUser, focus);
         dialogUpdateSalesOrderLine.setTargetFragment(this, 0);
@@ -128,14 +132,14 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void reloadShoppingSale(){
-        mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingSale();
+        mOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
         mShoppingSaleAdapter.setData(mOrderLines);
         fillFields();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putInt(STATE_BUSINESS_PARTNER_ID, mCurrentBusinessPartnerId);
         super.onSaveInstanceState(outState);
     }
 }

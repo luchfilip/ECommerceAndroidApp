@@ -30,8 +30,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
@@ -48,9 +46,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
                 mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
             }
@@ -59,11 +54,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -82,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -101,24 +92,21 @@ public class MainActivity extends AppCompatActivity
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(MainActivity.this, FilterOptionsActivity.class));
                 }
             });
 
             findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class));
                 }
             });
 
             findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(MainActivity.this, SearchResultsActivity.class));
                 }
             });
         }
@@ -168,7 +156,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -183,7 +171,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         try {
             ListView listView = (ListView) findViewById(R.id.main_categories_list);
             outState.putInt(STATE_LISTVIEW_INDEX, listView.getFirstVisiblePosition());

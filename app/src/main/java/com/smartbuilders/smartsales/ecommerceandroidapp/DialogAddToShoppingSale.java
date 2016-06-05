@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -68,7 +68,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 
         final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
 
         List<String> spinnerArray =  new ArrayList<>();
         final ArrayList<BusinessPartner> businessPartners =
@@ -134,8 +133,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
                             productTaxPercentage = Double
                                     .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString());
                         } catch (Exception e) { }
-                        String result = (new OrderLineDB(getContext(), mUser))
-                                .addProductToShoppingSale(mProduct, qtyRequested, productPrice, productTaxPercentage);
+
+                        String result = (new SalesOrderLineDB(getContext(), mUser))
+                                .addProductToShoppingSale(mProduct, qtyRequested, productPrice,
+                                        productTaxPercentage, sharedPref.getInt("current_business_partner_id", 0));
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_LONG).show();

@@ -23,10 +23,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String KEY_SALES_ORDER_ID = "KEY_SALES_ORDER_ID";
 
-    public static final String STATE_CURRENT_USER = "state_current_user";
     public static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
 
     private User mCurrentUser;
@@ -38,22 +36,18 @@ public class ShoppingCartActivity extends AppCompatActivity
         setContentView(R.layout.activity_shoping_cart);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                 mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
             }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
             if(getIntent().getExtras().containsKey(KEY_SALES_ORDER_ID)){
                 mSalesOrderId = getIntent().getExtras().getInt(KEY_SALES_ORDER_ID);
             }
         }
+
+        mCurrentUser = Utils.getCurrentUser(this);
 
         if(findViewById(R.id.title_textView) != null){
             ((TextView) findViewById(R.id.title_textView))
@@ -61,7 +55,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -87,8 +81,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                startActivity(new Intent(this, SearchResultsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -108,7 +101,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -116,7 +109,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         super.onSaveInstanceState(outState);
     }

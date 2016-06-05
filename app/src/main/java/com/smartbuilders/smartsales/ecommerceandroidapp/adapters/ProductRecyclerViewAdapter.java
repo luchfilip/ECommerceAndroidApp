@@ -121,7 +121,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                            intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                             intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position));
                             mContext.startActivity(intent);
                         }
@@ -132,7 +131,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ProductsListActivity.class);
-                            intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                             intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID,
                                     mDataset.get(position).getProductSubCategory().getId());
                             mContext.startActivity(intent);

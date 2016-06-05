@@ -25,8 +25,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String KEY_SALES_ORDER = "key_sales_order";
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
+
     public static final String STATE_SALES_ORDER = "state_sales_order";
 
     private User mCurrentUser;
@@ -37,19 +36,15 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_order_detail);
 
+        mCurrentUser = Utils.getCurrentUser(this);
+
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_SALES_ORDER)){
                 mOrder = savedInstanceState.getParcelable(STATE_SALES_ORDER);
             }
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
             if(getIntent().getExtras().containsKey(STATE_SALES_ORDER)){
                 mOrder = getIntent().getExtras().getParcelable(STATE_SALES_ORDER);
             }
@@ -61,7 +56,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -87,8 +82,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                startActivity(new Intent(this, SearchResultsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -108,7 +102,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -116,7 +110,6 @@ public class SalesOrderDetailActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putParcelable(STATE_SALES_ORDER, mOrder);
         super.onSaveInstanceState(outState);
     }

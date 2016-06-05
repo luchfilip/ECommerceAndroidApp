@@ -19,9 +19,7 @@ public class OrderLineDB {
 
     public static final String WISHLIST_DOCTYPE = "WL";
     public static final String SHOPPING_CART_DOCTYPE = "SC";
-    public static final String SHOPPING_SALE_DOCTYPE = "SS";
     public static final String FINALIZED_ORDER_DOCTYPE = "FO";
-    public static final String FINALIZED_SALES_ORDER_DOCTYPE = "FSO";
 
     private Context context;
     private User user;
@@ -37,10 +35,6 @@ public class OrderLineDB {
 
     public String addProductToShoppingCart(Product product, int qtyRequested){
         return addOrderLine(product, qtyRequested, 0, 0, SHOPPING_CART_DOCTYPE, null);
-    }
-
-    public String addProductToShoppingSale(Product product, int qtyRequested, double productPrice, double productTaxPercentage){
-        return addOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE, null);
     }
 
     public String addProductToWishList(Product product){
@@ -125,12 +119,52 @@ public class OrderLineDB {
         return getOrderLines(SHOPPING_CART_DOCTYPE, null);
     }
 
-    public ArrayList<OrderLine> getShoppingSale(){
-        return getOrderLines(SHOPPING_SALE_DOCTYPE, null);
-    }
-
-    public ArrayList<OrderLine> getSalesOrderLines(Integer salesOrderId){
-        return getOrderLines(FINALIZED_SALES_ORDER_DOCTYPE, salesOrderId);
+    public ArrayList<OrderLine> getOrderLinesBySalesOrderId(int salesOrderId){
+        ArrayList<OrderLine> orderLines = new ArrayList<>();
+        Cursor c = null;
+        try {
+            String sql = "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDERLINE WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
+                    " AND ECOMMERCE_SALES_ORDER_ID = "+salesOrderId +
+                    " ORDER BY CREATE_TIME DESC";
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+            while(c.moveToNext()){
+                OrderLine orderLine = new OrderLine();
+                orderLine.setId(c.getInt(0));
+                Product product = new Product();
+                product.setId(c.getInt(1));
+                orderLine.setQuantityOrdered(c.getInt(2));
+                orderLine.setPrice(c.getDouble(3));
+                orderLine.setTaxPercentage(c.getDouble(4));
+                orderLine.setTotalLineAmount(c.getDouble(5));
+                orderLine.setProduct(product);
+                orderLines.add(orderLine);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        ProductDB productDB = new ProductDB(context, user);
+        ArrayList<OrderLine> orderLinesToDelete = new ArrayList<>();
+        for(OrderLine orderLine : orderLines) {
+            orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId(), false));
+            if(orderLine.getProduct()==null){
+                orderLinesToDelete.add(orderLine);
+            }
+        }
+        if(!orderLinesToDelete.isEmpty()){
+            orderLines.removeAll(orderLinesToDelete);
+        }
+        return orderLines;
     }
 
     public ArrayList<OrderLine> getWishList(){
@@ -139,10 +173,6 @@ public class OrderLineDB {
 
     public ArrayList<OrderLine> getActiveFinalizedOrderLinesByOrderId(int orderId){
         return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
-    }
-
-    public ArrayList<OrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId){
-        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOCTYPE, orderId);
     }
 
     private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
@@ -258,10 +288,6 @@ public class OrderLineDB {
         return getActiveOrderLinesNumber(WISHLIST_DOCTYPE);
     }
 
-    public int getActiveShoppingSalesLinesNumber(){
-        return getActiveOrderLinesNumber(SHOPPING_SALE_DOCTYPE);
-    }
-
     private int getActiveOrderLinesNumber(String docType) {
         Cursor c = null;
         try {
@@ -284,10 +310,6 @@ public class OrderLineDB {
             }
         }
         return 0;
-    }
-
-    public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int orderId) {
-        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_SALES_ORDER_DOCTYPE, SHOPPING_SALE_DOCTYPE);
     }
 
     public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {

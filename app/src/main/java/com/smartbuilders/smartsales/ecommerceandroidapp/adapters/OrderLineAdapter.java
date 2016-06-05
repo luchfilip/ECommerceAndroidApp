@@ -128,7 +128,6 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
                 mContext.startActivity(intent);
             }

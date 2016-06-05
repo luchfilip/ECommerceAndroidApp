@@ -24,6 +24,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.OrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -47,17 +48,13 @@ public class OrderDetailFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         if (getArguments() != null) {
             if (getArguments().containsKey(OrderDetailActivity.KEY_ORDER)) {
                 mOrder = getArguments().getParcelable(OrderDetailActivity.KEY_ORDER);
             }
-            if (getArguments().containsKey(OrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getArguments().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
-            }
         } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_CURRENT_USER);
-            }
             if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER)) {
                 mOrder = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_ORDER);
             }

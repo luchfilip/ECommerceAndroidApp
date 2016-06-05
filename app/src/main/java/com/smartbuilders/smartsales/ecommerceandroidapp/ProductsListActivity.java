@@ -22,13 +22,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class ProductsListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
     public static final String KEY_PRODUCT_CATEGORY_ID = "KEY_PRODUCT_CATEGORY_ID";
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
     public static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
-    private static final String STATE_CURRENT_USER = "state_current_user";
 
     private User mCurrentUser;
 
@@ -37,20 +35,10 @@ public class ProductsListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 
-        if( savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null) {
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)) {
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(ProductsListActivity.this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(ProductsListActivity.this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -68,24 +56,21 @@ public class ProductsListActivity extends AppCompatActivity
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(ProductsListActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(ProductsListActivity.this, FilterOptionsActivity.class));
                 }
             });
 
             findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class));
                 }
             });
 
             findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class)
-                            .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class));
                 }
             });
         }
@@ -94,16 +79,10 @@ public class ProductsListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
-        super.onSaveInstanceState(outState);
     }
 
     @Override

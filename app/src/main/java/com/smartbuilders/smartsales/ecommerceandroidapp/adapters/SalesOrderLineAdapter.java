@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  */
 public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAdapter.ViewHolder> {
 
-    private ArrayList<OrderLine> mDataset;
+    private ArrayList<SalesOrderLine> mDataset;
     private Context mContext;
     private User mCurrentUser;
 
@@ -56,7 +57,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SalesOrderLineAdapter(ArrayList<OrderLine> myDataset, User user) {
+    public SalesOrderLineAdapter(ArrayList<SalesOrderLine> myDataset, User user) {
         mDataset = myDataset;
         mCurrentUser = user;
     }
@@ -113,7 +114,6 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
                 mContext.startActivity(intent);
             }

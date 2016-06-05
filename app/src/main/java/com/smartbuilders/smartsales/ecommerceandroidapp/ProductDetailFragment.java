@@ -39,8 +39,6 @@ import java.util.ArrayList;
  */
 public class ProductDetailFragment extends Fragment {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
-
     private ProgressDialog waitPlease;
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
@@ -59,16 +57,9 @@ public class ProductDetailFragment extends Fragment {
         setHasOptionsMenu(true);
         final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ProductDetailActivity.KEY_CURRENT_USER);
-            }
             if(getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
                 mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
             }
@@ -163,7 +154,6 @@ public class ProductDetailFragment extends Fragment {
                                  @Override
                                  public void onClick(View v) {
                                      startActivity((new Intent(getContext(), ZoomImageActivity.class)
-                                         .putExtra(ZoomImageActivity.KEY_CURRENT_USER, mCurrentUser)
                                          .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
                                  }
                              });
@@ -325,11 +315,5 @@ public class ProductDetailFragment extends Fragment {
         DialogAddToShoppingSale addToShoppingSaleFragment =
                 DialogAddToShoppingSale.newInstance(mProduct, mCurrentUser);
         addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
-        super.onSaveInstanceState(outState);
     }
 }

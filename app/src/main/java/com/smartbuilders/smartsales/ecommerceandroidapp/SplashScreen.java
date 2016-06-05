@@ -69,7 +69,7 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
                             if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
-                                initApp(mCurrentUser);
+                                initApp();
                             }else{
                                 if (waitPlease!=null && waitPlease.isShowing()) {
                                     waitPlease.dismiss();
@@ -180,7 +180,7 @@ public class SplashScreen extends AppCompatActivity {
                 }, null);
     }
 
-    private void initApp(User user){
+    private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         if (waitPlease!=null && waitPlease.isShowing()){
             waitPlease.dismiss();
@@ -188,7 +188,6 @@ public class SplashScreen extends AppCompatActivity {
         }
         Utils.createImageFiles(this, mCurrentUser);
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
-        i.putExtra(MainActivity.KEY_CURRENT_USER, user);
         startActivity(i);
         finish();
     }
@@ -228,7 +227,7 @@ public class SplashScreen extends AppCompatActivity {
                     findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
                 }
         } else if (mCurrentUser!=null) {
-            initApp(mCurrentUser);
+            initApp();
         } else {
             //TODO: mostrar error en pantalla
             //startActivity(new Intent(this, SplashScreen.class));

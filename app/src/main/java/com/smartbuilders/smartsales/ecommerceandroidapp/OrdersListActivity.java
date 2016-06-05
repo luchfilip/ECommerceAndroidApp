@@ -29,8 +29,7 @@ public class OrdersListActivity extends AppCompatActivity
 
     private boolean mTwoPane;
     private static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    private static final String STATE_CURRENT_USER = "state_current_user";
+
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
     private User mCurrentUser;
     private int mCurrentSelectedItemPosition;
@@ -41,19 +40,12 @@ public class OrdersListActivity extends AppCompatActivity
         setContentView(R.layout.activity_orders_list);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
                 mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
             }
         }
 
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         if(findViewById(R.id.title_textView) != null){
             ((TextView) findViewById(R.id.title_textView))
@@ -61,7 +53,7 @@ public class OrdersListActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -81,21 +73,7 @@ public class OrdersListActivity extends AppCompatActivity
             }
         }
 
-        if(findViewById(R.id.order_detail_container) != null){
-            // If this view is present, then the activity should be
-            // in two-pane mode.
-            mTwoPane = true;
-            //// In two-pane mode, show the detail view in this activity by
-            //// adding or replacing the detail fragment using a
-            //// fragment transaction.
-            //if(savedInstanceState == null){
-            //    getSupportFragmentManager().beginTransaction()
-            //            .add(R.id.order_detail_container, new OrderDetailFragment(),
-            //                    ORDERDETAIL_FRAGMENT_TAG).commit();
-            //}
-        }else{
-            mTwoPane = false;
-        }
+        mTwoPane = findViewById(R.id.order_detail_container) != null;
     }
 
     @Override
@@ -138,8 +116,7 @@ public class OrdersListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class)
-                        .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+                startActivity(new Intent(this, SearchResultsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -152,7 +129,6 @@ public class OrdersListActivity extends AppCompatActivity
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putParcelable(OrderDetailActivity.KEY_ORDER, order);
-            args.putParcelable(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
 
             OrderDetailFragment fragment = new OrderDetailFragment();
             fragment.setArguments(args);
@@ -163,7 +139,6 @@ public class OrdersListActivity extends AppCompatActivity
         }else{
             Intent intent = new Intent(OrdersListActivity.this, OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
-            intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
             startActivity(intent);
         }
     }
@@ -181,7 +156,7 @@ public class OrdersListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -189,7 +164,6 @@ public class OrdersListActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putInt(STATE_CURRENT_SELECTED_ITEM_POSITION, mCurrentSelectedItemPosition);
         super.onSaveInstanceState(outState);
     }

@@ -36,9 +36,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class SearchResultsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
-
     private User mCurrentUser;
     private ProductDB productDB;
     private ListView mListView;
@@ -51,20 +48,10 @@ public class SearchResultsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        if( savedInstanceState != null ) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(SalesOrdersListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(SalesOrdersListActivity.KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,8 +73,7 @@ public class SearchResultsActivity extends AppCompatActivity
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(SearchResultsActivity.this, FilterOptionsActivity.class)
-                            .putExtra(FilterOptionsActivity.KEY_CURRENT_USER, mCurrentUser));
+                    startActivity(new Intent(SearchResultsActivity.this, FilterOptionsActivity.class));
                 }
             });
             searchEditText = (EditText) findViewById(R.id.search_product_editText);
@@ -122,7 +108,6 @@ public class SearchResultsActivity extends AppCompatActivity
                         new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
                                 .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                         Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
-                        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                         intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
                         startActivity(intent);
                         return true;
@@ -137,7 +122,6 @@ public class SearchResultsActivity extends AppCompatActivity
                     new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
                             .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                     Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
                     startActivity(intent);
                 }
@@ -158,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -196,11 +180,5 @@ public class SearchResultsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
     }
 }

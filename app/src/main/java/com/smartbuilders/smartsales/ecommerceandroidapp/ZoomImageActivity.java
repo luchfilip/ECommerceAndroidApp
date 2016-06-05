@@ -22,11 +22,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class ZoomImageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
-    private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
-
     public static final String KEY_IMAGE_FILE_NAME = "KEY_IMAGE_FILE_NAME";
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
+
+    private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
 
     private User mCurrentUser;
     private String mImageFileName;
@@ -36,23 +34,16 @@ public class ZoomImageActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoom_image);
 
-        if( savedInstanceState != null ) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
             if(getIntent().getExtras().containsKey(KEY_IMAGE_FILE_NAME)){
                 mImageFileName = getIntent().getExtras().getString(KEY_IMAGE_FILE_NAME);
             }
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,8 +68,7 @@ public class ZoomImageActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.search){
-            startActivity(new Intent(this, SearchResultsActivity.class)
-                    .putExtra(SearchResultsActivity.KEY_CURRENT_USER, mCurrentUser));
+            startActivity(new Intent(this, SearchResultsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -96,7 +86,7 @@ public class ZoomImageActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Utils.navigationItemSelectedBehave(item.getItemId(), this, mCurrentUser);
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -104,7 +94,6 @@ public class ZoomImageActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putString(STATE_IMAGE_FILE_NAME, mImageFileName);
         super.onSaveInstanceState(outState);
     }

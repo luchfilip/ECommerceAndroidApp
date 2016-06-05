@@ -17,10 +17,10 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -38,21 +38,21 @@ public class ShoppingSaleAdapter extends BaseAdapter {
 
     private Context mContext;
     private ShoppingSaleFragment mShoppingSaleFragment;
-    private ArrayList<OrderLine> mDataset;
+    private ArrayList<SalesOrderLine> mDataset;
     private User mCurrentUser;
-    private OrderLineDB orderLineDB;
+    private SalesOrderLineDB mSalesOrderLineDB;
 
     public interface Callback {
-        public void updateSalesOrderLine(OrderLine orderLine, int focus);
+        public void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
     }
 
     public ShoppingSaleAdapter(Context context, ShoppingSaleFragment shoppingSaleFragment,
-                               ArrayList<OrderLine> data, User user) {
+                               ArrayList<SalesOrderLine> data, User user) {
         mContext = context;
         mShoppingSaleFragment = shoppingSaleFragment;
         mDataset = data;
         mCurrentUser = user;
-        orderLineDB = new OrderLineDB(context, user);
+        mSalesOrderLineDB = new SalesOrderLineDB(context, user);
     }
 
     @Override
@@ -110,7 +110,6 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
                 mContext.startActivity(intent);
             }
@@ -126,7 +125,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                                 mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                String result = mSalesOrderLineDB.deleteSalesOrderLine(mDataset.get(position));
                                 if(result == null){
                                     mDataset.remove(position);
                                     notifyDataSetChanged();
@@ -196,7 +195,7 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         }
     }
 
-    public void setData(ArrayList<OrderLine> salesOrderLines) {
+    public void setData(ArrayList<SalesOrderLine> salesOrderLines) {
         this.mDataset = salesOrderLines;
         notifyDataSetChanged();
     }

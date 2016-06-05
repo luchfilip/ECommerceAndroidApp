@@ -10,9 +10,10 @@ import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrdersListAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class SalesOrdersListFragment extends Fragment {
     private User mCurrentUser;
 
     public interface Callback {
-        public void onItemSelected(Order order, int selectedItemPosition);
+        public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
     }
 
     public SalesOrdersListFragment() {
@@ -35,13 +36,9 @@ public class SalesOrdersListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sales_orders_list, container, false);
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
-            if(getActivity().getIntent().getExtras().containsKey(SalesOrdersListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(SalesOrdersListActivity.KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
-        ArrayList<Order> activeSalesOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveSalesOrders();
+        ArrayList<SalesOrder> activeSalesOrders = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders();
         if (activeSalesOrders!=null && !activeSalesOrders.isEmpty()) {
             ListView listView = (ListView) rootView.findViewById(R.id.sales_orders_list);
             listView.setAdapter(new SalesOrdersListAdapter(getActivity(), activeSalesOrders, mCurrentUser));
@@ -52,9 +49,9 @@ public class SalesOrdersListFragment extends Fragment {
                 public void onItemClick(AdapterView adapterView, View view, int position, long l) {
                     // CursorAdapter returns a cursor at the correct position for getItem(), or null
                     // if it cannot seek to that position.
-                    Order order = (Order) adapterView.getItemAtPosition(position);
-                    if (order != null) {
-                        ((Callback) getActivity()).onItemSelected(order, position);
+                    SalesOrder salesOrder = (SalesOrder) adapterView.getItemAtPosition(position);
+                    if (salesOrder != null) {
+                        ((Callback) getActivity()).onItemSelected(salesOrder, position);
                     }
                 }
             });

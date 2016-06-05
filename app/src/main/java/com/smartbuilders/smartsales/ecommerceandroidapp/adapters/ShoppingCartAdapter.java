@@ -63,12 +63,22 @@ public class ShoppingCartAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mDataset.get(position);
+        try {
+            return mDataset.get(position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return mDataset.get(position).getId();
+        try {
+            return mDataset.get(position).getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  -1;
     }
 
     @Override
@@ -108,7 +118,6 @@ public class ShoppingCartAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                 intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position).getProduct());
                 mContext.startActivity(intent);
             }

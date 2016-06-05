@@ -17,6 +17,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,6 @@ import java.util.ArrayList;
  */
 public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
 
     private User mCurrentUser;
@@ -37,20 +37,16 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
+
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                 mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
             }
         }
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras()
-                        .getParcelable(ShoppingCartActivity.KEY_CURRENT_USER);
-            }
             if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
                 mSalesOrderId = getActivity().getIntent().getExtras()
                         .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
@@ -58,7 +54,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }
 
         if (mSalesOrderId>0) {
-            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getSalesOrderLines(mSalesOrderId);
+            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
         }else {
             mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
         }
@@ -90,7 +86,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                             }
                                             if(result == null){
                                                 Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                                                intent.putExtra(OrderDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                                                 intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
                                                 startActivity(intent);
                                                 getActivity().finish();
@@ -130,7 +125,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         super.onSaveInstanceState(outState);
     }

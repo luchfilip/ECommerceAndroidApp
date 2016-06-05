@@ -18,7 +18,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
  */
 public class ZoomImageFragment extends Fragment {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
 
     private User mCurrentUser;
@@ -30,20 +29,16 @@ public class ZoomImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_IMAGE_FILE_NAME)){
                 mImageFileName = savedInstanceState.getString(STATE_IMAGE_FILE_NAME);
             }
         }
 
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ZoomImageActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras()
-                        .getParcelable(ZoomImageActivity.KEY_CURRENT_USER);
-            }
             if(getActivity().getIntent().getExtras().containsKey(ZoomImageActivity.KEY_IMAGE_FILE_NAME)){
                 mImageFileName = getActivity().getIntent().getExtras()
                         .getString(ZoomImageActivity.KEY_IMAGE_FILE_NAME);
@@ -76,7 +71,6 @@ public class ZoomImageFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         outState.putString(STATE_IMAGE_FILE_NAME, mImageFileName);
         super.onSaveInstanceState(outState);
     }

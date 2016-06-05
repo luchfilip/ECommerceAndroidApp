@@ -23,6 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.WishListPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -33,7 +34,6 @@ import java.util.ArrayList;
  */
 public class WishListFragment extends Fragment implements WishListAdapter.Callback {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> wishListLines;
@@ -49,17 +49,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
-
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(WishListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(WishListActivity.KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
         wishListLines = (new OrderLineDB(getActivity(), mCurrentUser)).getWishList();
 
@@ -81,7 +71,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
                     if (orderLine != null) {
                         Intent intent = new Intent(getContext(), ProductDetailActivity.class);
-                        intent.putExtra(ProductDetailActivity.KEY_CURRENT_USER, mCurrentUser);
                         intent.putExtra(ProductDetailFragment.KEY_PRODUCT, orderLine.getProduct());
                         startActivity(intent);
                     }
@@ -187,11 +176,5 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 }
             });
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
-        super.onSaveInstanceState(outState);
     }
 }

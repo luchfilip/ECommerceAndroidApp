@@ -16,10 +16,11 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderLineBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * Created by stein on 26/5/2016.
@@ -27,16 +28,15 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class DialogUpdateSalesOrderLine extends DialogFragment {
 
     private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
-    private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
-    private OrderLine mOrderLine;
+    private SalesOrderLine mSaleOrderLine;
     private User mUser;
     private int mFocus;
 
-    public static DialogUpdateSalesOrderLine newInstance(OrderLine orderLine, User user, int focus){
+    public static DialogUpdateSalesOrderLine newInstance(SalesOrderLine orderLine, User user, int focus){
         DialogUpdateSalesOrderLine dialogUpdateSalesOrderLine = new DialogUpdateSalesOrderLine();
         dialogUpdateSalesOrderLine.mUser = user;
-        dialogUpdateSalesOrderLine.mOrderLine = orderLine;
+        dialogUpdateSalesOrderLine.mSaleOrderLine = orderLine;
         dialogUpdateSalesOrderLine.mFocus = focus;
         return dialogUpdateSalesOrderLine;
     }
@@ -46,17 +46,16 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialog_update_product_to_sale, container);
 
+        mUser = Utils.getCurrentUser(getContext());
+
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_ORDERLINE)){
-                mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
-            }
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+                mSaleOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
             }
         }
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
-                .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
+                .setText(getContext().getString(R.string.availability, mSaleOrderLine.getProduct().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,19 +66,19 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
         try {
             ((EditText) view.findViewById(R.id.qty_requested_editText))
-                    .setText(String.valueOf(mOrderLine.getQuantityOrdered()));
+                    .setText(String.valueOf(mSaleOrderLine.getQuantityOrdered()));
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             ((EditText) view.findViewById(R.id.product_price_editText))
-                    .setText(String.valueOf(mOrderLine.getPrice()));
+                    .setText(String.valueOf(mSaleOrderLine.getPrice()));
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             ((EditText) view.findViewById(R.id.product_tax_editText))
-                    .setText(String.valueOf(mOrderLine.getTaxPercentage()));
+                    .setText(String.valueOf(mSaleOrderLine.getTaxPercentage()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,28 +88,28 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             public void onClick(View v) {
                 try {
                     try {
-                        mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view
+                        mSaleOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view
                                 .findViewById(R.id.qty_requested_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        mOrderLine.setQuantityOrdered(0);
+                        mSaleOrderLine.setQuantityOrdered(0);
                     }
                     try {
-                        mOrderLine.setPrice(Double.valueOf(((EditText) view
+                        mSaleOrderLine.setPrice(Double.valueOf(((EditText) view
                                 .findViewById(R.id.product_price_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        mOrderLine.setPrice(0);
+                        mSaleOrderLine.setPrice(0);
                     }
                     try {
-                        mOrderLine.setTaxPercentage(Double.valueOf(((EditText) view
+                        mSaleOrderLine.setTaxPercentage(Double.valueOf(((EditText) view
                                 .findViewById(R.id.product_tax_editText)).getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        mOrderLine.setTaxPercentage(0);
+                        mSaleOrderLine.setTaxPercentage(0);
                     }
-                    mOrderLine.setTotalLineAmount(OrderLineBR.getTotalLine(mOrderLine));
-                    String result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
+                    mSaleOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(mSaleOrderLine));
+                    String result = (new SalesOrderLineDB(getContext(), mUser)).updateSalesOrderLine(mSaleOrderLine);
                     if(result == null){
                         ((ShoppingSaleFragment) getTargetFragment()).reloadShoppingSale();
                     } else {
@@ -125,11 +124,11 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         });
 
         if(view.findViewById(R.id.product_commercial_package) != null){
-            if(mOrderLine.getProduct()!=null && mOrderLine.getProduct().getProductCommercialPackage()!=null
-                    && !TextUtils.isEmpty(mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
+            if(mSaleOrderLine.getProduct()!=null && mSaleOrderLine.getProduct().getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                        mOrderLine.getProduct().getProductCommercialPackage().getUnits() + " " +
-                                mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
+                        mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits() + " " +
+                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }
@@ -147,14 +146,13 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                 break;
         }
 
-        getDialog().setTitle(mOrderLine.getProduct().getName());
+        getDialog().setTitle(mSaleOrderLine.getProduct().getName());
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mUser);
-        outState.putParcelable(STATE_CURRENT_ORDERLINE, mOrderLine);
+        outState.putParcelable(STATE_CURRENT_ORDERLINE, mSaleOrderLine);
         super.onSaveInstanceState(outState);
     }
 

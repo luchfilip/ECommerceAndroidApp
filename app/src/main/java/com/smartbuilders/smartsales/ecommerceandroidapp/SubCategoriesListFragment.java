@@ -14,6 +14,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdap
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -33,21 +34,17 @@ public class SubCategoriesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sub_categories_list, container, false);
 
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         int mCategoryId = 0;
 
         if(getArguments()!=null){
             if(getArguments().containsKey(KEY_CATEGORY_ID)){
                 mCategoryId = getArguments().getInt(KEY_CATEGORY_ID);
             }
-            if(getArguments().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getArguments().getParcelable(SubCategoriesListActivity.KEY_CURRENT_USER);
-            }
         }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
             if(getActivity().getIntent().getExtras().containsKey(KEY_CATEGORY_ID)) {
                 mCategoryId = getActivity().getIntent().getExtras().getInt(KEY_CATEGORY_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(SubCategoriesListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(SubCategoriesListActivity.KEY_CURRENT_USER);
             }
         }
 
@@ -67,7 +64,6 @@ public class SubCategoriesListFragment extends Fragment {
                 if (productSubCategory != null) {
                     Intent intent = new Intent(getContext(), ProductsListActivity.class);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, productSubCategory.getId());
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                     startActivity(intent);
                 }
             }

@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecycler
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,6 @@ import java.util.ArrayList;
  */
 public class ProductsListFragment extends Fragment {
 
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private ProgressDialog waitPlease;
@@ -52,10 +52,9 @@ public class ProductsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view  = inflater.inflate(R.layout.fragment_products_list, container, false);
 
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         if( savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
                 mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
@@ -64,9 +63,6 @@ public class ProductsListFragment extends Fragment {
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
             if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_ID)){
                 productId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(ProductsListActivity.KEY_CURRENT_USER);
             }
             if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID)){
                 productCategoryId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID);
@@ -246,7 +242,6 @@ public class ProductsListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         if (linearLayoutManager instanceof GridLayoutManager) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                     linearLayoutManager.findFirstVisibleItemPosition());

@@ -26,8 +26,8 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,7 +41,7 @@ import java.util.ArrayList;
 public class SalesOrderDetailPDFCreator {
     private static final String TAG = SalesOrderDetailPDFCreator.class.getSimpleName();
 
-    public File generatePDF(Order order, ArrayList<OrderLine> lines, String fileName, Context ctx, User user) {
+    public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName, Context ctx, User user) {
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
@@ -67,7 +67,7 @@ public class SalesOrderDetailPDFCreator {
                 document.open();
 
                 //se agrega la informacion del cliente, numero de cotizacion, fecha de emision, etc.
-                addSalesOrderHeader(document, order);
+                addSalesOrderHeader(document, salesOrder);
 
                 //agrega el titulo del documento.
                 addSalesOrderTitle(document);
@@ -76,7 +76,7 @@ public class SalesOrderDetailPDFCreator {
                 addSalesOrderDetails(document, lines, ctx, user);
 
                 //se le agrega la informacion de subtotal, impuestos y total de la cotizacion
-                addSalesOrderFooter(document, order);
+                addSalesOrderFooter(document, salesOrder);
 
                 document.close();
 
@@ -168,7 +168,7 @@ public class SalesOrderDetailPDFCreator {
         return headerTable;
     }
 
-    private void addSalesOrderHeader(Document document, Order order)
+    private void addSalesOrderHeader(Document document, SalesOrder salesOrder)
             throws DocumentException, IOException {
         Font font;
         Font fontBold;
@@ -214,7 +214,7 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setPadding(3);
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + order.getOrderNumber(), fontBold));
+        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + salesOrder.getOrderNumber(), fontBold));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);
 
@@ -241,7 +241,7 @@ public class SalesOrderDetailPDFCreator {
         document.add(new Phrase("\n"));
     }
 
-    private void addSalesOrderDetails(Document document, ArrayList<OrderLine> lines, Context ctx, User user) throws DocumentException, IOException {
+    private void addSalesOrderDetails(Document document, ArrayList<SalesOrderLine> lines, Context ctx, User user) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -261,7 +261,7 @@ public class SalesOrderDetailPDFCreator {
         // Defiles the relative width of the columns
         float[] columnWidths = new float[] {30f, 150f, 100f};
         table.setWidths(columnWidths);
-        for(OrderLine line : lines){
+        for(SalesOrderLine line : lines){
             Bitmap bmp = null;
             if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
                 bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
@@ -308,7 +308,7 @@ public class SalesOrderDetailPDFCreator {
         document.add(new Phrase("\n"));
     }
 
-    private void addSalesOrderFooter(Document document, Order order) throws DocumentException, IOException {
+    private void addSalesOrderFooter(Document document, SalesOrder salesOrder) throws DocumentException, IOException {
         Font font;
         try{
             font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
@@ -328,9 +328,9 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setPadding(3);
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        salesOrderNumberCell.addElement(new Paragraph("Sub-Total: "+order.getSubTotalAmount(), font));
-        salesOrderNumberCell.addElement(new Paragraph("Impuestos: "+order.getTruncatedTaxAmount(), font));
-        salesOrderNumberCell.addElement(new Paragraph("Total: "+order.getTruncatedTotalAmount(), font));
+        salesOrderNumberCell.addElement(new Paragraph("Sub-Total: "+salesOrder.getSubTotalAmount(), font));
+        salesOrderNumberCell.addElement(new Paragraph("Impuestos: "+salesOrder.getTruncatedTaxAmount(), font));
+        salesOrderNumberCell.addElement(new Paragraph("Total: "+salesOrder.getTruncatedTotalAmount(), font));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);
     }

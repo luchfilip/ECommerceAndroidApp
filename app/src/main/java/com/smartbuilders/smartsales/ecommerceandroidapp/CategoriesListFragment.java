@@ -13,6 +13,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.CategoryAdapter
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * Created by Alberto on 26/3/2016.
@@ -41,11 +42,7 @@ public class CategoriesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
-            if(getActivity().getIntent().getExtras().containsKey(CategoriesListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(CategoriesListActivity.KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
         ProductCategoryDB categoryDB = new ProductCategoryDB(getContext(), mCurrentUser);
 

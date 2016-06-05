@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BrandAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductBrandDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,11 +40,7 @@ public class BrandsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_brands_list, container, false);
         setHasOptionsMenu(true);
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
-            if(getActivity().getIntent().getExtras().containsKey(BrandsListActivity.KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(BrandsListActivity.KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(getContext());
 
         mBrandAdapter = new BrandAdapter(getContext(),
                 new ProductBrandDB(getContext(), mCurrentUser).getActiveProductBrands());
@@ -61,7 +58,6 @@ public class BrandsListFragment extends Fragment {
                 ProductBrand productBrand = (ProductBrand) adapterView.getItemAtPosition(position);
                 if (productBrand != null) {
                     Intent intent = new Intent(getActivity(), ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                     intent.putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, productBrand.getId());
                     startActivity(intent);
                 }

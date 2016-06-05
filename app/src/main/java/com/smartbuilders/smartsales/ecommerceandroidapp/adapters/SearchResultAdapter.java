@@ -119,8 +119,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, CategoriesListActivity.class)
-                                .putExtra(CategoriesListActivity.KEY_CURRENT_USER, mCurrentUser));
+                        mContext.startActivity(new Intent(mContext, CategoriesListActivity.class));
                     }
                 });
             } else if (mDataset.get(position).equals(mContext.getString(R.string.search_by_brand))) {
@@ -129,8 +128,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, BrandsListActivity.class)
-                                .putExtra(BrandsListActivity.KEY_CURRENT_USER, mCurrentUser));
+                        mContext.startActivity(new Intent(mContext, BrandsListActivity.class));
                     }
                 });
             }
@@ -175,7 +173,6 @@ public class SearchResultAdapter extends BaseAdapter {
                         goToProductList(product);
                     }else{
                         Intent intent = new Intent(mContext, ProductsListActivity.class);
-                        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
                         intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch());
                         mContext.startActivity(intent);
                     }
@@ -191,7 +188,6 @@ public class SearchResultAdapter extends BaseAdapter {
         Intent intent = new Intent(mContext, ProductsListActivity.class);
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
-        intent.putExtra(ProductsListActivity.KEY_CURRENT_USER, mCurrentUser);
         mContext.startActivity(intent);
     }
 

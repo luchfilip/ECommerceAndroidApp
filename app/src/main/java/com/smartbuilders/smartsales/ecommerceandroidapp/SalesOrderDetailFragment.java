@@ -18,12 +18,13 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrderLineAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.SalesOrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -33,9 +34,9 @@ import java.util.ArrayList;
 public class SalesOrderDetailFragment extends Fragment {
 
     private User mCurrentUser;
-    private Order mOrder;
+    private SalesOrder mOrder;
     private ShareActionProvider mShareActionProvider;
-    private ArrayList<OrderLine> mOrderLines;
+    private ArrayList<SalesOrderLine> mOrderLines;
 
     public SalesOrderDetailFragment() {
     }
@@ -47,24 +48,20 @@ public class SalesOrderDetailFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        mCurrentUser = Utils.getCurrentUser(getContext());
+
         if (getArguments() != null) {
             if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
                 mOrder = getArguments().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
-            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getArguments().getParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER);
-            }
         } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_CURRENT_USER)) {
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_CURRENT_USER);
-            }
             if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
                 mOrder = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
             }
         }
 
         if (mOrder != null) {
-            mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
+            mOrderLines = new SalesOrderLineDB(getContext(), mCurrentUser)
                     .getActiveFinalizedSalesOrderLinesByOrderId(mOrder.getId());
 
             RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
@@ -101,7 +98,6 @@ public class SalesOrderDetailFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        intent.putExtra(ShoppingCartActivity.KEY_CURRENT_USER, mCurrentUser);
                         intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mOrder.getId());
                         startActivity(intent);
                     }

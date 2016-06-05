@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -8,12 +7,11 @@ import android.view.MenuItem;
 import com.jasgcorp.ids.model.User;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class InvoiceDetailActivity extends AppCompatActivity {
 
     public static final String KEY_INVOICE_ID = "KEY_INVOICE_ID";
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    public static final String STATE_CURRENT_USER = "state_current_user";
     private User mCurrentUser;
 
     @Override
@@ -21,11 +19,7 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_detail);
 
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(0);
@@ -36,23 +30,11 @@ public class InvoiceDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; go home
-                goBack();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        goBack();
-    }
-
-    private void goBack(){
-        Intent intent = new Intent(this, InvoicesListActivity.class);
-        intent.putExtra(KEY_CURRENT_USER, mCurrentUser);
-        startActivity(intent);
     }
 
 }

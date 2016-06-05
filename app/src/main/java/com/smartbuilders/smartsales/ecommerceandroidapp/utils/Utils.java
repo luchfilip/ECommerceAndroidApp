@@ -393,8 +393,7 @@ public class Utils {
         return -1;
     }
 
-    public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, final User user,
-                                             final boolean goToHome){
+    public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, final boolean goToHome){
         toolbar.setTitle("");
         if (goToHome) {
             for(int i = 0; i < toolbar.getChildCount(); i++){
@@ -403,8 +402,7 @@ public class Utils {
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context,
-                                    MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user));
+                            context.startActivity(new Intent(context, MainActivity.class));
                         }
                     });
                     break;
@@ -413,8 +411,7 @@ public class Utils {
         }
     }
 
-    public static void setCustomActionbarTitle(final Activity activity, ActionBar actionBar,
-                                               final User user, boolean goToHome){
+    public static void setCustomActionbarTitle(final Activity activity, ActionBar actionBar, boolean goToHome){
         if(actionBar!=null){
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
@@ -425,8 +422,7 @@ public class Utils {
                     @Override
                     public void onClick(View v) {
                         activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
-                                MainActivity.class).putExtra(MainActivity.KEY_CURRENT_USER, user)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     }
                 });
             }
@@ -438,39 +434,31 @@ public class Utils {
      *
      * @param itemId
      * @param context
-     * @param user
      */
-    public static void navigationItemSelectedBehave(int itemId, Context context, User user) {
+    public static void navigationItemSelectedBehave(int itemId, Context context) {
         switch (itemId){
             case R.id.nav_shopping_cart:
                 context.startActivity(new Intent(context, ShoppingCartActivity.class)
-                        .putExtra(ShoppingCartActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_shopping_sale:
                 context.startActivity(new Intent(context, ShoppingSaleActivity.class)
-                        .putExtra(ShoppingSaleActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;
             case R.id.nav_wish_list:
                 context.startActivity(new Intent(context, WishListActivity.class)
-                        .putExtra(WishListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_orders:
                 context.startActivity(new Intent(context, OrdersListActivity.class)
-                        .putExtra(OrdersListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_sales_orders:
                 context.startActivity(new Intent(context, SalesOrdersListActivity.class)
-                        .putExtra(SalesOrdersListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
-
             case R.id.nav_settings:
-                context.startActivity(new Intent(context, SettingsActivity.class)
-                        .putExtra(SettingsActivity.KEY_CURRENT_USER, user));
+                context.startActivity(new Intent(context, SettingsActivity.class));
             break;
             case R.id.nav_business_partners:
                 context.startActivity(new Intent(context, BusinessPartnersListActivity.class)

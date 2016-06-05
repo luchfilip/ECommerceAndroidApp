@@ -36,16 +36,18 @@ public class OrderDB {
                 (new OrderLineDB(context, user)).getShoppingCart(), false);
     }
 
-    public String createOrderFromShoppingSale(){
-        return createOrder(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
-                (new OrderLineDB(context, user)).getShoppingSale(), false);
+    public Order getLastFinalizedOrder(){
+        return getLastOrderByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
     }
 
-    public String createOrder(String docType, ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
+    public ArrayList<Order> getActiveOrders(){
+        return getActiveOrders(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
+    }
+
+    private String createOrder(String docType, ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         if(orderLines != null
                 && (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
-                || (docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingSalesLinesNumber()>0)
                 || insertOrderLinesInDB){
             Cursor c = null;
             int orderId = 0;
@@ -89,31 +91,7 @@ public class OrderDB {
                     }
                 }
             }
-            if(docType.equals(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE)){
-                if (insertOrderLinesInDB) {
-                    for (OrderLine orderLine : orderLines) {
-                        orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
-                    }
-                } else {
-                    if(orderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(orderId)<=0){
-                        try {
-                            int rowsAffected = context.getContentResolver()
-                                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                            null,
-                                            "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
-                                            new String[]{String.valueOf(orderId)});
-                            if(rowsAffected <= 0){
-                                return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
-                            }
-                        } catch (Exception e){
-                            e.printStackTrace();
-                            return e.getMessage();
-                        }
-                        return "Error 002 - No se insertó la cotización en la base de datos.";
-                    }
-                }
-            } else if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
+            if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
                 if (insertOrderLinesInDB) {
                     for (OrderLine orderLine : orderLines) {
                         orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
@@ -142,14 +120,6 @@ public class OrderDB {
             return "No existen productos en el Carrito de compras.";
         }
         return null;
-    }
-
-    public Order getLastFinalizedOrder(){
-        return getLastOrderByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
-    }
-
-    public Order getLastFinalizedSalesOrder() {
-        return getLastOrderByDocType(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
     }
 
     private Order getLastOrderByDocType(String docType){
@@ -189,14 +159,6 @@ public class OrderDB {
             }
         }
         return order;
-    }
-
-    public ArrayList<Order> getActiveSalesOrders(){
-        return getActiveOrders(OrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
-    }
-
-    public ArrayList<Order> getActiveOrders(){
-        return getActiveOrders(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
     }
 
     /**
@@ -247,5 +209,4 @@ public class OrderDB {
         }
         return activeOrders;
     }
-
 }
