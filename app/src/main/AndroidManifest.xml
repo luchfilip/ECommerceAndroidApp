@@ -229,8 +229,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity"
-            android:label="@string/title_activity_company"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

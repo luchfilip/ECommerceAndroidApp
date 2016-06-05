@@ -255,5 +255,5 @@
     <string name="update">Actualizar</string>
     <string name="update_business_partner">Actualizar Cliente</string>
     <string name="title_activity_business_partners_list">Clientes Registrados</string>
-    <string name="title_activity_company">CompanyActivity</string>
+    <string name="title_activity_company">Mis Datos</string>
 </resources>
