@@ -47,10 +47,10 @@ public class SplashScreen extends AppCompatActivity {
                             && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
-                            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)
-                                    && extras.getInt(SyncAdapter.SYNCHRONIZATION_PROGRESS)>=80){
-                                initApp(mCurrentUser);
-                            } else {
+                            //if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)
+                            //        && extras.getInt(SyncAdapter.SYNCHRONIZATION_PROGRESS)>=80){
+                            //    initApp(mCurrentUser);
+                            //} else {
                                 if (waitPlease==null || !waitPlease.isShowing()){
                                     if(waitPlease!=null){
                                         waitPlease.dismiss();
@@ -62,7 +62,7 @@ public class SplashScreen extends AppCompatActivity {
                                     }
                                 }
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-                            }
+                            //}
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)

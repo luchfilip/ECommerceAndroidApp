@@ -61,7 +61,7 @@ public class OrderDB {
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                                 null,
-                                "INSERT INTO ECOMMERCE_ORDER (DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
+                                "INSERT INTO ECOMMERCE_ORDER (DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{"CO", docType, Utils.getAppVersionName(context), user.getUserName(),
                                         String.valueOf(orderLines.size()), String.valueOf(subTotal), String.valueOf(tax),
@@ -156,7 +156,7 @@ public class OrderDB {
         Cursor c = null;
         Order order = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
+            String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
                     " FROM ECOMMERCE_ORDER " +
                     " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -208,8 +208,8 @@ public class OrderDB {
         ArrayList<Order> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, CB_PARTNER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
-                    " APP_VERSION, APP_USER_NAME, ORDERLINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
+            String sql = "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+                    " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
                     " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
@@ -218,16 +218,16 @@ public class OrderDB {
                 Order order = new Order();
                 order.setId(c.getInt(0));
                 try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(3)).getTime()));
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(3)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
-                order.setOrderLinesNumber(c.getInt(7));
-                order.setSubTotalAmount(c.getDouble(8));
-                order.setTaxAmount(c.getDouble(9));
-                order.setTotalAmount(c.getDouble(10));
+                order.setOrderLinesNumber(c.getInt(6));
+                order.setSubTotalAmount(c.getDouble(7));
+                order.setTaxAmount(c.getDouble(8));
+                order.setTotalAmount(c.getDouble(9));
                 activeOrders.add(order);
             }
         } catch (Exception e) {

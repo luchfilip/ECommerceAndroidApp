@@ -168,8 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_ECOMMERCE_ORDER =
                                 new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
                                         .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                                        .append("CB_PARTNER_ID INTEGER DEFAULT NULL, ")
-                                        .append("ORDERLINES_NUMBER INTEGER DEFAULT 0, ")
+                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
                                         .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
                                         .append("TAX DOUBLE DEFAULT 0, ")
                                         .append("TOTAL DOUBLE DEFAULT 0, ")
@@ -190,6 +189,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
 										.append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
 										.append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_ECOMMERCE_SALES_ORDER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER ")
+                                        .append("(ECOMMERCE_SALES_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, ")
+                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
+                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("TAX DOUBLE DEFAULT 0, ")
+                                        .append("TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_ECOMMERCE_SALES_ORDERLINE =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDERLINE ")
+                                        .append("(ECOMMERCE_SALES_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, ")
+                                        .append("BUSINESS_PARTNER_ID INTEGER NOT NULL, ")
+                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
+                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
+                                        .append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
+                                        .append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
                                         .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
                                         .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
                                         .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
@@ -220,6 +252,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
 										.append("APP_VERSION VARCHAR(128) NOT NULL, ")
 										.append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+	public static final String CREATE_COMPANY =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS COMPANY ")
+										.append("(NAME TEXT DEFAULT NULL, ")
+										.append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+										.append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+										.append("ADDRESS TEXT DEFAULT NULL, ")
+										.append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+										.append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+										.append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+										.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+										.append("APP_VERSION VARCHAR(128) NOT NULL, ")
+										.append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
+										.append("PRIMARY KEY (APP_USER_NAME))").toString();
 
 	/**
 	 * 
@@ -269,16 +317,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_MAINPAGE_PRODUCT);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
-			db.execSQL(CREATE_PRODUCT_AVAILABILITY);
+            db.execSQL(CREATE_ECOMMERCE_SALES_ORDER);
+            db.execSQL(CREATE_ECOMMERCE_SALES_ORDERLINE);
+            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
 			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
 			db.execSQL(CREATE_RECENT_SEARCH);
 			db.execSQL(CREATE_BUSINESS_PARTNER);
+			db.execSQL(CREATE_COMPANY);
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-		db.execSQL(CREATE_BUSINESS_PARTNER);
 	}
 
 	@Override
