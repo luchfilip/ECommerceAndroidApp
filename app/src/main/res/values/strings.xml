@@ -246,11 +246,12 @@
     <string name="address">Dirección</string>
     <string name="address_label">Dirección:</string>
     <string name="save">Guardar</string>
-    <string name="business_oartner_tax_id_label">RIF:</string>
+    <string name="business_partner_tax_id_label">RIF:</string>
     <string name="contact_person_label">Persona de Contacto:</string>
     <string name="email_address_label">Correo Electrónico:</string>
     <string name="phone_number_label">Número de Teléfono:</string>
     <string name="title_activity_register_business_partner">Registrar Cliente</string>
+    <string name="company_updated_successfully">Datos de la compañía actualizados exitosamente.</string>
     <string name="business_partner_updated_successfully">Cliente actualizado exitosamente.</string>
     <string name="update">Actualizar</string>
     <string name="update_business_partner">Actualizar Cliente</string>

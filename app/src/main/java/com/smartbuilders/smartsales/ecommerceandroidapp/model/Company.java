@@ -8,6 +8,10 @@ import android.os.Parcelable;
  */
 public class Company extends BusinessPartner implements Parcelable {
 
+    public Company() {
+
+    }
+
     protected Company(Parcel in) {
         super(in);
     }
