@@ -77,6 +77,7 @@ public class TableDataReceiverFromServer extends Thread {
 			//while (sync) {
 			//	pullTableDataFromServer(getRowEventIdsInClient());
 			//}
+			sync = Utils.appRequireInitialLoad(context, mUser);
 			if(sync){
 				loadInitialDataFromWS(context, mUser);
 			}
