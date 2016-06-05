@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -64,12 +67,22 @@ public class DialogAddToShoppingSale extends DialogFragment {
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 
+        final SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+
         List<String> spinnerArray =  new ArrayList<>();
-        ArrayList<BusinessPartner> businessPartners =
+        final ArrayList<BusinessPartner> businessPartners =
                 (new BusinessPartnerDB(getContext(), mUser)).getActiveBusinessPartners();
+        int selectedIndex = 0;
         if (businessPartners!=null) {
+            int index = 0;
             for (BusinessPartner businessPartner : businessPartners) {
-                spinnerArray.add(businessPartner.getCommercialName());
+                if(businessPartner.getId() == sharedPref.getInt("current_business_partner_id", 0)){
+                    selectedIndex = index;
+                }
+                spinnerArray.add(businessPartner.getCommercialName() + " - " +
+                        getString(R.string.tax_id, businessPartner.getTaxId()));
+                index++;
             }
         } else {
             spinnerArray.add(getString(R.string.no_business_partners_registered));
@@ -79,8 +92,21 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItems = (Spinner) view.findViewById(R.id.business_partners_spinner);
-        sItems.setAdapter(adapter);
+        Spinner businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
+        businessPartnersSpinner.setAdapter(adapter);
+        businessPartnersSpinner.setSelection(selectedIndex);
+
+        businessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt("current_business_partner_id", businessPartners.get(position).getId());
+                editor.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {

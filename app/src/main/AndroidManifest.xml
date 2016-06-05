@@ -231,6 +231,10 @@
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>
