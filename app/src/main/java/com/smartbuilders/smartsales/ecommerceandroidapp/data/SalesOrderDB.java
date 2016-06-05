@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -73,8 +74,10 @@ public class SalesOrderDB {
             }
         }
         SalesOrderLineDB orderLineDB = new SalesOrderLineDB(context, user);
-        for(SalesOrder order : activeOrders){
-            order.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
+        for(SalesOrder salesOrder : activeOrders){
+            salesOrder.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(salesOrder.getId()));
+            salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartner().getId()));
         }
         return activeOrders;
     }
