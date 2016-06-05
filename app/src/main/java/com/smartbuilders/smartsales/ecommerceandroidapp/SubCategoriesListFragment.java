@@ -20,7 +20,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
  */
 public class SubCategoriesListFragment extends Fragment {
 
-    private static final String TAG = SubCategoriesListFragment.class.getSimpleName();
     public static final String KEY_CATEGORY_ID = "key_category_id";
 
     private User mCurrentUser;

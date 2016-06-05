@@ -47,17 +47,22 @@ public class SplashScreen extends AppCompatActivity {
                             && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
-                            if (waitPlease==null || !waitPlease.isShowing()){
-                                if(waitPlease!=null){
-                                    waitPlease.dismiss();
-                                    waitPlease = null;
+                            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)
+                                    && extras.getInt(SyncAdapter.SYNCHRONIZATION_PROGRESS)>=80){
+                                initApp(mCurrentUser);
+                            } else {
+                                if (waitPlease==null || !waitPlease.isShowing()){
+                                    if(waitPlease!=null){
+                                        waitPlease.dismiss();
+                                        waitPlease = null;
+                                    }
+                                    if(!isFinishing()){
+                                        waitPlease = ProgressDialog.show(SplashScreen.this,
+                                                getString(R.string.loading_data), getString(R.string.wait_please), true, false);
+                                    }
                                 }
-                                if(!isFinishing()){
-                                    waitPlease = ProgressDialog.show(SplashScreen.this, getString(R.string.loading_data),
-                                            getString(R.string.wait_please), true, false);
-                                }
+                                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                             }
-                            findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
@@ -177,6 +182,10 @@ public class SplashScreen extends AppCompatActivity {
 
     private void initApp(User user){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
+        if (waitPlease!=null && waitPlease.isShowing()){
+            waitPlease.dismiss();
+            waitPlease.cancel();
+        }
         Utils.createImageFiles(this, mCurrentUser);
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
         i.putExtra(MainActivity.KEY_CURRENT_USER, user);

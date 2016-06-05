@@ -67,12 +67,12 @@ public class CategoriesListActivity extends AppCompatActivity implements
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.subcategory_list_container, new SubCategoriesListFragment(),
-                                SUBCATEGORYFRAGMENT_TAG)
-                        .commit();
-            }
+            //if(savedInstanceState == null){
+            //    getSupportFragmentManager().beginTransaction()
+            //            .add(R.id.subcategory_list_container, new SubCategoriesListFragment(),
+            //                    SUBCATEGORYFRAGMENT_TAG)
+            //            .commit();
+            //}
         }else{
             mTwoPane = false;
         }

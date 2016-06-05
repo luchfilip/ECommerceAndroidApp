@@ -15,12 +15,12 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 7/4/2016.
  */
-public class BusinessPartnertsListAdapter extends BaseAdapter {
+public class BusinessPartnersListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<BusinessPartner> mDataset;
 
-    public BusinessPartnertsListAdapter(Context context, ArrayList<BusinessPartner> data) {
+    public BusinessPartnersListAdapter(Context context, ArrayList<BusinessPartner> data) {
         mContext = context;
         mDataset = data;
     }
