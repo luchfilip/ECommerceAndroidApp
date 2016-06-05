@@ -75,7 +75,7 @@ public class SalesOrderDetailFragment extends Fragment {
             mRecyclerView.setAdapter(new SalesOrderLineAdapter(mOrderLines, mCurrentUser));
 
             ((TextView) rootView.findViewById(R.id.sales_order_lines_number_tv))
-                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrder.getOrderLinesNumber())));
+                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrder.getLinesNumber())));
 
             ((TextView) rootView.findViewById(R.id.sales_order_number_tv))
                     .setText(getContext().getString(R.string.sales_order_number, mOrder.getOrderNumber()));

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 public class ShoppingSalesListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<Order> mDataset;
+    private ArrayList<SalesOrder> mDataset;
 
-    public ShoppingSalesListAdapter(Context context, ArrayList<Order> data) {
+    public ShoppingSalesListAdapter(Context context, ArrayList<SalesOrder> data) {
         mContext = context;
         mDataset = data;
     }

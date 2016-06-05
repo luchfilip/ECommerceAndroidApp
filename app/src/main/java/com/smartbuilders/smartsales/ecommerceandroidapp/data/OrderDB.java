@@ -172,7 +172,7 @@ public class OrderDB {
                         order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
-                order.setOrderLinesNumber(c.getInt(2));
+                order.setLinesNumber(c.getInt(2));
                 order.setSubTotalAmount(c.getDouble(3));
                 order.setTaxAmount(c.getDouble(4));
                 order.setTotalAmount(c.getDouble(5));
@@ -224,7 +224,7 @@ public class OrderDB {
                         order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
-                order.setOrderLinesNumber(c.getInt(6));
+                order.setLinesNumber(c.getInt(6));
                 order.setSubTotalAmount(c.getDouble(7));
                 order.setTaxAmount(c.getDouble(8));
                 order.setTotalAmount(c.getDouble(9));
@@ -243,7 +243,7 @@ public class OrderDB {
         }
         OrderLineDB orderLineDB = new OrderLineDB(context, user);
         for(Order order : activeOrders){
-            order.setOrderLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+            order.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
         }
         return activeOrders;
     }

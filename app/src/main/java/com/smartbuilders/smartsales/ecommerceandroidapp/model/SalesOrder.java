@@ -7,16 +7,17 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 
 /**
- * Created by Alberto on 5/4/2016.
+ * Created by stein on 5/6/2016.
  */
-public class Order extends Model implements Parcelable {
+public class SalesOrder extends Model implements Parcelable {
 
     private int linesNumber;
     private double subTotalAmount;
     private double taxAmount;
     private double totalAmount;
+    private BusinessPartner businessPartner;
 
-    public Order() {
+    public SalesOrder() {
 
     }
 
@@ -64,12 +65,21 @@ public class Order extends Model implements Parcelable {
         return new BigDecimal(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
-    protected Order(Parcel in) {
+    public BusinessPartner getBusinessPartner() {
+        return businessPartner;
+    }
+
+    public void setBusinessPartner(BusinessPartner businessPartner) {
+        this.businessPartner = businessPartner;
+    }
+
+    protected SalesOrder(Parcel in) {
         super(in);
         linesNumber = in.readInt();
         subTotalAmount = in.readDouble();
         taxAmount = in.readDouble();
         totalAmount = in.readDouble();
+        businessPartner = in.readParcelable(BusinessPartner.class.getClassLoader());
     }
 
     @Override
@@ -79,6 +89,7 @@ public class Order extends Model implements Parcelable {
         dest.writeDouble(subTotalAmount);
         dest.writeDouble(taxAmount);
         dest.writeDouble(totalAmount);
+        dest.writeParcelable(businessPartner, flags);
     }
 
     public String getCreatedStringFormat(){
@@ -93,7 +104,7 @@ public class Order extends Model implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel in) {
             return new Order(in);
@@ -104,4 +115,5 @@ public class Order extends Model implements Parcelable {
             return new Order[size];
         }
     };
+
 }
