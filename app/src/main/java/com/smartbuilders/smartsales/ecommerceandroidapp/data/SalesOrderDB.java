@@ -35,8 +35,52 @@ public class SalesOrderDB {
         return getLastOrderByDocType(SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
     }
 
+    public ArrayList<SalesOrder> getActiveShoppingSalesOrders(){
+        ArrayList<SalesOrder> activeOrders = new ArrayList<>();
+        Cursor c = null;
+        try {
+            String sql = "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+                    " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
+                    " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_ORDER_ID desc";
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, new String[]{"Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
+            while(c.moveToNext()){
+                SalesOrder order = new SalesOrder();
+                order.setId(c.getInt(0));
+                try{
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                }catch(ParseException ex){
+                    try {
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                    } catch (ParseException e) { }
+                }catch(Exception ex){ }
+                order.setLinesNumber(c.getInt(6));
+                order.setSubTotalAmount(c.getDouble(7));
+                order.setTaxAmount(c.getDouble(8));
+                order.setTotalAmount(c.getDouble(9));
+                activeOrders.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        SalesOrderLineDB orderLineDB = new SalesOrderLineDB(context, user);
+        for(SalesOrder order : activeOrders){
+            order.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+        }
+        return activeOrders;
+    }
+
     public ArrayList<SalesOrder> getActiveSalesOrders(){
-        return getActiveOrders(SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
+        return getActiveSalesOrders(SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE);
     }
 
     public String createOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, boolean insertOrderLinesInDB){
@@ -159,7 +203,7 @@ public class SalesOrderDB {
      * @param docType
      * @return
      */
-    private ArrayList<SalesOrder> getActiveOrders(String docType){
+    private ArrayList<SalesOrder> getActiveSalesOrders(String docType){
         ArrayList<SalesOrder> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {

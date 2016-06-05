@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,12 +13,16 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 public class ShoppingSalesListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ShoppingSalesListFragment.Callback {
+
+    public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG = "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
 
     private User mCurrentUser;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,8 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
+        mTwoPane = findViewById(R.id.shopping_sale_order_detail_container)!=null;
+
     }
 
     @Override
@@ -63,4 +70,31 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition) {
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
+
+            ShoppingSaleFragment fragment = new ShoppingSaleFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.shopping_sale_order_detail_container, fragment, SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG)
+                    .commit();
+        }else{
+            Intent intent = new Intent(this, ShoppingSaleActivity.class);
+            intent.putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemLongSelected(SalesOrder salesOrder, int selectedItemPosition) {
+        if(mTwoPane) {
+
+        } else {
+
+        }
+    }
 }

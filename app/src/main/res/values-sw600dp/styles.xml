@@ -32,6 +32,15 @@
         <item name="android:background">@color/grey_medium</item>
     </style>
 
+    <style name="shopping_sales_orders_list_style">
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="shopping_sales_orders_style">
+        <item name="android:background">@color/grey_medium</item>
+    </style>
+
     <style name="sales_orders_list_style">
         <item name="android:choiceMode">singleChoice</item>
         <item name="android:background">@android:color/white</item>

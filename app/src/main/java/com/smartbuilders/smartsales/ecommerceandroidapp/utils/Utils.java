@@ -27,6 +27,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActi
 import com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
@@ -442,7 +443,7 @@ public class Utils {
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_shopping_sale:
-                context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;
             case R.id.nav_wish_list:
