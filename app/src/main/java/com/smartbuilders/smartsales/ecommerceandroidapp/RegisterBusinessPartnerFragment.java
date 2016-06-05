@@ -29,6 +29,11 @@ public class RegisterBusinessPartnerFragment extends Fragment {
     private User mCurrentUser;
     private BusinessPartner mBusinessPartner;
 
+    public interface Callback {
+        public void onBusinessPartnerRegistered(BusinessPartner businessPartner);
+        public void onBusinessPartnerUpdated(BusinessPartner businessPartner);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -132,6 +137,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                     if (mBusinessPartner!=null) {
                         String result = businessPartnerDB.updateBusinessPartner(mBusinessPartner);
                         if (result==null){
+                            ((Callback) getActivity()).onBusinessPartnerUpdated(mBusinessPartner);
                             Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
@@ -150,10 +156,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                         if (result==null) {
                             result = businessPartnerDB.registerBusinessPartner(businessPartner);
                             if (result==null){
-                                //startActivity(new Intent(getContext(), BusinessPartnersListActivity.class)
-                                //        .putExtra(BusinessPartnersListActivity.KEY_CURRENT_USER, mCurrentUser)
-                                //        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                                //finish();
+                                ((Callback) getActivity()).onBusinessPartnerRegistered(businessPartner);
                             } else {
                                 Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
                             }

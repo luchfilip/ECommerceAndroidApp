@@ -8,22 +8,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
-
-import java.util.ArrayList;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class BusinessPartnersListFragment extends Fragment {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-
-    private static final String STATE_CURRENT_USER = "state_current_user";
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
@@ -31,7 +26,6 @@ public class BusinessPartnersListFragment extends Fragment {
     // save index and top position
     int mListViewIndex;
     int mListViewTop;
-    private User mCurrentUser;
     private BusinessPartnerDB businessPartnerDB;
     private BusinessPartnersListAdapter businessPartnersListAdapter;
 
@@ -48,9 +42,6 @@ public class BusinessPartnersListFragment extends Fragment {
             Bundle savedInstanceState) {
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
             if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
                 mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
             }
@@ -59,13 +50,7 @@ public class BusinessPartnersListFragment extends Fragment {
             }
         }
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
-            if(getActivity().getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getActivity().getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
-
-        businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
+        businessPartnerDB = new BusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
 
         View rootView = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
 
@@ -105,7 +90,6 @@ public class BusinessPartnersListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         try {
             outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
             outState.putInt(STATE_LISTVIEW_TOP,

@@ -474,7 +474,6 @@ public class Utils {
             break;
             case R.id.nav_business_partners:
                 context.startActivity(new Intent(context, BusinessPartnersListActivity.class)
-                        .putExtra(BusinessPartnersListActivity.KEY_CURRENT_USER, user)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
             break;
             case R.id.nav_share:

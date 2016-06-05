@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
@@ -28,32 +29,22 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  * Jesus Sarco, 03.06.2016
  */
 public class BusinessPartnersListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BusinessPartnersListFragment.Callback {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        BusinessPartnersListFragment.Callback, RegisterBusinessPartnerFragment.Callback {
 
-    public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
-    private static final String STATE_CURRENT_USER = "state_current_user";
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
 
     private User mCurrentUser;
+    private BusinessPartnerDB mBusinessPartnerDB;
     private boolean mTwoPane;
-
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_partners_list);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_USER)){
-                mCurrentUser = getIntent().getExtras().getParcelable(KEY_CURRENT_USER);
-            }
-        }
+        mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, mCurrentUser, false);
@@ -72,6 +63,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
         mTwoPane = findViewById(R.id.business_partner_detail_container)!=null;
+
+        mBusinessPartnerDB = new BusinessPartnerDB(BusinessPartnersListActivity.this, mCurrentUser);
+
+        mListView = (ListView) findViewById(R.id.business_partners_list);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab!=null) {
@@ -97,9 +92,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (mTwoPane) {
-            ListView lv = (ListView) findViewById(R.id.business_partners_list);
-            if (lv != null && lv.getAdapter().getCount()>0) {
-                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            if (mListView != null && mListView.getAdapter().getCount()>0) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
         }
     }
@@ -125,7 +119,6 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
         super.onSaveInstanceState(outState);
     }
 
@@ -141,7 +134,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     .replace(R.id.business_partner_detail_container, fragment, REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
                     .commit();
         } else {
-            startActivity(new Intent(this, RegisterBusinessPartnerFragment.class)
+            startActivity(new Intent(this, RegisterBusinessPartnerActivity.class)
                     .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner));
         }
     }
@@ -152,10 +145,24 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 .setMessage(getString(R.string.delete_business_partner, businessPartner.getCommercialName()))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = (new BusinessPartnerDB(BusinessPartnersListActivity.this, mCurrentUser))
-                                .deactivateBusinessPartner(businessPartner);
+                        String result = mBusinessPartnerDB.deactivateBusinessPartner(businessPartner);
                         if (result==null) {
-                            //businessPartnertsListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
+                            if (mListView != null) {
+                                if (mListView.getAdapter()!=null) {
+                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+                                } else {
+                                    mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mBusinessPartnerDB.getActiveBusinessPartners()));
+                                }
+                                if (mTwoPane) {
+                                    if(mListView.getAdapter().getCount()>0) {
+                                        mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                                    } else {
+                                        getSupportFragmentManager().beginTransaction()
+                                                .replace(R.id.business_partner_detail_container, null, null)
+                                                .commit();
+                                    }
+                                }
+                            }
                         } else {
                             Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -163,10 +170,29 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .show();
-        if (mTwoPane) {
+    }
 
-        } else {
+    @Override
+    public void onBusinessPartnerRegistered(BusinessPartner businessPartner) {
+        if (mListView != null) {
+            if (mListView.getAdapter()!=null) {
+                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+            } else {
+                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
+            }
+            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+        }
+    }
 
+    @Override
+    public void onBusinessPartnerUpdated(BusinessPartner businessPartner) {
+        if (mListView != null) {
+            if (mListView.getAdapter()!=null) {
+                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+            } else {
+                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
+            }
+            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
         }
     }
 }

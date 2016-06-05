@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * Jesus Sarco 03.06.2016
  */
-public class RegisterBusinessPartnerActivity extends AppCompatActivity {
+public class RegisterBusinessPartnerActivity extends AppCompatActivity
+        implements RegisterBusinessPartnerFragment.Callback {
 
     public static final String KEY_BUSINESS_PARTNER = "KEY_BUSINESS_PARTNER";
 
@@ -46,5 +48,15 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity {
                 finish();
         }
         return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBusinessPartnerRegistered(BusinessPartner businessPartner) {
+        finish();
+    }
+
+    @Override
+    public void onBusinessPartnerUpdated(BusinessPartner businessPartner) {
+
     }
 }
