@@ -32,7 +32,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;

@@ -39,7 +39,7 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+            String sql = "SELECT ECOMMERCE_SALES_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
                     " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
                     " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -89,7 +89,7 @@ public class SalesOrderDB {
                 && ((salesOrderLineDB.getActiveShoppingSalesLinesNumber(businessPartnerId)>0)
                 || insertOrderLinesInDB)){
             Cursor c = null;
-            int orderId = 0;
+            int salesOrderId = 0;
             try {
                 double subTotal=0, tax=0, total=0;
                 for(SalesOrderLine orderLine : orderLines){
@@ -102,21 +102,21 @@ public class SalesOrderDB {
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                                 null,
-                                "INSERT INTO ECOMMERCE_ORDER (DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
+                                "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                                new String[]{"CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, Utils.getAppVersionName(context), user.getUserName(),
-                                        String.valueOf(orderLines.size()), String.valueOf(subTotal), String.valueOf(tax),
-                                        String.valueOf(total), "Y"});
+                                new String[]{String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
+                                        Utils.getAppVersionName(context), user.getUserName(), String.valueOf(orderLines.size()),
+                                        String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total), "Y"});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }
 
-                String sql = "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
+                String sql = "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                         .build(), null, sql, new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
                 if(c.moveToNext()){
-                    orderId = c.getInt(0);
+                    salesOrderId = c.getInt(0);
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -132,17 +132,17 @@ public class SalesOrderDB {
             }
             if (insertOrderLinesInDB) {
                 for (SalesOrderLine orderLine : orderLines) {
-                    salesOrderLineDB.addSalesOrderLineToFinalizedSalesOrder(orderLine, orderId, businessPartnerId);
+                    salesOrderLineDB.addSalesOrderLineToFinalizedSalesOrder(orderLine, salesOrderId, businessPartnerId);
                 }
             } else {
-                if(salesOrderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(businessPartnerId, orderId)<=0){
+                if(salesOrderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(businessPartnerId, salesOrderId)<=0){
                     try {
                         int rowsAffected = context.getContentResolver()
                                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                                         null,
-                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
-                                        new String[]{String.valueOf(orderId)});
+                                        "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ?",
+                                        new String[]{String.valueOf(salesOrderId)});
                         if(rowsAffected <= 0){
                             return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
                         }
@@ -163,9 +163,9 @@ public class SalesOrderDB {
         Cursor c = null;
         SalesOrder order = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
-                    " FROM ECOMMERCE_ORDER " +
-                    " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
+            String sql = "SELECT ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
+                    " FROM ECOMMERCE_SALES_ORDER " +
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = (SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", docType}, null);
@@ -204,30 +204,30 @@ public class SalesOrderDB {
      * @return
      */
     private ArrayList<SalesOrder> getActiveSalesOrders(String docType){
-        ArrayList<SalesOrder> activeOrders = new ArrayList<>();
+        ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+            String sql = "SELECT ECOMMERCE_SALES_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
                     " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
-                    " FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_ORDER_ID desc";
+                    " FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_SALES_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", docType}, null);
             while(c.moveToNext()){
-                SalesOrder order = new SalesOrder();
-                order.setId(c.getInt(0));
+                SalesOrder salesOrder = new SalesOrder();
+                salesOrder.setId(c.getInt(0));
                 try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
-                order.setLinesNumber(c.getInt(6));
-                order.setSubTotalAmount(c.getDouble(7));
-                order.setTaxAmount(c.getDouble(8));
-                order.setTotalAmount(c.getDouble(9));
-                activeOrders.add(order);
+                salesOrder.setLinesNumber(c.getInt(6));
+                salesOrder.setSubTotalAmount(c.getDouble(7));
+                salesOrder.setTaxAmount(c.getDouble(8));
+                salesOrder.setTotalAmount(c.getDouble(9));
+                activeSalesOrders.add(salesOrder);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,10 +240,10 @@ public class SalesOrderDB {
                 }
             }
         }
-        SalesOrderLineDB orderLineDB = new SalesOrderLineDB(context, user);
-        for(SalesOrder order : activeOrders){
-            order.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+        SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(context, user);
+        for(SalesOrder salesOrder : activeSalesOrders){
+            salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersByOrderId(salesOrder.getId()));
         }
-        return activeOrders;
+        return activeSalesOrders;
     }
 }
