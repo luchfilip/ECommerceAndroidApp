@@ -10,14 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stein on 5/1/2016.
@@ -56,6 +63,24 @@ public class DialogAddToShoppingSale extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_sale, container);
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
+
+        List<String> spinnerArray =  new ArrayList<>();
+        ArrayList<BusinessPartner> businessPartners =
+                (new BusinessPartnerDB(getContext(), mUser)).getActiveBusinessPartners();
+        if (businessPartners!=null) {
+            for (BusinessPartner businessPartner : businessPartners) {
+                spinnerArray.add(businessPartner.getCommercialName());
+            }
+        } else {
+            spinnerArray.add(getString(R.string.no_business_partners_registered));
+        }
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner sItems = (Spinner) view.findViewById(R.id.business_partners_spinner);
+        sItems.setAdapter(adapter);
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {

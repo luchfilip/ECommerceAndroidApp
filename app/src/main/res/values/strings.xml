@@ -257,4 +257,6 @@
     <string name="update_business_partner">Actualizar Cliente</string>
     <string name="title_activity_business_partners_list">Clientes Registrados</string>
     <string name="title_activity_company">Mis Datos</string>
+    <string name="no_business_partners_registered">No hay clientes registrados.</string>
+    <string name="business_partner_label">Cliente:</string>
 </resources>
