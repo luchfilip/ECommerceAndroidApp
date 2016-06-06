@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -49,6 +51,17 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.shopping_sale_order_detail_container)!=null;
 
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mTwoPane) {
+            ListView lv = (ListView) findViewById(R.id.shopping_sales_orders_list);
+            if (lv != null && lv.getAdapter().getCount()>0) {
+                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
     }
 
     @Override
