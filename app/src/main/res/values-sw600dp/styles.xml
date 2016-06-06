@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="toolbar_products_list_style">
+    </style>
+
     <style name="categories_style">
         <item name="android:background">@color/grey_medium</item>
     </style>
