@@ -23,6 +23,7 @@
         <menu>
             <item
                 android:id="@+id/nav_business_partners"
+                android:icon="@drawable/ic_supervisor_account_black_24dp"
                 android:title="@string/business_partners" />
             <item
                 android:id="@+id/nav_shopping_sale"
@@ -58,6 +59,7 @@
         <menu>
             <item
                 android:id="@+id/nav_my_company"
+                android:icon="@drawable/ic_work_black_24dp"
                 android:title="@string/my_company" />
             <item
                 android:id="@+id/nav_settings"
