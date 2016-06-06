@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -51,7 +50,7 @@ public class SearchResultsActivity extends AppCompatActivity
         mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, false);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

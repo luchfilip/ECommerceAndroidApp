@@ -124,7 +124,7 @@ public class OrderLineDB {
         Cursor c = null;
         try {
             String sql = "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_ORDERLINE WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
                     " AND ECOMMERCE_SALES_ORDER_ID = "+salesOrderId +
                     " ORDER BY CREATE_TIME DESC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

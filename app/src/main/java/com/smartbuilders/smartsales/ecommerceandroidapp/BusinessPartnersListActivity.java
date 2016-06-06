@@ -47,7 +47,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, false);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

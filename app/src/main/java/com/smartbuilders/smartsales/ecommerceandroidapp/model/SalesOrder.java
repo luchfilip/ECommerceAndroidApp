@@ -104,15 +104,15 @@ public class SalesOrder extends Model implements Parcelable {
         return 0;
     }
 
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+    public static final Parcelable.Creator<SalesOrder> CREATOR = new Parcelable.Creator<SalesOrder>() {
         @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
+        public SalesOrder createFromParcel(Parcel in) {
+            return new SalesOrder(in);
         }
 
         @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
+        public SalesOrder[] newArray(int size) {
+            return new SalesOrder[size];
         }
     };
 

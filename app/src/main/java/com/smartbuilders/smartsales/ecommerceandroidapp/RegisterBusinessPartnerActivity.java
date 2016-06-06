@@ -33,7 +33,7 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, false);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
