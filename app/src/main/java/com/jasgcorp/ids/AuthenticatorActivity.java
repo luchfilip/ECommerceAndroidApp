@@ -22,10 +22,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
@@ -51,8 +50,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
     public final static String PARAM_USER_PASS = "USER_PASS";
 
-    private final String TAG = this.getClass().getSimpleName();
-
     private AccountManager mAccountManager;
     private Account mAccount;
     private String mAuthTokenType;
@@ -70,6 +67,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         if (Utils.getCurrentUser(getApplicationContext())!=null) {
             finish();
         } else {
+            //setTypeFaceToViews();
             mAccountManager = AccountManager.get(getBaseContext());
 
             String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
@@ -93,21 +91,21 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     }
                 }
                 if(user!=null){
-                    ((TextView) findViewById(R.id.accountName)).setEnabled(false);
-                    ((TextView) findViewById(R.id.server_address)).setEnabled(false);
-                    ((TextView) findViewById(R.id.user_group)).setEnabled(false);
+                    findViewById(R.id.accountName).setEnabled(false);
+                    findViewById(R.id.server_address).setEnabled(false);
+                    findViewById(R.id.user_group).setEnabled(false);
 
-                    ((TextView) findViewById(R.id.accountName)).setText(accountName);
-                    ((TextView) findViewById(R.id.accountPassword)).setText(user.getUserPass());
-                    ((TextView) findViewById(R.id.server_address)).setText(user.getServerAddress());
-                    ((TextView) findViewById(R.id.user_group)).setText(user.getUserGroup());
+                    ((EditText) findViewById(R.id.accountName)).setText(accountName);
+                    ((EditText) findViewById(R.id.accountPassword)).setText(user.getUserPass());
+                    ((EditText) findViewById(R.id.server_address)).setText(user.getServerAddress());
+                    ((EditText) findViewById(R.id.user_group)).setText(user.getUserGroup());
                 }
             } else if (savedInstanceState != null) {
 
-                ((TextView) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
-                ((TextView) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USERPASS));
-                ((TextView) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVERADDRESS));
-                ((TextView) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USERGROUP));
+                ((EditText) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
+                ((EditText) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USERPASS));
+                ((EditText) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVERADDRESS));
+                ((EditText) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USERGROUP));
             }
 
             findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
@@ -124,6 +122,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         startActivity(new Intent(AuthenticatorActivity.this, ResetPasswordActivity.class));
                     }
                 });
+
             }
             if (findViewById(R.id.sign_up_textView)!=null){
                 findViewById(R.id.sign_up_textView).setOnClickListener(new View.OnClickListener() {
@@ -135,6 +134,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             }
         }
     }
+
+    //private void setTypeFaceToViews(){
+    //    ((TextView) findViewById(R.id.company_phrase)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((EditText) findViewById(R.id.accountName)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((EditText) findViewById(R.id.accountPassword)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((EditText) findViewById(R.id.server_address)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((EditText) findViewById(R.id.user_group)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((Button) findViewById(R.id.submit)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((TextView) findViewById(R.id.reset_password_textView)).setTypeface(Utils.getGlobalTypeFace(this));
+    //    ((TextView) findViewById(R.id.sign_up_textView)).setTypeface(Utils.getGlobalTypeFace(this));
+    //}
 
     @Override
     protected void onResume() {
@@ -148,10 +158,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(STATE_USERNAME, ((TextView) findViewById(R.id.accountName)).getText().toString());
-        outState.putString(STATE_USERPASS, ((TextView) findViewById(R.id.accountPassword)).getText().toString());
-        outState.putString(STATE_SERVERADDRESS, ((TextView) findViewById(R.id.server_address)).getText().toString());
-        outState.putString(STATE_USERGROUP, ((TextView) findViewById(R.id.user_group)).getText().toString());
+        outState.putString(STATE_USERNAME, ((EditText) findViewById(R.id.accountName)).getText().toString());
+        outState.putString(STATE_USERPASS, ((EditText) findViewById(R.id.accountPassword)).getText().toString());
+        outState.putString(STATE_SERVERADDRESS, ((EditText) findViewById(R.id.server_address)).getText().toString());
+        outState.putString(STATE_USERGROUP, ((EditText) findViewById(R.id.user_group)).getText().toString());
         super.onSaveInstanceState(outState);
     }
 
@@ -164,9 +174,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
         final String userGroup 		= "catalogo-febeca";
-        final String userName 		= ((TextView) findViewById(R.id.accountName)).getText().toString();
-        final String userPass 		= ((TextView) findViewById(R.id.accountPassword)).getText().toString();
-        final String serverAddress 	= ((TextView) findViewById(R.id.server_address)).getText().toString();
+        final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
+        final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
+        final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();
         final boolean saveDBInExternalCard = false;
 
         waitPlease = ProgressDialog.show(this, getString(R.string.authenticating_user), getString(R.string.wait_please), true, false);
@@ -175,8 +185,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
             @Override
             protected Intent doInBackground(Context... context) {
-
-                Log.d(TAG, "> Started authenticating");
 
                 Bundle data = new Bundle();
                 if(user!=null){//entra aqui cuando hay problemas con la clave del usuario
@@ -274,20 +282,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void finishLogin(Intent intent) {
-        Log.d(TAG, "> finishLogin");
-
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d(TAG, "> finishLogin > addAccountExplicitly");
             mAccount = new Account(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), getString(R.string.authenticator_acount_type));
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             boolean saved = mAccountManager.addAccountExplicitly(mAccount, accountPassword, intent.getBundleExtra(AccountManager.KEY_USERDATA));
             if(saved){
-                Log.d(TAG, "finishLogin - mAuthTokenType: "+mAuthTokenType);
-                Log.d(TAG, "finishLogin - authToken: "+intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
                 mAccountManager.setAuthToken(mAccount, mAuthTokenType, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
                 //Register the user in the local data base.
                 ApplicationUtilities.registerUserInDataBase(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_ID),
@@ -302,7 +305,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 return;
             }
         } else {
-            Log.d(TAG, "> finishLogin > setPassword");
             mAccountManager.setPassword(mAccount, accountPassword);
             mAccountManager.setAuthToken(mAccount, mAuthTokenType, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
         }
