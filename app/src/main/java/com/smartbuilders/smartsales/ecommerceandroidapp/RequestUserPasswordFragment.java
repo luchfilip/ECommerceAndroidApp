@@ -57,6 +57,7 @@ public class RequestUserPasswordFragment extends Fragment {
                     msgIntent.putExtra(RequestUserPasswordService.USER_NAME, userName.getText().toString());
                     msgIntent.putExtra(RequestUserPasswordService.USER_EMAIL, userEmail.getText().toString());
                     getContext().startService(msgIntent);
+                    progressContainer.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

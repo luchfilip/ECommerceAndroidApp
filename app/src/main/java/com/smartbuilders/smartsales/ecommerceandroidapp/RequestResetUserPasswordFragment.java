@@ -28,6 +28,7 @@ public class RequestResetUserPasswordFragment extends Fragment {
     private View progressContainer;
     private ResponseReceiver receiver;
 
+
     public RequestResetUserPasswordFragment() {
     }
 
@@ -41,11 +42,6 @@ public class RequestResetUserPasswordFragment extends Fragment {
 
         progressContainer = rootView.findViewById(R.id.progressContainer);
 
-        IntentFilter filter = new IntentFilter(ACTION_RESP);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new ResponseReceiver();
-        getContext().registerReceiver(receiver, filter);
-
         rootView.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +51,7 @@ public class RequestResetUserPasswordFragment extends Fragment {
                     msgIntent.putExtra(RequestResetUserPasswordService.SERVER_ADDRESS, serverAddress.getText().toString());
                     msgIntent.putExtra(RequestResetUserPasswordService.USER_EMAIL, userEmail.getText().toString());
                     getContext().startService(msgIntent);
+                    progressContainer.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -63,6 +60,25 @@ public class RequestResetUserPasswordFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        IntentFilter filter = new IntentFilter(ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        getContext().registerReceiver(receiver, filter);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            getContext().unregisterReceiver(receiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onStop();
     }
 
     private void validateInputFields(String serverAddress, String userEmail) {
