@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUse
  */
 public class RequestResetUserPasswordFragment extends Fragment {
 
+    public static final String ACTION_RESP =
+            "RequestResetUserPasswordFragment.ResponseReceiver.ACTION_RESP";
+    public static final String MESSAGE =
+            "RequestResetUserPasswordFragment.ResponseReceiver.MESSAGE";
+
     private View progressContainer;
     private ResponseReceiver receiver;
 
@@ -34,6 +40,11 @@ public class RequestResetUserPasswordFragment extends Fragment {
         final EditText userEmail = (EditText) rootView.findViewById(R.id.userEmail_editText);
 
         progressContainer = rootView.findViewById(R.id.progressContainer);
+
+        IntentFilter filter = new IntentFilter(ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        getContext().registerReceiver(receiver, filter);
 
         rootView.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,10 +70,6 @@ public class RequestResetUserPasswordFragment extends Fragment {
     }
 
     class ResponseReceiver extends BroadcastReceiver {
-        public static final String ACTION_RESP =
-                "RequestResetUserPasswordFragment.ResponseReceiver.ACTION_RESP";
-        public static final String MESSAGE =
-                "RequestResetUserPasswordFragment.ResponseReceiver.MESSAGE";
 
         @Override
         public void onReceive(Context context, Intent intent) {

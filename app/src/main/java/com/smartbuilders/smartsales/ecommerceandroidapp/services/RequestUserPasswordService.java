@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordFragment;
 
 import org.ksoap2.serialization.SoapPrimitive;
 
@@ -78,5 +79,10 @@ public class RequestUserPasswordService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(RequestUserPasswordFragment.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra(RequestUserPasswordFragment.MESSAGE, resultMsg);
+        sendBroadcast(broadcastIntent);
     }
 }

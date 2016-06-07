@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordFragment;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordFragment;
 
 import org.ksoap2.serialization.SoapPrimitive;
 
@@ -42,6 +44,7 @@ public class RequestResetUserPasswordService extends IntentService {
         String serverAddress = workIntent.getStringExtra(SERVER_ADDRESS);
         String userEmail = workIntent.getStringExtra(USER_EMAIL);
 
+        String resultMsg = null;
         try {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
             parameters.put("userGroup", "catalogo-febeca");
@@ -74,5 +77,10 @@ public class RequestResetUserPasswordService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(RequestResetUserPasswordFragment.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra(RequestResetUserPasswordFragment.MESSAGE, resultMsg);
+        sendBroadcast(broadcastIntent);
     }
 }
