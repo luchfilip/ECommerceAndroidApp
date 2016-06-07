@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 public class SalesOrderDB {
 
+    public static final String TAG = SalesOrderDB.class.getSimpleName();
+
     private Context context;
     private User user;
 
@@ -40,12 +42,14 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT COUNT(BUSINESS_PARTNER_ID), BUSINESS_PARTNER_ID " +
-                    " FROM ECOMMERCE_SALES_ORDERLINE WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
-                    " GROUP BY BUSINESS_PARTNER_ID";
+            String sql = "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE OL " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+                    " WHERE OL.ISACTIVE = ? AND OL.DOC_TYPE = ? " +
+                    " GROUP BY OL.BUSINESS_PARTNER_ID";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
+                    .build(), null, sql, new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
             while(c.moveToNext()){
                 SalesOrder salesOrder = new SalesOrder();
                 salesOrder.setLinesNumber(c.getInt(0));
