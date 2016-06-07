@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.OperationCanceledException;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -32,10 +31,17 @@ public class SplashScreen extends AppCompatActivity {
 
     private static final String TAG = SplashScreen.class.getSimpleName();
 
-    private ProgressDialog waitPlease;
+    private static final String STATE_SYNCHRONIZATION_STATE = "STATE_SYNCHRONIZATION_STATE";
+
+    private static final int SYNC_RUNNING = 1;
+    private static final int SYNC_ERROR = 2;
+    private static final int SYNC_STOPED = 3;
+    private static final int SYNC_FINISHED = 4;
+
     private AccountManager mAccountManager;
     private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
+    private int mSynchronizationState;
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
         @Override
@@ -43,26 +49,13 @@ public class SplashScreen extends AppCompatActivity {
             if(intent!=null && intent.getAction()!=null){
                 Bundle extras = intent.getExtras();
                 if(extras!=null){
-                    if(extras.containsKey(SyncAdapter.USER_ID)
+                    if(extras.containsKey(SyncAdapter.USER_ID) && mCurrentUser!=null
                             && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
-                            //if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)
-                            //        && extras.getInt(SyncAdapter.SYNCHRONIZATION_PROGRESS)>=80){
-                            //    initApp(mCurrentUser);
-                            //} else {
-                                if (waitPlease==null || !waitPlease.isShowing()){
-                                    if(waitPlease!=null){
-                                        waitPlease.dismiss();
-                                        waitPlease = null;
-                                    }
-                                    if(!isFinishing()){
-                                        waitPlease = ProgressDialog.show(SplashScreen.this,
-                                                getString(R.string.loading_data), getString(R.string.wait_please), true, false);
-                                    }
-                                }
-                                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-                            //}
+                            findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
+                            findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                            mSynchronizationState = SYNC_RUNNING;
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
@@ -70,12 +63,11 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
                             if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
                                 initApp();
+                                mSynchronizationState = SYNC_FINISHED;
                             }else{
-                                if (waitPlease!=null && waitPlease.isShowing()) {
-                                    waitPlease.dismiss();
-                                    waitPlease.cancel();
-                                }
+                                mSynchronizationState = SYNC_ERROR;
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                                findViewById(R.id.progressContainer).setVisibility(View.GONE);
                             }
                         }
                     }
@@ -108,7 +100,14 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        if(savedInstanceState!=null) {
+            if(savedInstanceState.containsKey(STATE_SYNCHRONIZATION_STATE)){
+                mSynchronizationState = savedInstanceState.getInt(STATE_SYNCHRONIZATION_STATE);
+            }
+        }
+
         mAccountManager = AccountManager.get(this);
+        mCurrentUser = Utils.getCurrentUser(this);
 
         final Account availableAccounts[] = mAccountManager
                 .getAccountsByType(getString(R.string.authenticator_acount_type));
@@ -132,7 +131,12 @@ public class SplashScreen extends AppCompatActivity {
 
 
         if (availableAccounts != null && availableAccounts.length > 0) {
-            checkInitialLoad(mAccountManager, availableAccounts[0]);
+            if(mSynchronizationState==SYNC_ERROR){
+                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                findViewById(R.id.progressContainer).setVisibility(View.GONE);
+            }else{
+                checkInitialLoad(mAccountManager, availableAccounts[0]);
+            }
         } else {
             addNewAccount(getString(R.string.authenticator_acount_type),
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
@@ -182,10 +186,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-        if (waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
-        }
+        findViewById(R.id.progressContainer).setVisibility(View.GONE);
         Utils.createImageFiles(this, mCurrentUser);
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(i);
@@ -196,10 +197,7 @@ public class SplashScreen extends AppCompatActivity {
      * Verifica si tiene que hacerse la carga inicial
      */
     private void checkInitialLoad(AccountManager accountManager, Account account) {
-        if (waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
-        }
+        findViewById(R.id.progressContainer).setVisibility(View.GONE);
 
         ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
 
@@ -209,14 +207,14 @@ public class SplashScreen extends AppCompatActivity {
         if (mCurrentUser!=null && Utils.appRequireInitialLoad(this, mCurrentUser)) {
                 if(NetworkConnectionUtilities.isOnline(this)
                         && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
-                    waitPlease = ProgressDialog.show(this, getString(R.string.loading_data),
-                            getString(R.string.wait_please), true, false);
+                    findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
                         Log.d(TAG, "!ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
                         Bundle settingsBundle = new Bundle();
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                         ContentResolver.requestSync(account, getString(R.string.sync_adapter_content_authority), settingsBundle);
+                        mSynchronizationState = SYNC_RUNNING;
                     }else{
                         Log.d(TAG, "ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
                     }
@@ -225,8 +223,11 @@ public class SplashScreen extends AppCompatActivity {
                     Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
                     //TODO: mostrar en pantalla error de conexion
                     findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                    mSynchronizationState = SYNC_ERROR;
                 }
         } else if (mCurrentUser!=null) {
+            mSynchronizationState = SYNC_FINISHED;
             initApp();
         } else {
             //TODO: mostrar error en pantalla
@@ -245,12 +246,8 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        if(waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
-        }
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_SYNCHRONIZATION_STATE, mSynchronizationState);
+        super.onSaveInstanceState(outState);
     }
-
 }
