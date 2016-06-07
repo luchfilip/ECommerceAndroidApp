@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -165,6 +166,13 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
         getDialog().setTitle(mProduct.getName());
         return view;
+    }
+
+    private void showDialogCreateBusinessPartner() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        DialogCreateBusinessPartner dialogCreateBusinessPartner =
+                DialogCreateBusinessPartner.newInstance(mUser);
+        dialogCreateBusinessPartner.show(fm, DialogCreateBusinessPartner.class.getSimpleName());
     }
 
     @Override

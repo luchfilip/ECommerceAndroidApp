@@ -5,8 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.ResetPasswordActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.SignUpActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
@@ -119,7 +119,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 findViewById(R.id.reset_password_textView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(AuthenticatorActivity.this, ResetPasswordActivity.class));
+                        startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class));
                     }
                 });
 
@@ -128,7 +128,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 findViewById(R.id.sign_up_textView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(AuthenticatorActivity.this, SignUpActivity.class));
+                        startActivity(new Intent(AuthenticatorActivity.this, RequestUserPasswordActivity.class));
                     }
                 });
             }

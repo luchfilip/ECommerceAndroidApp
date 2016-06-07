@@ -268,4 +268,5 @@
     <string name="action_sign_up">Registrarse</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="action_reset_password">Reestablecer Contraseña</string>
+    <string name="register_business_partner">Registrar Cliente</string>
 </resources>

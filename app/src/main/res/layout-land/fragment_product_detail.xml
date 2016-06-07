@@ -110,23 +110,16 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@string/buy"
-                                    android:id="@+id/product_addtoshoppingcart_button" />
+                                    android:id="@+id/product_addtoshoppingcart_button"
+                                    android:layout_marginBottom="2dp" />
 
                                 <Button
                                     style="@style/GoldenButtonAppTheme"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="@string/sell"
-                                    android:id="@+id/product_addtoshoppingsales_button" />
-
-                                <Button
-                                    style="@style/GreyButtonAppTheme"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/add_to_wishlist"
-                                    android:id="@+id/product_addtowishlist_button"
-                                    android:focusable="false"
-                                    android:visibility="gone" />
+                                    android:id="@+id/product_addtoshoppingsales_button"
+                                    android:layout_marginTop="2dp" />
                             </LinearLayout>
 
                         </LinearLayout>

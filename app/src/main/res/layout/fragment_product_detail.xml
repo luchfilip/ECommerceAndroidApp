@@ -100,7 +100,8 @@
                                 android:layout_width="match_parent"
                                 android:text="@string/buy"
                                 android:id="@+id/product_addtoshoppingcart_button"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:layout_marginBottom="2dp" />
                         </TableRow>
 
                         <TableRow
@@ -112,20 +113,8 @@
                                 android:layout_width="match_parent"
                                 android:text="@string/sell"
                                 android:id="@+id/product_addtoshoppingsales_button"
-                                android:layout_weight="1" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <Button
-                                android:layout_width="match_parent"
-                                android:text="@string/add_to_wishlist"
-                                android:id="@+id/product_addtowishlist_button"
                                 android:layout_weight="1"
-                                style="@style/GreyButtonAppTheme" />
+                                android:layout_marginTop="2dp" />
                         </TableRow>
 
                     </TableLayout>

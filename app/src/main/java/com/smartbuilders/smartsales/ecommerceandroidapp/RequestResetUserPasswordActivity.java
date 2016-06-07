@@ -8,12 +8,12 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 /**
  * Jesus Sarco, 07.06.2016
  */
-public class ResetPasswordActivity extends AppCompatActivity {
+public class RequestResetUserPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reset_password);
+        setContentView(R.layout.activity_request_reset_user_password);
     }
 
 }

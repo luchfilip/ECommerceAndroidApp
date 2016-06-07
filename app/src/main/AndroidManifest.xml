@@ -116,6 +116,21 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+        <!--
+            Because android:exported is set to "false",
+            the service is only available to this app.
+        -->
+        <service
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUserPasswordService"
+            android:exported="false"/>
+
+        <!--
+            Because android:exported is set to "false",
+            the service is only available to this app.
+        -->
+        <service
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestUserPasswordService"
+            android:exported="false"/>
 
         <receiver
             android:name="com.jasgcorp.ids.gcm.GcmBroadcastReceiver"
@@ -236,11 +251,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SignUpActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ResetPasswordActivity"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
     </application>

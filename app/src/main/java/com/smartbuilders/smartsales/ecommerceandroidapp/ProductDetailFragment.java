@@ -113,16 +113,24 @@ public class ProductDetailFragment extends Fragment {
                             }
 
                             if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
+                                final File thumb = Utils.getFileThumbByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                if (thumb!=null) {
+                                    Picasso.with(getContext())
+                                            .load(thumb).error(R.drawable.no_image_available)
+                                            .into((ImageView) view.findViewById(R.id.product_image));
+                                } else {
+                                    ((ImageView) view.findViewById(R.id.product_image))
+                                            .setImageResource(R.drawable.no_image_available);
+                                }
+
                                 File img = Utils.getFileImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
                                 if(img!=null){
                                     Picasso.with(getContext())
-                                            .load(img).error(R.drawable.no_image_available)
-                                            .into((ImageView) view.findViewById(R.id.product_image));
+                                            .load(img).into((ImageView) view.findViewById(R.id.product_image));
                                 }else{
                                     Picasso.with(getContext())
                                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
                                                 + mProduct.getImageFileName())
-                                        .error(R.drawable.no_image_available)
                                         .into((ImageView) view.findViewById(R.id.product_image), new Callback() {
                                             @Override
                                             public void onSuccess() {
@@ -133,10 +141,9 @@ public class ProductDetailFragment extends Fragment {
 
                                             @Override
                                             public void onError() {
-                                                File img = Utils.getFileThumbByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
-                                                if(img!=null){
+                                                if(thumb!=null){
                                                     Picasso.with(getContext())
-                                                            .load(img).error(R.drawable.no_image_available)
+                                                            .load(thumb).error(R.drawable.no_image_available)
                                                             .into((ImageView) view.findViewById(R.id.product_image));
                                                 }else{
                                                     ((ImageView) view.findViewById(R.id.product_image))
@@ -230,21 +237,21 @@ public class ProductDetailFragment extends Fragment {
                                 );
                             }
 
-                            if (view.findViewById(R.id.product_addtowishlist_button) != null) {
-                                view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct);
-                                            if (result == null) {
-                                                Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    }
-                                );
-                            }
+                            //if (view.findViewById(R.id.product_addtowishlist_button) != null) {
+                            //    view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
+                            //        new View.OnClickListener() {
+                            //            @Override
+                            //            public void onClick(View v) {
+                            //                String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct);
+                            //                if (result == null) {
+                            //                    Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
+                            //                } else {
+                            //                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            //                }
+                            //            }
+                            //        }
+                            //    );
+                            //}
 
                             if (view.findViewById(R.id.product_availability) != null) {
                                 ((TextView) view.findViewById(R.id.product_availability))
@@ -307,13 +314,13 @@ public class ProductDetailFragment extends Fragment {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingCart addToShoppingCartFragment =
                 DialogAddToShoppingCart.newInstance(mProduct, mCurrentUser);
-        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
     }
 
     private void addToShoppingSale() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingSale addToShoppingSaleFragment =
                 DialogAddToShoppingSale.newInstance(mProduct, mCurrentUser);
-        addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
+        addToShoppingSaleFragment.show(fm, DialogAddToShoppingSale.class.getSimpleName());
     }
 }
