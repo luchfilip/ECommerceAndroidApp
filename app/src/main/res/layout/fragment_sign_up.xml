@@ -8,8 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimary"
-    android:gravity="center"
-    android:id="@+id/parent_layout">
+    android:gravity="center" >
 
     <ImageView
         android:layout_width="wrap_content"
@@ -31,10 +30,12 @@
         android:textAppearance="@android:style/TextAppearance.Medium" />
 
     <LinearLayout
+        android:id="@+id/email_login_form"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
+        android:gravity="center"
         android:layout_weight="1">
 
         <EditText
@@ -47,20 +48,6 @@
             android:inputType="textUri"
             android:textColor="@android:color/white"
             android:textColorHint="@color/material_grey_50"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
-
-        <EditText
-            android:id="@+id/user_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/sync_user_group"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/material_grey_50"
-            android:visibility="gone"
             android:focusable="true"
             android:focusableInTouchMode="true" />
 
@@ -78,10 +65,10 @@
             android:focusableInTouchMode="true" />
 
         <EditText
-            android:id="@+id/accountPassword"
+            android:id="@+id/accountEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
+            android:hint="@string/email"
             android:inputType="text"
             android:maxLines="1"
             android:singleLine="true"
@@ -95,30 +82,11 @@
             style="@style/GreyButtonAppTheme"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:layout_marginTop="16dp"
-            android:text="@string/action_sign_in"
+            android:text="@string/action_sign_up"
+            android:textAppearance="@android:style/TextAppearance.Medium"
             android:textStyle="bold"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_password"
-        android:id="@+id/reset_password_textView"
-        android:textColor="@android:color/primary_text_light"
-        android:padding="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_up"
-        android:id="@+id/sign_up_textView"
-        android:textColor="@android:color/primary_text_light"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp" />
 
 </LinearLayout>

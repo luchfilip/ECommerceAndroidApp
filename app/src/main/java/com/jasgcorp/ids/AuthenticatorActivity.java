@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.ResetPasswordActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.SignUpActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
@@ -23,12 +25,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
-
 
 /**
  * The Authenticator activity.
@@ -116,6 +116,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     submit();
                 }
             });
+
+            if (findViewById(R.id.reset_password_textView)!=null){
+                findViewById(R.id.reset_password_textView).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(AuthenticatorActivity.this, ResetPasswordActivity.class));
+                    }
+                });
+            }
+            if (findViewById(R.id.sign_up_textView)!=null){
+                findViewById(R.id.sign_up_textView).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(AuthenticatorActivity.this, SignUpActivity.class));
+                    }
+                });
+            }
         }
     }
 
@@ -123,9 +140,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     protected void onResume() {
         super.onResume();
         if(!ApplicationUtilities.checkPlayServices(this)){
-            ((LinearLayout)findViewById(R.id.parent_layout)).setVisibility(View.GONE);
-        }else if(((LinearLayout)findViewById(R.id.parent_layout)).getVisibility()==View.GONE){
-            ((LinearLayout)findViewById(R.id.parent_layout)).setVisibility(View.VISIBLE);
+            findViewById(R.id.parent_layout).setVisibility(View.GONE);
+        }else if(findViewById(R.id.parent_layout).getVisibility()==View.GONE){
+            findViewById(R.id.parent_layout).setVisibility(View.VISIBLE);
         }
     }
 
@@ -146,7 +163,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             e.printStackTrace();
         }
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
-        final String userGroup 		= "catalogo";
+        final String userGroup 		= "catalogo-febeca";
         final String userName 		= ((TextView) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((TextView) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= ((TextView) findViewById(R.id.server_address)).getText().toString();

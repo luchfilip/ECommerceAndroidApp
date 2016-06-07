@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
@@ -48,6 +49,8 @@ import java.util.concurrent.ExecutionException;
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
+
+    private static Typeface globalTypeface;
 
     /**
      *
@@ -548,5 +551,16 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Typeface getGlobalTypeFace(Context context)  {
+        if (globalTypeface == null) {
+            try {
+                globalTypeface = Typeface.createFromAsset(context.getAssets(),"Roboto-Regular.ttf");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return globalTypeface;
     }
 }
