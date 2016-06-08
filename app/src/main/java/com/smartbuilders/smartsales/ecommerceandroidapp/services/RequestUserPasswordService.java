@@ -11,6 +11,7 @@ import org.ksoap2.serialization.SoapPrimitive;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.LinkedHashMap;
@@ -52,31 +53,38 @@ public class RequestUserPasswordService extends IntentService {
             parameters.put("userName", userName);
             parameters.put("userEmail", userEmail);
             ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
-                    serverAddress,
-                    "/IntelligentDataSynchronizer/services/ManageUser?wsdl",
-                    "requestUserPassword",
-                    "urn:requestUserPassword",
-                    parameters);
+                                                        serverAddress,
+                                                        "/IntelligentDataSynchronizer/services/ManageUser?wsdl",
+                                                        "requestUserPassword",
+                                                        "urn:requestUserPassword",
+                                                        parameters);
             Object response =  a.getWSResponse();
             if(response instanceof SoapPrimitive){
                 Log.d(TAG, "response: "+response.toString());
                 //TODO: enviar broadcast a la aplicacion
+                resultMsg = response.toString();
             }else if (response != null){
                 throw new ClassCastException("response classCastException.");
-            }else if (response == null) {
-
             }else {
-                throw new NullPointerException("response error.");
+                throw new NullPointerException("response is null.");
             }
         } catch(ConnectException e){
+            resultMsg = e.getMessage();
             e.printStackTrace();
         } catch(SocketTimeoutException e){
+            resultMsg = e.getMessage();
             e.printStackTrace();
         } catch(SocketException e){
+            resultMsg = e.getMessage();
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            resultMsg = e.getMessage();
             e.printStackTrace();
         } catch(IOException e){
+            resultMsg = e.getMessage();
             e.printStackTrace();
         } catch (Exception e) {
+            resultMsg = e.getMessage();
             e.printStackTrace();
         }
         Intent broadcastIntent = new Intent();

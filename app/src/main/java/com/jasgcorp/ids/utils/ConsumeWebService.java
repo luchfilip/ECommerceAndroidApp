@@ -2,6 +2,7 @@ package com.jasgcorp.ids.utils;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.LinkedHashMap;
@@ -91,7 +92,12 @@ public class ConsumeWebService {
 			Log.e(TAG, "SocketException");
         	//e.printStackTrace();
         	return retry(e);
-        } catch(IOException e){
+        } catch (MalformedURLException e) {
+			Log.e(TAG, "MalformedURLException");
+			//e.printStackTrace();
+			throw e;
+			//return retry(e);
+		} catch(IOException e){
 			Log.e(TAG, "IOException");
         	//e.printStackTrace();
             throw e;
