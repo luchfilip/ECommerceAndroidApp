@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordFragment;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
 import org.ksoap2.serialization.SoapPrimitive;
 

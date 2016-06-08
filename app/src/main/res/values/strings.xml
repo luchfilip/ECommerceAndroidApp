@@ -262,11 +262,12 @@
     <string name="title_activity_shopping_sales_list">Cotizaciones Abiertas</string>
     <string name="loading_data_wait_please">Cargando datos...</string>
     <string name="reset_password">Reestablecer contraseña</string>
-    <string name="sign_up">Regístrate</string>
+    <string name="sign_up">¿No posees una contraseña?</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="email">Correo electrónico</string>
     <string name="action_sign_up">Registrarse</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="action_reset_password">Reestablecer Contraseña</string>
     <string name="register_business_partner">Registrar Cliente</string>
+    <string name="sending_request_wait_please">Enviando petición, espere por favor...</string>
 </resources>

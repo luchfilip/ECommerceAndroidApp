@@ -2,8 +2,12 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestUserPasswordService;
@@ -53,38 +56,43 @@ public class RequestUserPasswordFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    EditText serverAddress = (EditText) rootView.findViewById(R.id.serverAddress_editText);
-                    EditText userName = (EditText) rootView.findViewById(R.id.userName_editText);
-                    EditText userEmail = (EditText) rootView.findViewById(R.id.userEmail_editText);
-                    if (!mServiceRunning) {
-                        lockScreen();
+                final String serverAddress = ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
+                final String userName = ((EditText) rootView.findViewById(R.id.userName_editText)).getText().toString();
+                final String userEmail = ((EditText) rootView.findViewById(R.id.userEmail_editText)).getText().toString();
 
-                        URL url = new URL(serverAddress.getText().toString());
-                        URLConnection conn = url.openConnection();
-                        conn.setConnectTimeout(1000*2);//5 seconds
-                        conn.connect();
+                if (!mServiceRunning && validateInputFields(serverAddress, userName, userEmail)) {
+                    lockScreen();
 
-                        Intent msgIntent = new Intent(getContext(), RequestUserPasswordService.class);
-                        validateInputFields(serverAddress.getText().toString(), userName.getText().toString(),
-                                userEmail.getText().toString());
-                        msgIntent.putExtra(RequestUserPasswordService.SERVER_ADDRESS, serverAddress.getText().toString());
-                        msgIntent.putExtra(RequestUserPasswordService.USER_NAME, userName.getText().toString());
-                        msgIntent.putExtra(RequestUserPasswordService.USER_EMAIL, userEmail.getText().toString());
-                        getContext().startService(msgIntent);
-                    }
-                } catch (MalformedURLException e) {
-                    // the URL is not in a valid form
-                    e.printStackTrace();
-                    unlockScreen(getString(R.string.error_server_address_malformedurlexception));
-                } catch (IOException e) {
-                    // the connection couldn't be established
-                    e.printStackTrace();
-                    unlockScreen(getString(R.string.error_server_address_ioexception));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    unlockScreen(e.getMessage());
+                    new AsyncTask<Void, Void, String>() {
+
+                        @Override
+                        protected String doInBackground(Void... params) {
+                            try {
+                                URL url = new URL(serverAddress);
+                                URLConnection conn = url.openConnection();
+                                conn.setConnectTimeout(1000*2);//2 seconds
+                                conn.connect();
+
+                                Intent msgIntent = new Intent(getContext(), RequestUserPasswordService.class);
+                                msgIntent.putExtra(RequestUserPasswordService.SERVER_ADDRESS, serverAddress);
+                                msgIntent.putExtra(RequestUserPasswordService.USER_NAME, userName);
+                                msgIntent.putExtra(RequestUserPasswordService.USER_EMAIL, userEmail);
+                                getContext().startService(msgIntent);
+                            } catch (MalformedURLException e) {
+                                // the URL is not in a valid form
+                                e.printStackTrace();
+                                unlockScreen(getString(R.string.error_server_address_malformedurlexception));
+                            } catch (IOException e) {
+                                // the connection couldn't be established
+                                e.printStackTrace();
+                                unlockScreen(getString(R.string.error_server_address_ioexception));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                unlockScreen(e.getMessage());
+                            }
+                            return null;
+                        }
+                    }.execute();
                 }
             }
         });
@@ -98,8 +106,8 @@ public class RequestUserPasswordFragment extends Fragment {
         return rootView;
     }
 
-    private void validateInputFields(String serverAddress, String userName, String userEmail) {
-
+    private boolean validateInputFields(String serverAddress, String userName, String userEmail) {
+        return true;
     }
 
     @Override
@@ -122,21 +130,40 @@ public class RequestUserPasswordFragment extends Fragment {
     }
 
     private void lockScreen(){
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
         mServiceRunning = true;
         submit.setEnabled(false);
         progressContainer.setVisibility(View.VISIBLE);
     }
 
-    private void unlockScreen(String message){
-        if(message!=null){
-            new AlertDialog.Builder(getContext())
-                    .setMessage(message)
-                    .setNeutralButton(R.string.accept, null)
-                    .show();
-        }
-        submit.setEnabled(true);
-        progressContainer.setVisibility(View.GONE);
-        mServiceRunning = false;
+    private void unlockScreen(final String message){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(message!=null){
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(message)
+                            .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                } else {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                }
+                submit.setEnabled(true);
+                progressContainer.setVisibility(View.GONE);
+                mServiceRunning = false;
+
+            }
+        });
     }
 
     class ResponseReceiver extends BroadcastReceiver {
