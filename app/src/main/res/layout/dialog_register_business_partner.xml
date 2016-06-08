@@ -37,7 +37,8 @@
                     android:id="@+id/business_partner_commercial_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -59,7 +60,8 @@
                     android:id="@+id/business_partner_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -81,7 +83,8 @@
                     android:id="@+id/business_partner_tax_id_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -103,7 +106,8 @@
                     android:id="@+id/business_partner_address_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -125,7 +129,8 @@
                     android:id="@+id/business_partner_contact_person_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -148,7 +153,8 @@
                     android:ems="10"
                     android:id="@+id/business_partner_email_address_editText"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:layout_weight="1" />
             </TableRow>
 
             <TableRow
@@ -171,7 +177,8 @@
                     android:ems="10"
                     android:id="@+id/business_partner_phone_number_editText"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:layout_weight="1" />
             </TableRow>
         </TableLayout>
     </ScrollView>
@@ -186,7 +193,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save"
+            android:text="@string/register"
             android:id="@+id/save_button"
             android:layout_gravity="center_horizontal" />
 
