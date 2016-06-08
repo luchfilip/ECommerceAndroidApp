@@ -109,8 +109,8 @@ public class RequestResetUserPasswordFragment extends Fragment {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         if (waitPlease==null || !waitPlease.isShowing()){
-            waitPlease = ProgressDialog.show(getContext(),
-                    getString(R.string.sending_request_wait_please), null, true, false);
+            waitPlease = ProgressDialog.show(getContext(), null,
+                    getString(R.string.sending_request_wait_please), true, false);
         }
         mServiceRunning = true;
         submit.setEnabled(false);
@@ -161,12 +161,21 @@ public class RequestResetUserPasswordFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (waitPlease!=null && waitPlease.isShowing()) {
+            waitPlease.cancel();
+        }
         super.onStop();
     }
 
     private boolean validateInputFields(String serverAddress, String userEmail) {
         EmailValidator emailValidator = new EmailValidator();
-        emailValidator.validate(userEmail);
+        if (!emailValidator.validate(userEmail)) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.invalid_email_format)
+                    .setPositiveButton(R.string.accept, null)
+                    .show();
+            return false;
+        }
         return true;
     }
 

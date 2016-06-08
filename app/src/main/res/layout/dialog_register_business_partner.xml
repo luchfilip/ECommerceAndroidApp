@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/scrollView"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/business_partner_commercial_name_label"
+                    android:id="@+id/business_partner_commercial_name_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_commercial_name_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/business_partner_name_label"
+                    android:id="@+id/business_partner_name_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_name_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/business_partner_tax_id_label"
+                    android:id="@+id/business_partner_tax_id_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_tax_id_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address_label"
+                    android:id="@+id/business_partner_address_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_address_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contact_person_label"
+                    android:id="@+id/business_partner_contact_person_name_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_contact_person_name_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_address_label"
+                    android:id="@+id/business_partner_email_address_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:ems="10"
+                    android:id="@+id/business_partner_email_address_editText"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_number_label"
+                    android:id="@+id/business_partner_phone_number_textView"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical|right"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:ems="10"
+                    android:id="@+id/business_partner_phone_number_editText"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:id="@+id/save_button"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancel_button" />
+    </LinearLayout>
+
+</LinearLayout>

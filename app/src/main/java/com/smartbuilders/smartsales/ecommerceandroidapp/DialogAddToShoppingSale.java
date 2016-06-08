@@ -74,7 +74,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
         final ArrayList<BusinessPartner> businessPartners =
                 (new BusinessPartnerDB(getContext(), mUser)).getActiveBusinessPartners();
         int selectedIndex = 0;
-        if (businessPartners!=null) {
+        if (businessPartners!=null && !businessPartners.isEmpty()) {
             int index = 0;
             for (BusinessPartner businessPartner : businessPartners) {
                 if(businessPartner.getId() == sharedPref.getInt("current_business_partner_id", 0)){
@@ -84,29 +84,36 @@ public class DialogAddToShoppingSale extends DialogFragment {
                         getString(R.string.tax_id, businessPartner.getTaxId()));
                 index++;
             }
+            ArrayAdapter<String> adapter =
+                    new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            Spinner businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
+            businessPartnersSpinner.setAdapter(adapter);
+            businessPartnersSpinner.setSelection(selectedIndex);
+
+            businessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putInt("current_business_partner_id", businessPartners.get(position).getId());
+                    editor.commit();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) { }
+            });
         } else {
-            spinnerArray.add(getString(R.string.no_business_partners_registered));
+            view.findViewById(R.id.business_partners_spinner).setVisibility(View.GONE);
+            view.findViewById(R.id.buttons_container).setVisibility(View.GONE);
+            view.findViewById(R.id.register_business_partner_button).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.register_business_partner_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDialogCreateBusinessPartner();
+                }
+            });
         }
-
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
-        businessPartnersSpinner.setAdapter(adapter);
-        businessPartnersSpinner.setSelection(selectedIndex);
-
-        businessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt("current_business_partner_id", businessPartners.get(position).getId());
-                editor.commit();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -170,9 +177,9 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
     private void showDialogCreateBusinessPartner() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogCreateBusinessPartner dialogCreateBusinessPartner =
-                DialogCreateBusinessPartner.newInstance(mUser);
-        dialogCreateBusinessPartner.show(fm, DialogCreateBusinessPartner.class.getSimpleName());
+        DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
+                DialogRegisterBusinessPartner.newInstance(mUser);
+        dialogRegisterBusinessPartner.show(fm, DialogRegisterBusinessPartner.class.getSimpleName());
     }
 
     @Override

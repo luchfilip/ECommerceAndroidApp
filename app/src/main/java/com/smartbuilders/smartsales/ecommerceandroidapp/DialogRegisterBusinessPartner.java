@@ -1,12 +1,14 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -16,20 +18,28 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 /**
  * Created by stein on 5/1/2016.
  */
-public class DialogCreateBusinessPartner extends DialogFragment {
+public class DialogRegisterBusinessPartner extends DialogFragment {
 
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private User mUser;
 
-    public DialogCreateBusinessPartner() {
+    public DialogRegisterBusinessPartner() {
         // Empty constructor required for DialogFragment
     }
 
-    public static DialogCreateBusinessPartner newInstance(User user){
-        DialogCreateBusinessPartner editQtyRequestedDialogFragment = new DialogCreateBusinessPartner();
+    public static DialogRegisterBusinessPartner newInstance(User user){
+        DialogRegisterBusinessPartner editQtyRequestedDialogFragment = new DialogRegisterBusinessPartner();
         editQtyRequestedDialogFragment.mUser = user;
         return editQtyRequestedDialogFragment;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        return dialog;
     }
 
     @Override
@@ -41,7 +51,7 @@ public class DialogCreateBusinessPartner extends DialogFragment {
             }
         }
 
-        final View view = inflater.inflate(R.layout.fragment_register_business_partner, container);
+        final View view = inflater.inflate(R.layout.dialog_register_business_partner, container);
         
 
         return view;

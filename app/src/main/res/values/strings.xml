@@ -270,4 +270,5 @@
     <string name="action_reset_password">Reestablecer Contraseña</string>
     <string name="register_business_partner">Registrar Cliente</string>
     <string name="sending_request_wait_please">Enviando petición, espere por favor...</string>
+    <string name="invalid_email_format">El formato de coreo electrónico es inválido.</string>
 </resources>

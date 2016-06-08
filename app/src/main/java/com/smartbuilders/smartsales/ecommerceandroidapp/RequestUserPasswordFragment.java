@@ -20,6 +20,7 @@ import android.widget.EditText;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestUserPasswordService;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.EmailValidator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.IOException;
@@ -105,6 +106,14 @@ public class RequestUserPasswordFragment extends Fragment {
     }
 
     private boolean validateInputFields(String serverAddress, String userName, String userEmail) {
+        EmailValidator emailValidator = new EmailValidator();
+        if (!emailValidator.validate(userEmail)) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.invalid_email_format)
+                    .setPositiveButton(R.string.accept, null)
+                    .show();
+            return false;
+        }
         return true;
     }
 
@@ -124,6 +133,9 @@ public class RequestUserPasswordFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (waitPlease!=null && waitPlease.isShowing()) {
+            waitPlease.cancel();
+        }
         super.onStop();
     }
 
@@ -134,8 +146,8 @@ public class RequestUserPasswordFragment extends Fragment {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
         if (waitPlease==null || !waitPlease.isShowing()){
-            waitPlease = ProgressDialog.show(getContext(),
-                    getString(R.string.sending_request_wait_please), null, true, false);
+            waitPlease = ProgressDialog.show(getContext(), null,
+                    getString(R.string.sending_request_wait_please), true, false);
         }
         mServiceRunning = true;
         submit.setEnabled(false);
