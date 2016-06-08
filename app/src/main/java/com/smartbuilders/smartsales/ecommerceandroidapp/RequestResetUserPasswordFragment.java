@@ -1,6 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,10 +38,10 @@ public class RequestResetUserPasswordFragment extends Fragment {
     public static final String MESSAGE =
             "RequestResetUserPasswordFragment.ResponseReceiver.MESSAGE";
 
-    private View progressContainer;
     private ResponseReceiver receiver;
     private boolean mServiceRunning;
     private Button submit;
+    private ProgressDialog waitPlease;
 
     public RequestResetUserPasswordFragment() {
     }
@@ -50,8 +50,6 @@ public class RequestResetUserPasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_request_reset_user_password, container, false);
-
-        progressContainer = rootView.findViewById(R.id.progressContainer);
 
         submit = (Button) rootView.findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +108,12 @@ public class RequestResetUserPasswordFragment extends Fragment {
         } else {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
+        if (waitPlease==null || !waitPlease.isShowing()){
+            waitPlease = ProgressDialog.show(getContext(),
+                    getString(R.string.sending_request_wait_please), null, true, false);
+        }
         mServiceRunning = true;
         submit.setEnabled(false);
-        progressContainer.setVisibility(View.VISIBLE);
     }
 
     private void unlockScreen(final String message){
@@ -134,7 +135,10 @@ public class RequestResetUserPasswordFragment extends Fragment {
                     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                 }
                 submit.setEnabled(true);
-                progressContainer.setVisibility(View.GONE);
+                if (waitPlease!=null && waitPlease.isShowing()) {
+                    waitPlease.cancel();
+                    waitPlease = null;
+                }
                 mServiceRunning = false;
 
             }
