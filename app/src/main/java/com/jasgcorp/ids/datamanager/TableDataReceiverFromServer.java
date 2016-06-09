@@ -166,8 +166,26 @@ public class TableDataReceiverFromServer extends Thread {
 			execRemoteQueryAndInsert(context, user,
 					"select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
-            syncPercentage = 100;
+            syncPercentage = 90;
         }
+		if(sync){
+			execRemoteQueryAndInsert(context, user,
+					"select BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME from BANNER where ISACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO BANNER (BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME) VALUES (?, ?, ?, ?, ?, ?)");
+			syncPercentage = 95;
+		}
+		if(sync){
+			execRemoteQueryAndInsert(context, user,
+					"select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
+							" BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, " +
+							" PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
+						" from BRAND_PROMOTIONAL_CARD where ISACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO BRAND_PROMOTIONAL_CARD (BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, " +
+							" IMAGE_FILE_NAME, PROMOTIONAL_TEXT, BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, " +
+							" BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, " +
+							" PROMOTIONAL_TEXT_B_COLOR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			syncPercentage = 100;
+		}
 		Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 	}
 
