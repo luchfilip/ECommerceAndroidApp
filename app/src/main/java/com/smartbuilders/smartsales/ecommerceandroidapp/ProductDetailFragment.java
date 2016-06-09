@@ -19,11 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -123,7 +121,7 @@ public class ProductDetailFragment extends Fragment {
                                             .setImageResource(R.drawable.no_image_available);
                                 }
 
-                                File img = Utils.getFileImageByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                File img = Utils.getFileInOriginalDirByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
                                 if(img!=null){
                                     Picasso.with(getContext())
                                             .load(img).into((ImageView) view.findViewById(R.id.product_image));

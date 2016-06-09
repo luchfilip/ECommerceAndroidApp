@@ -10,8 +10,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -50,8 +50,6 @@ import java.util.concurrent.ExecutionException;
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
-
-    private static Typeface globalTypeface;
 
     /**
      *
@@ -108,7 +106,7 @@ public class Utils {
     public static Intent createShareProductIntent(Product product, Context context, User user){
         String fileName = "tmpImg.jpg";
         if(product.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageByFileName(context, user, product.getImageFileName());
+            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, user, product.getImageFileName());
             if(productImage==null){
                 //Si el archivo no existe entonces se descarga
                 GetFileFromServlet getFileFromServlet =
@@ -122,7 +120,7 @@ public class Utils {
                 }
             }
             if(productImage==null){
-                productImage = Utils.getThumbByFileName(context, user, product.getImageFileName());
+                productImage = Utils.getImageFromThumbDirByFileName(context, user, product.getImageFileName());
             }
             if(productImage!=null){
                 createFileInCacheDir(fileName, productImage, context);
@@ -268,7 +266,73 @@ public class Utils {
         }
     }
 
-    public static File getFileImageByFileName(Context context, User user, String fileName){
+    /**
+     *
+     * @param fileName
+     * @param image
+     * @param ctx
+     */
+    public static void createFileInBannerDir(String fileName, Bitmap image, User user, Context ctx){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
+        } else if (fileName!=null && image!=null && user!=null && ctx!=null
+                && ctx.getExternalFilesDir(null)!=null){
+            //path for the image file in the external storage
+            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/banner/")
+                    .append(fileName).toString());
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                createImageFiles(ctx, user);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     *
+     * @param fileName
+     * @param image
+     * @param ctx
+     */
+    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, User user, Context ctx){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
+        } else if (fileName!=null && image!=null && user!=null && ctx!=null
+                && ctx.getExternalFilesDir(null)!=null){
+            //path for the image file in the external storage
+            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/productBrandPromotional/")
+                    .append(fileName).toString());
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                createImageFiles(ctx, user);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static File getFileInOriginalDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
                 || user==null || fileName==null){
             return null;
@@ -277,6 +341,44 @@ public class Utils {
             File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
                     .append(File.separator).append(user.getUserGroup()).append(File.separator)
                     .append(user.getUserName()).append("/Data_In/original/")
+                    .append(fileName).toString());
+            if(imgFile.exists()){
+                return imgFile;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static File getFileInBannerDirByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
+            return null;
+        }
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/banner/")
+                    .append(fileName).toString());
+            if(imgFile.exists()){
+                return imgFile;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static File getFileInProductBrandPromotionalDirByFileName(Context context, User user, String fileName){
+        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+                || user==null || fileName==null){
+            return null;
+        }
+        try {
+            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
+                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
+                    .append(user.getUserName()).append("/Data_In/productBrandPromotional/")
                     .append(fileName).toString());
             if(imgFile.exists()){
                 return imgFile;
@@ -306,7 +408,7 @@ public class Utils {
         return null;
     }
 
-    public static Bitmap getImageByFileName(Context context, User user, String fileName){
+    public static Bitmap getImageFromOriginalDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
                 || user==null || fileName==null){
             return null;
@@ -325,7 +427,7 @@ public class Utils {
         return null;
     }
 
-    public static Bitmap getThumbByFileName(Context context, User user, String fileName){
+    public static Bitmap getImageFromThumbDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
                 || user==null || fileName==null){
             return null;
@@ -509,13 +611,37 @@ public class Utils {
                 se.printStackTrace();
             }
         }
+        File folderBanner = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/Data_In/banner/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folderBanner.exists()) {
+            try {
+                if (!folderBanner.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folderBanner.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+        }
+        File folderProductBrandPromotional = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/Data_In/productBrandPromotional/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folderProductBrandPromotional.exists()) {
+            try {
+                if (!folderProductBrandPromotional.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folderProductBrandPromotional.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+        }
     }
 
     public static boolean appRequireInitialLoad(Context context, User user) {
         Cursor c = null;
         try{
             String[] tables = new String[]{"ARTICULOS", "BRAND", "Category", "MAINPAGE_PRODUCT",
-                    "MAINPAGE_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
+                    "MAINPAGE_PRODUCT_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
             for (String table : tables){
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
@@ -554,17 +680,6 @@ public class Utils {
         return null;
     }
 
-    public static Typeface getGlobalTypeFace(Context context)  {
-        if (globalTypeface == null) {
-            try {
-                globalTypeface = Typeface.createFromAsset(context.getAssets(),"Roboto-Regular.ttf");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return globalTypeface;
-    }
-
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -573,5 +688,15 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static String getMacAddress (Context context) {
+        try {
+            return (((WifiManager) context.getSystemService(Context.WIFI_SERVICE))
+                    .getConnectionInfo()).getMacAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

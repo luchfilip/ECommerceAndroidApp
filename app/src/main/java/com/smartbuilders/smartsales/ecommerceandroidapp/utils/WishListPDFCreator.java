@@ -3,8 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -110,7 +108,7 @@ public class WishListPDFCreator {
                 for(OrderLine line : lines){
                     Bitmap bmp = null;
                     if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                        bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
+                        bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
                     }
                     if(bmp==null){
                         bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);

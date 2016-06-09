@@ -1,42 +1,26 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Banner;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
+import android.content.Context;
 
-import java.util.ArrayList;
+import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 
 /**
  * Created by stein on 1/6/2016.
  */
 public class BannerSectionDB {
 
-    public static BannerSection getBannerSection() {
+    private Context mContext;
+    private User mUser;
+
+    public BannerSectionDB(Context context, User user){
+        this.mContext = context;
+        this.mUser = user;
+    }
+
+    public BannerSection getBannerSection() {
         BannerSection bannerSection = new BannerSection();
-
-        ArrayList<Banner> banners = new ArrayList<>();
-        Banner banner = new Banner();
-        banner.setImageResId(R.drawable.banner);
-        banners.add(banner);
-
-        banner = new Banner();
-        banner.setImageResId(R.drawable.banner1);
-        banners.add(banner);
-
-        banner = new Banner();
-        banner.setImageResId(R.drawable.banner2);
-        banners.add(banner);
-
-        banner = new Banner();
-        banner.setImageResId(R.drawable.banner3);
-        banners.add(banner);
-
-        banner = new Banner();
-        banner.setImageResId(R.drawable.banner4);
-        banners.add(banner);
-
-        bannerSection.setBanners(banners);
-
+        bannerSection.setBanners((new BannerDB(mContext, mUser)).getActiveBanners());
         return bannerSection;
     }
 }

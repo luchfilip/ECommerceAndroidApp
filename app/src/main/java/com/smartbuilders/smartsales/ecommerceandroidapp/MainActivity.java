@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionsDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -117,11 +117,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    final MainPageDB mainPageDB = new MainPageDB(MainActivity.this, mCurrentUser);
+                    final MainPageSectionsDB mainPageSectionsDB = new MainPageSectionsDB(MainActivity.this, mCurrentUser);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            loadMainPage(mainPageDB.getMainPageList());
+                            loadMainPage(mainPageSectionsDB.getActiveMainPageSections());
                         }
                     });
                 } catch (Exception e) {

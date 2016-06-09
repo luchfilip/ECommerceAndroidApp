@@ -264,7 +264,7 @@ public class SalesOrderDetailPDFCreator {
         for(SalesOrderLine line : lines){
             Bitmap bmp = null;
             if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                bmp = Utils.getThumbByFileName(ctx, user, line.getProduct().getImageFileName());
+                bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
             }
             if(bmp==null){
                 bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);

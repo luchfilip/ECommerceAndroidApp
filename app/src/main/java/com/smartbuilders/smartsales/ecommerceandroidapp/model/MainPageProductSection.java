@@ -8,18 +8,18 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 25/4/2016.
  */
-public class MainPageSection extends Model implements Parcelable {
+public class MainPageProductSection extends Model implements Parcelable {
 
     private String name;
     private String description;
     private int priority;
     private ArrayList<Product> products;
 
-    public MainPageSection() {
+    public MainPageProductSection() {
 
     }
 
-    protected MainPageSection(Parcel in) {
+    protected MainPageProductSection(Parcel in) {
         super(in);
         name = in.readString();
         description = in.readString();
@@ -41,15 +41,15 @@ public class MainPageSection extends Model implements Parcelable {
         return 0;
     }
 
-    public static final Creator<MainPageSection> CREATOR = new Creator<MainPageSection>() {
+    public static final Creator<MainPageProductSection> CREATOR = new Creator<MainPageProductSection>() {
         @Override
-        public MainPageSection createFromParcel(Parcel in) {
-            return new MainPageSection(in);
+        public MainPageProductSection createFromParcel(Parcel in) {
+            return new MainPageProductSection(in);
         }
 
         @Override
-        public MainPageSection[] newArray(int size) {
-            return new MainPageSection[size];
+        public MainPageProductSection[] newArray(int size) {
+            return new MainPageProductSection[size];
         }
     };
 

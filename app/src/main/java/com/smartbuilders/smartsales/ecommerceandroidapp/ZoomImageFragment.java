@@ -46,7 +46,7 @@ public class ZoomImageFragment extends Fragment {
         }
 
         View view;
-        Bitmap img = Utils.getImageByFileName(getContext(), mCurrentUser, mImageFileName);
+        Bitmap img = Utils.getImageFromOriginalDirByFileName(getContext(), mCurrentUser, mImageFileName);
         if (img != null) {
             TouchImageView touchImageView = new TouchImageView(getContext());
             touchImageView.setImageBitmap(img);
@@ -54,7 +54,7 @@ public class ZoomImageFragment extends Fragment {
             view = touchImageView;
             view.setBackgroundColor(Color.WHITE);
         } else {
-            img = Utils.getThumbByFileName(getContext(), mCurrentUser, mImageFileName);
+            img = Utils.getImageFromThumbDirByFileName(getContext(), mCurrentUser, mImageFileName);
             if (img != null) {
                 TouchImageView touchImageView = new TouchImageView(getContext());
                 touchImageView.setImageBitmap(img);

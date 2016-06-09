@@ -110,9 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                             .append("PRODUCT_ID INTEGER NOT NULL, ")
 											.append("FILE_NAME VARCHAR(255) NOT NULL, ")
                                             .append("PRIORITY INTEGER NOT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
-											.append("UPDATE_TIME DATETIME DEFAULT NULL)").toString();
+											.append("ISACTIVE CHAR(1) DEFAULT 'Y')").toString();
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
 									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
@@ -147,19 +145,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
 											.append("PRIMARY KEY (SUBCATEGORY_ID))").toString();
 
-	public static final String CREATE_MAINPAGE_SECTION =
-								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_SECTION ")
-										.append("(MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
+	public static final String CREATE_MAINPAGE_PRODUCT_SECTION =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT_SECTION ")
+										.append("(MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, ")
 										.append("NAME VARCHAR(128) DEFAULT NULL, ")
 										.append("DESCRIPTION VARCHAR(255) DEFAULT NULL, ")
 										.append("PRIORITY INTEGER DEFAULT NULL, ")
 										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-										.append("PRIMARY KEY (MAINPAGE_SECTION_ID))").toString();
+										.append("PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID))").toString();
 
 	public static final String CREATE_MAINPAGE_PRODUCT =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT ")
 										.append("(MAINPAGE_PRODUCT_ID INTEGER NOT NULL, ")
-										.append("MAINPAGE_SECTION_ID INTEGER NOT NULL, ")
+										.append("MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, ")
 										.append("PRODUCT_ID INTEGER NOT NULL, ")
 										.append("PRIORITY INTEGER DEFAULT NULL, ")
 										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
@@ -269,6 +267,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
 										.append("PRIMARY KEY (APP_USER_NAME))").toString();
 
+	public static final String CREATE_BANNER =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS BANNER ")
+										.append("(BANNER_ID INTEGER NOT NULL, ")
+                                        .append("PRODUCT_ID INTEGER DEFAULT NULL, ")
+										.append("BRAND_ID INTEGER DEFAULT NULL, ")
+                                        .append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
+                                        .append("CATEGORY_ID INTEGER DEFAULT NULL, ")
+										.append("IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("PRIMARY KEY (BANNER_ID))").toString();
+
+	public static final String CREATE_BRAND_PROMOTIONAL_CARD =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS BRAND_PROMOTIONAL_CARD ")
+										.append("(BRAND_PROMOTIONAL_CARD_ID INTEGER NOT NULL, ")
+										.append("BRAND_ID INTEGER NOT NULL, ")
+                                        .append("IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, ")
+                                        .append("PROMOTIONAL_TEXT TEXT DEFAULT NULL, ")
+                                        .append("BACKGROUND_R_COLOR INTEGER DEFAULT NULL, ")
+                                        .append("BACKGROUND_G_COLOR INTEGER DEFAULT NULL, ")
+                                        .append("BACKGROUND_B_COLOR INTEGER DEFAULT NULL, ")
+                                        .append("PROMOTIONAL_TEXT_R_COLOR INTEGER DEFAULT NULL, ")
+                                        .append("PROMOTIONAL_TEXT_G_COLOR INTEGER DEFAULT NULL, ")
+                                        .append("PROMOTIONAL_TEXT_B_COLOR INTEGER DEFAULT NULL, ")
+										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("PRIMARY KEY (BRAND_PROMOTIONAL_CARD_ID))").toString();
+
 	/**
 	 * 
 	 * @param context
@@ -313,7 +337,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_BRAND);
 			db.execSQL(CREATE_CATEGORY);
 			db.execSQL(CREATE_SUBCATEGORY);
-			db.execSQL(CREATE_MAINPAGE_SECTION);
+			db.execSQL(CREATE_MAINPAGE_PRODUCT_SECTION);
 			db.execSQL(CREATE_MAINPAGE_PRODUCT);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
@@ -324,11 +348,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_RECENT_SEARCH);
 			db.execSQL(CREATE_BUSINESS_PARTNER);
 			db.execSQL(CREATE_COMPANY);
+            db.execSQL(CREATE_BANNER);
+            db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
 		}
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
 	}
 
 	@Override

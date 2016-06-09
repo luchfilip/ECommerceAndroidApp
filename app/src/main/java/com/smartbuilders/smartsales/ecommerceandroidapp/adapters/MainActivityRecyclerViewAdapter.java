@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +20,14 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Banner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageSection;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandsPromotionSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ViewIdGenerator;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -43,9 +48,9 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (mDataset.get(position) instanceof BannerSection) {
             return VIEW_TYPE_VIEWFLIPPER;
-        } else if (mDataset.get(position) instanceof MainPageSection) {
+        } else if (mDataset.get(position) instanceof MainPageProductSection) {
             return VIEW_TYPE_RECYCLERVIEW;
-        } else if (mDataset.get(position) instanceof ProductBrandsPromotionSection) {
+        } else if (mDataset.get(position) instanceof ProductBrandPromotionalSection) {
             return VIEW_TYPE_VIEWPAGER;
         }
         return -1;
@@ -102,7 +107,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                             && mDataset.get(position) instanceof BannerSection
                             &&  ((BannerSection) mDataset.get(position)).getBanners()!=null) {
                         for (Banner banner : ((BannerSection) mDataset.get(position)).getBanners()) {
-                            setFlipperImage(parent.getContext(), viewHolder.mViewFlipper, banner.getImageResId());
+                            setFlipperImage(parent.getContext(), viewHolder.mViewFlipper, banner.getImageFileName());
                         }
                         /** Start Flipping */
                         viewHolder.mViewFlipper.startFlipping();
@@ -110,12 +115,13 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                     break;
                 }
                 case VIEW_TYPE_RECYCLERVIEW: {
-                    MainPageSection mainPageSection = (MainPageSection) mDataset.get(position);
+                    MainPageProductSection mainPageProductSection = (MainPageProductSection) mDataset.get(position);
 
-                    if(mainPageSection!=null && mainPageSection.getProducts()!=null && !mainPageSection.getProducts().isEmpty()){
+                    if(mainPageProductSection !=null && mainPageProductSection.getProducts()!=null
+                            && !mainPageProductSection.getProducts().isEmpty()){
                         // - get element from your dataset at this position
                         // - replace the contents of the view with that element
-                        viewHolder.categoryName.setText(mainPageSection.getName());
+                        viewHolder.categoryName.setText(mainPageProductSection.getName());
 
                         // use this setting to improve performance if you know that changes
                         // in content do not change the layout size of the RecyclerView
@@ -141,18 +147,19 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
                         viewHolder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mFragmentActivity,
-                                mainPageSection.getProducts(), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                                mainPageProductSection.getProducts(), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                     }
                     break;
                 }
                 case VIEW_TYPE_VIEWPAGER:
-                    ProductBrandsPromotionSection productBrandsPromotionSection =
-                            (ProductBrandsPromotionSection) mDataset.get(position);
-                    if(productBrandsPromotionSection!=null && productBrandsPromotionSection.getProductBrands()!=null
-                            && !productBrandsPromotionSection.getProductBrands().isEmpty()) {
+                    ProductBrandPromotionalSection productBrandPromotionalSection =
+                            (ProductBrandPromotionalSection) mDataset.get(position);
+                    if(productBrandPromotionalSection !=null
+                            && productBrandPromotionalSection.getProductBrandPromotionalCards()!=null
+                            && !productBrandPromotionalSection.getProductBrandPromotionalCards().isEmpty()) {
                         viewHolder.mViewPager.setId(ViewIdGenerator.generateViewId());
                         viewHolder.mViewPager.setClipToPadding(false);
-                        int height = 0;
+                        int height;
                         if(metrics.widthPixels < metrics.heightPixels){
                             height = (int) (metrics.heightPixels / 3.5);
                         } else {
@@ -161,11 +168,10 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);
                         viewHolder.mViewPager.setPageMargin(12);
-                        ProductBrandsPromotionAdapter productBrandsPromotionAdapter =
-                                new ProductBrandsPromotionAdapter(mFragmentActivity.getSupportFragmentManager());
-                        productBrandsPromotionAdapter.setData(productBrandsPromotionSection.getProductBrands());
-                        productBrandsPromotionAdapter.setUser(mCurrentUser);
-                        viewHolder.mViewPager.setAdapter(productBrandsPromotionAdapter);
+                        ProductBrandPromotionalAdapter productBrandPromotionalAdapter =
+                                new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager());
+                        productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());
+                        viewHolder.mViewPager.setAdapter(productBrandPromotionalAdapter);
                     }
                     break;
             }
@@ -175,9 +181,30 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         return view;
     }
 
-    private void setFlipperImage(Context context, ViewFlipper viewFlipper, int res) {
-        ImageView image = new ImageView(context);
-        image.setImageResource(res);
+    private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final String imageFileName) {
+        final ImageView image = new ImageView(context);
+
+        File img = Utils.getFileInProductBrandPromotionalDirByFileName(context, mCurrentUser, imageFileName);
+        if(img!=null){
+            Picasso.with(context).load(img).into(image);
+        }else{
+            Picasso.with(context)
+                    .load(mCurrentUser.getServerAddress()
+                            + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
+                            + imageFileName)
+                    .into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Utils.createFileInProductBrandPromotionalDir(imageFileName,
+                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(),
+                                    mCurrentUser, context);
+                        }
+
+                        @Override
+                        public void onError() { }
+                    });
+        }
+
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         image.setAdjustViewBounds(true);
         viewFlipper.addView(image);
