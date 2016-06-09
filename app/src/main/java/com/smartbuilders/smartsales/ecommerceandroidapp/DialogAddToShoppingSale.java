@@ -186,6 +186,9 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) { }
             });
+            businessPartnersSpinner.setVisibility(View.VISIBLE);
+            buttonsContainer.setVisibility(View.VISIBLE);
+            registerBusinessPartnerButton.setVisibility(View.GONE);
         } else {
             businessPartnersSpinner.setVisibility(View.GONE);
             buttonsContainer.setVisibility(View.GONE);
