@@ -190,7 +190,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         }else{
             Picasso.with(context)
                     .load(mCurrentUser.getServerAddress()
-                            + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
+                            + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
                             + imageFileName)
                     .into(image, new Callback() {
                         @Override

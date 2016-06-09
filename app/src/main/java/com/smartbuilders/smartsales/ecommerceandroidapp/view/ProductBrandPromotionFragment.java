@@ -41,7 +41,6 @@ public class ProductBrandPromotionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         final User user = Utils.getCurrentUser(getContext());
 
         if (savedInstanceState!=null){
@@ -56,18 +55,18 @@ public class ProductBrandPromotionFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.promotional_text))
                 .setText(mProductBrandPromotionalCard.getPromotionalText());
 
-        File img = Utils.getFileInBannerDirByFileName(getContext(), user, mProductBrandPromotionalCard.getImageFileName());
+        File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), user, mProductBrandPromotionalCard.getImageFileName());
         if (img!=null) {
             Picasso.with(getContext())
                     .load(img).into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView));
         } else {
             Picasso.with(getContext())
-                    .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
+                    .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
                             + mProductBrandPromotionalCard.getImageFileName())
                     .into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView), new Callback() {
                         @Override
                         public void onSuccess() {
-                            Utils.createFileInBannerDir(mProductBrandPromotionalCard.getImageFileName(),
+                            Utils.createFileInProductBrandPromotionalDir(mProductBrandPromotionalCard.getImageFileName(),
                                     ((BitmapDrawable)((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView)).getDrawable()).getBitmap(),
                                     user, getContext());
                         }

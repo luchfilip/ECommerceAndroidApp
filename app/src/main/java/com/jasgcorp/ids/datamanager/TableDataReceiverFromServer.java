@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.ContentValues;
@@ -77,7 +78,7 @@ public class TableDataReceiverFromServer extends Thread {
 			//while (sync) {
 			//	pullTableDataFromServer(getRowEventIdsInClient());
 			//}
-			sync = Utils.appRequireInitialLoad(context, mUser);
+			//sync = Utils.appRequireInitialLoad(context, mUser);
 			if(sync){
 				loadInitialDataFromWS(context, mUser);
 			}
@@ -281,7 +282,9 @@ public class TableDataReceiverFromServer extends Thread {
 						try {
 							//data que se insertara
 							statement.bindString(columnIndex, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
-						} catch (Exception e) {
+						} catch (JSONException e) {
+                            Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
+                        } catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
