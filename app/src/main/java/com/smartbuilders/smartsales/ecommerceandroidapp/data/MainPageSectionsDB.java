@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
 
 import java.util.ArrayList;
@@ -25,8 +26,7 @@ public class MainPageSectionsDB {
         ArrayList<Object> mainPageList = new ArrayList<>();
 
         try {
-            BannerSectionDB bannerSectionDB = new BannerSectionDB(mContext, mUser);
-            BannerSection bannerSection = bannerSectionDB.getBannerSection();
+            BannerSection bannerSection = (new BannerSectionDB(mContext, mUser)).getBannerSection();
             if (bannerSection!=null && bannerSection.getBanners()!=null
                     && !bannerSection.getBanners().isEmpty()) {
                 mainPageList.add(bannerSection);
@@ -36,10 +36,8 @@ public class MainPageSectionsDB {
         }
 
         try {
-            ProductBrandPromotionSectionDB productBrandPromotionSectionDB =
-                    new ProductBrandPromotionSectionDB(mContext, mUser);
             ProductBrandPromotionalSection productBrandPromotionalSection =
-                    productBrandPromotionSectionDB.getProductBrandPromotionSection();
+                    (new ProductBrandPromotionSectionDB(mContext, mUser)).getProductBrandPromotionSection();
             if (productBrandPromotionalSection !=null
                     && productBrandPromotionalSection.getProductBrandPromotionalCards()!=null
                     && !productBrandPromotionalSection.getProductBrandPromotionalCards().isEmpty()) {
@@ -50,7 +48,16 @@ public class MainPageSectionsDB {
         }
 
         try {
-            mainPageList.addAll((new MainPageProductSectionDB(mContext, mUser)).getActiveMainPageProductSections());
+            ArrayList<MainPageProductSection> mainPageProductSections =
+                    (new MainPageProductSectionDB(mContext, mUser)).getActiveMainPageProductSections();
+            if (mainPageProductSections!=null && !mainPageProductSections.isEmpty()) {
+                for (MainPageProductSection mainPageProductSection : mainPageProductSections) {
+                    if(mainPageProductSection!=null && mainPageProductSection.getProducts()!=null
+                            && !mainPageProductSection.getProducts().isEmpty()) {
+                        mainPageList.add(mainPageProductSection);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

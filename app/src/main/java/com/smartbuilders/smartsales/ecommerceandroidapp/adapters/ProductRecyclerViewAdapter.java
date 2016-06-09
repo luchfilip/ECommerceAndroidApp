@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
@@ -107,7 +106,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if(mDataset==null || mDataset.get(position) == null){
-            System.out.println("onBindViewHolder(...),  mDataset==null || mDataset.get(position) == null");
             return;
         }
         // - get element from your dataset at this position
@@ -121,7 +119,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                            intent.putExtra(ProductDetailFragment.KEY_PRODUCT, mDataset.get(position));
+                            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getId());
                             mContext.startActivity(intent);
                         }
                     });
@@ -269,7 +267,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         FragmentManager fm = mFragmentActivity.getSupportFragmentManager();
         DialogAddToShoppingCart addToShoppingCartFragment =
                 DialogAddToShoppingCart.newInstance(product, mCurrentUser);
-        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
     }
 
     private String addToWishList(Product product) {

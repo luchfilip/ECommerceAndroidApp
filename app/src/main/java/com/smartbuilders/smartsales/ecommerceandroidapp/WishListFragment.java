@@ -71,7 +71,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
                     if (orderLine != null) {
                         Intent intent = new Intent(getContext(), ProductDetailActivity.class);
-                        intent.putExtra(ProductDetailFragment.KEY_PRODUCT, orderLine.getProduct());
+                        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, orderLine.getProduct().getId());
                         startActivity(intent);
                     }
                 }

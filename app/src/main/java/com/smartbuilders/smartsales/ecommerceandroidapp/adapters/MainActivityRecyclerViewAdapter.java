@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Banner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
@@ -107,7 +110,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                             && mDataset.get(position) instanceof BannerSection
                             &&  ((BannerSection) mDataset.get(position)).getBanners()!=null) {
                         for (Banner banner : ((BannerSection) mDataset.get(position)).getBanners()) {
-                            setFlipperImage(parent.getContext(), viewHolder.mViewFlipper, banner.getImageFileName());
+                            setFlipperImage(parent.getContext(), viewHolder.mViewFlipper, banner);
                         }
                         /** Start Flipping */
                         viewHolder.mViewFlipper.startFlipping();
@@ -181,21 +184,21 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
         return view;
     }
 
-    private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final String imageFileName) {
+    private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final Banner banner) {
         final ImageView image = new ImageView(context);
 
-        File img = Utils.getFileInBannerDirByFileName(context, mCurrentUser, imageFileName);
+        File img = Utils.getFileInBannerDirByFileName(context, mCurrentUser, banner.getImageFileName());
         if(img!=null){
             Picasso.with(context).load(img).into(image);
         }else{
             Picasso.with(context)
                     .load(mCurrentUser.getServerAddress()
                             + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
-                            + imageFileName)
+                            + banner.getImageFileName())
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Utils.createFileInBannerDir(imageFileName,
+                            Utils.createFileInBannerDir(banner.getImageFileName(),
                                     ((BitmapDrawable)(image).getDrawable()).getBitmap(),
                                     mCurrentUser, context);
                         }
@@ -204,6 +207,25 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                         public void onError() { }
                     });
         }
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(banner.getProductId()>0){
+                    context.startActivity(new Intent(context, ProductDetailActivity.class)
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, banner.getProductId()));
+                } else if (banner.getProductBrandId()>0) {
+                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                            .putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, banner.getProductBrandId()));
+                } else if (banner.getProductSubCategoryId()>0) {
+                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                            .putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, banner.getProductSubCategoryId()));
+                } else if (banner.getProductCategoryId()>0) {
+                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                            .putExtra(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID, banner.getProductCategoryId()));
+                }
+            }
+        });
 
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         image.setAdjustViewBounds(true);

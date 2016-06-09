@@ -22,6 +22,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class ProductDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String KEY_PRODUCT_ID = "key_product_id";
+
     private User mCurrentUser;
 
     @Override

@@ -123,13 +123,16 @@ public class OrderLineDB {
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDERLINE WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
-                    " AND ECOMMERCE_SALES_ORDER_ID = "+salesOrderId +
-                    " ORDER BY CREATE_TIME DESC";
+            String sql = "SELECT ECOMMERCE_SOL.SALES_ORDERLINE_ID, SOL.PRODUCT_ID, SOL.QTY_REQUESTED, " +
+                        " SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
+                        " INNER JOIN ARTICULOS A ON A.IDARTICULO = SOL.PRODUCT_ID AND A.ACTIVO = ?  " +
+                    " WHERE SOL.ISACTIVE = ? AND SOL.DOC_TYPE = ? " +
+                        " AND SOL.ECOMMERCE_SALES_ORDER_ID = ? " +
+                    " ORDER BY SOL.CREATE_TIME DESC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+                    .build(), null, sql, new String[]{"V", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, String.valueOf(salesOrderId)}, null);
             while(c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
                 orderLine.setId(c.getInt(0));
@@ -154,15 +157,8 @@ public class OrderLineDB {
             }
         }
         ProductDB productDB = new ProductDB(context, user);
-        ArrayList<OrderLine> orderLinesToDelete = new ArrayList<>();
         for(OrderLine orderLine : orderLines) {
             orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId(), false));
-            if(orderLine.getProduct()==null){
-                orderLinesToDelete.add(orderLine);
-            }
-        }
-        if(!orderLinesToDelete.isEmpty()){
-            orderLines.removeAll(orderLinesToDelete);
         }
         return orderLines;
     }
@@ -282,10 +278,6 @@ public class OrderLineDB {
 
     public int getActiveShoppingCartLinesNumber(){
         return getActiveOrderLinesNumber(SHOPPING_CART_DOCTYPE);
-    }
-
-    public int getActiveWishListLinesNumber(){
-        return getActiveOrderLinesNumber(WISHLIST_DOCTYPE);
     }
 
     private int getActiveOrderLinesNumber(String docType) {

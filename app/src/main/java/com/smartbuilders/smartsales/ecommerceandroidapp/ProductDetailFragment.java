@@ -38,9 +38,9 @@ import java.util.ArrayList;
 public class ProductDetailFragment extends Fragment {
 
     private ProgressDialog waitPlease;
+    private int mProductId;
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
-    public static final String KEY_PRODUCT = "key_product";
     private User mCurrentUser;
     private ArrayList<Product> relatedProductsByShopping;
     private ArrayList<Product> relatedProductsByBrandId;
@@ -52,24 +52,23 @@ public class ProductDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
-
-        mCurrentUser = Utils.getCurrentUser(getContext());
-
         if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(KEY_PRODUCT)){
-                mProduct = getActivity().getIntent().getExtras().getParcelable(KEY_PRODUCT);
+            if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_PRODUCT_ID)){
+                mProductId = getActivity().getIntent().getExtras().getInt(ProductDetailActivity.KEY_PRODUCT_ID);
             }
         }
+
+        final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
         waitPlease = ProgressDialog.show(getActivity(), getString(R.string.loading), getString(R.string.wait_please), true, false);
         new Thread() {
             @Override
             public void run() {
+                mCurrentUser = Utils.getCurrentUser(getContext());
+
                 ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
                 try {
-                    mProduct = productDB.getProductById(mProduct.getId(), true);
+                    mProduct = productDB.getProductById(mProductId, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -270,6 +269,7 @@ public class ProductDetailFragment extends Fragment {
             }
         }.start();
 
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -320,5 +320,11 @@ public class ProductDetailFragment extends Fragment {
         DialogAddToShoppingSale addToShoppingSaleFragment =
                 DialogAddToShoppingSale.newInstance(mProduct, mCurrentUser);
         addToShoppingSaleFragment.show(fm, DialogAddToShoppingSale.class.getSimpleName());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ProductDetailActivity.KEY_PRODUCT_ID, mProductId);
+        super.onSaveInstanceState(outState);
     }
 }
