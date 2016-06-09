@@ -184,7 +184,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
     private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final String imageFileName) {
         final ImageView image = new ImageView(context);
 
-        File img = Utils.getFileInProductBrandPromotionalDirByFileName(context, mCurrentUser, imageFileName);
+        File img = Utils.getFileInBannerDirByFileName(context, mCurrentUser, imageFileName);
         if(img!=null){
             Picasso.with(context).load(img).into(image);
         }else{
@@ -195,7 +195,7 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Utils.createFileInProductBrandPromotionalDir(imageFileName,
+                            Utils.createFileInBannerDir(imageFileName,
                                     ((BitmapDrawable)(image).getDrawable()).getBitmap(),
                                     mCurrentUser, context);
                         }
