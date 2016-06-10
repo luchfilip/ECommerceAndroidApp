@@ -29,7 +29,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class DialogUpdateSalesOrderLine extends DialogFragment {
 
-    private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
+    private static final String STATE_ORDERLINE = "STATE_ORDERLINE";
+    private static final String STATE_USER = "STATE_USER";
+    private static final String STATE_FOCUS = "STATE_FOCUS";
 
     private SalesOrderLine mSaleOrderLine;
     private User mUser;
@@ -37,8 +39,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
     public static DialogUpdateSalesOrderLine newInstance(SalesOrderLine orderLine, User user, int focus){
         DialogUpdateSalesOrderLine dialogUpdateSalesOrderLine = new DialogUpdateSalesOrderLine();
-        dialogUpdateSalesOrderLine.mUser = user;
         dialogUpdateSalesOrderLine.mSaleOrderLine = orderLine;
+        dialogUpdateSalesOrderLine.mUser = user;
         dialogUpdateSalesOrderLine.mFocus = focus;
         return dialogUpdateSalesOrderLine;
     }
@@ -60,8 +62,14 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         mUser = Utils.getCurrentUser(getContext());
 
         if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_CURRENT_ORDERLINE)){
-                mSaleOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
+            if(savedInstanceState.containsKey(STATE_ORDERLINE)){
+                mSaleOrderLine = savedInstanceState.getParcelable(STATE_ORDERLINE);
+            }
+            if(savedInstanceState.containsKey(STATE_USER)){
+                mUser = savedInstanceState.getParcelable(STATE_USER);
+            }
+            if(savedInstanceState.containsKey(STATE_FOCUS)){
+                mFocus = savedInstanceState.getInt(STATE_FOCUS);
             }
         }
 
@@ -163,7 +171,9 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_ORDERLINE, mSaleOrderLine);
+        outState.putParcelable(STATE_ORDERLINE, mSaleOrderLine);
+        outState.putParcelable(STATE_USER, mUser);
+        outState.putInt(STATE_FOCUS, mFocus);
         super.onSaveInstanceState(outState);
     }
 
