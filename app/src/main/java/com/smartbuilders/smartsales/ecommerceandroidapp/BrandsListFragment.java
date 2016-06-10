@@ -43,8 +43,6 @@ public class BrandsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-
-
         final View rootView = inflater.inflate(R.layout.fragment_brands_list, container, false);
         setHasOptionsMenu(true);
 

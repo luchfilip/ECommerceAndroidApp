@@ -134,14 +134,12 @@ public class CategoriesListFragment extends Fragment {
         try {
             outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            e.printStackTrace();
             outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
         }
         try {
             outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            e.printStackTrace();
             outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
         }
         super.onSaveInstanceState(outState);

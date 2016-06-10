@@ -32,77 +32,120 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 22/3/2016.
  */
-public class WishListFragment extends Fragment implements WishListAdapter.Callback {
+public class WishListFragment extends Fragment {
+
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+
+    // save index and top position
+    int mListViewIndex;
+    int mListViewTop;
+
+    private ListView mListView;
 
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
-    private ArrayList<OrderLine> wishListLines;
+
     private WishListAdapter mWishListAdapter;
+    private ArrayList<OrderLine> wishListLines;
+    private Intent shareIntent;
 
     public WishListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
-
         mCurrentUser = Utils.getCurrentUser(getContext());
 
-        wishListLines = (new OrderLineDB(getActivity(), mCurrentUser)).getWishList();
+        wishListLines = new ArrayList<>();
+        mWishListAdapter = new WishListAdapter(getContext(), this, wishListLines, mCurrentUser);
 
-        if (wishListLines==null || wishListLines.size()==0) {
-            view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.wish_list).setVisibility(View.GONE);
-        } else {
-            mWishListAdapter = new WishListAdapter(getContext(), this, wishListLines, mCurrentUser);
-
-            ListView listView = (ListView) view.findViewById(R.id.wish_list);
-            listView.setAdapter(mWishListAdapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                    // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                    // if it cannot seek to that position.
-                    OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
-                    if (orderLine != null) {
-                        Intent intent = new Intent(getContext(), ProductDetailActivity.class);
-                        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, orderLine.getProduct().getId());
-                        startActivity(intent);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if(savedInstanceState != null) {
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        }
                     }
+                    wishListLines.addAll((new OrderLineDB(getActivity(), mCurrentUser)).getWishList());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (wishListLines==null || wishListLines.size()==0) {
+                                    view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.wish_list).setVisibility(View.GONE);
+                                } else {
+                                    mListView = (ListView) view.findViewById(R.id.wish_list);
+                                    mListView.setAdapter(mWishListAdapter);
+
+                                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                        @Override
+                                        public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                            // if it cannot seek to that position.
+                                            OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
+                                            if (orderLine != null) {
+                                                Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+                                                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, orderLine.getProduct().getId());
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+
+                                    mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
         return view;
     }
 
-    @Override
-    public void addToShoppingCart(OrderLine orderLine) {
-        Product product = (new ProductDB(getContext(), mCurrentUser))
+    public void addToShoppingCart(OrderLine orderLine, User user) {
+        Product product = (new ProductDB(getContext(), user))
                 .getProductById(orderLine.getProduct().getId(), false);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingCart addToShoppingCartFragment =
-                DialogAddToShoppingCart.newInstance(product, mCurrentUser);
-        addToShoppingCartFragment.show(fm, "fragment_edit_name");
+                DialogAddToShoppingCart.newInstance(product, user);
+        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
     }
 
-    @Override
-    public void addToShoppingSale(OrderLine orderLine) {
-        Product product = (new ProductDB(getContext(), mCurrentUser))
+    public void addToShoppingSale(OrderLine orderLine, User user) {
+        Product product = (new ProductDB(getContext(), user))
                 .getProductById(orderLine.getProduct().getId(), false);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingSale addToShoppingSaleFragment =
-                DialogAddToShoppingSale.newInstance(product, mCurrentUser);
-        addToShoppingSaleFragment.show(fm, "fragment_sale_edit_name");
+                DialogAddToShoppingSale.newInstance(product, user);
+        addToShoppingSaleFragment.show(fm, DialogAddToShoppingSale.class.getSimpleName());
     }
 
-    public void reloadWishList(){
-        wishListLines = (new OrderLineDB(getActivity(), mCurrentUser)).getWishList();
+    public void reloadWishList(User user){
+        wishListLines = (new OrderLineDB(getActivity(), user)).getWishList();
         mWishListAdapter.setData(wishListLines);
+        //Se debe recargar el documento pdf que se tiene para compartir
+        new CreateShareIntentThread().start();
     }
 
     @Override
@@ -134,41 +177,37 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             if (wishListLines != null && wishListLines.size() > 0) {
-                mShareActionProvider.setShareIntent(createShareProductIntent());
+                mShareActionProvider.setShareIntent(shareIntent);
             }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareProductIntent(){
-        String fileName = "ListaDeDeseos";
-        String subject = "";
-        String message = "";
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        // need this to prompts email client only
-        shareIntent.setType("message/rfc822");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-        try{
-            new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext(), mCurrentUser);
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        //Add the attachment by specifying a reference to our custom ContentProvider
-        //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
-        return shareIntent;
-    }
-
     class CreateShareIntentThread extends Thread {
         public void run() {
-            final Intent shareIntent = createShareProductIntent();
+            String fileName = "ListaDeDeseos";
+            String subject = "";
+            String message = "";
+
+            shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            // need this to prompts email client only
+            shareIntent.setType("message/rfc822");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+            try{
+                new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext(), mCurrentUser);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            //Add the attachment by specifying a reference to our custom ContentProvider
+            //and the specific file of interest
+            shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                    + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -176,5 +215,21 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 }
             });
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        try {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        }
+        super.onSaveInstanceState(outState);
     }
 }

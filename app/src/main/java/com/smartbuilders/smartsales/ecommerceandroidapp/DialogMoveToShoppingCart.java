@@ -89,7 +89,7 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                         String result = orderLineDB.moveOrderLineToShoppingCart(mOrderLine, qtyRequested);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart, Toast.LENGTH_SHORT).show();
-                            ((WishListFragment) getTargetFragment()).reloadWishList();
+                            ((WishListFragment) getTargetFragment()).reloadWishList(mUser);
                         } else {
                             throw new Exception(result);
                         }

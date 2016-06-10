@@ -63,7 +63,9 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
 
             <Button
                 style="@style/MainButtonAppTheme"
@@ -71,7 +73,9 @@
                 android:layout_height="38dp"
                 android:text="@string/buy"
                 android:id="@+id/product_addtoshoppingcart_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp" />
 
             <Button
                 style="@style/GoldenButtonAppTheme"
@@ -79,7 +83,9 @@
                 android:layout_height="38dp"
                 android:text="@string/sell"
                 android:id="@+id/product_addtoshoppingsales_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp" />
         </LinearLayout>
 
     </LinearLayout>

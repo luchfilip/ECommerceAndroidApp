@@ -31,19 +31,12 @@ import java.util.ArrayList;
  */
 public class WishListAdapter extends BaseAdapter {
 
-    private Context mContext;
     private WishListFragment mWishListFragment;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
 
-    public interface Callback {
-        public void addToShoppingCart(OrderLine orderLine);
-        public void addToShoppingSale(OrderLine orderLine);
-    }
-
     public WishListAdapter(Context context, WishListFragment wishListFragment, ArrayList<OrderLine> data, User user) {
-        mContext = context;
         mWishListFragment = wishListFragment;
         mDataset = data;
         mCurrentUser = user;
@@ -69,18 +62,18 @@ public class WishListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.wish_list_item, parent, false);
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wish_list_item, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
+            File img = Utils.getFileThumbByFileName(parent.getContext(), mCurrentUser,
                     mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
-                Picasso.with(mContext)
+                Picasso.with(parent.getContext())
                         .load(img).error(R.drawable.no_image_available).into(viewHolder.productImage);
             }else{
-                Picasso.with(mContext)
+                Picasso.with(parent.getContext())
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
@@ -89,7 +82,7 @@ public class WishListAdapter extends BaseAdapter {
                             public void onSuccess() {
                                 Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
                                         ((BitmapDrawable) viewHolder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
+                                        mCurrentUser, parent.getContext());
                             }
 
                             @Override
@@ -104,22 +97,22 @@ public class WishListAdapter extends BaseAdapter {
         viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                Intent intent = new Intent(parent.getContext(), ProductDetailActivity.class);
                 intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getProduct().getId());
-                mContext.startActivity(intent);
+                parent.getContext().startActivity(intent);
             }
         });
 
         viewHolder.productName.setText(mDataset.get(position).getProduct().getName());
 
-        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+        viewHolder.productAvailability.setText(parent.getContext().getString(R.string.availability,
                 mDataset.get(position).getProduct().getAvailability()));
 
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question, mDataset.get(position).getProduct().getName()))
+                new AlertDialog.Builder(parent.getContext())
+                        .setMessage(parent.getContext().getString(R.string.delete_from_wish_list_question, mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = orderLineDB.deleteOrderLine(mDataset.get(position));
@@ -127,7 +120,7 @@ public class WishListAdapter extends BaseAdapter {
                                     mDataset.remove(position);
                                     notifyDataSetChanged();
                                 } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(parent.getContext(), result, Toast.LENGTH_LONG).show();
                                 }
                             }
                         })
@@ -140,7 +133,7 @@ public class WishListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {
-                    mWishListFragment.addToShoppingCart(mDataset.get(position));
+                    mWishListFragment.addToShoppingCart(mDataset.get(position), mCurrentUser);
                 }
             }
         });
@@ -149,14 +142,14 @@ public class WishListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {
-                    mWishListFragment.addToShoppingSale(mDataset.get(position));
+                    mWishListFragment.addToShoppingSale(mDataset.get(position), mCurrentUser);
                 }
             }
         });
 
         if (mDataset.get(position).getProduct().getProductBrand() != null
                 && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
-            viewHolder.productBrand.setText(mContext.getString(R.string.brand_detail,
+            viewHolder.productBrand.setText(parent.getContext().getString(R.string.brand_detail,
                     mDataset.get(position).getProduct().getProductBrand().getDescription()));
         } else {
             viewHolder.productBrand.setVisibility(View.INVISIBLE);
