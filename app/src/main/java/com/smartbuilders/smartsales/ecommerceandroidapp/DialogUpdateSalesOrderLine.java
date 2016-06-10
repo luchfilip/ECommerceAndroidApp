@@ -86,18 +86,36 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         try {
             ((EditText) view.findViewById(R.id.qty_requested_editText))
                     .setText(String.valueOf(mSaleOrderLine.getQuantityOrdered()));
+            view.findViewById(R.id.qty_requested_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFocus = ShoppingSaleAdapter.FOCUS_QTY_ORDERED;
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             ((EditText) view.findViewById(R.id.product_price_editText))
                     .setText(String.valueOf(mSaleOrderLine.getPrice()));
+            view.findViewById(R.id.product_price_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFocus = ShoppingSaleAdapter.FOCUS_PRICE;
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             ((EditText) view.findViewById(R.id.product_tax_editText))
                     .setText(String.valueOf(mSaleOrderLine.getTaxPercentage()));
+            view.findViewById(R.id.product_tax_editText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFocus = ShoppingSaleAdapter.FOCUS_TAX_PERCENTAGE;
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
