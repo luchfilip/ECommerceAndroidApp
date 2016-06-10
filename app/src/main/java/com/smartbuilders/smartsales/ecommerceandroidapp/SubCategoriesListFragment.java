@@ -23,6 +23,14 @@ import java.util.ArrayList;
 public class SubCategoriesListFragment extends Fragment {
 
     private static final String STATE_CATEGORY_ID = "STATE_CATEGORY_ID";
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+
+    // save index and top position
+    int mListViewIndex;
+    int mListViewTop;
+
+    private ListView mListView;
 
     private int mCategoryId;
 
@@ -43,6 +51,12 @@ public class SubCategoriesListFragment extends Fragment {
                     if (savedInstanceState!=null) {
                         if (savedInstanceState.containsKey(STATE_CATEGORY_ID)) {
                             mCategoryId = savedInstanceState.getInt(STATE_CATEGORY_ID);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
 
@@ -69,7 +83,7 @@ public class SubCategoriesListFragment extends Fragment {
                         public void run() {
                             try {
                                 SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(), productSubCategories);
-                                ListView mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
+                                mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
                                 mListView.setAdapter(mCategoryAdapter);
 
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,6 +100,8 @@ public class SubCategoriesListFragment extends Fragment {
                                         }
                                     }
                                 });
+
+                                mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -104,6 +120,17 @@ public class SubCategoriesListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CATEGORY_ID, mCategoryId);
+        try {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        }
         super.onSaveInstanceState(outState);
     }
 }

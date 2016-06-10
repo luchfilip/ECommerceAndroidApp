@@ -28,13 +28,16 @@ public class ProductBrandDB {
         try {
             String sql = "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                     " FROM BRAND B " +
-                    " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = 'V' " +
-                    " WHERE B.ISACTIVE = 'Y' " +
+                        " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
+                    " WHERE B.ISACTIVE = ? " +
                     " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
                     " ORDER BY B.NAME ASC ";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
+                    .build(), null, sql, new String[]{"V", "Y", "Y", "Y", "Y"}, null);
             while(c.moveToNext()){
                 ProductBrand productBrand = new ProductBrand();
                 productBrand.setId(c.getInt(0));

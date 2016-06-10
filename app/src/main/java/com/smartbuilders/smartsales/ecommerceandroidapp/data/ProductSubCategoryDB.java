@@ -22,55 +22,21 @@ public class ProductSubCategoryDB {
         this.user = user;
     }
 
-    public ArrayList<ProductSubCategory> getActiveProductSubCategories(){
-        ArrayList<ProductSubCategory> categories = new ArrayList<>();
-        Cursor c = null;
-        try {
-            String sql = "SELECT S.SUBCATEGORY_ID, S.CATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
-                    " FROM SUBCATEGORY S " +
-                    " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-                    " WHERE S.ISACTIVE = 'Y' " +
-                    " GROUP BY S.SUBCATEGORY_ID, S.CATEGORY_ID, S.NAME, S.DESCRIPTION " +
-                    " ORDER BY S.NAME ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
-            while(c.moveToNext()){
-                ProductSubCategory productSubCategory = new ProductSubCategory();
-                productSubCategory.setId(c.getInt(1));
-                productSubCategory.setProductCategoryId(c.getInt(0));
-                productSubCategory.setName(c.getString(2));
-                productSubCategory.setDescription(c.getString(3));
-                productSubCategory.setProductsActiveQty(c.getInt(4));
-                categories.add(productSubCategory);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (c!=null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return categories;
-    }
-
     public ArrayList<ProductSubCategory> getActiveProductSubCategoriesByCategoryId(int categoryId){
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
             String sql = "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
-                    " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-                    " WHERE S.ISACTIVE = 'Y' AND S.CATEGORY_ID ="+categoryId +
+                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
+                    " WHERE S.ISACTIVE = ? AND S.CATEGORY_ID = ? " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " ORDER BY S.NAME ASC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
+                    .build(), null, sql, new String[]{"V", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
             while(c.moveToNext()){
                 ProductSubCategory productSubCategory = new ProductSubCategory();
                 productSubCategory.setId(c.getInt(0));
@@ -92,40 +58,5 @@ public class ProductSubCategoryDB {
             }
         }
         return categories;
-    }
-
-    public ProductSubCategory getProductSubCategoryById(int subCategoryId){
-        Cursor c = null;
-        try {
-            String sql = "SELECT S.CATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.CATEGORY_ID) " +
-                    " FROM SUBCATEGORY S " +
-                    " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-                    " WHERE S.ISACTIVE = 'Y' AND S.SUB_CATEGORY_ID ="+subCategoryId +
-                    " GROUP BY S.CATEGORY_ID, S.NAME, S.DESCRIPTION " +
-                    " ORDER BY S.NAME ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
-            if(c.moveToNext()){
-                ProductSubCategory productSubCategory = new ProductSubCategory();
-                productSubCategory.setId(subCategoryId);
-                productSubCategory.setProductCategoryId(c.getInt(0));
-                productSubCategory.setName(c.getString(1));
-                productSubCategory.setDescription(c.getString(2));
-                productSubCategory.setProductsActiveQty(c.getInt(3));
-                return productSubCategory;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (c!=null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
     }
 }

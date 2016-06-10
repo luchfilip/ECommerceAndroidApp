@@ -22,13 +22,21 @@ import java.util.ArrayList;
 public class CategoriesListFragment extends Fragment {
 
     public static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
+    // save index and top position
+    int mListViewIndex;
+    int mListViewTop;
+
+    private ListView mListView;
     private int mCurrentSelectedIndex;
 
     public interface Callback {
         public void onItemSelected(ProductCategory productCategory);
         public void onItemLongSelected(ProductCategory productCategory);
-        public void onCategoriesListIsLoaded(int selectedIndex);
+        public void onCategoriesListIsLoaded();
+        public void setSelectedIndex(int selectedIndex);
     }
 
     public CategoriesListFragment() {
@@ -41,13 +49,7 @@ public class CategoriesListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (savedInstanceState!=null) {
-            if (savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)) {
-               mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX) ;
-            }
-        }
+                             final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);
 
         final ArrayList<ProductCategory> productCategories = new ArrayList<>();
@@ -56,6 +58,17 @@ public class CategoriesListFragment extends Fragment {
             @Override
             public void run() {
                 try {
+                    if(savedInstanceState != null) {
+                        if (savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)) {
+                            mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX) ;
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        }
+                    }
                     productCategories.addAll(new ProductCategoryDB(getContext(),
                             Utils.getCurrentUser(getContext())).getActiveProductCategories()) ;
                 } catch (Exception e) {
@@ -66,10 +79,10 @@ public class CategoriesListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                ListView listView = (ListView) rootView.findViewById(R.id.categories_list);
-                                listView.setAdapter(new CategoryAdapter(getActivity(), productCategories));
+                                mListView = (ListView) rootView.findViewById(R.id.categories_list);
+                                mListView.setAdapter(new CategoryAdapter(getActivity(), productCategories));
 
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                                     @Override
                                     public void onItemClick(AdapterView adapterView, View view, int position, long l) {
@@ -83,7 +96,7 @@ public class CategoriesListFragment extends Fragment {
                                     }
                                 });
 
-                                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                     @Override
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         ProductCategory productCategory = (ProductCategory) parent.getItemAtPosition(position);
@@ -93,13 +106,17 @@ public class CategoriesListFragment extends Fragment {
                                         return true;
                                     }
                                 });
+
+                                mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 rootView.findViewById(R.id.categories_list).setVisibility(View.VISIBLE);
-                                if (getActivity()!=null) {
-                                    ((Callback) getActivity()).onCategoriesListIsLoaded(mCurrentSelectedIndex);
+                                if (savedInstanceState==null && getActivity()!=null) {
+                                    ((Callback) getActivity()).onCategoriesListIsLoaded();
+                                } else {
+                                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                                 }
                             }
                         }
@@ -114,6 +131,19 @@ public class CategoriesListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
+        try {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+        } catch (Exception e) {
+            e.printStackTrace();
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        }
         super.onSaveInstanceState(outState);
     }
 }

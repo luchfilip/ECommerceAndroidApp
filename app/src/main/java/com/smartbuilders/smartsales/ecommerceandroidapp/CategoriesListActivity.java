@@ -53,11 +53,22 @@ public class CategoriesListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onCategoriesListIsLoaded(int selectedIndex) {
+    public void onCategoriesListIsLoaded() {
+        if (mTwoPane) {
+            ListView lv = (ListView) findViewById(R.id.categories_list);
+            if (lv!=null && lv.getAdapter()!=null && lv.getAdapter().getCount()>0) {
+                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
+    }
+
+    @Override
+    public void setSelectedIndex(int selectedIndex) {
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.categories_list);
             if (lv!=null && lv.getAdapter()!=null && lv.getAdapter().getCount()>selectedIndex) {
-                lv.performItemClick(lv.getAdapter().getView(selectedIndex, null, null), selectedIndex, 0);
+                lv.setSelection(selectedIndex);
+                lv.setItemChecked(selectedIndex, true);
             }
         }
     }
