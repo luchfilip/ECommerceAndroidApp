@@ -30,16 +30,14 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private User mCurrentUser;
-    private DialogAddToShoppingSale mDialogAddToShoppingSale;
 
     public DialogRegisterBusinessPartner() {
         // Empty constructor required for DialogFragment
     }
 
-    public static DialogRegisterBusinessPartner newInstance(User user, DialogAddToShoppingSale dialogAddToShoppingSale){
+    public static DialogRegisterBusinessPartner newInstance(User user){
         DialogRegisterBusinessPartner editQtyRequestedDialogFragment = new DialogRegisterBusinessPartner();
         editQtyRequestedDialogFragment.mCurrentUser = user;
-        editQtyRequestedDialogFragment.mDialogAddToShoppingSale = dialogAddToShoppingSale;
         return editQtyRequestedDialogFragment;
     }
 
@@ -97,7 +95,11 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
                     if (result==null) {
                         result = businessPartnerDB.registerBusinessPartner(businessPartner);
                         if (result==null){
-                            mDialogAddToShoppingSale.initViews();
+                            try {
+                                ((DialogAddToShoppingSale) getTargetFragment()).initViews();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             dismiss();
                         } else {
                             Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();

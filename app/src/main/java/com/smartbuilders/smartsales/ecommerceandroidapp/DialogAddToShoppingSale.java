@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -57,6 +59,15 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        // request a window without the title
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(savedInstanceState!=null){
@@ -83,8 +94,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 showDialogCreateBusinessPartner();
             }
         });
-
-        initViews();
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -142,14 +151,17 @@ public class DialogAddToShoppingSale extends DialogFragment {
             }
         }
 
-        getDialog().setTitle(mProduct.getName());
+        ((TextView) view.findViewById(R.id.product_name_textView)).setText(mProduct.getName());
+
+        initViews();
         return view;
     }
 
     private void showDialogCreateBusinessPartner() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
-                DialogRegisterBusinessPartner.newInstance(mUser, this);
+                DialogRegisterBusinessPartner.newInstance(mUser);
+        dialogRegisterBusinessPartner.setTargetFragment(this, 0);
         dialogRegisterBusinessPartner.show(fm, DialogRegisterBusinessPartner.class.getSimpleName());
     }
 

@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -37,6 +39,15 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
         dialogUpdateQuantityOrdered.mIsShoppingCart = isShoppingCart;
         dialogUpdateQuantityOrdered.mOrderLine = orderLine;
         return dialogUpdateQuantityOrdered;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        // request a window without the title
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override
@@ -98,7 +109,7 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
             }
         }
 
-        getDialog().setTitle(mOrderLine.getProduct().getName());
+        ((TextView) view.findViewById(R.id.product_name_textView)).setText(mOrderLine.getProduct().getName());
         return view;
     }
 
