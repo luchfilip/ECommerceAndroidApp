@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -89,16 +88,6 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (mTwoPane) {
-            if (mListView != null && mListView.getAdapter().getCount()>0) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-            }
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -120,6 +109,25 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onListIsLoaded() {
+        if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
+    }
+
+    @Override
+    public void setSelectedIndex(int selectedIndex) {
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            }
+        }
     }
 
     @Override
