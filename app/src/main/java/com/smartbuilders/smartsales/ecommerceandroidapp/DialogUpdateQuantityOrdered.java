@@ -27,6 +27,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class DialogUpdateQuantityOrdered extends DialogFragment {
 
     private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
+    private static final String STATE_IS_SHOPPING_CART = "STATE_IS_SHOPPING_CART";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private OrderLine mOrderLine;
@@ -56,6 +57,9 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_ORDERLINE)){
                 mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
+            }
+            if(savedInstanceState.containsKey(STATE_IS_SHOPPING_CART)){
+                mIsShoppingCart = savedInstanceState.getBoolean(STATE_IS_SHOPPING_CART);
             }
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
@@ -116,6 +120,7 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mUser);
+        outState.putBoolean(STATE_IS_SHOPPING_CART, mIsShoppingCart);
         outState.putParcelable(STATE_CURRENT_ORDERLINE, mOrderLine);
         super.onSaveInstanceState(outState);
     }
