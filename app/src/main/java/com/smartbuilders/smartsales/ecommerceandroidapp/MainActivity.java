@@ -161,13 +161,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        ListView listView = (ListView) findViewById(R.id.main_categories_list);
         try {
-            ListView listView = (ListView) findViewById(R.id.main_categories_list);
             outState.putInt(STATE_LISTVIEW_INDEX, listView.getFirstVisiblePosition());
-            outState.putInt(STATE_LISTVIEW_TOP,
-                    (listView.getChildAt(0) == null) ? 0 : (listView.getChildAt(0).getTop() - listView.getPaddingTop()));
         } catch (Exception e) {
-            e.printStackTrace();
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (listView.getChildAt(0) == null) ? 0 :
+                    (listView.getChildAt(0).getTop() - listView.getPaddingTop()));
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
         }
         super.onSaveInstanceState(outState);
     }

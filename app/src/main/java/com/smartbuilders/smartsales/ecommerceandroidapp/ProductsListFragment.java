@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -32,14 +31,11 @@ public class ProductsListFragment extends Fragment {
 
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
-    private ProgressDialog waitPlease;
-    private User mCurrentUser;
     private int productCategoryId;
     private int productSubCategoryId;
     private int productBrandId;
     private int productId;
     private String productName;
-    private ArrayList<Product> products;
     private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
     private LinearLayoutManager linearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -52,9 +48,9 @@ public class ProductsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view  = inflater.inflate(R.layout.fragment_products_list, container, false);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        final User mCurrentUser = Utils.getCurrentUser(getContext());
 
-        if( savedInstanceState != null) {
+        if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
                 mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
@@ -78,111 +74,107 @@ public class ProductsListFragment extends Fragment {
             }
         }
 
-        waitPlease = ProgressDialog.show(getContext(), getString(R.string.loading), getString(R.string.wait_please), true, false);
+        final ArrayList<Product> products = new ArrayList<>();
+
         new Thread() {
             @Override
             public void run() {
                 try {
                     if (productCategoryId != 0) {
-                        products = new ProductDB(getContext(), mCurrentUser).getProductsByCategoryId(productCategoryId);
+                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByCategoryId(productCategoryId));
                     } else if (productSubCategoryId != 0) {
-                        products = new ProductDB(getContext(), mCurrentUser).getProductsBySubCategoryId(productSubCategoryId);
+                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsBySubCategoryId(productSubCategoryId));
                     } else if (productBrandId != 0) {
-                        products = (new ProductDB(getContext(), mCurrentUser)).getProductsByBrandId(productBrandId);
+                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByBrandId(productBrandId));
                     } else if (productName != null) {
-                        products = (new ProductDB(getContext(), mCurrentUser)).getProductsByName(productName);
+                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByName(productName));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            if(products!=null && !products.isEmpty()) {
-                                if (productCategoryId != 0) {
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if(!products.isEmpty()) {
+                                    if (productCategoryId != 0) {
+                                        TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
+                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
+                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                    } else if (productSubCategoryId != 0) {
+                                        TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
+                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
+                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
+                                        wordTwo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_subcategory)),
+                                                0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.append(wordTwo);
+                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                    } else if (productBrandId != 0) {
+                                        TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
+                                        Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
+                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    } else if (productName != null) {
+                                        TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
+                                        Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
+                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    }
+                                } else {
                                     TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
-                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                    Spannable word = new SpannableString(getString(R.string.no_products_to_show));
+                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)), 0,
                                             word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
-                                } else if (productSubCategoryId != 0) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
-                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
-                                    wordTwo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_subcategory)),
-                                            0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.append(wordTwo);
-                                    categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
-                                } else if (productBrandId != 0) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
-                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
-                                } else if (productName != null) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
-                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    categorySubcategoryResultsTextView.append(word);
                                 }
-                            } else if(products==null){
-                                products = new ArrayList<>();
-                            }
 
-                            if(products.isEmpty()){
-                                TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
-                                Spannable word = new SpannableString("No se encontraron productos para mostrar. ");
-                                word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)), 0,
-                                        word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                categorySubcategoryResultsTextView.append(word);
-                            }
+                                mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(getActivity(), products, true,
+                                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
-                            mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(getActivity(), products, true,
-                                    ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                recyclerView.setHasFixedSize(true);
+                                if (useGridView()) {
+                                    linearLayoutManager = new GridLayoutManager(getContext(), getSpanCount());
+                                }else{
+                                    linearLayoutManager = new LinearLayoutManager(getContext());
+                                }
+                                recyclerView.setLayoutManager(linearLayoutManager);
+                                recyclerView.setAdapter(mProductRecyclerViewAdapter);
 
-                            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
-                            // use this setting to improve performance if you know that changes
-                            // in content do not change the layout size of the RecyclerView
-                            recyclerView.setHasFixedSize(true);
-                            if (useGridView()) {
-                                linearLayoutManager = new GridLayoutManager(getContext(), getSpanCount());
-                            }else{
-                                linearLayoutManager = new LinearLayoutManager(getContext());
-                            }
-                            recyclerView.setLayoutManager(linearLayoutManager);
-                            recyclerView.setAdapter(mProductRecyclerViewAdapter);
-
-                            if (mRecyclerViewCurrentFirstPosition!=0) {
-                                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-                            } else if(!products.isEmpty() && productId != 0) {
-                                for (int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++) {
-                                    if (mProductRecyclerViewAdapter.getItemId(pos) == productId) {
-                                        recyclerView.scrollToPosition(pos);
-                                        break;
+                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                } else if(!products.isEmpty() && productId != 0) {
+                                    for (int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++) {
+                                        if (mProductRecyclerViewAdapter.getItemId(pos) == productId) {
+                                            recyclerView.scrollToPosition(pos);
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            try {
-                                waitPlease.dismiss();
-                                waitPlease.cancel();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.category_subcategory_results).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.product_list_result).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         }.start();
 
@@ -242,12 +234,16 @@ public class ProductsListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (linearLayoutManager instanceof GridLayoutManager) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
-                    linearLayoutManager.findFirstVisibleItemPosition());
+        if(linearLayoutManager!=null) {
+            if (linearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        linearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
         } else {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
-                    linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }
