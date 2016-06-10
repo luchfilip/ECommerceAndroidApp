@@ -9,65 +9,101 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import java.util.ArrayList;
+
 /**
  * Created by Alberto on 26/3/2016.
  */
 public class SubCategoriesListFragment extends Fragment {
 
-    public static final String KEY_CATEGORY_ID = "key_category_id";
+    private static final String STATE_CATEGORY_ID = "STATE_CATEGORY_ID";
 
-    private User mCurrentUser;
+    private int mCategoryId;
 
     public SubCategoriesListFragment() {
-
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_sub_categories_list, container, false);
+                             final Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_sub_categories_list, container, false);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        final ArrayList<ProductSubCategory> productSubCategories = new ArrayList<>();
 
-        int mCategoryId = 0;
-
-        if(getArguments()!=null){
-            if(getArguments().containsKey(KEY_CATEGORY_ID)){
-                mCategoryId = getArguments().getInt(KEY_CATEGORY_ID);
-            }
-        }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(KEY_CATEGORY_ID)) {
-                mCategoryId = getActivity().getIntent().getExtras().getInt(KEY_CATEGORY_ID);
-            }
-        }
-
-        SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(),
-                (new ProductSubCategoryDB(getContext(), mCurrentUser)).getActiveProductSubCategoriesByCategoryId(mCategoryId));
-
-        ListView mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
-        mListView.setAdapter(mCategoryAdapter);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        new Thread() {
             @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                ProductSubCategory productSubCategory = (ProductSubCategory) adapterView.getItemAtPosition(position);
-                if (productSubCategory != null) {
-                    Intent intent = new Intent(getContext(), ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, productSubCategory.getId());
-                    startActivity(intent);
+            public void run() {
+                try {
+                    if (savedInstanceState!=null) {
+                        if (savedInstanceState.containsKey(STATE_CATEGORY_ID)) {
+                            mCategoryId = savedInstanceState.getInt(STATE_CATEGORY_ID);
+                        }
+                    }
+
+                    if(getArguments()!=null){
+                        if(getArguments().containsKey(SubCategoriesListActivity.KEY_CATEGORY_ID)){
+                            mCategoryId = getArguments().getInt(SubCategoriesListActivity.KEY_CATEGORY_ID);
+                        }
+                    }else if(getActivity()!=null && getActivity().getIntent()!=null
+                            && getActivity().getIntent().getExtras()!=null) {
+                        if(getActivity().getIntent().getExtras().containsKey(SubCategoriesListActivity.KEY_CATEGORY_ID)) {
+                            mCategoryId = getActivity().getIntent().getExtras().getInt(SubCategoriesListActivity.KEY_CATEGORY_ID);
+                        }
+                    }
+
+                    productSubCategories.addAll((new ProductSubCategoryDB(getContext(),
+                            Utils.getCurrentUser(getContext()))).getActiveProductSubCategoriesByCategoryId(mCategoryId));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(), productSubCategories);
+                                ListView mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
+                                mListView.setAdapter(mCategoryAdapter);
+
+                                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                    @Override
+                                    public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                        // if it cannot seek to that position.
+                                        ProductSubCategory productSubCategory = (ProductSubCategory) adapterView.getItemAtPosition(position);
+                                        if (productSubCategory != null) {
+                                            Intent intent = new Intent(getContext(), ProductsListActivity.class);
+                                            intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, productSubCategory.getId());
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                rootView.findViewById(R.id.sub_categories_list).setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
                 }
             }
-        });
+        }.start();
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_CATEGORY_ID, mCategoryId);
+        super.onSaveInstanceState(outState);
     }
 }

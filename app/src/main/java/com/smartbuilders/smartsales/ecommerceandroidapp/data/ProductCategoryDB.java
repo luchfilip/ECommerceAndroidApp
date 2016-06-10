@@ -30,13 +30,13 @@ public class ProductCategoryDB {
         try {
             String sql = "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
-                    " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = 'Y' " +
-                    " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = 'V' " +
-                    " WHERE C.ISACTIVE = 'Y' " +
+                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = ? " +
+                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
+                    " WHERE C.ISACTIVE = ? " +
                     " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
+                    .build(), null, sql, new String[]{"Y", "V", "Y"}, null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
