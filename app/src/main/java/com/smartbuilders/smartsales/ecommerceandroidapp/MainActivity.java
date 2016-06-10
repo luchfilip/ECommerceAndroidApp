@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import com.jasgcorp.ids.model.User;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,12 +32,9 @@ public class MainActivity extends AppCompatActivity
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
-    private User mCurrentUser;
-    private ProgressDialog waitPlease;
     // save index and top position
     int mListViewIndex;
     int mListViewTop;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +50,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        mCurrentUser = Utils.getCurrentUser(this);
+        final User currentUser = Utils.getCurrentUser(this);
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -86,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
@@ -111,17 +107,15 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
-        waitPlease = ProgressDialog.show(this, getString(R.string.loading),
-                getString(R.string.wait_please), true, false);
         new Thread() {
             @Override
             public void run() {
                 try {
-                    final MainPageSectionsDB mainPageSectionsDB = new MainPageSectionsDB(MainActivity.this, mCurrentUser);
+                    final MainPageSectionsDB mainPageSectionsDB = new MainPageSectionsDB(MainActivity.this, currentUser);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            loadMainPage(mainPageSectionsDB.getActiveMainPageSections());
+                            loadMainPage(mainPageSectionsDB.getActiveMainPageSections(), currentUser);
                         }
                     });
                 } catch (Exception e) {
@@ -130,12 +124,8 @@ public class MainActivity extends AppCompatActivity
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                waitPlease.dismiss();
-                                waitPlease.cancel();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                            findViewById(R.id.main_categories_list).setVisibility(View.VISIBLE);
                         }
                     });
                 }
@@ -162,9 +152,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void loadMainPage(ArrayList<Object> mainPageSections){
+    private void loadMainPage(ArrayList<Object> mainPageSections, User user){
         ListView listView = (ListView) findViewById(R.id.main_categories_list);
-        listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, mCurrentUser));
+        listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, user));
         listView.setVisibility(View.VISIBLE);
         listView.setSelectionFromTop(mListViewIndex, mListViewTop);
     }
@@ -180,14 +170,5 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(waitPlease!=null && waitPlease.isShowing()){
-            waitPlease.dismiss();
-            waitPlease.cancel();
-        }
-        super.onDestroy();
     }
 }
