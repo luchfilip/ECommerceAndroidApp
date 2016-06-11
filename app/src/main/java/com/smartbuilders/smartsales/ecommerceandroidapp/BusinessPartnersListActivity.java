@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -44,6 +45,11 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_partners_list);
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
+        }
 
         mCurrentUser = Utils.getCurrentUser(this);
 

@@ -1,8 +1,8 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +31,11 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_sales_list);
 
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
+        }
+
         mCurrentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,14 +59,14 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onResume() {
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.shopping_sales_orders_list);
-            if (lv != null && lv.getAdapter().getCount()>0) {
+            if (lv != null && lv.getAdapter()!=null && lv.getAdapter().getCount()>0) {
                 lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
             }
         }
+        super.onResume();
     }
 
     @Override

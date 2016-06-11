@@ -62,7 +62,8 @@ public class BusinessPartnersListFragment extends Fragment {
                         }
                     }
                     businessPartnerDB = new BusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
-                    businessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(), businessPartnerDB.getActiveBusinessPartners());
+                    businessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
+                            businessPartnerDB.getActiveBusinessPartners());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -121,7 +122,9 @@ public class BusinessPartnersListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        businessPartnersListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
+        if (businessPartnersListAdapter!=null && businessPartnerDB!=null) {
+            businessPartnersListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
+        }
         super.onResume();
     }
 

@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,11 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_business_partner);
+
+        if(findViewById(R.id.title_textView) != null){
+            ((TextView) findViewById(R.id.title_textView))
+                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
+        }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_BUSINESS_PARTNER)) {

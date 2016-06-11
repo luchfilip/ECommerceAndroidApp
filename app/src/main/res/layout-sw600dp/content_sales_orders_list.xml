@@ -28,13 +28,19 @@
     This layout is a two-pane layout for the Items master/detail flow.
     -->
 
-    <fragment
-        android:id="@+id/fragment_sales_order_list"
-        android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListFragment"
+    <com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        tools:layout="@android:layout/list_content" />
+        android:layout_weight="3" />
+
+    <!--<fragment-->
+        <!--android:id="@+id/fragment_sales_order_list"-->
+        <!--android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListFragment"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="3"-->
+        <!--tools:layout="@android:layout/list_content" />-->
 
     <FrameLayout
         android:id="@+id/sales_order_detail_container"
