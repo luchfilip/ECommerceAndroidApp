@@ -25,8 +25,8 @@ public class BusinessPartnersListFragment extends Fragment {
 
     private ListView mListView;
     // save index and top position
-    int mListViewIndex;
-    int mListViewTop;
+    private int mListViewIndex;
+    private int mListViewTop;
     private int mCurrentSelectedIndex;
     private BusinessPartnerDB businessPartnerDB;
     private BusinessPartnersListAdapter businessPartnersListAdapter;
@@ -51,6 +51,9 @@ public class BusinessPartnersListFragment extends Fragment {
             public void run() {
                 try {
                     if(savedInstanceState != null) {
+                        if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)){
+                            mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX);
+                        }
                         if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
                             mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
                         }

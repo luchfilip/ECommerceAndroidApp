@@ -35,6 +35,10 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
+    public interface Callback {
+        public void reloadBusinessPartnersList();
+    }
+
     public static DialogRegisterBusinessPartner newInstance(User user){
         DialogRegisterBusinessPartner editQtyRequestedDialogFragment = new DialogRegisterBusinessPartner();
         editQtyRequestedDialogFragment.mCurrentUser = user;
@@ -96,7 +100,16 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
                         result = businessPartnerDB.registerBusinessPartner(businessPartner);
                         if (result==null){
                             try {
-                                ((DialogAddToShoppingSale) getTargetFragment()).initViews();
+                                if (getActivity()!=null && getActivity() instanceof BusinessPartnersListActivity) {
+                                    ((Callback) getActivity()).reloadBusinessPartnersList();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if (getTargetFragment()!=null) {
+                                    ((DialogAddToShoppingSale) getTargetFragment()).initViews();
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

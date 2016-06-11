@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,7 +30,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class BusinessPartnersListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        BusinessPartnersListFragment.Callback, RegisterBusinessPartnerFragment.Callback {
+        BusinessPartnersListFragment.Callback, RegisterBusinessPartnerFragment.Callback,
+        DialogRegisterBusinessPartner.Callback {
 
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
 
@@ -73,11 +75,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     if (mTwoPane) {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.business_partner_detail_container,
-                                        new RegisterBusinessPartnerFragment(),
-                                        REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
-                                .commit();
+                        //getSupportFragmentManager().beginTransaction()
+                        //        .replace(R.id.business_partner_detail_container,
+                        //                new RegisterBusinessPartnerFragment(),
+                        //                REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
+                        //        .commit();
+                        showDialogCreateBusinessPartner();
                     } else {
                         startActivity(new Intent(BusinessPartnersListActivity.this,
                                 RegisterBusinessPartnerActivity.class));
@@ -85,6 +88,25 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    @Override
+    public void reloadBusinessPartnersList() {
+        if (mListView != null) {
+            if (mListView.getAdapter()!=null) {
+                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+            } else {
+                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
+            }
+            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+        }
+    }
+
+    private void showDialogCreateBusinessPartner() {
+        FragmentManager fm = getSupportFragmentManager();
+        DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
+                DialogRegisterBusinessPartner.newInstance(mCurrentUser);
+        dialogRegisterBusinessPartner.show(fm, DialogRegisterBusinessPartner.class.getSimpleName());
     }
 
     @Override
@@ -166,7 +188,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                         mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
                                     } else {
                                         getSupportFragmentManager().beginTransaction()
-                                                .replace(R.id.business_partner_detail_container, null, null)
+                                                .replace(R.id.business_partner_detail_container,
+                                                        new RegisterBusinessPartnerFragment(), REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
                                                 .commit();
                                     }
                                 }
@@ -181,26 +204,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBusinessPartnerRegistered(BusinessPartner businessPartner) {
-        if (mListView != null) {
-            if (mListView.getAdapter()!=null) {
-                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
-            } else {
-                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
-            }
-            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-        }
+    public void onBusinessPartnerRegistered() {
+        reloadBusinessPartnersList();
     }
 
     @Override
-    public void onBusinessPartnerUpdated(BusinessPartner businessPartner) {
-        if (mListView != null) {
-            if (mListView.getAdapter()!=null) {
-                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
-            } else {
-                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
-            }
-            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-        }
+    public void onBusinessPartnerUpdated() {
+        reloadBusinessPartnersList();
     }
 }

@@ -123,7 +123,7 @@ public class OrderLineDB {
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_SOL.SALES_ORDERLINE_ID, SOL.PRODUCT_ID, SOL.QTY_REQUESTED, " +
+            String sql = "SELECT SOL.ECOMMERCE_SALES_ORDERLINE_ID, SOL.PRODUCT_ID, SOL.QTY_REQUESTED, " +
                         " SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
                         " INNER JOIN ARTICULOS A ON A.IDARTICULO = SOL.PRODUCT_ID AND A.ACTIVO = ?  " +

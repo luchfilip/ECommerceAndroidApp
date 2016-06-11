@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -48,12 +47,12 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBusinessPartnerRegistered(BusinessPartner businessPartner) {
+    public void onBusinessPartnerRegistered() {
         finish();
     }
 
     @Override
-    public void onBusinessPartnerUpdated(BusinessPartner businessPartner) {
+    public void onBusinessPartnerUpdated() {
 
     }
 }
