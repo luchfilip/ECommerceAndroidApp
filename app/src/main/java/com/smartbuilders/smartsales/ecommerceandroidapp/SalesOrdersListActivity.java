@@ -85,7 +85,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //((SalesOrdersListFragment) adapter.getItem(tab.getPosition())).
             }
 
             @Override

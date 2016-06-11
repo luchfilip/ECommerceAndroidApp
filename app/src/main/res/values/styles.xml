@@ -56,7 +56,7 @@
     <style name="toolbar_products_list_style"></style>
 
     <style name="business_partners_style">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/grey_medium</item>
     </style>
 
     <style name="business_partners_list_style">
@@ -64,18 +64,18 @@
     </style>
 
     <style name="categories_style">
-        <item name="android:background">@android:color/white</item>
-    </style>
-
-    <style name="sub_categories_style">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/grey_medium</item>
     </style>
 
     <style name="categories_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
 
-    <style name="orders_list_style">
+    <style name="sub_categories_style">
+        <item name="android:background">@color/grey_medium</item>
+    </style>
+
+    <style name="sub_categories_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
 
@@ -83,7 +83,7 @@
         <item name="android:background">@color/grey_medium</item>
     </style>
 
-    <style name="shopping_sales_orders_list_style">
+    <style name="orders_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
 
@@ -91,7 +91,7 @@
         <item name="android:background">@color/grey_medium</item>
     </style>
 
-    <style name="sales_orders_list_style">
+    <style name="shopping_sales_orders_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
 
@@ -99,7 +99,7 @@
         <item name="android:background">@color/grey_medium</item>
     </style>
 
-    <style name="sub_categories_list_style">
+    <style name="sales_orders_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
 

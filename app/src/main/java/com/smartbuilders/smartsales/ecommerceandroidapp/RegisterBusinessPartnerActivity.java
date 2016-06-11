@@ -1,9 +1,11 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -44,12 +46,23 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_register_business_partner, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                startActivity(new Intent(this, SearchResultsActivity.class));
+                return true;
             case android.R.id.home:
                 finish();
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return (super.onOptionsItemSelected(menuItem));
     }
 
     @Override
