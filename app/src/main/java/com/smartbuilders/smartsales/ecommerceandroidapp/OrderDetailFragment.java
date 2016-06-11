@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -64,12 +65,16 @@ public class OrderDetailFragment extends Fragment {
             mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
                     .getActiveFinalizedOrderLinesByOrderId(mOrder.getId());
 
-            RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+            //RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
+            //// use this setting to improve performance if you know that changes
+            //// in content do not change the layout size of the RecyclerView
+            //mRecyclerView.setHasFixedSize(true);
+            //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            //mRecyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+
+            ListView listView = (ListView) rootView.findViewById(R.id.order_lines);
+
+            listView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
 
             ((TextView) rootView.findViewById(R.id.order_lines_number_tv))
                     .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
