@@ -20,13 +20,13 @@
     <string name="product_details_label">Detalles del Producto</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
-    <string name="shopping_cart">Carrito de Compra</string>
-    <string name="shopping_sale">Carrito de Venta</string>
+    <string name="shopping_cart">Pedido Abierto</string>
+    <string name="open_shopping_sale">Cotizaciones Abiertas</string>
     <string name="wish_list">Lista de favoritos</string>
     <string name="my_company">Mi Compañía</string>
-    <string name="orders_list">Pedidos</string>
+    <string name="orders_list">Pedidos Cerrados</string>
     <string name="business_partners">Clientes</string>
-    <string name="sales_orders_list">Cotizaciones</string>
+    <string name="closed_sales_orders">Cotizaciones Cerradas</string>
     <string name="invoces_list">Facturas</string>
     <string name="statement_of_account">Estado de Cuenta</string>
     <string name="invite">Invitar amigos</string>
@@ -37,10 +37,10 @@
     <string name="value_us">Valoranos</string>
     <string name="google_play">Google Play</string>
     <string name="tools">Herramientas</string>
-    <string name="add_to_shopping_cart">Agregar al Carrito de Compra</string>
-    <string name="add_to_shopping_sales">Agregar al Carrito de Venta</string>
+    <string name="add_to_shopping_cart">Agregar al pedido</string>
+    <string name="add_to_shopping_sales">Agregar a la cotización</string>
     <string name="add_to_wishlist">Agregar a la lista de favoritos</string>
-    <string name="move_to_shopping_cart">Mover al Carrito de Compras</string>
+    <string name="move_to_shopping_cart">Mover al pedido</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar Pedido</string>
     <string name="proceed_to_checkout_shopping_sale">Finalizar Cotización</string>
@@ -104,7 +104,7 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="title_activity_product_list">Productos</string>
-    <string name="title_activity_shopping_cart">Carrito de Compra</string>
+    <string name="title_activity_shopping_cart">Pedido</string>
     <string name="title_activity_categories">Busqueda Por Categoría</string>
     <string name="title_activity_sub_categories">Busqueda Por SubCategoría</string>
     <string name="title_activity_checkout">Finalizar Pedido</string>
@@ -130,20 +130,20 @@
     <string name="tax_id">RIF: %1$s.</string>
     <string name="order_lines_number">Cantidad de líneas: %1$s.</string>
     <string name="products_availables">Artículos disponibles: %1$s.</string>
-    <string name="product_moved_to_shopping_cart">Agregado al carrito de compra.</string>
-    <string name="product_moved_to_shopping_sale">Agregado al carrito de venta.</string>
+    <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
+    <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
-    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del carrito de compra?</string>
-    <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s del carrito de venta?</string>
+    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
+    <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s de la cotización?</string>
     <string name="accept">Aceptar</string>
-    <string name="title_activity_shopping_sale">Carrito de Venta</string>
+    <string name="title_activity_shopping_sale">Cotización</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cant. pedida: %1$s</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
     <string name="brand_detail">Marca: %1$s.</string>
     <string name="my_purchases">Mis Compras</string>
-    <string name="my_sales">Mis Ventas</string>
+    <string name="my_sales_orders">Mis Cotizaciones</string>
     <string name="ranking_label">Valoración:</string>
     <string name="no_results_founds">No se encontraron resultados.</string>
     <string name="welcome_user">Bienvenido %1$s</string>
@@ -169,7 +169,7 @@
     <string name="loading">Cargando</string>
     <string name="loading_data">Cargando Datos</string>
     <string name="buy">Comprar</string>
-    <string name="sell">Vender</string>
+    <string name="sell">Cotizar</string>
     <string name="title_activity_settings">Configuraciones</string>
 
     <!-- Strings related to Settings -->
@@ -259,7 +259,7 @@
     <string name="title_activity_company">Mis Datos</string>
     <string name="no_business_partners_registered">No hay clientes registrados.</string>
     <string name="business_partner_label">Cliente:</string>
-    <string name="title_activity_shopping_sales_list">Carritos de venta por cliente</string>
+    <string name="title_activity_shopping_sales_list">Cotizaciones abiertas por cliente</string>
     <string name="loading_data_wait_please">Cargando datos...</string>
     <string name="reset_password">Reestablecer contraseña</string>
     <string name="sign_up">¿No posees una contraseña?</string>

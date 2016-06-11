@@ -19,7 +19,7 @@
                 android:title="@string/orders_list" />
         </menu>
     </item>
-    <item android:title="@string/my_sales">
+    <item android:title="@string/my_sales_orders">
         <menu>
             <item
                 android:id="@+id/nav_business_partners"
@@ -28,11 +28,11 @@
             <item
                 android:id="@+id/nav_shopping_sale"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"
-                android:title="@string/shopping_sale" />
+                android:title="@string/open_shopping_sale" />
             <item
                 android:id="@+id/nav_sales_orders"
                 android:icon="@drawable/ic_view_list_black_24dp"
-                android:title="@string/sales_orders_list" />
+                android:title="@string/closed_sales_orders" />
         </menu>
     </item>
     <item android:title="@string/communicate">

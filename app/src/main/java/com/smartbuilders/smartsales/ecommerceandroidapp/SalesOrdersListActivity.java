@@ -73,8 +73,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
         mTwoPane = findViewById(R.id.sales_order_detail_container) != null;
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cotizaciones"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cotizaciones hechas pedidos"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final SalesOrderListPagerAdapter adapter = new SalesOrderListPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
