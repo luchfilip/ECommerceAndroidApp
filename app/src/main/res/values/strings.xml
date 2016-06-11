@@ -124,12 +124,12 @@
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
     <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
-    <string name="order_number">Número de pedido: %1$s.</string>
-    <string name="sales_order_number">Número de cotización: %1$s.</string>
-    <string name="order_date">Fecha de creación: %1$s.</string>
-    <string name="tax_id">RIF: %1$s.</string>
-    <string name="order_lines_number">Cantidad de líneas: %1$s.</string>
-    <string name="products_availables">Artículos disponibles: %1$s.</string>
+    <string name="order_number">Número de pedido: %1$s</string>
+    <string name="sales_order_number">Número de cotización: %1$s</string>
+    <string name="order_date">Fecha de creación: %1$s</string>
+    <string name="tax_id">RIF: %1$s</string>
+    <string name="order_lines_number">Cantidad de líneas: %1$s</string>
+    <string name="products_availables">Artículos disponibles: %1$s</string>
     <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
     <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
@@ -141,7 +141,7 @@
     <string name="qty_ordered">Cant. pedida: %1$s</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
-    <string name="brand_detail">Marca: %1$s.</string>
+    <string name="brand_detail">Marca: %1$s</string>
     <string name="my_purchases">Mis Compras</string>
     <string name="my_sales_orders">Mis Cotizaciones</string>
     <string name="ranking_label">Valoración:</string>

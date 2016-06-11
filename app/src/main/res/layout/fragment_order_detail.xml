@@ -9,15 +9,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/order_number_tv"
         android:textColor="@android:color/black"
-        android:padding="5dp"
-        android:layout_marginTop="10dp" />
+        android:padding="5dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/order_date_tv"
-        android:padding="5dp"
-        android:layout_marginBottom="10dp" />
+        android:padding="5dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/order_lines"
@@ -31,8 +29,6 @@
         android:id="@+id/order_lines_number_tv"
         android:layout_gravity="right"
         android:padding="5dp"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        android:textColor="@android:color/black" />
 
 </LinearLayout>

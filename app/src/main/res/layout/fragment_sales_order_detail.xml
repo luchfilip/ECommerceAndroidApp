@@ -26,11 +26,7 @@
         android:id="@+id/sales_order_lines"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_weight="1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +59,8 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:textColor="@color/black"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="left" />
 
         <TextView
             android:layout_width="match_parent"
@@ -74,7 +71,8 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:textColor="@color/black"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="right" />
     </LinearLayout>
 
     <TextView
