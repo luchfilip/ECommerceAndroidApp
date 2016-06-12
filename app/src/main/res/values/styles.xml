@@ -159,4 +159,6 @@
     <style name="go_to_arrow_style">
         <item name="android:visibility">visible</item>
     </style>
+    <style name="shape_style">
+    </style>
 </resources>

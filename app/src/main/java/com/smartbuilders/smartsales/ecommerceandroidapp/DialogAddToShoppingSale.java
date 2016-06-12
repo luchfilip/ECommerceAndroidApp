@@ -214,19 +214,4 @@ public class DialogAddToShoppingSale extends DialogFragment {
         outState.putParcelable(STATE_CURRENT_PRODUCT, mProduct);
         super.onSaveInstanceState(outState);
     }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        try {
-            if (getActivity()!=null && getActivity().getWindow()!=null) {
-                getActivity().getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                ((InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onDismiss(dialog);
-    }
 }

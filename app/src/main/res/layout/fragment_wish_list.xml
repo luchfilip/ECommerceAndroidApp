@@ -45,11 +45,11 @@
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/wish_list"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/wish_list_style"
             android:visibility="visible" />
 
     </LinearLayout>

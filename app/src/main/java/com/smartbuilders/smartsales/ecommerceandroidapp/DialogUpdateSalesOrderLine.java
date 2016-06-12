@@ -1,8 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -10,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -193,20 +189,5 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         outState.putParcelable(STATE_USER, mUser);
         outState.putInt(STATE_FOCUS, mFocus);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        try {
-            if(getActivity()!=null && getActivity().getWindow()!=null){
-                getActivity().getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                ((InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onDismiss(dialog);
     }
 }

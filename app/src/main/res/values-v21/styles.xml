@@ -72,4 +72,8 @@
     <style name="image_button_style">
         <item name="android:foreground">@drawable/ripple</item>
     </style>
+
+    <style name="shape_style">
+        <item name="android:elevation">1dp</item>
+    </style>
 </resources>

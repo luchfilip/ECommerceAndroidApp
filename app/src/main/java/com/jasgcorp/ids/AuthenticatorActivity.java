@@ -16,14 +16,12 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -166,12 +164,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void submit() {
-        try {
-            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                    .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
         final String userGroup 		= "catalogo-febeca";
         final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();

@@ -1,20 +1,23 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
@@ -34,20 +37,15 @@ import java.util.ArrayList;
  */
 public class WishListFragment extends Fragment {
 
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
-
-    // save index and top position
-    int mListViewIndex;
-    int mListViewTop;
-
-    private ListView mListView;
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
     private ShareActionProvider mShareActionProvider;
 
     private WishListAdapter mWishListAdapter;
     private ArrayList<OrderLine> wishListLines;
+    private LinearLayoutManager linearLayoutManager;
+    private int mRecyclerViewCurrentFirstPosition;
     private Intent shareIntent;
 
     public WishListFragment() {
@@ -59,24 +57,25 @@ public class WishListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
-        mCurrentUser = Utils.getCurrentUser(getContext());
 
         wishListLines = new ArrayList<>();
-        mWishListAdapter = new WishListAdapter(getContext(), this, wishListLines, mCurrentUser);
 
         new Thread() {
             @Override
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
-                        }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
                         }
                     }
-                    wishListLines.addAll((new OrderLineDB(getActivity(), mCurrentUser)).getWishList());
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    if (getActivity()!=null) {
+                        wishListLines.addAll((new OrderLineDB(getActivity(), mCurrentUser)).getWishList());
+                    }
+                    if (getContext()!=null) {
+                        mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mCurrentUser);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -89,25 +88,21 @@ public class WishListFragment extends Fragment {
                                     view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
                                     view.findViewById(R.id.wish_list).setVisibility(View.GONE);
                                 } else {
-                                    mListView = (ListView) view.findViewById(R.id.wish_list);
-                                    mListView.setAdapter(mWishListAdapter);
+                                    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.wish_list);
+                                    // use this setting to improve performance if you know that changes
+                                    // in content do not change the layout size of the RecyclerView
+                                    recyclerView.setHasFixedSize(true);
+                                    if (useGridView()) {
+                                        linearLayoutManager = new GridLayoutManager(getContext(), getSpanCount());
+                                    }else{
+                                        linearLayoutManager = new LinearLayoutManager(getContext());
+                                    }
+                                    recyclerView.setLayoutManager(linearLayoutManager);
+                                    recyclerView.setAdapter(mWishListAdapter);
 
-                                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                        @Override
-                                        public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                                            // if it cannot seek to that position.
-                                            OrderLine orderLine = (OrderLine) adapterView.getItemAtPosition(position);
-                                            if (orderLine != null) {
-                                                Intent intent = new Intent(getContext(), ProductDetailActivity.class);
-                                                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, orderLine.getProduct().getId());
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    });
-
-                                    mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+                                    if (mRecyclerViewCurrentFirstPosition!=0) {
+                                        recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -142,10 +137,12 @@ public class WishListFragment extends Fragment {
     }
 
     public void reloadWishList(User user){
-        wishListLines = (new OrderLineDB(getActivity(), user)).getWishList();
-        mWishListAdapter.setData(wishListLines);
-        //Se debe recargar el documento pdf que se tiene para compartir
-        new CreateShareIntentThread().start();
+        if (getActivity()!=null) {
+            wishListLines = (new OrderLineDB(getActivity(), user)).getWishList();
+            mWishListAdapter.setData(wishListLines);
+            //Se debe recargar el documento pdf que se tiene para compartir
+            new CreateShareIntentThread().start();
+        }
     }
 
     @Override
@@ -208,27 +205,80 @@ public class WishListFragment extends Fragment {
             shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
                     + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mShareActionProvider.setShareIntent(shareIntent);
-                }
-            });
+            if (getActivity()!=null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mShareActionProvider.setShareIntent(shareIntent);
+                    }
+                });
+            }
         }
+    }
+
+    private boolean useGridView(){
+        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            return true;
+        }else {
+            switch(getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) {
+                case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                    switch(getResources().getDisplayMetrics().densityDpi) {
+                        case DisplayMetrics.DENSITY_LOW:
+                            break;
+                        case DisplayMetrics.DENSITY_MEDIUM:
+                        case DisplayMetrics.DENSITY_HIGH:
+                        case DisplayMetrics.DENSITY_XHIGH:
+                            return  true;
+                    }
+                    break;
+                //case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                //    break;
+                //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+                //    break;
+                //case Configuration.SCREENLAYOUT_SIZE_SMALL:
+                //    break;
+            }
+        }
+        return false;
+    }
+
+    private int getSpanCount() {
+        switch(getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) {
+            case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                switch(getResources().getDisplayMetrics().densityDpi) {
+                    case DisplayMetrics.DENSITY_LOW:
+                        break;
+                    case DisplayMetrics.DENSITY_MEDIUM:
+                    case DisplayMetrics.DENSITY_HIGH:
+                    case DisplayMetrics.DENSITY_XHIGH:
+                        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                            return 3;
+                        }
+                        break;
+                }
+                break;
+            //case Configuration.SCREENLAYOUT_SIZE_LARGE:
+            //    break;
+            //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+            //    break;
+            //case Configuration.SCREENLAYOUT_SIZE_SMALL:
+            //    break;
+        }
+        return 2;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
-        } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
-        }
-        try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
-                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
-        } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        if(linearLayoutManager!=null) {
+            if (linearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        linearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
+        } else {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }
