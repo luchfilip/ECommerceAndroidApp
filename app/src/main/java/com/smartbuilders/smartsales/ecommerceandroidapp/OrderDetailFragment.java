@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
@@ -14,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -34,8 +34,12 @@ import java.util.ArrayList;
  */
 public class OrderDetailFragment extends Fragment {
 
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+
     private User mCurrentUser;
     private Order mOrder;
+    private LinearLayoutManager mLinearLayoutManager;
+    private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<OrderLine> mOrderLines;
 
@@ -45,6 +49,13 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+            }
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
         setHasOptionsMenu(true);
@@ -65,16 +76,17 @@ public class OrderDetailFragment extends Fragment {
             mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
                     .getActiveFinalizedOrderLinesByOrderId(mOrder.getId());
 
-            //RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
-            //// use this setting to improve performance if you know that changes
-            //// in content do not change the layout size of the RecyclerView
-            //mRecyclerView.setHasFixedSize(true);
-            //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            //mRecyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            recyclerView.setHasFixedSize(true);
+            mLinearLayoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(mLinearLayoutManager);
+            recyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
 
-            ListView listView = (ListView) rootView.findViewById(R.id.order_lines);
-
-            listView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+            if (mRecyclerViewCurrentFirstPosition!=0) {
+                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+            }
 
             ((TextView) rootView.findViewById(R.id.order_lines_number_tv))
                     .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
@@ -164,5 +176,21 @@ public class OrderDetailFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mLinearLayoutManager!=null) {
+            if (mLinearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
+        } else {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 }

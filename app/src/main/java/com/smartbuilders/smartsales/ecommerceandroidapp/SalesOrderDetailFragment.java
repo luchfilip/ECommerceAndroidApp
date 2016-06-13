@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
@@ -33,8 +34,12 @@ import java.util.ArrayList;
  */
 public class SalesOrderDetailFragment extends Fragment {
 
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+
     private User mCurrentUser;
     private SalesOrder mSalesOrder;
+    private LinearLayoutManager mLinearLayoutManager;
+    private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
     private ArrayList<SalesOrderLine> mOrderLines;
 
@@ -44,6 +49,13 @@ public class SalesOrderDetailFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+            }
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
 
         setHasOptionsMenu(true);
@@ -64,12 +76,17 @@ public class SalesOrderDetailFragment extends Fragment {
             mOrderLines = new SalesOrderLineDB(getContext(), mCurrentUser)
                     .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId());
 
-            RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerView.setAdapter(new SalesOrderLineAdapter(mOrderLines, mCurrentUser));
+            recyclerView.setHasFixedSize(true);
+            mLinearLayoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(mLinearLayoutManager);
+            recyclerView.setAdapter(new SalesOrderLineAdapter(mOrderLines, mCurrentUser));
+
+            if (mRecyclerViewCurrentFirstPosition!=0) {
+                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+            }
 
             ((TextView) rootView.findViewById(R.id.sales_order_lines_number_tv))
                     .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
@@ -184,5 +201,21 @@ public class SalesOrderDetailFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mLinearLayoutManager!=null) {
+            if (mLinearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
+        } else {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 }

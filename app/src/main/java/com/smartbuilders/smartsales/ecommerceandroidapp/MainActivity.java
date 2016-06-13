@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityRecyclerViewAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionsDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadMainPage(ArrayList<Object> mainPageSections, User user){
         ListView listView = (ListView) findViewById(R.id.main_categories_list);
-        listView.setAdapter(new MainActivityRecyclerViewAdapter(this, mainPageSections, user));
+        listView.setAdapter(new MainActivityAdapter(this, mainPageSections, user));
         listView.setVisibility(View.VISIBLE);
         listView.setSelectionFromTop(mListViewIndex, mListViewTop);
     }

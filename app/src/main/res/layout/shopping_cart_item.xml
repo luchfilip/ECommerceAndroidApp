@@ -4,8 +4,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="4dp">
+    style="@style/shape_style"
+    android:background="@drawable/shape"
+    android:layout_margin="4dp" >
 
     <ImageView
         android:layout_width="@dimen/shopping_cart_item_image_width"
@@ -22,60 +23,34 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp">
+            android:layout_height="match_parent">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_name"
                 android:layout_weight="1"
-                android:textColor="@android:color/black"
-                android:layout_gravity="center_vertical" />
+                android:textColor="@color/black"
+                android:layout_gravity="center_vertical"
+                android:maxLines="2"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/delete_item_button_img"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_highlight_off_black"
-                android:layout_marginLeft="4dp"
-                android:layout_marginBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingRight="10dp" />
+                android:src="@drawable/ic_highlight_off_black" />
         </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/product_commercial_package"
-            android:textAppearance="@android:style/TextAppearance.Small"
+            android:id="@+id/product_brand"
             android:textColor="@color/black" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/product_price"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/discount"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/total_line"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:visibility="gone" />
-
         <View style="@style/Divider"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="4dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -89,7 +64,7 @@
                 android:id="@+id/textView"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
-                android:textAppearance="@android:style/TextAppearance.Medium" />
+                android:textColor="@color/black" />
 
             <EditText
                 android:layout_width="0dp"
@@ -99,13 +74,11 @@
                 android:id="@+id/qty_ordered"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="@android:style/TextAppearance.Medium"
                 android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:focusableInTouchMode="false"
+                android:textColor="@color/black" />
 
-        </LinearLayout>-->
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

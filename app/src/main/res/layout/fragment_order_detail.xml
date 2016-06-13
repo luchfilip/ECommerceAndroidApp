@@ -17,17 +17,10 @@
         android:id="@+id/order_date_tv"
         android:padding="5dp" />
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/order_lines"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1" />-->
-
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/order_lines"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        style="@style/wish_list_style"
         android:layout_weight="1" />
 
     <TextView

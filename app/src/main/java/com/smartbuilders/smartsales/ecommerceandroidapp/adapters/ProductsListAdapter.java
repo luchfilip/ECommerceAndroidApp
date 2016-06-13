@@ -33,7 +33,7 @@ import com.squareup.picasso.Callback;
 /**
  * Created by Alberto on 22/3/2016.
  */
-public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder> {
+public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ViewHolder> {
 
     public static final int REDIRECT_PRODUCT_LIST = 0;
     public static final int REDIRECT_PRODUCT_DETAILS = 1;
@@ -75,8 +75,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
-                                      boolean useDetailLayout, int redirectOption, User user) {
+    public ProductsListAdapter(FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
+                               boolean useDetailLayout, int redirectOption, User user) {
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
@@ -86,8 +86,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ProductRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public ProductsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                             int viewType) {
         mContext = parent.getContext();
         // create a new view
         View v;

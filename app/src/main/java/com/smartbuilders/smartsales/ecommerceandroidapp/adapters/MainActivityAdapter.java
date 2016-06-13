@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 25/3/2016.
  */
-public class MainActivityRecyclerViewAdapter extends BaseAdapter {
+public class MainActivityAdapter extends BaseAdapter {
 
     private static final int VIEW_TYPE_VIEWFLIPPER = 0;
     private static final int VIEW_TYPE_RECYCLERVIEW = 1;
@@ -74,8 +74,8 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<Object> myDataset,
-                                           User user) {
+    public MainActivityAdapter(FragmentActivity fragmentActivity, ArrayList<Object> myDataset,
+                               User user) {
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
@@ -149,8 +149,8 @@ public class MainActivityRecyclerViewAdapter extends BaseAdapter {
                                 LinearLayoutManager.HORIZONTAL, false));
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
-                        viewHolder.mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(mFragmentActivity,
-                                mainPageProductSection.getProducts(), false, ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                        viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mFragmentActivity,
+                                mainPageProductSection.getProducts(), false, ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                     }
                     break;
                 }

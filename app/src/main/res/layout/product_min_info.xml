@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/productMinInfo_cardView_Width"
     android:layout_height="wrap_content"
+    style="@style/shape_style"
     android:background="@drawable/shape"
     android:layout_margin="5dp"
     android:orientation="vertical">

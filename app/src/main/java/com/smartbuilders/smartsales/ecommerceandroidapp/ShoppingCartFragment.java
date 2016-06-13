@@ -5,17 +5,18 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -28,10 +29,13 @@ import java.util.ArrayList;
 public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback {
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
     private int mSalesOrderId;
     private ShoppingCartAdapter mShoppingCartAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private int mRecyclerViewCurrentFirstPosition;
     private ArrayList<OrderLine> mOrderLines;
 
     @Override
@@ -44,6 +48,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                 mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+            }
+            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
         }
 
@@ -67,7 +74,17 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         } else {
             mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
 
-            ((ListView) view.findViewById(R.id.shoppingCart_items_list)).setAdapter(mShoppingCartAdapter);
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            recyclerView.setHasFixedSize(true);
+            mLinearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(mLinearLayoutManager);
+            recyclerView.setAdapter(mShoppingCartAdapter);
+
+            if (mRecyclerViewCurrentFirstPosition!=0) {
+                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+            }
 
             view.findViewById(R.id.proceed_to_checkout_button)
                     .setOnClickListener(new View.OnClickListener() {
@@ -127,6 +144,17 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
+        if(mLinearLayoutManager!=null) {
+            if (mLinearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
+        } else {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+        }
         super.onSaveInstanceState(outState);
     }
 }

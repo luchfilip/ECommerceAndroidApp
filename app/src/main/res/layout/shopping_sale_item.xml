@@ -61,8 +61,7 @@
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp">
+                android:layout_height="match_parent">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -76,7 +75,8 @@
                         android:text="@string/price_label"
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical|right"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginRight="4dp" />
 
                     <EditText
                         android:layout_width="0dp"
@@ -84,17 +84,14 @@
                         android:ems="10"
                         android:id="@+id/product_price"
                         android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
                         android:background="@color/golden"
-                        android:gravity="right"
-                        android:paddingTop="2dp"
                         android:paddingRight="4dp"
-                        android:paddingLeft="4dp" />
+                        android:paddingLeft="4dp"
+                        android:gravity="right" />
                 </TableRow>
 
                 <TableRow
@@ -109,7 +106,8 @@
                         android:text="@string/tax_label"
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical|right"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginRight="4dp" />
 
                     <EditText
                         android:layout_width="0dp"
@@ -117,15 +115,12 @@
                         android:ems="10"
                         android:id="@+id/product_tax_percentage"
                         android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
                         android:background="@color/golden"
                         android:gravity="right"
-                        android:paddingTop="2dp"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp" />
                 </TableRow>
@@ -142,7 +137,8 @@
                         android:text="@string/qty_ordered_label"
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical|right"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginRight="4dp" />
 
                     <EditText
                         android:layout_width="0dp"
@@ -150,15 +146,12 @@
                         android:ems="10"
                         android:id="@+id/qty_ordered"
                         android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
                         android:background="@color/golden"
                         android:gravity="right"
-                        android:paddingTop="2dp"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp" />
                 </TableRow>
@@ -177,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/total_line_amount_label"
                     android:id="@+id/textView"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginRight="4dp"
                     android:textColor="@color/black"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="2dp"

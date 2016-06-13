@@ -4,8 +4,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="5dp">
+    android:background="@drawable/shape"
+    style="@style/shape_style"
+    android:layout_margin="4dp" >
 
     <ImageView
         android:layout_width="70dp"
@@ -21,16 +22,19 @@
         android:paddingBottom="2dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_name"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_brand" />
+
+        <View style="@style/Divider"
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:layout_width="match_parent"

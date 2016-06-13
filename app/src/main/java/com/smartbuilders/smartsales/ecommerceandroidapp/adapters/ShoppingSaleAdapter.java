@@ -51,7 +51,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         public ImageView deleteItem;
         public TextView productName;
         public TextView productBrand;
-        public TextView totalLine;
         public EditText qtyOrdered;
         public EditText productPrice;
         public EditText productTaxPercentage;
@@ -62,7 +61,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
-            totalLine = (TextView) v.findViewById(R.id.total_line);
             productPrice = (EditText) v.findViewById(R.id.product_price);
             productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
             totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);

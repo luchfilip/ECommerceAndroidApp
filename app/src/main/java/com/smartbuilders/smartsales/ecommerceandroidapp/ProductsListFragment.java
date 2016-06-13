@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductRecyclerViewAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -36,7 +36,7 @@ public class ProductsListFragment extends Fragment {
     private int productBrandId;
     private int productId;
     private String productName;
-    private ProductRecyclerViewAdapter mProductRecyclerViewAdapter;
+    private ProductsListAdapter mProductsListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
 
@@ -140,8 +140,8 @@ public class ProductsListFragment extends Fragment {
                                     categorySubcategoryResultsTextView.append(word);
                                 }
 
-                                mProductRecyclerViewAdapter = new ProductRecyclerViewAdapter(getActivity(), products, true,
-                                        ProductRecyclerViewAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+                                mProductsListAdapter = new ProductsListAdapter(getActivity(), products, true,
+                                        ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
                                 // use this setting to improve performance if you know that changes
@@ -153,13 +153,13 @@ public class ProductsListFragment extends Fragment {
                                     linearLayoutManager = new LinearLayoutManager(getContext());
                                 }
                                 recyclerView.setLayoutManager(linearLayoutManager);
-                                recyclerView.setAdapter(mProductRecyclerViewAdapter);
+                                recyclerView.setAdapter(mProductsListAdapter);
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 } else if(!products.isEmpty() && productId != 0) {
-                                    for (int pos = 0; pos < mProductRecyclerViewAdapter.getItemCount(); pos++) {
-                                        if (mProductRecyclerViewAdapter.getItemId(pos) == productId) {
+                                    for (int pos = 0; pos < mProductsListAdapter.getItemCount(); pos++) {
+                                        if (mProductsListAdapter.getItemId(pos) == productId) {
                                             recyclerView.scrollToPosition(pos);
                                             break;
                                         }
