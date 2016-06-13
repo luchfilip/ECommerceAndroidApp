@@ -37,6 +37,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
+        public TextView productBrand;
         public ImageView productImage;
         public TextView qtyOrdered;
         public TextView productPrice;
@@ -46,6 +47,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productBrand = (TextView) v.findViewById(R.id.product_brand);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
             productPrice = (TextView) v.findViewById(R.id.product_price_textView);
@@ -80,6 +82,17 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+
+        if(holder.productBrand!=null){
+            if(mDataset.get(position).getProduct().getProductBrand()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                        mDataset.get(position).getProduct().getProductBrand().getDescription()));
+            }else{
+                holder.productBrand.setVisibility(TextView.GONE);
+            }
+        }
+
         if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
             File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
                     mDataset.get(position).getProduct().getImageFileName());

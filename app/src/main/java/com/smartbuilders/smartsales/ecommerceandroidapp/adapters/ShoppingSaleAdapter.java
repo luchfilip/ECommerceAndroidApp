@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
+        public TextView productBrand;
         public TextView totalLine;
         public EditText qtyOrdered;
         public EditText productPrice;
@@ -59,6 +61,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productBrand = (TextView) v.findViewById(R.id.product_brand);
             totalLine = (TextView) v.findViewById(R.id.total_line);
             productPrice = (EditText) v.findViewById(R.id.product_price);
             productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
@@ -156,6 +159,16 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         });
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+
+        if(holder.productBrand!=null){
+            if(mDataset.get(position).getProduct().getProductBrand()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                        mDataset.get(position).getProduct().getProductBrand().getDescription()));
+            }else{
+                holder.productBrand.setVisibility(TextView.GONE);
+            }
+        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

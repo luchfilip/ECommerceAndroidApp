@@ -1,94 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="4dp">
+    android:background="@drawable/shape"
+    style="@style/shape_style"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/product_image"
+        android:layout_gravity="center"
+        android:layout_margin="4dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/product_image"
-            android:layout_gravity="center|top"
-            android:layout_margin="4dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_name"
+            android:textColor="@android:color/black"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textStyle="bold"
+            android:maxLines="2" />
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_brand"
+            android:textColor="@color/black" />
+        <View style="@style/Divider"/>
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_name"
-                android:textColor="@android:color/black"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:textStyle="bold" />
-
-            <TableLayout
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TableRow
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/qty_requested_textView"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/qty_requested_textView"
-                        android:textColor="@color/black"
-                        android:layout_marginRight="2dp"
-                        android:layout_weight="1"
-                        android:padding="2dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_price_textView"
-                        android:textColor="@color/black"
-                        android:layout_weight="1"
-                        android:padding="2dp" />
-                </TableRow>
-
-                <TableRow
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_price_textView"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_tax_percentage_textView"
-                        android:textColor="@color/black"
-                        android:layout_marginRight="2dp"
-                        android:layout_weight="1"
-                        android:padding="2dp" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/total_line_amount_textView"
-                        android:textColor="@color/black"
-                        android:layout_weight="1"
-                        android:background="@color/light_grey"
-                        android:padding="2dp" />
-                </TableRow>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_tax_percentage_textView"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
 
-            </TableLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/total_line_amount_textView"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:textStyle="bold" />
+            </TableRow>
 
-        </LinearLayout>
+        </TableLayout>
 
     </LinearLayout>
-
-    <View style="@style/Divider"
-        android:layout_width="match_parent" />
 
 </LinearLayout>
