@@ -41,29 +41,41 @@
             android:layout_gravity="right"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="5dp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:layout_marginTop="5dp" />
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/subTotalAmount_tv"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/subTotalAmount_tv"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/taxesAmount_tv"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textColor="@color/black" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/taxesAmount_tv"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
-
-        <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/totalAmount_tv"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black" />
 
         <Button
             android:layout_width="wrap_content"

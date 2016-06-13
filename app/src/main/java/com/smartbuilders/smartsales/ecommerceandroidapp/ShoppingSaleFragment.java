@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -31,7 +33,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
-    private ArrayList<SalesOrderLine> mOrderLines;
+    private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
     private TextView totalLines;
     private TextView subTotalAmount;
@@ -70,8 +72,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
         mCurrentUser = Utils.getCurrentUser(getContext());
 
-        mOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
-        mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), this, mOrderLines, mCurrentUser);
+        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
+        mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), this, mSalesOrderLines, mCurrentUser);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
         // use this setting to improve performance if you know that changes
@@ -118,7 +120,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         taxesAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
         totalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
 
-        if (mOrderLines==null || mOrderLines.size()==0) {
+        if (mSalesOrderLines ==null || mSalesOrderLines.size()==0) {
             view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
             view.findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
             view.findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
@@ -129,16 +131,10 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        double subTotal=0, tax=0, total=0;
-        for(SalesOrderLine orderLine : mOrderLines){
-            subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
-            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
-            total += subTotal + tax;
-        }
-        totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
-        subTotalAmount.setText(getString(R.string.order_sub_total_amount, String.valueOf(subTotal)));
-        taxesAmount.setText(getString(R.string.order_tax_amount, String.valueOf(tax)));
-        totalAmount.setText(getString(R.string.order_total_amount, String.valueOf(total)));
+        totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mSalesOrderLines.size())));
+        subTotalAmount.setText(getString(R.string.order_sub_total_amount, String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
+        taxesAmount.setText(getString(R.string.order_tax_amount, String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
+        totalAmount.setText(getString(R.string.order_total_amount, String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
     }
 
     @Override
@@ -151,8 +147,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void reloadShoppingSale(){
-        mOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
-        mShoppingSaleAdapter.setData(mOrderLines);
+        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
+        mShoppingSaleAdapter.setData(mSalesOrderLines);
         fillFields();
     }
 
