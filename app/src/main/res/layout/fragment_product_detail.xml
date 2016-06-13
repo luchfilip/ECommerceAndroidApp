@@ -89,28 +89,28 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/product_brand"
-                            android:textSize="@dimen/productDetailActivity_productBrand_text_size"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textAppearance="@android:style/TextAppearance.Medium" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size"
                             android:id="@+id/product_commercial_package"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textAppearance="@android:style/TextAppearance.Medium" />
 
                         <TextView
                             android:id="@+id/product_availability"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/productDetailActivity_productAvailability_text_size"
                             android:textStyle="bold"
-                            android:textColor="@color/product_availability" />
+                            android:textColor="@color/product_availability"
+                            android:textAppearance="@android:style/TextAppearance.Medium" />
 
                         <RatingBar
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            style="?android:attr/ratingBarStyleIndicator"
                             android:progressTint="@color/ratingbar_progress"
                             android:numStars="5"
                             android:rating="2.5"

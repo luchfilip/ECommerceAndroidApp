@@ -84,7 +84,7 @@
 
     </LinearLayout>
 
-    <View style="@style/Divider"/>
+    <View style="@style/Divider" />
 
     <LinearLayout
         android:orientation="horizontal"

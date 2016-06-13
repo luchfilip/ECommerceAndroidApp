@@ -3,10 +3,10 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -58,7 +59,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public LinearLayout linearLayoutContent;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
-        public ImageView addToShoppingCartImageView;
+        public Button addToShoppingCartButton;
+        public Button addToShoppingSaleButton;
 
         public ViewHolder(View v) {
             super(v);
@@ -70,7 +72,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
-            addToShoppingCartImageView = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
+            addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
+            addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
         }
     }
 
@@ -211,7 +214,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         String result = removeFromWishList(mDataset.get(position));
                         if (result == null) {
                             mDataset.get(position).setFavorite(false);
-                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            notifyItemChanged(position);
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
@@ -225,7 +228,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         String result = addToWishList(mDataset.get(position));
                         if (result == null) {
                             mDataset.get(position).setFavorite(true);
-                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            notifyItemChanged(position);
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
@@ -234,11 +237,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         }
 
-        if(holder.addToShoppingCartImageView!=null) {
-            holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
+        if(holder.addToShoppingCartButton!=null) {
+            holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     addToShoppingCart(mDataset.get(position));
+                }
+            });
+        }
+
+        if(holder.addToShoppingSaleButton!=null) {
+            holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToShoppingSale(mDataset.get(position));
                 }
             });
         }
@@ -264,10 +276,18 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private void addToShoppingCart(Product product) {
         product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
-        FragmentManager fm = mFragmentActivity.getSupportFragmentManager();
-        DialogAddToShoppingCart addToShoppingCartFragment =
+        DialogAddToShoppingCart dialogAddToShoppingCart =
                 DialogAddToShoppingCart.newInstance(product, mCurrentUser);
-        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
+        dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogAddToShoppingCart.class.getSimpleName());
+    }
+
+    private void addToShoppingSale(Product product) {
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        DialogAddToShoppingSale dialogAddToShoppingSale =
+                DialogAddToShoppingSale.newInstance(product, mCurrentUser);
+        dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogAddToShoppingCart.class.getSimpleName());
     }
 
     private String addToWishList(Product product) {

@@ -18,13 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/product_name"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="2dp"
             android:textSize="@dimen/productMinInfo_product_name_text_size"
-            android:lines="2" />
+            android:lines="2"
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="@dimen/productMinInfo_max_image_Width"
@@ -38,11 +39,20 @@
             android:id="@+id/product_availability"
             android:textSize="@dimen/productMinInfo_availability_text_size"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="2dp"
             android:textColor="@color/product_availability"
             android:singleLine="false"
-            android:lines="1"
+            android:lines="1" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/ratingBarStyleSmall"
+            android:progressTint="@color/ratingbar_progress"
+            android:numStars="5"
+            android:rating="2.5"
+            android:id="@+id/product_ratingbar"
+            android:layout_marginLeft="5dp"
             android:layout_marginBottom="2dp" />
 
         <View style="@style/Divider"/>

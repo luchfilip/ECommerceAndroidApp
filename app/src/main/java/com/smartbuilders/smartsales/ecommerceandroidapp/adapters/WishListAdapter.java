@@ -50,8 +50,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productBrand;
         public TextView commercialPackage;
         public ImageView shareImageView;
-        public Button addToShoppingCart;
-        public Button addToShoppingSale;
+        public Button addToShoppingCartButton;
+        public Button addToShoppingSaleButton;
 
         public ViewHolder(View v) {
             super(v);
@@ -62,8 +62,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
-            addToShoppingCart = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
-            addToShoppingSale = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
+            addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
+            addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
         }
     }
 
@@ -186,7 +186,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             });
         }
 
-        holder.addToShoppingCart.setOnClickListener(new View.OnClickListener() {
+        holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {
@@ -195,7 +195,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             }
         });
 
-        holder.addToShoppingSale.setOnClickListener(new View.OnClickListener() {
+        holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mDataset.get(position) != null) {

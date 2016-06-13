@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -121,19 +120,19 @@ public class WishListFragment extends Fragment {
     public void addToShoppingCart(OrderLine orderLine, User user) {
         Product product = (new ProductDB(getContext(), user))
                 .getProductById(orderLine.getProduct().getId(), false);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogAddToShoppingCart addToShoppingCartFragment =
+        DialogAddToShoppingCart dialogAddToShoppingCart =
                 DialogAddToShoppingCart.newInstance(product, user);
-        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
+        dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
+                DialogAddToShoppingCart.class.getSimpleName());
     }
 
     public void addToShoppingSale(OrderLine orderLine, User user) {
         Product product = (new ProductDB(getContext(), user))
                 .getProductById(orderLine.getProduct().getId(), false);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogAddToShoppingSale addToShoppingSaleFragment =
+        DialogAddToShoppingSale dialogAddToShoppingSale =
                 DialogAddToShoppingSale.newInstance(product, user);
-        addToShoppingSaleFragment.show(fm, DialogAddToShoppingSale.class.getSimpleName());
+        dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                DialogAddToShoppingSale.class.getSimpleName());
     }
 
     public void reloadWishList(User user){
