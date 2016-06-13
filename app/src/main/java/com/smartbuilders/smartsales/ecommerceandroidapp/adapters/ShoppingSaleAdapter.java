@@ -5,10 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 7/4/2016.
  */
-public class ShoppingSaleAdapter extends BaseAdapter {
+public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapter.ViewHolder> {
 
     public static final int FOCUS_PRICE = 1;
     public static final int FOCUS_TAX_PERCENTAGE = 2;
@@ -40,6 +40,33 @@ public class ShoppingSaleAdapter extends BaseAdapter {
     private ArrayList<SalesOrderLine> mDataset;
     private User mCurrentUser;
     private SalesOrderLineDB mSalesOrderLineDB;
+
+    /**
+     * Cache of the children views for a forecast list item.
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public ImageView productImage;
+        public ImageView deleteItem;
+        public TextView productName;
+        public TextView totalLine;
+        public EditText qtyOrdered;
+        public EditText productPrice;
+        public EditText productTaxPercentage;
+        public EditText totalLineAmount;
+
+        public ViewHolder(View v) {
+            super(v);
+            productImage = (ImageView) v.findViewById(R.id.product_image);
+            productName = (TextView) v.findViewById(R.id.product_name);
+            totalLine = (TextView) v.findViewById(R.id.total_line);
+            productPrice = (EditText) v.findViewById(R.id.product_price);
+            productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
+            totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);
+            deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
+            qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
+        }
+    }
 
     public interface Callback {
         public void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
@@ -54,45 +81,59 @@ public class ShoppingSaleAdapter extends BaseAdapter {
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
     }
 
+    // Create new views (invoked by the layout manager)
     @Override
-    public int getCount() {
-        if (mDataset!=null) {
-            return mDataset.size();
-        }
-        return 0;
+    public ShoppingSaleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                         int viewType) {
+        mContext = parent.getContext();
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.shopping_sale_item, parent, false);
+
+        return new ViewHolder(v);
     }
 
+    // Return the size of your dataset (invoked by the layout manager)
     @Override
-    public Object getItem(int position) {
-        return mDataset.get(position);
+    public int getItemCount() {
+        if(mDataset==null){
+            return 0;
+        }
+        return mDataset.size();
     }
 
     @Override
     public long getItemId(int position) {
-        return mDataset.get(position).getId();
+        try {
+            return mDataset.get(position).getId();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
+    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sale_item, parent, false);
-        final ViewHolder viewHolder = new ViewHolder(view);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if(mDataset==null || mDataset.get(position) == null){
+            return;
+        }
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
             File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
                     mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
                 Picasso.with(mContext)
-                        .load(img).error(R.drawable.no_image_available).into(viewHolder.productImage);
+                        .load(img).error(R.drawable.no_image_available).into(holder.productImage);
             }else{
                 Picasso.with(mContext)
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(viewHolder.productImage, new com.squareup.picasso.Callback() {
+                        .into(holder.productImage, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
                                 Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
-                                        ((BitmapDrawable) viewHolder.productImage.getDrawable()).getBitmap(),
+                                        ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
                                         mCurrentUser, mContext);
                             }
 
@@ -102,10 +143,10 @@ public class ShoppingSaleAdapter extends BaseAdapter {
                         });
             }
         }else{
-            viewHolder.productImage.setImageResource(R.drawable.no_image_available);
+            holder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
-        viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+        holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
@@ -114,9 +155,9 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.productName.setText(mDataset.get(position).getProduct().getName());
+        holder.productName.setText(mDataset.get(position).getProduct().getName());
 
-        viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
+        holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
@@ -138,60 +179,31 @@ public class ShoppingSaleAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.productPrice.setText(String.valueOf(mDataset.get(position).getPrice()));
-        viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+        holder.productPrice.setText(String.valueOf(mDataset.get(position).getPrice()));
+        holder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_PRICE);
             }
         });
 
-        viewHolder.productTaxPercentage.setText(String.valueOf(mDataset.get(position).getTaxPercentage()));
-        viewHolder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
+        holder.productTaxPercentage.setText(String.valueOf(mDataset.get(position).getTaxPercentage()));
+        holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_TAX_PERCENTAGE);
             }
         });
 
-        viewHolder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
-        viewHolder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
+        holder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
+        holder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_QTY_ORDERED);
             }
         });
 
-        viewHolder.totalLineAmount.setText(String.valueOf(mDataset.get(position).getTotalLineAmount()));
-
-        view.setTag(viewHolder);
-        return view;
-    }
-
-    /**
-     * Cache of the children views for a forecast list item.
-     */
-    public static class ViewHolder {
-        // each data item is just a string in this case
-        public ImageView productImage;
-        public ImageView deleteItem;
-        public TextView productName;
-        public TextView totalLine;
-        public EditText qtyOrdered;
-        public EditText productPrice;
-        public EditText productTaxPercentage;
-        public EditText totalLineAmount;
-
-        public ViewHolder(View v) {
-            productImage = (ImageView) v.findViewById(R.id.product_image);
-            productName = (TextView) v.findViewById(R.id.product_name);
-            totalLine = (TextView) v.findViewById(R.id.total_line);
-            productPrice = (EditText) v.findViewById(R.id.product_price);
-            productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
-            totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);
-            deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
-            qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
-        }
+        holder.totalLineAmount.setText(String.valueOf(mDataset.get(position).getTotalLineAmount()));
     }
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {

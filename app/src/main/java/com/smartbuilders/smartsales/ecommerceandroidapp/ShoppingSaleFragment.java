@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback {
 
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
+    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
     private ArrayList<SalesOrderLine> mOrderLines;
@@ -35,6 +37,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView subTotalAmount;
     private TextView taxesAmount;
     private TextView totalAmount;
+    private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentBusinessPartnerId;
 
     public ShoppingSaleFragment() {
@@ -46,6 +49,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         if(savedInstanceState!=null) {
             if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
                 mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+            }
+            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
         }
 
@@ -67,7 +73,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         mOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
         mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), this, mOrderLines, mCurrentUser);
 
-        ((ListView) view.findViewById(R.id.shoppingSale_items_list)).setAdapter(mShoppingSaleAdapter);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mShoppingSaleAdapter);
+
+        if (mRecyclerViewCurrentFirstPosition!=0) {
+            recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+        }
 
         view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
             .setOnClickListener(new View.OnClickListener() {
@@ -144,6 +159,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_BUSINESS_PARTNER_ID, mCurrentBusinessPartnerId);
+        outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         super.onSaveInstanceState(outState);
     }
 }
