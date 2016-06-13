@@ -57,7 +57,7 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.busineess_partner_list_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.business_partner_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getCommercialName());

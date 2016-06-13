@@ -161,12 +161,14 @@ public class SalesOrderDB {
         Cursor c = null;
         SalesOrder salesOrder = null;
         try {
-            String sql = "SELECT ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
-                    " FROM ECOMMERCE_SALES_ORDER " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID = (SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
+            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID "+
+                    " FROM ECOMMERCE_SALES_ORDER SO " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = (SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?) " +
+                    " AND SO.ISACTIVE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType}, null);
+                    .build(), null, sql, new String[]{"Y", "Y", docType, "Y"}, null);
             if(c.moveToNext()){
                 salesOrder = new SalesOrder();
                 salesOrder.setId(c.getInt(0));
@@ -181,6 +183,7 @@ public class SalesOrderDB {
                 salesOrder.setSubTotalAmount(c.getDouble(3));
                 salesOrder.setTaxAmount(c.getDouble(4));
                 salesOrder.setTotalAmount(c.getDouble(5));
+                salesOrder.setBusinessPartnerId(c.getInt(10));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -205,12 +208,15 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_SALES_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
-                    " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL " +
-                    " FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ? order by ECOMMERCE_SALES_ORDER_ID desc";
+            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
+                    " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID " +
+                    " FROM ECOMMERCE_SALES_ORDER SO " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ? " +
+                    " order by SO.ECOMMERCE_SALES_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType}, null);
+                    .build(), null, sql, new String[]{"Y", "Y", docType}, null);
             while(c.moveToNext()){
                 SalesOrder salesOrder = new SalesOrder();
                 salesOrder.setId(c.getInt(0));
@@ -225,6 +231,7 @@ public class SalesOrderDB {
                 salesOrder.setSubTotalAmount(c.getDouble(7));
                 salesOrder.setTaxAmount(c.getDouble(8));
                 salesOrder.setTotalAmount(c.getDouble(9));
+                salesOrder.setBusinessPartnerId(c.getInt(10));
                 activeSalesOrders.add(salesOrder);
             }
         } catch (Exception e) {
@@ -239,8 +246,10 @@ public class SalesOrderDB {
             }
         }
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(context, user);
+        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
         for(SalesOrder salesOrder : activeSalesOrders){
             salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId()));
+            salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartnerId()));
         }
         return activeSalesOrders;
     }

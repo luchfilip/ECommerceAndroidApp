@@ -48,7 +48,7 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
         View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
-        viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
+        viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
         viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
         viewHolder.shoppingSaleSubTotal.setText(mContext.getString(R.string.order_sub_total_amount, mDataset.get(position).getSubTotalAmount()));
 
@@ -61,12 +61,12 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView businessPartnerName;
+        public TextView businessPartnerCommercialName;
         public TextView shoppingSaleLinesNumber;
         public TextView shoppingSaleSubTotal;
 
         public ViewHolder(View v) {
-            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_name_textView);
+            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             shoppingSaleLinesNumber = (TextView) v.findViewById(R.id.shopping_sale_lines_number_textView);
             shoppingSaleSubTotal = (TextView) v.findViewById(R.id.shopping_sale_sub_total_textView);
         }
