@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,7 +11,7 @@
     android:background="@color/light_grey">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/product_name_textView"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/product_availability_dialog_edit_qty_requested_tv"
-        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/product_availability"
         android:textStyle="bold|italic" />
 
@@ -33,19 +33,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/product_commercial_package"
         android:textStyle="italic"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp">
 
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="3dp">
+            android:padding="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,13 +56,13 @@
                 android:layout_marginRight="4dp"
                 android:textColor="@color/black"
                 android:layout_span="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/business_partners_spinner"
-                style="@style/shape_style"
                 android:background="@drawable/shape"
                 android:layout_span="3"
                 android:layout_weight="1"
@@ -97,7 +97,8 @@
                 android:id="@+id/product_price_label_textView"
                 android:gravity="center_vertical|right"
                 android:layout_span="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:layout_width="0dp"
@@ -115,7 +116,8 @@
                 android:layout_span="1"
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical|right"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,7 +130,8 @@
                 android:gravity="center_vertical|right"
                 android:layout_marginLeft="10dp"
                 android:layout_span="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:layout_width="0dp"
@@ -146,15 +149,15 @@
                 android:layout_span="1"
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical|right"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp"
-            android:layout_marginTop="3dp">
+            android:padding="2dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -166,7 +169,8 @@
                 android:id="@+id/qty_label_textView"
                 android:gravity="right"
                 android:layout_span="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -183,7 +187,8 @@
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:gravity="right" />
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
     </TableLayout>
@@ -194,7 +199,8 @@
         android:layout_height="wrap_content"
         android:gravity="top|bottom|center_horizontal"
         android:id="@+id/buttons_container"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp">
 
         <Button
             android:layout_width="wrap_content"

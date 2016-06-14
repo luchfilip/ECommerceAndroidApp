@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 
 import java.util.ArrayList;
@@ -62,16 +63,20 @@ public class RecentSearchDB {
         ArrayList<RecentSearch> recentSearches = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT TEXT_TO_SEARCH, PRODUCT_ID, SUBCATEGORY_ID, RECENT_SEARCH_ID FROM RECENT_SEARCH ORDER BY CREATE_TIME desc" ;
+            String sql = "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
+                    " FROM RECENT_SEARCH RS " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.ISACTIVE = ? " +
+                    " ORDER BY RS.CREATE_TIME desc" ;
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, null, null);
+                    .build(), null, sql, new String[]{"Y"}, null);
             while(c.moveToNext()){
                 RecentSearch recentSearch = new RecentSearch();
                 recentSearch.setId(c.getInt(3));
                 recentSearch.setTextToSearch(c.getString(0));
                 recentSearch.setProductId(c.getInt(1));
                 recentSearch.setSubcategoryId(c.getInt(2));
+                recentSearch.setProductSubCategory(new ProductSubCategory(0, c.getInt(2), c.getString(4), c.getString(5)));
                 recentSearches.add(recentSearch);
             }
         } catch (Exception e) {

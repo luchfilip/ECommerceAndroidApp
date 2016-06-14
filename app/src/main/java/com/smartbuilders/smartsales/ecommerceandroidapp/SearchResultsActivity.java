@@ -87,9 +87,9 @@ public class SearchResultsActivity extends AppCompatActivity
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(TextUtils.isEmpty(s)){
-                        mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
                     }else{
-                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(null, productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
                     }
                     mSearchResultAdapter.notifyDataSetChanged();
                 }
@@ -169,7 +169,7 @@ public class SearchResultsActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             (new RecentSearchDB(SearchResultsActivity.this, mCurrentUser))
                                     .deleteAllRecentSearches();
-                            mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                            mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
                             mSearchResultAdapter.notifyDataSetChanged();
                         }
                     })

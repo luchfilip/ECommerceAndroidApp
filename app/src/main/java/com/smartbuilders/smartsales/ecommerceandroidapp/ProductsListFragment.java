@@ -36,6 +36,7 @@ public class ProductsListFragment extends Fragment {
     private int productBrandId;
     private int productId;
     private String productName;
+    private String mSearchPattern;
     private ProductsListAdapter mProductsListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -72,6 +73,9 @@ public class ProductsListFragment extends Fragment {
             if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_NAME)){
                 productName = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_PRODUCT_NAME);
             }
+            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_SEARCH_PATTERN)){
+                mSearchPattern = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_SEARCH_PATTERN);
+            }
         }
 
         final ArrayList<Product> products = new ArrayList<>();
@@ -83,7 +87,7 @@ public class ProductsListFragment extends Fragment {
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByCategoryId(productCategoryId));
                     } else if (productSubCategoryId != 0) {
-                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsBySubCategoryId(productSubCategoryId));
+                        products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsBySubCategoryId(productSubCategoryId, mSearchPattern));
                     } else if (productBrandId != 0) {
                         products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByBrandId(productBrandId));
                     } else if (productName != null) {
@@ -157,14 +161,14 @@ public class ProductsListFragment extends Fragment {
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-                                } else if(!products.isEmpty() && productId != 0) {
+                                } /*else if(!products.isEmpty() && productId != 0) {
                                     for (int pos = 0; pos < mProductsListAdapter.getItemCount(); pos++) {
                                         if (mProductsListAdapter.getItemId(pos) == productId) {
                                             recyclerView.scrollToPosition(pos);
                                             break;
                                         }
                                     }
-                                }
+                                }*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {

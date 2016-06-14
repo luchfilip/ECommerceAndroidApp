@@ -39,7 +39,6 @@
         android:padding="20dp"
         style="@style/shape_style"
         android:background="@drawable/shape"
-        android:layout_margin="10dp"
         android:id="@+id/error_loading_data_linearLayout"
         android:visibility="gone">
 

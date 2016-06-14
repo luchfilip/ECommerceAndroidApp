@@ -61,6 +61,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public ImageView favoriteImageView;
         public Button addToShoppingCartButton;
         public Button addToShoppingSaleButton;
+        public ImageView addToShoppingCartImage;
 
         public ViewHolder(View v) {
             super(v);
@@ -74,6 +75,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
             addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
+            addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
         }
     }
 
@@ -251,6 +253,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 @Override
                 public void onClick(View v) {
                     addToShoppingSale(mDataset.get(position));
+                }
+            });
+        }
+
+        if(holder.addToShoppingCartImage!=null){
+            holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToShoppingCart(mDataset.get(position));
                 }
             });
         }

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class SearchResultAdapter extends BaseAdapter {
 
     private Context mContext;
+    private String mSearchPattern;
     private ArrayList mDataset;
     private User mCurrentUser;
     private RecentSearchDB recentSearchDB;
@@ -37,6 +38,7 @@ public class SearchResultAdapter extends BaseAdapter {
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
         recentSearchDB = new RecentSearchDB(context, user);
+        mSearchPattern = new String();
         if(data == null){
             data = recentSearchDB.getRecentSearches(30);
         }else if(data.isEmpty()){
@@ -48,7 +50,8 @@ public class SearchResultAdapter extends BaseAdapter {
         mCurrentUser = user;
     }
 
-    public void setData(ArrayList data, Context context){
+    public void setData(String searchPattern, ArrayList data, Context context){
+        mSearchPattern = searchPattern;
         if(data == null){
             data = recentSearchDB.getRecentSearches(30);
         }else if(data.isEmpty()){
@@ -102,7 +105,7 @@ public class SearchResultAdapter extends BaseAdapter {
                     recentSearchDB.insertRecentSearch(((Product) mDataset.get(position)).getName(),
                             ((Product) mDataset.get(position)).getId(),
                             ((Product) mDataset.get(position)).getProductSubCategory().getId());
-                    goToProductList((Product) mDataset.get(position));
+                    goToProductList(((Product) mDataset.get(position)).getName(), (Product) mDataset.get(position));
                 }
             });
         }else if(mDataset.get(position) instanceof String){
@@ -137,7 +140,12 @@ public class SearchResultAdapter extends BaseAdapter {
             viewHolder.title.setTextSize(14);
             viewHolder.title.setText(((RecentSearch) mDataset.get(position)).getTextToSearch());
 
-            viewHolder.subTitle.setVisibility(TextView.GONE);
+            if(((RecentSearch) mDataset.get(position)).getProductSubCategory()!=null &&
+                    !TextUtils.isEmpty(((RecentSearch) mDataset.get(position)).getProductSubCategory().getDescription())){
+                viewHolder.subTitle.setText(((RecentSearch) mDataset.get(position)).getProductSubCategory().getDescription());
+            }else{
+                viewHolder.subTitle.setVisibility(TextView.GONE);
+            }
 
             viewHolder.goToSearchImage.setImageResource(android.R.drawable.ic_menu_recent_history);
 
@@ -170,7 +178,7 @@ public class SearchResultAdapter extends BaseAdapter {
                         ProductSubCategory productSubCategory = new ProductSubCategory();
                         productSubCategory.setId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
                         product.setProductSubCategory(productSubCategory);
-                        goToProductList(product);
+                        goToProductList(((RecentSearch) mDataset.get(position)).getTextToSearch(), product);
                     }else{
                         Intent intent = new Intent(mContext, ProductsListActivity.class);
                         intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch());
@@ -184,10 +192,11 @@ public class SearchResultAdapter extends BaseAdapter {
         return view;
     }
 
-    private void goToProductList(Product product){
+    private void goToProductList(String searchPattern, Product product){
         Intent intent = new Intent(mContext, ProductsListActivity.class);
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
+        intent.putExtra(ProductsListActivity.KEY_SEARCH_PATTERN, searchPattern);
         mContext.startActivity(intent);
     }
 

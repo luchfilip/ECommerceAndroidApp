@@ -33,14 +33,20 @@
 
     <dimen name="related_products_label_text_size">23sp</dimen>
 
-    <dimen name="shopping_sale_item_image_width">120dp</dimen>
-    <dimen name="shopping_sale_item_image_height">120dp</dimen>
+    <dimen name="shopping_sale_item_image_width">110dp</dimen>
+    <dimen name="shopping_sale_item_image_height">110dp</dimen>
 
-    <dimen name="shopping_cart_item_image_width">120dp</dimen>
-    <dimen name="shopping_cart_item_image_height">120dp</dimen>
+    <dimen name="shopping_cart_item_image_width">110dp</dimen>
+    <dimen name="shopping_cart_item_image_height">110dp</dimen>
 
-    <dimen name="wish_list_item_image_width">120dp</dimen>
-    <dimen name="wish_list_item_image_height">120dp</dimen>
+    <dimen name="wish_list_item_image_width">110dp</dimen>
+    <dimen name="wish_list_item_image_height">110dp</dimen>
+
+    <dimen name="order_line_item_image_width">110dp</dimen>
+    <dimen name="order_line_item_image_height">110dp</dimen>
+
+    <dimen name="sales_order_line_item_image_width">110dp</dimen>
+    <dimen name="sales_order_line_item_image_height">110dp</dimen>
 
     <dimen name="button_height">30dp</dimen>
 

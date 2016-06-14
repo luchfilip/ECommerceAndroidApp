@@ -27,6 +27,7 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
     public static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
+    public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
 
     private User mCurrentUser;
 

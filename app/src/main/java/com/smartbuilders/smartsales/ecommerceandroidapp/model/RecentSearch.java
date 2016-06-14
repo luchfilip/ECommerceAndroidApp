@@ -11,6 +11,7 @@ public class RecentSearch extends Model implements Parcelable {
     private String textToSearch;
     private int productId;
     private int subcategoryId;
+    private ProductSubCategory productSubCategory;
 
     public RecentSearch(){
         super();
@@ -21,6 +22,7 @@ public class RecentSearch extends Model implements Parcelable {
         textToSearch = in.readString();
         productId = in.readInt();
         subcategoryId = in.readInt();
+        productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
     }
 
     @Override
@@ -29,6 +31,7 @@ public class RecentSearch extends Model implements Parcelable {
         dest.writeString(textToSearch);
         dest.writeInt(productId);
         dest.writeInt(subcategoryId);
+        dest.writeParcelable(productSubCategory, flags);
     }
 
     @Override
@@ -70,5 +73,13 @@ public class RecentSearch extends Model implements Parcelable {
 
     public void setSubcategoryId(int subcategoryId) {
         this.subcategoryId = subcategoryId;
+    }
+
+    public ProductSubCategory getProductSubCategory() {
+        return productSubCategory;
+    }
+
+    public void setProductSubCategory(ProductSubCategory productSubCategory) {
+        this.productSubCategory = productSubCategory;
     }
 }

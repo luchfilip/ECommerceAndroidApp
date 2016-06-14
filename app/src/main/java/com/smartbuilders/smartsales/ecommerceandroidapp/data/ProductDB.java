@@ -173,7 +173,7 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId){
+    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId, String searchPattern){
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
@@ -195,7 +195,20 @@ public class ProductDB {
                     .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
                     OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(subCategoryId), "V"}, null);
             if (c!=null) {
+                String[] words = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+                whileStatement:
                 while(c.moveToNext()){
+                    if(searchPattern!=null){
+                        try {
+                            for(String word : words){
+                                if(!c.getString(3).toUpperCase().contains(word)){
+                                    continue whileStatement;
+                                }
+                            }
+                        } catch (Exception e) {
+                            continue whileStatement;
+                        }
+                    }
                     Product p = new Product();
                     p.setId(c.getInt(0));
                     p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
@@ -413,21 +426,23 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByName(String name){
+    public ArrayList<Product> getLightProductsByName(String searchPattern){
         ArrayList<Product> products = new ArrayList<>();
-        if(TextUtils.isEmpty(name)){
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
+                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        name = name.replaceAll("\\s+", " ").trim().toUpperCase();
+        searchPattern = searchPattern.replaceAll("\\s+", " ").trim().toUpperCase();
 
         boolean isNumeric = false;
         // Regular expression in Java to check if String is number or not
         Pattern pattern = Pattern.compile(".*[^0-9].*");
-        if(name.length()<8 && !pattern.matcher(name).matches()){
+        if(searchPattern.length()<8 && !pattern.matcher(searchPattern).matches()){
             isNumeric = true;
         }
 
-        if(!isNumeric && (TextUtils.isEmpty(name) || name.length()<1)){
+        if(!isNumeric && (TextUtils.isEmpty(searchPattern) || searchPattern.length()<1)){
             return products;
         }
 
@@ -436,59 +451,72 @@ public class ProductDB {
             if (isNumeric) {
                 String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                         " FROM ARTICULOS A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
                         " WHERE A.CODVIEJO LIKE ? AND A.ACTIVO = ? "  +
                         " ORDER BY A.CODVIEJO ASC LIMIT 20";
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, sql, new String[]{"Y", "Y", name+"%", "V"}, null);
+                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "V"}, null);
             } else {
                 String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                         " FROM ARTICULOS A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
-                        " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE " + (name.length() > 1 ? " OR A.NOMBRE LIKE ? COLLATE NOCASE) " : ") ") +
-                            " AND ACTIVO = ? " +
-                        " ORDER BY A.NOMBRE ASC " + (name.length()==1 ? " LIMIT 50" : "");
-                String selectionArgs[];
-                if(name.length() > 1) {
-                    selectionArgs = new String[]{"Y", "Y", name+"%", "% "+name+"%", "V"};
-                } else {
-                    selectionArgs = new String[]{"Y", "Y", name+"%", "V"};
+                        " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE OR A.NOMBRE LIKE ? COLLATE NOCASE) AND A.ACTIVO = ? " +
+                        " ORDER BY A.NOMBRE ASC " +
+                        (searchPattern.length()>1 ? "" : " LIMIT 100");
+                String aux = null;
+                String firstWord = "";
+                for (String word : searchPattern.split(" ")){
+                    if(aux==null){
+                        if (searchPattern.length()>1 && searchPattern.split(" ").length==1) {
+                            firstWord = "% "+word+"%";
+                        }
+                        aux = word+"%";
+                    } else {
+                        aux += " "+word+"%";
+                    }
                 }
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, sql, selectionArgs, null);
+                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "V"}, null);
             }
 
             if (c!=null) {
+                boolean searchPatternIsOneWord = searchPattern.split(" ").length==1;
                 whileStatement:
                 while(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
                     if (!isNumeric) {
-                        for(String aux : c.getString(2).replaceAll("\\s+", " ").split(" ")){
-                            p.setName(p.getName()==null ? aux : p.getName() + " " +  aux);
-                            if(aux.contains(name)){
-                                break;
+                        if(searchPatternIsOneWord) {
+                            for(String aux : c.getString(2).replaceAll("\\s+", " ").split(" ")){
+                                if(aux.contains(searchPattern)){
+                                    p.setName(aux);
+                                    break;
+                                }
                             }
-                        }
-                        if(p.getName()==null){
+                            if(p.getName()==null){
+                                p.setName(c.getString(2));
+                            }
+                        } else {
                             p.setName(c.getString(2));
                         }
                     } else {
                         p.setName("Cod: "+c.getString(3)+" - " + c.getString(2));
                     }
 
-                    p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), c.getString(4), c.getString(5)));
-                    if(!isNumeric) {
-                        for(Product aux : products){
-                            if(aux.equals(p)){
-                                continue whileStatement;
-                            }
-                        }
+                    p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), null, null));
+                    if(!isNumeric && products.contains(p)){
+                        continue whileStatement;
                     }
+                    p.getProductSubCategory().setName(c.getString(4));
+                    p.getProductSubCategory().setDescription(c.getString(5));
                     products.add(p);
                 }
             }
