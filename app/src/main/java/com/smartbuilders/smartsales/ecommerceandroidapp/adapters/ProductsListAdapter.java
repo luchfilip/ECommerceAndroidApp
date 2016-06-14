@@ -202,6 +202,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.shareImageView!=null) {
+            holder.shareImageView.setColorFilter(mContext.getResources().getColor(R.color.black),
+                    PorterDuff.Mode.SRC_ATOP);
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -212,10 +214,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.favoriteImageView!=null) {
+            holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
+                PorterDuff.Mode.SRC_ATOP);
             if(mDataset.get(position).isFavorite()){
                 holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
-                        PorterDuff.Mode.SRC_ATOP);
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
