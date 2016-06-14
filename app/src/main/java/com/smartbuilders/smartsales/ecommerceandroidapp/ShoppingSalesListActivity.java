@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +21,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class ShoppingSalesListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ShoppingSalesListFragment.Callback {
 
-    public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG = "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
+    public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
+            "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
 
     private User mCurrentUser;
     private boolean mTwoPane;
@@ -31,11 +31,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_sales_list);
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
-        }
 
         mCurrentUser = Utils.getCurrentUser(this);
 

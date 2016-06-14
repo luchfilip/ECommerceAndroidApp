@@ -88,13 +88,15 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="3"
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -110,21 +112,27 @@
 
         <Button
             style="@style/MainButtonAppTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/buy"
             android:id="@+id/product_addtoshoppingcart_button"
             android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp" />
+            android:layout_marginLeft="3dp"
+            android:layout_weight="4"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textStyle="bold" />
 
         <Button
             style="@style/GoldenButtonAppTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/sell"
             android:id="@+id/product_addtoshoppingsales_button"
             android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp" />
+            android:layout_marginRight="3dp"
+            android:layout_weight="4"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

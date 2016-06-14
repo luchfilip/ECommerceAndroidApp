@@ -37,8 +37,8 @@
     <string name="value_us">Valoranos</string>
     <string name="google_play">Google Play</string>
     <string name="tools">Herramientas</string>
-    <string name="add_to_shopping_cart">Agregar al pedido</string>
-    <string name="add_to_shopping_sales">Agregar a la cotización</string>
+    <string name="add_to_shopping_cart">Agregar al Pedido</string>
+    <string name="add_to_shopping_sales">Agregar a Cotización</string>
     <string name="add_to_wishlist">Agregar a la lista de favoritos</string>
     <string name="move_to_shopping_cart">Mover al pedido</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
@@ -168,8 +168,8 @@
     <string name="related_products_by_brand_title">Más productos de la marca %1$s</string>
     <string name="loading">Cargando</string>
     <string name="loading_data">Cargando Datos</string>
-    <string name="buy">Comprar</string>
-    <string name="sell">Cotizar</string>
+    <string name="buy">Agregar al Pedido</string>
+    <string name="sell">Agregar a Cotización</string>
     <string name="title_activity_settings">Configuraciones</string>
 
     <!-- Strings related to Settings -->

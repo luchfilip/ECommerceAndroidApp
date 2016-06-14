@@ -77,15 +77,16 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="right"
         android:paddingTop="5dp"
-        android:paddingBottom="2dp">
+        android:paddingBottom="2dp"
+        android:gravity="center_vertical">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="3"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -96,9 +97,8 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:padding="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_weight="1" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -108,30 +108,35 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:padding="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <Button
             style="@style/MainButtonAppTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/buy"
             android:id="@+id/product_addtoshoppingcart_button"
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:textAppearance="@android:style/TextAppearance.Small" />
 
         <Button
             style="@style/GoldenButtonAppTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/sell"
             android:id="@+id/product_addtoshoppingsales_button"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:textAppearance="@android:style/TextAppearance.Small" />
 
     </LinearLayout>
 

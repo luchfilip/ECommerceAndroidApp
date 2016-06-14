@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,11 +31,6 @@ public class ShoppingCartActivity extends AppCompatActivity
         setContentView(R.layout.activity_shoping_cart);
 
         User currentUser = Utils.getCurrentUser(this);
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);

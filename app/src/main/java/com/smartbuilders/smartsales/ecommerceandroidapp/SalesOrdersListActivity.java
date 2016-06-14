@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -31,7 +30,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
         implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String SALES_ORDERDETAIL_FRAGMENT_TAG = "SALES_ORDERDETAIL_FRAGMENT_TAG";
-
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
 
     private boolean mTwoPane;
@@ -43,18 +41,13 @@ public class SalesOrdersListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_orders_list);
 
-        if( savedInstanceState != null ) {
+        if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
                 mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
             }
         }
 
         mCurrentUser = Utils.getCurrentUser(this);
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -198,7 +191,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                    .replace(R.id.sales_order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderDetailActivity.class);

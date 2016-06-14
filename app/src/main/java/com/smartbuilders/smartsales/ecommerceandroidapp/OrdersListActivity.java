@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -46,11 +45,6 @@ public class OrdersListActivity extends AppCompatActivity
         }
 
         mCurrentUser = Utils.getCurrentUser(this);
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);

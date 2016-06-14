@@ -48,6 +48,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public ImageView deleteItem;
         public TextView productName;
         public TextView productBrand;
+        public TextView productAvailability;
         public EditText qtyOrdered;
 
         public ViewHolder(View v) {
@@ -55,6 +56,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productAvailability = (TextView) v.findViewById(R.id.product_availability);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
         }
@@ -159,6 +161,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 holder.productBrand.setVisibility(TextView.GONE);
             }
         }
+
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getProduct().getAvailability()));
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,7 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +20,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -39,6 +43,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ArrayList<OrderLine> mOrderLines;
+    private ProgressDialog waitPlease;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +83,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
         if (mOrderLines==null || mOrderLines.size()==0) {
             view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.shoppingCart_items_list).setVisibility(View.GONE);
-            view.findViewById(R.id.shoppingCart_data_linearLayout).setVisibility(View.GONE);
+            view.findViewById(R.id.main_layout).setVisibility(View.GONE);
         } else {
             mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
 
@@ -104,24 +108,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
-                                            String result;
-                                            if (mSalesOrderId > 0) {
-                                                result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
-                                            } else {
-                                                result = orderDB.createOrderFromShoppingCart();
-                                            }
-                                            if(result == null){
-                                                Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                                                intent.putExtra(OrderDetailActivity.KEY_ORDER, orderDB.getLastFinalizedOrder());
-                                                startActivity(intent);
-                                                getActivity().finish();
-                                            }else{
-                                                new AlertDialog.Builder(getContext())
-                                                        .setMessage(result)
-                                                        .setNeutralButton(android.R.string.ok, null)
-                                                        .show();
-                                            }
+                                            closeOrder();
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, null)
@@ -132,6 +119,80 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
         }
         return view;
+    }
+
+    private void closeOrder(){
+        lockScreen();
+        new Thread() {
+            @Override
+            public void run() {
+                String result = null;
+                try {
+                    OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
+                    if (mSalesOrderId > 0) {
+                        result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
+                    } else {
+                        result = orderDB.createOrderFromShoppingCart();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result = e.getMessage();
+                } finally {
+                    unlockScreen(result);
+                }
+            }
+        }.start();
+    }
+
+    private void lockScreen() {
+        if (getActivity()!=null) {
+            //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            } else {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+            }
+            if (waitPlease==null || !waitPlease.isShowing()){
+                waitPlease = ProgressDialog.show(getContext(), null,
+                        getString(R.string.closing_order_wait_please), true, false);
+            }
+        }
+    }
+
+    private void unlockScreen(final String message){
+        if(getActivity()!=null){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(message!=null){
+                        new AlertDialog.Builder(getContext())
+                                .setMessage(message)
+                                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.cancel();
+                            waitPlease = null;
+                        }
+                    } else {
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.cancel();
+                            waitPlease = null;
+                        }
+                        Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+                        intent.putExtra(OrderDetailActivity.KEY_ORDER, new OrderDB(getContext(), mCurrentUser)
+                                .getLastFinalizedOrder());
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }
+            });
+        }
     }
 
     @Override

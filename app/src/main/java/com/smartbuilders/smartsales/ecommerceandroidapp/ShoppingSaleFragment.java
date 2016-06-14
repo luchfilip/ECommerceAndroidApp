@@ -142,6 +142,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     private void lockScreen() {
         if (getActivity()!=null) {
+            //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             } else {
@@ -155,34 +156,40 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     private void unlockScreen(final String message){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(message!=null){
-                    new AlertDialog.Builder(getContext())
-                            .setMessage(message)
-                            .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                                }
-                            })
-                            .setCancelable(false)
-                            .show();
-                } else {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                    Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
-                    intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, new SalesOrderDB(getContext(), mCurrentUser)
-                            .getLastFinalizedSalesOrder());
-                    startActivity(intent);
-                    getActivity().finish();
+        if(getActivity()!=null){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(message!=null){
+                        new AlertDialog.Builder(getContext())
+                                .setMessage(message)
+                                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.cancel();
+                            waitPlease = null;
+                        }
+                    } else {
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.cancel();
+                            waitPlease = null;
+                        }
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                        Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
+                        intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, new SalesOrderDB(getContext(), mCurrentUser)
+                                .getLastFinalizedSalesOrder());
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
                 }
-                if (waitPlease!=null && waitPlease.isShowing()) {
-                    waitPlease.cancel();
-                    waitPlease = null;
-                }
-            }
-        });
+            });
+        }
     }
 
     public void fillFields(){

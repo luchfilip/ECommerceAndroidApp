@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -26,34 +24,12 @@ public class OrderDetailActivity extends AppCompatActivity
 
     public static final String KEY_ORDER = "key_order";
 
-    public static final String STATE_ORDER = "state_order";
-
-    private User mCurrentUser;
-    private Order mOrder;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
-        mCurrentUser = Utils.getCurrentUser(this);
-
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_ORDER)){
-                mOrder = savedInstanceState.getParcelable(STATE_ORDER);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_ORDER)){
-                mOrder = getIntent().getExtras().getParcelable(KEY_ORDER);
-            }
-        }
-
-        if(findViewById(R.id.title_textView) != null){
-            ((TextView) findViewById(R.id.title_textView))
-                    .setTypeface(Typeface.createFromAsset(getAssets(), "MyriadPro-Bold.otf"));
-        }
+        User currentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -68,7 +44,7 @@ public class OrderDetailActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
     }
 
     @Override
@@ -106,11 +82,5 @@ public class OrderDetailActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_ORDER, mOrder);
-        super.onSaveInstanceState(outState);
     }
 }

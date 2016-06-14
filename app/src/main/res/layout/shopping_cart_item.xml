@@ -48,6 +48,14 @@
             android:id="@+id/product_brand"
             android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/product_availability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/product_availability"
+            android:textStyle="bold"
+            android:textSize="@dimen/productDetailCardView_productAvailability_text_size" />
+
         <View style="@style/Divider"
             android:layout_marginBottom="10dp" />
 
@@ -83,7 +91,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:gravity="right"
-                android:background="@color/colorPrimaryMedium" />
+                android:background="@color/colorPrimaryLight" />
 
         </LinearLayout>
 
