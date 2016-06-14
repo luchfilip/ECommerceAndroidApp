@@ -14,8 +14,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Recibe una señal del sistema cuando cambia la conectividad del equipo
@@ -32,7 +30,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conn.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-            Toast.makeText(context, "Catálogo: Conexion Wi-Fi enabled. Start Synchronization.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Catálogo: Conexion Wi-Fi enabled. Start Synchronization.", Toast.LENGTH_SHORT).show();
             try {
                 Bundle settingsBundle = new Bundle();
                 settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -41,7 +39,6 @@ public class NetworkReceiver extends BroadcastReceiver {
                         .getAccountsByType(context.getString(R.string.authenticator_acount_type));
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(account, DataBaseContentProvider.AUTHORITY)){
-                        Log.d(TAG, "ContentResolver.requestSync("+account.name+", "+context.getString(R.string.sync_adapter_content_authority)+", settingsBundle);");
                         ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
                     }
                 }

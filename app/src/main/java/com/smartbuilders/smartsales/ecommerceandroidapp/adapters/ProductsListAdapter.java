@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +63,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public Button addToShoppingCartButton;
         public Button addToShoppingSaleButton;
         public ImageView addToShoppingCartImage;
+        public ImageView addToShoppingSaleImage;
 
         public ViewHolder(View v) {
             super(v);
@@ -76,6 +78,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
             addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
+            addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
         }
     }
 
@@ -87,6 +90,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mCurrentUser = user;
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -210,6 +214,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         if(holder.favoriteImageView!=null) {
             if(mDataset.get(position).isFavorite()){
                 holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
+                        PorterDuff.Mode.SRC_ATOP);
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -258,10 +264,23 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.addToShoppingCartImage!=null){
+            holder.addToShoppingCartImage.setColorFilter(mContext.getResources().getColor(R.color.colorPrimary),
+                    PorterDuff.Mode.SRC_ATOP);
             holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     addToShoppingCart(mDataset.get(position));
+                }
+            });
+        }
+
+        if(holder.addToShoppingSaleImage!=null) {
+            holder.addToShoppingSaleImage.setColorFilter(mContext.getResources().getColor(R.color.golden),
+                    PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addToShoppingSale(mDataset.get(position));
                 }
             });
         }

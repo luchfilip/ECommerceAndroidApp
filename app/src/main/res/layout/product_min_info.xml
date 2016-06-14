@@ -52,7 +52,8 @@
             android:rating="2.5"
             android:id="@+id/product_ratingbar"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="2dp" />
+            android:layout_marginBottom="2dp"
+            android:visibility="gone" />
 
         <View style="@style/Divider"/>
 
@@ -62,35 +63,79 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="right">
+        android:gravity="right"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:baselineAligned="false">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/share_imageView"
-            android:src="@drawable/ic_share_black_24dp"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_margin="8dp" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/favorite_imageView"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_margin="8dp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/share_imageView"
+                android:src="@drawable/ic_share_black_24dp"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/addToShoppingCart_imageView"
-            android:src="@drawable/ic_add_shopping_cart_black_24dp"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_margin="8dp" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favorite_imageView"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addToShoppingCart_imageView"
+                android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                style="@style/image_button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addToShoppingSale_imageView"
+                android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
+
     </LinearLayout>
 </LinearLayout>

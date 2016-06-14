@@ -10,7 +10,7 @@
     <color name="ratingbar_progress">#FFD700</color>
     <color name="ratingbar_background">#FF00FF</color>
     <color name="ratingbar_secondaryprogress">#CCCCCC</color>
-    <color name="promo_label_color">#B40404</color>
+    <color name="heart_color">#cb0f14</color>
     <color name="product_category">#333333</color>
     <color name="product_subcategory">#467ed8</color>
     <color name="product_availability">#1556bf</color>
