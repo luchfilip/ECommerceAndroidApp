@@ -87,7 +87,7 @@
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
-                        android:background="@color/golden"
+                        android:background="@color/golden_medium"
                         android:paddingRight="4dp"
                         android:paddingLeft="4dp"
                         android:gravity="right" />
@@ -118,7 +118,7 @@
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
-                        android:background="@color/golden"
+                        android:background="@color/golden_medium"
                         android:gravity="right"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp" />
@@ -149,7 +149,7 @@
                         android:focusableInTouchMode="false"
                         android:inputType="numberDecimal"
                         android:layout_gravity="right"
-                        android:background="@color/golden"
+                        android:background="@color/golden_medium"
                         android:gravity="right"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp" />

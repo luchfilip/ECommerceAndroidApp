@@ -29,10 +29,12 @@ import java.util.ArrayList;
 public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback {
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
+    private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
     private int mSalesOrderId;
+    private int mBusinessPartnerId;
     private ShoppingCartAdapter mShoppingCartAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -49,6 +51,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                 mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
             }
+            if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
+                mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+            }
             if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
                 mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
@@ -58,6 +63,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
                 mSalesOrderId = getActivity().getIntent().getExtras()
                         .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
+            }
+            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
+                mBusinessPartnerId = getActivity().getIntent().getExtras()
+                        .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
             }
         }
 
@@ -98,7 +107,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                             OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
                                             String result;
                                             if (mSalesOrderId > 0) {
-                                                result = orderDB.createOrderFromOrderLines(mOrderLines);
+                                                result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
                                             } else {
                                                 result = orderDB.createOrderFromShoppingCart();
                                             }
@@ -144,6 +153,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
+        outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
         if(mLinearLayoutManager!=null) {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,

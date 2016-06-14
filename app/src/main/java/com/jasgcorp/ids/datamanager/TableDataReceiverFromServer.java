@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.concurrent.Exchanger;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -109,23 +110,43 @@ public class TableDataReceiverFromServer extends Thread {
 	public void loadInitialDataFromWS(Context context, User user) throws Exception {
 		long initTime = System.currentTimeMillis();
         syncPercentage = 0;
+        if(sync){
+            execRemoteQueryAndInsert(context, user,
+                    "select APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
+                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
+                        " from APP_PARAMETER where ISACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO APP_PARAMETER (APP_PARAMETER_ID, PARAMETER_DESCRIPTION, " +
+                            " TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            syncPercentage = 5;
+        }
+        if(sync){
+            execRemoteQueryAndInsert(context, user,
+                    "select USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
+                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
+                            " from APP_PARAMETER where ISACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO APP_PARAMETER (USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, " +
+                            " INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            syncPercentage = 10;
+        }
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
 					"select IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, " +
 							" USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
-							" UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE " +
+							" UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
 							" from ARTICULOS where ACTIVO = 'V'",
 					"INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, " +
 							" IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, " +
-							" CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE) " +
-							" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            syncPercentage = 10;
+							" CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
+							" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            syncPercentage = 20;
 		}
         if(sync){
 			execRemoteQueryAndInsert(context, user,
 					"select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-            syncPercentage = 20;
+            syncPercentage = 25;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
@@ -157,11 +178,23 @@ public class TableDataReceiverFromServer extends Thread {
 					"INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
             syncPercentage = 70;
         }
+		if(sync){
+			execRemoteQueryAndInsert(context, user,
+					"select PRODUCT_RANKING_ID, PRODUCT_ID, RANKING from PRODUCT_RANKING where ISACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO PRODUCT_RANKING (PRODUCT_RANKING_ID, PRODUCT_ID, RANKING) VALUES (?, ?, ?)");
+			syncPercentage = 75;
+		}
+        if(sync){
+            execRemoteQueryAndInsert(context, user,
+                    "select PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME from PRODUCT_TAX where ISACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO PRODUCT_TAX (PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME) VALUES (?, ?, ?)");
+            syncPercentage = 80;
+        }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
 					"select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where ISACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
-            syncPercentage = 80;
+            syncPercentage = 85;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
@@ -204,17 +237,19 @@ public class TableDataReceiverFromServer extends Thread {
 		parameters.put("userId", user.getServerUserId());
 		parameters.put("sql", sql);
 		ConsumeWebService a = new ConsumeWebService(context,
-				user.getServerAddress(),
-				"/IntelligentDataSynchronizer/services/ManageRemoteDBAccess?wsdl",
-				"executeQuery",
-				"urn:executeQuery",
-				parameters);
+                                                    user.getServerAddress(),
+                                                    "/IntelligentDataSynchronizer/services/ManageRemoteDBAccess?wsdl",
+                                                    "executeQuery",
+                                                    "urn:executeQuery",
+                                                    parameters);
         Object result = a.getWSResponse();
-        if(result instanceof SoapPrimitive){
+        if (result instanceof SoapPrimitive) {
             insertDataFromWSResultData(result.toString(), insertSentence, context, user);
-        }else if (result !=null){
+        } else if(result instanceof Exception) {
+            throw (Exception) result;
+        } else if (result!=null) {
             throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), ClassCastException.");
-        }else{
+        } else {
             throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), result is null.");
         }
 	}

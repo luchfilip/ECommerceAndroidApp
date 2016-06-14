@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -19,8 +18,6 @@ import java.util.ArrayList;
  * Created by stein on 5/6/2016.
  */
 public class SalesOrderDB {
-
-    public static final String TAG = SalesOrderDB.class.getSimpleName();
 
     private Context context;
     private User user;
@@ -50,13 +47,13 @@ public class SalesOrderDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
-            while(c.moveToNext()){
-                SalesOrder salesOrder = new SalesOrder();
-                salesOrder.setLinesNumber(c.getInt(0));
-                BusinessPartner businessPartner = new BusinessPartner();
-                businessPartner.setId(c.getInt(1));
-                salesOrder.setBusinessPartner(businessPartner);
-                activeOrders.add(salesOrder);
+            if(c!=null){
+                while(c.moveToNext()){
+                    SalesOrder salesOrder = new SalesOrder();
+                    salesOrder.setLinesNumber(c.getInt(0));
+                    salesOrder.setBusinessPartnerId(c.getInt(1));
+                    activeOrders.add(salesOrder);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +68,7 @@ public class SalesOrderDB {
         }
         BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
         for(SalesOrder salesOrder : activeOrders){
-            salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartner().getId()));
+            salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartnerId()));
         }
         return activeOrders;
     }
@@ -113,7 +110,7 @@ public class SalesOrderDB {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                         .build(), null, sql, new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
-                if(c.moveToNext()){
+                if(c!=null && c.moveToNext()){
                     salesOrderId = c.getInt(0);
                 }
             } catch (Exception e){
@@ -169,7 +166,7 @@ public class SalesOrderDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", "Y", docType, "Y"}, null);
-            if(c.moveToNext()){
+            if(c!=null && c.moveToNext()){
                 salesOrder = new SalesOrder();
                 salesOrder.setId(c.getInt(0));
                 try{
@@ -217,22 +214,24 @@ public class SalesOrderDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", "Y", docType}, null);
-            while(c.moveToNext()){
-                SalesOrder salesOrder = new SalesOrder();
-                salesOrder.setId(c.getInt(0));
-                try{
-                    salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
-                }catch(ParseException ex){
-                    try {
-                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
-                    } catch (ParseException e) { }
-                }catch(Exception ex){ }
-                salesOrder.setLinesNumber(c.getInt(6));
-                salesOrder.setSubTotalAmount(c.getDouble(7));
-                salesOrder.setTaxAmount(c.getDouble(8));
-                salesOrder.setTotalAmount(c.getDouble(9));
-                salesOrder.setBusinessPartnerId(c.getInt(10));
-                activeSalesOrders.add(salesOrder);
+            if(c!=null){
+                while(c.moveToNext()){
+                    SalesOrder salesOrder = new SalesOrder();
+                    salesOrder.setId(c.getInt(0));
+                    try{
+                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    }catch(ParseException ex){
+                        try {
+                            salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        } catch (ParseException e) { }
+                    }catch(Exception ex){ }
+                    salesOrder.setLinesNumber(c.getInt(6));
+                    salesOrder.setSubTotalAmount(c.getDouble(7));
+                    salesOrder.setTaxAmount(c.getDouble(8));
+                    salesOrder.setTotalAmount(c.getDouble(9));
+                    salesOrder.setBusinessPartnerId(c.getInt(10));
+                    activeSalesOrders.add(salesOrder);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

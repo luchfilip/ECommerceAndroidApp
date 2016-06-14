@@ -15,6 +15,8 @@ public class Order extends Model implements Parcelable {
     private double subTotalAmount;
     private double taxAmount;
     private double totalAmount;
+    private int salesOrderId;
+    private int businessPartnerId;
 
     public Order() {
 
@@ -64,12 +66,30 @@ public class Order extends Model implements Parcelable {
         return new BigDecimal(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
+    public int getSalesOrderId() {
+        return salesOrderId;
+    }
+
+    public void setSalesOrderId(int salesOrderId) {
+        this.salesOrderId = salesOrderId;
+    }
+
+    public int getBusinessPartnerId() {
+        return businessPartnerId;
+    }
+
+    public void setBusinessPartnerId(int businessPartnerId) {
+        this.businessPartnerId = businessPartnerId;
+    }
+
     protected Order(Parcel in) {
         super(in);
         linesNumber = in.readInt();
         subTotalAmount = in.readDouble();
         taxAmount = in.readDouble();
         totalAmount = in.readDouble();
+        salesOrderId = in.readInt();
+        businessPartnerId = in.readInt();
     }
 
     @Override
@@ -79,6 +99,8 @@ public class Order extends Model implements Parcelable {
         dest.writeDouble(subTotalAmount);
         dest.writeDouble(taxAmount);
         dest.writeDouble(totalAmount);
+        dest.writeInt(salesOrderId);
+        dest.writeInt(businessPartnerId);
     }
 
     public String getCreatedStringFormat(){

@@ -116,6 +116,7 @@ public class SalesOrderDetailFragment extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
                         intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
+                        intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
                         startActivity(intent);
                     }
                 });

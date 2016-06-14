@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -182,6 +183,26 @@ public class SalesOrdersListActivity extends AppCompatActivity
         }else{
             Intent intent = new Intent(this, SalesOrderDetailActivity.class);
             intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemSelected(Order order, int selectedItemPosition) {
+        mCurrentSelectedItemPosition = selectedItemPosition;
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putParcelable(OrderDetailActivity.KEY_ORDER, order);
+
+            OrderDetailFragment fragment = new OrderDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                    .commit();
+        }else{
+            Intent intent = new Intent(this, OrderDetailActivity.class);
+            intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
             startActivity(intent);
         }
     }

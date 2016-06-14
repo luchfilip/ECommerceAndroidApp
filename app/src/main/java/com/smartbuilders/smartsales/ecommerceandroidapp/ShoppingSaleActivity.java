@@ -25,14 +25,12 @@ public class ShoppingSaleActivity extends AppCompatActivity
 
     public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
 
-    private User mCurrentUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_sale);
 
-        mCurrentUser = Utils.getCurrentUser(this);
+        User currentUser = Utils.getCurrentUser(this);
 
         if(findViewById(R.id.title_textView) != null){
             ((TextView) findViewById(R.id.title_textView))
@@ -53,7 +51,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
     }
 
     @Override

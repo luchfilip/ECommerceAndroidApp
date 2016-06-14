@@ -24,30 +24,14 @@ public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String KEY_SALES_ORDER_ID = "KEY_SALES_ORDER_ID";
-
-    public static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
-
-    private User mCurrentUser;
-    private int mSalesOrderId;
+    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoping_cart);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
-                mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_SALES_ORDER_ID)){
-                mSalesOrderId = getIntent().getExtras().getInt(KEY_SALES_ORDER_ID);
-            }
-        }
-
-        mCurrentUser = Utils.getCurrentUser(this);
+        User currentUser = Utils.getCurrentUser(this);
 
         if(findViewById(R.id.title_textView) != null){
             ((TextView) findViewById(R.id.title_textView))
@@ -67,7 +51,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
     }
 
     @Override
@@ -105,11 +89,5 @@ public class ShoppingCartActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
-        super.onSaveInstanceState(outState);
     }
 }

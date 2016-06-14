@@ -41,7 +41,7 @@ public class OrdersListFragment extends Fragment {
         ArrayList<Order> activeOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveOrders();
         if (activeOrders!=null && !activeOrders.isEmpty()) {
             ListView listView = (ListView) rootView.findViewById(R.id.orders_list);
-            listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders , mCurrentUser));
+            listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders));
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

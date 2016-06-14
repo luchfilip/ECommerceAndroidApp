@@ -28,7 +28,7 @@ public class OrdersListActivity extends AppCompatActivity
         implements OrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private boolean mTwoPane;
-    private static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
+    public static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
 
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
     private User mCurrentUser;
@@ -137,7 +137,7 @@ public class OrdersListActivity extends AppCompatActivity
                     .replace(R.id.order_detail_container, fragment, ORDERDETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
-            Intent intent = new Intent(OrdersListActivity.this, OrderDetailActivity.class);
+            Intent intent = new Intent(this, OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
             startActivity(intent);
         }

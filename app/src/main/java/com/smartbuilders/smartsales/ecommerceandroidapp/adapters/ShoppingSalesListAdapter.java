@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,9 @@ import java.util.ArrayList;
  */
 public class ShoppingSalesListAdapter extends BaseAdapter {
 
-    private Context mContext;
     private ArrayList<SalesOrder> mDataset;
 
-    public ShoppingSalesListAdapter(Context context, ArrayList<SalesOrder> data) {
-        mContext = context;
+    public ShoppingSalesListAdapter(ArrayList<SalesOrder> data) {
         mDataset = data;
     }
 
@@ -45,12 +42,11 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_sales_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
-        viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
-        viewHolder.shoppingSaleSubTotal.setText(mContext.getString(R.string.order_sub_total_amount, mDataset.get(position).getSubTotalAmount()));
+        viewHolder.shoppingSaleLinesNumber.setText(parent.getContext().getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
 
         view.setTag(viewHolder);
         return view;
@@ -63,12 +59,10 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView businessPartnerCommercialName;
         public TextView shoppingSaleLinesNumber;
-        public TextView shoppingSaleSubTotal;
 
         public ViewHolder(View v) {
             businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             shoppingSaleLinesNumber = (TextView) v.findViewById(R.id.shopping_sale_lines_number_textView);
-            shoppingSaleSubTotal = (TextView) v.findViewById(R.id.shopping_sale_sub_total_textView);
         }
     }
 }

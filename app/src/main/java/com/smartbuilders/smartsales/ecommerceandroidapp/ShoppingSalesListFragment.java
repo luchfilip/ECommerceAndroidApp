@@ -40,8 +40,7 @@ public class ShoppingSalesListFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.shopping_sales_orders_list);
 
-        listView.setAdapter(new ShoppingSalesListAdapter(getContext(),
-                (new SalesOrderDB(getContext(), mCurrentUser)).getActiveShoppingSalesOrders()));
+        listView.setAdapter(new ShoppingSalesListAdapter((new SalesOrderDB(getContext(), mCurrentUser)).getActiveShoppingSalesOrders()));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
