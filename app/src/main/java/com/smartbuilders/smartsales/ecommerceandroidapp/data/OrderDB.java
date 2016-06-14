@@ -7,6 +7,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.sql.Timestamp;
@@ -29,107 +30,14 @@ public class OrderDB {
 
     public String createOrderFromOrderLines(Integer salesOrderId, Integer businessPartnerId,
                                             ArrayList<OrderLine> orderLines){
-        return createOrder(salesOrderId, businessPartnerId, OrderLineDB.FINALIZED_ORDER_DOCTYPE, orderLines, true);
+        return createOrder(salesOrderId, businessPartnerId, orderLines, true);
     }
 
     public String createOrderFromShoppingCart(){
-        return createOrder(null, null, OrderLineDB.FINALIZED_ORDER_DOCTYPE,
-                (new OrderLineDB(context, user)).getShoppingCart(), false);
+        return createOrder(null, null, (new OrderLineDB(context, user)).getShoppingCart(), false);
     }
 
     public Order getLastFinalizedOrder(){
-        return getLastOrderByDocType(OrderLineDB.FINALIZED_ORDER_DOCTYPE);
-    }
-
-    public ArrayList<Order> getActiveOrders(){
-        return getActiveOrders(OrderLineDB.FINALIZED_ORDER_DOCTYPE, false);
-    }
-
-    public ArrayList<Order> getActiveOrdersFromSalesOrders(){
-        return getActiveOrders(SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, true);
-    }
-
-    private String createOrder(Integer salesOrderId, Integer businessPartnerId, String docType,
-                               ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
-        OrderLineDB orderLineDB = new OrderLineDB(context, user);
-        if(orderLines != null
-                && (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE) && orderLineDB.getActiveShoppingCartLinesNumber()>0)
-                || insertOrderLinesInDB){
-            Cursor c = null;
-            int orderId = 0;
-            try {
-                double subTotal=0, tax=0, total=0;
-                for(OrderLine orderLine : orderLines){
-                    subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
-                    tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
-                    total += subTotal + tax;
-                }
-
-                int rowsAffected = context.getContentResolver()
-                        .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                null,
-                                "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
-                                        " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
-                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                                new String[]{String.valueOf(salesOrderId), String.valueOf(businessPartnerId),"CO", docType,
-                                        Utils.getAppVersionName(context), user.getUserName(), String.valueOf(orderLines.size()),
-                                        String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total), "Y"});
-                if(rowsAffected <= 0){
-                    return "Error 001 - No se insertó el pedido en la base de datos.";
-                }
-
-                String sql = "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
-                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, sql, new String[]{"Y", docType}, null);
-                if(c.moveToNext()){
-                    orderId = c.getInt(0);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-                return e.getMessage();
-            } finally {
-                if(c != null) {
-                    try {
-                        c.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            if (docType.equals(OrderLineDB.FINALIZED_ORDER_DOCTYPE)) {
-                if (insertOrderLinesInDB) {
-                    for (OrderLine orderLine : orderLines) {
-                        orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
-                    }
-                } else {
-                    if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
-                        try {
-                            int rowsAffected = context.getContentResolver()
-                                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                            null,
-                                            "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
-                                            new String[]{String.valueOf(orderId)});
-                            if(rowsAffected <= 0){
-                                return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
-                            }
-                        } catch (Exception e){
-                            e.printStackTrace();
-                            return e.getMessage();
-                        }
-                        return "Error 002 - No se insertó el pedido en la base de datos.";
-                    }
-                }
-            }
-        }else{
-            return "No existen productos en el Carrito de compras.";
-        }
-        return null;
-    }
-
-    private Order getLastOrderByDocType(String docType){
         Cursor c = null;
         Order order = null;
         try {
@@ -138,7 +46,7 @@ public class OrderDB {
                     " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType}, null);
+                    .build(), null, sql, new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
             if(c.moveToNext()){
                 order = new Order();
                 order.setId(c.getInt(0));
@@ -168,12 +76,96 @@ public class OrderDB {
         return order;
     }
 
+    public ArrayList<Order> getActiveOrders(){
+        return getActiveOrders(false);
+    }
+
+    public ArrayList<Order> getActiveOrdersFromSalesOrders(){
+        return getActiveOrders(true);
+    }
+
+    private String createOrder(Integer salesOrderId, Integer businessPartnerId,
+                               ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
+        OrderLineDB orderLineDB = new OrderLineDB(context, user);
+        if((orderLines!=null && insertOrderLinesInDB) || orderLineDB.getActiveShoppingCartLinesNumber()>0){
+            Cursor c = null;
+            int orderId = 0;
+            try {
+                double subTotal=0, tax=0, total=0;
+                for(OrderLine orderLine : orderLines){
+                    subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
+                    tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
+                    total += subTotal + tax;
+                }
+
+                int rowsAffected = context.getContentResolver()
+                        .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                null,
+                                "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
+                                        " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
+                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                new String[]{String.valueOf(salesOrderId), String.valueOf(businessPartnerId),"CO", OrderLineDB.FINALIZED_ORDER_DOCTYPE,
+                                        Utils.getAppVersionName(context), user.getUserName(), String.valueOf(orderLines.size()),
+                                        String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total), "Y"});
+                if(rowsAffected <= 0){
+                    return "Error 001 - No se insertó el pedido en la base de datos.";
+                }
+
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                        null,
+                        "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                        new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
+                if(c!=null && c.moveToNext()){
+                    orderId = c.getInt(0);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+                return e.getMessage();
+            } finally {
+                if(c != null) {
+                    try {
+                        c.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (insertOrderLinesInDB) {
+                for (OrderLine orderLine : orderLines) {
+                    orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
+                }
+            } else {
+                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
+                    try {
+                        int rowsAffected = context.getContentResolver()
+                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                        null,
+                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
+                                        new String[]{String.valueOf(orderId)});
+                        if(rowsAffected <= 0){
+                            return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        return e.getMessage();
+                    }
+                    return "Error 002 - No se insertó el pedido en la base de datos.";
+                }
+            }
+        }else{
+            return "No existen productos en el Carrito de compras.";
+        }
+        return null;
+    }
+
     /**
      *
-     * @param docType
      * @return
      */
-    private ArrayList<Order> getActiveOrders(String docType, boolean fromSalesOrder){
+    private ArrayList<Order> getActiveOrders(boolean fromSalesOrder){
         ArrayList<Order> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
@@ -187,7 +179,7 @@ public class OrderDB {
                     " order by ECOMMERCE_ORDER_ID desc";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType}, null);
+                    .build(), null, sql, new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
             while(c.moveToNext()){
                 Order order = new Order();
                 order.setId(c.getInt(0));
@@ -217,9 +209,11 @@ public class OrderDB {
                 }
             }
         }
-        OrderLineDB orderLineDB = new OrderLineDB(context, user);
-        for(Order order : activeOrders){
-            order.setLinesNumber(orderLineDB.getOrderLineNumbersByOrderId(order.getId()));
+        if(fromSalesOrder) {
+            BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
+            for(Order order : activeOrders){
+                order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
+            }
         }
         return activeOrders;
     }

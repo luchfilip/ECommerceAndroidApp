@@ -273,4 +273,6 @@
     <string name="invalid_email_format">El formato de coreo electrónico es inválido.</string>
     <string name="register">Registrar</string>
     <string name="no_products_to_show">No se encontraron productos para mostrar.</string>
+    <string name="closing_sales_order_wait_please">Finalizando cotización, espere por favor...</string>
+    <string name="closing_order_wait_please">Finalizando pedido, espere por favor...</string>
 </resources>

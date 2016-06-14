@@ -1,7 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +43,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView totalAmount;
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentBusinessPartnerId;
+    private ProgressDialog waitPlease;
 
     public ShoppingSaleFragment() {
     }
@@ -94,19 +98,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SalesOrderDB salesOrderDB = new SalesOrderDB(getContext(), mCurrentUser);
-                                String result = salesOrderDB.createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId);
-                                if(result == null){
-                                    Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
-                                    intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrderDB.getLastFinalizedSalesOrder());
-                                    startActivity(intent);
-                                    getActivity().finish();
-                                }else{
-                                    new AlertDialog.Builder(getContext())
-                                            .setMessage(result)
-                                            .setNeutralButton(android.R.string.ok, null)
-                                            .show();
-                                }
+                                closeSalesOrder();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -127,6 +119,70 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             fillFields();
         }
         return view;
+    }
+
+    private void closeSalesOrder(){
+        lockScreen();
+        new Thread() {
+            @Override
+            public void run() {
+                String result = null;
+                try {
+                    result = new SalesOrderDB(getContext(), mCurrentUser)
+                            .createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result = e.getMessage();
+                } finally {
+                    unlockScreen(result);
+                }
+            }
+        }.start();
+    }
+
+    private void lockScreen() {
+        if (getActivity()!=null) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            } else {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+            }
+            if (waitPlease==null || !waitPlease.isShowing()){
+                waitPlease = ProgressDialog.show(getContext(), null,
+                        getString(R.string.closing_sales_order_wait_please), true, false);
+            }
+        }
+    }
+
+    private void unlockScreen(final String message){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(message!=null){
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(message)
+                            .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                } else {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
+                    intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, new SalesOrderDB(getContext(), mCurrentUser)
+                            .getLastFinalizedSalesOrder());
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                if (waitPlease!=null && waitPlease.isShowing()) {
+                    waitPlease.cancel();
+                    waitPlease = null;
+                }
+            }
+        });
     }
 
     public void fillFields(){

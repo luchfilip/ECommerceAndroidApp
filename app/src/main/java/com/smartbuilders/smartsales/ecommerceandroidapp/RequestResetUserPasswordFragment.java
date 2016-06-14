@@ -140,7 +140,6 @@ public class RequestResetUserPasswordFragment extends Fragment {
                     waitPlease = null;
                 }
                 mServiceRunning = false;
-
             }
         });
     }
