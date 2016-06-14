@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -31,7 +30,8 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="vertical"
@@ -39,283 +39,222 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants" >
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="5dp"
-                card_view:cardElevation="2dp"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                android:focusable="true">
+                android:background="@drawable/shape"
+                android:id="@+id/card_view"
+                android:layout_margin="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_name"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/productDetailActivity_productName_text_size"
+                    android:focusable="false"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp" />
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_name"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/productDetailActivity_productName_text_size"
+                        android:layout_height="@dimen/viewpager_height"
+                        android:id="@+id/product_image"
                         android:focusable="false"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp" />
+                        android:layout_margin="4dp"
+                        android:layout_weight="4" />
 
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:baselineAligned="false">
+                        android:layout_weight="5"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp">
 
-                        <ImageView
+                        <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/viewpager_height"
-                            android:id="@+id/product_image"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/product_brand"
                             android:focusable="false"
-                            android:layout_margin="4dp"
-                            android:layout_weight="4" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/product_commercial_package"
+                            android:focusable="false"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
+
+                        <TextView
+                            android:id="@+id/product_availability"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:focusable="false"
+                            android:textColor="@color/product_availability"
+                            android:textSize="@dimen/productDetailActivity_productAvailability_text_size" />
+
+                        <RatingBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/Widget.AppCompat.RatingBar.Indicator"
+                            android:progressTint="@color/ratingbar_progress"
+                            android:numStars="5"
+                            android:rating="2.5"
+                            android:id="@+id/product_ratingbar"
+                            android:focusable="false" />
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp">
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_gravity="bottom"
+                            android:gravity="bottom">
 
-                            <TextView
+                            <Button
+                                style="@style/MainButtonAppTheme"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/product_brand"
-                                android:focusable="false"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
+                                android:text="@string/buy"
+                                android:id="@+id/product_addtoshoppingcart_button"
+                                android:layout_marginBottom="2dp"
+                                android:layout_marginTop="2dp"
+                                android:textStyle="bold" />
 
-                            <TextView
+                            <Button
+                                style="@style/GoldenButtonAppTheme"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/product_commercial_package"
-                                android:focusable="false"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
-
-                            <TextView
-                                android:id="@+id/product_availability"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:focusable="false"
-                                android:textColor="@color/product_availability"
-                                android:textSize="@dimen/productDetailActivity_productAvailability_text_size" />
-
-                            <RatingBar
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/Widget.AppCompat.RatingBar.Indicator"
-                                android:progressTint="@color/ratingbar_progress"
-                                android:numStars="5"
-                                android:rating="2.5"
-                                android:id="@+id/product_ratingbar"
-                                android:focusable="false" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:layout_gravity="bottom"
-                                android:gravity="bottom">
-
-                                <Button
-                                    style="@style/MainButtonAppTheme"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/buy"
-                                    android:id="@+id/product_addtoshoppingcart_button"
-                                    android:layout_marginBottom="2dp"
-                                    android:layout_marginTop="2dp"
-                                    android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:textStyle="bold" />
-
-                                <Button
-                                    style="@style/GoldenButtonAppTheme"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/sell"
-                                    android:id="@+id/product_addtoshoppingsales_button"
-                                    android:layout_marginTop="2dp"
-                                    android:textAppearance="@android:style/TextAppearance.Small"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
+                                android:text="@string/sell"
+                                android:layout_marginTop="2dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:background="@drawable/shape"
                 android:id="@+id/card_details_description"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="5dp"
-                card_view:cardElevation="2dp"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                android:focusable="false">
+                android:layout_margin="4dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product_details_label"
+                    android:textSize="@dimen/productDetailActivity_details_label_text_size"
+                    android:textColor="@color/label_color"
+                    android:focusable="false" />
+
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="false">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_detail_description"
+                    android:textSize="@dimen/productDetailActivity_details_text_size"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:focusable="false"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/product_details_label"
-                        android:textSize="@dimen/productDetailActivity_details_label_text_size"
-                        android:textColor="@color/label_color"
-                        android:focusable="false" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/product_detail_description"
-                        android:textSize="@dimen/productDetailActivity_details_text_size"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:focusable="false"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:background="@drawable/shape"
                 android:id="@+id/related_shopping_products_card_view"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="5dp"
-                card_view:cardElevation="2dp"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                android:focusable="false">
+                android:layout_margin="4dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/related_shopping_products"
+                    android:id="@+id/related_shopping_products"
+                    android:textSize="@dimen/related_products_label_text_size"
+                    android:focusable="false"
+                    android:textColor="@color/label_color" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/related_shopping_products_recycler_view"
+                    android:scrollbars="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="false">
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/related_shopping_products"
-                        android:id="@+id/related_shopping_products"
-                        android:textSize="@dimen/related_products_label_text_size"
-                        android:focusable="false"
-                        android:textColor="@color/label_color" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/related_shopping_products_recycler_view"
-                        android:scrollbars="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:layout_marginTop="5dp" />
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:background="@drawable/shape"
                 android:id="@+id/related_products_by_brand_card_view"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="5dp"
-                card_view:cardElevation="2dp"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                android:focusable="false" >
+                android:layout_margin="4dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="false" >
+                    android:layout_height="wrap_content"
+                    android:id="@+id/related_products_by_brand_tv"
+                    android:textSize="@dimen/related_products_label_text_size"
+                    android:textColor="@color/label_color"
+                    android:focusable="false" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/related_products_by_brand_tv"
-                        android:textSize="@dimen/related_products_label_text_size"
-                        android:textColor="@color/label_color"
-                        android:focusable="false" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/related_products_by_brand_recycler_view"
+                    android:scrollbars="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:focusable="false" />
+            </LinearLayout>
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/related_products_by_brand_recycler_view"
-                        android:scrollbars="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:focusable="false" />
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:background="@drawable/shape"
                 android:id="@+id/relatedproducts_card_view"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardCornerRadius="2dp"
-                card_view:contentPadding="5dp"
-                card_view:cardElevation="2dp"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@android:color/white"
-                android:focusable="false">
+                android:layout_margin="4dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/related_products"
+                    android:id="@+id/related_products"
+                    android:textSize="@dimen/related_products_label_text_size"
+                    android:focusable="false"
+                    android:textColor="@color/label_color" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/relatedproducts_recycler_view"
+                    android:scrollbars="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:focusable="false">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/related_products"
-                        android:id="@+id/related_products"
-                        android:textSize="@dimen/related_products_label_text_size"
-                        android:focusable="false"
-                        android:textColor="@color/label_color" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/relatedproducts_recycler_view"
-                        android:scrollbars="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:layout_marginTop="5dp" />
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
