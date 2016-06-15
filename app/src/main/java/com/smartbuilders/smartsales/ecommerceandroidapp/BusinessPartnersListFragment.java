@@ -43,7 +43,7 @@ public class BusinessPartnersListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
 
         new Thread() {
             @Override
@@ -72,7 +72,7 @@ public class BusinessPartnersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mListView = (ListView) rootView.findViewById(R.id.business_partners_list);
+                                mListView = (ListView) view.findViewById(R.id.business_partners_list);
 
                                 mListView.setAdapter(businessPartnersListAdapter);
 
@@ -102,8 +102,8 @@ public class BusinessPartnersListFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                rootView.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 if (getActivity()!=null) {
                                     if (savedInstanceState==null) {
                                         ((Callback) getActivity()).onListIsLoaded();
@@ -117,8 +117,7 @@ public class BusinessPartnersListFragment extends Fragment {
                 }
             }
         }.start();
-
-        return rootView;
+        return view;
     }
 
     @Override

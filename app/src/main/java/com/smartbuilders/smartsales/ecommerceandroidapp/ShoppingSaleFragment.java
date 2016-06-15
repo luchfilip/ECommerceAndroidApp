@@ -50,74 +50,96 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if(savedInstanceState!=null) {
-            if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
-                mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
-            }
-            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
-            }
-        }
-
-        if(getArguments()!=null){
-            if(getArguments().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)){
-                mCurrentBusinessPartnerId = getArguments().getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
-            }
-        }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
-            if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
-                mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
-                        .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
-            }
-        }
-
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_sale, container, false);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if(savedInstanceState!=null) {
+                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
+                            mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+                        }
+                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
+                    }
 
-        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
-        mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), this, mSalesOrderLines, mCurrentUser);
+                    if(getArguments()!=null){
+                        if(getArguments().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)){
+                            mCurrentBusinessPartnerId = getArguments().getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+                        }
+                    }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
+                        if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
+                            mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
+                                    .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+                        }
+                    }
+                    mCurrentUser = Utils.getCurrentUser(getContext());
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mShoppingSaleAdapter);
-
-        if (mRecyclerViewCurrentFirstPosition!=0) {
-            recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-        }
-
-        view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
-            .setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(getContext())
-                        .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                closeSalesOrder();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
+                    mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mCurrentUser);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
 
-        totalLines = (TextView) view.findViewById(R.id.total_lines);
-        subTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
-        taxesAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
-        totalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                recyclerView.setAdapter(mShoppingSaleAdapter);
 
-        if (mSalesOrderLines ==null || mSalesOrderLines.size()==0) {
-            view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
-            view.findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
-        } else {
-            fillFields();
-        }
+                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                }
+
+                                view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
+                                        .setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                new AlertDialog.Builder(getContext())
+                                                        .setMessage(R.string.proceed_to_checkout_quoatation_question)
+                                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                closeSalesOrder();
+                                                            }
+                                                        })
+                                                        .setNegativeButton(android.R.string.no, null)
+                                                        .show();
+                                            }
+                                        });
+
+                                totalLines = (TextView) view.findViewById(R.id.total_lines);
+                                subTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
+                                taxesAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
+                                totalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+
+                                if (mSalesOrderLines ==null || mSalesOrderLines.size()==0) {
+                                    view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
+                                    view.findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
+                                } else {
+                                    fillFields();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
         return view;
     }
 
@@ -193,10 +215,14 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mSalesOrderLines.size())));
-        subTotalAmount.setText(getString(R.string.order_sub_total_amount, String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
-        taxesAmount.setText(getString(R.string.order_tax_amount, String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
-        totalAmount.setText(getString(R.string.order_total_amount, String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
+        totalLines.setText(getString(R.string.order_lines_number,
+                String.valueOf(mSalesOrderLines.size())));
+        subTotalAmount.setText(getString(R.string.order_sub_total_amount,
+                String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
+        taxesAmount.setText(getString(R.string.order_tax_amount,
+                String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
+        totalAmount.setText(getString(R.string.order_total_amount,
+                String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
     }
 
     @Override

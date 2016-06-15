@@ -18,6 +18,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+/**
+ * Jesus Sarco, before 15.06.2016
+ */
 public class ShoppingSalesListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ShoppingSalesListFragment.Callback {
 
