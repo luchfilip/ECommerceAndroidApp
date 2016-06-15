@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_name"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_productName_text_size"
                 android:maxLines="2" />
 
@@ -40,14 +40,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_productBrand_text_size" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_commercial_package"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
 
             <TextView
@@ -77,7 +77,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:gravity="center_vertical">
 
@@ -88,28 +88,39 @@
             android:layout_weight="3"
             android:gravity="center_vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/share_imageView"
-                android:src="@drawable/ic_share_black_24dp"
-                style="@style/image_button_style"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:padding="5dp"
-                android:layout_gravity="center"
-                android:layout_weight="1" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/favorite_imageView"
-                style="@style/image_button_style"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:padding="5dp"
-                android:layout_gravity="center"
-                android:layout_weight="1" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/share_imageView"
+                    android:src="@drawable/ic_share_black_24dp"
+                    style="@style/image_button_style"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="5dp"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favorite_imageView"
+                    style="@style/image_button_style"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="5dp"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <Button

@@ -19,6 +19,8 @@
     <color name="grey">#CCCCCC</color>
     <color name="grey_medium">#dddddd</color>
     <color name="light_grey">#eeeeee</color>
+    <color name="transparent_light_grey">#AAeeeeee</color>
+    <color name="transparent_white">#AAFFFFFF</color>
     <color name="category_product_card_color">#7ceeeeee</color>
     <color name="search_bar_button_color">#444444</color>
     <!-- Green -->
@@ -26,7 +28,7 @@
     <color name="green_dark">#159204</color>
     <color name="bright_green">#02d8b0</color>
     <color name="button_green">#10a54a</color>
-    <color name="golden">#ffd700</color>
+    <color name="golden">#ffc300</color>
     <color name="golden_medium">#ffe450</color>
     <color name="button_text_color">#333333</color>
     <color name="black">#222222</color>

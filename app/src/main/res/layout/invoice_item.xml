@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Numero de Factura"
         android:id="@+id/invoice_number_tv"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
         android:text="Importe:"
         android:id="@+id/grand_total_tv"
         android:layout_gravity="right"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,5 +44,5 @@
         android:text="Saldo:"
         android:id="@+id/balance_tv"
         android:layout_gravity="right"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/black" />
 </LinearLayout>

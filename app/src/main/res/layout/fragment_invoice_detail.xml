@@ -12,7 +12,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Numero de Factura"
         android:id="@+id/invoice_number_tv"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="match_parent"

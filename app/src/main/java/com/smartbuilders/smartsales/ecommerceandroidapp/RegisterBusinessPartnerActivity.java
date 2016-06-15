@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -29,6 +30,8 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
                 if (findViewById(R.id.title_textView)!=null) {
                     ((TextView) findViewById(R.id.title_textView))
                             .setText(getString(R.string.update_business_partner));
+                    ((ImageView) findViewById(R.id.toolbar_imageView))
+                            .setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
         }

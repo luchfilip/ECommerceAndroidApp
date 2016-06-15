@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_name"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:id="@+id/qty_requested_textView"
             android:gravity="bottom|right"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

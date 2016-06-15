@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_name"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/productDetailActivity_productName_text_size"
                     android:focusable="false"
                     android:layout_marginLeft="4dp"
@@ -160,7 +160,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:focusable="false"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout

@@ -37,16 +37,40 @@ public class OrderDB {
         return createOrder(null, null, (new OrderLineDB(context, user)).getShoppingCart(), false);
     }
 
-    public Order getLastFinalizedOrder(){
+    public int getLastFinalizedOrderId(){
         Cursor c = null;
-        Order order = null;
         try {
-            String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL"+
-                    " FROM ECOMMERCE_ORDER " +
-                    " WHERE ECOMMERCE_ORDER_ID = (SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?)";
+            String sql = "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
+            if(c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public Order getActiveOrderById(int orderId){
+        Cursor c = null;
+        Order order = null;
+        try {
+            String sql = "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL "+
+                    " FROM ECOMMERCE_ORDER " +
+                    " WHERE ECOMMERCE_ORDER_ID = ? AND ISACTIVE = ?";
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null, sql, new String[]{String.valueOf(orderId), "Y"}, null);
             if(c.moveToNext()){
                 order = new Order();
                 order.setId(c.getInt(0));

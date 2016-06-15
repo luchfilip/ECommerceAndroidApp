@@ -20,7 +20,6 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -47,77 +46,98 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if(savedInstanceState != null) {
+                        if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
+                            mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+                        }
+                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
+                            mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+                        }
+                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
+                    }
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
-                mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
-            }
-            if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
-                mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
-            }
-            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
-                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
-            }
-        }
+                    if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+                        if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
+                            mSalesOrderId = getActivity().getIntent().getExtras()
+                                    .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
+                        }
+                        if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
+                            mBusinessPartnerId = getActivity().getIntent().getExtras()
+                                    .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
+                        }
+                    }
 
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
-                mSalesOrderId = getActivity().getIntent().getExtras()
-                        .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
-                mBusinessPartnerId = getActivity().getIntent().getExtras()
-                        .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
-            }
-        }
+                    mCurrentUser = Utils.getCurrentUser(getContext());
 
-        if (mSalesOrderId>0) {
-            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
-        }else {
-            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
-        }
-
-        if (mOrderLines==null || mOrderLines.size()==0) {
-            view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.main_layout).setVisibility(View.GONE);
-        } else {
-            mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
-
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            recyclerView.setHasFixedSize(true);
-            mLinearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(mLinearLayoutManager);
-            recyclerView.setAdapter(mShoppingCartAdapter);
-
-            if (mRecyclerViewCurrentFirstPosition!=0) {
-                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-            }
-
-            view.findViewById(R.id.proceed_to_checkout_button)
-                    .setOnClickListener(new View.OnClickListener() {
+                    if (mSalesOrderId>0) {
+                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
+                    }else {
+                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
+                    }
+                    mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
+                            ShoppingCartFragment.this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
-                        public void onClick(View v) {
-                            new AlertDialog.Builder(getContext())
-                                    .setMessage(R.string.proceed_to_checkout_question)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            closeOrder();
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
+                        public void run() {
+                            try {
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                recyclerView.setHasFixedSize(true);
+                                mLinearLayoutManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(mLinearLayoutManager);
+                                recyclerView.setAdapter(mShoppingCartAdapter);
+
+                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                }
+
+                                view.findViewById(R.id.proceed_to_checkout_button)
+                                        .setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                new AlertDialog.Builder(getContext())
+                                                        .setMessage(R.string.proceed_to_checkout_question)
+                                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                closeOrder();
+                                                            }
+                                                        })
+                                                        .setNegativeButton(android.R.string.no, null)
+                                                        .show();
+                                            }
+                                        });
+                                ((TextView) view.findViewById(R.id.total_lines))
+                                        .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                if (mOrderLines==null || mOrderLines.size()==0) {
+                                    view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.shopping_cart_layout).setVisibility(View.GONE);
+                                }
+                            }
                         }
                     });
-            ((TextView) view.findViewById(R.id.total_lines))
-                    .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
-        }
+                }
+            }
+        }.start();
         return view;
     }
 
@@ -185,8 +205,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             waitPlease = null;
                         }
                         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                        intent.putExtra(OrderDetailActivity.KEY_ORDER, new OrderDB(getContext(), mCurrentUser)
-                                .getLastFinalizedOrder());
+                        intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, new OrderDB(getContext(), mCurrentUser)
+                                .getLastFinalizedOrderId());
                         startActivity(intent);
                         getActivity().finish();
                     }

@@ -34,13 +34,13 @@ public class OrdersListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_orders_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
 
         mCurrentUser = Utils.getCurrentUser(getContext());
 
         ArrayList<Order> activeOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveOrders();
         if (activeOrders!=null && !activeOrders.isEmpty()) {
-            ListView listView = (ListView) rootView.findViewById(R.id.orders_list);
+            ListView listView = (ListView) view.findViewById(R.id.orders_list);
             listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders));
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,6 +56,31 @@ public class OrdersListFragment extends Fragment {
                 }
             });
         }
-        return rootView;
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
+        return view;
     }
 }

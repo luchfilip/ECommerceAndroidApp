@@ -122,7 +122,7 @@ public class OrdersListActivity extends AppCompatActivity
         mCurrentSelectedItemPosition = selectedItemPosition;
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putParcelable(OrderDetailActivity.KEY_ORDER, order);
+            args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
 
             OrderDetailFragment fragment = new OrderDetailFragment();
             fragment.setArguments(args);
@@ -132,7 +132,7 @@ public class OrdersListActivity extends AppCompatActivity
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderDetailActivity.class);
-            intent.putExtra(OrderDetailActivity.KEY_ORDER, order);
+            intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, order.getId());
             startActivity(intent);
         }
     }

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrderLineAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -34,10 +35,11 @@ import java.util.ArrayList;
  */
 public class OrderDetailFragment extends Fragment {
 
+    private static final String STATE_ORDER_ID = "STATE_ORDER_ID";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
-    private Order mOrder;
+    private int mOrderId;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
@@ -48,56 +50,78 @@ public class OrderDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (savedInstanceState!=null) {
-            if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
-            }
-        }
-
-        View rootView = inflater.inflate(R.layout.fragment_order_detail, container, false);
-
+                             final Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
         setHasOptionsMenu(true);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (savedInstanceState!=null) {
+                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
+                        if (savedInstanceState.containsKey(STATE_ORDER_ID)) {
+                            mOrderId = savedInstanceState.getInt(STATE_ORDER_ID);
+                        }
+                    }
 
-        if (getArguments() != null) {
-            if (getArguments().containsKey(OrderDetailActivity.KEY_ORDER)) {
-                mOrder = getArguments().getParcelable(OrderDetailActivity.KEY_ORDER);
+                    if (getArguments() != null) {
+                        if (getArguments().containsKey(OrderDetailActivity.KEY_ORDER_ID)) {
+                            mOrderId = getArguments().getInt(OrderDetailActivity.KEY_ORDER_ID);
+                        }
+                    } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
+                        if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER_ID)) {
+                            mOrderId = getActivity().getIntent().getExtras().getInt(OrderDetailActivity.KEY_ORDER_ID);
+                        }
+                    }
+
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+
+                    mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
+                            .getActiveFinalizedOrderLinesByOrderId(mOrderId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.order_lines);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                recyclerView.setHasFixedSize(true);
+                                mLinearLayoutManager = new LinearLayoutManager(getActivity());
+                                recyclerView.setLayoutManager(mLinearLayoutManager);
+                                recyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+
+                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                }
+
+                                ((TextView) view.findViewById(R.id.order_lines_number_tv))
+                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+
+                                Order order = (new OrderDB(getContext(), mCurrentUser)).getActiveOrderById(mOrderId);
+                                ((TextView) view.findViewById(R.id.order_number_tv))
+                                        .setText(getContext().getString(R.string.order_number, order.getOrderNumber()));
+
+                                ((TextView) view.findViewById(R.id.order_date_tv))
+                                        .setText(getContext().getString(R.string.order_date, order.getCreatedStringFormat()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
             }
-        } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER)) {
-                mOrder = getActivity().getIntent().getExtras().getParcelable(OrderDetailActivity.KEY_ORDER);
-            }
-        }
-
-        if (mOrder != null) {
-            mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
-                    .getActiveFinalizedOrderLinesByOrderId(mOrder.getId());
-
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.order_lines);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            recyclerView.setHasFixedSize(true);
-            mLinearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(mLinearLayoutManager);
-            recyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
-
-            if (mRecyclerViewCurrentFirstPosition!=0) {
-                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-            }
-
-            ((TextView) rootView.findViewById(R.id.order_lines_number_tv))
-                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
-
-            ((TextView) rootView.findViewById(R.id.order_number_tv))
-                    .setText(getContext().getString(R.string.order_number, mOrder.getOrderNumber()));
-
-            ((TextView) rootView.findViewById(R.id.order_date_tv))
-                    .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
-        }
-        return rootView;
+        }.start();
+        return view;
     }
 
     @Override
@@ -180,6 +204,7 @@ public class OrderDetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_ORDER_ID, mOrderId);
         if(mLinearLayoutManager!=null) {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,

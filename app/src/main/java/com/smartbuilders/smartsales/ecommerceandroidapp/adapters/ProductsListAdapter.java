@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
@@ -202,20 +203,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.shareImageView!=null) {
-            holder.shareImageView.setColorFilter(mContext.getResources().getColor(R.color.black),
-                    PorterDuff.Mode.SRC_ATOP);
+            //holder.shareImageView.setColorFilter(mContext.getResources().getColor(R.color.black),
+            //        PorterDuff.Mode.SRC_ATOP);
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
-                            mDataset.get(position), mContext, mCurrentUser), mContext.getString(R.string.share_image)));
+                    holder.shareImageView.setEnabled(false);
+                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(position), holder.shareImageView).start();
                 }
             });
         }
 
         if(holder.favoriteImageView!=null) {
-            holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
-                PorterDuff.Mode.SRC_ATOP);
+            //holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
+            //    PorterDuff.Mode.SRC_ATOP);
             if(mDataset.get(position).isFavorite()){
                 holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
@@ -330,5 +331,31 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private String removeFromWishList(Product product) {
         product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
         return (new OrderLineDB(mContext, mCurrentUser)).removeProductFromWishList(product);
+    }
+
+    class CreateShareIntentThread extends Thread {
+        private Activity mActivity;
+        private Product mProduct;
+        private ImageView mShareProductImageView;
+
+        CreateShareIntentThread(Activity activity, Product product, ImageView shareProductImageView) {
+            mActivity = activity;
+            mProduct = product;
+            mShareProductImageView = shareProductImageView;
+        }
+
+        public void run() {
+            final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
+                    mContext, mCurrentUser), mContext.getString(R.string.share_image));
+            if(mActivity!=null){
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContext.startActivity(shareIntent);
+                        mShareProductImageView.setEnabled(true);
+                    }
+                });
+            }
+        }
     }
 }

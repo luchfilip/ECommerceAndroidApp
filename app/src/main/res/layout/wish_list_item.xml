@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_name"
                     android:layout_weight="1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/black"
                     android:layout_gravity="center_vertical"
                     android:textStyle="bold"
                     android:layout_marginRight="4dp"
@@ -53,14 +53,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_productBrand_text_size" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_commercial_package"
-                android:textColor="@android:color/black"
+                android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
 
             <TextView
@@ -90,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingTop="5dp"
+        android:paddingTop="2dp"
         android:paddingBottom="2dp">
 
         <LinearLayout
