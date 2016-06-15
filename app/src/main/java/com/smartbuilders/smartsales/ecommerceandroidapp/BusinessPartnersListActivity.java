@@ -122,10 +122,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     private void showDialogCreateBusinessPartner() {
-        FragmentManager fm = getSupportFragmentManager();
         DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
                 DialogRegisterBusinessPartner.newInstance(mCurrentUser);
-        dialogRegisterBusinessPartner.show(fm, DialogRegisterBusinessPartner.class.getSimpleName());
+        dialogRegisterBusinessPartner.show(getSupportFragmentManager(),
+                DialogRegisterBusinessPartner.class.getSimpleName());
     }
 
     @Override

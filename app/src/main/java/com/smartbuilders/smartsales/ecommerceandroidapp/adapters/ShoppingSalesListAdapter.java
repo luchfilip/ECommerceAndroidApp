@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
  */
 public class ShoppingSalesListAdapter extends BaseAdapter {
 
+    private Context mContext;
     private ArrayList<SalesOrder> mDataset;
 
-    public ShoppingSalesListAdapter(ArrayList<SalesOrder> data) {
+    public ShoppingSalesListAdapter(Context context, ArrayList<SalesOrder> data) {
+        mContext = context;
         mDataset = data;
     }
 
@@ -42,11 +45,11 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_sales_list_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
-        viewHolder.shoppingSaleLinesNumber.setText(parent.getContext().getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
+        viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
 
         view.setTag(viewHolder);
         return view;
@@ -64,5 +67,10 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
             businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             shoppingSaleLinesNumber = (TextView) v.findViewById(R.id.shopping_sale_lines_number_textView);
         }
+    }
+
+    public void setData(ArrayList<SalesOrder> salesOrders) {
+        mDataset = salesOrders;
+        notifyDataSetChanged();
     }
 }

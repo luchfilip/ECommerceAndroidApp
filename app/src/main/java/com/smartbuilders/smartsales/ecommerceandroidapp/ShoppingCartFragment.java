@@ -29,7 +29,8 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback {
+public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback,
+        DialogUpdateQuantityOrdered.Callback {
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
@@ -141,6 +142,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void closeOrder(){
         lockScreen();
         new Thread() {
@@ -224,6 +230,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 DialogUpdateQuantityOrdered.class.getSimpleName());
     }
 
+    @Override
     public void reloadShoppingCart(){
         if (mSalesOrderId <= 0){
             mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();

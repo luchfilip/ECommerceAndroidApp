@@ -38,6 +38,10 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
         return dialogUpdateQuantityOrdered;
     }
 
+    public interface Callback {
+        void reloadShoppingCart();
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -85,7 +89,7 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
                         result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
                     }
                     if(result == null){
-                        ((ShoppingCartFragment) getTargetFragment()).reloadShoppingCart();
+                        ((Callback) getTargetFragment()).reloadShoppingCart();
                     } else {
                         throw new Exception(result);
                     }

@@ -24,7 +24,6 @@ public class BusinessPartnersListFragment extends Fragment {
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
     private ListView mListView;
-    // save index and top position
     private int mListViewIndex;
     private int mListViewTop;
     private int mCurrentSelectedIndex;
@@ -105,10 +104,12 @@ public class BusinessPartnersListFragment extends Fragment {
                             } finally {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 rootView.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                                if (savedInstanceState==null && getActivity()!=null) {
-                                    ((Callback) getActivity()).onListIsLoaded();
-                                } else {
-                                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                if (getActivity()!=null) {
+                                    if (savedInstanceState==null) {
+                                        ((Callback) getActivity()).onListIsLoaded();
+                                    } else {
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                    }
                                 }
                             }
                         }
@@ -118,14 +119,6 @@ public class BusinessPartnersListFragment extends Fragment {
         }.start();
 
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        if (businessPartnersListAdapter!=null && businessPartnerDB!=null) {
-            businessPartnersListAdapter.setData(businessPartnerDB.getActiveBusinessPartners());
-        }
-        super.onResume();
     }
 
     @Override

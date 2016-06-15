@@ -26,6 +26,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     private User mCurrentUser;
     private boolean mTwoPane;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.shopping_sale_order_detail_container)!=null;
 
+        mListView = (ListView) findViewById(R.id.shopping_sales_orders_list);
     }
 
     @Override
@@ -70,17 +72,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        if (mTwoPane) {
-            ListView lv = (ListView) findViewById(R.id.shopping_sales_orders_list);
-            if (lv != null && lv.getAdapter()!=null && lv.getAdapter().getCount()>0) {
-                lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
-            }
-        }
-        super.onResume();
     }
 
     @Override
@@ -103,7 +94,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition) {
+    public void onItemSelected(SalesOrder salesOrder) {
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
@@ -122,11 +113,26 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(SalesOrder salesOrder, int selectedItemPosition) {
-        if(mTwoPane) {
+    public void onItemLongSelected(SalesOrder salesOrder) {
 
-        } else {
+    }
 
+    @Override
+    public void onListIsLoaded() {
+        if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
+    }
+
+    @Override
+    public void setSelectedIndex(int selectedIndex) {
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            }
         }
     }
 }
