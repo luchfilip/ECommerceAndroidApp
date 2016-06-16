@@ -84,7 +84,7 @@ public class SalesOrderDB {
                 salesOrder.setSubTotalAmount(c.getDouble(3));
                 salesOrder.setTaxAmount(c.getDouble(4));
                 salesOrder.setTotalAmount(c.getDouble(5));
-                salesOrder.setBusinessPartnerId(c.getInt(10));
+                salesOrder.setBusinessPartnerId(c.getInt(6));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -195,9 +195,8 @@ public class SalesOrderDB {
 
     public String createOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, boolean insertOrderLinesInDB){
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mCurrentUser);
-        if(orderLines != null
-                && ((salesOrderLineDB.getActiveShoppingSalesLinesNumber(businessPartnerId)>0)
-                || insertOrderLinesInDB)){
+        if((orderLines != null && insertOrderLinesInDB)
+                || salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId)>0){
             Cursor c = null;
             int salesOrderId = 0;
             try {

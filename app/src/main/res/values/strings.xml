@@ -152,6 +152,7 @@
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
+    <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
     <string name="price_label">Precio:</string>
     <string name="tax_label">(%) Impuesto:</string>
     <string name="total_label">Total:</string>

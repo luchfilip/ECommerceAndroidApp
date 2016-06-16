@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -102,34 +101,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
         viewPager.setAllowSwap(!mTwoPane);
 
         mListView = (ListView) findViewById(R.id.sales_orders_list);
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (mTwoPane) {
-            if (mListView != null && mListView.getAdapter()!=null
-                    && mListView.getAdapter().getCount() > mCurrentSelectedItemPosition
-                    && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
-                mListView.performItemClick(mListView.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
-                        mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ListView lv = (ListView) findViewById(R.id.sales_orders_list);
-        if(lv != null && (lv.getAdapter()==null || lv.getAdapter().getCount()==0)){
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            if(mTwoPane){
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
-                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
-            }else{
-                findViewById(R.id.sales_orders_list).setVisibility(View.GONE);
-            }
-        }
     }
 
     @Override
@@ -241,6 +212,36 @@ public class SalesOrdersListActivity extends AppCompatActivity
             Intent intent = new Intent(this, OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, order.getId());
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onListIsLoaded() {
+        if(mListView != null && (mListView.getAdapter()==null || mListView.getAdapter().getCount()==0)){
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            if(mTwoPane){
+                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
+                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+            }else{
+                findViewById(R.id.sales_orders_list).setVisibility(View.GONE);
+            }
+        } else if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount() > mCurrentSelectedItemPosition
+                    && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
+                mListView.performItemClick(mListView.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
+                        mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
+            }
+        }
+    }
+
+    @Override
+    public void setSelectedIndex(int selectedIndex) {
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            }
         }
     }
 

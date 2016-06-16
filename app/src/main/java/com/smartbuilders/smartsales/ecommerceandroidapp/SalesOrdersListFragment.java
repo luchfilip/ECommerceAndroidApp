@@ -27,14 +27,23 @@ public class SalesOrdersListFragment extends Fragment {
 
     public static final String KEY_LOAD_ORDERS_FROM_SALES_ORDERS = "KEY_LOAD_ORDERS_FROM_SALES_ORDERS";
     private static final String STATE_LOAD_ORDERS_FROM_SALES_ORDERS = "STATE_LOAD_ORDERS_FROM_SALES_ORDERS";
+    private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
     private User mCurrentUser;
     private boolean mLoadOrdersFromSalesOrders;
+    private ListView mListView;
+    private int mListViewIndex;
+    private int mListViewTop;
+    private int mCurrentSelectedIndex;
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
         void onItemLongSelected(SalesOrder salesOrder);
         void onItemSelected(Order order, int selectedItemPosition);
+        void onListIsLoaded();
+        void setSelectedIndex(int selectedIndex);
     }
 
     public SalesOrdersListFragment() {
@@ -42,82 +51,137 @@ public class SalesOrdersListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_sales_orders_list, container, false);
 
-        if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_LOAD_ORDERS_FROM_SALES_ORDERS)){
-                mLoadOrdersFromSalesOrders = savedInstanceState.getBoolean(STATE_LOAD_ORDERS_FROM_SALES_ORDERS);
-            }
-        }
+        final ArrayList<Order> activeOrdersFromSalesOrders = new ArrayList<>();
+        final ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
 
-        if(getArguments()!=null){
-            if(getArguments().containsKey(KEY_LOAD_ORDERS_FROM_SALES_ORDERS)){
-                mLoadOrdersFromSalesOrders = getArguments().getBoolean(KEY_LOAD_ORDERS_FROM_SALES_ORDERS);
-            }
-        }
-
-        View rootView = inflater.inflate(R.layout.fragment_sales_orders_list, container, false);
-
-        mCurrentUser = Utils.getCurrentUser(getContext());
-
-        if (mLoadOrdersFromSalesOrders) {
-            ArrayList<Order> activeOrdersFromSalesOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveOrdersFromSalesOrders();
-            if (activeOrdersFromSalesOrders!=null && !activeOrdersFromSalesOrders.isEmpty()) {
-                ListView listView = (ListView) rootView.findViewById(R.id.sales_orders_list);
-                listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrdersFromSalesOrders));
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                        // if it cannot seek to that position.
-                        Order order = (Order) adapterView.getItemAtPosition(position);
-                        if (order != null) {
-                            ((Callback) getActivity()).onItemSelected(order, position);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if(savedInstanceState!=null){
+                        if(savedInstanceState.containsKey(STATE_LOAD_ORDERS_FROM_SALES_ORDERS)){
+                            mLoadOrdersFromSalesOrders = savedInstanceState.getBoolean(STATE_LOAD_ORDERS_FROM_SALES_ORDERS);
+                        }
+                        if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)){
+                            mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
-                });
-            }
-        } else {
-            ArrayList<SalesOrder> activeSalesOrders = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders();
-            if (activeSalesOrders!=null && !activeSalesOrders.isEmpty()) {
-                ListView listView = (ListView) rootView.findViewById(R.id.sales_orders_list);
-                listView.setAdapter(new SalesOrdersListAdapter(getActivity(), activeSalesOrders));
 
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView parent, View view, int position, long id) {
-                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                        // if it cannot seek to that position.
-                        SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
-                        if (salesOrder != null) {
-                            ((Callback) getActivity()).onItemSelected(salesOrder, position);
+                    if(getArguments()!=null){
+                        if(getArguments().containsKey(KEY_LOAD_ORDERS_FROM_SALES_ORDERS)){
+                            mLoadOrdersFromSalesOrders = getArguments().getBoolean(KEY_LOAD_ORDERS_FROM_SALES_ORDERS);
                         }
                     }
-                });
 
-                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                        // if it cannot seek to that position.
-                        SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
-                        if (salesOrder != null) {
-                            ((Callback) getActivity()).onItemLongSelected(salesOrder);
-                        }
-                        return true;
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+
+                    if (mLoadOrdersFromSalesOrders) {
+                        activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mCurrentUser)).getActiveOrdersFromSalesOrders());
+                    } else {
+                        activeSalesOrders.addAll((new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders());
                     }
-                });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (mLoadOrdersFromSalesOrders) {
+                                    mListView = (ListView) view.findViewById(R.id.sales_orders_list);
+                                    mListView.setAdapter(new OrdersListAdapter(getActivity(), activeOrdersFromSalesOrders));
+
+                                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                        @Override
+                                        public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                            // if it cannot seek to that position.
+                                            Order order = (Order) adapterView.getItemAtPosition(position);
+                                            if (order != null) {
+                                                ((Callback) getActivity()).onItemSelected(order, position);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    mListView = (ListView) view.findViewById(R.id.sales_orders_list);
+                                    mListView.setAdapter(new SalesOrdersListAdapter(getActivity(), activeSalesOrders));
+
+                                    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                        @Override
+                                        public void onItemClick(AdapterView parent, View view, int position, long id) {
+                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                            // if it cannot seek to that position.
+                                            SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
+                                            if (salesOrder != null) {
+                                                ((Callback) getActivity()).onItemSelected(salesOrder, position);
+                                            }
+                                        }
+                                    });
+
+                                    mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                        @Override
+                                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                            // if it cannot seek to that position.
+                                            SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
+                                            if (salesOrder != null) {
+                                                ((Callback) getActivity()).onItemLongSelected(salesOrder);
+                                            }
+                                            return true;
+                                        }
+                                    });
+                                }
+
+                                mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                if (getActivity()!=null) {
+                                    if (savedInstanceState==null) {
+                                        ((Callback) getActivity()).onListIsLoaded();
+                                    } else {
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
-        }
-        return rootView;
+        }.start();
+        return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_LOAD_ORDERS_FROM_SALES_ORDERS, mLoadOrdersFromSalesOrders);
+        try {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        }
+        outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
         super.onSaveInstanceState(outState);
     }
 }

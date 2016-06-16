@@ -177,7 +177,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                 mDataset.get(position).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = mSalesOrderLineDB.deleteSalesOrderLine(mDataset.get(position));
+                                String result = mSalesOrderLineDB.deactiveSalesOrderLine(mDataset.get(position));
                                 if(result == null){
                                     mDataset.remove(position);
                                     notifyDataSetChanged();

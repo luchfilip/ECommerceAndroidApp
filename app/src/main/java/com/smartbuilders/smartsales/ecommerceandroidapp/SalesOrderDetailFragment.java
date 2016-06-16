@@ -44,94 +44,118 @@ public class SalesOrderDetailFragment extends Fragment {
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
-    private ArrayList<SalesOrderLine> mOrderLines;
+    private Intent mShareIntent;
 
     public SalesOrderDetailFragment() {
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (savedInstanceState!=null) {
-            if (savedInstanceState.containsKey(STATE_SALES_ORDER_ID)) {
-               mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
-            }
-            if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
-            }
-        }
-
-        View rootView = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
-
+                             final Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
         setHasOptionsMenu(true);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        final ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
 
-        if (getArguments() != null) {
-            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
-                mSalesOrderId = getArguments().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
-            }
-        } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
-                mSalesOrderId = getActivity().getIntent().getExtras().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
-            }
-        }
-        if (mSalesOrderId>0) {
-            mSalesOrder = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrderById(mSalesOrderId);
-        }
-
-        if (mSalesOrder != null) {
-            mOrderLines = new SalesOrderLineDB(getContext(), mCurrentUser)
-                    .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId());
-
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.sales_order_lines);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            recyclerView.setHasFixedSize(true);
-            mLinearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(mLinearLayoutManager);
-            recyclerView.setAdapter(new SalesOrderLineAdapter(mOrderLines, mCurrentUser));
-
-            if (mRecyclerViewCurrentFirstPosition!=0) {
-                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-            }
-
-            ((TextView) rootView.findViewById(R.id.sales_order_lines_number_tv))
-                    .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
-
-            ((TextView) rootView.findViewById(R.id.sales_order_number_tv))
-                    .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
-
-            ((TextView) rootView.findViewById(R.id.sales_order_date_tv))
-                    .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
-
-            if(rootView.findViewById(R.id.sales_order_sub_total_tv) != null) {
-                ((TextView) rootView.findViewById(R.id.sales_order_sub_total_tv))
-                        .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
-            }
-            if(rootView.findViewById(R.id.sales_order_total_tv) != null) {
-                ((TextView) rootView.findViewById(R.id.sales_order_total_tv))
-                        .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
-            }
-            if(rootView.findViewById(R.id.sales_order_tax_tv) != null) {
-                ((TextView) rootView.findViewById(R.id.sales_order_tax_tv))
-                        .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
-            }
-            if(rootView.findViewById(R.id.create_order_button)!=null){
-                rootView.findViewById(R.id.create_order_button)
-                        .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
-                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
-                        intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
-                        startActivity(intent);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (savedInstanceState!=null) {
+                        if (savedInstanceState.containsKey(STATE_SALES_ORDER_ID)) {
+                            mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+                        }
+                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
                     }
-                });
+
+                    if (getArguments() != null) {
+                        if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
+                            mSalesOrderId = getArguments().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
+                        }
+                    } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
+                        if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
+                            mSalesOrderId = getActivity().getIntent().getExtras().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
+                        }
+                    }
+
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+
+                    if (mSalesOrderId>0) {
+                        mSalesOrder = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrderById(mSalesOrderId);
+                    }
+
+                    if (mSalesOrder != null) {
+                        orderLines.addAll((new SalesOrderLineDB(getContext(), mCurrentUser))
+                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId()));
+                        mShareIntent = createShareSalesOrderIntent(mSalesOrder, orderLines);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sales_order_lines);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                recyclerView.setHasFixedSize(true);
+                                mLinearLayoutManager = new LinearLayoutManager(getActivity());
+                                recyclerView.setLayoutManager(mLinearLayoutManager);
+                                recyclerView.setAdapter(new SalesOrderLineAdapter(orderLines, mCurrentUser));
+
+                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                }
+
+                                ((TextView) view.findViewById(R.id.sales_order_lines_number_tv))
+                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
+
+                                ((TextView) view.findViewById(R.id.sales_order_number_tv))
+                                        .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
+
+                                ((TextView) view.findViewById(R.id.sales_order_date_tv))
+                                        .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
+
+                                if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
+                                    ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
+                                            .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
+                                }
+                                if(view.findViewById(R.id.sales_order_total_tv) != null) {
+                                    ((TextView) view.findViewById(R.id.sales_order_total_tv))
+                                            .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
+                                }
+                                if(view.findViewById(R.id.sales_order_tax_tv) != null) {
+                                    ((TextView) view.findViewById(R.id.sales_order_tax_tv))
+                                            .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
+                                }
+                                if(view.findViewById(R.id.create_order_button)!=null){
+                                    view.findViewById(R.id.create_order_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
+                                                    intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
+                                                    intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                }
             }
-        }
-        return rootView;
+        }.start();
+        return view;
     }
 
     @Override
@@ -148,9 +172,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        if (mOrderLines != null && mOrderLines.size() > 0) {
-            new CreateShareIntentThread().start();
-        }
+        mShareActionProvider.setShareIntent(mShareIntent);
     }
 
     @Override
@@ -162,16 +184,14 @@ public class SalesOrderDetailFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            if (mOrderLines != null && mOrderLines.size() > 0) {
-                mShareActionProvider.setShareIntent(createShareSalesOrderIntent());
-            }
+            mShareActionProvider.setShareIntent(mShareIntent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareSalesOrderIntent(){
+    private Intent createShareSalesOrderIntent(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines){
         String fileName = "Cotizacion";
         String subject = "";
         String message = "";
@@ -184,7 +204,7 @@ public class SalesOrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new SalesOrderDetailPDFCreator().generatePDF(mSalesOrder, mOrderLines, fileName+".pdf",
+            new SalesOrderDetailPDFCreator().generatePDF(salesOrder, salesOrderLines, fileName+".pdf",
                     getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
@@ -197,21 +217,30 @@ public class SalesOrderDetailFragment extends Fragment {
         return shareIntent;
     }
 
-    class CreateShareIntentThread extends Thread {
-        public void run() {
-            final Intent shareIntent = createShareSalesOrderIntent();
-            try {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mShareActionProvider.setShareIntent(shareIntent);
-                    }
-                });
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
+    //class CreateShareIntentThread extends Thread {
+    //
+    //    private SalesOrder mSalesOrder;
+    //    private ArrayList<SalesOrderLine> mSalesOrderLines;
+    //
+    //    CreateShareIntentThread(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines) {
+    //        this.mSalesOrder = salesOrder;
+    //        this.mSalesOrderLines = salesOrderLines;
+    //    }
+    //
+    //    public void run() {
+    //        mShareIntent = createShareSalesOrderIntent(this.mSalesOrder, this.mSalesOrderLines);
+    //        try {
+    //            getActivity().runOnUiThread(new Runnable() {
+    //                @Override
+    //                public void run() {
+    //                    mShareActionProvider.setShareIntent(mShareIntent);
+    //                }
+    //            });
+    //        } catch (Exception e){
+    //            e.printStackTrace();
+    //        }
+    //    }
+    //}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

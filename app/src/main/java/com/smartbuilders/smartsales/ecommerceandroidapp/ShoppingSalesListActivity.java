@@ -1,21 +1,25 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSalesListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -120,8 +124,23 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(SalesOrder salesOrder) {
-
+    public void onItemLongSelected(final SalesOrder salesOrder) {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.delete_shopping_sales_question,
+                        salesOrder.getBusinessPartner().getCommercialName()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String result = (new SalesOrderLineDB(ShoppingSalesListActivity.this, mCurrentUser))
+                                .deactiveLinesFromShoppingSaleByBusinessPartnerId(salesOrder.getBusinessPartnerId());
+                        if (result==null) {
+                            reloadShoppingSalesList();
+                        } else {
+                            Toast.makeText(ShoppingSalesListActivity.this, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
     }
 
     @Override
@@ -159,7 +178,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                 }
             }
         }
-
     }
 
     @Override

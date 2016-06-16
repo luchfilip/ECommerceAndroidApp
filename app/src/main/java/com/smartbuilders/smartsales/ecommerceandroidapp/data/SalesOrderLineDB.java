@@ -37,29 +37,32 @@ public class SalesOrderLineDB {
     }
 
     public ArrayList<SalesOrderLine> getShoppingSale(int businessPartnerId){
-        return getOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOCTYPE, businessPartnerId);
-    }
-
-    public ArrayList<SalesOrderLine> getSalesOrderLines(Integer salesOrderId){
-        return getSalesOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOCTYPE, salesOrderId);
+        return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOCTYPE, businessPartnerId);
     }
 
     public ArrayList<SalesOrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId){
         return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOCTYPE, orderId);
     }
 
-    public int getActiveShoppingSalesLinesNumber(int businessPartnerId){
-        return getActiveOrderLinesNumber(SHOPPING_SALE_DOCTYPE);
-    }
-
     public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int businessPartnerId, int orderId) {
         return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_SALES_ORDER_DOCTYPE, SHOPPING_SALE_DOCTYPE);
     }
 
+    /**
+     *
+     * @param docType
+     * @param orderId
+     * @return
+     */
     private ArrayList<SalesOrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
         return getSalesOrderLinesByOrderId(docType, orderId);
     }
 
+    /**
+     *
+     * @param orderLine
+     * @return
+     */
     public String updateSalesOrderLine(SalesOrderLine orderLine){
         try {
             String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
@@ -82,14 +85,16 @@ public class SalesOrderLineDB {
         return null;
     }
 
-    private int getActiveOrderLinesNumber(String docType) {
+    public int getActiveShoppingSaleLinesNumberByBusinessPartnerId(int businessPartnerId) {
         Cursor c = null;
         try {
-            String sql = "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDERLINE WHERE DOC_TYPE=? AND ISACTIVE = ?";
+            String sql = "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDERLINE " +
+                    " WHERE BUSINESS_PARTNER_ID=? AND DOC_TYPE = ? AND ISACTIVE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{docType, "Y"}, null);
-            while(c.moveToNext()){
+                    .build(), null, sql,
+                    new String[]{String.valueOf(businessPartnerId), SHOPPING_SALE_DOCTYPE, "Y"}, null);
+            if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
         } catch (Exception e) {
@@ -103,9 +108,20 @@ public class SalesOrderLineDB {
                 }
             }
         }
-        return 0;
+        return -1;
     }
 
+    /**
+     *
+     * @param product
+     * @param qtyRequested
+     * @param productPrice
+     * @param productTaxPercentage
+     * @param docType
+     * @param orderId
+     * @param businessPartnerId
+     * @return
+     */
     private String addSalesOrderLine(Product product, int qtyRequested, double productPrice,
                                 double productTaxPercentage, String docType, Integer orderId, int businessPartnerId) {
         try {
@@ -134,12 +150,18 @@ public class SalesOrderLineDB {
         return null;
     }
 
-    public String deleteSalesOrderLine(SalesOrderLine orderLine){
+    /**
+     *
+     * @param orderLine
+     * @return
+     */
+    public String deactiveSalesOrderLine(SalesOrderLine orderLine){
         try {
-            String sql = "DELETE FROM ECOMMERCE_SALES_ORDERLINE WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?";
+            String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                    " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql, new String[]{String.valueOf(orderLine.getId())});
+                    null, sql, new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -150,7 +172,13 @@ public class SalesOrderLineDB {
         return null;
     }
 
-    private ArrayList<SalesOrderLine> getOrderLinesByBusinessPartnerId(String docType, int businessPartnerId) {
+    /**
+     *
+     * @param docType
+     * @param businessPartnerId
+     * @return
+     */
+    private ArrayList<SalesOrderLine> getActiveSalesOrderLinesByBusinessPartnerId(String docType, int businessPartnerId) {
         ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
         try {
@@ -200,6 +228,12 @@ public class SalesOrderLineDB {
         return orderLines;
     }
 
+    /**
+     *
+     * @param docType
+     * @param salesOrderId
+     * @return
+     */
     private ArrayList<SalesOrderLine> getSalesOrderLinesByOrderId(String docType, int salesOrderId) {
         ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
@@ -250,11 +284,16 @@ public class SalesOrderLineDB {
         return orderLines;
     }
 
+    /**
+     *
+     * @param salesOrderId
+     * @return
+     */
     public int getOrderLineNumbersBySalesOrderId(int salesOrderId){
         Cursor c = null;
         try {
             String sql = "SELECT COUNT(ECOMMERCE_SALES_ORDERLINE_ID) FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID=? AND ISACTIVE = ?";
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND ISACTIVE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{String.valueOf(salesOrderId), "Y"}, null);
@@ -275,6 +314,14 @@ public class SalesOrderLineDB {
         return 0;
     }
 
+    /**
+     *
+     * @param businessPartnerId
+     * @param orderId
+     * @param newDocType
+     * @param currentDocType
+     * @return
+     */
     private int moveOrderLinesToOrderByOrderId(int businessPartnerId, int orderId, String newDocType, String currentDocType) {
         try {
             String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, " +
@@ -288,6 +335,28 @@ public class SalesOrderLineDB {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     *
+     * @param businessPartnerId
+     * @return
+     */
+    public String deactiveLinesFromShoppingSaleByBusinessPartnerId(int businessPartnerId) {
+        try {
+            context.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                            null,
+                            "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                                    " WHERE BUSINESS_PARTNER_ID = ? AND DOC_TYPE = ?",
+                            new String[]{"N", "datetime('now','localtime')",
+                                    String.valueOf(businessPartnerId), SHOPPING_SALE_DOCTYPE});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
     }
 
 }
