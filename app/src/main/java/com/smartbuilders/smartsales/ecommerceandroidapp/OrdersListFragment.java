@@ -22,10 +22,20 @@ import java.util.ArrayList;
  */
 public class OrdersListFragment extends Fragment {
 
+    private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
+    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
+    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+
     private User mCurrentUser;
+    private ListView mListView;
+    private int mListViewIndex;
+    private int mListViewTop;
+    private int mCurrentSelectedIndex;
 
     public interface Callback {
-        void onItemSelected(Order order, int selectedItemPosition);
+        void onItemSelected(Order order);
+        void onListIsLoaded();
+        void setSelectedIndex(int selectedIndex);
     }
 
     public OrdersListFragment() {
@@ -33,34 +43,29 @@ public class OrdersListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        final ArrayList<Order> activeOrders = new ArrayList<>();
 
-        ArrayList<Order> activeOrders = (new OrderDB(getContext(), mCurrentUser)).getActiveOrders();
-        if (activeOrders!=null && !activeOrders.isEmpty()) {
-            ListView listView = (ListView) view.findViewById(R.id.orders_list);
-            listView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders));
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView adapterView, View view, int position, long l) {
-                    // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                    // if it cannot seek to that position.
-                    Order order = (Order) adapterView.getItemAtPosition(position);
-                    if (order != null) {
-                        ((Callback) getActivity()).onItemSelected(order, position);
-                    }
-                }
-            });
-        }
         new Thread() {
             @Override
             public void run() {
                 try {
+                    if(savedInstanceState != null) {
+                        if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)){
+                            mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        }
+                    }
 
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    activeOrders.addAll((new OrderDB(getContext(), mCurrentUser)).getActiveOrders());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -69,12 +74,36 @@ public class OrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                mListView = (ListView) view.findViewById(R.id.orders_list);
+                                mListView.setAdapter(new OrdersListAdapter(getActivity(), activeOrders));
 
+                                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                    @Override
+                                    public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                                        mCurrentSelectedIndex = position;
+                                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                        // if it cannot seek to that position.
+                                        Order order = (Order) adapterView.getItemAtPosition(position);
+                                        if (order != null) {
+                                            ((Callback) getActivity()).onItemSelected(order);
+                                        }
+                                    }
+                                });
+
+                                mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                if (getActivity()!=null) {
+                                    if (savedInstanceState==null) {
+                                        ((Callback) getActivity()).onListIsLoaded();
+                                    } else {
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                    }
+                                }
                             }
                         }
                     });
@@ -82,5 +111,22 @@ public class OrdersListFragment extends Fragment {
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        try {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+        }
+        try {
+            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
+        } catch (Exception e) {
+            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+        }
+        outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
+        super.onSaveInstanceState(outState);
     }
 }

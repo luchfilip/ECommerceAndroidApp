@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group>
         <item
             android:id="@+id/nav_wish_list"
@@ -53,14 +52,14 @@
                 android:title="@string/invite" />
         </menu>
     </item>
-    <item android:title="@string/value_us">
-        <menu>
-            <item
-                android:id="@+id/nav_value_us"
-                android:icon="@drawable/google_play_icon"
-                android:title="@string/google_play" />
-        </menu>
-    </item>
+    <!--<item android:title="@string/value_us">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_value_us"-->
+                <!--android:icon="@drawable/google_play_icon"-->
+                <!--android:title="@string/google_play" />-->
+        <!--</menu>-->
+    <!--</item>-->
     <item android:title="@string/action_setting">
         <menu>
             <item

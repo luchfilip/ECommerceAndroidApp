@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,24 +26,15 @@ public class OrdersListActivity extends AppCompatActivity
 
     public static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
 
-    private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
-
     private boolean mTwoPane;
-    private User mCurrentUser;
-    private int mCurrentSelectedItemPosition;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
-                mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
-            }
-        }
-
-        mCurrentUser = Utils.getCurrentUser(this);
+        User currentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -62,42 +51,15 @@ public class OrdersListActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
             try{
                 ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                        .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                        .setText(getString(R.string.welcome_user, currentUser.getUserName()));
             }catch(Exception e){
                 e.printStackTrace();
             }
         }
 
         mTwoPane = findViewById(R.id.order_detail_container) != null;
-    }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (mTwoPane) {
-            ListView lv = (ListView) findViewById(R.id.orders_list);
-            if (lv != null && lv.getAdapter()!=null
-                    && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
-                    && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
-                lv.performItemClick(lv.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
-                        mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ListView lv = (ListView) findViewById(R.id.orders_list);
-        if(lv != null && (lv.getAdapter()==null || lv.getAdapter().getCount()==0)){
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            if(mTwoPane){
-                findViewById(R.id.fragment_order_list).setVisibility(View.GONE);
-                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
-            }else{
-                findViewById(R.id.orders_list).setVisibility(View.GONE);
-            }
-        }
+        mListView = (ListView) findViewById(R.id.orders_list);
     }
 
     @Override
@@ -119,8 +81,26 @@ public class OrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(Order order, int selectedItemPosition) {
-        mCurrentSelectedItemPosition = selectedItemPosition;
+    public void onListIsLoaded() {
+        if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
+    }
+
+    @Override
+    public void setSelectedIndex(int selectedIndex) {
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            }
+        }
+    }
+
+    @Override
+    public void onItemSelected(Order order) {
         if(mTwoPane){
             Bundle args = new Bundle();
             args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
@@ -155,11 +135,5 @@ public class OrdersListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_CURRENT_SELECTED_ITEM_POSITION, mCurrentSelectedItemPosition);
-        super.onSaveInstanceState(outState);
     }
 }

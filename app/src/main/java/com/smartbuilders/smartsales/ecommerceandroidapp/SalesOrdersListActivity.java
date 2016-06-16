@@ -34,23 +34,15 @@ public class SalesOrdersListActivity extends AppCompatActivity
         implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String SALES_ORDER_DETAIL_FRAGMENT_TAG = "SALES_ORDER_DETAIL_FRAGMENT_TAG";
-    private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
 
-    private boolean mTwoPane;
+    private boolean mThreePane;
     private User mCurrentUser;
-    private int mCurrentSelectedItemPosition;
     private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_orders_list);
-
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_ITEM_POSITION)){
-                mCurrentSelectedItemPosition = savedInstanceState.getInt(STATE_CURRENT_SELECTED_ITEM_POSITION);
-            }
-        }
 
         mCurrentUser = Utils.getCurrentUser(this);
 
@@ -69,7 +61,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
 
-        mTwoPane = findViewById(R.id.sales_order_detail_container) != null;
+        mThreePane = findViewById(R.id.sales_order_detail_container) != null
+                && findViewById(R.id.order_detail_container) != null;
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Cotizaciones"));
@@ -84,6 +77,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                if(mThreePane) {
+                    switch (tab.getPosition()) {
+                        case 0:
+                            findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
+                            findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+                            findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+                            break;
+                    }
+                }
             }
 
             @Override
@@ -96,7 +101,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
             }
         });
-        viewPager.setAllowSwap(!mTwoPane);
+        viewPager.setAllowSwap(!mThreePane);
 
         mListView = (ListView) findViewById(R.id.sales_orders_list);
     }
@@ -139,9 +144,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition) {
-        mCurrentSelectedItemPosition = selectedItemPosition;
-        if(mTwoPane){
+    public void onItemSelected(SalesOrder salesOrder) {
+        if(mThreePane){
             Bundle args = new Bundle();
             args.putInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, salesOrder.getId());
 
@@ -179,9 +183,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(Order order, int selectedItemPosition) {
-        mCurrentSelectedItemPosition = selectedItemPosition;
-        if(mTwoPane){
+    public void onItemSelected(Order order) {
+        if(mThreePane){
             Bundle args = new Bundle();
             args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
 
@@ -189,7 +192,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.sales_order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                    .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderDetailActivity.class);
@@ -200,7 +203,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mTwoPane) {
+        if (mThreePane) {
             if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
@@ -214,9 +217,9 @@ public class SalesOrdersListActivity extends AppCompatActivity
             ((SalesOrdersListAdapter) mListView.getAdapter())
                     .setData(new SalesOrderDB(this, mCurrentUser).getActiveSalesOrders());
 
-            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
+            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mThreePane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-            } else if (mListView.getCount()>selectedIndex && mTwoPane) {
+            } else if (mListView.getCount()>selectedIndex && mThreePane) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
             } else if(mListView.getCount()==0) { //se bloquea la pantalla
@@ -230,17 +233,11 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        if (mTwoPane) {
+        if (mThreePane) {
             if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_CURRENT_SELECTED_ITEM_POSITION, mCurrentSelectedItemPosition);
-        super.onSaveInstanceState(outState);
     }
 }

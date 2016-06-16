@@ -307,17 +307,17 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void addToShoppingCart(User user, Product product) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingCart addToShoppingCartFragment =
                 DialogAddToShoppingCart.newInstance(product, user);
-        addToShoppingCartFragment.show(fm, DialogAddToShoppingCart.class.getSimpleName());
+        addToShoppingCartFragment.show(getActivity().getSupportFragmentManager(),
+                DialogAddToShoppingCart.class.getSimpleName());
     }
 
     private void addToShoppingSale(User user, Product product) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
         DialogAddToShoppingSale addToShoppingSaleFragment =
                 DialogAddToShoppingSale.newInstance(product, user);
-        addToShoppingSaleFragment.show(fm, DialogAddToShoppingSale.class.getSimpleName());
+        addToShoppingSaleFragment.show(getActivity().getSupportFragmentManager(),
+                DialogAddToShoppingSale.class.getSimpleName());
     }
 
     @Override

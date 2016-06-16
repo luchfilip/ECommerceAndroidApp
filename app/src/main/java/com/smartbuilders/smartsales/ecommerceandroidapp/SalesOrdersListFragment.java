@@ -39,9 +39,9 @@ public class SalesOrdersListFragment extends Fragment {
     private int mCurrentSelectedIndex;
 
     public interface Callback {
-        void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
+        void onItemSelected(SalesOrder salesOrder);
         void onItemLongSelected(SalesOrder salesOrder);
-        void onItemSelected(Order order, int selectedItemPosition);
+        void onItemSelected(Order order);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -106,11 +106,12 @@ public class SalesOrdersListFragment extends Fragment {
 
                                         @Override
                                         public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                                            mCurrentSelectedIndex = position;
                                             // CursorAdapter returns a cursor at the correct position for getItem(), or null
                                             // if it cannot seek to that position.
                                             Order order = (Order) adapterView.getItemAtPosition(position);
                                             if (order != null) {
-                                                ((Callback) getActivity()).onItemSelected(order, position);
+                                                ((Callback) getActivity()).onItemSelected(order);
                                             }
                                         }
                                     });
@@ -122,11 +123,12 @@ public class SalesOrdersListFragment extends Fragment {
 
                                         @Override
                                         public void onItemClick(AdapterView parent, View view, int position, long id) {
+                                            mCurrentSelectedIndex = position;
                                             // CursorAdapter returns a cursor at the correct position for getItem(), or null
                                             // if it cannot seek to that position.
                                             SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                                             if (salesOrder != null) {
-                                                ((Callback) getActivity()).onItemSelected(salesOrder, position);
+                                                ((Callback) getActivity()).onItemSelected(salesOrder);
                                             }
                                         }
                                     });

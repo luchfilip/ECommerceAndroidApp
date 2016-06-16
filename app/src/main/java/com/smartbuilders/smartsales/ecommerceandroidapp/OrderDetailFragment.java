@@ -43,7 +43,8 @@ public class OrderDetailFragment extends Fragment {
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
-    private ArrayList<OrderLine> mOrderLines;
+    private Order mOrder;
+    private Intent mShareIntent;
 
     public OrderDetailFragment() {
     }
@@ -52,7 +53,8 @@ public class OrderDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
-        setHasOptionsMenu(true);
+
+        final ArrayList<OrderLine> mOrderLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -79,8 +81,12 @@ public class OrderDetailFragment extends Fragment {
 
                     mCurrentUser = Utils.getCurrentUser(getContext());
 
-                    mOrderLines = new OrderLineDB(getContext(), mCurrentUser)
-                            .getActiveFinalizedOrderLinesByOrderId(mOrderId);
+                    mOrderLines.addAll(new OrderLineDB(getContext(), mCurrentUser)
+                            .getActiveFinalizedOrderLinesByOrderId(mOrderId));
+
+                    mOrder = (new OrderDB(getContext(), mCurrentUser)).getActiveOrderById(mOrderId);
+
+                    mShareIntent = createShareOrderIntent(mOrderLines);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -104,12 +110,13 @@ public class OrderDetailFragment extends Fragment {
                                 ((TextView) view.findViewById(R.id.order_lines_number_tv))
                                         .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
 
-                                Order order = (new OrderDB(getContext(), mCurrentUser)).getActiveOrderById(mOrderId);
-                                ((TextView) view.findViewById(R.id.order_number_tv))
-                                        .setText(getContext().getString(R.string.order_number, order.getOrderNumber()));
+                                if (mOrder!=null) {
+                                    ((TextView) view.findViewById(R.id.order_number_tv))
+                                            .setText(getContext().getString(R.string.order_number, mOrder.getOrderNumber()));
 
-                                ((TextView) view.findViewById(R.id.order_date_tv))
-                                        .setText(getContext().getString(R.string.order_date, order.getCreatedStringFormat()));
+                                    ((TextView) view.findViewById(R.id.order_date_tv))
+                                            .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -121,6 +128,8 @@ public class OrderDetailFragment extends Fragment {
                 }
             }
         }.start();
+
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -138,9 +147,7 @@ public class OrderDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        if (mOrderLines != null && mOrderLines.size() > 0) {
-            new CreateShareIntentThread().start();
-        }
+        mShareActionProvider.setShareIntent(mShareIntent);
     }
 
     @Override
@@ -152,16 +159,14 @@ public class OrderDetailFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            if (mOrderLines != null && mOrderLines.size() > 0) {
-                mShareActionProvider.setShareIntent(createShareOrderIntent());
-            }
+            mShareActionProvider.setShareIntent(mShareIntent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareOrderIntent(){
+    private Intent createShareOrderIntent(ArrayList<OrderLine> orderLines){
         String fileName = "Pedido";
         String subject = "";
         String message = "";
@@ -174,7 +179,7 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new OrderDetailPDFCreator().generatePDF(mOrderLines, fileName+".pdf", getContext(), mCurrentUser);
+            new OrderDetailPDFCreator().generatePDF(orderLines, fileName+".pdf", getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -184,22 +189,6 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
         return shareIntent;
-    }
-
-    class CreateShareIntentThread extends Thread {
-        public void run() {
-            final Intent shareIntent = createShareOrderIntent();
-            try {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mShareActionProvider.setShareIntent(shareIntent);
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
