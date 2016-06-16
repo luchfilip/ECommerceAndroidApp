@@ -174,10 +174,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(BusinessPartner businessPartner) {
+    public void onItemSelected(int businessPartnerId) {
         if (mTwoPane) {
             Bundle args = new Bundle();
-            args.putParcelable(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner);
+            args.putInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId);
             RegisterBusinessPartnerFragment fragment = new RegisterBusinessPartnerFragment();
             fragment.setArguments(args);
 
@@ -186,17 +186,17 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     .commit();
         } else {
             startActivityForResult(new Intent(this, RegisterBusinessPartnerActivity.class)
-                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
+                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
         }
     }
 
     @Override
-    public void onItemLongSelected(final BusinessPartner businessPartner) {
+    public void onItemLongSelected(final int businessPartnerId, String businessPartnerCommercialName) {
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.delete_business_partner, businessPartner.getCommercialName()))
+                .setMessage(getString(R.string.delete_business_partner, businessPartnerCommercialName))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = mBusinessPartnerDB.deactivateBusinessPartner(businessPartner);
+                        String result = mBusinessPartnerDB.deactivateBusinessPartner(businessPartnerId);
                         if (result==null) {
                             if (mListView != null) {
                                 if (mListView.getAdapter()!=null) {

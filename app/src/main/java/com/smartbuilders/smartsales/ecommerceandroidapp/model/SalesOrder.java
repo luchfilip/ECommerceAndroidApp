@@ -22,7 +22,7 @@ public class SalesOrder extends Model implements Parcelable {
 
     }
 
-    public String getOrderNumber() {
+    public String getSalesOrderNumber() {
         return String.format("%06d", getId());
     }
 

@@ -211,8 +211,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         //la informacion actualizada
                         reloadShoppingSalesList();
                         Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
-                        intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, new SalesOrderDB(getContext(), mCurrentUser)
-                                .getLastFinalizedSalesOrder());
+                        intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, new SalesOrderDB(getContext(), mCurrentUser)
+                                .getLastFinalizedSalesOrderId());
                         startActivity(intent);
                         getActivity().finish();
                     }

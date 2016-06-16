@@ -24,9 +24,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class RegisterBusinessPartnerFragment extends Fragment {
 
-    private static final String STATE_BUSINESS_PARTNER = "state_business_partner";
+    private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
 
     private User mCurrentUser;
+    private int mBusinessPartnerId;
     private BusinessPartner mBusinessPartner;
 
     public interface Callback {
@@ -44,22 +45,26 @@ public class RegisterBusinessPartnerFragment extends Fragment {
             public void run() {
                 try {
                     if (getArguments()!=null) {
-                        if (getArguments().containsKey(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER)) {
-                            mBusinessPartner = getArguments().getParcelable(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER);
+                        if (getArguments().containsKey(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID)) {
+                            mBusinessPartnerId = getArguments().getInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID);
                         }
                     } else if (getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-                        if(getActivity().getIntent().getExtras().containsKey(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER)) {
-                            mBusinessPartner = getActivity().getIntent().getExtras().getParcelable(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER);
+                        if(getActivity().getIntent().getExtras().containsKey(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID)) {
+                            mBusinessPartnerId = getActivity().getIntent().getExtras().getInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID);
                         }
                     }
 
                     if(savedInstanceState!=null){
-                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER)){
-                            mBusinessPartner = savedInstanceState.getParcelable(STATE_BUSINESS_PARTNER);
+                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
+                            mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
                     }
 
                     mCurrentUser = Utils.getCurrentUser(getContext());
+                    if(mBusinessPartnerId>0){
+                        mBusinessPartner = (new BusinessPartnerDB(getContext(), mCurrentUser))
+                                .getActiveBusinessPartnerById(mBusinessPartnerId);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -78,7 +83,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
 
                                 Button saveButton = (Button) rootView.findViewById(R.id.save_button);
 
-                                if (mBusinessPartner!=null){
+                                if (mBusinessPartner !=null){
                                     businessPartnerName.setText(mBusinessPartner.getName());
                                     businessPartnerName.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
@@ -144,7 +149,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
-                                            if (mBusinessPartner!=null) {
+                                            if (mBusinessPartner !=null) {
                                                 String result = businessPartnerDB.updateBusinessPartner(mBusinessPartner);
                                                 if (result==null){
                                                     ((Callback) getActivity()).onBusinessPartnerUpdated();
@@ -197,7 +202,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_BUSINESS_PARTNER, mBusinessPartner);
+        outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
         super.onSaveInstanceState(outState);
     }
 }

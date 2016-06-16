@@ -7,7 +7,6 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.sql.Timestamp;
@@ -236,7 +235,7 @@ public class OrderDB {
         if(fromSalesOrder) {
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
             for(Order order : activeOrders){
-                order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
+                order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
             }
         }
         return activeOrders;

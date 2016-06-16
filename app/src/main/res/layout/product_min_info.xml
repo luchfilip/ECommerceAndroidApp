@@ -55,9 +55,9 @@
             android:layout_marginBottom="2dp"
             android:visibility="gone" />
 
-        <View style="@style/Divider"/>
-
     </LinearLayout>
+
+    <View style="@style/Divider"/>
 
     <LinearLayout
         android:orientation="horizontal"

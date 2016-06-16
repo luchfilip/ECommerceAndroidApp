@@ -33,6 +33,7 @@ public class SalesOrdersListFragment extends Fragment {
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
+        void onItemLongSelected(SalesOrder salesOrder);
         void onItemSelected(Order order, int selectedItemPosition);
     }
 
@@ -87,13 +88,26 @@ public class SalesOrdersListFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
-                    public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                    public void onItemClick(AdapterView parent, View view, int position, long id) {
                         // CursorAdapter returns a cursor at the correct position for getItem(), or null
                         // if it cannot seek to that position.
-                        SalesOrder salesOrder = (SalesOrder) adapterView.getItemAtPosition(position);
+                        SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                         if (salesOrder != null) {
                             ((Callback) getActivity()).onItemSelected(salesOrder, position);
                         }
+                    }
+                });
+
+                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                        // if it cannot seek to that position.
+                        SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
+                        if (salesOrder != null) {
+                            ((Callback) getActivity()).onItemLongSelected(salesOrder);
+                        }
+                        return true;
                     }
                 });
             }

@@ -19,7 +19,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class RegisterBusinessPartnerActivity extends AppCompatActivity
         implements RegisterBusinessPartnerFragment.Callback {
 
-    public static final String KEY_BUSINESS_PARTNER = "KEY_BUSINESS_PARTNER";
+    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
     private static final String STATE_RELOAD_BUSINESS_PARTNER_LIST = "STATE_RELOAD_BUSINESS_PARTNER_LIST";
 
     private boolean mReloadBusinessPartnersList;
@@ -36,7 +36,7 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
         }
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_BUSINESS_PARTNER)) {
+            if(getIntent().getExtras().containsKey(KEY_BUSINESS_PARTNER_ID)) {
                 if (findViewById(R.id.title_textView)!=null) {
                     ((TextView) findViewById(R.id.title_textView))
                             .setText(getString(R.string.update_business_partner));

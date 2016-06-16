@@ -22,7 +22,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class SalesOrderDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_SALES_ORDER = "key_sales_order";
+    public static final String KEY_SALES_ORDER_ID = "key_sales_order_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -48,7 +48,7 @@ public class SalesOrdersListAdapter extends BaseAdapter {
         View view = LayoutInflater.from(mContext).inflate(R.layout.sales_orders_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
-        viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number, mDataset.get(position).getOrderNumber()));
+        viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number, mDataset.get(position).getSalesOrderNumber()));
         viewHolder.salesOrderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
         viewHolder.salesOrderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getLinesNumber())));
@@ -74,5 +74,10 @@ public class SalesOrdersListAdapter extends BaseAdapter {
             salesOrderDate = (TextView) v.findViewById(R.id.sales_order_date_tv);
             salesOrderLinesNumber = (TextView) v.findViewById(R.id.sales_order_lines_number_tv);
         }
+    }
+
+    public void setData(ArrayList<SalesOrder> salesOrders) {
+        mDataset = salesOrders;
+        notifyDataSetChanged();
     }
 }

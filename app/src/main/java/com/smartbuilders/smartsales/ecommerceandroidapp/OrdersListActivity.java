@@ -26,10 +26,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class OrdersListActivity extends AppCompatActivity
         implements OrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
-    private boolean mTwoPane;
     public static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
 
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
+
+    private boolean mTwoPane;
     private User mCurrentUser;
     private int mCurrentSelectedItemPosition;
 

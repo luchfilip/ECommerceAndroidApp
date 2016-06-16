@@ -151,6 +151,7 @@
     <string name="delete_search_historical">Borrar historial</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
+    <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="price_label">Precio:</string>
     <string name="tax_label">(%) Impuesto:</string>
     <string name="total_label">Total:</string>
@@ -278,4 +279,9 @@
     <string name="title_activity_conctac_us">ConctacUsActivity</string>
     <string name="send_email">Enviar correo electrónico</string>
     <string name="send_error_report">Enviar reporte de error</string>
+    <string name="company_tax_id">RIF: J000033927</string>
+    <string name="contact_center_label">Centro de Contacto</string>
+    <string name="master_label">Master:</string>
+    <string name="fax_label">Fax:</string>
+    <string name="direction_label">Dirección:</string>
 </resources>

@@ -102,13 +102,13 @@ public class BusinessPartnerDB {
         return null;
     }
 
-    public String deactivateBusinessPartner(BusinessPartner businessPartner){
+    public String deactivateBusinessPartner(int businessPartnerId){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "UPDATE BUSINESS_PARTNER SET ISACTIVE = ? WHERE BUSINESS_PARTNER_ID = ?",
-                    new String[]{"N", String.valueOf(businessPartner.getId())});
+                    new String[]{"N", String.valueOf(businessPartnerId)});
             if (rowsAffected <= 0){
                 return "No se desactivó el registro en la base de datos.";
             }
@@ -143,15 +143,15 @@ public class BusinessPartnerDB {
         return false;
     }
 
-    public BusinessPartner getBusinessPartnerById(int businessPartnerId) {
+    public BusinessPartner getActiveBusinessPartnerById(int businessPartnerId) {
         Cursor c = null;
         try {
             String sql = "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                     " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ?";
+                    " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ? AND ISACTIVE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null, sql, new String[]{String.valueOf(businessPartnerId)}, null);
+                    .build(), null, sql, new String[]{String.valueOf(businessPartnerId), "Y"}, null);
             if(c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();
                 businessPartner.setId(businessPartnerId);

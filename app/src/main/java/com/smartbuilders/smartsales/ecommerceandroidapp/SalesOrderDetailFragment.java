@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrderLineAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
@@ -34,9 +35,11 @@ import java.util.ArrayList;
  */
 public class SalesOrderDetailFragment extends Fragment {
 
+    private static final String STATE_SALES_ORDER_ID = "STATE_SALES_ORDER_ID";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
     private User mCurrentUser;
+    private int mSalesOrderId;
     private SalesOrder mSalesOrder;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -51,6 +54,9 @@ public class SalesOrderDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_SALES_ORDER_ID)) {
+               mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
+            }
             if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
                 mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
             }
@@ -63,13 +69,16 @@ public class SalesOrderDetailFragment extends Fragment {
         mCurrentUser = Utils.getCurrentUser(getContext());
 
         if (getArguments() != null) {
-            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
-                mSalesOrder = getArguments().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
+            if (getArguments().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
+                mSalesOrderId = getArguments().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
             }
         } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER)) {
-                mSalesOrder = getActivity().getIntent().getExtras().getParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER);
+            if (getActivity().getIntent().getExtras().containsKey(SalesOrderDetailActivity.KEY_SALES_ORDER_ID)) {
+                mSalesOrderId = getActivity().getIntent().getExtras().getInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID);
             }
+        }
+        if (mSalesOrderId>0) {
+            mSalesOrder = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrderById(mSalesOrderId);
         }
 
         if (mSalesOrder != null) {
@@ -92,7 +101,7 @@ public class SalesOrderDetailFragment extends Fragment {
                     .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
 
             ((TextView) rootView.findViewById(R.id.sales_order_number_tv))
-                    .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getOrderNumber()));
+                    .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
 
             ((TextView) rootView.findViewById(R.id.sales_order_date_tv))
                     .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
@@ -206,6 +215,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         if(mLinearLayoutManager!=null) {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,

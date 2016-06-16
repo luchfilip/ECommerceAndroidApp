@@ -31,8 +31,8 @@ public class BusinessPartnersListFragment extends Fragment {
     private BusinessPartnersListAdapter businessPartnersListAdapter;
 
     public interface Callback {
-        void onItemSelected(BusinessPartner businessPartner);
-        void onItemLongSelected(BusinessPartner businessPartner);
+        void onItemSelected(int businessPartnerId);
+        void onItemLongSelected(int businessPartnerId, String businessPartnerCommercialName);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -82,7 +82,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                         mCurrentSelectedIndex = position;
                                         final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                         if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemSelected(businessPartner);
+                                            ((Callback) getActivity()).onItemSelected(businessPartner.getId());
                                         }
                                     }
                                 });
@@ -92,7 +92,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                         if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(businessPartner);
+                                            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getCommercialName());
                                         }
                                         return true;
                                     }

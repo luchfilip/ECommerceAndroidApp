@@ -214,7 +214,7 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setPadding(3);
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + salesOrder.getOrderNumber(), fontBold));
+        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + salesOrder.getSalesOrderNumber(), fontBold));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);
 

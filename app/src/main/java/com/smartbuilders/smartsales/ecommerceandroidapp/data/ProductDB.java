@@ -195,10 +195,15 @@ public class ProductDB {
                     .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
                     OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(subCategoryId), "V"}, null);
             if (c!=null) {
-                String[] words = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+                String[] words;
+                try {
+                    words = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+                } catch (Exception e) {
+                    words = null;
+                }
                 whileStatement:
                 while(c.moveToNext()){
-                    if(searchPattern!=null){
+                    if(searchPattern!=null && words!=null){
                         try {
                             for(String word : words){
                                 if(!c.getString(3).toUpperCase().contains(word)){

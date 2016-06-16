@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,13 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager;
+
+import java.util.ArrayList;
 
 /**
  * Jesus Sarco, 12.05.2016
@@ -29,12 +36,13 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager;
 public class SalesOrdersListActivity extends AppCompatActivity
         implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String SALES_ORDERDETAIL_FRAGMENT_TAG = "SALES_ORDERDETAIL_FRAGMENT_TAG";
+    private static final String SALES_ORDER_DETAIL_FRAGMENT_TAG = "SALES_ORDER_DETAIL_FRAGMENT_TAG";
     private static final String STATE_CURRENT_SELECTED_ITEM_POSITION = "STATE_CURRENT_SELECTED_ITEM_POSITION";
 
     private boolean mTwoPane;
     private User mCurrentUser;
     private int mCurrentSelectedItemPosition;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,17 +100,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         });
         viewPager.setAllowSwap(!mTwoPane);
+
+        mListView = (ListView) findViewById(R.id.sales_orders_list);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (mTwoPane) {
-            ListView lv = (ListView) findViewById(R.id.sales_orders_list);
-            if (lv != null && lv.getAdapter()!=null
-                    && lv.getAdapter().getCount() > mCurrentSelectedItemPosition
+            if (mListView != null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount() > mCurrentSelectedItemPosition
                     && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
-                lv.performItemClick(lv.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
+                mListView.performItemClick(mListView.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
                         mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
             }
         }
@@ -165,19 +174,54 @@ public class SalesOrdersListActivity extends AppCompatActivity
         mCurrentSelectedItemPosition = selectedItemPosition;
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putParcelable(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
+            args.putInt(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, salesOrder.getId());
 
             SalesOrderDetailFragment fragment = new SalesOrderDetailFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.sales_order_detail_container, fragment, SALES_ORDERDETAIL_FRAGMENT_TAG)
+                    .replace(R.id.sales_order_detail_container, fragment, SALES_ORDER_DETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, SalesOrderDetailActivity.class);
-            intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, salesOrder);
+            intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, salesOrder.getId());
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onItemLongSelected(final SalesOrder salesOrder) {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
+                        salesOrder.getBusinessPartner().getCommercialName()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String result = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
+                                .deactiveSalesOrderById(salesOrder.getId());
+                        if (result==null) {
+                            if (mListView != null) {
+                                ArrayList<SalesOrder> activeSalesOrders = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
+                                        .getActiveSalesOrders();
+                                if (mListView.getAdapter()!=null) {
+                                    ((SalesOrdersListAdapter) mListView.getAdapter()).setData(activeSalesOrders);
+                                } else {
+                                    mListView.setAdapter(new SalesOrdersListAdapter(SalesOrdersListActivity.this, activeSalesOrders));
+                                }
+                                if (mTwoPane) {
+                                    if(mListView.getAdapter().getCount()>0) {
+                                        mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                                    } else {
+
+                                    }
+                                }
+                            }
+                        } else {
+                            Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
     }
 
     @Override
