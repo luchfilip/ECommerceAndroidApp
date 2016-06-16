@@ -29,7 +29,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
             "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
-    public static final int SHOW_SALES_ORDER_DETAIL_REQUEST = 1;
+    private static final int SHOW_SALES_ORDER_DETAIL_REQUEST = 1;
 
     private User mCurrentUser;
     private boolean mTwoPane;
@@ -115,7 +115,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         }else{
             Intent intent = new Intent(this, ShoppingSaleActivity.class);
             intent.putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, SHOW_SALES_ORDER_DETAIL_REQUEST);
         }
     }
 

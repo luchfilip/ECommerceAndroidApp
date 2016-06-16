@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +34,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         DialogRegisterBusinessPartner.Callback {
 
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
+    private static int SHOW_BUSINESS_PARTNER_REGISTER_UPDATE = 2;
 
     private User mCurrentUser;
     private BusinessPartnerDB mBusinessPartnerDB;
@@ -66,7 +66,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.business_partner_detail_container)!=null;
 
-        mBusinessPartnerDB = new BusinessPartnerDB(BusinessPartnersListActivity.this, mCurrentUser);
+        mBusinessPartnerDB = new BusinessPartnerDB(this, mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.business_partners_list);
 
@@ -83,8 +83,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                         //        .commit();
                         showDialogCreateBusinessPartner();
                     } else {
-                        startActivity(new Intent(BusinessPartnersListActivity.this,
-                                RegisterBusinessPartnerActivity.class));
+                        startActivityForResult(new Intent(BusinessPartnersListActivity.this,
+                                RegisterBusinessPartnerActivity.class), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
                     }
                 }
             });
@@ -117,7 +117,9 @@ public class BusinessPartnersListActivity extends AppCompatActivity
             } else {
                 mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
             }
-            mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            if (mTwoPane) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }
         }
     }
 
@@ -183,8 +185,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     .replace(R.id.business_partner_detail_container, fragment, REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
                     .commit();
         } else {
-            startActivity(new Intent(this, RegisterBusinessPartnerActivity.class)
-                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner));
+            startActivityForResult(new Intent(this, RegisterBusinessPartnerActivity.class)
+                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER, businessPartner), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
         }
     }
 
@@ -230,5 +232,14 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     @Override
     public void onBusinessPartnerUpdated() {
         reloadBusinessPartnersList();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SHOW_BUSINESS_PARTNER_REGISTER_UPDATE) {
+            if (resultCode == RESULT_OK) {
+                reloadBusinessPartnersList();
+            }
+        }
     }
 }

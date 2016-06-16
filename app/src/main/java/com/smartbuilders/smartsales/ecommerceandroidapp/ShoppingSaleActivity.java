@@ -85,7 +85,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
             Intent returnIntent = new Intent();
             setResult(mReloadShoppingSalesList ? RESULT_OK : RESULT_CANCELED, returnIntent);
             finish();
-            //super.onBackPressed();
         }
     }
 
