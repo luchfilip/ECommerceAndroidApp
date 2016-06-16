@@ -273,7 +273,7 @@ public class SalesOrderDB {
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});
             int rowsAffected = mContext.getContentResolver()

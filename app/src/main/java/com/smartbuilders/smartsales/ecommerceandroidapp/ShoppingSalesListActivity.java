@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -169,12 +170,16 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             int selectedIndex = mListView.getCheckedItemPosition();
             ((ShoppingSalesListAdapter) mListView.getAdapter())
                     .setData(new SalesOrderDB(this, mCurrentUser).getActiveShoppingSalesOrders());
-            if (mTwoPane) {
-                if (mListView.getCount()<oldListSize && mListView.getCount()>0) {
-                    mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                } else {
-                    mListView.setSelection(selectedIndex);
-                    mListView.setItemChecked(selectedIndex, true);
+
+            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            } else if (mListView.getCount()>selectedIndex && mTwoPane) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            } else if(mListView.getCount()==0) { //se bloquea la pantalla
+                mListView.setVisibility(View.GONE);
+                if (findViewById(R.id.company_logo_name)!=null) {
+                    findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
                 }
             }
         }
