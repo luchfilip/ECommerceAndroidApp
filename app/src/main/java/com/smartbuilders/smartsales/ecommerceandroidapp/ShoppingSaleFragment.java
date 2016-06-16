@@ -37,10 +37,13 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private User mCurrentUser;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
-    private TextView totalLines;
-    private TextView subTotalAmount;
-    private TextView taxesAmount;
-    private TextView totalAmount;
+    private View mBlankScreenView;
+    private View mShoppingSaleItemsListView;
+    private View mShoppingSaleDataView;
+    private TextView mTotalLines;
+    private TextView mSubTotalAmount;
+    private TextView mTaxAmount;
+    private TextView mTotalAmount;
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentBusinessPartnerId;
     private ProgressDialog waitPlease;
@@ -121,18 +124,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                             }
                                         });
 
-                                totalLines = (TextView) view.findViewById(R.id.total_lines);
-                                subTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
-                                taxesAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
-                                totalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+                                mTotalLines = (TextView) view.findViewById(R.id.total_lines);
+                                mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
+                                mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
+                                mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
 
-                                if (mSalesOrderLines ==null || mSalesOrderLines.size()==0) {
-                                    view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-                                    view.findViewById(R.id.shoppingSale_items_list).setVisibility(View.GONE);
-                                    view.findViewById(R.id.shoppingSale_data_linearLayout).setVisibility(View.GONE);
-                                } else {
-                                    fillFields();
-                                }
+                                mBlankScreenView = view.findViewById(R.id.company_logo_name);
+                                mShoppingSaleItemsListView = view.findViewById(R.id.shoppingSale_items_list);
+                                mShoppingSaleDataView = view.findViewById(R.id.shoppingSale_data_linearLayout);
+
+                                fillFields();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -219,14 +220,20 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        totalLines.setText(getString(R.string.order_lines_number,
-                String.valueOf(mSalesOrderLines.size())));
-        subTotalAmount.setText(getString(R.string.order_sub_total_amount,
-                String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
-        taxesAmount.setText(getString(R.string.order_tax_amount,
-                String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
-        totalAmount.setText(getString(R.string.order_total_amount,
-                String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
+        if (mSalesOrderLines==null || mSalesOrderLines.size()==0) {
+            mBlankScreenView.setVisibility(View.VISIBLE);
+            mShoppingSaleItemsListView.setVisibility(View.GONE);
+            mShoppingSaleDataView.setVisibility(View.GONE);
+        } else {
+            mTotalLines.setText(getString(R.string.order_lines_number,
+                    String.valueOf(mSalesOrderLines.size())));
+            mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
+                    String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
+            mTaxAmount.setText(getString(R.string.order_tax_amount,
+                    String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
+            mTotalAmount.setText(getString(R.string.order_total_amount,
+                    String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
+        }
     }
 
     @Override
@@ -240,6 +247,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void reloadShoppingSalesList() {
+        //manda a refrescar la lista de la izquierda cuando se esta en pantalla dividida
         ((Callback) getActivity()).reloadShoppingSalesList();
     }
 

@@ -146,11 +146,11 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     public void reloadShoppingSalesList() {
         if (mTwoPane) {
             if (mListView!=null && mListView.getAdapter()!=null) {
-                int oldListSize = mListView.getAdapter().getCount();
-                int selectedIndex = mListView.getSelectedItemPosition();
+                int oldListSize = mListView.getCount();
+                int selectedIndex = mListView.getCheckedItemPosition();
                 ((ShoppingSalesListAdapter) mListView.getAdapter())
                         .setData(new SalesOrderDB(this, mCurrentUser).getActiveShoppingSalesOrders());
-                if (oldListSize<mListView.getAdapter().getCount() && mListView.getAdapter().getCount()>0) {
+                if (mListView.getCount()<oldListSize && mListView.getCount()>0) {
                     mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
                 } else {
                     mListView.setSelection(selectedIndex);

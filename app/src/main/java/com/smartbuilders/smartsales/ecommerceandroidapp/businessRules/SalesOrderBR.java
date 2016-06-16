@@ -28,13 +28,7 @@ public class SalesOrderBR {
     }
 
     public static double getTotalAmount(ArrayList<SalesOrderLine> salesOrderLines){
-        double subTotal=0, tax=0, total=0;
-        for(SalesOrderLine salesOrderLine : salesOrderLines){
-            subTotal += salesOrderLine.getQuantityOrdered() * salesOrderLine.getPrice();
-            tax += salesOrderLine.getQuantityOrdered() * salesOrderLine.getPrice() *
-                    (salesOrderLine.getTaxPercentage()/100);
-            total += subTotal + tax;
-        }
+        double total = getSubTotalAmount(salesOrderLines) + getTaxAmount(salesOrderLines);
         return new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }
