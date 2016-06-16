@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSalesListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -22,7 +24,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  * Jesus Sarco, before 15.06.2016
  */
 public class ShoppingSalesListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ShoppingSalesListFragment.Callback {
+        implements NavigationView.OnNavigationItemSelectedListener, ShoppingSalesListFragment.Callback,
+        ShoppingSaleFragment.Callback {
 
     public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
             "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
@@ -135,6 +138,24 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
+            }
+        }
+    }
+
+    @Override
+    public void reloadShoppingSalesList() {
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null) {
+                int oldListSize = mListView.getAdapter().getCount();
+                int selectedIndex = mListView.getSelectedItemPosition();
+                ((ShoppingSalesListAdapter) mListView.getAdapter())
+                        .setData(new SalesOrderDB(this, mCurrentUser).getActiveShoppingSalesOrders());
+                if (oldListSize<mListView.getAdapter().getCount() && mListView.getAdapter().getCount()>0) {
+                    mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                } else {
+                    mListView.setSelection(selectedIndex);
+                    mListView.setItemChecked(selectedIndex, true);
+                }
             }
         }
     }

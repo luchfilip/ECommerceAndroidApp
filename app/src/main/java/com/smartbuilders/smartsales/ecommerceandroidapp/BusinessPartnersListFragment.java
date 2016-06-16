@@ -31,10 +31,10 @@ public class BusinessPartnersListFragment extends Fragment {
     private BusinessPartnersListAdapter businessPartnersListAdapter;
 
     public interface Callback {
-        public void onItemSelected(BusinessPartner businessPartner);
-        public void onItemLongSelected(BusinessPartner businessPartner);
-        public void onListIsLoaded();
-        public void setSelectedIndex(int selectedIndex);
+        void onItemSelected(BusinessPartner businessPartner);
+        void onItemLongSelected(BusinessPartner businessPartner);
+        void onListIsLoaded();
+        void setSelectedIndex(int selectedIndex);
     }
 
     public BusinessPartnersListFragment() {

@@ -20,7 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
  * Jesus Sarco 12.05.2016
  */
 public class ShoppingSaleActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ShoppingSaleFragment.Callback {
 
     public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
 
@@ -83,5 +83,10 @@ public class ShoppingSaleActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void reloadShoppingSalesList() {
+
     }
 }

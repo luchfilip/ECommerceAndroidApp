@@ -32,7 +32,7 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
     }
 
     public interface Callback {
-        public void reloadBusinessPartnersList();
+        void reloadBusinessPartnersList();
     }
 
     public static DialogRegisterBusinessPartner newInstance(User user){

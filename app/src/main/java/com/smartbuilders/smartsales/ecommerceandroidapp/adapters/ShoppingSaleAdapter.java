@@ -70,8 +70,8 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     }
 
     public interface Callback {
-        public void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
-        public void reloadShoppingSalesList();
+        void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
+        void reloadShoppingSalesList();
     }
 
     public ShoppingSaleAdapter(Context context, ShoppingSaleFragment shoppingSaleFragment,

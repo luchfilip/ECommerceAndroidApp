@@ -33,10 +33,10 @@ public class CategoriesListFragment extends Fragment {
     private int mCurrentSelectedIndex;
 
     public interface Callback {
-        public void onItemSelected(ProductCategory productCategory);
-        public void onItemLongSelected(ProductCategory productCategory);
-        public void onCategoriesListIsLoaded();
-        public void setSelectedIndex(int selectedIndex);
+        void onItemSelected(ProductCategory productCategory);
+        void onItemLongSelected(ProductCategory productCategory);
+        void onCategoriesListIsLoaded();
+        void setSelectedIndex(int selectedIndex);
     }
 
     public CategoriesListFragment() {

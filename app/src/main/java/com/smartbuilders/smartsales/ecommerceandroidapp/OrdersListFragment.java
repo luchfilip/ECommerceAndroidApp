@@ -25,7 +25,7 @@ public class OrdersListFragment extends Fragment {
     private User mCurrentUser;
 
     public interface Callback {
-        public void onItemSelected(Order order, int selectedItemPosition);
+        void onItemSelected(Order order, int selectedItemPosition);
     }
 
     public OrdersListFragment() {

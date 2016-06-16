@@ -49,7 +49,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public interface Callback {
-        public void reloadShoppingSalesList();
+        void reloadShoppingSalesList();
     }
 
     @Override

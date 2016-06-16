@@ -30,8 +30,8 @@ public class RegisterBusinessPartnerFragment extends Fragment {
     private BusinessPartner mBusinessPartner;
 
     public interface Callback {
-        public void onBusinessPartnerRegistered();
-        public void onBusinessPartnerUpdated();
+        void onBusinessPartnerRegistered();
+        void onBusinessPartnerUpdated();
     }
 
     @Override

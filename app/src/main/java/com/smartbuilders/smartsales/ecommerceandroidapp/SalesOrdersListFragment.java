@@ -32,8 +32,8 @@ public class SalesOrdersListFragment extends Fragment {
     private boolean mLoadOrdersFromSalesOrders;
 
     public interface Callback {
-        public void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
-        public void onItemSelected(Order order, int selectedItemPosition);
+        void onItemSelected(SalesOrder salesOrder, int selectedItemPosition);
+        void onItemSelected(Order order, int selectedItemPosition);
     }
 
     public SalesOrdersListFragment() {

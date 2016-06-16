@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +33,10 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     private ShoppingSalesListAdapter mShoppingSalesListAdapter;
 
     public interface Callback {
-        public void onItemSelected(SalesOrder salesOrder);
-        public void onItemLongSelected(SalesOrder salesOrder);
-        public void onListIsLoaded();
-        public void setSelectedIndex(int selectedIndex);
+        void onItemSelected(SalesOrder salesOrder);
+        void onItemLongSelected(SalesOrder salesOrder);
+        void onListIsLoaded();
+        void setSelectedIndex(int selectedIndex);
     }
 
     public ShoppingSalesListFragment() {
