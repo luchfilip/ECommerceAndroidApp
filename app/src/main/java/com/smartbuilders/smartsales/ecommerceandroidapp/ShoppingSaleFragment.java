@@ -207,7 +207,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                        //se manda a recargar la lista padre para que cuando se vuelva a la misma tenga
+                        //la informacion actualizada
+                        reloadShoppingSalesList();
                         Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
                         intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER, new SalesOrderDB(getContext(), mCurrentUser)
                                 .getLastFinalizedSalesOrder());

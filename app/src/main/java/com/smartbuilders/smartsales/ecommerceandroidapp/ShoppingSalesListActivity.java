@@ -29,6 +29,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
             "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
+    public static final int SHOW_SALES_ORDER_DETAIL_REQUEST = 1;
 
     private User mCurrentUser;
     private boolean mTwoPane;
@@ -114,7 +115,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         }else{
             Intent intent = new Intent(this, ShoppingSaleActivity.class);
             intent.putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -144,18 +145,28 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void reloadShoppingSalesList() {
-        if (mTwoPane) {
-            if (mListView!=null && mListView.getAdapter()!=null) {
-                int oldListSize = mListView.getCount();
-                int selectedIndex = mListView.getCheckedItemPosition();
-                ((ShoppingSalesListAdapter) mListView.getAdapter())
-                        .setData(new SalesOrderDB(this, mCurrentUser).getActiveShoppingSalesOrders());
+        if (mListView!=null && mListView.getAdapter()!=null) {
+            int oldListSize = mListView.getCount();
+            int selectedIndex = mListView.getCheckedItemPosition();
+            ((ShoppingSalesListAdapter) mListView.getAdapter())
+                    .setData(new SalesOrderDB(this, mCurrentUser).getActiveShoppingSalesOrders());
+            if (mTwoPane) {
                 if (mListView.getCount()<oldListSize && mListView.getCount()>0) {
                     mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
                 } else {
                     mListView.setSelection(selectedIndex);
                     mListView.setItemChecked(selectedIndex, true);
                 }
+            }
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SHOW_SALES_ORDER_DETAIL_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                reloadShoppingSalesList();
             }
         }
     }

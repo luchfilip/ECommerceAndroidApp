@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,11 +24,20 @@ public class ShoppingSaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ShoppingSaleFragment.Callback {
 
     public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
+    private static final String STATE_RELOAD_SHOPPING_SALES_LIST = "STATE_RELOAD_SHOPPING_SALES_LIST";
+
+    private boolean mReloadShoppingSalesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_sale);
+
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_RELOAD_SHOPPING_SALES_LIST)) {
+                mReloadShoppingSalesList = savedInstanceState.getBoolean(STATE_RELOAD_SHOPPING_SALES_LIST);
+            }
+        }
 
         User currentUser = Utils.getCurrentUser(this);
 
@@ -72,7 +82,10 @@ public class ShoppingSaleActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent returnIntent = new Intent();
+            setResult(mReloadShoppingSalesList ? RESULT_OK : RESULT_CANCELED, returnIntent);
+            finish();
+            //super.onBackPressed();
         }
     }
 
@@ -87,6 +100,12 @@ public class ShoppingSaleActivity extends AppCompatActivity
 
     @Override
     public void reloadShoppingSalesList() {
+        mReloadShoppingSalesList = true;
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean(STATE_RELOAD_SHOPPING_SALES_LIST, mReloadShoppingSalesList);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }
