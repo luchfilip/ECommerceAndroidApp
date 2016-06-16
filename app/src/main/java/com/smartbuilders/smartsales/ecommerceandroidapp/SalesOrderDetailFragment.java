@@ -99,50 +99,54 @@ public class SalesOrderDetailFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sales_order_lines);
-                                // use this setting to improve performance if you know that changes
-                                // in content do not change the layout size of the RecyclerView
-                                recyclerView.setHasFixedSize(true);
-                                mLinearLayoutManager = new LinearLayoutManager(getActivity());
-                                recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new SalesOrderLineAdapter(orderLines, mCurrentUser));
+                                if (mSalesOrder != null) {
+                                    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sales_order_lines);
+                                    // use this setting to improve performance if you know that changes
+                                    // in content do not change the layout size of the RecyclerView
+                                    recyclerView.setHasFixedSize(true);
+                                    mLinearLayoutManager = new LinearLayoutManager(getActivity());
+                                    recyclerView.setLayoutManager(mLinearLayoutManager);
+                                    recyclerView.setAdapter(new SalesOrderLineAdapter(orderLines, mCurrentUser));
 
-                                if (mRecyclerViewCurrentFirstPosition!=0) {
-                                    recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-                                }
+                                    if (mRecyclerViewCurrentFirstPosition!=0) {
+                                        recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                    }
 
-                                ((TextView) view.findViewById(R.id.sales_order_lines_number_tv))
-                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
+                                    ((TextView) view.findViewById(R.id.sales_order_lines_number_tv))
+                                            .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mSalesOrder.getLinesNumber())));
 
-                                ((TextView) view.findViewById(R.id.sales_order_number_tv))
-                                        .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
+                                    ((TextView) view.findViewById(R.id.sales_order_number_tv))
+                                            .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
 
-                                ((TextView) view.findViewById(R.id.sales_order_date_tv))
-                                        .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
+                                    ((TextView) view.findViewById(R.id.sales_order_date_tv))
+                                            .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
 
-                                if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
-                                    ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
-                                            .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
-                                }
-                                if(view.findViewById(R.id.sales_order_total_tv) != null) {
-                                    ((TextView) view.findViewById(R.id.sales_order_total_tv))
-                                            .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
-                                }
-                                if(view.findViewById(R.id.sales_order_tax_tv) != null) {
-                                    ((TextView) view.findViewById(R.id.sales_order_tax_tv))
-                                            .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
-                                }
-                                if(view.findViewById(R.id.create_order_button)!=null){
-                                    view.findViewById(R.id.create_order_button)
-                                            .setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
-                                                    intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
-                                                    intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
-                                                    startActivity(intent);
-                                                }
-                                            });
+                                    if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
+                                        ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
+                                                .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
+                                    }
+                                    if(view.findViewById(R.id.sales_order_total_tv) != null) {
+                                        ((TextView) view.findViewById(R.id.sales_order_total_tv))
+                                                .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
+                                    }
+                                    if(view.findViewById(R.id.sales_order_tax_tv) != null) {
+                                        ((TextView) view.findViewById(R.id.sales_order_tax_tv))
+                                                .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
+                                    }
+                                    if(view.findViewById(R.id.create_sales_order_button)!=null){
+                                        view.findViewById(R.id.create_sales_order_button)
+                                                .setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
+                                                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
+                                                        intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    //TODO: mostrar mensaje que no hay detalles para mostrar.
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

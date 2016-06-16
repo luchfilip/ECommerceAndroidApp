@@ -63,7 +63,8 @@ public class SalesOrderDB {
         Cursor c = null;
         SalesOrder salesOrder = null;
         try {
-            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID "+
+            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
+                        " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID "+
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
                     " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.ISACTIVE = ?";
@@ -86,6 +87,10 @@ public class SalesOrderDB {
                 salesOrder.setTotalAmount(c.getDouble(5));
                 salesOrder.setBusinessPartnerId(c.getInt(6));
             }
+            if(salesOrder!=null){
+                salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mCurrentUser))
+                        .getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -97,9 +102,6 @@ public class SalesOrderDB {
                 }
             }
         }
-
-        salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mCurrentUser))
-                .getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
         return salesOrder;
     }
 
@@ -283,7 +285,7 @@ public class SalesOrderDB {
                             "UPDATE ECOMMERCE_SALES_ORDER SET ISACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});
-            if(rowsAffected<0){
+            if(rowsAffected <= 0){
                 return "No se actualizó ningún registro en la base de datos";
             }
         } catch (Exception e) {

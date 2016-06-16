@@ -27,8 +27,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager;
 
-import java.util.ArrayList;
-
 /**
  * Jesus Sarco, 12.05.2016
  */
@@ -170,22 +168,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         String result = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
                                 .deactiveSalesOrderById(salesOrder.getId());
                         if (result==null) {
-                            if (mListView != null) {
-                                ArrayList<SalesOrder> activeSalesOrders = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
-                                        .getActiveSalesOrders();
-                                if (mListView.getAdapter()!=null) {
-                                    ((SalesOrdersListAdapter) mListView.getAdapter()).setData(activeSalesOrders);
-                                } else {
-                                    mListView.setAdapter(new SalesOrdersListAdapter(SalesOrdersListActivity.this, activeSalesOrders));
-                                }
-                                if (mTwoPane) {
-                                    if(mListView.getAdapter().getCount()>0) {
-                                        mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                                    } else {
-
-                                    }
-                                }
-                            }
+                            reloadSalesOrdersList();
                         } else {
                             Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -217,20 +200,30 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if(mListView != null && (mListView.getAdapter()==null || mListView.getAdapter().getCount()==0)){
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-            if(mTwoPane){
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
-                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
-            }else{
-                findViewById(R.id.sales_orders_list).setVisibility(View.GONE);
+        if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
-        } else if (mTwoPane) {
-            if (mListView != null && mListView.getAdapter()!=null
-                    && mListView.getAdapter().getCount() > mCurrentSelectedItemPosition
-                    && mCurrentSelectedItemPosition != ListView.INVALID_POSITION) {
-                mListView.performItemClick(mListView.getAdapter().getView(mCurrentSelectedItemPosition, null, null),
-                        mCurrentSelectedItemPosition, mCurrentSelectedItemPosition);
+        }
+    }
+
+    private void reloadSalesOrdersList(){
+        if (mListView!=null && mListView.getAdapter()!=null) {
+            int oldListSize = mListView.getCount();
+            int selectedIndex = mListView.getCheckedItemPosition();
+            ((SalesOrdersListAdapter) mListView.getAdapter())
+                    .setData(new SalesOrderDB(this, mCurrentUser).getActiveSalesOrders());
+
+            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
+                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            } else if (mListView.getCount()>selectedIndex && mTwoPane) {
+                mListView.setSelection(selectedIndex);
+                mListView.setItemChecked(selectedIndex, true);
+            } else if(mListView.getCount()==0) { //se bloquea la pantalla
+                mListView.setVisibility(View.GONE);
+                if (findViewById(R.id.company_logo_name)!=null) {
+                    findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+                }
             }
         }
     }
