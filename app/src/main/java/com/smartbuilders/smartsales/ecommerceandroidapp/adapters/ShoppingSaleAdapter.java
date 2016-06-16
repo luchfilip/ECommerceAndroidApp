@@ -71,6 +71,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
 
     public interface Callback {
         public void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
+        public void reloadShoppingSalesList();
     }
 
     public ShoppingSaleAdapter(Context context, ShoppingSaleFragment shoppingSaleFragment,
@@ -178,6 +179,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mSalesOrderLineDB.deleteSalesOrderLine(mDataset.get(position));
                                 if(result == null){
+                                    mShoppingSaleFragment.reloadShoppingSalesList();
                                     mDataset.remove(position);
                                     notifyDataSetChanged();
                                 } else {

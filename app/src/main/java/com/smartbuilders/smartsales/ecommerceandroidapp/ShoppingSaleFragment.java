@@ -48,6 +48,10 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     public ShoppingSaleFragment() {
     }
 
+    public interface Callback {
+        public void reloadShoppingSalesList();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -232,6 +236,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         dialogUpdateSalesOrderLine.setTargetFragment(this, 0);
         dialogUpdateSalesOrderLine.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateSalesOrderLine.class.getSimpleName());
+    }
+
+    @Override
+    public void reloadShoppingSalesList() {
+        ((Callback) getActivity()).reloadShoppingSalesList();
     }
 
     public void reloadShoppingSale(){

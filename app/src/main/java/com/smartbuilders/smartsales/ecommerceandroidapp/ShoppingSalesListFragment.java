@@ -2,22 +2,25 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSalesListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ShoppingSalesListFragment extends Fragment {
+public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleAdapter.Callback {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
@@ -116,6 +119,16 @@ public class ShoppingSalesListFragment extends Fragment {
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void updateSalesOrderLine(SalesOrderLine orderLine, int focus) {
+
+    }
+
+    @Override
+    public void reloadShoppingSalesList() {
+        mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
     }
 
     @Override

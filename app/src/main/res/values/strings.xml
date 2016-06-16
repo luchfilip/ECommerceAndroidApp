@@ -275,4 +275,7 @@
     <string name="no_products_to_show">No se encontraron productos para mostrar.</string>
     <string name="closing_sales_order_wait_please">Finalizando cotización, espere por favor...</string>
     <string name="closing_order_wait_please">Finalizando pedido, espere por favor...</string>
+    <string name="title_activity_conctac_us">ConctacUsActivity</string>
+    <string name="send_email">Enviar correo electrónico</string>
+    <string name="send_error_report">Enviar reporte de error</string>
 </resources>

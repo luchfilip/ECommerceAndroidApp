@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,6 +27,7 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ContactUsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity;
@@ -547,7 +547,7 @@ public class Utils {
             case R.id.nav_shopping_cart:
                 context.startActivity(new Intent(context, ShoppingCartActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
             case R.id.nav_shopping_sale:
                 context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
@@ -555,35 +555,46 @@ public class Utils {
             case R.id.nav_wish_list:
                 context.startActivity(new Intent(context, WishListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
             case R.id.nav_orders:
                 context.startActivity(new Intent(context, OrdersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
             case R.id.nav_sales_orders:
                 context.startActivity(new Intent(context, SalesOrdersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
             case R.id.nav_settings:
                 context.startActivity(new Intent(context, SettingsActivity.class));
-            break;
+                break;
             case R.id.nav_business_partners:
                 context.startActivity(new Intent(context, BusinessPartnersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
             case R.id.nav_share:
                 try{
                     showPromptShareApp(context);
                 }catch(Throwable e){
                     e.printStackTrace();
                 }
-            break;
+                break;
             case R.id.nav_my_company:
                 context.startActivity(new Intent(context, CompanyActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            break;
+                break;
+            case R.id.nav_conctac_us:
+                context.startActivity(new Intent(context, ContactUsActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                break;
             case R.id.nav_report_error:
-            break;
+                Intent contactUsEmailIntent = new Intent(Intent.ACTION_SEND);
+                contactUsEmailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                // need this to prompts email client only
+                contactUsEmailIntent.setType("message/rfc822");
+                contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"smartBuilders.ve@gmail.com"});
+
+                context.startActivity(Intent.createChooser(contactUsEmailIntent, context.getString(R.string.send_error_report)));
+                break;
         }
     }
 

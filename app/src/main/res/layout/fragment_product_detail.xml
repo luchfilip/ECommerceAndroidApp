@@ -109,7 +109,8 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="fill_vertical">
+                    android:gravity="fill_vertical"
+                    android:padding="4dp">
 
                     <Button
                         style="@style/MainButtonAppTheme"
@@ -119,7 +120,8 @@
                         android:layout_weight="1"
                         android:layout_marginRight="3dp"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginLeft="3dp" />
 
                     <Button
                         style="@style/GoldenButtonAppTheme"
@@ -129,7 +131,8 @@
                         android:layout_weight="1"
                         android:layout_marginRight="3dp"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginLeft="3dp" />
 
                 </LinearLayout>
 

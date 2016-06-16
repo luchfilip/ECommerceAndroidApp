@@ -21,8 +21,8 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.smartbuilders.smartsales.ecommerceandroidapp.permission.C2D_MESSAGE" />
-    <!--necesarion para consultar el mac address del dispositivo-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- necesarion para consultar el mac address del dispositivo -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <permission
         android:name="com.smartbuilders.smartsales.ecommerceandroidapp.permission.C2D_MESSAGE"
@@ -41,7 +41,7 @@
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SplashScreen"
-            android:theme="@style/SplashTheme.NoActionBar" >
+            android:theme="@style/SplashTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -119,7 +119,7 @@
         -->
         <service
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUserPasswordService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!--
             Because android:exported is set to "false",
@@ -127,7 +127,7 @@
         -->
         <service
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestUserPasswordService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name="com.jasgcorp.ids.gcm.GcmBroadcastReceiver"
@@ -229,6 +229,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ContactUsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
