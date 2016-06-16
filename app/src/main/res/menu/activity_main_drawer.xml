@@ -34,12 +34,6 @@
                 android:title="@string/closed_sales_orders" />
         </menu>
     </item>
-    <group>
-        <item
-            android:id="@+id/nav_my_company"
-            android:icon="@drawable/ic_business_black_24dp"
-            android:title="@string/my_company" />
-    </group>
     <item android:title="@string/communicate">
         <menu>
             <item
@@ -62,6 +56,10 @@
     <!--</item>-->
     <item android:title="@string/action_setting">
         <menu>
+            <item
+                android:id="@+id/nav_my_company"
+                android:icon="@drawable/ic_business_black_24dp"
+                android:title="@string/my_company" />
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"

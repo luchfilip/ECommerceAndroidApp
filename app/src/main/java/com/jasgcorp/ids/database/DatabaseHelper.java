@@ -120,12 +120,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                             .append("RANKING DOUBLE NOT NULL, ")
                                             .append("ISACTIVE CHAR(1) DEFAULT 'Y')").toString();
 
-    public static final String CREATE_PRODUCT_TAX =
-                                    new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_TAX ")
-                                            .append("(PRODUCT_TAX_ID INTEGER NOT NULL, ")
-                                            .append("TAX_PERCENTAGE DOUBLE NOT NULL, ")
-                                            .append("TAX_NAME VARCHAR(255) DEFAULT NULL, ")
-                                            .append("PRIMARY KEY (PRODUCT_TAX_ID))").toString();
+	public static final String CREATE_PRODUCT_TAX =
+									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_TAX ")
+											.append("(PRODUCT_TAX_ID INTEGER NOT NULL, ")
+											.append("TAX_PERCENTAGE DOUBLE NOT NULL, ")
+											.append("TAX_NAME VARCHAR(255) DEFAULT NULL, ")
+											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("PRIMARY KEY (PRODUCT_TAX_ID))").toString();
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
 									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")

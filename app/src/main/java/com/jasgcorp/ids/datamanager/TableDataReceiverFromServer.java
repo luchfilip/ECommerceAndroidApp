@@ -124,8 +124,8 @@ public class TableDataReceiverFromServer extends Thread {
             execRemoteQueryAndInsert(context, user,
                     "select USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
                             " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                            " from APP_PARAMETER where ISACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO APP_PARAMETER (USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, " +
+                            " from USER_APP_PARAMETER where ISACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO USER_APP_PARAMETER (USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, " +
                             " INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 10;
