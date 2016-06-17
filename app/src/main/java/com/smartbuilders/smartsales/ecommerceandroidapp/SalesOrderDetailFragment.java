@@ -226,12 +226,12 @@ public class SalesOrderDetailFragment extends Fragment {
         return shareIntent;
     }
 
-    //class CreateShareIntentThread extends Thread {
+    //class ReloadShareIntentThread extends Thread {
     //
     //    private SalesOrder mSalesOrder;
     //    private ArrayList<SalesOrderLine> mSalesOrderLines;
     //
-    //    CreateShareIntentThread(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines) {
+    //    ReloadShareIntentThread(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines) {
     //        this.mSalesOrder = salesOrder;
     //        this.mSalesOrderLines = salesOrderLines;
     //    }

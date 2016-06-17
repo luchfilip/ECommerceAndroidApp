@@ -133,6 +133,7 @@
     <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
     <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
+    <string name="clear_wish_list_question">¿Está seguro que desea eliminar todos los registros de la lista de favoritos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s de la cotización?</string>
     <string name="accept">Aceptar</string>
@@ -149,6 +150,7 @@
     <string name="welcome_user">Bienvenido %1$s</string>
     <string name="delete_recent_search">¿Desea eliminar la busqueda "%1$s" del historial de busqueda?</string>
     <string name="delete_search_historical">Borrar historial</string>
+    <string name="clear_wish_list">Limpiar lista de favoritos</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>

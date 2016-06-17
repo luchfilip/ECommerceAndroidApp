@@ -115,6 +115,19 @@ public class OrderLineDB {
         return null;
     }
 
+    public String clearWishList(){
+        try {
+            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                    null, "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ?",
+                    new String[]{WISHLIST_DOCTYPE});
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
     public ArrayList<OrderLine> getShoppingCart(){
         return getOrderLines(SHOPPING_CART_DOCTYPE, null);
     }
