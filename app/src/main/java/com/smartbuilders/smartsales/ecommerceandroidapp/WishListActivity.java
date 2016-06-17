@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -26,6 +27,8 @@ public class WishListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wish_list);
 
+        User currentUser = Utils.getCurrentUser(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
@@ -39,7 +42,7 @@ public class WishListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, Utils.getCurrentUser(this).getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
     }
 
     @Override

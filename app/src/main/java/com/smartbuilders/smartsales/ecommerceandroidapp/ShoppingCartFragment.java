@@ -142,11 +142,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     private void closeOrder(){
         lockScreen();
         new Thread() {

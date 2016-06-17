@@ -26,7 +26,6 @@ public class ZoomImageActivity extends AppCompatActivity
 
     private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
 
-    private User mCurrentUser;
     private String mImageFileName;
 
     @Override
@@ -34,7 +33,7 @@ public class ZoomImageActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoom_image);
 
-        mCurrentUser = Utils.getCurrentUser(this);
+        User currentUser = Utils.getCurrentUser(this);
 
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_IMAGE_FILE_NAME)){
@@ -55,7 +54,7 @@ public class ZoomImageActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
     }
 
     @Override

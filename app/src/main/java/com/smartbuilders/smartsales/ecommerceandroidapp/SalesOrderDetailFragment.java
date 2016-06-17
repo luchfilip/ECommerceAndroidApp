@@ -53,7 +53,6 @@ public class SalesOrderDetailFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
-        setHasOptionsMenu(true);
 
         final ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
 
@@ -159,6 +158,7 @@ public class SalesOrderDetailFragment extends Fragment {
                 }
             }
         }.start();
+        setHasOptionsMenu(true);
         return view;
     }
 

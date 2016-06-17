@@ -79,7 +79,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(getArguments().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)){
                             mCurrentBusinessPartnerId = getArguments().getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
                         }
-                    }else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null){
+                    }else if(getActivity()!=null && getActivity().getIntent()!=null
+                            && getActivity().getIntent().getExtras()!=null){
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
                             mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);

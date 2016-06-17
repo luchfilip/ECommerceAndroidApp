@@ -37,7 +37,6 @@ public class SearchResultsActivity extends AppCompatActivity
 
     private User mCurrentUser;
     private ProductDB productDB;
-    private ListView mListView;
     private SearchResultAdapter mSearchResultAdapter;
     private EditText searchEditText;
     private NavigationView mNavigationView;
@@ -64,7 +63,7 @@ public class SearchResultsActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        mListView = (ListView) findViewById(R.id.search_result_list);
+        ListView mListView = (ListView) findViewById(R.id.search_result_list);
         mSearchResultAdapter = new SearchResultAdapter(this, null, mCurrentUser);
         mListView.setAdapter(mSearchResultAdapter);
 

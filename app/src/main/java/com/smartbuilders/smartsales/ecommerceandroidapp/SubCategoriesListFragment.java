@@ -27,11 +27,9 @@ public class SubCategoriesListFragment extends Fragment {
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
     // save index and top position
-    int mListViewIndex;
-    int mListViewTop;
-
+    private int mListViewIndex;
+    private int mListViewTop;
     private ListView mListView;
-
     private int mCategoryId;
 
     public SubCategoriesListFragment() {
@@ -82,9 +80,8 @@ public class SubCategoriesListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                SubCategoryAdapter mCategoryAdapter = new SubCategoryAdapter(getActivity(), productSubCategories);
                                 mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
-                                mListView.setAdapter(mCategoryAdapter);
+                                mListView.setAdapter(new SubCategoryAdapter(getContext(), productSubCategories));
 
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
