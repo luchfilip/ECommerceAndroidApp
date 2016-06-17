@@ -150,8 +150,13 @@ public class SalesOrderDetailFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                                view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                if (mSalesOrder!=null) {
+                                    view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                } else {
+                                    view.findViewById(R.id.main_layout).setVisibility(View.GONE);
+                                    view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                }
                             }
                         }
                     });

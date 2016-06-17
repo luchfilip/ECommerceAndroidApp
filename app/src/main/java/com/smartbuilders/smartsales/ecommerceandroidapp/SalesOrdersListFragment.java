@@ -40,10 +40,10 @@ public class SalesOrdersListFragment extends Fragment {
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
-        void onItemLongSelected(SalesOrder salesOrder);
+        void onItemLongSelected(SalesOrder salesOrder, ListView listView);
         void onItemSelected(Order order);
-        void onListIsLoaded();
-        void setSelectedIndex(int selectedIndex);
+        void onListIsLoaded(ListView listView);
+        void setSelectedIndex(int selectedIndex, ListView listView);
     }
 
     public SalesOrdersListFragment() {
@@ -98,8 +98,8 @@ public class SalesOrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                mListView = (ListView) view.findViewById(R.id.sales_orders_list);
                                 if (mLoadOrdersFromSalesOrders) {
-                                    mListView = (ListView) view.findViewById(R.id.sales_orders_list);
                                     mListView.setAdapter(new OrdersListAdapter(getActivity(), activeOrdersFromSalesOrders));
 
                                     mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,7 +116,6 @@ public class SalesOrdersListFragment extends Fragment {
                                         }
                                     });
                                 } else {
-                                    mListView = (ListView) view.findViewById(R.id.sales_orders_list);
                                     mListView.setAdapter(new SalesOrdersListAdapter(getActivity(), activeSalesOrders));
 
                                     mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,7 +139,7 @@ public class SalesOrdersListFragment extends Fragment {
                                             // if it cannot seek to that position.
                                             SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                                             if (salesOrder != null) {
-                                                ((Callback) getActivity()).onItemLongSelected(salesOrder);
+                                                ((Callback) getActivity()).onItemLongSelected(salesOrder, mListView);
                                             }
                                             return true;
                                         }
@@ -155,9 +154,9 @@ public class SalesOrdersListFragment extends Fragment {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
                                     if (savedInstanceState==null) {
-                                        ((Callback) getActivity()).onListIsLoaded();
+                                        ((Callback) getActivity()).onListIsLoaded(mListView);
                                     } else {
-                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
                                     }
                                 }
                             }

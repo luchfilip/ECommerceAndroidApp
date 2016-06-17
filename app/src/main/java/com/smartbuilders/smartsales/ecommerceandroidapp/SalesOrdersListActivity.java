@@ -37,7 +37,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
     private boolean mThreePane;
     private User mCurrentUser;
-    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +101,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         });
         viewPager.setAllowSwap(!mThreePane);
-
-        mListView = (ListView) findViewById(R.id.sales_orders_list);
     }
 
     @Override
@@ -163,7 +160,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(final SalesOrder salesOrder) {
+    public void onItemLongSelected(final SalesOrder salesOrder, final ListView listView) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
                         salesOrder.getBusinessPartner().getCommercialName()))
@@ -172,7 +169,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         String result = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
                                 .deactiveSalesOrderById(salesOrder.getId());
                         if (result==null) {
-                            reloadSalesOrdersList();
+
+                            reloadSalesOrdersList(listView);
                         } else {
                             Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -202,41 +200,40 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListIsLoaded() {
+    public void onListIsLoaded(ListView listView) {
         if (mThreePane) {
-            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            if (listView != null && listView.getAdapter()!=null && listView.getAdapter().getCount()>0) {
+                listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
             }
         }
     }
 
-    private void reloadSalesOrdersList(){
-        if (mListView!=null && mListView.getAdapter()!=null) {
-            int oldListSize = mListView.getCount();
-            int selectedIndex = mListView.getCheckedItemPosition();
-            ((SalesOrdersListAdapter) mListView.getAdapter())
+    private void reloadSalesOrdersList(ListView listView){
+        if (listView!=null && listView.getAdapter()!=null) {
+            int oldListSize = listView.getCount();
+            int selectedIndex = listView.getCheckedItemPosition();
+            ((SalesOrdersListAdapter) listView.getAdapter())
                     .setData(new SalesOrderDB(this, mCurrentUser).getActiveSalesOrders());
 
-            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mThreePane) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-            } else if (mListView.getCount()>selectedIndex && mThreePane) {
-                mListView.setSelection(selectedIndex);
-                mListView.setItemChecked(selectedIndex, true);
-            } else if(mListView.getCount()==0) { //se bloquea la pantalla
-                mListView.setVisibility(View.GONE);
-                if (findViewById(R.id.company_logo_name)!=null) {
-                    findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-                }
+            if (listView.getCount()<oldListSize && listView.getCount()>0 && mThreePane) {
+                listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
+            } else if (listView.getCount()>selectedIndex && mThreePane) {
+                listView.setSelection(selectedIndex);
+                listView.setItemChecked(selectedIndex, true);
+            } else if (mThreePane) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.sales_order_detail_container, new SalesOrderDetailFragment(), SALES_ORDER_DETAIL_FRAGMENT_TAG)
+                        .commit();
             }
         }
     }
 
     @Override
-    public void setSelectedIndex(int selectedIndex) {
+    public void setSelectedIndex(int selectedIndex, ListView listView) {
         if (mThreePane) {
-            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
-                mListView.setSelection(selectedIndex);
-                mListView.setItemChecked(selectedIndex, true);
+            if (listView!=null && listView.getAdapter()!=null && listView.getAdapter().getCount()>selectedIndex) {
+                listView.setSelection(selectedIndex);
+                listView.setItemChecked(selectedIndex, true);
             }
         }
     }
