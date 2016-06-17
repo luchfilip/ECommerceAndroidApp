@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    style="@style/list_item_style"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    style="@style/list_item_style"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Medium"
         android:id="@+id/order_number_tv"
-        android:textColor="@color/black"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,29 +34,4 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/total_lines_tv"
-        android:layout_gravity="right"
-        android:textColor="@color/black"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        android:visibility="gone" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/total_tax_lines"
-        android:layout_gravity="right"
-        android:textColor="@color/black"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        android:visibility="gone" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/grand_total"
-        android:layout_gravity="right"
-        android:textColor="@color/black"
-        android:visibility="gone" />
 </LinearLayout>
