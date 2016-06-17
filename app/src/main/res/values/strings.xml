@@ -286,4 +286,10 @@
     <string name="master_label">Master:</string>
     <string name="fax_label">Fax:</string>
     <string name="direction_label">Dirección:</string>
+
+    <string-array name="search_by_options">
+        <item>@string/search_by</item>
+        <item>@string/categories</item>
+        <item>@string/brands</item>
+    </string-array>
 </resources>

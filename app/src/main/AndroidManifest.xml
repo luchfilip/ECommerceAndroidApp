@@ -191,9 +191,6 @@
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.FilterOptionsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.BrandsListActivity"
             android:label="@string/app_name" />
         <activity

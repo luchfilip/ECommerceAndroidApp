@@ -18,8 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -28,6 +31,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Jesus Sarco 12.05.2016
@@ -68,12 +74,29 @@ public class SearchResultsActivity extends AppCompatActivity
         mListView.setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
-            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+            final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
+            adapter.setDropDownViewResource(R.layout.search_by_option_item);
+            searchByOptionsSpinner.setAdapter(adapter);
+            searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(SearchResultsActivity.this, FilterOptionsActivity.class));
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String selectedOption = (String) parent.getItemAtPosition(position);
+                    if(selectedOption!=null){
+                        if(selectedOption.equals(getString(R.string.categories))){
+                            startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
+                        }else if(selectedOption.equals(getString(R.string.brands))){
+                            startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
+                        }
+                    }
+                    searchByOptionsSpinner.setSelection(0);
                 }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) { }
             });
+
             searchEditText = (EditText) findViewById(R.id.search_product_editText);
             searchEditText.setFocusable(true);
             searchEditText.setFocusableInTouchMode(true);

@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -51,11 +54,27 @@ public class ProductsListActivity extends AppCompatActivity
                 .setText(getString(R.string.welcome_user, currentUser.getUserName()));
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
-            findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
+            final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
+            adapter.setDropDownViewResource(R.layout.search_by_option_item);
+            searchByOptionsSpinner.setAdapter(adapter);
+            searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(ProductsListActivity.this, FilterOptionsActivity.class));
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String selectedOption = (String) parent.getItemAtPosition(position);
+                    if(selectedOption!=null){
+                        if(selectedOption.equals(getString(R.string.categories))){
+                            startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
+                        }else if(selectedOption.equals(getString(R.string.brands))){
+                            startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
+                        }
+                    }
+                    searchByOptionsSpinner.setSelection(0);
                 }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) { }
             });
 
             findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
