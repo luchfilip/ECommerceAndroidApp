@@ -544,6 +544,10 @@ public class Utils {
      */
     public static void navigationItemSelectedBehave(int itemId, Context context) {
         switch (itemId){
+            case R.id.nav_home:
+                context.startActivity(new Intent(context, MainActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                break;
             case R.id.nav_shopping_cart:
                 context.startActivity(new Intent(context, ShoppingCartActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));

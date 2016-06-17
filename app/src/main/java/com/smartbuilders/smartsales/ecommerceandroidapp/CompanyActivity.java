@@ -29,6 +29,7 @@ public class CompanyActivity extends AppCompatActivity {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
         }
         return (super.onOptionsItemSelected(menuItem));
     }

@@ -34,49 +34,20 @@ public class ProductsListFragment extends Fragment {
     private int productCategoryId;
     private int productSubCategoryId;
     private int productBrandId;
-    private int productId;
     private String productName;
     private String mSearchPattern;
     private ProductsListAdapter mProductsListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
+    private User mCurrentUser;
 
     public ProductsListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view  = inflater.inflate(R.layout.fragment_products_list, container, false);
-
-        final User mCurrentUser = Utils.getCurrentUser(getContext());
-
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
-                mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
-            }
-        }
-
-        if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_ID)){
-                productId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID)){
-                productCategoryId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID)){
-                productSubCategoryId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_BRAND_ID)){
-                productBrandId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_BRAND_ID);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_NAME)){
-                productName = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_PRODUCT_NAME);
-            }
-            if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_SEARCH_PATTERN)){
-                mSearchPattern = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_SEARCH_PATTERN);
-            }
-        }
 
         final ArrayList<Product> products = new ArrayList<>();
 
@@ -84,6 +55,32 @@ public class ProductsListFragment extends Fragment {
             @Override
             public void run() {
                 try {
+                    if(savedInstanceState != null) {
+                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
+                    }
+
+                    if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+                        if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID)){
+                            productCategoryId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID);
+                        }
+                        if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID)){
+                            productSubCategoryId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID);
+                        }
+                        if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_BRAND_ID)){
+                            productBrandId = getActivity().getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_BRAND_ID);
+                        }
+                        if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_NAME)){
+                            productName = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_PRODUCT_NAME);
+                        }
+                        if(getActivity().getIntent().getExtras().containsKey(ProductsListActivity.KEY_SEARCH_PATTERN)){
+                            mSearchPattern = getActivity().getIntent().getExtras().getString(ProductsListActivity.KEY_SEARCH_PATTERN);
+                        }
+                    }
+
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(getContext(), mCurrentUser).getProductsByCategoryId(productCategoryId));
                     } else if (productSubCategoryId != 0) {
@@ -161,14 +158,7 @@ public class ProductsListFragment extends Fragment {
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
-                                } /*else if(!products.isEmpty() && productId != 0) {
-                                    for (int pos = 0; pos < mProductsListAdapter.getItemCount(); pos++) {
-                                        if (mProductsListAdapter.getItemId(pos) == productId) {
-                                            recyclerView.scrollToPosition(pos);
-                                            break;
-                                        }
-                                    }
-                                }*/
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -181,7 +171,6 @@ public class ProductsListFragment extends Fragment {
                 }
             }
         }.start();
-
         return view;
     }
 
@@ -238,7 +227,7 @@ public class ProductsListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(linearLayoutManager!=null) {
+        try {
             if (linearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstVisibleItemPosition());
@@ -246,7 +235,7 @@ public class ProductsListFragment extends Fragment {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
-        } else {
+        } catch (Exception e) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);

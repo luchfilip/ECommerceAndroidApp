@@ -268,7 +268,7 @@ public class WishListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(linearLayoutManager!=null) {
+        try {
             if (linearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstVisibleItemPosition());
@@ -276,7 +276,7 @@ public class WishListFragment extends Fragment {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
-        } else {
+        } catch (Exception e) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);

@@ -106,8 +106,7 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
             if(mOrderLine.getProduct()!=null && mOrderLine.getProduct().getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                        mOrderLine.getProduct().getProductCommercialPackage().getUnits() + " " +
-                                mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
+                        mOrderLine.getProduct().getProductCommercialPackage().getUnits(), mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }

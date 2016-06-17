@@ -242,7 +242,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
-        if(mLinearLayoutManager!=null) {
+        try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
@@ -250,7 +250,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
-        } else {
+        } catch (Exception e) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);

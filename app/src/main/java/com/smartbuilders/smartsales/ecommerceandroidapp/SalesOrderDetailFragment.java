@@ -249,7 +249,7 @@ public class SalesOrderDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
-        if(mLinearLayoutManager!=null) {
+        try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
@@ -257,7 +257,7 @@ public class SalesOrderDetailFragment extends Fragment {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
-        } else {
+        } catch (Exception e) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);

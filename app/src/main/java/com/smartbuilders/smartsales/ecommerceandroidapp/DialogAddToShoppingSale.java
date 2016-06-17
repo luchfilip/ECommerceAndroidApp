@@ -156,8 +156,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
             if(mProduct.getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                        mProduct.getProductCommercialPackage().getUnits() + " " +
-                                mProduct.getProductCommercialPackage().getUnitDescription()));
+                        mProduct.getProductCommercialPackage().getUnits(), mProduct.getProductCommercialPackage().getUnitDescription()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }

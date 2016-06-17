@@ -73,7 +73,8 @@ public class OrderDetailFragment extends Fragment {
                         if (getArguments().containsKey(OrderDetailActivity.KEY_ORDER_ID)) {
                             mOrderId = getArguments().getInt(OrderDetailActivity.KEY_ORDER_ID);
                         }
-                    } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
+                    } else if (getActivity()!=null && getActivity().getIntent() != null &&
+                            getActivity().getIntent().getExtras() != null) {
                         if (getActivity().getIntent().getExtras().containsKey(OrderDetailActivity.KEY_ORDER_ID)) {
                             mOrderId = getActivity().getIntent().getExtras().getInt(OrderDetailActivity.KEY_ORDER_ID);
                         }
@@ -194,7 +195,7 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_ORDER_ID, mOrderId);
-        if(mLinearLayoutManager!=null) {
+        try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
@@ -202,7 +203,7 @@ public class OrderDetailFragment extends Fragment {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
-        } else {
+        } catch (Exception e) {
             outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);

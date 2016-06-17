@@ -1,7 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import com.jasgcorp.ids.model.User;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,15 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.MainActivityAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.MainPageSectionsDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-
-import java.util.ArrayList;
 
 /**
  * Created by Alberto on 22/3/2016.
@@ -29,28 +22,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
-
-    // save index and top position
-    int mListViewIndex;
-    int mListViewTop;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
-            }
-            if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
-            }
-        }
-
-        final User currentUser = Utils.getCurrentUser(this);
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -80,9 +55,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, Utils.getCurrentUser(this).getUserName()));
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {
@@ -106,31 +80,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    final MainPageSectionsDB mainPageSectionsDB = new MainPageSectionsDB(MainActivity.this, currentUser);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loadMainPage(mainPageSectionsDB.getActiveMainPageSections(), currentUser);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                            findViewById(R.id.main_categories_list).setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
-            }
-        }.start();
     }
 
     @Override
@@ -150,29 +99,5 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void loadMainPage(ArrayList<Object> mainPageSections, User user){
-        ListView listView = (ListView) findViewById(R.id.main_categories_list);
-        listView.setAdapter(new MainActivityAdapter(this, mainPageSections, user));
-        listView.setVisibility(View.VISIBLE);
-        listView.setSelectionFromTop(mListViewIndex, mListViewTop);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        ListView listView = (ListView) findViewById(R.id.main_categories_list);
-        try {
-            outState.putInt(STATE_LISTVIEW_INDEX, listView.getFirstVisiblePosition());
-        } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
-        }
-        try {
-            outState.putInt(STATE_LISTVIEW_TOP, (listView.getChildAt(0) == null) ? 0 :
-                    (listView.getChildAt(0).getTop() - listView.getPaddingTop()));
-        } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
-        }
-        super.onSaveInstanceState(outState);
     }
 }

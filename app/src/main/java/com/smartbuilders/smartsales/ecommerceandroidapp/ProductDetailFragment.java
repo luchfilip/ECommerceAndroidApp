@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
  */
 public class ProductDetailFragment extends Fragment {
 
+    private static final String STATE_PRODUCT_ID = "STATE_PRODUCT_ID";
+
     private int mProductId;
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
@@ -51,49 +52,61 @@ public class ProductDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if(getActivity()!=null && getActivity().getIntent()!=null
-                && getActivity().getIntent().getExtras()!=null) {
-            if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_PRODUCT_ID)){
-                mProductId = getActivity().getIntent().getExtras().getInt(ProductDetailActivity.KEY_PRODUCT_ID);
-            }
-        }
-
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
         new Thread() {
             @Override
             public void run() {
-                mCurrentUser = Utils.getCurrentUser(getContext());
+                try {
+                    if(getActivity()!=null && getActivity().getIntent()!=null
+                            && getActivity().getIntent().getExtras()!=null) {
+                        if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_PRODUCT_ID)){
+                            mProductId = getActivity().getIntent().getExtras().getInt(ProductDetailActivity.KEY_PRODUCT_ID);
+                        }
+                    }
 
-                ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
-                try {
-                    mProduct = productDB.getProductById(mProductId, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    relatedProductsByShopping = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    if(mProduct.getProductBrand()!=null) {
-                        relatedProductsByBrandId = productDB
-                                .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
+                    if(savedInstanceState!=null){
+                        if(savedInstanceState.containsKey(STATE_PRODUCT_ID)){
+                            mProductId = savedInstanceState.getInt(STATE_PRODUCT_ID);
+                        }
+                    }
+
+                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
+
+                    try {
+                        mProduct = productDB.getProductById(mProductId, true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        relatedProductsByShopping = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        if (mProduct.getProductBrand() != null) {
+                            relatedProductsByBrandId = productDB
+                                    .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        if (mProduct.getProductSubCategory() != null) {
+                            relatedProductsBySubCategoryId = productDB
+                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (mProduct!=null) {
+                        mShareProductIntent = Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                try {
-                    if(mProduct.getProductSubCategory()!=null) {
-                        relatedProductsBySubCategoryId = productDB
-                                .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
                 if (getActivity()!=null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -207,8 +220,7 @@ public class ProductDetailFragment extends Fragment {
 
                                 if (mProduct.getProductCommercialPackage() != null) {
                                     ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                                            mProduct.getProductCommercialPackage().getUnits() + " " +
-                                                    mProduct.getProductCommercialPackage().getUnitDescription()));
+                                            mProduct.getProductCommercialPackage().getUnits(), mProduct.getProductCommercialPackage().getUnitDescription()));
                                 } else {
                                     view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);
                                 }
@@ -285,10 +297,7 @@ public class ProductDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        if (mProduct != null) {
-            mShareProductIntent = Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser);
-            mShareActionProvider.setShareIntent(mShareProductIntent);
-        }
+        mShareActionProvider.setShareIntent(mShareProductIntent);
     }
 
     @Override
@@ -322,7 +331,7 @@ public class ProductDetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(ProductDetailActivity.KEY_PRODUCT_ID, mProductId);
+        outState.putInt(STATE_PRODUCT_ID, mProductId);
         super.onSaveInstanceState(outState);
     }
 }

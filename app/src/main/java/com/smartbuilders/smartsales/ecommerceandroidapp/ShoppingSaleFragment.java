@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView mTaxAmount;
     private TextView mTotalAmount;
     private int mRecyclerViewCurrentFirstPosition;
+    private LinearLayoutManager mLinearLayoutManager;
     private int mCurrentBusinessPartnerId;
     private ProgressDialog waitPlease;
 
@@ -100,7 +102,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
                                 recyclerView.setHasFixedSize(true);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                mLinearLayoutManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(mLinearLayoutManager);
                                 recyclerView.setAdapter(mShoppingSaleAdapter);
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
@@ -262,7 +265,17 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_BUSINESS_PARTNER_ID, mCurrentBusinessPartnerId);
-        outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+        try {
+            if (mLinearLayoutManager instanceof GridLayoutManager) {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstVisibleItemPosition());
+            } else {
+                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+            }
+        } catch (Exception e) {
+            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+        }
         super.onSaveInstanceState(outState);
     }
 }

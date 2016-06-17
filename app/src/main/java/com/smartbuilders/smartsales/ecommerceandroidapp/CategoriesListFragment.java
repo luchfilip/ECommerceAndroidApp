@@ -124,7 +124,6 @@ public class CategoriesListFragment extends Fragment {
                 }
             }
         }.start();
-
         return rootView;
     }
 

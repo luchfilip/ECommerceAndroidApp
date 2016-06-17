@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group>
+    <group
+        android:id="@+id/menu_home">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home" />
+    </group>
+    <group
+        android:id="@+id/menu_wish_list">
         <item
             android:id="@+id/nav_wish_list"
             android:icon="@drawable/ic_favorite_black_24dp"

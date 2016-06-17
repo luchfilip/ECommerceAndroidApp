@@ -26,17 +26,14 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
-    public static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
     public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
-
-    private User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 
-        mCurrentUser = Utils.getCurrentUser(this);
+        User currentUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(ProductsListActivity.this, toolbar, true);
@@ -51,7 +48,7 @@ public class ProductsListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(ProductsListActivity.this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+                .setText(getString(R.string.welcome_user, currentUser.getUserName()));
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             findViewById(R.id.search_by_button).setOnClickListener(new View.OnClickListener() {

@@ -22,7 +22,8 @@
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>
     <string name="open_shopping_sale">Cotizaciones Abiertas</string>
-    <string name="wish_list">Lista de favoritos</string>
+    <string name="home">Páginal Principal</string>
+    <string name="wish_list">Lista de Favoritos</string>
     <string name="my_company">Mi Compañía</string>
     <string name="orders_list">Pedidos Cerrados</string>
     <string name="business_partners">Clientes</string>
@@ -81,7 +82,7 @@
     <string name="sync_in_progress">Synchronization in progress</string>
     <string name="alarm_already_set">Error creating Alarm, Alarm already set.</string>
     <string name="wait_please">Espere por favor</string>
-    <string name="authenticating_user">Authenticating User</string>
+    <string name="authenticating_user">Autenticando al usuario</string>
     <string name="mandatory_fields_empty">You need to fill all the mandatory fields.</string>
     <string name="user_already_registered">User already registered in the application.</string>
     <string name="error_server_address_ioexception">The connection couldn\'t be established</string>
@@ -116,7 +117,7 @@
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
-    <string name="commercial_package">Empaque comercial: %1$s.</string>
+    <string name="commercial_package">Empaque comercial: %1$s %2$s.</string>
     <string name="availability">Disponibilidad: %1$s</string>
     <string name="search_by">BUSCAR POR</string>
     <string name="search_by_category">BUSCAR POR CATEGORÍA</string>

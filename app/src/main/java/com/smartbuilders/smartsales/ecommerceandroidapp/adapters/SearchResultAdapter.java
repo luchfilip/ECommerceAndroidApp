@@ -195,7 +195,6 @@ public class SearchResultAdapter extends BaseAdapter {
     private void goToProductList(String searchPattern, Product product){
         Intent intent = new Intent(mContext, ProductsListActivity.class);
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID, product.getId());
         intent.putExtra(ProductsListActivity.KEY_SEARCH_PATTERN, searchPattern);
         mContext.startActivity(intent);
     }
