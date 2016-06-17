@@ -24,9 +24,7 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
-    <!--
-    This layout is a two-pane layout for the Items master/detail flow.
-    -->
+    <!-- This layout is a two-pane layout for the Items master/detail flow. -->
 
     <fragment
         android:id="@+id/fragment_sales_order_list"

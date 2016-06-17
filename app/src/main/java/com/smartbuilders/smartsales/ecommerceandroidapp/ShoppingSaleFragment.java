@@ -39,8 +39,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
     private View mBlankScreenView;
-    private View mShoppingSaleItemsListView;
-    private View mShoppingSaleDataView;
+    private View mainLayout;
     private TextView mTotalLines;
     private TextView mSubTotalAmount;
     private TextView mTaxAmount;
@@ -99,6 +98,14 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         @Override
                         public void run() {
                             try {
+                                mBlankScreenView = view.findViewById(R.id.company_logo_name);
+                                mainLayout = view.findViewById(R.id.main_layout);
+
+                                mTotalLines = (TextView) view.findViewById(R.id.total_lines);
+                                mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
+                                mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
+                                mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
@@ -128,21 +135,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                             }
                                         });
 
-                                mTotalLines = (TextView) view.findViewById(R.id.total_lines);
-                                mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
-                                mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
-                                mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
-
-                                mBlankScreenView = view.findViewById(R.id.company_logo_name);
-                                mShoppingSaleItemsListView = view.findViewById(R.id.shoppingSale_items_list);
-                                mShoppingSaleDataView = view.findViewById(R.id.shoppingSale_data_linearLayout);
-
                                 fillFields();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                if (mSalesOrderLines==null || mSalesOrderLines.isEmpty()) {
+                                    mBlankScreenView.setVisibility(View.VISIBLE);
+                                } else {
+                                    mainLayout.setVisibility(View.VISIBLE);
+                                }
                             }
                         }
                     });
@@ -226,11 +228,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        if (mSalesOrderLines==null || mSalesOrderLines.size()==0) {
-            mBlankScreenView.setVisibility(View.VISIBLE);
-            mShoppingSaleItemsListView.setVisibility(View.GONE);
-            mShoppingSaleDataView.setVisibility(View.GONE);
-        } else {
+        if (mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));
             mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
@@ -258,9 +256,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void reloadShoppingSale(){
-        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
+        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser))
+                .getShoppingSale(mCurrentBusinessPartnerId);
         mShoppingSaleAdapter.setData(mSalesOrderLines);
-        fillFields();
+
+        if (mSalesOrderLines==null || mSalesOrderLines.isEmpty()) {
+            mBlankScreenView.setVisibility(View.VISIBLE);
+            mainLayout.setVisibility(View.GONE);
+        }else{
+            fillFields();
+        }
     }
 
     @Override

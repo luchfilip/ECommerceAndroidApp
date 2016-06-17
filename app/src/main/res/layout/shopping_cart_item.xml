@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/delete_item_button_img"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_highlight_off_black" />
+                android:src="@drawable/ic_highlight_off_black"
+                android:background="?attr/selectableItemBackground" />
         </LinearLayout>
 
         <TextView

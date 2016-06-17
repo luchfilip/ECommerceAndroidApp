@@ -44,6 +44,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private int mRecyclerViewCurrentFirstPosition;
     private ArrayList<OrderLine> mOrderLines;
     private ProgressDialog waitPlease;
+    private View mainLayout;
+    private View mBlankScreenView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +96,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         @Override
                         public void run() {
                             try {
+                                mBlankScreenView = view.findViewById(R.id.company_logo_name);
+                                mainLayout = view.findViewById(R.id.main_layout);
+
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
@@ -127,11 +132,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mOrderLines==null || mOrderLines.size()==0) {
-                                    view.findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-                                    view.findViewById(R.id.shopping_cart_layout).setVisibility(View.GONE);
+                                if (mOrderLines!=null && !mOrderLines.isEmpty()) {
+                                    mainLayout.setVisibility(View.VISIBLE);
+                                } else {
+                                    mBlankScreenView.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -231,6 +236,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();
         }
         mShoppingCartAdapter.setData(mOrderLines);
+        if (mOrderLines==null || mOrderLines.isEmpty()) {
+            mBlankScreenView.setVisibility(View.VISIBLE);
+            mainLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -78,8 +78,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ShoppingCartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+    public ShoppingCartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
@@ -178,8 +177,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                                     result = orderLineDB.deleteOrderLine(mDataset.get(position));
                                 }
                                 if(result == null){
-                                    mDataset.remove(position);
-                                    notifyDataSetChanged();
+                                    //mDataset.remove(position);
+                                    //notifyDataSetChanged();
+                                    mShoppingCartFragment.reloadShoppingCart();
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                 }

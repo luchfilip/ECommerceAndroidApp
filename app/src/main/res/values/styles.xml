@@ -140,7 +140,7 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="GoldenButtonAppTheme">
@@ -149,7 +149,7 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="GreyButtonAppTheme">
@@ -158,7 +158,7 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="list_item_style">

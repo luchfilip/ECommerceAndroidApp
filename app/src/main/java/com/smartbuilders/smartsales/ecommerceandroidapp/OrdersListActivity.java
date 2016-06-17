@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,10 +83,19 @@ public class OrdersListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mTwoPane) {
-            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+        if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+            if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
+        } else {
+            if (mTwoPane) {
+                findViewById(R.id.fragment_order_list).setVisibility(View.GONE);
+                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                findViewById(R.id.main_layout).setVisibility(View.GONE);
+            }
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
         }
     }
 

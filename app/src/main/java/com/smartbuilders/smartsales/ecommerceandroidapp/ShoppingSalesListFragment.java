@@ -94,7 +94,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                         if (salesOrder != null) {
                                             ((Callback) getActivity()).onItemLongSelected(salesOrder);
                                         }
-                                        return false;
+                                        return true;
                                     }
                                 });
 
