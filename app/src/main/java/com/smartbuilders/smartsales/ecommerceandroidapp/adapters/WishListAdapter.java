@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -77,9 +78,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     // Create new views (invoked by the layout manager)
     @Override
-    public WishListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                    int viewType) {
-        mContext = parent.getContext();
+    public WishListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.wish_list_item, parent, false);
@@ -144,13 +143,17 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getProduct().getId());
-                mContext.startActivity(intent);
+                goToProductDetails(mDataset.get(position).getProduct());
             }
         });
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(position).getProduct());
+            }
+        });
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getAvailability()));
@@ -165,7 +168,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                                 String result = orderLineDB.deleteOrderLine(mDataset.get(position));
                                 if(result == null){
                                     mDataset.remove(position);
-                                    notifyDataSetChanged();
+                                    mWishListFragment.reloadWishList(mDataset);
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                 }
@@ -221,6 +224,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 holder.commercialPackage.setVisibility(TextView.GONE);
             }
         }
+    }
+
+    private void goToProductDetails(Product product) {
+        Intent intent = new Intent(mContext, ProductDetailActivity.class);
+        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
+        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<OrderLine> wishListLines) {

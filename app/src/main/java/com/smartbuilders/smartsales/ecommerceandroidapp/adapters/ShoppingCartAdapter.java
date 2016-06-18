@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder> {
 
     private Context mContext;
-    private ShoppingCartFragment mShoppingCartFragment;
+    private Fragment mShoppingCartFragment;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
@@ -64,9 +65,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     public interface Callback {
         void updateQtyOrdered(OrderLine orderLine);
+        void reloadShoppingCart();
+        void reloadShoppingCart(ArrayList<OrderLine> orderLines);
     }
 
-    public ShoppingCartAdapter(Context context, ShoppingCartFragment shoppingCartFragment,
+    public ShoppingCartAdapter(Context context, Fragment shoppingCartFragment,
                                ArrayList<OrderLine> data, boolean isShoppingCart, User user) {
         mContext = context;
         mShoppingCartFragment = shoppingCartFragment;
@@ -177,9 +180,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                                     result = orderLineDB.deleteOrderLine(mDataset.get(position));
                                 }
                                 if(result == null){
-                                    //mDataset.remove(position);
-                                    //notifyDataSetChanged();
-                                    mShoppingCartFragment.reloadShoppingCart();
+                                    if(mIsShoppingCart){
+                                        ((Callback) mShoppingCartFragment).reloadShoppingCart();
+                                    }else{
+                                        mDataset.remove(position);
+                                        ((Callback) mShoppingCartFragment).reloadShoppingCart(mDataset);
+                                    }
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                 }
@@ -195,7 +201,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingCartFragment.updateQtyOrdered(mDataset.get(position));
+                ((Callback) mShoppingCartFragment).updateQtyOrdered(mDataset.get(position));
             }
         });
     }

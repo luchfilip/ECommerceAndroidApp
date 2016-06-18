@@ -77,16 +77,15 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp">
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/productDetail_max_image_Width"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -129,10 +128,8 @@
             android:layout_height="wrap_content"
             android:text="@string/buy"
             android:id="@+id/product_addtoshoppingcart_button"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
             android:layout_gravity="center"
-            android:layout_weight="4"
+            android:layout_weight="1"
             android:textStyle="bold" />
 
         <Button
@@ -141,10 +138,8 @@
             android:layout_height="wrap_content"
             android:text="@string/sell"
             android:id="@+id/product_addtoshoppingsales_button"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
             android:layout_gravity="center"
-            android:layout_weight="4"
+            android:layout_weight="1"
             android:textStyle="bold" />
 
     </LinearLayout>

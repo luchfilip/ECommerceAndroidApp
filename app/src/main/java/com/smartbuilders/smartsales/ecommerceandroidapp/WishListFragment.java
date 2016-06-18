@@ -143,14 +143,17 @@ public class WishListFragment extends Fragment {
 
     public void reloadWishList(){
         if (getContext()!=null) {
-            ArrayList<OrderLine> wishListLines = (new OrderLineDB(getContext(), mCurrentUser)).getWishList();
-            mWishListAdapter.setData(wishListLines);
-            //Se debe recargar el documento pdf que se tiene para compartir
-            new ReloadShareIntentThread(wishListLines).start();
-            if (wishListLines==null || wishListLines.size()==0) {
-                mBlankScreenView.setVisibility(View.VISIBLE);
-                mainLayout.setVisibility(View.GONE);
-            }
+            reloadWishList((new OrderLineDB(getContext(), mCurrentUser)).getWishList());
+        }
+    }
+
+    public void reloadWishList(ArrayList<OrderLine> wishListLines){
+        mWishListAdapter.setData(wishListLines);
+        //Se debe recargar el documento pdf que se tiene para compartir
+        new ReloadShareIntentThread(wishListLines).start();
+        if (wishListLines==null || wishListLines.size()==0) {
+            mBlankScreenView.setVisibility(View.VISIBLE);
+            mainLayout.setVisibility(View.GONE);
         }
     }
 

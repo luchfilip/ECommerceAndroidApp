@@ -46,6 +46,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private ProgressDialog waitPlease;
     private View mainLayout;
     private View mBlankScreenView;
+    private boolean mIsShoppingCart = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +59,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 try {
                     if(savedInstanceState != null) {
                         if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
+                            mIsShoppingCart = false;
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
                         }
                         if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
@@ -70,6 +72,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
                     if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
+                            mIsShoppingCart = false;
                             mSalesOrderId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
                         }
@@ -81,13 +84,13 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
                     mCurrentUser = Utils.getCurrentUser(getContext());
 
-                    if (mSalesOrderId>0) {
-                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
-                    }else {
+                    if (mIsShoppingCart) {
                         mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
+                    }else {
+                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
                     }
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
-                            ShoppingCartFragment.this, mOrderLines, mSalesOrderId <= 0,  mCurrentUser);
+                            ShoppingCartFragment.this, mOrderLines, mIsShoppingCart,  mCurrentUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -224,22 +227,25 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void updateQtyOrdered(OrderLine orderLine) {
         DialogUpdateQuantityOrdered dialogUpdateQuantityOrdered =
-                DialogUpdateQuantityOrdered.newInstance(orderLine, mSalesOrderId <= 0, mCurrentUser);
+                DialogUpdateQuantityOrdered.newInstance(orderLine, mIsShoppingCart, mCurrentUser);
         dialogUpdateQuantityOrdered.setTargetFragment(this, 0);
         dialogUpdateQuantityOrdered.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateQuantityOrdered.class.getSimpleName());
     }
 
     @Override
-    public void reloadShoppingCart(){
-        if (mSalesOrderId <= 0){
-            mOrderLines = (new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart();
-        }
+    public void reloadShoppingCart(ArrayList<OrderLine> orderLines){
+        mOrderLines = orderLines;
         mShoppingCartAdapter.setData(mOrderLines);
         if (mOrderLines==null || mOrderLines.isEmpty()) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void reloadShoppingCart(){
+        reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
     }
 
     @Override
