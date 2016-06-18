@@ -62,29 +62,14 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
         if(TextUtils.isEmpty(mFileName)){
             return null;
         }
-        Bitmap bitmap = null;
-        InputStream stream = null;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inSampleSize = 1;
-
+        //BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        //bmOptions.inSampleSize = 1;
         try {
-            stream = getHttpConnection(url);
-            bitmap = BitmapFactory.
-                    decodeStream(stream, null, bmOptions);
-        } catch (IOException e1) {
+            return BitmapFactory.decodeStream(getHttpConnection(url), null, null/*bmOptions*/);
+        } catch (IOException | NullPointerException e1) {
             e1.printStackTrace();
-        } catch (NullPointerException e) {
-          e.printStackTrace();
-        } finally {
-            if(stream!=null){
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        return bitmap;
+        return null;
     }
 
     // Makes HttpURLConnection and returns InputStream

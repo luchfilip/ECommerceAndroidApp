@@ -3,8 +3,9 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,9 +30,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Callback;
 
 /**
  * Created by Alberto on 22/3/2016.
@@ -84,8 +85,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductsListAdapter(FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
+    public ProductsListAdapter(Context context, FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
                                boolean useDetailLayout, int redirectOption, User user) {
+        mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mCurrentUser = user;
@@ -96,9 +98,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ProductsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
-        mContext = parent.getContext();
+    public ProductsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v;
         if(mUseDetailLayout){
@@ -114,7 +114,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(mDataset==null || mDataset.get(position) == null){
             return;
         }
@@ -129,7 +129,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getId());
+                            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId());
                             mContext.startActivity(intent);
                         }
                     });
@@ -140,7 +140,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ProductsListActivity.class);
                             intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID,
-                                    mDataset.get(position).getProductSubCategory().getId());
+                                    mDataset.get(holder.getAdapterPosition()).getProductSubCategory().getId());
                             mContext.startActivity(intent);
                         }
                     });
@@ -177,29 +177,28 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(holder.productImage, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(mDataset.get(position).getImageFileName(),
-                                        ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
-                            }
-
-                            @Override
-                            public void onError() {
-                            }
-                        });
+                        //.into(holder.productImage, new Callback() {
+                        //    @Override
+                        //    public void onSuccess() {
+                        //        Utils.createFileInThumbDir(mDataset.get(position).getImageFileName(),
+                        //                ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
+                        //                mCurrentUser, mContext);
+                        //    }
+                        //
+                        //    @Override
+                        //    public void onError() {
+                        //    }
+                        //});
+                        .into(holder.productImage,
+                                new CallbackPicassoDownloadImage(mDataset.get(position).getImageFileName(),
+                                        true, mCurrentUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
         }
 
-        if(holder.productAvailability !=null){
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));
-        }else{
-            holder.productAvailability.setVisibility(View.VISIBLE);
-        }
 
         if(holder.shareImageView!=null) {
             //holder.shareImageView.setColorFilter(mContext.getResources().getColor(R.color.black),
@@ -208,7 +207,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 @Override
                 public void onClick(View v) {
                     holder.shareImageView.setEnabled(false);
-                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(position), holder.shareImageView).start();
+                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()), holder.shareImageView).start();
                 }
             });
         }
@@ -221,10 +220,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String result = removeFromWishList(mDataset.get(position));
+                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()));
                         if (result == null) {
-                            mDataset.get(position).setFavorite(false);
-                            notifyItemChanged(position);
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+                            notifyItemChanged(holder.getAdapterPosition());
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
@@ -235,10 +234,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String result = addToWishList(mDataset.get(position));
+                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
                         if (result == null) {
-                            mDataset.get(position).setFavorite(true);
-                            notifyItemChanged(position);
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+                            notifyItemChanged(holder.getAdapterPosition());
                         } else {
                             Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                         }
@@ -251,7 +250,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToShoppingCart(mDataset.get(position));
+                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
                 }
             });
         }
@@ -260,29 +259,27 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToShoppingSale(mDataset.get(position));
+                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
                 }
             });
         }
 
         if(holder.addToShoppingCartImage!=null){
-            holder.addToShoppingCartImage.setColorFilter(mContext.getResources().getColor(R.color.colorPrimary),
-                    PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingCartImage.setColorFilter(getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
             holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToShoppingCart(mDataset.get(position));
+                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
                 }
             });
         }
 
         if(holder.addToShoppingSaleImage!=null) {
-            holder.addToShoppingSaleImage.setColorFilter(mContext.getResources().getColor(R.color.golden),
-                    PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingSaleImage.setColorFilter(getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
             holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addToShoppingSale(mDataset.get(position));
+                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
                 }
             });
         }
@@ -355,6 +352,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
             }
+        }
+    }
+
+    private int getColor(Context context, int id) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+            return ContextCompat.getColor(context, id);
+        } else {
+            return context.getResources().getColor(id);
         }
     }
 }

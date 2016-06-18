@@ -85,8 +85,16 @@ public class SearchResultAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.search_result_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+        if(view==null){//si la vista es null la crea sino la reutiliza
+            view = LayoutInflater.from(mContext).inflate(R.layout.search_result_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
         if(mDataset.get(position) instanceof Product){
             if(!TextUtils.isEmpty(((Product) mDataset.get(position)).getName())){
                 viewHolder.title.setText(((Product) mDataset.get(position)).getName());
@@ -188,7 +196,6 @@ public class SearchResultAdapter extends BaseAdapter {
             });
         }
 
-        view.setTag(viewHolder);
         return view;
     }
 

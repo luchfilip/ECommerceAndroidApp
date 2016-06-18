@@ -149,7 +149,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                 LinearLayoutManager.HORIZONTAL, false));
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
-                        viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mFragmentActivity,
+                        viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(parent.getContext(), mFragmentActivity,
                                 mainPageProductSection.getProducts(), false, ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                     }
                     break;
@@ -178,7 +178,6 @@ public class MainActivityAdapter extends BaseAdapter {
                     }
                     break;
             }
-
             view.setTag(viewHolder);
         }
         return view;

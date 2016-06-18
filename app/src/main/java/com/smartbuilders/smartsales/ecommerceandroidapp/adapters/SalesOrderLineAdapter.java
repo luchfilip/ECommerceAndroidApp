@@ -15,6 +15,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -57,28 +58,26 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SalesOrderLineAdapter(ArrayList<SalesOrderLine> myDataset, User user) {
+    public SalesOrderLineAdapter(Context context, ArrayList<SalesOrderLine> myDataset, User user) {
         mDataset = myDataset;
         mCurrentUser = user;
+        mContext = context;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public SalesOrderLineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                               int viewType) {
-        mContext = parent.getContext();
+    public SalesOrderLineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.sales_order_line_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
@@ -104,18 +103,21 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(holder.productImage, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
-                                        ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
-                            }
-
-                            @Override
-                            public void onError() {
-                            }
-                        });
+                        //.into(holder.productImage, new Callback() {
+                        //    @Override
+                        //    public void onSuccess() {
+                        //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
+                        //                ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
+                        //                mCurrentUser, mContext);
+                        //    }
+                        //
+                        //    @Override
+                        //    public void onError() {
+                        //    }
+                        //});
+                        .into(holder.productImage,
+                                new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
+                                        true, mCurrentUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
@@ -125,7 +127,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getProduct().getId());
+                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
                 mContext.startActivity(intent);
             }
         });

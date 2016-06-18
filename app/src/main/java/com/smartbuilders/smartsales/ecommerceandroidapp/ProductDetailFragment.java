@@ -22,6 +22,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.squareup.picasso.Callback;
@@ -142,26 +143,46 @@ public class ProductDetailFragment extends Fragment {
                                         Picasso.with(getContext())
                                             .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
                                                     + mProduct.getImageFileName())
-                                            .into((ImageView) view.findViewById(R.id.product_image), new Callback() {
-                                                @Override
-                                                public void onSuccess() {
-                                                    Utils.createFileInOriginalDir(mProduct.getImageFileName(),
-                                                            ((BitmapDrawable)((ImageView) view.findViewById(R.id.product_image)).getDrawable()).getBitmap(),
-                                                            mCurrentUser, getContext());
-                                                }
+                                            //.into((ImageView) view.findViewById(R.id.product_image), new Callback() {
+                                            //    @Override
+                                            //    public void onSuccess() {
+                                            //        Utils.createFileInOriginalDir(mProduct.getImageFileName(),
+                                            //                ((BitmapDrawable)((ImageView) view.findViewById(R.id.product_image)).getDrawable()).getBitmap(),
+                                            //                mCurrentUser, getContext());
+                                            //    }
+                                            //
+                                            //    @Override
+                                            //    public void onError() {
+                                            //        if(thumb!=null){
+                                            //            Picasso.with(getContext())
+                                            //                    .load(thumb).error(R.drawable.no_image_available)
+                                            //                    .into((ImageView) view.findViewById(R.id.product_image));
+                                            //        }else{
+                                            //            ((ImageView) view.findViewById(R.id.product_image))
+                                            //                    .setImageResource(R.drawable.no_image_available);
+                                            //        }
+                                            //    }
+                                            //});
+                                            .into((ImageView) view.findViewById(R.id.product_image),
+                                                    new CallbackPicassoDownloadImage(mProduct.getImageFileName(),
+                                                            false, mCurrentUser, getContext()){
+                                                        @Override
+                                                        public void onSuccess() {
+                                                            super.onSuccess();
+                                                        }
 
-                                                @Override
-                                                public void onError() {
-                                                    if(thumb!=null){
-                                                        Picasso.with(getContext())
-                                                                .load(thumb).error(R.drawable.no_image_available)
-                                                                .into((ImageView) view.findViewById(R.id.product_image));
-                                                    }else{
-                                                        ((ImageView) view.findViewById(R.id.product_image))
-                                                                .setImageResource(R.drawable.no_image_available);
-                                                    }
-                                                }
-                                            });
+                                                        @Override
+                                                        public void onError() {
+                                                            if(thumb!=null){
+                                                                Picasso.with(getContext())
+                                                                        .load(thumb).error(R.drawable.no_image_available)
+                                                                        .into((ImageView) view.findViewById(R.id.product_image));
+                                                            }else{
+                                                                ((ImageView) view.findViewById(R.id.product_image))
+                                                                        .setImageResource(R.drawable.no_image_available);
+                                                            }
+                                                        }
+                                                    });
                                     }
                                 } else {
                                     ((ImageView) view.findViewById(R.id.product_image))
@@ -182,7 +203,7 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getActivity(), relatedProductsByShopping, false,
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByShopping, false,
                                             ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                                 } else {
                                     view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
@@ -194,7 +215,7 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getActivity(), relatedProductsByBrandId, false,
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByBrandId, false,
                                             ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
 
                                     ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
@@ -212,7 +233,7 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getActivity(), relatedProductsBySubCategoryId, false,
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsBySubCategoryId, false,
                                             ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
                                 } else {
                                     view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);

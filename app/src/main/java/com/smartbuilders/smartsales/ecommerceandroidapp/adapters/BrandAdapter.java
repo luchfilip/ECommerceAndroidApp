@@ -34,10 +34,10 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
         mContext = context;
         mDataset = data;
 
-        this.arraylist = new ArrayList<ProductBrand>();
+        this.arraylist = new ArrayList<>();
         this.arraylist.addAll(mDataset);
 
-        alphaIndexer = new HashMap<String, Integer>();
+        alphaIndexer = new HashMap<>();
         int size = mDataset.size();
 
         for (int x = 0; x < size; x++) {
@@ -54,7 +54,7 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
         Set<String> sectionLetters = alphaIndexer.keySet();
         // create a list from the set to sort
-        ArrayList<String> sectionList = new ArrayList<String>(
+        ArrayList<String> sectionList = new ArrayList<>(
                 sectionLetters);
         Collections.sort(sectionList);
         sections = new String[sectionList.size()];
@@ -63,8 +63,16 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.brand_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+        if(view==null){//si la vista es null la crea sino la reutiliza
+            view = LayoutInflater.from(mContext).inflate(R.layout.brand_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.brandName.setText(mDataset.get(position).getName());
         }else{
@@ -85,8 +93,6 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
         viewHolder.productsActiveQty.setText(mContext.getString(R.string.products_availables,
                 String.valueOf(mDataset.get(position).getProductsActiveQty())));
-
-        view.setTag(viewHolder);
         return view;
     }
 

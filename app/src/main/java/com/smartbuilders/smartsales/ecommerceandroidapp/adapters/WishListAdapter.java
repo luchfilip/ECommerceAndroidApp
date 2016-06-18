@@ -22,6 +22,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.WishListFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -106,7 +107,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(mDataset==null || mDataset.get(position) == null){
             return;
         }
@@ -123,18 +124,21 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(holder.productImage, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
-                                        ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
-                            }
-
-                            @Override
-                            public void onError() {
-                            }
-                        });
+                        //.into(holder.productImage, new com.squareup.picasso.Callback() {
+                        //    @Override
+                        //    public void onSuccess() {
+                        //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
+                        //                ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
+                        //                mCurrentUser, mContext);
+                        //    }
+                        //
+                        //    @Override
+                        //    public void onError() {
+                        //    }
+                        //});
+                        .into(holder.productImage,
+                                new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
+                                        true, mCurrentUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
@@ -143,7 +147,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(position).getProduct());
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
 
@@ -151,7 +155,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(position).getProduct());
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
 
@@ -162,12 +166,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question, mDataset.get(position).getProduct().getName()))
+                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question, mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                String result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
                                 if(result == null){
-                                    mDataset.remove(position);
+                                    mDataset.remove(holder.getAdapterPosition());
                                     mWishListFragment.reloadWishList(mDataset);
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
@@ -184,7 +188,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
-                            mDataset.get(position).getProduct(), mContext, mCurrentUser), mContext.getString(R.string.share_image)));
+                            mDataset.get(holder.getAdapterPosition()).getProduct(), mContext, mCurrentUser), mContext.getString(R.string.share_image)));
                 }
             });
         }
@@ -192,8 +196,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDataset.get(position) != null) {
-                    mWishListFragment.addToShoppingCart(mDataset.get(position), mCurrentUser);
+                if (mDataset.get(holder.getAdapterPosition()) != null) {
+                    mWishListFragment.addToShoppingCart(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
                 }
             }
         });
@@ -201,8 +205,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDataset.get(position) != null) {
-                    mWishListFragment.addToShoppingSale(mDataset.get(position), mCurrentUser);
+                if (mDataset.get(holder.getAdapterPosition()) != null) {
+                    mWishListFragment.addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
                 }
             }
         });

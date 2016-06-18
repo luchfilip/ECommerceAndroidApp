@@ -55,13 +55,19 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+        if(view==null){//si la vista es null la crea sino la reutiliza
+            view = LayoutInflater.from(mContext).inflate(R.layout.shopping_sales_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
 
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
         viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
 
-        view.setTag(viewHolder);
         return view;
     }
 

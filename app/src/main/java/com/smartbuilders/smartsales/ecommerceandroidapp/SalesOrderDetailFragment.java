@@ -105,7 +105,7 @@ public class SalesOrderDetailFragment extends Fragment {
                                     recyclerView.setHasFixedSize(true);
                                     mLinearLayoutManager = new LinearLayoutManager(getActivity());
                                     recyclerView.setLayoutManager(mLinearLayoutManager);
-                                    recyclerView.setAdapter(new SalesOrderLineAdapter(orderLines, mCurrentUser));
+                                    recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), orderLines, mCurrentUser));
 
                                     if (mRecyclerViewCurrentFirstPosition!=0) {
                                         recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);

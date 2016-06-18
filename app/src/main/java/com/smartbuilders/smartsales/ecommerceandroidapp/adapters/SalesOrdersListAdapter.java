@@ -45,8 +45,15 @@ public class SalesOrdersListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.sales_orders_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+        if(view==null){//si la vista es null la crea sino la reutiliza
+            view = LayoutInflater.from(mContext).inflate(R.layout.sales_orders_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
 
         viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number, mDataset.get(position).getSalesOrderNumber()));
         viewHolder.salesOrderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
@@ -54,7 +61,6 @@ public class SalesOrdersListAdapter extends BaseAdapter {
                 String.valueOf(mDataset.get(position).getLinesNumber())));
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
 
-        view.setTag(viewHolder);
         return view;
     }
 

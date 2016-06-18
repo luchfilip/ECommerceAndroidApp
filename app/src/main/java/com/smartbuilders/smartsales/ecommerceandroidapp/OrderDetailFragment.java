@@ -102,7 +102,7 @@ public class OrderDetailFragment extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getActivity());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new OrderLineAdapter(mOrderLines, mCurrentUser));
+                                recyclerView.setAdapter(new OrderLineAdapter(getContext(), mOrderLines, mCurrentUser));
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);

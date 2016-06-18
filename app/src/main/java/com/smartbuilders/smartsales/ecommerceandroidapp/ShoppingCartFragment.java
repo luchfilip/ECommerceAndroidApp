@@ -58,25 +58,21 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
+                        if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)
+                                && savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
                             mIsShoppingCart = false;
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
-                        }
-                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
                             mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
                         if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
                         }
-                    }
-
-                    if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
-                        if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)){
+                    } else  if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+                        if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
+                                && getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
                             mIsShoppingCart = false;
                             mSalesOrderId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
-                        }
-                        if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
                             mBusinessPartnerId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
                         }
@@ -250,8 +246,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
-        outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
+        if (!mIsShoppingCart) {
+            outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
+            outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
+        }
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,

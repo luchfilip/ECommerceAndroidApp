@@ -141,7 +141,7 @@ public class ProductsListFragment extends Fragment {
                                     categorySubcategoryResultsTextView.append(word);
                                 }
 
-                                mProductsListAdapter = new ProductsListAdapter(getActivity(), products, true,
+                                mProductsListAdapter = new ProductsListAdapter(getContext(), getActivity(), products, true,
                                         ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);

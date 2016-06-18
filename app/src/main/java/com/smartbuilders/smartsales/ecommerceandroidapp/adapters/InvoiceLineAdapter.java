@@ -45,19 +45,17 @@ public class InvoiceLineAdapter extends RecyclerView.Adapter<InvoiceLineAdapter.
     @Override
     public InvoiceLineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                     int viewType) {
-        mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.invoice_line_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());

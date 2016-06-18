@@ -85,7 +85,7 @@ public class CategoriesListActivity extends AppCompatActivity implements
                     .replace(R.id.subcategory_list_container, fragment, SUBCATEGORYFRAGMENT_TAG)
                     .commit();
         }else{
-            Intent intent = new Intent(CategoriesListActivity.this, SubCategoriesListActivity.class);
+            Intent intent = new Intent(this, SubCategoriesListActivity.class);
             intent.putExtra(SubCategoriesListActivity.KEY_CATEGORY_ID, productCategory.getId());
             startActivity(intent);
         }
@@ -93,7 +93,7 @@ public class CategoriesListActivity extends AppCompatActivity implements
 
     @Override
     public void onItemLongSelected(ProductCategory productCategory){
-        Intent intent = new Intent(CategoriesListActivity.this, ProductsListActivity.class);
+        Intent intent = new Intent(this, ProductsListActivity.class);
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID, productCategory.getId());
         startActivity(intent);
     }

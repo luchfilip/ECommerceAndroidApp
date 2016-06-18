@@ -47,8 +47,16 @@ public class SubCategoryAdapter  extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.subcategory_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = convertView;
+        ViewHolder viewHolder;
+        if(view==null){//si la vista es null la crea sino la reutiliza
+            view = LayoutInflater.from(mContext).inflate(R.layout.subcategory_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.categoryName.setText(mDataset.get(position).getName());
         }else{
@@ -68,7 +76,6 @@ public class SubCategoryAdapter  extends BaseAdapter {
         viewHolder.productsActiveQty.setText(mContext.getString(R.string.products_availables,
                 String.valueOf(mDataset.get(position).getProductsActiveQty())));
 
-        view.setTag(viewHolder);
         return view;
     }
 

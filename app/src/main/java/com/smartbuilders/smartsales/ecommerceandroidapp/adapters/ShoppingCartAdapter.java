@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.ViewHolder> {
 
     private Context mContext;
-    private Fragment mShoppingCartFragment;
+    private Fragment mFragment;
     private ArrayList<OrderLine> mDataset;
     private User mCurrentUser;
     private OrderLineDB orderLineDB;
@@ -72,7 +72,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     public ShoppingCartAdapter(Context context, Fragment shoppingCartFragment,
                                ArrayList<OrderLine> data, boolean isShoppingCart, User user) {
         mContext = context;
-        mShoppingCartFragment = shoppingCartFragment;
+        mFragment = shoppingCartFragment;
         mDataset = data;
         mIsShoppingCart = isShoppingCart;
         mCurrentUser = user;
@@ -82,7 +82,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     // Create new views (invoked by the layout manager)
     @Override
     public ShoppingCartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shopping_cart_item, parent, false);
@@ -93,10 +92,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        if(mDataset==null){
-            return 0;
+        try {
+            return mDataset.size();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return mDataset.size();
+        return -1;
     }
 
     @Override
@@ -104,13 +105,14 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         try {
             return mDataset.get(position).getId();
         } catch (Exception e) {
-            return 0;
+            e.printStackTrace();
         }
+        return 0;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(mDataset==null || mDataset.get(position) == null){
             return;
         }
@@ -126,18 +128,21 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(holder.productImage, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
-                                        ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
-                            }
-
-                            @Override
-                            public void onError() {
-                            }
-                        });
+                        //.into(holder.productImage, new com.squareup.picasso.Callback() {
+                        //    @Override
+                        //    public void onSuccess() {
+                        //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
+                        //                ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
+                        //                mCurrentUser, mContext);
+                        //    }
+                        //
+                        //    @Override
+                        //    public void onError() {
+                        //    }
+                        //});
+                        .into(holder.productImage,
+                                new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
+                                        true, mCurrentUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
@@ -147,7 +152,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getProduct().getId());
+                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
                 mContext.startActivity(intent);
             }
         });
@@ -172,19 +177,19 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
                         .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
-                                mDataset.get(position).getProduct().getName()))
+                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = null;
                                 if(mIsShoppingCart){
-                                    result = orderLineDB.deleteOrderLine(mDataset.get(position));
+                                    result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
                                 }
                                 if(result == null){
                                     if(mIsShoppingCart){
-                                        ((Callback) mShoppingCartFragment).reloadShoppingCart();
+                                        ((Callback) mFragment).reloadShoppingCart();
                                     }else{
-                                        mDataset.remove(position);
-                                        ((Callback) mShoppingCartFragment).reloadShoppingCart(mDataset);
+                                        mDataset.remove(holder.getAdapterPosition());
+                                        ((Callback) mFragment).reloadShoppingCart(mDataset);
                                     }
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
@@ -201,7 +206,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mShoppingCartFragment).updateQtyOrdered(mDataset.get(position));
+                ((Callback) mFragment).updateQtyOrdered(mDataset.get(holder.getAdapterPosition()));
             }
         });
     }

@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -87,7 +88,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     @Override
     public ShoppingSaleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                          int viewType) {
-        mContext = parent.getContext();
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.shopping_sale_item, parent, false);
@@ -115,7 +115,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(mDataset==null || mDataset.get(position) == null){
             return;
         }
@@ -131,18 +131,21 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                         .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
-                        .into(holder.productImage, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(mDataset.get(position).getProduct().getImageFileName(),
-                                        ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
-                                        mCurrentUser, mContext);
-                            }
-
-                            @Override
-                            public void onError() {
-                            }
-                        });
+                        //.into(holder.productImage, new com.squareup.picasso.Callback() {
+                        //    @Override
+                        //    public void onSuccess() {
+                        //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
+                        //                ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
+                        //                mCurrentUser, mContext);
+                        //    }
+                        //
+                        //    @Override
+                        //    public void onError() {
+                        //    }
+                        //});
+                        .into(holder.productImage,
+                                new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
+                                        true, mCurrentUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);
@@ -152,7 +155,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(position).getProduct().getId());
+                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
                 mContext.startActivity(intent);
             }
         });
@@ -174,12 +177,12 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
                         .setMessage(mContext.getString(R.string.delete_from_shopping_sale_question,
-                                mDataset.get(position).getProduct().getName()))
+                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = mSalesOrderLineDB.deactiveSalesOrderLine(mDataset.get(position));
+                                String result = mSalesOrderLineDB.deactiveSalesOrderLine(mDataset.get(holder.getAdapterPosition()));
                                 if(result == null){
-                                    mDataset.remove(position);
+                                    mDataset.remove(holder.getAdapterPosition());
                                     notifyDataSetChanged();
                                     mShoppingSaleFragment.reloadShoppingSale();
                                     mShoppingSaleFragment.reloadShoppingSalesList();
@@ -197,7 +200,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_PRICE);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_PRICE);
             }
         });
 
@@ -205,7 +208,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_TAX_PERCENTAGE);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_TAX_PERCENTAGE);
             }
         });
 
@@ -213,7 +216,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(position), FOCUS_QTY_ORDERED);
+                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_QTY_ORDERED);
             }
         });
 
