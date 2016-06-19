@@ -26,26 +26,37 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/main_layout"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        style="@style/business_partners_style"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <ListView
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/business_partners_list_style"
-            android:id="@+id/business_partners_list" />
+            style="@style/business_partners_style"
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_circle_black_24dp"
-            app:backgroundTint="@color/golden_medium" />
-    </android.support.design.widget.CoordinatorLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/business_partners_list_style"
+                android:id="@+id/business_partners_list" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_add_circle_black_24dp"
+                app:backgroundTint="@color/golden_medium" />
+        </android.support.design.widget.CoordinatorLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>

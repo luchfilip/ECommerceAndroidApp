@@ -78,4 +78,9 @@ public class OrdersListAdapter extends BaseAdapter {
             orderLinesNumber = (TextView) v.findViewById(R.id.order_lines_number_tv);
         }
     }
+
+    public void setData (ArrayList<Order> orders){
+        mDataset = orders;
+        notifyDataSetChanged();
+    }
 }

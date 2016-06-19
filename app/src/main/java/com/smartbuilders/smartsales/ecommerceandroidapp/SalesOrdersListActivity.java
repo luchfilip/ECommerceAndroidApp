@@ -208,6 +208,13 @@ public class SalesOrdersListActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void reloadActivity() {
+        startActivity(new Intent(this, SalesOrdersListActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+        finish();
+    }
+
     private void reloadSalesOrdersList(ListView listView){
         if (listView!=null && listView.getAdapter()!=null) {
             int oldListSize = listView.getCount();

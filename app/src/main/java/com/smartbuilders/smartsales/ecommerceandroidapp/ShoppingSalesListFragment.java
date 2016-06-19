@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,14 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     private int mCurrentSelectedIndex;
     private SalesOrderDB mSalesOrderDB;
     private ShoppingSalesListAdapter mShoppingSalesListAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
         void onItemLongSelected(SalesOrder salesOrder);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
+        void reloadActivity();
     }
 
     public ShoppingSalesListFragment() {
@@ -99,6 +102,20 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                 });
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+
+                                mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.main_layout);
+                                /*
+                                 * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
+                                 * performs a swipe-to-refresh gesture.
+                                 */
+                                mSwipeRefreshLayout.setOnRefreshListener(
+                                        new SwipeRefreshLayout.OnRefreshListener() {
+                                            @Override
+                                            public void onRefresh() {
+                                                ((Callback) getActivity()).reloadActivity();
+                                            }
+                                        }
+                                );
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {

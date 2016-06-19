@@ -129,6 +129,13 @@ public class OrdersListActivity extends AppCompatActivity
     }
 
     @Override
+    public void reloadActivity() {
+        startActivity(new Intent(this, OrdersListActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+        finish();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

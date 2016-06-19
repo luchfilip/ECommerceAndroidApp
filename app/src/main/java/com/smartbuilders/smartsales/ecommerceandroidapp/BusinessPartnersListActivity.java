@@ -122,6 +122,13 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void reloadActivity() {
+        startActivity(new Intent(this, BusinessPartnersListActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+        finish();
+    }
+
     private void showDialogCreateBusinessPartner() {
         DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
                 DialogRegisterBusinessPartner.newInstance(mCurrentUser);

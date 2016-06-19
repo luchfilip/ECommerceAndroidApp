@@ -195,6 +195,13 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     }
 
     @Override
+    public void reloadActivity() {
+        startActivity(new Intent(this, ShoppingSalesListActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SHOW_SALES_ORDER_DETAIL_REQUEST) {
             if (resultCode == RESULT_OK) {
