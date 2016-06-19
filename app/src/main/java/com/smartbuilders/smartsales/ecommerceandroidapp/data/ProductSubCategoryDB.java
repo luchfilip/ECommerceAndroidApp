@@ -37,14 +37,16 @@ public class ProductSubCategoryDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null, sql, new String[]{"V", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
-            while(c.moveToNext()){
-                ProductSubCategory productSubCategory = new ProductSubCategory();
-                productSubCategory.setId(c.getInt(0));
-                productSubCategory.setProductCategoryId(categoryId);
-                productSubCategory.setName(c.getString(1));
-                productSubCategory.setDescription(c.getString(2));
-                productSubCategory.setProductsActiveQty(c.getInt(3));
-                categories.add(productSubCategory);
+            if (c!=null) {
+                while(c.moveToNext()){
+                    ProductSubCategory productSubCategory = new ProductSubCategory();
+                    productSubCategory.setId(c.getInt(0));
+                    productSubCategory.setProductCategoryId(categoryId);
+                    productSubCategory.setName(c.getString(1));
+                    productSubCategory.setDescription(c.getString(2));
+                    productSubCategory.setProductsActiveQty(c.getInt(3));
+                    categories.add(productSubCategory);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -45,13 +45,14 @@ public class CompanyDB {
     public Company getCompany(){
         Cursor c = null;
         try {
-            String sql = "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                    " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from COMPANY where ISACTIVE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null, sql, new String[]{"Y"}, null);
-            if(c.moveToNext()){
+                    .build(), null,
+                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
+                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                        " from COMPANY where ISACTIVE = ?",
+                    new String[]{"Y"}, null);
+            if(c!=null && c.moveToNext()){
                 Company company = new Company();
                 company.setName(c.getString(0));
                 company.setCommercialName(c.getString(1));

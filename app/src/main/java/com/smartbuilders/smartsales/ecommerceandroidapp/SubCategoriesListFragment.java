@@ -8,9 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -42,6 +46,8 @@ public class SubCategoriesListFragment extends Fragment {
 
         final ArrayList<ProductSubCategory> productSubCategories = new ArrayList<>();
 
+        final User currentUser = Utils.getCurrentUser(getContext());
+
         new Thread() {
             @Override
             public void run() {
@@ -69,8 +75,8 @@ public class SubCategoriesListFragment extends Fragment {
                         }
                     }
 
-                    productSubCategories.addAll((new ProductSubCategoryDB(getContext(),
-                            Utils.getCurrentUser(getContext()))).getActiveProductSubCategoriesByCategoryId(mCategoryId));
+                    productSubCategories.addAll((new ProductSubCategoryDB(getContext(), currentUser))
+                            .getActiveProductSubCategoriesByCategoryId(mCategoryId));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -80,6 +86,13 @@ public class SubCategoriesListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                ProductCategory productCategory = (new ProductCategoryDB(getContext(), currentUser))
+                                        .getActiveProductCategoryById(mCategoryId);
+                                if(productCategory!=null){
+                                    ((TextView) rootView.findViewById(R.id.category_name_textView))
+                                        .setText(productCategory.getDescription());
+                                }
+
                                 mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
                                 mListView.setAdapter(new SubCategoryAdapter(getContext(), productSubCategories));
 
@@ -103,7 +116,7 @@ public class SubCategoriesListFragment extends Fragment {
                                 e.printStackTrace();
                             } finally {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                rootView.findViewById(R.id.sub_categories_list).setVisibility(View.VISIBLE);
+                                rootView.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                             }
                         }
                     });

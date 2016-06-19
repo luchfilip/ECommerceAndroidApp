@@ -27,15 +27,16 @@ public class MainPageProductSectionDB {
         ArrayList<MainPageProductSection> mainPageProductSections = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT MS.MAINPAGE_PRODUCT_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT DISTINCT MS.MAINPAGE_PRODUCT_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
                     " FROM MAINPAGE_PRODUCT_SECTION MS " +
                         " INNER JOIN MAINPAGE_PRODUCT MP ON MP.MAINPAGE_PRODUCT_SECTION_ID = MS.MAINPAGE_PRODUCT_SECTION_ID " +
                             " AND MP.ISACTIVE = ? " +
                     " WHERE MS.ISACTIVE = ? " +
-                    " ORDER BY MS.PRIORITY ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[] {"Y", "Y"}, null);
+                    " ORDER BY MS.PRIORITY ASC",
+                    new String[] {"Y", "Y"}, null);
             while(c.moveToNext()){
                 MainPageProductSection mainPageProductSection = new MainPageProductSection();
                 mainPageProductSection.setId(c.getInt(0));
@@ -67,14 +68,15 @@ public class MainPageProductSectionDB {
         ArrayList<Product> productsByProductSectionId = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID AND A.ACTIVO = ? " +
                     " WHERE M.ISACTIVE = ? AND M.MAINPAGE_PRODUCT_SECTION_ID = ? " +
-                    " ORDER BY M.PRIORITY ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"V", "Y", String.valueOf(productSectionId)}, null);
+                    " ORDER BY M.PRIORITY ASC",
+                    new String[]{"V", "Y", String.valueOf(productSectionId)}, null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(2));

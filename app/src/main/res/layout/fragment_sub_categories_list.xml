@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:visibility="visible">
 
         <ProgressBar style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
@@ -23,10 +24,26 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/sub_categories_list"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/sub_categories_list_style"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:id="@+id/main_layout"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/category_name_textView"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:textColor="@color/black" />
+
+        <ListView
+            android:id="@+id/sub_categories_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/sub_categories_list_style" />
+    </LinearLayout>
+
 </FrameLayout>

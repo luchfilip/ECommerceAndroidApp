@@ -28,15 +28,16 @@ public class ProductCategoryDB {
         ArrayList<ProductCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
                         " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = ? " +
                         " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
                     " WHERE C.ISACTIVE = ? " +
-                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", "V", "Y"}, null);
+                    " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ",
+                    new String[]{"Y", "V", "Y"}, null);
             while(c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));
@@ -69,5 +70,34 @@ public class ProductCategoryDB {
             }
         }
         return categories;
+    }
+
+    public ProductCategory getActiveProductCategoryById(int productCategoryId){
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND ISACTIVE=?",
+                    new String[]{String.valueOf(productCategoryId), "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                ProductCategory productCategory = new ProductCategory();
+                productCategory.setId(c.getInt(0));
+                productCategory.setName(c.getString(1));
+                productCategory.setDescription(c.getString(2));
+                return productCategory;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }

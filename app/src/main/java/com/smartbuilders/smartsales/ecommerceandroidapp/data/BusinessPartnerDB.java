@@ -122,11 +122,12 @@ public class BusinessPartnerDB {
     public boolean isTaxIdRegistered(String taxID){
         Cursor c = null;
         try {
-            String sql = "select COUNT(TAX_ID) from BUSINESS_PARTNER where ISACTIVE = ? AND TAX_ID = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null, sql, new String[]{taxID, "Y"}, null);
-            if(c.moveToNext()){
+                    .build(), null,
+                    "select COUNT(TAX_ID) from BUSINESS_PARTNER where ISACTIVE = ? AND TAX_ID = ?",
+                    new String[]{taxID, "Y"}, null);
+            if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
             }
         } catch (Exception e) {
@@ -146,13 +147,14 @@ public class BusinessPartnerDB {
     public BusinessPartner getActiveBusinessPartnerById(int businessPartnerId) {
         Cursor c = null;
         try {
-            String sql = "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                    " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ? AND ISACTIVE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null, sql, new String[]{String.valueOf(businessPartnerId), "Y"}, null);
-            if(c.moveToNext()){
+                    .build(), null,
+                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
+                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                        " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ? AND ISACTIVE = ?",
+                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+            if(c!=null && c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();
                 businessPartner.setId(businessPartnerId);
                 businessPartner.setName(c.getString(0));
