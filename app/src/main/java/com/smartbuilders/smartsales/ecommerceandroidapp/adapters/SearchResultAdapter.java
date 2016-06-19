@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -30,15 +31,15 @@ import java.util.ArrayList;
 public class SearchResultAdapter extends BaseAdapter {
 
     private Context mContext;
-    private String mSearchPattern;
+    //private String mSearchPattern;
     private ArrayList mDataset;
-    private User mCurrentUser;
+    //private User mCurrentUser;
     private RecentSearchDB recentSearchDB;
 
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
         recentSearchDB = new RecentSearchDB(context, user);
-        mSearchPattern = new String();
+        //mSearchPattern = new String();
         if(data == null){
             data = recentSearchDB.getRecentSearches(30);
         }else if(data.isEmpty()){
@@ -47,11 +48,11 @@ public class SearchResultAdapter extends BaseAdapter {
             data.add(context.getString(R.string.search_by_brand));
         }
         mDataset = data;
-        mCurrentUser = user;
+        //mCurrentUser = user;
     }
 
-    public void setData(String searchPattern, ArrayList data, Context context){
-        mSearchPattern = searchPattern;
+    public void setData(/*String searchPattern,*/ ArrayList data, Context context){
+        //mSearchPattern = searchPattern;
         if(data == null){
             data = recentSearchDB.getRecentSearches(30);
         }else if(data.isEmpty()){
@@ -120,7 +121,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 viewHolder.goToSearchImage.setVisibility(View.INVISIBLE);
             }else if(mDataset.get(position).equals(mContext.getString(R.string.search_by_category))) {
                 viewHolder.title.setTextSize(18);
-                viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                viewHolder.title.setTextColor(Utils.getColor(mContext, R.color.colorPrimary));
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -129,7 +130,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 });
             } else if (mDataset.get(position).equals(mContext.getString(R.string.search_by_brand))) {
                 viewHolder.title.setTextSize(18);
-                viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                viewHolder.title.setTextColor(Utils.getColor(mContext, R.color.colorPrimary));
                 view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -203,12 +204,12 @@ public class SearchResultAdapter extends BaseAdapter {
     /**
      * Cache of the children views for a forecast list item.
      */
-    public static class ViewHolder {
+    static class ViewHolder {
         // each data item is just a string in this case
-        public TextView title;
-        public TextView subTitle;
-        public ImageView goToSearchImage;
-        public ImageView deleteRecentSearchImage;
+        TextView title;
+        TextView subTitle;
+        ImageView goToSearchImage;
+        ImageView deleteRecentSearchImage;
 
         public ViewHolder(View v) {
             title = (TextView) v.findViewById(R.id.title_textView);

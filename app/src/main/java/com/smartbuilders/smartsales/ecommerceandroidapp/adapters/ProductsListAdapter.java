@@ -153,6 +153,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
                 holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                         mDataset.get(position).getProductBrand().getDescription()));
+                holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
             }
@@ -163,6 +164,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
                 holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
                                 mDataset.get(position).getProductCommercialPackage().getUnits(), mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
+                holder.commercialPackage.setVisibility(TextView.VISIBLE);
             }else{
                 holder.commercialPackage.setVisibility(TextView.GONE);
             }
@@ -201,8 +203,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     mDataset.get(position).getAvailability()));
 
         if(holder.shareImageView!=null) {
-            //holder.shareImageView.setColorFilter(mContext.getResources().getColor(R.color.black),
-            //        PorterDuff.Mode.SRC_ATOP);
             holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -213,8 +213,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.favoriteImageView!=null) {
-            //holder.favoriteImageView.setColorFilter(mContext.getResources().getColor(R.color.heart_color),
-            //    PorterDuff.Mode.SRC_ATOP);
             if(mDataset.get(position).isFavorite()){
                 holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +263,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.addToShoppingCartImage!=null){
-            holder.addToShoppingCartImage.setColorFilter(getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
             holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,7 +273,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if(holder.addToShoppingSaleImage!=null) {
-            holder.addToShoppingSaleImage.setColorFilter(getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
             holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -352,15 +350,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
             }
-        }
-    }
-
-    private int getColor(Context context, int id) {
-        final int version = Build.VERSION.SDK_INT;
-        if (version >= 23) {
-            return ContextCompat.getColor(context, id);
-        } else {
-            return context.getResources().getColor(id);
         }
     }
 }

@@ -10,12 +10,13 @@
     <color name="ratingbar_progress">#FFD700</color>
     <color name="ratingbar_background">#FF00FF</color>
     <color name="ratingbar_secondaryprogress">#CCCCCC</color>
-    <color name="heart_color">#cb0f14</color>
+    <color name="heart_color">#c82c14</color>
     <color name="product_category">#333333</color>
     <color name="product_subcategory">#467ed8</color>
     <color name="product_availability">#1556bf</color>
     <color name="label_color">#222222</color>
     <color name="febeca_light_blue">#64c2f4</color>
+    <color name="dark_grey">#999999</color>
     <color name="grey">#CCCCCC</color>
     <color name="grey_medium">#dddddd</color>
     <color name="light_grey">#eeeeee</color>

@@ -58,12 +58,26 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp" />
 
-                <ImageView
+                <android.support.design.widget.CoordinatorLayout
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/viewpager_height"
-                    android:id="@+id/product_image"
-                    android:focusable="false"
-                    android:layout_margin="4dp" />
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/viewpager_height"
+                        android:id="@+id/product_image"
+                        android:focusable="false"
+                        android:layout_margin="4dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:layout_gravity="bottom|end"
+                        android:id="@+id/favorite_imageView"
+                        android:elevation="2dp" />
+                </android.support.design.widget.CoordinatorLayout>
 
                 <LinearLayout
                     android:orientation="vertical"

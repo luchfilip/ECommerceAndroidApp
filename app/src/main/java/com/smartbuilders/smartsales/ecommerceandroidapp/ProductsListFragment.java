@@ -103,32 +103,32 @@ public class ProductsListFragment extends Fragment {
                                     if (productCategoryId != 0) {
                                         TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                         Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
-                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.product_category)), 0,
                                                 word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         categorySubcategoryResultsTextView.setText(word);
                                         categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
                                     } else if (productSubCategoryId != 0) {
                                         TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                         Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
-                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.product_category)), 0,
                                                 word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         categorySubcategoryResultsTextView.setText(word);
                                         Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
-                                        wordTwo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_subcategory)),
+                                        wordTwo.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.product_subcategory)),
                                                 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         categorySubcategoryResultsTextView.append(wordTwo);
                                         categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
                                     } else if (productBrandId != 0) {
                                         TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                         Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
-                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.product_category)), 0,
                                                 word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         categorySubcategoryResultsTextView.setText(word);
                                         categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
                                     } else if (productName != null) {
                                         TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                         Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
-                                        word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.product_category)), 0,
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.product_category)), 0,
                                                 word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         categorySubcategoryResultsTextView.setText(word);
                                         categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
@@ -136,7 +136,7 @@ public class ProductsListFragment extends Fragment {
                                 } else {
                                     TextView categorySubcategoryResultsTextView = (TextView) view.findViewById(R.id.category_subcategory_results);
                                     Spannable word = new SpannableString(getString(R.string.no_products_to_show));
-                                    word.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)), 0,
+                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(getContext(), R.color.black)), 0,
                                             word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     categorySubcategoryResultsTextView.append(word);
                                 }

@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductsListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
@@ -134,6 +137,38 @@ public class ProductDetailFragment extends Fragment {
                                         ((ImageView) view.findViewById(R.id.product_image))
                                                 .setImageResource(R.drawable.no_image_available);
                                     }
+
+                                    final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
+                                    favoriteImageView.setColorFilter(Utils.getColor(getContext(), R.color.dark_grey), PorterDuff.Mode.SRC_ATOP);
+
+                                    if(mProduct.isFavorite()){
+                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                    }else{
+                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                                    }
+
+                                    favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if(mProduct.isFavorite()) {
+                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).removeProductFromWishList(mProduct);
+                                                if (result == null) {
+                                                    mProduct.setFavorite(false);
+                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                                                } else {
+                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                }
+                                            } else {
+                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct);
+                                                if (result == null) {
+                                                    mProduct.setFavorite(true);
+                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                                } else {
+                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        }
+                                    });
 
                                     File img = Utils.getFileInOriginalDirByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
                                     if(img!=null){

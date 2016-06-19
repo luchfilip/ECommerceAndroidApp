@@ -32,9 +32,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Jesus Sarco 12.05.2016
  */
@@ -42,10 +39,7 @@ public class SearchResultsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private User mCurrentUser;
-    private ProductDB productDB;
     private SearchResultAdapter mSearchResultAdapter;
-    private EditText searchEditText;
-    private NavigationView mNavigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,10 +58,10 @@ public class SearchResultsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        productDB = new ProductDB(this, mCurrentUser);
+        final ProductDB productDB = new ProductDB(this, mCurrentUser);
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         ListView mListView = (ListView) findViewById(R.id.search_result_list);
         mSearchResultAdapter = new SearchResultAdapter(this, null, mCurrentUser);
@@ -97,7 +91,7 @@ public class SearchResultsActivity extends AppCompatActivity
                 public void onNothingSelected(AdapterView<?> parent) { }
             });
 
-            searchEditText = (EditText) findViewById(R.id.search_product_editText);
+            final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
             searchEditText.setFocusable(true);
             searchEditText.setFocusableInTouchMode(true);
             searchEditText.addTextChangedListener(new TextWatcher() {
@@ -109,9 +103,9 @@ public class SearchResultsActivity extends AppCompatActivity
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(TextUtils.isEmpty(s)){
-                        mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(null, SearchResultsActivity.this);
                     }else{
-                        mSearchResultAdapter.setData(null, productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
                     }
                     mSearchResultAdapter.notifyDataSetChanged();
                 }
@@ -191,7 +185,7 @@ public class SearchResultsActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             (new RecentSearchDB(SearchResultsActivity.this, mCurrentUser))
                                     .deleteAllRecentSearches();
-                            mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
+                            mSearchResultAdapter.setData(null, SearchResultsActivity.this);
                             mSearchResultAdapter.notifyDataSetChanged();
                         }
                     })
