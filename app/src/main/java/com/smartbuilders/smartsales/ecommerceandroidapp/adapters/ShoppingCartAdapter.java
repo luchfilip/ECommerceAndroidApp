@@ -164,6 +164,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
                 holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                         mDataset.get(position).getProduct().getProductBrand().getDescription()));
+                holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
             }

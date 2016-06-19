@@ -59,16 +59,19 @@ public class CategoryAdapter extends BaseAdapter {
 
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.categoryName.setText(mDataset.get(position).getName());
+            viewHolder.categoryName.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.categoryName.setVisibility(TextView.GONE);
         }
         if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
             viewHolder.categoryDescription.setText(mDataset.get(position).getDescription());
+            viewHolder.categoryDescription.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.categoryDescription.setVisibility(TextView.GONE);
         }
         if(mDataset.get(position).getImageId()>0){
             viewHolder.categoryImage.setImageResource(mDataset.get(position).getImageId());
+            viewHolder.categoryImage.setVisibility(ImageView.VISIBLE);
         }else{
             viewHolder.categoryImage.setVisibility(ImageView.GONE);
         }

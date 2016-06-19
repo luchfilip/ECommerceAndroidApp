@@ -207,7 +207,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 @Override
                 public void onClick(View v) {
                     holder.shareImageView.setEnabled(false);
-                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()), holder.shareImageView).start();
+                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()),
+                            holder.shareImageView).start();
                 }
             });
         }

@@ -132,6 +132,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                 && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProduct().getProductBrand().getDescription()));
+            holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.INVISIBLE);
         }

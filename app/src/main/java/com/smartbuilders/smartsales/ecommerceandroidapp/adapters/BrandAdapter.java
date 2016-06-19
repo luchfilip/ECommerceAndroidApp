@@ -75,18 +75,21 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
 
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.brandName.setText(mDataset.get(position).getName());
+            viewHolder.brandName.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.brandName.setVisibility(TextView.GONE);
         }
 
         if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
             viewHolder.brandDescription.setText(mDataset.get(position).getDescription());
+            viewHolder.brandDescription.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.brandDescription.setVisibility(TextView.GONE);
         }
 
         if(mDataset.get(position).getImageId()>0){
             viewHolder.brandImage.setImageResource(mDataset.get(position).getImageId());
+            viewHolder.brandImage.setVisibility(ImageView.VISIBLE);
         }else{
             viewHolder.brandImage.setVisibility(ImageView.GONE);
         }
