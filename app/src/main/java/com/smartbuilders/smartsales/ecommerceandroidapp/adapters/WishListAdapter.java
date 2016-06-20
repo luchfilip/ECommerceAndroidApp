@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ import java.util.ArrayList;
  * Created by Alberto on 7/4/2016.
  */
 public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHolder> {
+
+    private static final int LAST_VIEW = 1;
 
     private Context mContext;
     private WishListFragment mWishListFragment;
@@ -76,13 +79,27 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         orderLineDB = new OrderLineDB(context, user);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(position>0 && mDataset!=null && position==mDataset.size()-1){
+            return LAST_VIEW;
+        }
+        return super.getItemViewType(position);
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public WishListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.wish_list_item, parent, false);
-
+                .inflate(R.layout.wish_list_item, parent, false);
+        if(viewType==LAST_VIEW){
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin,
+                    Utils.convertDpToPixel(80, parent.getContext()));
+            v.setLayoutParams(layoutParams);
+        }
         return new ViewHolder(v);
     }
 
