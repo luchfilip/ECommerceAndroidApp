@@ -21,11 +21,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/company_name"
                 android:id="@+id/company_name"
                 android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="35sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,6 +108,29 @@
                         android:id="@+id/fax_number"
                         android:textColor="@color/black" />
                 </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/mail_label"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_marginRight="5dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="atencionalcliente@febeca.com"
+                        android:id="@+id/email_address"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center_vertical" />
+                </TableRow>
             </TableLayout>
 
             <TextView
@@ -116,10 +139,10 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="www.febeca.com"
                 android:id="@+id/web_page"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
