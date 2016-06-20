@@ -1,7 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.view;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -86,6 +89,34 @@ public class ProductBrandPromotionFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        if(mProductBrandPromotionalCard.getBackground_R_Color()>=0
+                && mProductBrandPromotionalCard.getBackground_G_Color()>=0
+                && mProductBrandPromotionalCard.getBackground_B_Color()>=0){
+
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadius(Utils.convertDpToPixel(5, getContext()));
+            shape.setColor(Color.rgb(mProductBrandPromotionalCard.getBackground_R_Color(),
+                    mProductBrandPromotionalCard.getBackground_G_Color(),
+                    mProductBrandPromotionalCard.getBackground_B_Color()));
+            shape.setStroke(Utils.convertDpToPixel(1, getContext()), Utils.getColor(getContext(), R.color.grey_medium));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                rootView.findViewById(R.id.main_layout).setBackground(shape);
+            } else {
+                rootView.findViewById(R.id.main_layout).setBackgroundDrawable(shape);
+            }
+        }
+
+        if(mProductBrandPromotionalCard.getPromotionalText_R_Color()>=0
+                && mProductBrandPromotionalCard.getPromotionalText_G_Color()>=0
+                && mProductBrandPromotionalCard.getPromotionalText_B_Color()>=0){
+            ((TextView) rootView.findViewById(R.id.promotional_text))
+                    .setTextColor(Color.rgb(mProductBrandPromotionalCard.getPromotionalText_R_Color(),
+                            mProductBrandPromotionalCard.getPromotionalText_G_Color(),
+                            mProductBrandPromotionalCard.getPromotionalText_B_Color()));
+        }
 
         return rootView;
     }
