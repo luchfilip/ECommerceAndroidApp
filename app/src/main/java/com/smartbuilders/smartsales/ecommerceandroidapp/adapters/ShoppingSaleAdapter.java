@@ -20,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -154,13 +155,17 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
-                mContext.startActivity(intent);
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
 
         if(holder.productBrand!=null){
             if(mDataset.get(position).getProduct().getProductBrand()!=null
@@ -222,6 +227,12 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         });
 
         holder.totalLineAmount.setText(String.valueOf(mDataset.get(position).getTotalLineAmount()));
+    }
+
+    private void goToProductDetails(Product product) {
+        Intent intent = new Intent(mContext, ProductDetailActivity.class);
+        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
+        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {

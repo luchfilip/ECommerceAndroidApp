@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.squareup.picasso.Picasso;
@@ -151,13 +151,17 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
-                mContext.startActivity(intent);
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
 
         if(holder.productBrand!=null){
             if(mDataset.get(position).getProduct().getProductBrand()!=null
@@ -210,6 +214,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 ((Callback) mFragment).updateQtyOrdered(mDataset.get(holder.getAdapterPosition()));
             }
         });
+    }
+
+    private void goToProductDetails(Product product) {
+        Intent intent = new Intent(mContext, ProductDetailActivity.class);
+        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
+        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<OrderLine> orderLines) {
