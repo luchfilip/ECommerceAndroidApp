@@ -799,10 +799,12 @@ public class Utils {
             PendingIntent resultPendingIntent =
                     stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT );
             mBuilder.setContentIntent(resultPendingIntent);
+            mBuilder.setAutoCancel(true);
             NotificationManager mNotificationManager =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1639, mBuilder.build());
+            Toast.makeText(context, "Se creó el archivo "+fileName+" en la carpeta \"Descargas\"", Toast.LENGTH_LONG).show();
         }catch(Exception e){
             e.printStackTrace();
             Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
