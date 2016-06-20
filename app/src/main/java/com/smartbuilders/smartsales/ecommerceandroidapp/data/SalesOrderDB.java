@@ -35,13 +35,14 @@ public class SalesOrderDB {
     public int getLastFinalizedSalesOrderId() {
         Cursor c = null;
         try {
-            String sql = "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) " +
-                    " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+                    .build(), null,
+                    "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) " +
+                    " FROM ECOMMERCE_SALES_ORDER SO " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ?",
+                    new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
@@ -63,14 +64,15 @@ public class SalesOrderDB {
         Cursor c = null;
         SalesOrder salesOrder = null;
         try {
-            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .build(), null,
+                    "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
                         " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID "+
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.ISACTIVE = ?";
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", String.valueOf(salesOrderId), "Y"}, null);
+                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.ISACTIVE = ?",
+                    new String[]{"Y", String.valueOf(salesOrderId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 salesOrder = new SalesOrder();
                 salesOrder.setId(c.getInt(0));
@@ -109,14 +111,15 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .build(), null,
+                    "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
                     " FROM ECOMMERCE_SALES_ORDERLINE OL " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
                     " WHERE OL.ISACTIVE = ? AND OL.DOC_TYPE = ? " +
-                    " GROUP BY OL.BUSINESS_PARTNER_ID";
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
+                    " GROUP BY OL.BUSINESS_PARTNER_ID",
+                    new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     SalesOrder salesOrder = new SalesOrder();
@@ -147,15 +150,16 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
-                    " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID " +
-                    " FROM ECOMMERCE_SALES_ORDER SO " +
-                    " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ? " +
-                    " order by SO.ECOMMERCE_SALES_ORDER_ID desc";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+                    .build(), null,
+                    "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
+                        " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID " +
+                    " FROM ECOMMERCE_SALES_ORDER SO " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ? " +
+                    " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
+                    new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     SalesOrder salesOrder = new SalesOrder();

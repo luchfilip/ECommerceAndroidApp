@@ -177,10 +177,13 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                    " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                    " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
+                        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
+                        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
@@ -189,10 +192,8 @@ public class ProductDB {
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDPARTIDA = ? AND A.ACTIVO = ? " +
-                    " ORDER BY A.NOMBRE ASC ";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
+                    " ORDER BY A.NOMBRE ASC ",
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
                     OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(subCategoryId), "V"}, null);
             if (c!=null) {
                 String[] words;
@@ -373,25 +374,61 @@ public class ProductDB {
 
     public ArrayList<Product> getProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(name) || name.length()>120
+                || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
+            return products;
+        }
+        name = name.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        boolean isNumeric = false;
+        // Regular expression in Java to check if String is number or not
+        Pattern pattern = Pattern.compile(".*[^0-9].*");
+        if(name.length()<8 && !pattern.matcher(name).matches()){
+            isNumeric = true;
+        }
+
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                    " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                    " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                    " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-                    " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
-                    " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE OR A.NOMBRE LIKE ? COLLATE NOCASE) AND A.ACTIVO = ? " +
-                    " ORDER BY A.NOMBRE ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), OrderLineDB.WISHLIST_DOCTYPE,
-                    name.replaceAll("\\s+", " ").trim()+"%", "% "+name.replaceAll("\\s+", " ").trim()+"%", "V"}, null);
+            if(isNumeric) {
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                                .build(), null,
+                        "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
+                            " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
+                            " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
+                        " FROM ARTICULOS A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
+                            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
+                        " WHERE A.CODVIEJO LIKE ? AND A.ACTIVO = ? " +
+                        " ORDER BY A.NOMBRE ASC",
+                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), OrderLineDB.WISHLIST_DOCTYPE,
+                                name+"%", "V"}, null);
+            }else{
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                        .build(), null,
+                        "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
+                            " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
+                            " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
+                        " FROM ARTICULOS A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
+                            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
+                        " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE OR A.NOMBRE LIKE ? COLLATE NOCASE) AND A.ACTIVO = ? " +
+                        " ORDER BY A.NOMBRE ASC",
+                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), OrderLineDB.WISHLIST_DOCTYPE,
+                        name+"%", "% "+name+"%", "V"}, null);
+            }
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -454,17 +491,18 @@ public class ProductDB {
         Cursor c = null;
         try {
             if (isNumeric) {
-                String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                        .build(), null,
+                        "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                         " FROM ARTICULOS A " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
                             " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
                         " WHERE A.CODVIEJO LIKE ? AND A.ACTIVO = ? "  +
-                        " ORDER BY A.CODVIEJO ASC LIMIT 20";
-                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "V"}, null);
+                        " ORDER BY A.CODVIEJO ASC LIMIT 20",
+                        new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "V"}, null);
             } else {
                 String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
                         " FROM ARTICULOS A " +
@@ -542,7 +580,10 @@ public class ProductDB {
     public Product getProductById(int id, boolean useProductCode){
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
                         " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
                         " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
@@ -554,10 +595,8 @@ public class ProductDB {
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDARTICULO = ? AND A.ACTIVO = ? " +
-                    " ORDER BY A.NOMBRE ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
+                    " ORDER BY A.NOMBRE ASC",
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
                     OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(id), "V"}, null);
             if (c!=null) {
                 if(c.moveToNext()){

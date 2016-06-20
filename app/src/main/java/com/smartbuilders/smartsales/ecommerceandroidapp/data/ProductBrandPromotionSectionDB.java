@@ -25,13 +25,13 @@ public class ProductBrandPromotionSectionDB {
         ProductBrandPromotionalSection productBrandPromotionalSection = new ProductBrandPromotionalSection();
         Cursor c = null;
         try {
-            String sql = "select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
-                    " BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    " PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
-                    " from BRAND_PROMOTIONAL_CARD where ISACTIVE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null, sql, new String[]{"Y"}, null);
+                    .build(), null, "select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
+                    " BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
+                    " PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
+                    " from BRAND_PROMOTIONAL_CARD where ISACTIVE = ?",
+                    new String[]{"Y"}, null);
             while(c.moveToNext()){
                 ProductBrandPromotionalCard productBrandPromotionalCard = new ProductBrandPromotionalCard();
                 productBrandPromotionalCard.setId(c.getInt(0));

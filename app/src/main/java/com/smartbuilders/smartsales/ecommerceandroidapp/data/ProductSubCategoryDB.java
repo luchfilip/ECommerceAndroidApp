@@ -26,17 +26,18 @@ public class ProductSubCategoryDB {
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                     " WHERE S.ISACTIVE = ? AND S.CATEGORY_ID = ? " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
-                    " ORDER BY S.NAME ASC";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"V", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
+                    " ORDER BY S.NAME ASC",
+                    new String[]{"V", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     ProductSubCategory productSubCategory = new ProductSubCategory();

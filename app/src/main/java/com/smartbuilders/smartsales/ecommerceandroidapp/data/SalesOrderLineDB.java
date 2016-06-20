@@ -65,12 +65,12 @@ public class SalesOrderLineDB {
      */
     public String updateSalesOrderLine(SalesOrderLine orderLine){
         try {
-            String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
-                    " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
-                    " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql,
+                    null,
+                    "UPDATE ECOMMERCE_SALES_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
+                        " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                    " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?",
                     new String[]{String.valueOf(orderLine.getQuantityOrdered()),
                             String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
                             String.valueOf(orderLine.getTotalLineAmount()), "datetime('now')",
@@ -88,11 +88,11 @@ public class SalesOrderLineDB {
     public int getActiveShoppingSaleLinesNumberByBusinessPartnerId(int businessPartnerId) {
         Cursor c = null;
         try {
-            String sql = "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE BUSINESS_PARTNER_ID=? AND DOC_TYPE = ? AND ISACTIVE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql,
+                    .build(), null,
+                    "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDERLINE " +
+                        " WHERE BUSINESS_PARTNER_ID=? AND DOC_TYPE = ? AND ISACTIVE = ?",
                     new String[]{String.valueOf(businessPartnerId), SHOPPING_SALE_DOCTYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
@@ -132,12 +132,12 @@ public class SalesOrderLineDB {
             ol.setTaxPercentage(productTaxPercentage);
             ol.setTotalLineAmount(SalesOrderLineBR.getTotalLine(ol));
 
-            String sql = "INSERT INTO ECOMMERCE_SALES_ORDERLINE (PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, " +
-                    " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql,
+                    null,
+                    "INSERT INTO ECOMMERCE_SALES_ORDERLINE (PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, " +
+                        " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, ISACTIVE, APP_VERSION, APP_USER_NAME) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(ol.getProduct().getId()), String.valueOf(businessPartnerId),
                             String.valueOf(ol.getQuantityOrdered()), String.valueOf(ol.getPrice()),
                             String.valueOf(ol.getTaxPercentage()), String.valueOf(ol.getTotalLineAmount()),
@@ -157,11 +157,12 @@ public class SalesOrderLineDB {
      */
     public String deactiveSalesOrderLine(SalesOrderLine orderLine){
         try {
-            String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
-                    " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql, new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId())});
+                    null,
+                    "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                        " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?",
+                    new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -182,26 +183,29 @@ public class SalesOrderLineDB {
         ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, " +
-                    " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE ISACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ? " +
-                    " ORDER BY CREATE_TIME DESC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType, String.valueOf(businessPartnerId)}, null);
-            while(c.moveToNext()){
-                SalesOrderLine orderLine = new SalesOrderLine();
-                orderLine.setId(c.getInt(0));
-                Product product = new Product();
-                product.setId(c.getInt(1));
-                orderLine.setBusinessPartnerId(c.getInt(2));
-                orderLine.setQuantityOrdered(c.getInt(3));
-                orderLine.setPrice(c.getDouble(4));
-                orderLine.setTaxPercentage(c.getDouble(5));
-                orderLine.setTotalLineAmount(c.getDouble(6));
-                orderLine.setProduct(product);
-                orderLines.add(orderLine);
+                    .build(), null,
+                    "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, " +
+                        " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE " +
+                    " WHERE ISACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ? " +
+                    " ORDER BY CREATE_TIME DESC",
+                    new String[]{"Y", docType, String.valueOf(businessPartnerId)}, null);
+            if (c!=null) {
+                while(c.moveToNext()){
+                    SalesOrderLine orderLine = new SalesOrderLine();
+                    orderLine.setId(c.getInt(0));
+                    Product product = new Product();
+                    product.setId(c.getInt(1));
+                    orderLine.setBusinessPartnerId(c.getInt(2));
+                    orderLine.setQuantityOrdered(c.getInt(3));
+                    orderLine.setPrice(c.getDouble(4));
+                    orderLine.setTaxPercentage(c.getDouble(5));
+                    orderLine.setTotalLineAmount(c.getDouble(6));
+                    orderLine.setProduct(product);
+                    orderLines.add(orderLine);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,14 +242,15 @@ public class SalesOrderLineDB {
         ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, " +
-                    " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE ISACTIVE = ? AND DOC_TYPE = ? AND ECOMMERCE_SALES_ORDER_ID = ? " +
-                    " ORDER BY CREATE_TIME DESC";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y", docType, String.valueOf(salesOrderId)}, null);
+                    .build(), null,
+                    "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, " +
+                        " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE " +
+                    " WHERE ISACTIVE = ? AND DOC_TYPE = ? AND ECOMMERCE_SALES_ORDER_ID = ? " +
+                    " ORDER BY CREATE_TIME DESC",
+                    new String[]{"Y", docType, String.valueOf(salesOrderId)}, null);
             while(c.moveToNext()){
                 SalesOrderLine orderLine = new SalesOrderLine();
                 orderLine.setId(c.getInt(0));
@@ -292,11 +297,12 @@ public class SalesOrderLineDB {
     public int getOrderLineNumbersBySalesOrderId(int salesOrderId){
         Cursor c = null;
         try {
-            String sql = "SELECT COUNT(ECOMMERCE_SALES_ORDERLINE_ID) FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND ISACTIVE = ?";
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{String.valueOf(salesOrderId), "Y"}, null);
+                    .build(), null,
+                    "SELECT COUNT(ECOMMERCE_SALES_ORDERLINE_ID) FROM ECOMMERCE_SALES_ORDERLINE " +
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND ISACTIVE = ?",
+                    new String[]{String.valueOf(salesOrderId), "Y"}, null);
             while(c.moveToNext()){
                 return c.getInt(0);
             }
@@ -324,11 +330,11 @@ public class SalesOrderLineDB {
      */
     private int moveOrderLinesToOrderByOrderId(int businessPartnerId, int orderId, String newDocType, String currentDocType) {
         try {
-            String sql = "UPDATE ECOMMERCE_SALES_ORDERLINE SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, " +
-                    " DOC_TYPE = ? WHERE ISACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ?";
             return context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql,
+                    null,
+                    "UPDATE ECOMMERCE_SALES_ORDERLINE SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, " +
+                    " DOC_TYPE = ? WHERE ISACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ?",
                     new String[]{String.valueOf(orderId), "datetime('now')", newDocType, "Y",
                             currentDocType, String.valueOf(businessPartnerId)});
         } catch (Exception e) {

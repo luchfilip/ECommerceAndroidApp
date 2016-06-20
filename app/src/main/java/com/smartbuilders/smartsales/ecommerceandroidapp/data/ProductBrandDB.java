@@ -26,7 +26,10 @@ public class ProductBrandDB {
         ArrayList<ProductBrand> productBrands = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                    .build(), null,
+                    "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                     " FROM BRAND B " +
                         " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = ? " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
@@ -34,10 +37,8 @@ public class ProductBrandDB {
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                     " WHERE B.ISACTIVE = ? " +
                     " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
-                    " ORDER BY B.NAME ASC ";
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"V", "Y", "Y", "Y", "Y"}, null);
+                    " ORDER BY B.NAME ASC ",
+                    new String[]{"V", "Y", "Y", "Y", "Y"}, null);
             while(c.moveToNext()){
                 ProductBrand productBrand = new ProductBrand();
                 productBrand.setId(c.getInt(0));

@@ -43,10 +43,10 @@ public class OrderLineDB {
 
     public String removeProductFromWishList(Product product){
         try {
-            String sql = "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ? AND PRODUCT_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null, sql,
+                            null,
+                            "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ? AND PRODUCT_ID = ?",
                             new String[]{WISHLIST_DOCTYPE, String.valueOf(product.getId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -60,11 +60,11 @@ public class OrderLineDB {
 
     public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){
         try {
-            String sql = "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
-                    " UPDATE_TIME = ? WHERE ECOMMERCE_ORDERLINE_ID = ? AND DOC_TYPE=?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null, sql,
+                            null,
+                            "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
+                                " UPDATE_TIME = ? WHERE ECOMMERCE_ORDERLINE_ID = ? AND DOC_TYPE=?",
                             new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested), "datetime('now')",
                                         String.valueOf(orderLine.getId()), WISHLIST_DOCTYPE});
             if (rowsAffected < 1) {
@@ -79,16 +79,16 @@ public class OrderLineDB {
 
     public String updateOrderLine(OrderLine orderLine){
         try {
-            String sql = "UPDATE ECOMMERCE_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
-                    " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
-                    " WHERE ECOMMERCE_ORDERLINE_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                    null, sql,
-                                    new String[]{String.valueOf(orderLine.getQuantityOrdered()),
-                                    String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
-                                    String.valueOf(orderLine.getTotalLineAmount()), "datetime('now')",
-                                    String.valueOf(orderLine.getId())});
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
+                        " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                    " WHERE ECOMMERCE_ORDERLINE_ID = ?",
+                    new String[]{String.valueOf(orderLine.getQuantityOrdered()),
+                    String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
+                    String.valueOf(orderLine.getTotalLineAmount()), "datetime('now')",
+                    String.valueOf(orderLine.getId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -101,10 +101,11 @@ public class OrderLineDB {
 
     public String deleteOrderLine(OrderLine orderLine){
         try {
-            String sql = "DELETE FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDERLINE_ID = ?";
             int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                null, sql, new String[]{String.valueOf(orderLine.getId())});
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                    null,
+                    "DELETE FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDERLINE_ID = ?",
+                    new String[]{String.valueOf(orderLine.getId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -118,7 +119,7 @@ public class OrderLineDB {
     public String clearWishList(){
         try {
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                     null, "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ?",
                     new String[]{WISHLIST_DOCTYPE});
         } catch (Exception e){

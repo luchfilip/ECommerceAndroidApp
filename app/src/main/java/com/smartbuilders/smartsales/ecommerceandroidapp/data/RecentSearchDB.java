@@ -48,7 +48,8 @@ public class RecentSearchDB {
         try {
             context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?", new String[]{String.valueOf(recentSearchId)});
+                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?",
+                    new String[]{String.valueOf(recentSearchId)});
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -63,21 +64,24 @@ public class RecentSearchDB {
         ArrayList<RecentSearch> recentSearches = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
-                    " FROM RECENT_SEARCH RS " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.ISACTIVE = ? " +
-                    " ORDER BY RS.CREATE_TIME desc" ;
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, sql, new String[]{"Y"}, null);
-            while(c.moveToNext()){
-                RecentSearch recentSearch = new RecentSearch();
-                recentSearch.setId(c.getInt(3));
-                recentSearch.setTextToSearch(c.getString(0));
-                recentSearch.setProductId(c.getInt(1));
-                recentSearch.setSubcategoryId(c.getInt(2));
-                recentSearch.setProductSubCategory(new ProductSubCategory(0, c.getInt(2), c.getString(4), c.getString(5)));
-                recentSearches.add(recentSearch);
+                    .build(), null,
+                    "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
+                    " FROM RECENT_SEARCH RS " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.ISACTIVE = ? " +
+                    " ORDER BY RS.CREATE_TIME desc",
+                    new String[]{"Y"}, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    RecentSearch recentSearch = new RecentSearch();
+                    recentSearch.setId(c.getInt(3));
+                    recentSearch.setTextToSearch(c.getString(0));
+                    recentSearch.setProductId(c.getInt(1));
+                    recentSearch.setSubcategoryId(c.getInt(2));
+                    recentSearch.setProductSubCategory(new ProductSubCategory(0, c.getInt(2), c.getString(4), c.getString(5)));
+                    recentSearches.add(recentSearch);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
