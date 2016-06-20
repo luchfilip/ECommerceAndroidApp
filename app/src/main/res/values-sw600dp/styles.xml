@@ -5,40 +5,33 @@
 
     <style name="business_partners_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
+        <!--<item name="android:background">@android:color/white</item>-->
     </style>
 
     <style name="categories_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
+        <!--<item name="android:background">@android:color/white</item>-->
     </style>
 
     <style name="orders_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
+        <!--<item name="android:background">@android:color/white</item>-->
     </style>
 
     <style name="shopping_sales_orders_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
+        <!--<item name="android:background">@android:color/white</item>-->
     </style>
 
     <style name="sales_orders_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <item name="android:background">@android:color/white</item>
-    </style>
-
-    <style name="wish_list_style">
-
+        <!--<item name="android:background">@android:color/white</item>-->
     </style>
 
     <style name="invoices_list_style">
         <item name="android:choiceMode">singleChoice</item>
     </style>
 
-    <style name="brands_list_style">
-
-    </style>
     <style name="list_item_style">
         <item name="android:background">@drawable/list_item_selector</item>
     </style>

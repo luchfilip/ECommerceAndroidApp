@@ -36,7 +36,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/order_number_tv"
             android:textColor="@color/black"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
