@@ -20,7 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 /**
  * Created by stein on 26/5/2016.
  */
-public class DialogUpdateQuantityOrdered extends DialogFragment {
+public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
 
     private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
     private static final String STATE_IS_SHOPPING_CART = "STATE_IS_SHOPPING_CART";
@@ -30,12 +30,12 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
     private boolean mIsShoppingCart;
     private User mUser;
 
-    public static DialogUpdateQuantityOrdered newInstance(OrderLine orderLine, boolean isShoppingCart, User user){
-        DialogUpdateQuantityOrdered dialogUpdateQuantityOrdered = new DialogUpdateQuantityOrdered();
-        dialogUpdateQuantityOrdered.mUser = user;
-        dialogUpdateQuantityOrdered.mIsShoppingCart = isShoppingCart;
-        dialogUpdateQuantityOrdered.mOrderLine = orderLine;
-        return dialogUpdateQuantityOrdered;
+    public static DialogUpdateShoppingCartQtyOrdered newInstance(OrderLine orderLine, boolean isShoppingCart, User user){
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered = new DialogUpdateShoppingCartQtyOrdered();
+        dialogUpdateShoppingCartQtyOrdered.mUser = user;
+        dialogUpdateShoppingCartQtyOrdered.mIsShoppingCart = isShoppingCart;
+        dialogUpdateShoppingCartQtyOrdered.mOrderLine = orderLine;
+        return dialogUpdateShoppingCartQtyOrdered;
     }
 
     public interface Callback {
@@ -84,6 +84,16 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
                 int oldValue = mOrderLine.getQuantityOrdered();
                 try {
                     mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                    //TODO: mandar estas validaciones a una clase de businessRules
+                    if (mOrderLine.getQuantityOrdered()<=0) {
+                        throw new Exception("Cantidad pedida inválida.");
+                    }
+                    if ((mOrderLine.getQuantityOrdered() % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
+                        throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
+                    }
+                    if (mOrderLine.getQuantityOrdered() > mOrderLine.getProduct().getAvailability()) {
+                        throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
+                    }
                     String result = null;
                     if (mIsShoppingCart) {
                         result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
@@ -94,6 +104,9 @@ public class DialogUpdateQuantityOrdered extends DialogFragment {
                         throw new Exception(result);
                     }
                     dismiss();
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Cantidad pedida inválida.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     mOrderLine.setQuantityOrdered(oldValue);

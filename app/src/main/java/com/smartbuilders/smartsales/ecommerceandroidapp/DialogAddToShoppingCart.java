@@ -81,6 +81,16 @@ public class DialogAddToShoppingCart extends DialogFragment {
                     try {
                         int qtyRequested = Integer
                                 .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
+                        //TODO: mandar estas validaciones a una clase de businessRules
+                        if (qtyRequested<=0) {
+                            throw new Exception("Cantidad pedida inválida.");
+                        }
+                        if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
+                            throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
+                        }
+                        if (qtyRequested > mProduct.getAvailability()) {
+                            throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
+                        }
                         String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
@@ -89,6 +99,9 @@ public class DialogAddToShoppingCart extends DialogFragment {
                         } else {
                             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                         }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Cantidad pedida inválida.", Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

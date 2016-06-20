@@ -114,12 +114,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
                         if (qtyRequested<=0) {
                             throw new Exception("Cantidad pedida inválida.");
                         }
-                        if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
-                            throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
-                        }
-                        if (qtyRequested > mProduct.getAvailability()) {
-                            throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
-                        }
                         double productPrice = 0;
                         try {
                             productPrice = Double

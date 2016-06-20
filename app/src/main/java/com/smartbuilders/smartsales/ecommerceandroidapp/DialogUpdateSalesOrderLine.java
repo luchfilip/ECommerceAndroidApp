@@ -127,6 +127,9 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                         e.printStackTrace();
                         mSaleOrderLine.setQuantityOrdered(0);
                     }
+                    if (mSaleOrderLine.getQuantityOrdered()<=0) {
+                        throw new Exception("Cantidad pedida inválida.");
+                    }
                     try {
                         mSaleOrderLine.setPrice(Double.valueOf(((EditText) view
                                 .findViewById(R.id.product_price_editText)).getText().toString()));

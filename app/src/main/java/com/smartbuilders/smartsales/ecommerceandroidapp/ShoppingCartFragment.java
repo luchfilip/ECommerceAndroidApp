@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapter.Callback,
-        DialogUpdateQuantityOrdered.Callback {
+        DialogUpdateShoppingCartQtyOrdered.Callback {
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
@@ -222,11 +222,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void updateQtyOrdered(OrderLine orderLine) {
-        DialogUpdateQuantityOrdered dialogUpdateQuantityOrdered =
-                DialogUpdateQuantityOrdered.newInstance(orderLine, mIsShoppingCart, mCurrentUser);
-        dialogUpdateQuantityOrdered.setTargetFragment(this, 0);
-        dialogUpdateQuantityOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateQuantityOrdered.class.getSimpleName());
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, mIsShoppingCart, mCurrentUser);
+        dialogUpdateShoppingCartQtyOrdered.setTargetFragment(this, 0);
+        dialogUpdateShoppingCartQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
     @Override
