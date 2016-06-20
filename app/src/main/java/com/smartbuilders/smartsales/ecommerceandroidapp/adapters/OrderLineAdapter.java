@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,9 +14,9 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -94,6 +93,12 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
 
         if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
             File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
@@ -140,13 +145,17 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProduct().getId());
-                mContext.startActivity(intent);
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
+    }
+
+    private void goToProductDetails(Product product) {
+        Intent intent = new Intent(mContext, ProductDetailActivity.class);
+        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
+        mContext.startActivity(intent);
     }
 }
