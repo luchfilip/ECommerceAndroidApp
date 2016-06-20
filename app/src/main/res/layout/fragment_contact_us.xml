@@ -10,7 +10,7 @@
     android:background="@android:color/white">
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -21,7 +21,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/company_name"
                 android:id="@+id/company_name"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -30,7 +29,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/company_tax_id"
                 android:id="@+id/company_tax_id"
                 android:layout_marginBottom="10dp"
                 android:textColor="@color/black" />
@@ -48,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="0800-Febeca-0"
                 android:id="@+id/contact_center_phone"
                 android:textColor="@color/colorPrimary"
                 android:layout_marginBottom="10dp"
@@ -63,14 +60,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="2dp">
+                    android:layout_marginBottom="2dp"
+                    android:id="@+id/master_phone_tableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/master_label"
-                        android:id="@+id/master_label"
                         android:layout_marginRight="5dp"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
@@ -79,7 +76,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="+58-241-856.7200"
                         android:id="@+id/master_phone"
                         android:textColor="@color/black" />
                 </TableRow>
@@ -88,14 +84,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp">
+                    android:layout_marginBottom="2dp"
+                    android:id="@+id/fax_tableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/fax_label"
-                        android:id="@+id/fax_label"
                         android:layout_marginRight="5dp"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
@@ -104,14 +100,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="+58-241-856.7120"
                         android:id="@+id/fax_number"
                         android:textColor="@color/black" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/email_address_tableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -125,7 +121,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="atencionalcliente@febeca.com"
                         android:id="@+id/email_address"
                         android:layout_marginTop="2dp"
                         android:textColor="@color/black"
@@ -137,7 +132,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="www.febeca.com"
                 android:id="@+id/web_page"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/black"
@@ -148,8 +142,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/direction_label"
-                android:id="@+id/direction_label"
+                android:text="@string/address_label"
+                android:id="@+id/address_label"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -158,8 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Av. Fundo La Unión, Parcela L13, L19, Zona industrial Castillito, San Diego, Edo. Carabobo. República Bolivariana de Venezuela."
-                android:id="@+id/direction"
+                android:id="@+id/address"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black" />
         </LinearLayout>

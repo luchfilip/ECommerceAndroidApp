@@ -257,7 +257,6 @@
     <string name="contact_center_label">Centro de Contacto</string>
     <string name="master_label">Master:</string>
     <string name="fax_label">Fax:</string>
-    <string name="direction_label">Dirección:</string>
     <string name="mail_label">Correo:</string>
 
     <string-array name="search_by_options">
