@@ -36,7 +36,6 @@
     <style name="MainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialMainButton</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>
@@ -50,7 +49,6 @@
     <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialGoldenButton</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>
@@ -64,7 +62,6 @@
     <style name="GreyButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialGreyButton</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>

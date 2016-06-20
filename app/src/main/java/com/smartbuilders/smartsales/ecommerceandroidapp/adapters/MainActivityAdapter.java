@@ -164,9 +164,9 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mViewPager.setClipToPadding(false);
                         int height;
                         if(metrics.widthPixels < metrics.heightPixels){
-                            height = (int) (metrics.heightPixels / 3.5);
+                            height = (int) (metrics.heightPixels / 4.5);
                         } else {
-                            height = (int) (metrics.widthPixels / 3.5);
+                            height = (int) (metrics.widthPixels / 4.5);
                         }
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);

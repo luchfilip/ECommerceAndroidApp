@@ -137,7 +137,6 @@
     <style name="MainButtonAppTheme">
         <item name="android:background">@drawable/main_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>
@@ -146,7 +145,6 @@
     <style name="GoldenButtonAppTheme">
         <item name="android:background">@drawable/golden_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>
@@ -155,7 +153,6 @@
     <style name="GreyButtonAppTheme">
         <item name="android:background">@drawable/grey_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>

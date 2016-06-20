@@ -43,7 +43,8 @@
         android:id="@+id/main_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/wish_list"

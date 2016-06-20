@@ -134,18 +134,25 @@ public class SalesOrderDetailFragment extends Fragment {
                                         ((TextView) view.findViewById(R.id.sales_order_tax_tv))
                                                 .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
                                     }
-                                    if(view.findViewById(R.id.create_sales_order_button)!=null){
-                                        view.findViewById(R.id.create_sales_order_button)
-                                                .setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
-                                                        intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
-                                                        intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
-                                                        startActivity(intent);
-                                                    }
-                                                });
-                                    }
+
+                                    view.findViewById(R.id.create_order_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent intent = new Intent(getContext(), ShoppingCartActivity.class);
+                                                    intent.putExtra(ShoppingCartActivity.KEY_SALES_ORDER_ID, mSalesOrder.getId());
+                                                    intent.putExtra(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID, mSalesOrder.getBusinessPartnerId());
+                                                    startActivity(intent);
+                                                }
+                                            });
+
+                                    view.findViewById(R.id.share_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    startActivity(mShareIntent);
+                                                }
+                                            });
                                 } else {
                                     //TODO: mostrar mensaje que no hay detalles para mostrar.
                                 }

@@ -120,6 +120,12 @@ public class OrderDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.order_date_tv))
                                             .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
                                 }
+                                view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(mShareIntent);
+                                    }
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
