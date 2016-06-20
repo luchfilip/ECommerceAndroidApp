@@ -132,10 +132,9 @@
                         android:text="@string/buy"
                         android:id="@+id/product_addtoshoppingcart_button"
                         android:layout_weight="1"
-                        android:layout_marginRight="3dp"
+                        android:layout_marginRight="1dp"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="3dp" />
+                        android:textStyle="bold" />
 
                     <Button
                         style="@style/GoldenButtonAppTheme"
@@ -143,10 +142,9 @@
                         android:text="@string/sell"
                         android:id="@+id/product_addtoshoppingsales_button"
                         android:layout_weight="1"
-                        android:layout_marginRight="3dp"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:layout_marginLeft="3dp" />
+                        android:layout_marginLeft="1dp" />
 
                 </LinearLayout>
 

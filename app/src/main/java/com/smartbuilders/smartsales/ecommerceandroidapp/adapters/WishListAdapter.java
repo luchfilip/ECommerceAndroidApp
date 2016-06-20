@@ -3,15 +3,14 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +33,6 @@ import java.util.ArrayList;
  */
 public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHolder> {
 
-    private static final int LAST_VIEW = 1;
-
     private Context mContext;
     private WishListFragment mWishListFragment;
     private ArrayList<OrderLine> mDataset;
@@ -54,8 +51,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productBrand;
         public TextView commercialPackage;
         public ImageView shareImageView;
-        public Button addToShoppingCartButton;
-        public Button addToShoppingSaleButton;
+        public ImageView addToShoppingCartImage;
+        public ImageView addToShoppingSaleImage;
 
         public ViewHolder(View v) {
             super(v);
@@ -66,8 +63,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
-            addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
-            addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
+            addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
+            addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
         }
     }
 
@@ -79,27 +76,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         orderLineDB = new OrderLineDB(context, user);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if(position>0 && mDataset!=null && position==mDataset.size()-1){
-            return LAST_VIEW;
-        }
-        return super.getItemViewType(position);
-    }
-
     // Create new views (invoked by the layout manager)
     @Override
     public WishListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.wish_list_item, parent, false);
-        if(viewType==LAST_VIEW){
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin,
-                    Utils.convertDpToPixel(80, parent.getContext()));
-            v.setLayoutParams(layoutParams);
-        }
         return new ViewHolder(v);
     }
 
@@ -209,21 +191,19 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             });
         }
 
-        holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
+        holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDataset.get(holder.getAdapterPosition()) != null) {
-                    mWishListFragment.addToShoppingCart(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
-                }
+                mWishListFragment.addToShoppingCart(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
             }
         });
 
-        holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
+        holder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDataset.get(holder.getAdapterPosition()) != null) {
-                    mWishListFragment.addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
-                }
+                mWishListFragment.addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mCurrentUser);
             }
         });
 

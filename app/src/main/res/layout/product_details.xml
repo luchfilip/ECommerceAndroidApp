@@ -78,69 +78,79 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="2dp"
+        android:baselineAligned="false">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <View
             android:layout_width="@dimen/productDetail_max_image_Width"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:baselineAligned="false">
+            android:layout_height="match_parent"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/share_imageView"
-                    android:src="@drawable/ic_share_black_24dp"
-                    style="@style/image_button_style"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:padding="5dp"
-                    android:layout_gravity="center" />
-            </FrameLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/share_imageView"
+                android:src="@drawable/ic_share_black_24dp"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="5dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/favorite_imageView"
-                    style="@style/image_button_style"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:padding="5dp"
-                    android:layout_gravity="center" />
-            </FrameLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favorite_imageView"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="5dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
-        </LinearLayout>
-
-        <Button
-            style="@style/MainButtonAppTheme"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/buy"
-            android:id="@+id/product_addtoshoppingcart_button"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textStyle="bold" />
+            android:layout_weight="1">
 
-        <Button
-            style="@style/GoldenButtonAppTheme"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addToShoppingCart_imageView"
+                android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                style="@style/image_button_style"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sell"
-            android:id="@+id/product_addtoshoppingsales_button"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textStyle="bold" />
+            android:layout_weight="1">
+
+            <ImageView
+                style="@style/image_button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addToShoppingSale_imageView"
+                android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:padding="3dp" />
+        </FrameLayout>
 
     </LinearLayout>
 

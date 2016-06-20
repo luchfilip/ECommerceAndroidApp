@@ -208,7 +208,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_to_shopping_sales"
+            android:text="@string/sell"
             android:id="@+id/add_to_shopping_sale_button" />
     </LinearLayout>
 

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -60,8 +59,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public LinearLayout linearLayoutContent;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
-        public Button addToShoppingCartButton;
-        public Button addToShoppingSaleButton;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
 
@@ -75,8 +72,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
-            addToShoppingCartButton = (Button) v.findViewById(R.id.product_addtoshoppingcart_button);
-            addToShoppingSaleButton = (Button) v.findViewById(R.id.product_addtoshoppingsales_button);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
         }
@@ -243,43 +238,21 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         }
 
-        if(holder.addToShoppingCartButton!=null) {
-            holder.addToShoppingCartButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
-        }
+        holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
 
-        if(holder.addToShoppingSaleButton!=null) {
-            holder.addToShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
-        }
-
-        if(holder.addToShoppingCartImage!=null){
-            holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-            holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
-        }
-
-        if(holder.addToShoppingSaleImage!=null) {
-            holder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
-            holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
-        }
+        holder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
