@@ -28,6 +28,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.SalesOrderDetailPD
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +38,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
     private static final String STATE_SALES_ORDER_ID = "STATE_SALES_ORDER_ID";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String fileName = "Cotizacion";
 
     private User mCurrentUser;
     private int mSalesOrderId;
@@ -186,22 +188,22 @@ public class SalesOrderDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_share:
+                mShareActionProvider.setShareIntent(mShareIntent);
+                break;
+            case R.id.action_download:
+                if(mShareIntent!=null){
+                    Utils.createPdfFileInDownloadFolder(getContext(),
+                            getContext().getCacheDir() + File.separator + (fileName+".pdf"),
+                            fileName+".pdf");
+                }
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private Intent createShareSalesOrderIntent(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines){
-        String fileName = "Cotizacion";
         String subject = "";
         String message = "";
 
@@ -222,7 +224,7 @@ public class SalesOrderDetailFragment extends Fragment {
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
         shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+                + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
         return shareIntent;
     }
 

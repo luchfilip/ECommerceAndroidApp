@@ -11,7 +11,8 @@
     <string name="action_setting">Configuración</string>
     <string name="search">Buscar</string>
     <string name="categories">Categorías</string>
-    <string name="share">COMPARTIR</string>
+    <string name="share">Compartir</string>
+    <string name="download">Descargar</string>
     <string name="title_activity_product_detail">Detalle del Producto</string>
     <string name="related_products">Productos Relacionados</string>
     <string name="related_shopping_products">Clientes que compraron este producto también compraron</string>

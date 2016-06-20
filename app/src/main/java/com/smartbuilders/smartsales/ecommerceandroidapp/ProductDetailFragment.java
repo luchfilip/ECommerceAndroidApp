@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -28,7 +27,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -44,12 +42,8 @@ public class ProductDetailFragment extends Fragment {
     private int mProductId;
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
-    private Intent mShareProductIntent;
+    private Intent mShareIntent;
     private User mCurrentUser;
-    private ArrayList<Product> relatedProductsByShopping;
-    private ArrayList<Product> relatedProductsByBrandId;
-    private ArrayList<Product> relatedProductsBySubCategoryId;
-
 
     public ProductDetailFragment() {
     }
@@ -58,6 +52,10 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
+
+        final ArrayList<Product> relatedProductsByShopping = new ArrayList<>();
+        final ArrayList<Product> relatedProductsByBrandId = new ArrayList<>();
+        final ArrayList<Product> relatedProductsBySubCategoryId = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -85,28 +83,28 @@ public class ProductDetailFragment extends Fragment {
                         e.printStackTrace();
                     }
                     try {
-                        relatedProductsByShopping = productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20);
+                        relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
                         if (mProduct.getProductBrand() != null) {
-                            relatedProductsByBrandId = productDB
-                                    .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50);
+                            relatedProductsByBrandId.addAll(productDB
+                                    .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
                         if (mProduct.getProductSubCategory() != null) {
-                            relatedProductsBySubCategoryId = productDB
-                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30);
+                            relatedProductsBySubCategoryId.addAll(productDB
+                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     if (mProduct!=null) {
-                        mShareProductIntent = Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser);
+                        mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -232,7 +230,7 @@ public class ProductDetailFragment extends Fragment {
                                      }
                                  });
 
-                                if (relatedProductsByShopping != null && !relatedProductsByShopping.isEmpty()) {
+                                if (!relatedProductsByShopping.isEmpty()) {
                                     RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
                                     // use this setting to improve performance if you know that changes
                                     // in content do not change the layout size of the RecyclerView
@@ -244,7 +242,7 @@ public class ProductDetailFragment extends Fragment {
                                     view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
                                 }
 
-                                if (relatedProductsByBrandId != null && !relatedProductsByBrandId.isEmpty()) {
+                                if (!relatedProductsByBrandId.isEmpty()) {
                                     RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_products_by_brand_recycler_view);
                                     // use this setting to improve performance if you know that changes
                                     // in content do not change the layout size of the RecyclerView
@@ -262,7 +260,7 @@ public class ProductDetailFragment extends Fragment {
                                     view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
                                 }
 
-                                if (relatedProductsBySubCategoryId != null && !relatedProductsBySubCategoryId.isEmpty()) {
+                                if (!relatedProductsBySubCategoryId.isEmpty()) {
                                     RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                                     // use this setting to improve performance if you know that changes
                                     // in content do not change the layout size of the RecyclerView
@@ -303,22 +301,6 @@ public class ProductDetailFragment extends Fragment {
                                     );
                                 }
 
-                                //if (view.findViewById(R.id.product_addtowishlist_button) != null) {
-                                //    view.findViewById(R.id.product_addtowishlist_button).setOnClickListener(
-                                //        new View.OnClickListener() {
-                                //            @Override
-                                //            public void onClick(View v) {
-                                //                String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct);
-                                //                if (result == null) {
-                                //                    Toast.makeText(getContext(), R.string.product_put_in_wishlist, Toast.LENGTH_LONG).show();
-                                //                } else {
-                                //                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                                //                }
-                                //            }
-                                //        }
-                                //    );
-                                //}
-
                                 if (view.findViewById(R.id.product_availability) != null) {
                                     ((TextView) view.findViewById(R.id.product_availability))
                                             .setText(getString(R.string.availability, mProduct.getAvailability()));
@@ -353,7 +335,7 @@ public class ProductDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareProductIntent);
+        mShareActionProvider.setShareIntent(mShareIntent);
     }
 
     @Override
@@ -365,7 +347,7 @@ public class ProductDetailFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareProductIntent);
+            mShareActionProvider.setShareIntent(mShareIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

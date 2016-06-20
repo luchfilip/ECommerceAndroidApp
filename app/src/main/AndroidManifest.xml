@@ -21,6 +21,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.smartbuilders.smartsales.ecommerceandroidapp.permission.C2D_MESSAGE" />
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
     <!-- necesarion para consultar el mac address del dispositivo -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 

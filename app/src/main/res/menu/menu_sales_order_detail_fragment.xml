@@ -5,4 +5,9 @@
         app:showAsAction="never"
         android:title="@string/share"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
+
+    <item
+        android:id="@+id/action_download"
+        app:showAsAction="never"
+        android:title="@string/download" />
 </menu>

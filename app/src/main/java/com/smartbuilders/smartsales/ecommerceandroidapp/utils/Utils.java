@@ -4,6 +4,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +17,8 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -45,8 +49,11 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProv
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -748,5 +755,57 @@ public class Utils {
      */
     public static int convertPixelsToDp(int px, Context context){
         return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static void createPdfFileInDownloadFolder(Context context, String sourceFilePath, String fileName){
+        InputStream inStream;
+        OutputStream outStream;
+        try{
+            File sourceFile = new File(sourceFilePath);
+            File destinationFile =new File(Environment.getExternalStorageDirectory() +
+                    File.separator + Environment.DIRECTORY_DOWNLOADS + File.separator + (fileName+".pdf"));
+            inStream = new FileInputStream(sourceFile);
+            outStream = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            //copy the file content in bytes
+            while ((length = inStream.read(buffer)) > 0){
+                outStream.write(buffer, 0, length);
+            }
+            inStream.close();
+            outStream.close();
+            //Toast.makeText(getContext(), "El archivo fue creado en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Descarga completa, "+fileName+".pdf")
+                            .setContentText("El archivo se encuentra en \"Descargas\".");
+            // Creates an explicit intent for an Activity in your app
+            //Intent resultIntent = new Intent(this, ResultActivity.class);
+
+            Intent resultIntent = new Intent(Intent.ACTION_VIEW);
+            resultIntent.setDataAndType(Uri.fromFile(destinationFile), "application/pdf");
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            //stackBuilder.addParentStack(ResultActivity.class);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // mId allows you to update the notification later on.
+            mNotificationManager.notify(1639, mBuilder.build());
+        }catch(Exception e){
+            e.printStackTrace();
+            Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
+        }
     }
 }

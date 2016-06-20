@@ -28,6 +28,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.OrderDetailPDFCrea
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +38,7 @@ public class OrderDetailFragment extends Fragment {
 
     private static final String STATE_ORDER_ID = "STATE_ORDER_ID";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String fileName = "Pedido";
 
     private User mCurrentUser;
     private int mOrderId;
@@ -153,22 +155,22 @@ public class OrderDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_share:
+                mShareActionProvider.setShareIntent(mShareIntent);
+                break;
+            case R.id.action_download:
+                if(mShareIntent!=null){
+                    Utils.createPdfFileInDownloadFolder(getContext(),
+                            getContext().getCacheDir() + File.separator + (fileName+".pdf"),
+                            fileName+".pdf");
+                }
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private Intent createShareOrderIntent(ArrayList<OrderLine> orderLines){
-        String fileName = "Pedido";
         String subject = "";
         String message = "";
 
@@ -188,7 +190,7 @@ public class OrderDetailFragment extends Fragment {
         //Add the attachment by specifying a reference to our custom ContentProvider
         //and the specific file of interest
         shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + "/" + fileName + ".pdf"));
+                + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
         return shareIntent;
     }
 
