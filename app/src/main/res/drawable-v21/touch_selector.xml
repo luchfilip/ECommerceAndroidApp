@@ -13,5 +13,5 @@
         android:drawable="@color/febeca_light_blue" />
 
     <!-- Default, "just hangin' out" state. -->
-    <item android:drawable="@android:color/white" />
+    <item android:drawable="@android:color/transparent" />
 </selector>

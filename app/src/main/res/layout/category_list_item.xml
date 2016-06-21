@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    style="@style/list_item_style"
-    android:id="@+id/linearLayout_container"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
-
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/category_imageView"
-        android:layout_weight="4" />
+    android:background="@android:color/white">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        style="@style/list_item_style"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
-        <TextView
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/category_imageView"
+            android:layout_weight="4" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/category_name_textView"
+                android:textColor="@color/label_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/category_description_textView"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/products_active_qty"
+                android:layout_gravity="right" />
+        </LinearLayout>
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/category_name_textView"
-            android:textColor="@color/label_color"
-            android:textSize="14sp" />
+            android:id="@+id/go_to_subcategory_img"
+            android:layout_weight="1"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+            style="@style/go_to_arrow_style"
+            android:layout_gravity="center_vertical" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/category_description_textView"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/products_active_qty"
-            android:layout_gravity="right" />
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/go_to_subcategory_img"
-        android:layout_weight="1"
-        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-        style="@style/go_to_arrow_style"
-        android:layout_gravity="center_vertical" />
-
-</LinearLayout>
+</FrameLayout>
