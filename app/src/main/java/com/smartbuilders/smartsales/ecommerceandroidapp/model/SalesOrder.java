@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.util.Locale;
 
 /**
  * Created by stein on 5/6/2016.
@@ -105,7 +106,7 @@ public class SalesOrder extends Model implements Parcelable {
 
     public String getCreatedStringFormat(){
         try {
-            return DateFormat.getDateTimeInstance().format(getCreated());
+            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, new Locale("es","VE")).format(getCreated());
         } catch (Exception e) { }
         return null;
     }

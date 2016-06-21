@@ -56,9 +56,25 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/product_tax_percentage_textView"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/product_price_textView"
                     android:textColor="@color/black"
                     android:layout_weight="1"
+                    android:layout_span="2"
                     android:padding="2dp" />
             </TableRow>
 
@@ -69,19 +85,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/product_tax_percentage_textView"
-                    android:textColor="@color/black"
-                    android:layout_marginRight="2dp"
-                    android:layout_weight="1"
-                    android:padding="2dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/total_line_amount_textView"
                     android:textColor="@color/black"
                     android:layout_weight="1"
                     android:padding="2dp"
+                    android:layout_span="2"
                     android:textStyle="bold" />
             </TableRow>
 

@@ -163,7 +163,7 @@
     <string name="order_price_label">Precio: %1$s</string>
     <string name="order_sub_total_amount">Sub-Total: %1$s</string>
     <string name="order_sub_total_line_amount">Sub-Total: %1$s</string>
-    <string name="order_tax_amount">Impuestos: %1$s</string>
+    <string name="order_tax_amount">Imp.: %1$s</string>
     <string name="order_total_amount">Total: %1$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
