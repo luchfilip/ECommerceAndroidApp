@@ -205,14 +205,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             waitPlease = null;
                         }
                     } else {
+                        startActivity(new Intent(getContext(), OrdersListActivity.class));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-                        intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, new OrderDB(getContext(), mCurrentUser)
-                                .getLastFinalizedOrderId());
-                        startActivity(intent);
                         getActivity().finish();
                     }
                 }

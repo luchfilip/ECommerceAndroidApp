@@ -209,17 +209,15 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                             waitPlease = null;
                         }
                     } else {
+                        //se manda a recargar la lista padre para que cuando se vuelva a la misma tenga
+                        //la informacion actualizada
+                        reloadShoppingSalesList();
+
+                        startActivity(new Intent(getContext(), SalesOrdersListActivity.class));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        //se manda a recargar la lista padre para que cuando se vuelva a la misma tenga
-                        //la informacion actualizada
-                        reloadShoppingSalesList();
-                        Intent intent = new Intent(getContext(), SalesOrderDetailActivity.class);
-                        intent.putExtra(SalesOrderDetailActivity.KEY_SALES_ORDER_ID, new SalesOrderDB(getContext(), mCurrentUser)
-                                .getLastFinalizedSalesOrderId());
-                        startActivity(intent);
                         getActivity().finish();
                     }
                 }
