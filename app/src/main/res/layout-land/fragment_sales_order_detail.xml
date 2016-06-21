@@ -130,15 +130,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_margin="5dp">
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp">
 
                 <Button
                     style="@style/GreyButtonAppTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/share"
-                    android:id="@+id/share_button"
-                    android:layout_margin="2dp" />
+                    android:id="@+id/share_button" />
 
                 <Button
                     style="@style/MainButtonAppTheme"
@@ -146,8 +148,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/create_order"
                     android:id="@+id/create_order_button"
-                    android:layout_gravity="right"
-                    android:layout_margin="2dp" />
+                    android:layout_gravity="right" />
             </LinearLayout>
 
         </LinearLayout>

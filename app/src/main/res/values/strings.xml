@@ -125,8 +125,8 @@
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
     <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
-    <string name="order_number">Número de pedido: %1$s</string>
-    <string name="sales_order_number">Número de cotización: %1$s</string>
+    <string name="order_number">Pedido No.: %1$s</string>
+    <string name="sales_order_number">Cotización No.: %1$s</string>
     <string name="order_date">Fecha de creación: %1$s</string>
     <string name="tax_id">RIF: %1$s</string>
     <string name="order_lines_number">Cantidad de líneas: %1$s</string>

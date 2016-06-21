@@ -763,7 +763,7 @@ public class Utils {
         try{
             File sourceFile = new File(sourceFilePath);
             File destinationFile =new File(Environment.getExternalStorageDirectory() +
-                    File.separator + Environment.DIRECTORY_DOWNLOADS + File.separator + (fileName+".pdf"));
+                    File.separator + Environment.DIRECTORY_DOWNLOADS + File.separator + fileName);
             inStream = new FileInputStream(sourceFile);
             outStream = new FileOutputStream(destinationFile);
             byte[] buffer = new byte[1024];
@@ -778,7 +778,7 @@ public class Utils {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("Descarga completa, "+fileName+".pdf")
+                            .setContentTitle("Descarga completa, "+fileName)
                             .setContentText("El archivo se encuentra en \"Descargas\".");
             // Creates an explicit intent for an Activity in your app
             //Intent resultIntent = new Intent(this, ResultActivity.class);

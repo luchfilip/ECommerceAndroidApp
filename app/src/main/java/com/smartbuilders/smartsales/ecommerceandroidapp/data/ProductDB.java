@@ -424,7 +424,9 @@ public class ProductDB {
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
                             " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                             " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
-                        " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE OR A.NOMBRE LIKE ? COLLATE NOCASE) AND A.ACTIVO = ? " +
+                        " WHERE (replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                                    " OR replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                                " AND A.ACTIVO = ? " +
                         " ORDER BY A.NOMBRE ASC",
                         new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), OrderLineDB.WISHLIST_DOCTYPE,
                         name+"%", "% "+name+"%", "V"}, null);
@@ -510,7 +512,9 @@ public class ProductDB {
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
                             " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
-                        " WHERE (A.NOMBRE LIKE ? COLLATE NOCASE OR A.NOMBRE LIKE ? COLLATE NOCASE) AND A.ACTIVO = ? " +
+                        " WHERE (replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                                " OR replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                            " AND A.ACTIVO = ? " +
                         " ORDER BY A.NOMBRE ASC " +
                         (searchPattern.length()>1 ? "" : " LIMIT 100");
                 String aux = null;
