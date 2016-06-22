@@ -201,7 +201,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             }
         });
 
-        holder.productPrice.setText(String.valueOf(mDataset.get(position).getPrice()));
+        holder.productPrice.setText(mDataset.get(position).getPriceStringFormat());
         holder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,7 +209,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             }
         });
 
-        holder.productTaxPercentage.setText(String.valueOf(mDataset.get(position).getTaxPercentage()));
+        holder.productTaxPercentage.setText(mDataset.get(position).getTaxPercentageStringFormat());
         holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,7 +225,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             }
         });
 
-        holder.totalLineAmount.setText(String.valueOf(mDataset.get(position).getTotalLineAmount()));
+        holder.totalLineAmount.setText(mDataset.get(position).getTotalLineAmountStringFormat());
     }
 
     private void goToProductDetails(Product product) {
