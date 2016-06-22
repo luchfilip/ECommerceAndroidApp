@@ -230,11 +230,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));
             mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
-                    String.valueOf(SalesOrderBR.getSubTotalAmount(mSalesOrderLines))));
+                    SalesOrderBR.getSubTotalAmountStringFormat(mSalesOrderLines)));
             mTaxAmount.setText(getString(R.string.order_tax_amount,
-                    String.valueOf(SalesOrderBR.getTaxAmount(mSalesOrderLines))));
+                    SalesOrderBR.getTaxAmountStringFormat(mSalesOrderLines)));
             mTotalAmount.setText(getString(R.string.order_total_amount,
-                    String.valueOf(SalesOrderBR.getTotalAmount(mSalesOrderLines))));
+                    SalesOrderBR.getTotalAmountStringFormat(mSalesOrderLines)));
         }
     }
 
