@@ -106,7 +106,8 @@ public class SalesOrder extends Model implements Parcelable {
 
     public String getCreatedStringFormat(){
         try {
-            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, new Locale("es","VE")).format(getCreated());
+            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM,
+                    new Locale("es","VE")).format(getCreated());
         } catch (Exception e) { }
         return null;
     }

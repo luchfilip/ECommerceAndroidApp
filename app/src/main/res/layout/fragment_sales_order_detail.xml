@@ -37,8 +37,6 @@
             android:id="@+id/sales_order_number_tv"
             android:textColor="@color/black"
             android:padding="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,9 +44,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/sales_order_date_tv"
             android:padding="5dp"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:textColor="@color/black" />
 
         <View style="@style/Divider"
             android:layout_marginTop="1dp"
@@ -70,11 +66,8 @@
             android:id="@+id/sales_order_lines_number_tv"
             android:layout_gravity="right"
             android:textColor="@color/black"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             android:textStyle="bold"
-            android:layout_marginBottom="2dp" />
+            android:padding="5dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -121,7 +114,9 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="bottom">
 
                 <Button
                     style="@style/GreyButtonAppTheme"
@@ -135,8 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/create_order"
-                    android:id="@+id/create_order_button"
-                    android:layout_gravity="bottom" />
+                    android:id="@+id/create_order_button" />
             </LinearLayout>
 
         </LinearLayout>

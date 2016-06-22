@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/order_lines_number_tv"
                 android:layout_gravity="right"
-                android:padding="5dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_margin="5dp" />

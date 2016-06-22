@@ -65,9 +65,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/order_lines_number_tv"
             android:layout_gravity="right"
-            android:padding="5dp"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="5dp" />
 
         <Button
             style="@style/GreyButtonAppTheme"
@@ -75,8 +78,11 @@
             android:layout_height="wrap_content"
             android:text="@string/share"
             android:id="@+id/share_button"
-            android:layout_margin="5dp"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
 </LinearLayout>
