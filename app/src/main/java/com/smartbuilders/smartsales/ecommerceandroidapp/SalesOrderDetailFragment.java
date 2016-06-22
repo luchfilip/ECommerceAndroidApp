@@ -124,15 +124,15 @@ public class SalesOrderDetailFragment extends Fragment {
 
                                     if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
-                                                .setText(getContext().getString(R.string.order_sub_total_amount, String.valueOf(mSalesOrder.getSubTotalAmount())));
+                                                .setText(getContext().getString(R.string.order_sub_total_amount, mSalesOrder.getSubTotalAmountStringFormat()));
                                     }
                                     if(view.findViewById(R.id.sales_order_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_total_tv))
-                                                .setText(getContext().getString(R.string.order_total_amount, String.valueOf(mSalesOrder.getTruncatedTotalAmount())));
+                                                .setText(getContext().getString(R.string.order_total_amount, mSalesOrder.getTotalAmountStringFormat()));
                                     }
                                     if(view.findViewById(R.id.sales_order_tax_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_tax_tv))
-                                                .setText(getContext().getString(R.string.order_tax_amount, String.valueOf(mSalesOrder.getTruncatedTaxAmount())));
+                                                .setText(getContext().getString(R.string.order_tax_amount, mSalesOrder.getTaxAmountStringFormat()));
                                     }
 
                                     view.findViewById(R.id.create_order_button)
@@ -234,31 +234,6 @@ public class SalesOrderDetailFragment extends Fragment {
                 + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
         return shareIntent;
     }
-
-    //class ReloadShareIntentThread extends Thread {
-    //
-    //    private SalesOrder mSalesOrder;
-    //    private ArrayList<SalesOrderLine> mSalesOrderLines;
-    //
-    //    ReloadShareIntentThread(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines) {
-    //        this.mSalesOrder = salesOrder;
-    //        this.mSalesOrderLines = salesOrderLines;
-    //    }
-    //
-    //    public void run() {
-    //        mShareIntent = createShareSalesOrderIntent(this.mSalesOrder, this.mSalesOrderLines);
-    //        try {
-    //            getActivity().runOnUiThread(new Runnable() {
-    //                @Override
-    //                public void run() {
-    //                    mShareActionProvider.setShareIntent(mShareIntent);
-    //                }
-    //            });
-    //        } catch (Exception e){
-    //            e.printStackTrace();
-    //        }
-    //    }
-    //}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

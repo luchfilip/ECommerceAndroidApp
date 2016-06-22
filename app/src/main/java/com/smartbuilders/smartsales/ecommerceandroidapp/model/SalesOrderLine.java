@@ -67,12 +67,12 @@ public class SalesOrderLine extends Model implements Parcelable {
         return price;
     }
 
-    public String getPriceStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getPrice());
-    }
-
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getPriceStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getPrice());
     }
 
     public int getQuantityOrdered() {
@@ -103,12 +103,12 @@ public class SalesOrderLine extends Model implements Parcelable {
         return taxPercentage;
     }
 
-    public String getTaxPercentageStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getTaxPercentage());
-    }
-
     public void setTaxPercentage(double taxPercentage) {
         this.taxPercentage = taxPercentage;
+    }
+
+    public String getTaxPercentageStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getTaxPercentage());
     }
 
     public double getTotalLineAmount() {
@@ -117,6 +117,10 @@ public class SalesOrderLine extends Model implements Parcelable {
 
     public void setTotalLineAmount(double totalLineAmount) {
         this.totalLineAmount = totalLineAmount;
+    }
+
+    public String getTotalLineAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getTotalLineAmount());
     }
 
     public int getBusinessPartnerId() {
