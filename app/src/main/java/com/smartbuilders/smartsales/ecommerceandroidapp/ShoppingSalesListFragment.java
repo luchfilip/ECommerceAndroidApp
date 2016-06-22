@@ -32,7 +32,6 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     private int mCurrentSelectedIndex;
     private SalesOrderDB mSalesOrderDB;
     private ShoppingSalesListAdapter mShoppingSalesListAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
@@ -103,18 +102,17 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
 
-                                mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.main_layout);
                                 /*
                                  * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
                                  * performs a swipe-to-refresh gesture.
                                  */
-                                mSwipeRefreshLayout.setOnRefreshListener(
-                                        new SwipeRefreshLayout.OnRefreshListener() {
-                                            @Override
-                                            public void onRefresh() {
-                                                ((Callback) getActivity()).reloadActivity();
-                                            }
+                                ((SwipeRefreshLayout) view.findViewById(R.id.main_layout)).setOnRefreshListener(
+                                    new SwipeRefreshLayout.OnRefreshListener() {
+                                        @Override
+                                        public void onRefresh() {
+                                            ((Callback) getActivity()).reloadActivity();
                                         }
+                                    }
                                 );
                             } catch (Exception e) {
                                 e.printStackTrace();

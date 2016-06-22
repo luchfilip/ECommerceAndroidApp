@@ -30,7 +30,6 @@ public class BusinessPartnersListFragment extends Fragment {
     private int mCurrentSelectedIndex;
     private BusinessPartnerDB businessPartnerDB;
     private BusinessPartnersListAdapter businessPartnersListAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public interface Callback {
         void onItemSelected(int businessPartnerId);
@@ -103,18 +102,17 @@ public class BusinessPartnersListFragment extends Fragment {
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
 
-                                mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.main_layout);
                                 /*
                                  * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
                                  * performs a swipe-to-refresh gesture.
                                  */
-                                mSwipeRefreshLayout.setOnRefreshListener(
-                                        new SwipeRefreshLayout.OnRefreshListener() {
-                                            @Override
-                                            public void onRefresh() {
-                                                ((Callback) getActivity()).reloadActivity();
-                                            }
+                                ((SwipeRefreshLayout) view.findViewById(R.id.main_layout)).setOnRefreshListener(
+                                    new SwipeRefreshLayout.OnRefreshListener() {
+                                        @Override
+                                        public void onRefresh() {
+                                            ((Callback) getActivity()).reloadActivity();
                                         }
+                                    }
                                 );
                             } catch (Exception e) {
                                 e.printStackTrace();
