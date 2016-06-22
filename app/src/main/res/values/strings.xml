@@ -157,13 +157,13 @@
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
     <string name="price_label">Precio:</string>
-    <string name="tax_label">(%) Impuesto:</string>
+    <string name="tax_label">(%) Imp.:</string>
     <string name="total_label">Total:</string>
     <string name="total_line_amount_label">Sub-Total:</string>
     <string name="order_price_label">Precio: %1$s</string>
     <string name="order_sub_total_amount">Sub-Total: %1$s</string>
     <string name="order_sub_total_line_amount">Sub-Total: %1$s</string>
-    <string name="order_tax_amount">Imp.: %1$s</string>
+    <string name="order_tax_amount">(%%) Imp.: %1$s</string>
     <string name="order_total_amount">Total: %1$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>

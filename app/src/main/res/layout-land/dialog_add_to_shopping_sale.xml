@@ -19,7 +19,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:singleLine="true"
-        android:minEms="25"/>
+        android:minEms="28"/>
 
     <TextView
         android:layout_width="wrap_content"

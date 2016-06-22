@@ -19,7 +19,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:singleLine="true"
-        android:minEms="25"/>
+        android:minEms="28"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                 android:numeric="decimal"
                 android:background="@color/golden_medium"
                 android:focusableInTouchMode="true"
-                android:layout_weight="3"
+                android:layout_weight="7"
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical|right"
                 android:layout_gravity="center_vertical"
@@ -102,7 +102,7 @@
                 android:numeric="decimal"
                 android:background="@color/golden_medium"
                 android:focusableInTouchMode="true"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical|right"
                 android:layout_gravity="center_vertical"
