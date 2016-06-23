@@ -445,8 +445,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
             db.execSQL(CREATE_PRODUCT);
+            db.execSQL("create index product_idx on product (product_id)");
             db.execSQL(CREATE_PRODUCT_IMAGE);
+            db.execSQL("create index product_image_idx on product_image (product_id)");
             db.execSQL(CREATE_PRODUCT_RATING);
+            db.execSQL("create index product_rating_idx on product_rating (product_id)");
+            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
+            db.execSQL("create index product_availability_idx on product_availability (product_id)");
+            db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
+            db.execSQL("create index product_shopping_related_idx on product_shopping_related (product_id)");
             db.execSQL(CREATE_PRODUCT_TAX);
 			db.execSQL(CREATE_BRAND);
 			db.execSQL(CREATE_CATEGORY);
@@ -457,8 +464,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDER);
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDERLINE);
-            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-			db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
 			db.execSQL(CREATE_RECENT_SEARCH);
 			db.execSQL(CREATE_BUSINESS_PARTNER);
 			db.execSQL(CREATE_COMPANY);
