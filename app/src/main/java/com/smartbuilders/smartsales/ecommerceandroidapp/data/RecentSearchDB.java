@@ -7,6 +7,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -15,12 +16,12 @@ import java.util.ArrayList;
  */
 public class RecentSearchDB {
 
-    private Context context;
-    private User user;
+    private Context mContext;
+    private User mCurrentUser;
 
     public RecentSearchDB(Context context, User user){
-        this.context = context;
-        this.user = user;
+        this.mContext = context;
+        this.mCurrentUser = user;
     }
 
     /**
@@ -31,10 +32,14 @@ public class RecentSearchDB {
      */
     public void insertRecentSearch(String text, int productId, int subCategoryId){
         try {
-            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null, "INSERT INTO RECENT_SEARCH (PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH) VALUES (?, ?, ?)",
-                    new String[]{String.valueOf(productId), String.valueOf(subCategoryId), text});
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .build(), null,
+                    "INSERT INTO RECENT_SEARCH (PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
+                            " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?)",
+                    new String[]{String.valueOf(productId), String.valueOf(subCategoryId), text,
+                            Utils.getAppVersionName(mContext), mCurrentUser.getUserName(),
+                            Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -46,8 +51,8 @@ public class RecentSearchDB {
      */
     public void deleteRecentSearchById(int recentSearchId){
         try {
-            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?",
                     new String[]{String.valueOf(recentSearchId)});
         } catch (Exception e){
@@ -64,8 +69,8 @@ public class RecentSearchDB {
         ArrayList<RecentSearch> recentSearches = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
                     "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
                     " FROM RECENT_SEARCH RS " +
@@ -99,8 +104,8 @@ public class RecentSearchDB {
 
     public void deleteAllRecentSearches(){
         try {
-            context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null, "DELETE FROM RECENT_SEARCH", new String[0]);
         } catch (Exception e){
             e.printStackTrace();

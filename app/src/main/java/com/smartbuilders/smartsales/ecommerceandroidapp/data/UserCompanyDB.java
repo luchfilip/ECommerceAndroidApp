@@ -27,11 +27,12 @@ public class UserCompanyDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "insert or replace into user_company (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{company.getName(), company.getCommercialName(), company.getTaxId(),
                             company.getAddress(), company.getContactPerson(), company.getEmailAddress(),
-                            company.getPhoneNumber(), Utils.getAppVersionName(mContext), mUser.getUserName()});
+                            company.getPhoneNumber(), Utils.getAppVersionName(mContext),
+                            mUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó o actualizó el registro en la base de datos.";
             }

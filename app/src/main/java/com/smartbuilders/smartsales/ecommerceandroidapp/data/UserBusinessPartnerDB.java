@@ -16,11 +16,11 @@ import java.util.ArrayList;
 public class UserBusinessPartnerDB {
 
     private Context mContext;
-    private User mUser;
+    private User mCurrentUser;
 
     public UserBusinessPartnerDB(Context context, User user){
         this.mContext = context;
-        this.mUser = user;
+        this.mCurrentUser = user;
     }
 
     public ArrayList<BusinessPartner> getActiveUserBusinessPartners(){
@@ -32,7 +32,7 @@ public class UserBusinessPartnerDB {
                     " from USER_BUSINESS_PARTNER where IS_ACTIVE = ? " +
                     " order by USER_BUSINESS_PARTNER_ID desc";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null, sql, new String[]{"Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
@@ -65,14 +65,15 @@ public class UserBusinessPartnerDB {
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                     null,
                     "INSERT INTO USER_BUSINESS_PARTNER (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME) " +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
-                            businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext), mUser.getUserName()});
+                            businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
+                            mCurrentUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó el registro en la base de datos.";
             }
@@ -86,7 +87,7 @@ public class UserBusinessPartnerDB {
     public String updateUserBusinessPartner(BusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                     null,
                     "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
                             " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
@@ -94,7 +95,7 @@ public class UserBusinessPartnerDB {
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId())});
+                            mCurrentUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId())});
             if (rowsAffected <= 0){
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -108,7 +109,7 @@ public class UserBusinessPartnerDB {
     public String deactivateUserBusinessPartner(int businessPartnerId){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                     null,
                     "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ?",
                     new String[]{"N", String.valueOf(businessPartnerId)});
@@ -126,7 +127,7 @@ public class UserBusinessPartnerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
                     "select COUNT(TAX_ID) from USER_BUSINESS_PARTNER where IS_ACTIVE = ? AND TAX_ID = ?",
                     new String[]{"Y", taxID}, null);
@@ -151,7 +152,7 @@ public class UserBusinessPartnerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from USER_BUSINESS_PARTNER " +

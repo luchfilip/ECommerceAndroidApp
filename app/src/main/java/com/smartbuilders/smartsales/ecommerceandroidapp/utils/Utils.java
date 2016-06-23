@@ -725,7 +725,7 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return "null";
     }
 
     public static int getColor(Context context, int id) {

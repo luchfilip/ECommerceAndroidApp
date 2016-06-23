@@ -71,7 +71,7 @@ public class SalesOrderDB {
                     "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
                         " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
                     " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.IS_ACTIVE = ?",
                     new String[]{"Y", String.valueOf(salesOrderId), "Y"}, null);
             if(c!=null && c.moveToNext()){
@@ -124,7 +124,7 @@ public class SalesOrderDB {
                     .build(), null,
                     "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
                     " FROM ECOMMERCE_SALES_ORDERLINE OL " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE OL.IS_ACTIVE = ? AND OL.DOC_TYPE = ? " +
                     " GROUP BY OL.BUSINESS_PARTNER_ID",
                     new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
@@ -165,7 +165,7 @@ public class SalesOrderDB {
                         " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
                         " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
                     " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE SO.IS_ACTIVE = ? AND SO.DOC_TYPE = ? " +
                     " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                     new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
@@ -231,10 +231,11 @@ public class SalesOrderDB {
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, " +
-                                        " APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, IS_ACTIVE) " +
+                                        " APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
-                                        Utils.getAppVersionName(mContext), mCurrentUser.getUserName(), String.valueOf(orderLines.size()),
+                                        Utils.getAppVersionName(mContext), mCurrentUser.getUserName(),
+                                        Utils.getMacAddress(mContext), String.valueOf(orderLines.size()),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total),
                                         validTo!=null?(new SimpleDateFormat("yyyy-MM-dd")).format(validTo):null, "Y"});
                 if(rowsAffected <= 0){

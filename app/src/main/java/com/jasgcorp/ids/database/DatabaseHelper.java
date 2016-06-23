@@ -210,7 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("APP_VERSION VARCHAR(128) NOT NULL, ")
                                         .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
                                         .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
-                                            .append("PRIMARY KEY (APP_USER_NAME))").toString();
+                                        .append("PRIMARY KEY (APP_USER_NAME))").toString();
 
 
 	public static final String CREATE_MAINPAGE_PRODUCT_SECTION =
