@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -18,6 +19,7 @@ public class SalesOrder extends Model implements Parcelable {
     private double totalAmount;
     private BusinessPartner businessPartner;
     private int businessPartnerId;
+    private Date validTo;
 
     public SalesOrder() {
 
@@ -95,6 +97,29 @@ public class SalesOrder extends Model implements Parcelable {
         this.businessPartnerId = businessPartnerId;
     }
 
+    public String getCreatedStringFormat(){
+        try {
+            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM,
+                    new Locale("es","VE")).format(getCreated());
+        } catch (Exception e) { }
+        return null;
+    }
+
+    public Date getValidTo() {
+        return validTo;
+    }
+
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
+    }
+
+    public String getValidToStringFormat() {
+        try {
+            return DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("es","VE")).format(getValidTo());
+        } catch (Exception e) { }
+        return null;
+    }
+
     protected SalesOrder(Parcel in) {
         super(in);
         linesNumber = in.readInt();
@@ -103,6 +128,12 @@ public class SalesOrder extends Model implements Parcelable {
         totalAmount = in.readDouble();
         businessPartner = in.readParcelable(BusinessPartner.class.getClassLoader());
         businessPartnerId = in.readInt();
+        try{
+            long date = in.readLong();
+            if(date>0){
+                validTo = new Date(date);
+            }
+        }catch(Exception e){}
     }
 
     @Override
@@ -114,15 +145,10 @@ public class SalesOrder extends Model implements Parcelable {
         dest.writeDouble(totalAmount);
         dest.writeParcelable(businessPartner, flags);
         dest.writeInt(businessPartnerId);
+        dest.writeLong(validTo!=null ? validTo.getTime() : 0);
     }
 
-    public String getCreatedStringFormat(){
-        try {
-            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM,
-                    new Locale("es","VE")).format(getCreated());
-        } catch (Exception e) { }
-        return null;
-    }
+
 
     @Override
     public int describeContents() {

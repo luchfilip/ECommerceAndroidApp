@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by stein on 5/6/2016.
@@ -28,37 +29,37 @@ public class SalesOrderDB {
         this.mCurrentUser = user;
     }
 
-    public String createSalesOrderFromShoppingSale(int businessPartnerId){
-        return createOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mCurrentUser)).getShoppingSale(businessPartnerId), false);
+    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo){
+        return createOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mCurrentUser)).getShoppingSale(businessPartnerId), validTo, false);
     }
 
-    public int getLastFinalizedSalesOrderId() {
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null,
-                    "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) " +
-                    " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ?",
-                    new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
+    //public int getLastFinalizedSalesOrderId() {
+    //    Cursor c = null;
+    //    try {
+    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+    //                .build(), null,
+    //                "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) " +
+    //                " FROM ECOMMERCE_SALES_ORDER SO " +
+    //                    " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
+    //                " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ?",
+    //                new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+    //        if(c!=null && c.moveToNext()){
+    //            return c.getInt(0);
+    //        }
+    //    } catch (Exception e){
+    //        e.printStackTrace();
+    //    } finally {
+    //        if(c != null) {
+    //            try {
+    //                c.close();
+    //            } catch (Exception e) {
+    //                e.printStackTrace();
+    //            }
+    //        }
+    //    }
+    //    return -1;
+    //}
 
     public SalesOrder getActiveSalesOrderById(int salesOrderId) {
         Cursor c = null;
@@ -68,7 +69,7 @@ public class SalesOrderDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
                     "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
-                        " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID "+
+                        " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
                     " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.ISACTIVE = ?",
@@ -88,6 +89,13 @@ public class SalesOrderDB {
                 salesOrder.setTaxAmount(c.getDouble(4));
                 salesOrder.setTotalAmount(c.getDouble(5));
                 salesOrder.setBusinessPartnerId(c.getInt(6));
+                try {
+                    if(c.getString(7)!=null){
+                        salesOrder.setValidTo((new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(7)));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             if(salesOrder!=null){
                 salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mCurrentUser))
@@ -154,7 +162,8 @@ public class SalesOrderDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
                     "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
-                        " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID " +
+                        " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
+                        " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
                     " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ? " +
@@ -176,6 +185,13 @@ public class SalesOrderDB {
                     salesOrder.setTaxAmount(c.getDouble(8));
                     salesOrder.setTotalAmount(c.getDouble(9));
                     salesOrder.setBusinessPartnerId(c.getInt(10));
+                    try {
+                        if(c.getString(11)!=null){
+                            salesOrder.setValidTo((new SimpleDateFormat("yyyy-MM-dd")).parse(c.getString(11)));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     activeSalesOrders.add(salesOrder);
                 }
             }
@@ -199,7 +215,7 @@ public class SalesOrderDB {
         return activeSalesOrders;
     }
 
-    public String createOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, boolean insertOrderLinesInDB){
+    public String createOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mCurrentUser);
         if((orderLines != null && insertOrderLinesInDB)
                 || salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId)>0){
@@ -215,11 +231,12 @@ public class SalesOrderDB {
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, " +
-                                        " APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
-                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                        " APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, ISACTIVE) " +
+                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
                                         Utils.getAppVersionName(mContext), mCurrentUser.getUserName(), String.valueOf(orderLines.size()),
-                                        String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total), "Y"});
+                                        String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total),
+                                        validTo!=null?(new SimpleDateFormat("yyyy-MM-dd")).format(validTo):null, "Y"});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }

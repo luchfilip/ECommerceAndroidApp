@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -24,16 +26,23 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerceandroidapp.view.DatePickerFragment;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback {
+public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback,
+        DatePickerFragment.Callback {
 
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_VALID_TO = "STATE_VALID_TO";
 
     private User mCurrentUser;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
@@ -48,6 +57,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private LinearLayoutManager mLinearLayoutManager;
     private int mCurrentBusinessPartnerId;
     private ProgressDialog waitPlease;
+    private EditText mValidToEditText;
+    private String mValidToText;
 
     public ShoppingSaleFragment() {
     }
@@ -71,6 +82,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         }
                         if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        }
+                        if(savedInstanceState.containsKey(STATE_VALID_TO)) {
+                            mValidToText = savedInstanceState.getString(STATE_VALID_TO);
                         }
                     }
 
@@ -118,22 +132,49 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
+                                mValidToEditText = (EditText) view.findViewById(R.id.valid_to_editText);
+                                mValidToEditText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Date validTo = null;
+                                        try {
+                                            validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                                    new Locale("es","VE")).parse(mValidToEditText.getText().toString());
+                                        } catch (ParseException e){ }
+                                        catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        DialogFragment dialogFragment = DatePickerFragment.getInstance(validTo);
+                                        dialogFragment.setTargetFragment(ShoppingSaleFragment.this, 1);
+                                        dialogFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                                    }
+                                });
+                                mValidToEditText.setText(mValidToText);
+
                                 view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
-                                        .setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                new AlertDialog.Builder(getContext())
-                                                        .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                closeSalesOrder();
-                                                            }
-                                                        })
-                                                        .setNegativeButton(android.R.string.no, null)
-                                                        .show();
-                                            }
-                                        });
+                                    .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            new AlertDialog.Builder(getContext())
+                                                .setMessage(R.string.proceed_to_checkout_quoatation_question)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        Date validTo = null;
+                                                        try {
+                                                            validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                                                    new Locale("es","VE")).parse(mValidToEditText.getText().toString());
+                                                        } catch (ParseException e){ }
+                                                        catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        closeSalesOrder(validTo);
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, null)
+                                                .show();
+                                        }
+                                    });
 
                                 fillFields();
                             } catch (Exception e) {
@@ -154,7 +195,13 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         return view;
     }
 
-    private void closeSalesOrder(){
+    @Override
+    public void setDate(String date) {
+        mValidToText = date;
+        mValidToEditText.setText(date);
+    }
+
+    private void closeSalesOrder(final Date validTo){
         lockScreen();
         new Thread() {
             @Override
@@ -162,7 +209,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                 String result = null;
                 try {
                     result = new SalesOrderDB(getContext(), mCurrentUser)
-                            .createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId);
+                            .createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId, validTo);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();
@@ -269,6 +316,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_BUSINESS_PARTNER_ID, mCurrentBusinessPartnerId);
+        outState.putString(STATE_VALID_TO, mValidToText);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,

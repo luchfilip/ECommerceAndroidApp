@@ -91,13 +91,13 @@
                 android:layout_marginRight="5dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sales_order_sub_total_tv"
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sales_order_tax_tv"
                     android:textColor="@color/black"
@@ -105,12 +105,18 @@
                     android:layout_marginBottom="3dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sales_order_total_tv"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sales_order_valid_to_tv"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 

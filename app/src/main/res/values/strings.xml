@@ -162,8 +162,9 @@
     <string name="total_line_amount_label">Sub-Total:</string>
     <string name="order_price_label">Precio: %1$s</string>
     <string name="order_sub_total_amount">Sub-Total: %1$s</string>
+    <string name="sales_order_valid_to">Válida hasta: %1$s</string>
     <string name="order_sub_total_line_amount">Sub-Total: %1$s</string>
-    <string name="order_tax_amount">(%%) Imp.: %1$s</string>
+    <string name="order_tax_amount">Impuestos: %1$s</string>
     <string name="order_total_amount">Total: %1$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
@@ -259,6 +260,8 @@
     <string name="master_label">Master:</string>
     <string name="fax_label">Fax:</string>
     <string name="mail_label">Correo:</string>
+    <string name="valid_to_label">Válida hasta:</string>
+    <string name="undefined">Indefinido</string>
 
     <string-array name="search_by_options">
         <item>@string/search_by</item>

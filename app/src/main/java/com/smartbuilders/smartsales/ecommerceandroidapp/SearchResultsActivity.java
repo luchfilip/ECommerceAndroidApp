@@ -58,11 +58,12 @@ public class SearchResultsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        final ProductDB productDB = new ProductDB(this, mCurrentUser);
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                .setText(getString(R.string.welcome_user, Utils.getCurrentUser(this).getUserName()));
 
+        final ProductDB productDB = new ProductDB(this, mCurrentUser);
         ListView mListView = (ListView) findViewById(R.id.search_result_list);
         mSearchResultAdapter = new SearchResultAdapter(this, null, mCurrentUser);
         mListView.setAdapter(mSearchResultAdapter);

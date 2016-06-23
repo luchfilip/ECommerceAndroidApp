@@ -109,6 +109,28 @@
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/valid_to_label"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:ems="10"
+                    android:id="@+id/valid_to_editText" />
+            </LinearLayout>
+
             <Button
                 style="@style/GoldenButtonAppTheme"
                 android:layout_width="wrap_content"

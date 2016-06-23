@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 5;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String CREATE_USER_TABLE 	= "CREATE TABLE IF NOT EXISTS IDS_USER (" +
 														"USER_ID INTEGER NOT NULL, " +
 														"SERVER_USER_ID INTEGER, " +
+														"USER_PROFILE_ID INTEGER NOT NULL DEFAULT 0, " +
 														"AUTH_TOKEN TEXT, " +
 														"USER_NAME TEXT NOT NULL, " +
 														"SERVER_ADDRESS TEXT NOT NULL, " +
@@ -41,6 +42,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 														"UPDATED_BY VARCHAR(255), " +
 														"ISACTIVE CHAR(1), "+
 														"PRIMARY KEY(USER_ID, USER_GROUP))";
+
+	private static final String CREATE_USER_PROFILE_TABLE 	= "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
+														"USER_PROFILE_ID INTEGER NOT NULL, " +
+														"NAME VARCHAR(255), " +
+														"CREATE_TIME DATETIME, " +
+														"CREATED_BY VARCHAR(255), " +
+														"UPDATE_TIME DATETIME, " +
+														"UPDATED_BY VARCHAR(255), " +
+														"ISACTIVE CHAR(1), "+
+														"PRIMARY KEY(USER_PROFILE_ID))";
 	
 	private static final String CREATE_SCHEDULER_TABLE 	= "CREATE TABLE IF NOT EXISTS IDS_SCHEDULER_SYNC (" +
 															"SCHEDULER_SYNC_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
@@ -220,6 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
                                         .append("TAX DOUBLE DEFAULT 0, ")
                                         .append("TOTAL DOUBLE DEFAULT 0, ")
+										.append("VALID_TO DATE DEFAULT NULL, ")
                                         .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
                                         .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
                                         .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
@@ -373,6 +385,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_LOG_TABLE);
 			db.execSQL(CREATE_USER_TABLE);
 			db.execSQL(CREATE_SCHEDULER_TABLE);
+			db.execSQL(CREATE_USER_PROFILE_TABLE);
 		}else{
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
@@ -403,7 +416,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(!this.dataBaseName.equals(DATABASE_NAME) && newVersion<=3) {
+        if(this.dataBaseName.equals(DATABASE_NAME)){
+            try {
+                db.execSQL("ALTER TABLE IDS_USER ADD COLUMN USER_PROFILE_ID INTEGER NOT NULL DEFAULT 0");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
             try {
                 db.execSQL("ALTER TABLE ECOMMERCE_ORDER ADD COLUMN ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL");
             } catch (Exception e) {
@@ -436,6 +455,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             try {
                 db.execSQL(CREATE_USER_APP_PARAMETER);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                db.execSQL(CREATE_USER_PROFILE_TABLE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                db.execSQL("ALTER TABLE ECOMMERCE_SALES_ORDER ADD COLUMN VALID_TO DATE DEFAULT NULL");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -24,6 +24,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Alberto on 27/3/2016.
@@ -31,36 +32,39 @@ import java.util.ArrayList;
 public class SearchResultAdapter extends BaseAdapter {
 
     private Context mContext;
-    //private String mSearchPattern;
-    private ArrayList mDataset;
-    //private User mCurrentUser;
+    private List<Object> mDataset;
     private RecentSearchDB recentSearchDB;
 
     public SearchResultAdapter(Context context, ArrayList data, User user) {
         mContext = context;
         recentSearchDB = new RecentSearchDB(context, user);
-        //mSearchPattern = new String();
-        if(data == null){
-            data = recentSearchDB.getRecentSearches(30);
-        }else if(data.isEmpty()){
-            data.add(context.getString(R.string.no_results_founds));
-            data.add(context.getString(R.string.search_by_category));
-            data.add(context.getString(R.string.search_by_brand));
+        if(data!=null){
+            mDataset = new ArrayList<>();
+            mDataset.addAll(data);
         }
-        mDataset = data;
-        //mCurrentUser = user;
+        if(mDataset == null){
+            mDataset = new ArrayList<>();
+            mDataset.addAll(recentSearchDB.getRecentSearches(30));
+        }else if(mDataset.isEmpty()){
+            mDataset.add(context.getString(R.string.no_results_founds));
+            mDataset.add(context.getString(R.string.search_by_category));
+            mDataset.add(context.getString(R.string.search_by_brand));
+        }
     }
 
-    public void setData(/*String searchPattern,*/ ArrayList data, Context context){
-        //mSearchPattern = searchPattern;
-        if(data == null){
-            data = recentSearchDB.getRecentSearches(30);
-        }else if(data.isEmpty()){
-            data.add(context.getString(R.string.no_results_founds));
-            data.add(context.getString(R.string.search_by_category));
-            data.add(context.getString(R.string.search_by_brand));
+    public void setData(ArrayList data, Context context){
+        if(data!=null){
+            mDataset = new ArrayList<>();
+            mDataset.addAll(data);
         }
-        mDataset = data;
+        if(mDataset == null){
+            mDataset = new ArrayList<>();
+            mDataset.addAll(recentSearchDB.getRecentSearches(30));
+        }else if(mDataset.isEmpty()){
+            mDataset.add(context.getString(R.string.no_results_founds));
+            mDataset.add(context.getString(R.string.search_by_category));
+            mDataset.add(context.getString(R.string.search_by_brand));
+        }
     }
 
     @Override

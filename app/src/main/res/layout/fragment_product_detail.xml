@@ -123,8 +123,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="fill_vertical"
-                    android:padding="4dp">
+                    android:gravity="fill_vertical">
 
                     <Button
                         style="@style/MainButtonAppTheme"
@@ -133,8 +132,7 @@
                         android:id="@+id/product_addtoshoppingcart_button"
                         android:layout_weight="1"
                         android:layout_marginRight="1dp"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold" />
+                        android:layout_height="wrap_content" />
 
                     <Button
                         style="@style/GoldenButtonAppTheme"
@@ -143,7 +141,6 @@
                         android:id="@+id/product_addtoshoppingsales_button"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:layout_marginLeft="1dp" />
 
                 </LinearLayout>

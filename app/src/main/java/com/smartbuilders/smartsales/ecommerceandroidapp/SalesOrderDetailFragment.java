@@ -126,6 +126,15 @@ public class SalesOrderDetailFragment extends Fragment {
                                         ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
                                                 .setText(getContext().getString(R.string.order_sub_total_amount, mSalesOrder.getSubTotalAmountStringFormat()));
                                     }
+
+                                    if(mSalesOrder.getValidTo()!=null){
+                                        ((TextView) view.findViewById(R.id.sales_order_valid_to_tv))
+                                                .setText(getContext().getString(R.string.sales_order_valid_to, mSalesOrder.getValidToStringFormat()));
+                                    }else{
+                                        ((TextView) view.findViewById(R.id.sales_order_valid_to_tv))
+                                                .setText(getContext().getString(R.string.sales_order_valid_to, getString(R.string.undefined)));
+                                    }
+
                                     if(view.findViewById(R.id.sales_order_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_total_tv))
                                                 .setText(getContext().getString(R.string.order_total_amount, mSalesOrder.getTotalAmountStringFormat()));
