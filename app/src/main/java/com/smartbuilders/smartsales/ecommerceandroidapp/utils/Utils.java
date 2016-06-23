@@ -667,7 +667,7 @@ public class Utils {
     public static boolean appRequireInitialLoad(Context context, User user) {
         Cursor c = null;
         try{
-            String[] tables = new String[]{"PRODUCT", "BRAND", "Category", "MAINPAGE_PRODUCT",
+            String[] tables = new String[]{"PRODUCT", "BRAND", "CATEGORY", "MAINPAGE_PRODUCT",
                     "MAINPAGE_PRODUCT_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
             for (String table : tables){
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

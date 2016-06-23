@@ -212,7 +212,7 @@ public class ProductDB {
                                 }
                             }
                         } catch (Exception e) {
-                            continue whileStatement;
+                            continue;
                         }
                     }
                     Product p = new Product();
@@ -536,7 +536,6 @@ public class ProductDB {
 
             if (c!=null) {
                 boolean searchPatternIsOneWord = searchPattern.split(" ").length==1;
-                whileStatement:
                 while(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
@@ -560,7 +559,7 @@ public class ProductDB {
 
                     p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), null, null));
                     if(!isNumeric && products.contains(p)){
-                        continue whileStatement;
+                        continue;
                     }
                     p.getProductSubCategory().setName(c.getString(4));
                     p.getProductSubCategory().setDescription(c.getString(5));
