@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -28,8 +29,8 @@ public class BusinessPartnersListFragment extends Fragment {
     private int mListViewIndex;
     private int mListViewTop;
     private int mCurrentSelectedIndex;
-    private BusinessPartnerDB businessPartnerDB;
-    private BusinessPartnersListAdapter businessPartnersListAdapter;
+    private UserBusinessPartnerDB mUserBusinessPartnerDB;
+    private BusinessPartnersListAdapter mBusinessPartnersListAdapter;
 
     public interface Callback {
         void onItemSelected(int businessPartnerId);
@@ -62,9 +63,9 @@ public class BusinessPartnersListFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
-                    businessPartnerDB = new BusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
-                    businessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                            businessPartnerDB.getActiveBusinessPartners());
+                    mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
+                    mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
+                            mUserBusinessPartnerDB.getActiveUserBusinessPartners());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -76,7 +77,7 @@ public class BusinessPartnersListFragment extends Fragment {
                             try {
                                 mListView = (ListView) view.findViewById(R.id.business_partners_list);
 
-                                mListView.setAdapter(businessPartnersListAdapter);
+                                mListView.setAdapter(mBusinessPartnersListAdapter);
 
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override

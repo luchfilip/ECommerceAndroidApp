@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.BusinessPartnerBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.UserBusinessPartnerBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -62,8 +62,8 @@ public class RegisterBusinessPartnerFragment extends Fragment {
 
                     mCurrentUser = Utils.getCurrentUser(getContext());
                     if(mBusinessPartnerId>0){
-                        mBusinessPartner = (new BusinessPartnerDB(getContext(), mCurrentUser))
-                                .getActiveBusinessPartnerById(mBusinessPartnerId);
+                        mBusinessPartner = (new UserBusinessPartnerDB(getContext(), mCurrentUser))
+                                .getActiveUserBusinessPartnerById(mBusinessPartnerId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -148,9 +148,9 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                     saveButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
+                                            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mCurrentUser);
                                             if (mBusinessPartner !=null) {
-                                                String result = businessPartnerDB.updateBusinessPartner(mBusinessPartner);
+                                                String result = userBusinessPartnerDB.updateUserBusinessPartner(mBusinessPartner);
                                                 if (result==null){
                                                     ((Callback) getActivity()).onBusinessPartnerUpdated();
                                                     Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
@@ -166,10 +166,10 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                                 businessPartner.setContactPerson(businessPartnerContactPerson.getText().toString());
                                                 businessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
                                                 businessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
-                                                String result = BusinessPartnerBR.validateBusinessPartner(businessPartner,
+                                                String result = UserBusinessPartnerBR.validateBusinessPartner(businessPartner,
                                                         getContext(), mCurrentUser);
                                                 if (result==null) {
-                                                    result = businessPartnerDB.registerBusinessPartner(businessPartner);
+                                                    result = userBusinessPartnerDB.registerUserBusinessPartner(businessPartner);
                                                     if (result==null){
                                                         ((Callback) getActivity()).onBusinessPartnerRegistered();
                                                     } else {

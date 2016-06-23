@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.CompanyDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -31,7 +31,7 @@ public class CompanyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_company, container, false);
-        final CompanyDB companyDB = new CompanyDB(getContext(), Utils.getCurrentUser(getContext()));
+        final UserCompanyDB userCompanyDB = new UserCompanyDB(getContext(), Utils.getCurrentUser(getContext()));
 
         new Thread() {
             @Override
@@ -44,7 +44,7 @@ public class CompanyFragment extends Fragment {
                     }
 
                     if (mCompany==null) {
-                        mCompany = companyDB.getCompany();
+                        mCompany = userCompanyDB.getUserCompany();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -135,7 +135,7 @@ public class CompanyFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if (mCompany!=null) {
-                                                String result = companyDB.insertUpdateCompany(mCompany);
+                                                String result = userCompanyDB.insertUpdateUserCompany(mCompany);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();
@@ -152,7 +152,7 @@ public class CompanyFragment extends Fragment {
                                                 company.setEmailAddress(businessPartnerEmailAddress.getText().toString());
                                                 company.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
 
-                                                String result = companyDB.insertUpdateCompany(company);
+                                                String result = userCompanyDB.insertUpdateUserCompany(company);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();

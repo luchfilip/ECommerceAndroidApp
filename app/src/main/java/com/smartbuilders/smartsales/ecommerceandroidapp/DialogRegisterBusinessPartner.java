@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
-import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.BusinessPartnerBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.UserBusinessPartnerBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 
@@ -81,7 +81,7 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(getContext(), mCurrentUser);
+                    UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mCurrentUser);
                     BusinessPartner businessPartner = new BusinessPartner();
                     businessPartner.setName(businessPartnerName.getText().toString());
                     businessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
@@ -90,10 +90,10 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
                     businessPartner.setContactPerson(businessPartnerContactPerson.getText().toString());
                     businessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
                     businessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
-                    String result = BusinessPartnerBR.validateBusinessPartner(businessPartner,
+                    String result = UserBusinessPartnerBR.validateBusinessPartner(businessPartner,
                             getContext(), mCurrentUser);
                     if (result==null) {
-                        result = businessPartnerDB.registerBusinessPartner(businessPartner);
+                        result = userBusinessPartnerDB.registerUserBusinessPartner(businessPartner);
                         if (result==null){
                             try {
                                 if (getActivity()!=null && getActivity() instanceof BusinessPartnersListActivity) {

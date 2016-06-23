@@ -98,8 +98,8 @@ public class SalesOrderDB {
                 }
             }
             if(salesOrder!=null){
-                salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mCurrentUser))
-                        .getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+                salesOrder.setBusinessPartner((new UserBusinessPartnerDB(mContext, mCurrentUser))
+                        .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -147,9 +147,9 @@ public class SalesOrderDB {
                 }
             }
         }
-        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mCurrentUser);
+        UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mCurrentUser);
         for(SalesOrder salesOrder : activeOrders){
-            salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
         }
         return activeOrders;
     }
@@ -207,10 +207,10 @@ public class SalesOrderDB {
             }
         }
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mCurrentUser);
-        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mCurrentUser);
+        UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mCurrentUser);
         for(SalesOrder salesOrder : activeSalesOrders){
             salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId()));
-            salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
         }
         return activeSalesOrders;
     }

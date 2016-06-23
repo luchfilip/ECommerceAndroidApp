@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -172,7 +173,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
     public void initViews(){
         final ArrayList<BusinessPartner> businessPartners =
-                (new BusinessPartnerDB(getContext(), mUser)).getActiveBusinessPartners();
+                (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
         if (businessPartners!=null && !businessPartners.isEmpty()) {
             int index = 0;
             int selectedIndex = 0;

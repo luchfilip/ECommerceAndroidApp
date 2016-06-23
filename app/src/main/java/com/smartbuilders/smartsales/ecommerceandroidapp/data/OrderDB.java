@@ -37,30 +37,30 @@ public class OrderDB {
         return createOrder(null, null, (new OrderLineDB(context, user)).getShoppingCart(), false);
     }
 
-    public int getLastFinalizedOrderId(){
-        Cursor c = null;
-        try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
-                    "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
-                    new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
-    }
+    //public int getLastFinalizedOrderId(){
+    //    Cursor c = null;
+    //    try {
+    //        c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+    //                .build(), null,
+    //                "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
+    //                new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
+    //        if(c!=null && c.moveToNext()){
+    //            return c.getInt(0);
+    //        }
+    //    } catch (Exception e){
+    //        e.printStackTrace();
+    //    } finally {
+    //        if(c != null) {
+    //            try {
+    //                c.close();
+    //            } catch (Exception e) {
+    //                e.printStackTrace();
+    //            }
+    //        }
+    //    }
+    //    return 0;
+    //}
 
     public Order getActiveOrderById(int orderId){
         Cursor c = null;
@@ -216,23 +216,25 @@ public class OrderDB {
                         new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
 
             }
-            while(c.moveToNext()){
-                Order order = new Order();
-                order.setId(c.getInt(0));
-                try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
-                }catch(ParseException ex){
-                    try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
-                    } catch (ParseException e) { }
-                }catch(Exception ex){ }
-                order.setLinesNumber(c.getInt(6));
-                order.setSubTotalAmount(c.getDouble(7));
-                order.setTaxAmount(c.getDouble(8));
-                order.setTotalAmount(c.getDouble(9));
-                order.setSalesOrderId(c.getInt(10));
-                order.setBusinessPartnerId(c.getInt(11));
-                activeOrders.add(order);
+            if(c!=null){
+                while(c.moveToNext()){
+                    Order order = new Order();
+                    order.setId(c.getInt(0));
+                    try{
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    }catch(ParseException ex){
+                        try {
+                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        } catch (ParseException e) { }
+                    }catch(Exception ex){ }
+                    order.setLinesNumber(c.getInt(6));
+                    order.setSubTotalAmount(c.getDouble(7));
+                    order.setTaxAmount(c.getDouble(8));
+                    order.setTotalAmount(c.getDouble(9));
+                    order.setSalesOrderId(c.getInt(10));
+                    order.setBusinessPartnerId(c.getInt(11));
+                    activeOrders.add(order);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,9 +248,9 @@ public class OrderDB {
             }
         }
         if(fromSalesOrder) {
-            BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(context, user);
+            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(context, user);
             for(Order order : activeOrders){
-                order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
             }
         }
         return activeOrders;

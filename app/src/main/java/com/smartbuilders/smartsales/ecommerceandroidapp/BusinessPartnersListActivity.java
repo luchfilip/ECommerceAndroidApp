@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -36,7 +36,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     private static int SHOW_BUSINESS_PARTNER_REGISTER_UPDATE = 2;
 
     private User mCurrentUser;
-    private BusinessPartnerDB mBusinessPartnerDB;
+    private UserBusinessPartnerDB mUserBusinessPartnerDB;
     private boolean mTwoPane;
     private ListView mListView;
 
@@ -65,7 +65,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.business_partner_detail_container)!=null;
 
-        mBusinessPartnerDB = new BusinessPartnerDB(this, mCurrentUser);
+        mUserBusinessPartnerDB = new UserBusinessPartnerDB(this, mCurrentUser);
 
         mListView = (ListView) findViewById(R.id.business_partners_list);
 
@@ -112,9 +112,9 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     public void reloadBusinessPartnersList() {
         if (mListView != null) {
             if (mListView.getAdapter()!=null) {
-                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
             } else {
-                mListView.setAdapter(new BusinessPartnersListAdapter(this, mBusinessPartnerDB.getActiveBusinessPartners()));
+                mListView.setAdapter(new BusinessPartnersListAdapter(this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
             }
             if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
@@ -197,13 +197,13 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                 .setMessage(getString(R.string.delete_business_partner, businessPartnerCommercialName))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = mBusinessPartnerDB.deactivateBusinessPartner(businessPartnerId);
+                        String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
                         if (result==null) {
                             if (mListView != null) {
                                 if (mListView.getAdapter()!=null) {
-                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mBusinessPartnerDB.getActiveBusinessPartners());
+                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
                                 } else {
-                                    mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mBusinessPartnerDB.getActiveBusinessPartners()));
+                                    mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
                                 }
                                 if (mTwoPane) {
                                     if(mListView.getAdapter().getCount()>0) {
