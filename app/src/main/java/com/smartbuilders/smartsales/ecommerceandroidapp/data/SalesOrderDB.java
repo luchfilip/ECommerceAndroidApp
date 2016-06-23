@@ -232,7 +232,7 @@ public class SalesOrderDB {
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, " +
                                         " APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, IS_ACTIVE) " +
-                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
                                         Utils.getAppVersionName(mContext), mCurrentUser.getUserName(),
                                         Utils.getMacAddress(mContext), String.valueOf(orderLines.size()),
