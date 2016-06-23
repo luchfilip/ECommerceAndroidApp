@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +116,10 @@ public class ProductDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
+
+                                if(mProduct.getRating()>=0){
+                                    ((RatingBar) view.findViewById(R.id.product_ratingbar)).setRating(mProduct.getRating());
+                                }
 
                                 if (mProduct.getDescription() != null) {
                                     ((TextView) view.findViewById(R.id.product_detail_description)).setText(mProduct.getDescription());

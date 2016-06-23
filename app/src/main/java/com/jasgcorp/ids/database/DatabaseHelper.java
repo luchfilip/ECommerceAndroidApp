@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 4;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 														"CREATED_BY VARCHAR(255), " +
 														"UPDATE_TIME DATETIME, " +
 														"UPDATED_BY VARCHAR(255), " +
-														"ISACTIVE CHAR(1), "+
+														"IS_ACTIVE CHAR(1), "+
 														"PRIMARY KEY(USER_ID, USER_GROUP))";
 
 	private static final String CREATE_USER_PROFILE_TABLE 	= "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
@@ -50,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 														"CREATED_BY VARCHAR(255), " +
 														"UPDATE_TIME DATETIME, " +
 														"UPDATED_BY VARCHAR(255), " +
-														"ISACTIVE CHAR(1), "+
+														"IS_ACTIVE CHAR(1), "+
 														"PRIMARY KEY(USER_PROFILE_ID))";
 	
 	private static final String CREATE_SCHEDULER_TABLE 	= "CREATE TABLE IF NOT EXISTS IDS_SCHEDULER_SYNC (" +
@@ -65,94 +65,96 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 															"FRIDAY CHAR, " +
 															"SATURDAY CHAR, " +
 															"SUNDAY CHAR, " +
-															"ISACTIVE CHAR DEFAULT 'Y', " +
+															"IS_ACTIVE CHAR DEFAULT 'Y', " +
 															"CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 	
 	public static final String CREATE_IDS_INCOMING_FILE_SYNC = 
 								new StringBuffer("CREATE TABLE IF NOT EXISTS IDS_INCOMING_FILE_SYNC ")
-													.append("(INCOMING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, " )
-													.append(" FILE_SYNC_ID BIGINT UNSIGNED NOT NULL, ")
-													.append(" FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, ")
-													.append(" FILE_NAME VARCHAR(255) NOT NULL, ")
-													.append(" FILE_SIZE INTEGER NOT NULL, ")
-													.append(" ERROR_MESSAGE TEXT, ")
-													.append(" ISACTIVE CHAR DEFAULT 'Y', ")
-													.append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
+                                            .append("(INCOMING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, " )
+                                            .append(" FILE_SYNC_ID BIGINT UNSIGNED NOT NULL, ")
+                                            .append(" FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, ")
+                                            .append(" FILE_NAME VARCHAR(255) NOT NULL, ")
+                                            .append(" FILE_SIZE INTEGER NOT NULL, ")
+                                            .append(" ERROR_MESSAGE TEXT, ")
+                                            .append(" IS_ACTIVE CHAR DEFAULT 'Y', ")
+                                            .append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 	
 	public static final String CREATE_IDS_OUTGOING_FILE_SYNC = 
 								new StringBuffer("CREATE TABLE IF NOT EXISTS IDS_OUTGOING_FILE_SYNC ")
-													.append("(OUTGOING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-													.append(" FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, ")
-													.append(" FILE_PATH VARCHAR(512) NOT NULL, ")
-													.append(" FILE_SIZE INTEGER NOT NULL, ")
-													.append(" ISACTIVE CHAR DEFAULT 'Y', ")
-													.append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
+                                            .append("(OUTGOING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                            .append(" FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, ")
+                                            .append(" FILE_PATH VARCHAR(512) NOT NULL, ")
+                                            .append(" FILE_SIZE INTEGER NOT NULL, ")
+                                            .append(" IS_ACTIVE CHAR DEFAULT 'Y', ")
+                                            .append(" CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
 
-	public static final String CREATE_ARTICULOS =
-								new StringBuffer("CREATE TABLE IF NOT EXISTS ARTICULOS ")
-											.append("(IDARTICULO INTEGER DEFAULT 0 NOT NULL, ")
-											.append("IDPARTIDA INTEGER DEFAULT 0 NOT NULL, ")
-											.append("IDMARCA INTEGER DEFAULT 0 NOT NULL, ")
-											.append("NOMBRE VARCHAR(255) DEFAULT NULL, ")
-                                            .append("DESCRIPCION CLOB DEFAULT NULL, ")
-											.append("USO CLOB DEFAULT NULL, ")
-											.append("OBSERVACIONES CLOB DEFAULT NULL, ")
-											.append("IDREFERENCIA VARCHAR(36) DEFAULT NULL, ")
-											.append("NACIONALIDAD VARCHAR(55) DEFAULT NULL, ")
-											.append("ACTIVO CHAR(1) DEFAULT 'V', ")
-											.append("CODVIEJO CHAR(7) DEFAULT NULL, ")
-											.append("UNIDADVENTA_COMERCIAL INTEGER DEFAULT NULL,")
-											.append("EMPAQUE_COMERCIAL VARCHAR(20) DEFAULT NULL,")
+	public static final String CREATE_PRODUCT =
+								new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT ")
+											.append("(PRODUCT_ID INTEGER DEFAULT NULL, ")
+                                            .append("INTERNAL_CODE VARCHAR(128) DEFAULT NULL, ")
+											.append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
+											.append("BRAND_ID INTEGER DEFAULT NULL, ")
+											.append("NAME VARCHAR(255) DEFAULT NULL, ")
+                                            .append("DESCRIPTION CLOB DEFAULT NULL, ")
+											.append("PURPOSE CLOB DEFAULT NULL, ")
+											.append("OBSERVATION CLOB DEFAULT NULL, ")
+											.append("REFERENCE_ID VARCHAR(36) DEFAULT NULL, ")
+											.append("ORIGIN VARCHAR(55) DEFAULT NULL, ")
+											.append("COMMERCIAL_PACKAGE_UNITS INTEGER DEFAULT NULL,")
+											.append("COMMERCIAL_PACKAGE VARCHAR(20) DEFAULT NULL,")
+                                            .append("INVENTORY_PACKAGE_UNITS INTEGER DEFAULT NULL,")
+                                            .append("INVENTORY_PACKAGE VARCHAR(20) DEFAULT NULL,")
 											.append("LAST_RECEIVED_DATE DATE DEFAULT NULL, ")
                                             .append("PRODUCT_TAX_ID INTEGER DEFAULT NULL, ")
-											.append("PRIMARY KEY (IDARTICULO))").toString();
+                                            .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("PRIMARY KEY (PRODUCT_ID))").toString();
 
 	public static final String CREATE_PRODUCT_AVAILABILITY =
-									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_AVAILABILITY ")
-											.append("(PRODUCT_ID INTEGER NOT NULL, ")
-											.append("AVAILABILITY INTEGER DEFAULT 0 NOT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-											.append("CREATE_TIME DATETIME DEFAULT NULL, ")
-											.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-											.append("PRIMARY KEY (PRODUCT_ID, ISACTIVE))").toString();
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_AVAILABILITY ")
+                                        .append("(PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("AVAILABILITY INTEGER DEFAULT 0 NOT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("CREATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("PRIMARY KEY (PRODUCT_ID, IS_ACTIVE))").toString();
 
 	public static final String CREATE_PRODUCT_IMAGE =
-									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE ")
-											.append("(PRODUCT_IMAGE_ID INTEGER PRIMARY KEY, ")
-                                            .append("PRODUCT_ID INTEGER NOT NULL, ")
-											.append("FILE_NAME VARCHAR(255) NOT NULL, ")
-                                            .append("PRIORITY INTEGER NOT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y')").toString();
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE ")
+                                        .append("(PRODUCT_IMAGE_ID INTEGER PRIMARY KEY, ")
+                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("FILE_NAME VARCHAR(255) NOT NULL, ")
+                                        .append("PRIORITY INTEGER NOT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y')").toString();
 
-    public static final String CREATE_PRODUCT_RANKING =
-                                    new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_RANKING ")
-                                            .append("(PRODUCT_RANKING_ID INTEGER PRIMARY KEY, ")
-                                            .append("PRODUCT_ID INTEGER NOT NULL, ")
-                                            .append("RANKING DOUBLE NOT NULL, ")
-                                            .append("ISACTIVE CHAR(1) DEFAULT 'Y')").toString();
+    public static final String CREATE_PRODUCT_RATING =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_RATING ")
+                                        .append("(PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("RATING DOUBLE NOT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("PRIMARY KEY (PRODUCT_ID, IS_ACTIVE))").toString();
 
 	public static final String CREATE_PRODUCT_TAX =
-									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_TAX ")
-											.append("(PRODUCT_TAX_ID INTEGER NOT NULL, ")
-											.append("TAX_PERCENTAGE DOUBLE NOT NULL, ")
-											.append("TAX_NAME VARCHAR(255) DEFAULT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-											.append("PRIMARY KEY (PRODUCT_TAX_ID))").toString();
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_TAX ")
+                                        .append("(PRODUCT_TAX_ID INTEGER NOT NULL, ")
+                                        .append("TAX_PERCENTAGE DOUBLE NOT NULL, ")
+                                        .append("TAX_NAME VARCHAR(255) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("PRIMARY KEY (PRODUCT_TAX_ID))").toString();
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
-									new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
-											.append("(PRODUCT_ID INTEGER NOT NULL, ")
-											.append("PRODUCT_RELATED_ID INTEGER NOT NULL, ")
-											.append("TIMES INTEGER DEFAULT 0 NOT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-											.append("PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))").toString();
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED ")
+                                        .append("(PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("PRODUCT_RELATED_ID INTEGER NOT NULL, ")
+                                        .append("TIMES INTEGER DEFAULT 0 NOT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))").toString();
 
 	public static final String CREATE_BRAND =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS BRAND ")
 											.append("(BRAND_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 											.append("PRIMARY KEY (BRAND_ID))").toString();
 
 	public static final String CREATE_CATEGORY =
@@ -160,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("(CATEGORY_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 											.append("PRIMARY KEY (CATEGORY_ID))").toString();
 
 	public static final String CREATE_SUBCATEGORY =
@@ -169,8 +171,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 											.append("CATEGORY_ID INTEGER NOT NULL, ")
 											.append("NAME VARCHAR(255) DEFAULT NULL, ")
 											.append("DESCRIPTION TEXT DEFAULT NULL, ")
-											.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+											.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 											.append("PRIMARY KEY (SUBCATEGORY_ID))").toString();
+
+    public static final String CREATE_BUSINESS_PARTNER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER ")
+                                        .append("(BUSINESS_PARTNER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("INTERNAL_CODE VARCHAR(128) DEFAULT NULL, ")
+                                        .append("NAME TEXT DEFAULT NULL, ")
+                                        .append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+                                        .append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+                                        .append("ADDRESS TEXT DEFAULT NULL, ")
+                                        .append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+                                        .append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+                                        .append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_COMPANY =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS COMPANY ")
+                                        .append("(NAME TEXT DEFAULT NULL, ")
+                                        .append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+                                        .append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+                                        .append("ADDRESS TEXT DEFAULT NULL, ")
+                                        .append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+                                        .append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+                                        .append("CONTACT_CENTER_PHONE_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("PHONE_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("FAX_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("WEB_PAGE VARCHAR(255) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                            .append("PRIMARY KEY (APP_USER_NAME))").toString();
+
 
 	public static final String CREATE_MAINPAGE_PRODUCT_SECTION =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT_SECTION ")
@@ -178,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("NAME VARCHAR(128) DEFAULT NULL, ")
 										.append("DESCRIPTION VARCHAR(255) DEFAULT NULL, ")
 										.append("PRIORITY INTEGER DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 										.append("PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID))").toString();
 
 	public static final String CREATE_MAINPAGE_PRODUCT =
@@ -187,115 +228,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										.append("MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, ")
 										.append("PRODUCT_ID INTEGER NOT NULL, ")
 										.append("PRIORITY INTEGER DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 										.append("PRIMARY KEY (MAINPAGE_PRODUCT_ID))").toString();
-
-    public static final String CREATE_ECOMMERCE_ORDER =
-                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
-                                        .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-										.append("ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, ")
-										.append("BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, ")
-                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
-                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
-                                        .append("TAX DOUBLE DEFAULT 0, ")
-                                        .append("TOTAL DOUBLE DEFAULT 0, ")
-                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
-                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
-
-    public static final String CREATE_ECOMMERCE_ORDERLINE =
-                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE ")
-                                        .append("(ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                                        .append("ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, ")
-                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
-                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
-                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
-										.append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
-										.append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
-                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
-
-    public static final String CREATE_ECOMMERCE_SALES_ORDER =
-                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER ")
-                                        .append("(ECOMMERCE_SALES_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                                        .append("BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, ")
-                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
-                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
-                                        .append("TAX DOUBLE DEFAULT 0, ")
-                                        .append("TOTAL DOUBLE DEFAULT 0, ")
-										.append("VALID_TO DATE DEFAULT NULL, ")
-                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
-                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
-
-    public static final String CREATE_ECOMMERCE_SALES_ORDERLINE =
-                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDERLINE ")
-                                        .append("(ECOMMERCE_SALES_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                                        .append("ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, ")
-                                        .append("BUSINESS_PARTNER_ID INTEGER NOT NULL, ")
-                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
-                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
-                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
-                                        .append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
-                                        .append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
-                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT NULL, ")
-                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
-                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
-
-	public static final String CREATE_RECENT_SEARCH =
-								new StringBuffer("CREATE TABLE IF NOT EXISTS RECENT_SEARCH ")
-										.append("(RECENT_SEARCH_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-										.append("TEXT_TO_SEARCH TEXT NOT NULL, ")
-										.append("PRODUCT_ID INTEGER DEFAULT NULL, ")
-										.append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
-										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))").toString();
-
-	public static final String CREATE_BUSINESS_PARTNER =
-								new StringBuffer("CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER ")
-										.append("(BUSINESS_PARTNER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
-										.append("NAME TEXT DEFAULT NULL, ")
-										.append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
-										.append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
-                                        .append("ADDRESS TEXT DEFAULT NULL, ")
-										.append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
-										.append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
-										.append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-										.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-										.append("APP_VERSION VARCHAR(128) NOT NULL, ")
-										.append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
-
-	public static final String CREATE_COMPANY =
-								new StringBuffer("CREATE TABLE IF NOT EXISTS COMPANY ")
-										.append("(NAME TEXT DEFAULT NULL, ")
-										.append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
-										.append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
-										.append("ADDRESS TEXT DEFAULT NULL, ")
-										.append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
-										.append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
-										.append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
-										.append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
-										.append("UPDATE_TIME DATETIME DEFAULT NULL, ")
-										.append("APP_VERSION VARCHAR(128) NOT NULL, ")
-										.append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
-										.append("PRIMARY KEY (APP_USER_NAME))").toString();
 
 	public static final String CREATE_BANNER =
 								new StringBuffer("CREATE TABLE IF NOT EXISTS BANNER ")
@@ -305,7 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
                                         .append("CATEGORY_ID INTEGER DEFAULT NULL, ")
 										.append("IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 										.append("PRIMARY KEY (BANNER_ID))").toString();
 
 	public static final String CREATE_BRAND_PROMOTIONAL_CARD =
@@ -320,7 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("PROMOTIONAL_TEXT_R_COLOR INTEGER DEFAULT NULL, ")
                                         .append("PROMOTIONAL_TEXT_G_COLOR INTEGER DEFAULT NULL, ")
                                         .append("PROMOTIONAL_TEXT_B_COLOR INTEGER DEFAULT NULL, ")
-										.append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+										.append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
 										.append("PRIMARY KEY (BRAND_PROMOTIONAL_CARD_ID))").toString();
 
     public static final String CREATE_APP_PARAMETER =
@@ -333,7 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("BOOLEAN_VALUE CHAR(1) DEFAULT NULL, ")
                                         .append("DATE_VALUE DATE DEFAULT NULL, ")
                                         .append("DATETIME_VALUE DATETIME DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
                                         .append("PRIMARY KEY (APP_PARAMETER_ID))").toString();
 
     public static final String CREATE_USER_APP_PARAMETER =
@@ -346,8 +280,129 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                         .append("BOOLEAN_VALUE CHAR(1) DEFAULT NULL, ")
                                         .append("DATE_VALUE DATE DEFAULT NULL, ")
                                         .append("DATETIME_VALUE DATETIME DEFAULT NULL, ")
-                                        .append("ISACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
                                         .append("PRIMARY KEY (USER_NAME, APP_PARAMETER_ID))").toString();
+
+    public static final String CREATE_ECOMMERCE_ORDER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER ")
+                                        .append("(ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, ")
+                                        .append("BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, ")
+                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
+                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("TAX DOUBLE DEFAULT 0, ")
+                                        .append("TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_ECOMMERCE_ORDERLINE =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE ")
+                                        .append("(ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, ")
+                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
+                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
+                                        .append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
+                                        .append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_ECOMMERCE_SALES_ORDER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER ")
+                                        .append("(ECOMMERCE_SALES_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, ")
+                                        .append("LINES_NUMBER INTEGER DEFAULT 0, ")
+                                        .append("SUB_TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("TAX DOUBLE DEFAULT 0, ")
+                                        .append("TOTAL DOUBLE DEFAULT 0, ")
+                                        .append("VALID_TO DATE DEFAULT NULL, ")
+                                        .append("DOC_STATUS CHAR(2) DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_ECOMMERCE_SALES_ORDERLINE =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDERLINE ")
+                                        .append("(ECOMMERCE_SALES_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, ")
+                                        .append("BUSINESS_PARTNER_ID INTEGER NOT NULL, ")
+                                        .append("PRODUCT_ID INTEGER NOT NULL, ")
+                                        .append("QTY_REQUESTED INTEGER NOT NULL, ")
+                                        .append("SALES_PRICE DOUBLE DEFAULT NULL, ")
+                                        .append("TAX_PERCENTAGE DOUBLE DEFAULT NULL, ")
+                                        .append("TOTAL_LINE DOUBLE DEFAULT NULL, ")
+                                        .append("DOC_TYPE CHAR(2) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_RECENT_SEARCH =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS RECENT_SEARCH ")
+                                        .append("(RECENT_SEARCH_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("TEXT_TO_SEARCH TEXT NOT NULL, ")
+                                        .append("PRODUCT_ID INTEGER DEFAULT NULL, ")
+                                        .append("SUBCATEGORY_ID INTEGER DEFAULT NULL, ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_USER_BUSINESS_PARTNER =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER ")
+                                        .append("(USER_BUSINESS_PARTNER_ID INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                                        .append("INTERNAL_CODE VARCHAR(128) DEFAULT NULL, ")
+                                        .append("NAME TEXT DEFAULT NULL, ")
+                                        .append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+                                        .append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+                                        .append("ADDRESS TEXT DEFAULT NULL, ")
+                                        .append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+                                        .append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+                                        .append("PHONE_NUMBER VARCHAR(255) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL)").toString();
+
+    public static final String CREATE_USER_COMPANY =
+                                new StringBuffer("CREATE TABLE IF NOT EXISTS USER_COMPANY ")
+                                        .append("(NAME TEXT DEFAULT NULL, ")
+                                        .append("COMMERCIAL_NAME TEXT DEFAULT NULL, ")
+                                        .append("TAX_ID VARCHAR(255) DEFAULT NULL, ")
+                                        .append("ADDRESS TEXT DEFAULT NULL, ")
+                                        .append("CONTACT_PERSON VARCHAR(255) DEFAULT NULL, ")
+                                        .append("EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, ")
+                                        .append("CONTACT_CENTER_PHONE_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("PHONE_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("FAX_NUMBER VARCHAR(128) DEFAULT NULL, ")
+                                        .append("WEB_PAGE VARCHAR(255) DEFAULT NULL, ")
+                                        .append("IS_ACTIVE CHAR(1) DEFAULT 'Y', ")
+                                        .append("CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), ")
+                                        .append("UPDATE_TIME DATETIME DEFAULT NULL, ")
+                                        .append("APP_VERSION VARCHAR(128) NOT NULL, ")
+                                        .append("APP_USER_NAME VARCHAR(128) NOT NULL, ")
+                                        .append("DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, ")
+                                        .append("PRIMARY KEY (APP_USER_NAME))").toString();
 
 	/**
 	 * 
@@ -389,9 +444,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}else{
 			db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
 			db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
-            db.execSQL(CREATE_ARTICULOS);
+            db.execSQL(CREATE_PRODUCT);
             db.execSQL(CREATE_PRODUCT_IMAGE);
-            db.execSQL(CREATE_PRODUCT_RANKING);
+            db.execSQL(CREATE_PRODUCT_RATING);
             db.execSQL(CREATE_PRODUCT_TAX);
 			db.execSQL(CREATE_BRAND);
 			db.execSQL(CREATE_CATEGORY);
@@ -411,63 +466,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
             db.execSQL(CREATE_APP_PARAMETER);
             db.execSQL(CREATE_USER_APP_PARAMETER);
+            db.execSQL(CREATE_USER_BUSINESS_PARTNER);
+            db.execSQL(CREATE_USER_COMPANY);
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(this.dataBaseName.equals(DATABASE_NAME)){
-            try {
-                db.execSQL("ALTER TABLE IDS_USER ADD COLUMN USER_PROFILE_ID INTEGER NOT NULL DEFAULT 0");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                db.execSQL("ALTER TABLE ECOMMERCE_ORDER ADD COLUMN ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL("ALTER TABLE ECOMMERCE_ORDER ADD COLUMN BUSINESS_PARTNER_ID INTEGER DEFAULT NULL");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL("ALTER TABLE ARTICULOS ADD COLUMN PRODUCT_TAX_ID INTEGER DEFAULT NULL");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL(CREATE_PRODUCT_RANKING);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL(CREATE_PRODUCT_TAX);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL(CREATE_APP_PARAMETER);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL(CREATE_USER_APP_PARAMETER);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL(CREATE_USER_PROFILE_TABLE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                db.execSQL("ALTER TABLE ECOMMERCE_SALES_ORDER ADD COLUMN VALID_TO DATE DEFAULT NULL");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(this.dataBaseName.equals(DATABASE_NAME)) {
         }
 	}
 

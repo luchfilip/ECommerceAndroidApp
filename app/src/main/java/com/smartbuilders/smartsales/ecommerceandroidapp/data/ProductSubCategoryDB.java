@@ -31,13 +31,13 @@ public class ProductSubCategoryDB {
                     .build(), null,
                     "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
-                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                    " WHERE S.ISACTIVE = ? AND S.CATEGORY_ID = ? " +
+                        " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                    " WHERE S.IS_ACTIVE = ? AND S.CATEGORY_ID = ? " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " ORDER BY S.NAME ASC",
-                    new String[]{"V", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(categoryId)}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     ProductSubCategory productSubCategory = new ProductSubCategory();

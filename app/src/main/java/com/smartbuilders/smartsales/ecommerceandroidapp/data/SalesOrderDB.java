@@ -71,8 +71,8 @@ public class SalesOrderDB {
                     "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
                         " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
                     " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.ISACTIVE = ?",
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.IS_ACTIVE = ?",
                     new String[]{"Y", String.valueOf(salesOrderId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 salesOrder = new SalesOrder();
@@ -124,8 +124,8 @@ public class SalesOrderDB {
                     .build(), null,
                     "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
                     " FROM ECOMMERCE_SALES_ORDERLINE OL " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE OL.ISACTIVE = ? AND OL.DOC_TYPE = ? " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE OL.IS_ACTIVE = ? AND OL.DOC_TYPE = ? " +
                     " GROUP BY OL.BUSINESS_PARTNER_ID",
                     new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
             if(c!=null){
@@ -165,8 +165,8 @@ public class SalesOrderDB {
                         " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
                         " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
                     " FROM ECOMMERCE_SALES_ORDER SO " +
-                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                    " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ? " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE SO.IS_ACTIVE = ? AND SO.DOC_TYPE = ? " +
                     " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                     new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
             if(c!=null){
@@ -231,7 +231,7 @@ public class SalesOrderDB {
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, " +
-                                        " APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, ISACTIVE) " +
+                                        " APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
                                         Utils.getAppVersionName(mContext), mCurrentUser.getUserName(), String.valueOf(orderLines.size()),
@@ -244,7 +244,7 @@ public class SalesOrderDB {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                         null,
-                        "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                        "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
                         new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
                 if(c!=null && c.moveToNext()){
                     salesOrderId = c.getInt(0);
@@ -296,14 +296,14 @@ public class SalesOrderDB {
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDERLINE SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDER SET ISACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});
             if(rowsAffected <= 0){

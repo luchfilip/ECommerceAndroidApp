@@ -17,6 +17,7 @@ public class Product extends Model implements Parcelable {
     private ProductCommercialPackage productCommercialPackage;
     private int availability;
     private boolean isFavorite;
+    private float rating = -1;
 
     public Product(){
         super();
@@ -33,6 +34,7 @@ public class Product extends Model implements Parcelable {
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
         isFavorite = in.readByte() == 1;
+        rating = in.readFloat();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class Product extends Model implements Parcelable {
         dest.writeParcelable(productSubCategory, flags);
         dest.writeParcelable(productCommercialPackage, flags);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
+        dest.writeFloat(rating);
     }
 
     @Override
@@ -136,6 +139,14 @@ public class Product extends Model implements Parcelable {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
     @Override

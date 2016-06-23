@@ -623,7 +623,7 @@ public class ApplicationUtilities {
     			int rowsAffected = ctx.getContentResolver()
     									.update(DataBaseContentProvider.INTERNAL_DB_URI, 
     											new ContentValues(), 
-    											"UPDATE IDS_SCHEDULER_SYNC SET ISACTIVE=? WHERE SCHEDULER_SYNC_ID=?", 
+    											"UPDATE IDS_SCHEDULER_SYNC SET IS_ACTIVE=? WHERE SCHEDULER_SYNC_ID=?",
     											new String[]{data.isActive()?"Y":"N", Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
     			if(rowsAffected>0){
     				if(data.isActive()){
@@ -655,7 +655,7 @@ public class ApplicationUtilities {
 						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
 								new StringBuffer("SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
-										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, ISACTIVE ")
+										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 										.append(" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=").append(user.getUserId()).toString(),
 										null, null);
 				while(c.moveToNext()){
@@ -695,7 +695,7 @@ public class ApplicationUtilities {
 					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 							null, 
 							new StringBuffer("SELECT HOUR, MINUTE, MONDAY, TUESDAY, ")
-									.append("WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, ISACTIVE ")
+									.append("WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 									.append("FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=").append(schedulerSyncDataId).toString(),
 									null, null);
 			if(c.moveToNext()){

@@ -29,7 +29,7 @@ public class BusinessPartnerDB {
         try {
             String sql = "select BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                     " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from BUSINESS_PARTNER where ISACTIVE = ? order by BUSINESS_PARTNER_ID desc";
+                    " from BUSINESS_PARTNER where IS_ACTIVE = ? order by BUSINESS_PARTNER_ID desc";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null, sql, new String[]{"Y"}, null);
@@ -107,7 +107,7 @@ public class BusinessPartnerDB {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
-                    "UPDATE BUSINESS_PARTNER SET ISACTIVE = ? WHERE BUSINESS_PARTNER_ID = ?",
+                    "UPDATE BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE BUSINESS_PARTNER_ID = ?",
                     new String[]{"N", String.valueOf(businessPartnerId)});
             if (rowsAffected <= 0){
                 return "No se desactivó el registro en la base de datos.";
@@ -125,7 +125,7 @@ public class BusinessPartnerDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select COUNT(TAX_ID) from BUSINESS_PARTNER where ISACTIVE = ? AND TAX_ID = ?",
+                    "select COUNT(TAX_ID) from BUSINESS_PARTNER where IS_ACTIVE = ? AND TAX_ID = ?",
                     new String[]{taxID, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
@@ -152,7 +152,7 @@ public class BusinessPartnerDB {
                     .build(), null,
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                         " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                        " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ? AND ISACTIVE = ?",
+                        " from BUSINESS_PARTNER where BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(businessPartnerId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();

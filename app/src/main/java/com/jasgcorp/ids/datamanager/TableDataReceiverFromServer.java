@@ -114,7 +114,7 @@ public class TableDataReceiverFromServer extends Thread {
             execRemoteQueryAndInsert(context, user,
                     "select APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
                             " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                        " from APP_PARAMETER where ISACTIVE = 'Y'",
+                        " from APP_PARAMETER where IS_ACTIVE = 'Y'",
                     "INSERT OR REPLACE INTO APP_PARAMETER (APP_PARAMETER_ID, PARAMETER_DESCRIPTION, " +
                             " TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -123,88 +123,89 @@ public class TableDataReceiverFromServer extends Thread {
         if(sync){
             execRemoteQueryAndInsert(context, user,
                     "select USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
-                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                            " from USER_APP_PARAMETER where ISACTIVE = 'Y'",
+                        " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
+                    " from USER_APP_PARAMETER where IS_ACTIVE = 'Y'",
                     "INSERT OR REPLACE INTO USER_APP_PARAMETER (USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, " +
-                            " INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                        " INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 10;
         }
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select IDARTICULO, IDPARTIDA, IDMARCA, NOMBRE, DESCRIPCION, " +
-							" USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, CODVIEJO, " +
-							" UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
-							" from ARTICULOS where ACTIVO = 'V'",
-					"INSERT OR REPLACE INTO ARTICULOS (IDARTICULO, IDPARTIDA, " +
-							" IDMARCA, NOMBRE, DESCRIPCION, USO, OBSERVACIONES, IDREFERENCIA, NACIONALIDAD, " +
-							" CODVIEJO, UNIDADVENTA_COMERCIAL, EMPAQUE_COMERCIAL, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
-							" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					"select PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, DESCRIPTION, PURPOSE, " +
+						" OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, COMMERCIAL_PACKAGE_UNITS, " +
+						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
+					" from PRODUCT where IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO PRODUCT (PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, " +
+						" DESCRIPTION, PURPOSE, OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, " +
+						" COMMERCIAL_PACKAGE_UNITS, COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, " +
+						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
+					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 20;
 		}
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select BRAND_ID, NAME, DESCRIPTION from BRAND where ISACTIVE = 'Y'",
+					"select BRAND_ID, NAME, DESCRIPTION from BRAND where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             syncPercentage = 25;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select CATEGORY_ID, NAME, DESCRIPTION from Category where ISACTIVE = 'Y'",
+					"select CATEGORY_ID, NAME, DESCRIPTION from Category where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
             syncPercentage = 30;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select MAINPAGE_PRODUCT_ID, MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where ISACTIVE = 'Y'",
+					"select MAINPAGE_PRODUCT_ID, MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
             syncPercentage = 40;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select MAINPAGE_PRODUCT_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_PRODUCT_SECTION where ISACTIVE = 'Y'",
+					"select MAINPAGE_PRODUCT_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_PRODUCT_SECTION where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO MAINPAGE_PRODUCT_SECTION (MAINPAGE_PRODUCT_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
             syncPercentage = 50;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"SELECT PRODUCT_ID, AVAILABILITY FROM PRODUCT_AVAILABILITY WHERE ISACTIVE = 'Y'",
+					"SELECT PRODUCT_ID, AVAILABILITY FROM PRODUCT_AVAILABILITY WHERE IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
             syncPercentage = 60;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where ISACTIVE = 'Y'",
+					"select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
             syncPercentage = 70;
         }
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select PRODUCT_RANKING_ID, PRODUCT_ID, RANKING from PRODUCT_RANKING where ISACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_RANKING (PRODUCT_RANKING_ID, PRODUCT_ID, RANKING) VALUES (?, ?, ?)");
+					"select PRODUCT_ID, RATING from PRODUCT_RATING where IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO PRODUCT_RATING (PRODUCT_ID, RATING) VALUES (?, ?)");
 			syncPercentage = 75;
 		}
         if(sync){
             execRemoteQueryAndInsert(context, user,
-                    "select PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME from PRODUCT_TAX where ISACTIVE = 'Y'",
+                    "select PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME from PRODUCT_TAX where IS_ACTIVE = 'Y'",
                     "INSERT OR REPLACE INTO PRODUCT_TAX (PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME) VALUES (?, ?, ?)");
             syncPercentage = 80;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where ISACTIVE = 'Y'",
+					"select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
             syncPercentage = 85;
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where ISACTIVE = 'Y'",
+					"select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
             syncPercentage = 90;
         }
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME from BANNER where ISACTIVE = 'Y'",
+					"select BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME from BANNER where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO BANNER (BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME) VALUES (?, ?, ?, ?, ?, ?)");
 			syncPercentage = 95;
 		}
@@ -213,7 +214,7 @@ public class TableDataReceiverFromServer extends Thread {
 					"select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
 							" BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, " +
 							" PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
-						" from BRAND_PROMOTIONAL_CARD where ISACTIVE = 'Y'",
+						" from BRAND_PROMOTIONAL_CARD where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO BRAND_PROMOTIONAL_CARD (BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, " +
 							" IMAGE_FILE_NAME, PROMOTIONAL_TEXT, BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, " +
 							" BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, " +
@@ -318,7 +319,7 @@ public class TableDataReceiverFromServer extends Thread {
 							//data que se insertara
 							statement.bindString(columnIndex, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
 						} catch (JSONException e) {
-                            Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
+                            //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
                         } catch (Exception e) {
 							e.printStackTrace();
 						}

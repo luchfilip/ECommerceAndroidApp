@@ -50,7 +50,7 @@ public class CompanyDB {
                     .build(), null,
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                         " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                        " from COMPANY where ISACTIVE = ?",
+                        " from COMPANY where IS_ACTIVE = ?",
                     new String[]{"Y"}, null);
             if(c!=null && c.moveToNext()){
                 Company company = new Company();

@@ -36,10 +36,10 @@ public class ProductDB {
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                         " PA.AVAILABILITY, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? "+
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = A.IDARTICULO AND R.PRODUCT_ID = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
@@ -85,10 +85,10 @@ public class ProductDB {
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                         " PA.AVAILABILITY, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDPARTIDA = ? AND A.IDARTICULO <> ? AND A.ACTIVO = ? " +
@@ -133,10 +133,10 @@ public class ProductDB {
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                         " PA.AVAILABILITY, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDMARCA = ? AND A.IDARTICULO <> ?  AND A.ACTIVO = ? " +
@@ -185,10 +185,10 @@ public class ProductDB {
                         " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDPARTIDA = ? AND A.ACTIVO = ? " +
@@ -261,10 +261,10 @@ public class ProductDB {
                         " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE S.CATEGORY_ID = ? AND A.ACTIVO = ? " +
@@ -321,10 +321,10 @@ public class ProductDB {
                         " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                     " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
+                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                         " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                     " WHERE A.IDMARCA = ? AND A.ACTIVO = ? " +
@@ -399,10 +399,10 @@ public class ProductDB {
                             " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                         " FROM ARTICULOS A " +
-                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                             " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                         " WHERE A.CODVIEJO LIKE ? AND A.ACTIVO = ? " +
@@ -418,10 +418,10 @@ public class ProductDB {
                             " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
                         " FROM ARTICULOS A " +
-                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
                             " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
                         " WHERE (replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
@@ -496,26 +496,26 @@ public class ProductDB {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                         .build(), null,
-                        "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
-                        " FROM ARTICULOS A " +
-                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
-                        " WHERE A.CODVIEJO LIKE ? AND A.ACTIVO = ? "  +
-                        " ORDER BY A.CODVIEJO ASC LIMIT 20",
-                        new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "V"}, null);
+                        "SELECT A.PRODUCT_ID, A.SUBCATEGORY_ID, UPPER(A.NAME), A.INTERNAL_CODER, S.NAME, S.DESCRIPTION " +
+                        " FROM PRODUCT A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.BRAND_ID AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
+                        " WHERE A.INTERNAL_CODE LIKE ? AND A.IS_ACTIVE = ? "  +
+                        " ORDER BY A.INTERNAL_CODE ASC LIMIT 20",
+                        new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "Y"}, null);
             } else {
-                String sql = "SELECT A.IDARTICULO, A.IDPARTIDA, UPPER(A.NOMBRE), A.CODVIEJO, S.NAME, S.DESCRIPTION " +
-                        " FROM ARTICULOS A " +
-                            " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? "+
+                String sql = "SELECT A.PRODUCT_ID, A.SUBCATEGORY_ID, UPPER(A.NAME), A.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
+                        " FROM PRODUCT A " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = A.BRAND_ID AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
                         " WHERE (replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
                                 " OR replace(replace(replace(replace(replace(lower(A.NOMBRE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
-                            " AND A.ACTIVO = ? " +
-                        " ORDER BY A.NOMBRE ASC " +
+                            " AND A.IS_ACTIVE = ? " +
+                        " ORDER BY A.NAME ASC " +
                         (searchPattern.length()>1 ? "" : " LIMIT 100");
                 String aux = null;
                 String firstWord = "";
@@ -531,7 +531,7 @@ public class ProductDB {
                 }
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "V"}, null);
+                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "Y"}, null);
             }
 
             if (c!=null) {
@@ -587,21 +587,20 @@ public class ProductDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null,
-                    "SELECT DISTINCT A.IDARTICULO, A.IDPARTIDA, A.IDMARCA, A.NOMBRE, A.DESCRIPCION, A.USO, " +
-                        " A.OBSERVACIONES, A.IDREFERENCIA, A.NACIONALIDAD, A.CODVIEJO, A.UNIDADVENTA_COMERCIAL, " +
-                        " A.EMPAQUE_COMERCIAL, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                    "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
+                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                        " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID " +
-                    " FROM ARTICULOS A " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = A.IDMARCA AND B.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = A.IDARTICULO AND PI.PRIORITY = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = A.IDARTICULO AND OL.DOC_TYPE = ? " +
-                    " WHERE A.IDARTICULO = ? AND A.ACTIVO = ? " +
-                    " ORDER BY A.NOMBRE ASC",
+                    " FROM PRODUCT P " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " LEFT JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
+                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? " +
+                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
+                    " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
                     new String[]{"Y", "Y", "Y", "Y", String.valueOf(1),
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(id), "V"}, null);
+                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(id), "Y"}, null);
             if (c!=null) {
                 if(c.moveToNext()){
                     Product p = new Product();

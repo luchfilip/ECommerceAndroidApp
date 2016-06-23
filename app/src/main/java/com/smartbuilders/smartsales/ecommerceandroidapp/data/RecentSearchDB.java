@@ -69,7 +69,7 @@ public class RecentSearchDB {
                     .build(), null,
                     "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
                     " FROM RECENT_SEARCH RS " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.ISACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                     " ORDER BY RS.CREATE_TIME desc",
                     new String[]{"Y"}, null);
             if(c!=null){

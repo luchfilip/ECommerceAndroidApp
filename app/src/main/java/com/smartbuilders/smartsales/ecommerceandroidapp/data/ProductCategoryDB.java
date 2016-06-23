@@ -33,18 +33,20 @@ public class ProductCategoryDB {
                     .build(), null,
                     "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
-                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.ISACTIVE = ? " +
-                        " INNER JOIN ARTICULOS A ON A.IDPARTIDA = S.SUBCATEGORY_ID AND A.ACTIVO = ? " +
-                    " WHERE C.ISACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE C.IS_ACTIVE = ? " +
                     " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ",
-                    new String[]{"Y", "V", "Y"}, null);
-            while(c.moveToNext()){
-                ProductCategory productCategory = new ProductCategory();
-                productCategory.setId(c.getInt(0));
-                productCategory.setName(c.getString(1));
-                productCategory.setDescription(c.getString(2));
-                productCategory.setProductsActiveQty(c.getInt(3));
-                categories.add(productCategory);
+                    new String[]{"Y", "Y", "Y"}, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    ProductCategory productCategory = new ProductCategory();
+                    productCategory.setId(c.getInt(0));
+                    productCategory.setName(c.getString(1));
+                    productCategory.setDescription(c.getString(2));
+                    productCategory.setProductsActiveQty(c.getInt(3));
+                    categories.add(productCategory);
+                }
             }
             Collections.sort(categories, new Comparator<ProductCategory>() {
                 @Override
@@ -78,7 +80,7 @@ public class ProductCategoryDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null,
-                    "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND ISACTIVE=?",
+                    "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND IS_ACTIVE=?",
                     new String[]{String.valueOf(productCategoryId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();

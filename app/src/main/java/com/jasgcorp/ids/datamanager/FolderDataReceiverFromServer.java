@@ -181,7 +181,7 @@ public class FolderDataReceiverFromServer extends Thread {
 			try {
 				database = dbHelper.getReadableDatabase();
 				ContentValues cv = new ContentValues();
-				cv.put("ISACTIVE","N");
+				cv.put("IS_ACTIVE","N");
 				int rowsAffected = database.update("IDS_INCOMING_FILE_SYNC", 
 													cv, 
 													"FILE_SYNC_ID NOT IN ("+((SoapPrimitive) data).toString()+")", 
@@ -193,7 +193,7 @@ public class FolderDataReceiverFromServer extends Thread {
 					try {
 						c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
 													new String[]{"FOLDER_CLIENT_NAME", "FILE_NAME"}, /*columns*/
-													"ISACTIVE=? AND ERROR_MESSAGE is null", /*selection*/
+													"IS_ACTIVE=? AND ERROR_MESSAGE is null", /*selection*/
 													new String[] {"N"}, /*selectionArgs*/
 													null, /*groupBy*/
 													null, /*having*/
@@ -228,7 +228,7 @@ public class FolderDataReceiverFromServer extends Thread {
 							file = null;
 						}
 					}
-					database.delete("IDS_INCOMING_FILE_SYNC", "ISACTIVE=?", new String[] {"N"});
+					database.delete("IDS_INCOMING_FILE_SYNC", "IS_ACTIVE=?", new String[] {"N"});
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -253,7 +253,7 @@ public class FolderDataReceiverFromServer extends Thread {
 			database = dbHelper.getReadableDatabase(); 
 			c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
 										new String[]{"FILE_SYNC_ID"}, /*columns*/
-										"ISACTIVE=?", /*where*/
+										"IS_ACTIVE=?", /*where*/
 										new String[] {"Y"}, /*selectionArgs*/
 										null, /*groupBy*/
 										null, /*having*/

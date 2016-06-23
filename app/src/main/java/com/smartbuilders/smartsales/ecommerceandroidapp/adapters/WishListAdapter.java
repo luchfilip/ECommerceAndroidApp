@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView shareImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
+        public RatingBar productRatingBar;
 
         public ViewHolder(View v) {
             super(v);
@@ -65,6 +67,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
         }
     }
 
@@ -156,6 +159,11 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
+
+        if(mDataset.get(holder.getAdapterPosition()).getProduct().getRating()>=0){
+            ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
+                    .setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
+        }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getAvailability()));

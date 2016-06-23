@@ -27,7 +27,7 @@ public class BannerDB {
         Cursor c = null;
         try {
             String sql = "SELECT BANNER_ID, IMAGE_FILE_NAME, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID " +
-                    " from BANNER where ISACTIVE = ?";
+                    " from BANNER where IS_ACTIVE = ?";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null, sql, new String[]{"Y"}, null);

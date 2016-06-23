@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
+        public RatingBar productRatingBar;
 
         public ViewHolder(View v) {
             super(v);
@@ -74,6 +76,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
         }
     }
 
@@ -149,6 +152,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
+            }
+        }
+
+        if(holder.productRatingBar!=null){
+            if(mDataset.get(position).getRating()>=0){
+                ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
+                        .setRating(mDataset.get(position).getRating());
             }
         }
 

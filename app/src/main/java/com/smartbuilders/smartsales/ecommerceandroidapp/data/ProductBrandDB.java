@@ -31,21 +31,23 @@ public class ProductBrandDB {
                     .build(), null,
                     "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                     " FROM BRAND B " +
-                        " INNER JOIN ARTICULOS A ON A.IDMARCA = B.BRAND_ID AND A.ACTIVO = ? " +
-                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = A.IDARTICULO AND PA.ISACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = A.IDPARTIDA AND S.ISACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.ISACTIVE = ? " +
-                    " WHERE B.ISACTIVE = ? " +
+                        " INNER JOIN PRODUCT P ON P.BRAND_ID = B.BRAND_ID AND P.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                    " WHERE B.IS_ACTIVE = ? " +
                     " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
                     " ORDER BY B.NAME ASC ",
-                    new String[]{"V", "Y", "Y", "Y", "Y"}, null);
-            while(c.moveToNext()){
-                ProductBrand productBrand = new ProductBrand();
-                productBrand.setId(c.getInt(0));
-                productBrand.setName(c.getString(1).toUpperCase());
-                productBrand.setDescription(c.getString(2).toUpperCase());
-                productBrand.setProductsActiveQty(c.getInt(3));
-                productBrands.add(productBrand);
+                    new String[]{"Y", "Y", "Y", "Y", "Y"}, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    ProductBrand productBrand = new ProductBrand();
+                    productBrand.setId(c.getInt(0));
+                    productBrand.setName(c.getString(1).toUpperCase());
+                    productBrand.setDescription(c.getString(2).toUpperCase());
+                    productBrand.setProductsActiveQty(c.getInt(3));
+                    productBrands.add(productBrand);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

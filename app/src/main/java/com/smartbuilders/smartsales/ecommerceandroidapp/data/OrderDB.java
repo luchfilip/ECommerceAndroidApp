@@ -43,7 +43,7 @@ public class OrderDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                     .build(), null,
-                    "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                    "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
                     new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
@@ -71,7 +71,7 @@ public class OrderDB {
                     .build(), null,
                     "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL "+
                     " FROM ECOMMERCE_ORDER " +
-                    " WHERE ECOMMERCE_ORDER_ID = ? AND ISACTIVE = ?",
+                    " WHERE ECOMMERCE_ORDER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(orderId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 order = new Order();
@@ -124,7 +124,7 @@ public class OrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
-                                        " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, ISACTIVE) " +
+                                        " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO", OrderLineDB.FINALIZED_ORDER_DOCTYPE,
                                         Utils.getAppVersionName(context), user.getUserName(), String.valueOf(orderLines.size()),
@@ -136,7 +136,7 @@ public class OrderDB {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                         null,
-                        "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE ISACTIVE = ? AND DOC_TYPE = ?",
+                        "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
                         new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
                 if(c!=null && c.moveToNext()){
                     orderId = c.getInt(0);
@@ -198,8 +198,8 @@ public class OrderDB {
                             " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
                             " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID " +
                         " FROM ECOMMERCE_ORDER O " +
-                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-                        " WHERE O.ISACTIVE = ? AND O.DOC_TYPE = ? " +
+                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                        " WHERE O.IS_ACTIVE = ? AND O.DOC_TYPE = ? " +
                             " AND O.ECOMMERCE_SALES_ORDER_ID IS NOT NULL AND O.BUSINESS_PARTNER_ID IS NOT NULL " +
                         " ORDER BY O.ECOMMERCE_ORDER_ID desc",
                         new String[]{"Y", "Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
@@ -211,7 +211,7 @@ public class OrderDB {
                             " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
                             " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
                         " FROM ECOMMERCE_ORDER " +
-                        " WHERE ISACTIVE = ? AND DOC_TYPE = ? " +
+                        " WHERE IS_ACTIVE = ? AND DOC_TYPE = ? " +
                         " ORDER BY ECOMMERCE_ORDER_ID desc",
                         new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
 

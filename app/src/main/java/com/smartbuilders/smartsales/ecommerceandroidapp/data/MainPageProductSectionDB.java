@@ -33,8 +33,8 @@ public class MainPageProductSectionDB {
                     "SELECT DISTINCT MS.MAINPAGE_PRODUCT_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
                     " FROM MAINPAGE_PRODUCT_SECTION MS " +
                         " INNER JOIN MAINPAGE_PRODUCT MP ON MP.MAINPAGE_PRODUCT_SECTION_ID = MS.MAINPAGE_PRODUCT_SECTION_ID " +
-                            " AND MP.ISACTIVE = ? " +
-                    " WHERE MS.ISACTIVE = ? " +
+                            " AND MP.IS_ACTIVE = ? " +
+                    " WHERE MS.IS_ACTIVE = ? " +
                     " ORDER BY MS.PRIORITY ASC",
                     new String[] {"Y", "Y"}, null);
             while(c.moveToNext()){
@@ -73,10 +73,10 @@ public class MainPageProductSectionDB {
                     .build(), null,
                     "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
-                        " INNER JOIN ARTICULOS A ON A.IDARTICULO = M.PRODUCT_ID AND A.ACTIVO = ? " +
-                    " WHERE M.ISACTIVE = ? AND M.MAINPAGE_PRODUCT_SECTION_ID = ? " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = M.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE M.IS_ACTIVE = ? AND M.MAINPAGE_PRODUCT_SECTION_ID = ? " +
                     " ORDER BY M.PRIORITY ASC",
-                    new String[]{"V", "Y", String.valueOf(productSectionId)}, null);
+                    new String[]{"Y", "Y", String.valueOf(productSectionId)}, null);
             while(c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(2));
