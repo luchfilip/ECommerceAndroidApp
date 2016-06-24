@@ -55,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productBrand_text_size" />
+                android:textSize="@dimen/productDetailCardView_productBrand_text_size"
+                android:maxLines="1" />
 
             <TextView
                 android:layout_width="match_parent"

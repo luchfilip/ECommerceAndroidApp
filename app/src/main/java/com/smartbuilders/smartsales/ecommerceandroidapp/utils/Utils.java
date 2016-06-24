@@ -809,7 +809,7 @@ public class Utils {
         return px / (context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
-    public static void createPdfFileInDownloadFolder(Context context, String sourceFilePath, String fileName){
+    public static void createPdfFileInDownloadFolder(final Context context, String sourceFilePath, String fileName){
         InputStream inStream;
         OutputStream outStream;
         try{
@@ -835,7 +835,7 @@ public class Utils {
             // Creates an explicit intent for an Activity in your app
             //Intent resultIntent = new Intent(this, ResultActivity.class);
 
-            Intent resultIntent = new Intent(Intent.ACTION_VIEW);
+            final Intent resultIntent = new Intent(Intent.ACTION_VIEW);
             resultIntent.setDataAndType(Uri.fromFile(destinationFile), "application/pdf");
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
@@ -856,7 +856,14 @@ public class Utils {
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1639, mBuilder.build());
-            Toast.makeText(context, "Se creó el archivo "+fileName+" en la carpeta \"Descargas\"", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(context, "Se creó el archivo "+fileName+" en la carpeta \"Descargas\"", Toast.LENGTH_LONG);
+            toast.getView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(resultIntent);
+                }
+            });
+            toast.show();
         }catch(Exception e){
             e.printStackTrace();
             Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();

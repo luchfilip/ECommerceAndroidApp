@@ -273,11 +273,17 @@ public class SalesOrderDetailPDFCreator {
         }
         font = new Font(bf, 7.5f);
 
-        PdfPTable table = new PdfPTable(3);
-        // Defiles the relative width of the columns
-        float[] columnWidths = new float[] {30f, 150f, 100f};
-        table.setWidths(columnWidths);
+        PdfPTable superTable = new PdfPTable(1);
         for(SalesOrderLine line : lines){
+            PdfPTable borderTable = new PdfPTable(1);
+            borderTable.setWidthPercentage(100);
+
+            /****************************************/
+            PdfPTable table = new PdfPTable(3);
+            // Defiles the relative width of the columns
+            float[] columnWidths = new float[] {30f, 150f, 100f};
+            table.setWidths(columnWidths);
+            table.setWidthPercentage(100);
             Bitmap bmp = null;
             if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
                 bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
@@ -290,41 +296,46 @@ public class SalesOrderDetailPDFCreator {
             Image productImage = Image.getInstance(stream.toByteArray());
             PdfPCell cell = new PdfPCell(productImage, true);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            //cell.setPadding(3);
-            //cell.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
-            //cell.setUseVariableBorders(true);
-            //cell.setBorderColorTop(BaseColor.LIGHT_GRAY);
-            //cell.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-            //cell.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-            cell.setCellEvent(new RoundRectangle());
-            cell.setPadding(5);
+            cell.setPadding(3);
             cell.setBorder(PdfPCell.NO_BORDER);
             table.addCell(cell);
 
             PdfPCell cell2 = new PdfPCell();
+            cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell2.setPadding(3);
+            cell2.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
             cell2.setUseVariableBorders(true);
-            cell2.setBorderColorTop(BaseColor.LIGHT_GRAY);
-            cell2.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-            cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
+            cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
             cell2.addElement(new Paragraph("Precio: "+line.getPriceStringFormat(), font));
             cell2.addElement(new Paragraph("(%) Impuesto: "+line.getTaxPercentageStringFormat(), font));
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
+            cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell3.setPadding(3);
-            cell3.setBorder(Rectangle.RIGHT | Rectangle.TOP | Rectangle.BOTTOM);
-            cell3.setUseVariableBorders(true);
-            cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
-            cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-            cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
+            cell3.setBorder(PdfPCell.NO_BORDER);
             cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
             cell3.addElement(new Paragraph("Total linea: "+line.getTotalLineAmountStringFormat(), font));
             table.addCell(cell3);
+            /*****************************************/
+
+            PdfPCell borderTableCell = new PdfPCell();
+            borderTableCell.setCellEvent(new RoundRectangle());
+            borderTableCell.setBorder(PdfPCell.NO_BORDER);
+            borderTableCell.addElement(table);
+            borderTable.addCell(borderTableCell);
+
+
+            /***************************************************************/
+            PdfPCell superTableCell = new PdfPCell();
+            superTableCell.setPadding(5);
+            superTableCell.setBorder(PdfPCell.NO_BORDER);
+            superTableCell.addElement(borderTable);
+            superTable.addCell(superTableCell);
         }
-        document.add(table);
+        document.add(superTable);
         document.add(new Phrase("\n"));
     }
 
