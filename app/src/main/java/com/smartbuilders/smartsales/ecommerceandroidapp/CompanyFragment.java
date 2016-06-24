@@ -1,5 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.nfc.tech.NfcBarcode;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,12 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -22,6 +34,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class CompanyFragment extends Fragment {
 
     private static final String STATE_COMPANY = "STATE_COMPANY";
+    private static final int PICK_IMAGE = 100;
+
+    private User mCurrentUser;
+    private ImageView companyLogoImageView;
     private Company mCompany;
 
     public CompanyFragment() {
@@ -31,7 +47,9 @@ public class CompanyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_company, container, false);
-        final UserCompanyDB userCompanyDB = new UserCompanyDB(getContext(), Utils.getCurrentUser(getContext()));
+
+        mCurrentUser = Utils.getCurrentUser(getContext());
+        final UserCompanyDB userCompanyDB = new UserCompanyDB(getContext(), mCurrentUser);
 
         new Thread() {
             @Override
@@ -54,18 +72,27 @@ public class CompanyFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                final EditText businessPartnerName = (EditText) rootView.findViewById(R.id.business_partner_name_editText);
-                                final EditText businessPartnerCommercialName = (EditText) rootView.findViewById(R.id.business_partner_commercial_name_editText);
-                                final EditText businessPartnerTaxId = (EditText) rootView.findViewById(R.id.business_partner_tax_id_editText);
-                                final EditText businessPartnerAddress = (EditText) rootView.findViewById(R.id.business_partner_address_editText);
-                                final EditText businessPartnerContactPerson = (EditText) rootView.findViewById(R.id.business_partner_contact_person_name_editText);
-                                final EditText businessPartnerEmailAddress = (EditText) rootView.findViewById(R.id.business_partner_email_address_editText);
-                                final EditText businessPartnerPhoneNumber = (EditText) rootView.findViewById(R.id.business_partner_phone_number_editText);
+                                final EditText companyName = (EditText) rootView.findViewById(R.id.business_partner_name_editText);
+                                final EditText companyCommercialName = (EditText) rootView.findViewById(R.id.business_partner_commercial_name_editText);
+                                final EditText companyTaxId = (EditText) rootView.findViewById(R.id.business_partner_tax_id_editText);
+                                final EditText companyAddress = (EditText) rootView.findViewById(R.id.business_partner_address_editText);
+                                final EditText companyContactPerson = (EditText) rootView.findViewById(R.id.business_partner_contact_person_name_editText);
+                                final EditText companyEmailAddress = (EditText) rootView.findViewById(R.id.business_partner_email_address_editText);
+                                final EditText companyPhoneNumber = (EditText) rootView.findViewById(R.id.business_partner_phone_number_editText);
                                 final Button saveButton = (Button) rootView.findViewById(R.id.save_button);
 
+                                companyLogoImageView = (ImageView) rootView.findViewById(R.id.company_logo_imageView);
+                                companyLogoImageView.setImageBitmap(Utils.getImageFromCompanyDir(getContext(), mCurrentUser));
+                                companyLogoImageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        pickImage();
+                                    }
+                                });
+
                                 if (mCompany!=null){
-                                    businessPartnerName.setText(mCompany.getName());
-                                    businessPartnerName.addTextChangedListener(new TextWatcher(){
+                                    companyName.setText(mCompany.getName());
+                                    companyName.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setName(s.toString());
                                         }
@@ -73,8 +100,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerCommercialName.setText(mCompany.getCommercialName());
-                                    businessPartnerCommercialName.addTextChangedListener(new TextWatcher(){
+                                    companyCommercialName.setText(mCompany.getCommercialName());
+                                    companyCommercialName.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setCommercialName(s.toString());
                                         }
@@ -82,8 +109,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerTaxId.setText(mCompany.getTaxId());
-                                    businessPartnerTaxId.addTextChangedListener(new TextWatcher(){
+                                    companyTaxId.setText(mCompany.getTaxId());
+                                    companyTaxId.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setTaxId(s.toString());
                                         }
@@ -91,8 +118,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerAddress.setText(mCompany.getAddress());
-                                    businessPartnerAddress.addTextChangedListener(new TextWatcher(){
+                                    companyAddress.setText(mCompany.getAddress());
+                                    companyAddress.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setAddress(s.toString());
                                         }
@@ -100,8 +127,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerContactPerson.setText(mCompany.getContactPerson());
-                                    businessPartnerContactPerson.addTextChangedListener(new TextWatcher(){
+                                    companyContactPerson.setText(mCompany.getContactPerson());
+                                    companyContactPerson.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setContactPerson(s.toString());
                                         }
@@ -109,8 +136,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerEmailAddress.setText(mCompany.getEmailAddress());
-                                    businessPartnerEmailAddress.addTextChangedListener(new TextWatcher(){
+                                    companyEmailAddress.setText(mCompany.getEmailAddress());
+                                    companyEmailAddress.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setEmailAddress(s.toString());
                                         }
@@ -118,8 +145,8 @@ public class CompanyFragment extends Fragment {
                                         public void onTextChanged(CharSequence s, int start, int before, int count){}
                                     });
 
-                                    businessPartnerPhoneNumber.setText(mCompany.getPhoneNumber());
-                                    businessPartnerPhoneNumber.addTextChangedListener(new TextWatcher(){
+                                    companyPhoneNumber.setText(mCompany.getPhoneNumber());
+                                    companyPhoneNumber.addTextChangedListener(new TextWatcher(){
                                         public void afterTextChanged(Editable s) {
                                             mCompany.setPhoneNumber(s.toString());
                                         }
@@ -144,13 +171,13 @@ public class CompanyFragment extends Fragment {
                                                 }
                                             } else {
                                                 Company company = new Company();
-                                                company.setName(businessPartnerName.getText().toString());
-                                                company.setCommercialName(businessPartnerCommercialName.getText().toString());
-                                                company.setTaxId(businessPartnerTaxId.getText().toString());
-                                                company.setAddress(businessPartnerAddress.getText().toString());
-                                                company.setContactPerson(businessPartnerContactPerson.getText().toString());
-                                                company.setEmailAddress(businessPartnerEmailAddress.getText().toString());
-                                                company.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
+                                                company.setName(companyName.getText().toString());
+                                                company.setCommercialName(companyCommercialName.getText().toString());
+                                                company.setTaxId(companyTaxId.getText().toString());
+                                                company.setAddress(companyAddress.getText().toString());
+                                                company.setContactPerson(companyContactPerson.getText().toString());
+                                                company.setEmailAddress(companyEmailAddress.getText().toString());
+                                                company.setPhoneNumber(companyPhoneNumber.getText().toString());
 
                                                 String result = userCompanyDB.insertUpdateUserCompany(company);
                                                 if (result==null){
@@ -175,6 +202,35 @@ public class CompanyFragment extends Fragment {
             }
         }.start();
         return rootView;
+    }
+
+    private void pickImage(){
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        startActivityForResult(chooserIntent, PICK_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                try {
+                    Utils.createImageInCompanyDir(getContext(), mCurrentUser,
+                            getContext().getContentResolver().openInputStream(data.getData()));
+                    companyLogoImageView.setImageBitmap(Utils.getImageFromCompanyDir(getContext(), mCurrentUser));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override

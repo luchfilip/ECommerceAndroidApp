@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -68,11 +67,7 @@ public class Utils {
      * @return
      */
     public static boolean isExternalStorageReadOnly() {
-        String extStorageState = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState());
     }
 
     /**
@@ -80,11 +75,7 @@ public class Utils {
      * @return
      */
     public static boolean isExternalStorageAvailable() {
-        String extStorageState = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     /**
@@ -125,9 +116,7 @@ public class Utils {
                         new GetFileFromServlet(product.getImageFileName(), false, user, context);
                 try {
                     productImage = getFileFromServlet.execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }
@@ -225,10 +214,9 @@ public class Utils {
         } else if (fileName!=null && image!=null && user!=null && ctx!=null
                 && ctx.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/thumb/")
-                    .append(fileName).toString());
+            File imageFile = new File(ctx.getExternalFilesDir(null).toString() + File.separator +
+                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/thumb/" +
+                    fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -258,10 +246,9 @@ public class Utils {
         } else if (fileName!=null && image!=null && user!=null && ctx!=null
                 && ctx.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/original/")
-                    .append(fileName).toString());
+            File imageFile = new File(ctx.getExternalFilesDir(null).toString() + File.separator +
+                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/original/" +
+                    fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -346,7 +333,7 @@ public class Utils {
 
     public static File getFileInOriginalDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -365,7 +352,7 @@ public class Utils {
 
     public static File getFileInBannerDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -384,7 +371,7 @@ public class Utils {
 
     public static File getFileInProductBrandPromotionalDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -403,7 +390,7 @@ public class Utils {
 
     public static File getFileThumbByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -422,7 +409,7 @@ public class Utils {
 
     public static Bitmap getImageFromOriginalDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -441,7 +428,7 @@ public class Utils {
 
     public static Bitmap getImageFromThumbDirByFileName(Context context, User user, String fileName){
         if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null || fileName==null){
+                || user==null){
             return null;
         }
         try {
@@ -456,6 +443,56 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void createImageInCompanyDir(Context context, User user, InputStream inputStream){
+        OutputStream outputStream = null;
+        try {
+            // write the inputStream to a FileOutputStream
+            outputStream =
+                    new FileOutputStream(new File(context.getExternalFilesDir(null).toString() +
+                            File.separator + user.getUserGroup() + File.separator + user.getUserName() +
+                            "/Data_In/user_company/user_company_logo.jpg"));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    // outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static Bitmap getImageFromCompanyDir(Context context, User user){
+        try {
+            if(context!=null && context.getExternalFilesDir(null)!=null && user!=null){
+                File imgFile = new File(context.getExternalFilesDir(null).toString() + File.separator +
+                        user.getUserGroup() + File.separator + user.getUserName() +
+                        "/Data_In/user_company/user_company_logo.jpg");
+                if(imgFile.exists()){
+                    return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.no_image_available);
     }
 
     private static int calculateInSampleSize(
@@ -662,6 +699,18 @@ public class Utils {
                 se.printStackTrace();
             }
         }
+        File folderCompanyLogo = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/Data_In/company/");//-->Android/data/package.name/files/...
+        // if the directory does not exist, create it
+        if (!folderCompanyLogo.exists()) {
+            try {
+                if (!folderCompanyLogo.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folderCompanyLogo.getPath() + ".");
+                }
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+        }
     }
 
     public static boolean appRequireInitialLoad(Context context, User user) {
@@ -673,10 +722,12 @@ public class Utils {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                         .build(), null, "select count(*) from " + table, null, null);
-                if(c.moveToNext() && c.getInt(0)==0) {
+                if(c!=null && c.moveToNext() && c.getInt(0)==0) {
                     return true;
                 }
-                c.close();
+                if(c!=null){
+                    c.close();
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -698,7 +749,7 @@ public class Utils {
             AccountManager accountManager = AccountManager.get(context);
             final Account availableAccounts[] = accountManager
                     .getAccountsByType(context.getString(R.string.authenticator_acount_type));
-            if (availableAccounts!=null && availableAccounts.length>0) {
+            if (availableAccounts.length>0) {
                 return ApplicationUtilities.getUserByIdFromAccountManager(context,
                         accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
             }

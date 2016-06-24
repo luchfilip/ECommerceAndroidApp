@@ -169,10 +169,7 @@
             android:layout_height="wrap_content"
             android:text="@string/register"
             android:id="@+id/save_button"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:layout_margin="5dp" />
     </LinearLayout>
 </LinearLayout>

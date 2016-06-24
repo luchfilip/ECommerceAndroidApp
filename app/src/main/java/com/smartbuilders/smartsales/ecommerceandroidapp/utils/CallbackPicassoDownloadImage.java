@@ -35,25 +35,7 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
 
     @Override
     public void onSuccess() {
-        //Si el archivo no existe entonces se descarga
-        //GetFileFromServlet getFileFromServlet =
-        //        new GetFileFromServlet(mFileName, mIsThumb, mUser, mContext);
-        //try {
-        //    if(mIsThumb) {
-        //        Utils.createFileInThumbDir(mFileName,
-        //                getFileFromServlet.execute().get(),
-        //                mUser, mContext);
-        //    }else{
-        //        Utils.createFileInOriginalDir(mFileName,
-        //                getFileFromServlet.execute().get(),
-        //                mUser, mContext);
-        //    }
-        //} catch (InterruptedException e) {
-        //    e.printStackTrace();
-        //} catch (ExecutionException e) {
-        //    e.printStackTrace();
-        //}
-        new DownloadAndCreateImage(/*mFileName, mIsThumb, mUser, mContext*/).start();
+        new DownloadAndCreateImage().start();
     }
 
     @Override
@@ -62,17 +44,6 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
     }
 
     class DownloadAndCreateImage extends Thread {
-        //private String mFileName;
-        //private Context mContext;
-        //private User mUser;
-        //private boolean mIsThumb;
-        //
-        //public DownloadAndCreateImage(String fileName, boolean isThumb, User user, Context context) {
-        //    mFileName = fileName;
-        //    mContext = context;
-        //    mUser = user;
-        //    mIsThumb = isThumb;
-        //}
 
         public void run() {
             downloadImage(mFileName, mContext, mUser, mIsThumb);
@@ -141,7 +112,6 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
                 if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     return httpConnection.getInputStream();
                 } else {
-                    Log.w("DownloadAndCreateImage", "httpConnection.getResponseCode(): " + httpConnection.getResponseCode());
                     throw new Exception("httpConnection.getResponseCode(): " + httpConnection.getResponseCode());
                 }
             } catch (Exception ex) {

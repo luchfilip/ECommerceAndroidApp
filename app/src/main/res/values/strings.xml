@@ -262,6 +262,7 @@
     <string name="mail_label">Correo:</string>
     <string name="valid_to_label">Válida hasta:</string>
     <string name="undefined">Indefinido</string>
+    <string name="company_logo_label">Logo de la compañía:</string>
 
     <string-array name="search_by_options">
         <item>@string/search_by</item>
