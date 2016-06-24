@@ -700,7 +700,7 @@ public class Utils {
             }
         }
         File folderCompanyLogo = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/company/");//-->Android/data/package.name/files/...
+                + File.separator + user.getUserName() + "/Data_In/user_company/");//-->Android/data/package.name/files/...
         // if the directory does not exist, create it
         if (!folderCompanyLogo.exists()) {
             try {
