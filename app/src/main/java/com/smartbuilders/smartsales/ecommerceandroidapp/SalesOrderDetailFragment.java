@@ -124,7 +124,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
                                     if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
-                                                .setText(getContext().getString(R.string.order_sub_total_amount, mSalesOrder.getSubTotalAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_sub_total_amount, mSalesOrder.getSubTotalAmountStringFormat()));
                                     }
 
                                     if(mSalesOrder.getValidTo()!=null){
@@ -137,11 +137,11 @@ public class SalesOrderDetailFragment extends Fragment {
 
                                     if(view.findViewById(R.id.sales_order_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_total_tv))
-                                                .setText(getContext().getString(R.string.order_total_amount, mSalesOrder.getTotalAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_total_amount, mSalesOrder.getTotalAmountStringFormat()));
                                     }
                                     if(view.findViewById(R.id.sales_order_tax_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_tax_tv))
-                                                .setText(getContext().getString(R.string.order_tax_amount, mSalesOrder.getTaxAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_tax_amount, mSalesOrder.getTaxAmountStringFormat()));
                                     }
 
                                     view.findViewById(R.id.create_order_button)

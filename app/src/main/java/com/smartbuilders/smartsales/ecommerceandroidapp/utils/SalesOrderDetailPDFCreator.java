@@ -19,7 +19,10 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.GrayColor;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPCellEvent;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
@@ -286,13 +289,16 @@ public class SalesOrderDetailPDFCreator {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             Image productImage = Image.getInstance(stream.toByteArray());
             PdfPCell cell = new PdfPCell(productImage, true);
-            cell.setPadding(3);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
-            cell.setUseVariableBorders(true);
-            cell.setBorderColorTop(BaseColor.LIGHT_GRAY);
-            cell.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-            cell.setBorderColorLeft(BaseColor.LIGHT_GRAY);
+            //cell.setPadding(3);
+            //cell.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
+            //cell.setUseVariableBorders(true);
+            //cell.setBorderColorTop(BaseColor.LIGHT_GRAY);
+            //cell.setBorderColorBottom(BaseColor.LIGHT_GRAY);
+            //cell.setBorderColorLeft(BaseColor.LIGHT_GRAY);
+            cell.setCellEvent(new RoundRectangle());
+            cell.setPadding(5);
+            cell.setBorder(PdfPCell.NO_BORDER);
             table.addCell(cell);
 
             PdfPCell cell2 = new PdfPCell();
@@ -364,5 +370,16 @@ public class SalesOrderDetailPDFCreator {
                 bm, 0, 0, width, height, matrix, false);
         bm.recycle();
         return resizedBitmap;
+    }
+
+    class RoundRectangle implements PdfPCellEvent {
+
+        public void cellLayout(PdfPCell cell, Rectangle rect,
+                               PdfContentByte[] canvas) {
+            PdfContentByte cb = canvas[PdfPTable.LINECANVAS];
+            cb.setColorStroke(new GrayColor(0.8f));
+            cb.roundRectangle(rect.getLeft(), rect.getBottom(), rect.getWidth(), rect.getHeight(), 3);
+            cb.stroke();
+        }
     }
 }
