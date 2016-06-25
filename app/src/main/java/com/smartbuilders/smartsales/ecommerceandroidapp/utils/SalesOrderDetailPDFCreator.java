@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
@@ -44,10 +43,9 @@ import java.util.ArrayList;
  * Created by Alberto on 6/4/2016.
  */
 public class SalesOrderDetailPDFCreator {
-    private static final String TAG = SalesOrderDetailPDFCreator.class.getSimpleName();
 
-    public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName, Context ctx, User user) {
-        Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
+    public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName,
+                            Context ctx, User user) {
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -71,20 +69,22 @@ public class SalesOrderDetailPDFCreator {
                 PdfWriter.getInstance(document, byteArrayOutputStream);
                 document.open();
 
-                UserCompanyDB userCompanyDB = new UserCompanyDB(ctx, user);
-                Company userCompany = userCompanyDB.getUserCompany();
+                Company userCompany = (new UserCompanyDB(ctx, user)).getUserCompany();
+                if(userCompany==null){
+                    userCompany = new Company();
+                }
 
                 //se agrega la informacion del cliente, numero de cotizacion, fecha de emision, etc.
-                addSalesOrderHeader(document, userCompany, salesOrder);
+                addSalesOrderHeader(document, ctx, userCompany, salesOrder);
 
                 //agrega el titulo del documento.
-                addSalesOrderTitle(document);
+                addSalesOrderTitle(document, ctx);
 
                 //se cargan las lineas de la cotizacion
                 addSalesOrderDetails(document, lines, ctx, user);
 
                 //se le agrega la informacion de subtotal, impuestos y total de la cotizacion
-                addSalesOrderFooter(document, salesOrder);
+                addSalesOrderFooter(document, ctx, salesOrder);
 
                 document.close();
 
@@ -103,10 +103,7 @@ public class SalesOrderDetailPDFCreator {
             }catch(Exception e){
                 e.printStackTrace();
             }
-        }else{
-            Log.d(TAG, "pdfFile is null");
         }
-        Log.d(TAG, "return pdfFile;");
         return pdfFile;
     }
 
@@ -173,16 +170,16 @@ public class SalesOrderDetailPDFCreator {
         companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
         companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         companyDataCell.addElement(new Paragraph(userCompany.getCommercialName(), companyNameFont));
-        companyDataCell.addElement(new Paragraph("RIF: "+userCompany.getTaxId(), font));
-        companyDataCell.addElement(new Paragraph("Dirección: "+userCompany.getAddress(), font));
-        companyDataCell.addElement(new Paragraph("Teléfono: "+userCompany.getPhoneNumber(), font));
-        companyDataCell.addElement(new Paragraph("Correo electrónico: "+userCompany.getEmailAddress(), font));
+        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
+        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
+        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
+        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
         headerTable.addCell(companyDataCell);
 
         return headerTable;
     }
 
-    private void addSalesOrderHeader(Document document, Company userCompany, SalesOrder salesOrder)
+    private void addSalesOrderHeader(Document document, Context ctx, Company userCompany, SalesOrder salesOrder)
             throws DocumentException, IOException {
         Font font;
         Font fontBold;
@@ -208,18 +205,18 @@ public class SalesOrderDetailPDFCreator {
         clientDataCell.setPadding(3);
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        clientDataCell.addElement(new Paragraph("Cliente: "+salesOrder.getBusinessPartner().getCommercialName(), font));
-        clientDataCell.addElement(new Paragraph("Dirección: "+salesOrder.getBusinessPartner().getAddress(), font));
-        clientDataCell.addElement(new Paragraph("Rif: "+salesOrder.getBusinessPartner().getTaxId(), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getCommercialName()), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, salesOrder.getBusinessPartner().getAddress()), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, salesOrder.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);
 
         PdfPCell SalesOrderDataCell = new PdfPCell();
         SalesOrderDataCell.setPadding(3);
         SalesOrderDataCell.disableBorderSide(Rectangle.UNDEFINED);
         SalesOrderDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        SalesOrderDataCell.addElement(new Paragraph("Fecha de emision: "+salesOrder.getCreatedStringFormat(), font));
-        SalesOrderDataCell.addElement(new Paragraph("Fecha de vencimiento: "+salesOrder.getValidToStringFormat(), font));
-        SalesOrderDataCell.addElement(new Paragraph("Persona de contácto: "+userCompany.getContactPerson(), font));
+        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_date, salesOrder.getCreatedStringFormat()), font));
+        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, salesOrder.getValidToStringFormat()), font));
+        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, userCompany.getContactPerson()), font));
         headerTable.addCell(SalesOrderDataCell);
         document.add(headerTable);
 
@@ -229,14 +226,14 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setPadding(3);
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        salesOrderNumberCell.addElement(new Paragraph("COTIZACIÓN No.: " + salesOrder.getSalesOrderNumber(), fontBold));
+        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()), fontBold));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);
 
         document.add(new Phrase("\n"));
     }
 
-    private void addSalesOrderTitle(Document document) throws DocumentException, IOException {
+    private void addSalesOrderTitle(Document document, Context ctx) throws DocumentException, IOException {
         BaseFont titleBaseFont;
         try{
             titleBaseFont = BaseFont.createFont("assets/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
@@ -249,11 +246,10 @@ public class SalesOrderDetailPDFCreator {
                 titleBaseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
             }
         }
-        Paragraph title = new Paragraph(new Phrase(22, "COTIZACIÓN", new Font(titleBaseFont, 15f, Font.UNDERLINE)));
+        Paragraph title = new Paragraph(new Phrase(22, ctx.getString(R.string.sales_order_doc_name),
+                new Font(titleBaseFont, 15f, Font.UNDERLINE)));
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
-        document.add(new Phrase("\n"));
-        document.add(new Phrase("\n"));
     }
 
     private void addSalesOrderDetails(Document document, ArrayList<SalesOrderLine> lines,
@@ -272,6 +268,8 @@ public class SalesOrderDetailPDFCreator {
             }
         }
         font = new Font(bf, 7.5f);
+
+        document.add(new Phrase("\n"));
 
         PdfPTable superTable = new PdfPTable(1);
         for(SalesOrderLine line : lines){
@@ -308,16 +306,16 @@ public class SalesOrderDetailPDFCreator {
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-            cell2.addElement(new Paragraph("Precio: "+line.getPriceStringFormat(), font));
-            cell2.addElement(new Paragraph("(%) Impuesto: "+line.getTaxPercentageStringFormat(), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price, line.getPriceStringFormat()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount, line.getTaxPercentageStringFormat()), font));
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
             cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell3.setPadding(3);
             cell3.setBorder(PdfPCell.NO_BORDER);
-            cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
-            cell3.addElement(new Paragraph("Total linea: "+line.getTotalLineAmountStringFormat(), font));
+            cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered, String.valueOf(line.getQuantityOrdered())), font));
+            cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount, line.getTotalLineAmountStringFormat()), font));
             table.addCell(cell3);
             /*****************************************/
 
@@ -339,7 +337,7 @@ public class SalesOrderDetailPDFCreator {
         document.add(new Phrase("\n"));
     }
 
-    private void addSalesOrderFooter(Document document, SalesOrder salesOrder) throws DocumentException, IOException {
+    private void addSalesOrderFooter(Document document, Context ctx, SalesOrder salesOrder) throws DocumentException, IOException {
         Font font;
         try{
             font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
@@ -359,9 +357,12 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.setPadding(3);
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        salesOrderNumberCell.addElement(new Paragraph("Sub-Total: "+salesOrder.getSubTotalAmountStringFormat(), font));
-        salesOrderNumberCell.addElement(new Paragraph("Impuestos: "+salesOrder.getTaxAmountStringFormat(), font));
-        salesOrderNumberCell.addElement(new Paragraph("Total: "+salesOrder.getTotalAmountStringFormat(), font));
+        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_amount,
+                salesOrder.getSubTotalAmountStringFormat()), font));
+        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
+                salesOrder.getTaxAmountStringFormat()), font));
+        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_total_amount,
+                salesOrder.getTotalAmountStringFormat()), font));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);
     }

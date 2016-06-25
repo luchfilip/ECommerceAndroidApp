@@ -61,7 +61,7 @@ public class BusinessPartner extends Model implements Parcelable {
     };
 
     public String getName() {
-        return name;
+        return name!=null ? name : "";
     }
 
     public void setName(String name) {
@@ -69,7 +69,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getCommercialName() {
-        return commercialName;
+        return commercialName!=null ? commercialName : "";
     }
 
     public void setCommercialName(String commercialName) {
@@ -77,7 +77,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getTaxId() {
-        return taxId;
+        return taxId!=null ? taxId : "";
     }
 
     public void setTaxId(String taxId) {
@@ -85,7 +85,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getAddress() {
-        return address;
+        return address!=null ? address : "";
     }
 
     public void setAddress(String address) {
@@ -93,7 +93,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getContactPerson() {
-        return contactPerson;
+        return contactPerson!=null ? contactPerson : "";
     }
 
     public void setContactPerson(String contactPerson) {
@@ -101,7 +101,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getEmailAddress() {
-        return emailAddress;
+        return emailAddress!=null ? emailAddress : "";
     }
 
     public void setEmailAddress(String emailAddress) {
@@ -109,7 +109,7 @@ public class BusinessPartner extends Model implements Parcelable {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phoneNumber!=null ? phoneNumber : "";
     }
 
     public void setPhoneNumber(String phoneNumber) {
