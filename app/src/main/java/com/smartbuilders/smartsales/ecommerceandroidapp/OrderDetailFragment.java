@@ -89,7 +89,7 @@ public class OrderDetailFragment extends Fragment {
 
                     mOrder = (new OrderDB(getContext(), mCurrentUser)).getActiveOrderById(mOrderId);
 
-                    mShareIntent = createShareOrderIntent(mOrderLines);
+                    mShareIntent = createShareOrderIntent(mOrder, mOrderLines);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -176,7 +176,7 @@ public class OrderDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareOrderIntent(ArrayList<OrderLine> orderLines){
+    private Intent createShareOrderIntent(Order order, ArrayList<OrderLine> orderLines){
         String subject = "";
         String message = "";
 
@@ -188,7 +188,7 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new OrderDetailPDFCreator().generatePDF(orderLines, fileName+".pdf", getContext(), mCurrentUser);
+            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mCurrentUser);
         }catch(Exception e){
             e.printStackTrace();
         }

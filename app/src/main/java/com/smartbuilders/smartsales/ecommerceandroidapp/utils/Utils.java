@@ -445,7 +445,7 @@ public class Utils {
         return null;
     }
 
-    public static void createImageInCompanyDir(Context context, User user, InputStream inputStream){
+    public static void createImageInUserCompanyDir(Context context, User user, InputStream inputStream){
         OutputStream outputStream = null;
         try {
             // write the inputStream to a FileOutputStream
@@ -479,7 +479,7 @@ public class Utils {
         }
     }
 
-    public static Bitmap getImageFromCompanyDir(Context context, User user){
+    public static Bitmap getImageFromUserCompanyDir(Context context, User user){
         try {
             if(context!=null && context.getExternalFilesDir(null)!=null && user!=null){
                 File imgFile = new File(context.getExternalFilesDir(null).toString() + File.separator +

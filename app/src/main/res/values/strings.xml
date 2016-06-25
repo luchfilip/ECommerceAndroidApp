@@ -127,6 +127,7 @@
     <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
     <string name="order_number">Pedido No.: %1$s</string>
     <string name="sales_order_doc_name">COTIZACIÓN</string>
+    <string name="order_doc_name">PEDIDO</string>
     <string name="sales_order_number">Cotización No.: %1$s</string>
     <string name="sales_order_date">Fecha de creación: %1$s</string>
     <string name="order_date">Fecha de creación: %1$s</string>

@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itextpdf.text.ExceptionConverter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
@@ -80,11 +81,35 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     switch (tab.getPosition()) {
                         case 0:
                             findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
+                            try{
+                                getSupportFragmentManager().findFragmentByTag(
+                                        SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                            try{
+                                getSupportFragmentManager().findFragmentByTag(
+                                        OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(false);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case 1:
                             findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+                            try{
+                                getSupportFragmentManager().findFragmentByTag(
+                                        OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+                            try{
+                                getSupportFragmentManager().findFragmentByTag(
+                                        SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(false);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             break;
                     }
                 }
@@ -169,7 +194,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         String result = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
                                 .deactiveSalesOrderById(salesOrder.getId());
                         if (result==null) {
-
                             reloadSalesOrdersList(listView);
                         } else {
                             Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();

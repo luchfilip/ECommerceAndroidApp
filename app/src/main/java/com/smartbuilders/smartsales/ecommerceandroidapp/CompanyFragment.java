@@ -2,8 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.nfc.tech.NfcBarcode;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,11 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -82,7 +76,7 @@ public class CompanyFragment extends Fragment {
                                 final Button saveButton = (Button) rootView.findViewById(R.id.save_button);
 
                                 companyLogoImageView = (ImageView) rootView.findViewById(R.id.company_logo_imageView);
-                                companyLogoImageView.setImageBitmap(Utils.getImageFromCompanyDir(getContext(), mCurrentUser));
+                                companyLogoImageView.setImageBitmap(Utils.getImageFromUserCompanyDir(getContext(), mCurrentUser));
                                 companyLogoImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -223,9 +217,9 @@ public class CompanyFragment extends Fragment {
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 try {
-                    Utils.createImageInCompanyDir(getContext(), mCurrentUser,
+                    Utils.createImageInUserCompanyDir(getContext(), mCurrentUser,
                             getContext().getContentResolver().openInputStream(data.getData()));
-                    companyLogoImageView.setImageBitmap(Utils.getImageFromCompanyDir(getContext(), mCurrentUser));
+                    companyLogoImageView.setImageBitmap(Utils.getImageFromUserCompanyDir(getContext(), mCurrentUser));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

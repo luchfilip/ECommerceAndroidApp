@@ -149,7 +149,7 @@ public class SalesOrderDetailPDFCreator {
         PdfPCell companyLogoCell = new PdfPCell();
 
         try{
-            Bitmap bmp = Utils.getImageFromCompanyDir(ctx, user);
+            Bitmap bmp = Utils.getImageFromUserCompanyDir(ctx, user);
             if(bmp!=null) {
                 bmp = getResizedBitmap(bmp, 230, 80);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
