@@ -80,15 +80,15 @@ public class SalesOrdersListActivity extends AppCompatActivity
                 if(mThreePane) {
                     switch (tab.getPosition()) {
                         case 0:
-                            findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
                             try{
+                                findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
                                 getSupportFragmentManager().findFragmentByTag(
                                         SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(true);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            findViewById(R.id.order_detail_container).setVisibility(View.GONE);
                             try{
+                                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
                                 getSupportFragmentManager().findFragmentByTag(
                                         OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(false);
                             } catch (Exception e) {
@@ -96,15 +96,15 @@ public class SalesOrdersListActivity extends AppCompatActivity
                             }
                             break;
                         case 1:
-                            findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
                             try{
+                                findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
                                 getSupportFragmentManager().findFragmentByTag(
                                         OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(true);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                             try{
+                                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                                 getSupportFragmentManager().findFragmentByTag(
                                         SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(false);
                             } catch (Exception e) {
@@ -126,6 +126,15 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         });
         viewPager.setAllowSwap(!mThreePane);
+
+        try{
+            getSupportFragmentManager().findFragmentByTag(
+                    SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(true);
+            getSupportFragmentManager().findFragmentByTag(
+                    OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
