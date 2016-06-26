@@ -58,8 +58,8 @@ public class BrandsListFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
-                    mBrandAdapter = new BrandAdapter(getContext(), new ProductBrandDB(getContext(),
-                            Utils.getCurrentUser(getContext())).getActiveProductBrands());
+                    mBrandAdapter = new BrandAdapter(getContext(), new ProductBrandDB(getContext())
+                            .getActiveProductBrands());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

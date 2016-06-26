@@ -120,16 +120,16 @@ public class TableDataReceiverFromServer extends Thread {
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 5;
         }
-        if(sync){
-            execRemoteQueryAndInsert(context, user,
-                    "select USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
-                        " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                    " from USER_APP_PARAMETER where IS_ACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO USER_APP_PARAMETER (USER_NAME, APP_PARAMETER_ID, TEXT_VALUE, " +
-                        " INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            syncPercentage = 10;
-        }
+		if(sync){
+			execRemoteQueryAndInsert(context, user,
+					"select COMPANY_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
+                        " EMAIL_ADDRESS, CONTACT_CENTER_PHONE_NUMBER, PHONE_NUMBER, FAX_NUMBER, WEB_PAGE " +
+							" from COMPANY where IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO COMPANY (COMPANY_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
+                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, CONTACT_CENTER_PHONE_NUMBER, PHONE_NUMBER, FAX_NUMBER, WEB_PAGE) " +
+							" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			syncPercentage = 10;
+		}
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
 					"select PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, DESCRIPTION, PURPOSE, " +
@@ -175,8 +175,8 @@ public class TableDataReceiverFromServer extends Thread {
         }
         if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_IMAGE_ID, PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?, ?)");
+					"select PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?)");
             syncPercentage = 70;
         }
 		if(sync){
@@ -245,7 +245,7 @@ public class TableDataReceiverFromServer extends Thread {
                                                     parameters);
         Object result = a.getWSResponse();
         if (result instanceof SoapPrimitive) {
-            insertDataFromWSResultData(result.toString(), insertSentence, context, user);
+            insertDataFromWSResultData(result.toString(), insertSentence, context/*, user*/);
         } else if(result instanceof Exception) {
             throw (Exception) result;
         } else if (result!=null) {
@@ -260,10 +260,9 @@ public class TableDataReceiverFromServer extends Thread {
 	 * @param data
 	 * @param insertSentence
 	 * @param context
-	 * @param user
 	 * @throws Exception
 	 */
-	public void insertDataFromWSResultData(String data, String insertSentence, Context context, User user) throws Exception {
+	public void insertDataFromWSResultData(String data, String insertSentence, Context context/*, User user*/) throws Exception {
 		int counterEntireCompressedData = 0;
 		int counter = 0;
 		JSONArray jsonArray = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(data, Base64.GZIP)));
@@ -286,7 +285,7 @@ public class TableDataReceiverFromServer extends Thread {
 			SQLiteDatabase db = null;
 			SQLiteStatement statement = null;
 			try {
-				db = (new DatabaseHelper(context, user)).getWritableDatabase();
+				db = (new DatabaseHelper(context/*, user*/)).getWritableDatabase();
 
 				statement = db.compileStatement(insertSentence);
 				db.beginTransaction();

@@ -27,9 +27,7 @@ public class MainPageProductSectionDB {
         ArrayList<MainPageProductSection> mainPageProductSections = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT MS.MAINPAGE_PRODUCT_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
                     " FROM MAINPAGE_PRODUCT_SECTION MS " +
                         " INNER JOIN MAINPAGE_PRODUCT MP ON MP.MAINPAGE_PRODUCT_SECTION_ID = MS.MAINPAGE_PRODUCT_SECTION_ID " +
@@ -37,12 +35,14 @@ public class MainPageProductSectionDB {
                     " WHERE MS.IS_ACTIVE = ? " +
                     " ORDER BY MS.PRIORITY ASC",
                     new String[] {"Y", "Y"}, null);
-            while(c.moveToNext()){
-                MainPageProductSection mainPageProductSection = new MainPageProductSection();
-                mainPageProductSection.setId(c.getInt(0));
-                mainPageProductSection.setName(c.getString(1));
-                mainPageProductSection.setDescription(c.getString(2));
-                mainPageProductSections.add(mainPageProductSection);
+            if(c!=null){
+                while(c.moveToNext()){
+                    MainPageProductSection mainPageProductSection = new MainPageProductSection();
+                    mainPageProductSection.setId(c.getInt(0));
+                    mainPageProductSection.setName(c.getString(1));
+                    mainPageProductSection.setDescription(c.getString(2));
+                    mainPageProductSections.add(mainPageProductSection);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,19 +68,19 @@ public class MainPageProductSectionDB {
         ArrayList<Product> productsByProductSectionId = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = M.PRODUCT_ID AND P.IS_ACTIVE = ? " +
                     " WHERE M.IS_ACTIVE = ? AND M.MAINPAGE_PRODUCT_SECTION_ID = ? " +
                     " ORDER BY M.PRIORITY ASC",
                     new String[]{"Y", "Y", String.valueOf(productSectionId)}, null);
-            while(c.moveToNext()){
-                Product p = new Product();
-                p.setId(c.getInt(2));
-                productsByProductSectionId.add(p);
+            if(c!=null){
+                while(c.moveToNext()){
+                    Product p = new Product();
+                    p.setId(c.getInt(2));
+                    productsByProductSectionId.add(p);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

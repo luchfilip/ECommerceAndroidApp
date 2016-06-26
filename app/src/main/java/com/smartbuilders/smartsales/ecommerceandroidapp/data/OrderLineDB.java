@@ -340,4 +340,29 @@ public class OrderLineDB {
         }
         return 0;
     }
+
+    public boolean isProductInWishList(int productId) {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                            .build(), null,
+                    "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE PRODUCT_ID=? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(productId), WISHLIST_DOCTYPE, "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                return c.getInt(0)>0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
 }

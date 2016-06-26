@@ -69,8 +69,8 @@ public class CategoriesListFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
-                    productCategories.addAll(new ProductCategoryDB(getContext(),
-                            Utils.getCurrentUser(getContext())).getActiveProductCategories()) ;
+                    productCategories.addAll(new ProductCategoryDB(getContext())
+                            .getActiveProductCategories()) ;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

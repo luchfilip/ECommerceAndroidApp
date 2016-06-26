@@ -85,7 +85,7 @@ public class FolderDataReceiverFromServer extends Thread {
 			if(sync){
 				initSync();
 				while (sync) {
-					pullFileFromServer(getActiveFileSyncIdsInDb());
+					//pullFileFromServer(getActiveFileSyncIdsInDb());
 				}
 			}
 		} catch (ConnectException e) {
@@ -135,7 +135,7 @@ public class FolderDataReceiverFromServer extends Thread {
 						Log.d(TAG, "Nothing to sync.");
 						stopSynchronization();
 					}else{
-						processActiveFileSyncIds(response);
+						//processActiveFileSyncIds(response);
 					}
 				}else if (response!=null){
 					throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
@@ -168,114 +168,114 @@ public class FolderDataReceiverFromServer extends Thread {
 		}
 	}
 	
-	/**
-	 * elimina del cliente los archivos que no estan activos asi como de la
-	 * tabla IDS_INCOMING_FILE_SYNC
-	 * @param data
-	 */
-	private void processActiveFileSyncIds(Object data) {
-		Log.d(TAG, "processActiveFileSyncIds("+((SoapPrimitive) data).toString()+")");
-		if(data instanceof SoapPrimitive && ((SoapPrimitive) data).toString()!=null){
-			SQLiteDatabase database = null;
-			Log.d(TAG, "serverUserId: "+serverUserId);
-			try {
-				database = dbHelper.getReadableDatabase();
-				ContentValues cv = new ContentValues();
-				cv.put("IS_ACTIVE","N");
-				int rowsAffected = database.update("IDS_INCOMING_FILE_SYNC", 
-													cv, 
-													"FILE_SYNC_ID NOT IN ("+((SoapPrimitive) data).toString()+")", 
-													null);
-				Log.d(TAG, "rowsAffected: "+rowsAffected);
-				if(rowsAffected>0){
-					ArrayList<String> filesToRemove = new ArrayList<String>();
-					Cursor c = null;
-					try {
-						c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
-													new String[]{"FOLDER_CLIENT_NAME", "FILE_NAME"}, /*columns*/
-													"IS_ACTIVE=? AND ERROR_MESSAGE is null", /*selection*/
-													new String[] {"N"}, /*selectionArgs*/
-													null, /*groupBy*/
-													null, /*having*/
-													null /*orderBy*/); 
-						if(c!=null){
-							while(c.moveToNext()){
-								try{
-									filesToRemove.add(folder.getPath().toString()+"/"+c.getString(1));
-								}catch(Exception e1){
-									e1.printStackTrace();
-								}
-							}
-						}
-					} catch (Exception e){
-						e.printStackTrace();
-					} finally {
-						if(c!=null){
-							c.close();
-						}
-					}
-					File file = null;
-					for(String fileToRemove : filesToRemove){
-						try{
-							Log.d(TAG, "fileToRemove: "+fileToRemove);
-							file = new File(fileToRemove);
-							if(file!=null && file.exists()){
-								file.delete();
-							}
-						}catch(Exception e){
-							e.printStackTrace();
-						}finally{
-							file = null;
-						}
-					}
-					database.delete("IDS_INCOMING_FILE_SYNC", "IS_ACTIVE=?", new String[] {"N"});
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(database!=null){
-					database.close();
-				}
-			}
-		}
-	}
+	///**
+	// * elimina del cliente los archivos que no estan activos asi como de la
+	// * tabla IDS_INCOMING_FILE_SYNC
+	// * @param data
+	// */
+	//private void processActiveFileSyncIds(Object data) {
+	//	Log.d(TAG, "processActiveFileSyncIds("+((SoapPrimitive) data).toString()+")");
+	//	if(data instanceof SoapPrimitive && ((SoapPrimitive) data).toString()!=null){
+	//		SQLiteDatabase database = null;
+	//		Log.d(TAG, "serverUserId: "+serverUserId);
+	//		try {
+	//			database = dbHelper.getReadableDatabase();
+	//			ContentValues cv = new ContentValues();
+	//			cv.put("IS_ACTIVE","N");
+	//			int rowsAffected = database.update("IDS_INCOMING_FILE_SYNC",
+	//												cv,
+	//												"FILE_SYNC_ID NOT IN ("+((SoapPrimitive) data).toString()+")",
+	//												null);
+	//			Log.d(TAG, "rowsAffected: "+rowsAffected);
+	//			if(rowsAffected>0){
+	//				ArrayList<String> filesToRemove = new ArrayList<String>();
+	//				Cursor c = null;
+	//				try {
+	//					c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
+	//												new String[]{"FOLDER_CLIENT_NAME", "FILE_NAME"}, /*columns*/
+	//												"IS_ACTIVE=? AND ERROR_MESSAGE is null", /*selection*/
+	//												new String[] {"N"}, /*selectionArgs*/
+	//												null, /*groupBy*/
+	//												null, /*having*/
+	//												null /*orderBy*/);
+	//					if(c!=null){
+	//						while(c.moveToNext()){
+	//							try{
+	//								filesToRemove.add(folder.getPath().toString()+"/"+c.getString(1));
+	//							}catch(Exception e1){
+	//								e1.printStackTrace();
+	//							}
+	//						}
+	//					}
+	//				} catch (Exception e){
+	//					e.printStackTrace();
+	//				} finally {
+	//					if(c!=null){
+	//						c.close();
+	//					}
+	//				}
+	//				File file = null;
+	//				for(String fileToRemove : filesToRemove){
+	//					try{
+	//						Log.d(TAG, "fileToRemove: "+fileToRemove);
+	//						file = new File(fileToRemove);
+	//						if(file!=null && file.exists()){
+	//							file.delete();
+	//						}
+	//					}catch(Exception e){
+	//						e.printStackTrace();
+	//					}finally{
+	//						file = null;
+	//					}
+	//				}
+	//				database.delete("IDS_INCOMING_FILE_SYNC", "IS_ACTIVE=?", new String[] {"N"});
+	//			}
+	//		} catch (Exception e) {
+	//			e.printStackTrace();
+	//		} finally {
+	//			if(database!=null){
+	//				database.close();
+	//			}
+	//		}
+	//	}
+	//}
 	
-	/**
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
-	private String getActiveFileSyncIdsInDb() throws Exception{
-		StringBuffer filesReceived = new StringBuffer();
-		SQLiteDatabase database = null; 
-		Cursor c = null;
-		try {
-			database = dbHelper.getReadableDatabase(); 
-			c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
-										new String[]{"FILE_SYNC_ID"}, /*columns*/
-										"IS_ACTIVE=?", /*where*/
-										new String[] {"Y"}, /*selectionArgs*/
-										null, /*groupBy*/
-										null, /*having*/
-										null /*orderBy*/); 
-			if(c!=null && c.moveToNext()){
-				filesReceived.append(c.getString(0));
-				while(c.moveToNext()){
-					filesReceived.append(",").append(c.getString(0));
-				}
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		} finally {
-			if(c!=null){
-				c.close();
-			}
-			if(database!=null){
-				database.close();
-			}
-		}
-		return filesReceived.toString();
-	}
+	///**
+	// *
+	// * @return
+	// * @throws Exception
+	// */
+	//private String getActiveFileSyncIdsInDb() throws Exception{
+	//	StringBuffer filesReceived = new StringBuffer();
+	//	SQLiteDatabase database = null;
+	//	Cursor c = null;
+	//	try {
+	//		database = dbHelper.getReadableDatabase();
+	//		c = database.query("IDS_INCOMING_FILE_SYNC", /*table*/
+	//									new String[]{"FILE_SYNC_ID"}, /*columns*/
+	//									"IS_ACTIVE=?", /*where*/
+	//									new String[] {"Y"}, /*selectionArgs*/
+	//									null, /*groupBy*/
+	//									null, /*having*/
+	//									null /*orderBy*/);
+	//		if(c!=null && c.moveToNext()){
+	//			filesReceived.append(c.getString(0));
+	//			while(c.moveToNext()){
+	//				filesReceived.append(",").append(c.getString(0));
+	//			}
+	//		}
+	//	} catch (Exception e){
+	//		e.printStackTrace();
+	//	} finally {
+	//		if(c!=null){
+	//			c.close();
+	//		}
+	//		if(database!=null){
+	//			database.close();
+	//		}
+	//	}
+	//	return filesReceived.toString();
+	//}
 	
 	/**
 	 * 
@@ -373,29 +373,29 @@ public class FolderDataReceiverFromServer extends Thread {
 			e.printStackTrace();
 			errorMessage = e.getMessage()!=null ? e.getMessage() : "Exception with message null while receive file.";
 		}
-		insertIncomingFile(fileSyncId, folderClientName, fileName, fileSize, errorMessage);
+		//insertIncomingFile(fileSyncId, folderClientName, fileName, fileSize, errorMessage);
 	}
 	
-	/**
-	 *
-	 * @param fileSyncId
-	 * @param folderClientName
-	 * @param fileName
-	 * @param fileSize
-	 * @param errorMessage
-	 */
-	private void insertIncomingFile(String fileSyncId, String folderClientName, 
-									String fileName, Integer fileSize, String errorMessage){
-		SQLiteDatabase database = dbHelper.getWritableDatabase(); 
-		ContentValues values = new ContentValues(); 
-		values.put("FILE_SYNC_ID", fileSyncId); 
-		values.put("FOLDER_CLIENT_NAME", folderClientName); 
-		values.put("FILE_NAME", fileName); 
-		values.put("FILE_SIZE", fileSize); 
-		values.put("ERROR_MESSAGE", errorMessage); 
-		database.insert("IDS_INCOMING_FILE_SYNC", null, values); 
-		database.close();
-	}
+	///**
+	// *
+	// * @param fileSyncId
+	// * @param folderClientName
+	// * @param fileName
+	// * @param fileSize
+	// * @param errorMessage
+	// */
+	//private void insertIncomingFile(String fileSyncId, String folderClientName,
+	//								String fileName, Integer fileSize, String errorMessage){
+	//	SQLiteDatabase database = dbHelper.getWritableDatabase();
+	//	ContentValues values = new ContentValues();
+	//	values.put("FILE_SYNC_ID", fileSyncId);
+	//	values.put("FOLDER_CLIENT_NAME", folderClientName);
+	//	values.put("FILE_NAME", fileName);
+	//	values.put("FILE_SIZE", fileSize);
+	//	values.put("ERROR_MESSAGE", errorMessage);
+	//	database.insert("IDS_INCOMING_FILE_SYNC", null, values);
+	//	database.close();
+	//}
 	
 	public float getSyncPercentage(){
 		return syncPercentage;

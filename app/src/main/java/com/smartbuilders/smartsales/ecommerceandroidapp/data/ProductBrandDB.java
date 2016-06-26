@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 
@@ -15,20 +14,16 @@ import java.util.ArrayList;
 public class ProductBrandDB {
 
     private Context context;
-    private User user;
 
-    public ProductBrandDB(Context context, User user){
+    public ProductBrandDB(Context context){
         this.context = context;
-        this.user = user;
     }
 
     public ArrayList<ProductBrand> getActiveProductBrands(){
         ArrayList<ProductBrand> productBrands = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                     " FROM BRAND B " +
                         " INNER JOIN PRODUCT P ON P.BRAND_ID = B.BRAND_ID AND P.IS_ACTIVE = ? " +

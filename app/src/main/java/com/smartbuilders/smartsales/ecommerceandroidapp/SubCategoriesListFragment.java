@@ -10,14 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SubCategoryAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -46,8 +44,6 @@ public class SubCategoriesListFragment extends Fragment {
 
         final ArrayList<ProductSubCategory> productSubCategories = new ArrayList<>();
 
-        final User currentUser = Utils.getCurrentUser(getContext());
-
         new Thread() {
             @Override
             public void run() {
@@ -75,7 +71,7 @@ public class SubCategoriesListFragment extends Fragment {
                         }
                     }
 
-                    productSubCategories.addAll((new ProductSubCategoryDB(getContext(), currentUser))
+                    productSubCategories.addAll((new ProductSubCategoryDB(getContext()))
                             .getActiveProductSubCategoriesByCategoryId(mCategoryId));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -86,7 +82,7 @@ public class SubCategoriesListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                ProductCategory productCategory = (new ProductCategoryDB(getContext(), currentUser))
+                                ProductCategory productCategory = (new ProductCategoryDB(getContext()))
                                         .getActiveProductCategoryById(mCategoryId);
                                 if(productCategory!=null){
                                     ((TextView) rootView.findViewById(R.id.category_name_textView))

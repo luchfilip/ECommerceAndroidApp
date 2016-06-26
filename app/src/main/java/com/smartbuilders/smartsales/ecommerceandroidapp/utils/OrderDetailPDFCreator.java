@@ -198,7 +198,7 @@ public class OrderDetailPDFCreator {
                 PdfWriter.getInstance(document, byteArrayOutputStream);
                 document.open();
 
-                Company company = (new CompanyDB(ctx, user)).getCompany();
+                Company company = (new CompanyDB(ctx)).getCompany();
                 if(company==null){
                     company = new Company();
                 }

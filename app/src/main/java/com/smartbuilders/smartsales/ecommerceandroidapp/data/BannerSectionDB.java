@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
 import android.content.Context;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 
 /**
@@ -11,16 +10,14 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 public class BannerSectionDB {
 
     private Context mContext;
-    private User mUser;
 
-    public BannerSectionDB(Context context, User user){
+    public BannerSectionDB(Context context){
         this.mContext = context;
-        this.mUser = user;
     }
 
     public BannerSection getBannerSection() {
         BannerSection bannerSection = new BannerSection();
-        bannerSection.setBanners((new BannerDB(mContext, mUser)).getActiveBanners());
+        bannerSection.setBanners((new BannerDB(mContext)).getActiveBanners());
         return bannerSection;
     }
 }

@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 
@@ -15,20 +14,16 @@ import java.util.ArrayList;
 public class ProductSubCategoryDB {
 
     private Context context;
-    private User user;
 
-    public ProductSubCategoryDB(Context context, User user){
+    public ProductSubCategoryDB(Context context){
         this.context = context;
-        this.user = user;
     }
 
     public ArrayList<ProductSubCategory> getActiveProductSubCategoriesByCategoryId(int categoryId){
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +

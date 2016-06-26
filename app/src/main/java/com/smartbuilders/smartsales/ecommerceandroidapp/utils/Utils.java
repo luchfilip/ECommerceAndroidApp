@@ -719,9 +719,8 @@ public class Utils {
             String[] tables = new String[]{"PRODUCT", "BRAND", "CATEGORY", "MAINPAGE_PRODUCT",
                     "MAINPAGE_PRODUCT_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
             for (String table : tables){
-                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                        .build(), null, "select count(*) from " + table, null, null);
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
+                        null, "select count(*) from " + table, null, null);
                 if(c!=null && c.moveToNext() && c.getInt(0)==0) {
                     return true;
                 }

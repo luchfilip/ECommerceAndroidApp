@@ -21,11 +21,11 @@ import java.util.regex.Pattern;
 public class ProductDB {
 
     private Context mContext;
-    private User mCurrentUser;
+    private OrderLineDB mOrderLineDB;
 
     public ProductDB(Context context, User user){
         this.mContext = context;
-        this.mCurrentUser = user;
+        this.mOrderLineDB = new OrderLineDB(mContext, user);
     }
 
     public ArrayList<Product> getRelatedShoppingProductsByProductId(int productId, Integer limit){
@@ -33,8 +33,8 @@ public class ProductDB {
         Cursor c = null;
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
-                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, OL.PRODUCT_ID, PR.RATING " +
+                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -43,14 +43,12 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = P.PRODUCT_ID AND R.PRODUCT_ID = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? "  +
                     " ORDER BY R.TIMES DESC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(productId),
-                    String.valueOf(1), "Y", "Y", OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(productId), "Y"}, null);
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(productId),
+                    String.valueOf(1), "Y", "Y", String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -60,8 +58,8 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.setAvailability(c.getInt(10));
-                    p.setFavorite(c.getInt(11)>0);
-                    p.setRating(c.getFloat(12));
+                    p.setRating(c.getFloat(11));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -84,8 +82,8 @@ public class ProductDB {
         Cursor c = null;
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
-                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, OL.PRODUCT_ID, PR.RATING " +
+                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -93,14 +91,12 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.SUBCATEGORY_ID = ? AND P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(subCategoryId), String.valueOf(productId), "Y"}, null);
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                            String.valueOf(subCategoryId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -110,8 +106,8 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.setAvailability(c.getInt(10));
-                    p.setFavorite(c.getInt(11)>0);
-                    p.setRating(c.getFloat(12));
+                    p.setRating(c.getFloat(11));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -135,7 +131,7 @@ public class ProductDB {
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, OL.PRODUCT_ID, PR.RATING " +
+                        " PA.AVAILABILITY, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -143,14 +139,12 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.BRAND_ID = ? AND P.PRODUCT_ID <> ?  AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                            String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -160,8 +154,8 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.setAvailability(c.getInt(10));
-                    p.setFavorite(c.getInt(11)>0);
-                    p.setRating(c.getFloat(12));
+                    p.setRating(c.getFloat(11));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -183,13 +177,11 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -197,11 +189,10 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.SUBCATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC ",
                     new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(subCategoryId), "Y"}, null);
+                            String.valueOf(subCategoryId), "Y"}, null);
             if (c!=null) {
                 String[] words;
                 try {
@@ -235,14 +226,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
-                    p.setImageFileName(c.getString(20));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                     p.setAvailability(c.getInt(19));
-                    p.setFavorite(c.getInt(21)>0);
-                    p.setRating(c.getFloat(22));
+                    p.setImageFileName(c.getString(20));
+                    p.setRating(c.getFloat(21));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -264,10 +255,11 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
@@ -275,13 +267,9 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE S.CATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC ";
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(categoryId), "Y"}, null);
+                    " ORDER BY P.NAME ASC ",
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(categoryId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -297,14 +285,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
-                    p.setImageFileName(c.getString(20));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                     p.setAvailability(c.getInt(19));
-                    p.setFavorite(c.getInt(21)>0);
-                    p.setRating(c.getFloat(22));
+                    p.setImageFileName(c.getString(20));
+                    p.setRating(c.getFloat(21));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -326,10 +314,11 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -337,13 +326,10 @@ public class ProductDB {
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.BRAND_ID = ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC";
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(brandId), "Y"}, null);
+                    " ORDER BY P.NAME ASC",
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                            String.valueOf(brandId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -359,14 +345,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
-                    p.setImageFileName(c.getString(20));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                     p.setAvailability(c.getInt(19));
-                    p.setFavorite(c.getInt(21)>0);
-                    p.setRating(c.getFloat(22));
+                    p.setImageFileName(c.getString(20));
+                    p.setRating(c.getFloat(21));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -403,13 +389,11 @@ public class ProductDB {
         Cursor c = null;
         try {
             if(isNumeric) {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                                .build(), null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -417,15 +401,11 @@ public class ProductDB {
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                         " WHERE P.INTERNAL_CODE LIKE ? AND P.IS_ACTIVE = ? " +
                         " ORDER BY P.NAME ASC",
-                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", OrderLineDB.WISHLIST_DOCTYPE,
-                                name+"%", "Y"}, null);
+                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", name+"%", "Y"}, null);
             }else{
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                        .build(), null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -437,13 +417,11 @@ public class ProductDB {
                             " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                             " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                            " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                         " WHERE (replace(replace(replace(replace(replace(lower(P.NAME),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
                                     " OR replace(replace(replace(replace(replace(lower(P.NAME),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
                                 " AND P.IS_ACTIVE = ? " +
                         " ORDER BY P.NAME ASC",
-                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", OrderLineDB.WISHLIST_DOCTYPE,
-                        name+"%", "% "+name+"%", "Y"}, null);
+                        new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", name+"%", "% "+name+"%", "Y"}, null);
             }
             if (c!=null) {
                 while(c.moveToNext()){
@@ -460,14 +438,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
-                    p.setImageFileName(c.getString(20));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                     p.setAvailability(c.getInt(19));
-                    p.setFavorite(c.getInt(21)>0);
-                    p.setRating(c.getFloat(22));
+                    p.setImageFileName(c.getString(20));
+                    p.setRating(c.getFloat(21));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
             }
@@ -508,9 +486,7 @@ public class ProductDB {
         Cursor c = null;
         try {
             if (isNumeric) {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                        .build(), null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.NAME), P.INTERNAL_CODER, S.NAME, S.DESCRIPTION " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
@@ -544,9 +520,8 @@ public class ProductDB {
                         aux += " "+word+"%";
                     }
                 }
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                        .build(), null, sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "Y"}, null);
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                        sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "Y"}, null);
             }
 
             if (c!=null) {
@@ -598,13 +573,11 @@ public class ProductDB {
     public Product getProductById(int id, boolean useProductCode){
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -612,10 +585,8 @@ public class ProductDB {
                         " LEFT JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDERLINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.DOC_TYPE = ? " +
                     " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
-                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                    OrderLineDB.WISHLIST_DOCTYPE, String.valueOf(id), "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(id), "Y"}, null);
             if (c!=null) {
                 if(c.moveToNext()){
                     Product p = new Product();
@@ -631,14 +602,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
-                    p.setImageFileName(c.getString(20));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
                     p.setAvailability(c.getInt(19));
-                    p.setFavorite(c.getInt(21)>0);
-                    p.setRating(c.getFloat(22));
+                    p.setImageFileName(c.getString(20));
+                    p.setRating(c.getFloat(21));
+                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     return p;
                 }
             }

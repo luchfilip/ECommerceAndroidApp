@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
 
@@ -17,20 +16,16 @@ import java.util.Comparator;
 public class ProductCategoryDB {
 
     private Context context;
-    private User user;
 
-    public ProductCategoryDB(Context context, User user){
+    public ProductCategoryDB(Context context){
         this.context = context;
-        this.user = user;
     }
 
     public ArrayList<ProductCategory> getActiveProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
                         " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -77,9 +72,7 @@ public class ProductCategoryDB {
     public ProductCategory getActiveProductCategoryById(int productCategoryId){
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND IS_ACTIVE=?",
                     new String[]{String.valueOf(productCategoryId), "Y"}, null);
             if(c!=null && c.moveToNext()){

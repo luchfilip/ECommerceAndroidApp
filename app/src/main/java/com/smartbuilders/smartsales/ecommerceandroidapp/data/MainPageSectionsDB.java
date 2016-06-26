@@ -26,7 +26,7 @@ public class MainPageSectionsDB {
         ArrayList<Object> mainPageList = new ArrayList<>();
 
         try {
-            BannerSection bannerSection = (new BannerSectionDB(mContext, mUser)).getBannerSection();
+            BannerSection bannerSection = (new BannerSectionDB(mContext)).getBannerSection();
             if (bannerSection!=null && bannerSection.getBanners()!=null
                     && !bannerSection.getBanners().isEmpty()) {
                 mainPageList.add(bannerSection);
@@ -37,7 +37,7 @@ public class MainPageSectionsDB {
 
         try {
             ProductBrandPromotionalSection productBrandPromotionalSection =
-                    (new ProductBrandPromotionSectionDB(mContext, mUser)).getProductBrandPromotionSection();
+                    (new ProductBrandPromotionSectionDB(mContext)).getProductBrandPromotionSection();
             if (productBrandPromotionalSection !=null
                     && productBrandPromotionalSection.getProductBrandPromotionalCards()!=null
                     && !productBrandPromotionalSection.getProductBrandPromotionalCards().isEmpty()) {
