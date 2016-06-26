@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itextpdf.text.ExceptionConverter;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
@@ -32,17 +31,34 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager;
  * Jesus Sarco, 12.05.2016
  */
 public class SalesOrdersListActivity extends AppCompatActivity
-        implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
+        implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener,
+        SalesOrderDetailFragment.Callback, OrderDetailFragment.Callback {
 
     private static final String SALES_ORDER_DETAIL_FRAGMENT_TAG = "SALES_ORDER_DETAIL_FRAGMENT_TAG";
+    public static final String STATE_CURRENT_TAB_SELECTED = "STATE_CURRENT_TAB_SELECTED";
+    public static final String KEY_CURRENT_TAB_SELECTED = "KEY_CURRENT_TAB_SELECTED";
 
     private boolean mThreePane;
     private User mCurrentUser;
+    private TabLayout mTabLayout;
+    private int mCurrentTabSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_orders_list);
+
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
+                mCurrentTabSelected = savedInstanceState.getInt(STATE_CURRENT_TAB_SELECTED);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_TAB_SELECTED)){
+                mCurrentTabSelected = getIntent().getExtras().getInt(KEY_CURRENT_TAB_SELECTED);
+            }
+        }
 
         mCurrentUser = Utils.getCurrentUser(this);
 
@@ -64,52 +80,30 @@ public class SalesOrdersListActivity extends AppCompatActivity
         mThreePane = findViewById(R.id.sales_order_detail_container) != null
                 && findViewById(R.id.order_detail_container) != null;
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Cotizaciones"));
-        tabLayout.addTab(tabLayout.newTab().setText("Cotizaciones hechas pedidos"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.sales_orders_list_tab0_name));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.sales_orders_list_tab1_name));
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final SalesOrderListPagerAdapter adapter = new SalesOrderListPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final SalesOrderListPagerAdapter adapter = new SalesOrderListPagerAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                mCurrentTabSelected = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 if(mThreePane) {
+                    manageMenu();
                     switch (tab.getPosition()) {
                         case 0:
-                            try{
                                 findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
-                                getSupportFragmentManager().findFragmentByTag(
-                                        SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(true);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try{
                                 findViewById(R.id.order_detail_container).setVisibility(View.GONE);
-                                getSupportFragmentManager().findFragmentByTag(
-                                        OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(false);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             break;
                         case 1:
-                            try{
                                 findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
-                                getSupportFragmentManager().findFragmentByTag(
-                                        OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(true);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try{
                                 findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
-                                getSupportFragmentManager().findFragmentByTag(
-                                        SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(false);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             break;
                     }
                 }
@@ -126,15 +120,14 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         });
         viewPager.setAllowSwap(!mThreePane);
+    }
 
-        try{
-            getSupportFragmentManager().findFragmentByTag(
-                    SALES_ORDER_DETAIL_FRAGMENT_TAG).setMenuVisibility(true);
-            getSupportFragmentManager().findFragmentByTag(
-                    OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG).setMenuVisibility(false);
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    protected void onStart() {
+        if(mTabLayout!=null && mTabLayout.getTabAt(mCurrentTabSelected)!=null){
+            mTabLayout.getTabAt(mCurrentTabSelected).select();
         }
+        super.onStart();
     }
 
     @Override
@@ -244,6 +237,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     @Override
     public void reloadActivity() {
         startActivity(new Intent(this, SalesOrdersListActivity.class)
+                .putExtra(KEY_CURRENT_TAB_SELECTED, mCurrentTabSelected)
                 .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
         finish();
     }
@@ -274,6 +268,51 @@ public class SalesOrdersListActivity extends AppCompatActivity
             if (listView!=null && listView.getAdapter()!=null && listView.getAdapter().getCount()>selectedIndex) {
                 listView.setSelection(selectedIndex);
                 listView.setItemChecked(selectedIndex, true);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_CURRENT_TAB_SELECTED, mCurrentTabSelected);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean isFragmentMenuVisible() {
+        return false;
+    }
+
+    @Override
+    public void salesOrderDetailLoaded() {
+        manageMenu();
+    }
+
+    @Override
+    public void orderDetailLoaded() {
+        manageMenu();
+    }
+
+    private void manageMenu(){
+        if(mThreePane && getSupportFragmentManager()!=null){
+            if(mTabLayout.getSelectedTabPosition()==0) {
+                if(getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)
+                            .setMenuVisibility(true);
+                }
+                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                            .setMenuVisibility(false);
+                }
+            }else{
+                if(getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)
+                            .setMenuVisibility(false);
+                }
+                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                            .setMenuVisibility(true);
+                }
             }
         }
     }

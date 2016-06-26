@@ -272,7 +272,8 @@
     <string name="valid_to_label">Válida hasta:</string>
     <string name="undefined">Indefinido</string>
     <string name="company_logo_label">Logo de la compañía:</string>
-
+    <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
+    <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
     <string-array name="search_by_options">
         <item>@string/search_by</item>
         <item>@string/categories</item>

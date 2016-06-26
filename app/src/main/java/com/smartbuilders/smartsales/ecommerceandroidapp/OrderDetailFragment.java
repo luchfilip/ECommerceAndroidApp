@@ -51,10 +51,16 @@ public class OrderDetailFragment extends Fragment {
     public OrderDetailFragment() {
     }
 
+    public interface Callback {
+        void orderDetailLoaded();
+        boolean isFragmentMenuVisible();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
+        setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
 
         final ArrayList<OrderLine> mOrderLines = new ArrayList<>();
 
@@ -131,6 +137,9 @@ public class OrderDetailFragment extends Fragment {
                             } finally {
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                if(getActivity()!=null){
+                                    ((Callback) getActivity()).orderDetailLoaded();
+                                }
                             }
                         }
                     });

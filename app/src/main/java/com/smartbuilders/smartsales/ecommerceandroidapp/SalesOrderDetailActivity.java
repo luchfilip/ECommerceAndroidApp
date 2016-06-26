@@ -20,7 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
  * Jesus Sarco, 12.05.2016
  */
 public class SalesOrderDetailActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SalesOrderDetailFragment.Callback {
 
     public static final String KEY_SALES_ORDER_ID = "key_sales_order_id";
 
@@ -82,5 +82,15 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean isFragmentMenuVisible() {
+        return true;
+    }
+
+    @Override
+    public void salesOrderDetailLoaded() {
+
     }
 }
