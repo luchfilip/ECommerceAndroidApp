@@ -27,14 +27,15 @@ public class UserBusinessPartnerDB {
         ArrayList<BusinessPartner> activeBusinessPartners = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                    " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from USER_BUSINESS_PARTNER " +
-                    " where IS_ACTIVE = ? " +
-                    " order by USER_BUSINESS_PARTNER_ID desc";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, sql, new String[]{"Y"}, null);
+                    .build(), null,
+                    "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
+                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                    " from USER_BUSINESS_PARTNER " +
+                    " where IS_ACTIVE = ? " +
+                    " order by USER_BUSINESS_PARTNER_ID desc",
+                    new String[]{"Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     BusinessPartner businessPartner = new BusinessPartner();
@@ -69,8 +70,8 @@ public class UserBusinessPartnerDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                     null,
                     "INSERT INTO USER_BUSINESS_PARTNER (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                        " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
@@ -91,8 +92,8 @@ public class UserBusinessPartnerDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
                     null,
                     "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
-                            " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
-                            " where USER_BUSINESS_PARTNER_ID = ? ",
+                        " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
+                    " where USER_BUSINESS_PARTNER_ID = ? ",
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),

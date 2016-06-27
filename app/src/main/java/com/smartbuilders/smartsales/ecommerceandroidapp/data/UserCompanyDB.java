@@ -49,9 +49,10 @@ public class UserCompanyDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                        " from USER_COMPANY where IS_ACTIVE = ?",
+                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, " +
+                        " PHONE_NUMBER " +
+                    " from USER_COMPANY " +
+                    " where IS_ACTIVE = ?",
                     new String[]{"Y"}, null);
             if(c!=null && c.moveToNext()){
                 Company company = new Company();
