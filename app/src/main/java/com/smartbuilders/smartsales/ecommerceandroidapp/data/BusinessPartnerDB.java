@@ -32,9 +32,9 @@ public class BusinessPartnerDB {
                     "select BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                         " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from BUSINESS_PARTNER " +
-                    " where IS_ACTIVE = ? " +
+                    " where USER_ID = ? AND IS_ACTIVE = ? " +
                     " order by BUSINESS_PARTNER_ID desc",
-                    new String[]{"Y"}, null);
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     BusinessPartner businessPartner = new BusinessPartner();
@@ -72,8 +72,9 @@ public class BusinessPartnerDB {
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                         " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from BUSINESS_PARTNER " +
-                    " where BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+                    " where BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), "Y"},
+                    null);
             if(c!=null && c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();
                 businessPartner.setId(businessPartnerId);

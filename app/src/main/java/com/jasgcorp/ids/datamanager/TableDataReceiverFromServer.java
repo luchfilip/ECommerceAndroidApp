@@ -193,12 +193,12 @@ public class TableDataReceiverFromServer extends Thread {
 		syncPercentage = 0;
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
-					"select BUSINESS_PARTNER_ID, INTERNAL_CODE, NAME, COMMERCIAL_NAME, TAX_ID, " +
+					"select BUSINESS_PARTNER_ID, USER_ID, INTERNAL_CODE, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from BUSINESS_PARTNER where USER_ID = "+user.getServerUserId()+" AND IS_ACTIVE = 'Y' ",
-					"INSERT OR REPLACE INTO BUSINESS_PARTNER (BUSINESS_PARTNER_ID, INTERNAL_CODE, " +
+					"INSERT OR REPLACE INTO BUSINESS_PARTNER (BUSINESS_PARTNER_ID, USER_ID, INTERNAL_CODE, " +
                         " NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			syncPercentage = 100;
 		}
 		Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
