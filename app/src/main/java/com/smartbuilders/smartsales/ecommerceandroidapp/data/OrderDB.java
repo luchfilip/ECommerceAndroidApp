@@ -28,65 +28,50 @@ public class OrderDB {
         this.user = user;
     }
 
-    public String createOrderFromOrderLines(Integer salesOrderId, Integer businessPartnerId,
+    public String createOrderFromOrderLines(Integer salesOrderId, int businessPartnerId,
                                             ArrayList<OrderLine> orderLines){
         return createOrder(salesOrderId, businessPartnerId, orderLines, true);
     }
 
-    public String createOrderFromShoppingCart(){
-        return createOrder(null, null, (new OrderLineDB(mContext, user)).getShoppingCart(), false);
+    public String createOrderFromShoppingCart(int businessPartnerId){
+        return createOrder(null, businessPartnerId, (new OrderLineDB(mContext, user)).getShoppingCart(), false);
     }
 
-    //public int getLastFinalizedOrderId(){
-    //    Cursor c = null;
-    //    try {
-    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-    //                .build(), null,
-    //                "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
-    //                new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
-    //        if(c!=null && c.moveToNext()){
-    //            return c.getInt(0);
-    //        }
-    //    } catch (Exception e){
-    //        e.printStackTrace();
-    //    } finally {
-    //        if(c != null) {
-    //            try {
-    //                c.close();
-    //            } catch (Exception e) {
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //    return 0;
-    //}
+    public ArrayList<Order> getActiveOrders(){
+        return getActiveOrders(false);
+    }
+
+    public ArrayList<Order> getActiveOrdersFromSalesOrders(){
+        return getActiveOrders(true);
+    }
 
     public Order getActiveOrderById(int orderId){
         Cursor c = null;
         Order order = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
-                    .build(), null,
-                    "SELECT ECOMMERCE_ORDER_ID, CREATE_TIME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL "+
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(), null,
+                    "SELECT ECOMMERCE_ORDER_ID, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, LINES_NUMBER, " +
+                            " SUB_TOTAL, TAX, TOTAL, BUSINESS_PARTNER_ID "+
                     " FROM ECOMMERCE_ORDER " +
                     " WHERE ECOMMERCE_ORDER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(orderId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 order = new Order();
                 order.setId(c.getInt(0));
+                order.setSalesOrderId(c.getInt(1));
                 try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(1)).getTime()));
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) { }
                 }catch(Exception ex){ }
-                order.setLinesNumber(c.getInt(2));
-                order.setSubTotalAmount(c.getDouble(3));
-                order.setTaxAmount(c.getDouble(4));
-                order.setTotalAmount(c.getDouble(5));
+                order.setLinesNumber(c.getInt(3));
+                order.setSubTotalAmount(c.getDouble(4));
+                order.setTaxAmount(c.getDouble(5));
+                order.setTotalAmount(c.getDouble(6));
+                order.setBusinessPartnerId(c.getInt(7));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -99,18 +84,20 @@ public class OrderDB {
                 }
             }
         }
+
+        if(order!=null && order.getBusinessPartnerId()>0){
+            if(order.getSalesOrderId()>0){
+                order.setBusinessPartner((new UserBusinessPartnerDB(mContext, user))
+                        .getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+            }else{
+                order.setBusinessPartner((new BusinessPartnerDB(mContext, user))
+                        .getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+            }
+        }
         return order;
     }
 
-    public ArrayList<Order> getActiveOrders(){
-        return getActiveOrders(false);
-    }
-
-    public ArrayList<Order> getActiveOrdersFromSalesOrders(){
-        return getActiveOrders(true);
-    }
-
-    private String createOrder(Integer salesOrderId, Integer businessPartnerId,
+    private String createOrder(Integer salesOrderId, int businessPartnerId,
                                ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         OrderLineDB orderLineDB = new OrderLineDB(mContext, user);
         if((orderLines!=null && insertOrderLinesInDB) || orderLineDB.getActiveShoppingCartLinesNumber()>0){
@@ -248,12 +235,24 @@ public class OrderDB {
                 }
             }
         }
-        if(fromSalesOrder) {
-            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, user);
-            for(Order order : activeOrders){
-                order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+
+        UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, user);
+        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, user);
+        ArrayList<Order> ordersToRemove = new ArrayList<>();
+        for(Order order : activeOrders){
+            if(order.getBusinessPartnerId()>0){
+                if(order.getSalesOrderId()>0){
+                    order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+                }else{
+                    order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                }
+            }
+            if(order.getBusinessPartner()==null) {
+                ordersToRemove.add(order);
             }
         }
+        //se eliminan los pedidos que no tienen businessPartner asociado.
+        activeOrders.removeAll(ordersToRemove);
         return activeOrders;
     }
 }

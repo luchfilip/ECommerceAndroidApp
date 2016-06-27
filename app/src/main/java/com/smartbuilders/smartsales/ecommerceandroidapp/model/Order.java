@@ -119,6 +119,18 @@ public class Order extends Model implements Parcelable {
         dest.writeInt(businessPartnerId);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        try {
+            if(o instanceof Order){
+                return getId() == ((Order) o).getId();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return super.equals(o);
+    }
+
     public String getCreatedStringFormat(){
         try {
             return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM,
