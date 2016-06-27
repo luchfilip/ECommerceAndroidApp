@@ -7,7 +7,6 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -41,13 +40,37 @@ public class OrderLineDB {
         return addOrderLine(productId, 0, 0, 0, WISHLIST_DOCTYPE, null);
     }
 
-    public String removeProductFromWishList(Product product){
+    public ArrayList<OrderLine> getShoppingCart(){
+        return getOrderLines(SHOPPING_CART_DOCTYPE, null);
+    }
+
+    public ArrayList<OrderLine> getWishList(){
+        return getOrderLines(WISHLIST_DOCTYPE, null);
+    }
+
+    public ArrayList<OrderLine> getActiveFinalizedOrderLinesByOrderId(int orderId){
+        return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
+    }
+
+    private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
+        return getOrderLines(docType, orderId);
+    }
+
+    public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
+        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOCTYPE, SHOPPING_CART_DOCTYPE);
+    }
+
+    public int getActiveShoppingCartLinesNumber(){
+        return getActiveOrderLinesNumber(SHOPPING_CART_DOCTYPE);
+    }
+
+    public String removeProductFromWishList(int productId){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
                             null,
-                            "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ? AND PRODUCT_ID = ?",
-                            new String[]{WISHLIST_DOCTYPE, String.valueOf(product.getId())});
+                            "DELETE FROM ECOMMERCE_ORDERLINE WHERE PRODUCT_ID = ? AND DOC_TYPE = ?",
+                            new String[]{String.valueOf(productId), WISHLIST_DOCTYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -129,10 +152,6 @@ public class OrderLineDB {
         return null;
     }
 
-    public ArrayList<OrderLine> getShoppingCart(){
-        return getOrderLines(SHOPPING_CART_DOCTYPE, null);
-    }
-
     public ArrayList<OrderLine> getOrderLinesBySalesOrderId(int salesOrderId){
         ArrayList<OrderLine> orderLines = new ArrayList<>();
         Cursor c = null;
@@ -157,7 +176,7 @@ public class OrderLineDB {
                     orderLine.setPrice(c.getDouble(3));
                     orderLine.setTaxPercentage(c.getDouble(4));
                     orderLine.setTotalLineAmount(c.getDouble(5));
-                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId(), true));
+                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
                     if(orderLine.getProduct()!=null){
                         orderLines.add(orderLine);
                     }
@@ -175,18 +194,6 @@ public class OrderLineDB {
             }
         }
         return orderLines;
-    }
-
-    public ArrayList<OrderLine> getWishList(){
-        return getOrderLines(WISHLIST_DOCTYPE, null);
-    }
-
-    public ArrayList<OrderLine> getActiveFinalizedOrderLinesByOrderId(int orderId){
-        return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
-    }
-
-    private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
-        return getOrderLines(docType, orderId);
     }
 
     private String addOrderLine(int productId, int qtyRequested, double productPrice,
@@ -227,7 +234,7 @@ public class OrderLineDB {
                     "SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_ORDERLINE " +
                     " WHERE " + (orderId!=null ? " ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
-                            " DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                        " DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY CREATE_TIME DESC",
                     new String[]{docType, "Y"}, null);
             if(c!=null){
@@ -240,7 +247,7 @@ public class OrderLineDB {
                     orderLine.setPrice(c.getDouble(3));
                     orderLine.setTaxPercentage(c.getDouble(4));
                     orderLine.setTotalLineAmount(c.getDouble(5));
-                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId(), true));
+                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
                     if(orderLine.getProduct()!=null){
                         orderLines.add(orderLine);
                     }
@@ -286,10 +293,6 @@ public class OrderLineDB {
         return 0;
     }
 
-    public int getActiveShoppingCartLinesNumber(){
-        return getActiveOrderLinesNumber(SHOPPING_CART_DOCTYPE);
-    }
-
     private int getActiveOrderLinesNumber(String docType) {
         Cursor c = null;
         try {
@@ -313,10 +316,6 @@ public class OrderLineDB {
             }
         }
         return 0;
-    }
-
-    public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
-        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOCTYPE, SHOPPING_CART_DOCTYPE);
     }
 
     private int moveOrderLinesToOrderByOrderId(int orderId, String newDocType, String currentDocType) {

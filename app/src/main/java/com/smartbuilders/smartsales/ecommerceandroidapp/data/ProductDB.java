@@ -144,7 +144,7 @@ public class ProductDB {
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
-                            String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
+                    String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -215,7 +215,7 @@ public class ProductDB {
                     }
                     Product p = new Product();
                     p.setId(c.getInt(0));
-                    p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
+                    p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
@@ -226,6 +226,7 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
+                    p.setInternalCode(c.getString(9));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -274,7 +275,7 @@ public class ProductDB {
                 while(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
-                    p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
+                    p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
@@ -285,6 +286,7 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
+                    p.setInternalCode(c.getString(9));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -334,7 +336,7 @@ public class ProductDB {
                 while(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
-                    p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
+                    p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
@@ -345,6 +347,7 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
+                    p.setInternalCode(c.getString(9));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -427,7 +430,7 @@ public class ProductDB {
                 while(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
-                    p.setName(c.getString(3)+" (Cod: "+c.getString(9)+")");
+                    p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
                     if(!TextUtils.isEmpty(c.getString(5)) && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
@@ -438,6 +441,7 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
+                    p.setInternalCode(c.getString(9));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
@@ -544,9 +548,9 @@ public class ProductDB {
                             p.setName(c.getString(2));
                         }
                     } else {
-                        p.setName("Cod: "+c.getString(3)+" - " + c.getString(2));
+                        p.setName(c.getString(2));
                     }
-
+                    p.setInternalCode(c.getString(3));
                     p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), null, null));
                     if(!isNumeric && products.contains(p)){
                         continue;
@@ -570,7 +574,7 @@ public class ProductDB {
         return products;
     }
 
-    public Product getProductById(int id, boolean useProductCode){
+    public Product getProductById(int id){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
@@ -591,7 +595,7 @@ public class ProductDB {
                 if(c.moveToNext()){
                     Product p = new Product();
                     p.setId(c.getInt(0));
-                    p.setName(c.getString(3) + (useProductCode ? " (Cod: "+c.getString(9)+")" : ""));
+                    p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
@@ -602,6 +606,7 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(8))) {
                         p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
                     }
+                    p.setInternalCode(c.getString(9));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
                     p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));

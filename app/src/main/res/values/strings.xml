@@ -279,4 +279,5 @@
         <item>@string/categories</item>
         <item>@string/brands</item>
     </string-array>
+    <string name="product_internalCode_and_name">Cod: %1$s - %2$s</string>
 </resources>

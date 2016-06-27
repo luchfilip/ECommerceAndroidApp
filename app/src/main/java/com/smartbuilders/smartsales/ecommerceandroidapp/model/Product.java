@@ -8,12 +8,17 @@ import android.os.Parcelable;
  */
 public class Product extends Model implements Parcelable {
 
+    private int productBrandId;
     private ProductBrand productBrand;
     private String name;
+    private String internalCode;
     private String description;
     private String imageFileName;
+    private int productCategoryId;
     private ProductCategory productCategory;
+    private int productSubCategoryId;
     private ProductSubCategory productSubCategory;
+    private int productCommercialPackageId;
     private ProductCommercialPackage productCommercialPackage;
     private int availability;
     private boolean isFavorite;
@@ -26,12 +31,17 @@ public class Product extends Model implements Parcelable {
     protected Product(Parcel in) {
         super(in);
         name = in.readString();
+        internalCode = in.readString();
         description = in.readString();
         imageFileName = in.readString();
         availability = in.readInt();
+        productBrandId = in.readInt();
         productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
+        productCategoryId = in.readInt();
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
+        productSubCategoryId = in.readInt();
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
+        productCommercialPackageId = in.readInt();
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
         isFavorite = in.readByte() == 1;
         rating = in.readFloat();
@@ -41,12 +51,17 @@ public class Product extends Model implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(name);
+        dest.writeString(internalCode);
         dest.writeString(description);
         dest.writeString(imageFileName);
         dest.writeInt(availability);
+        dest.writeInt(productBrandId);
         dest.writeParcelable(productBrand, flags);
+        dest.writeInt(productCategoryId);
         dest.writeParcelable(productCategory, flags);
+        dest.writeInt(productSubCategoryId);
         dest.writeParcelable(productSubCategory, flags);
+        dest.writeInt(productCommercialPackageId);
         dest.writeParcelable(productCommercialPackage, flags);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
@@ -147,6 +162,46 @@ public class Product extends Model implements Parcelable {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public int getProductBrandId() {
+        return productBrandId;
+    }
+
+    public void setProductBrandId(int productBrandId) {
+        this.productBrandId = productBrandId;
+    }
+
+    public String getInternalCode() {
+        return internalCode;
+    }
+
+    public void setInternalCode(String internalCode) {
+        this.internalCode = internalCode;
+    }
+
+    public int getProductCategoryId() {
+        return productCategoryId;
+    }
+
+    public void setProductCategoryId(int productCategoryId) {
+        this.productCategoryId = productCategoryId;
+    }
+
+    public int getProductSubCategoryId() {
+        return productSubCategoryId;
+    }
+
+    public void setProductSubCategoryId(int productSubCategoryId) {
+        this.productSubCategoryId = productSubCategoryId;
+    }
+
+    public int getProductCommercialPackageId() {
+        return productCommercialPackageId;
+    }
+
+    public void setProductCommercialPackageId(int productCommercialPackageId) {
+        this.productCommercialPackageId = productCommercialPackageId;
     }
 
     @Override

@@ -96,7 +96,13 @@ public class SearchResultAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
         if(mDataset.get(position) instanceof Product){
             if(!TextUtils.isEmpty(((Product) mDataset.get(position)).getName())){
-                viewHolder.title.setText(((Product) mDataset.get(position)).getName());
+                if(((Product) mDataset.get(position)).getInternalCode()!=null) {
+                    viewHolder.title.setText(mContext.getString(R.string.product_internalCode_and_name,
+                            ((Product) mDataset.get(position)).getInternalCode(),
+                            ((Product) mDataset.get(position)).getName()));
+                }else{
+                    viewHolder.title.setText(((Product) mDataset.get(position)).getName());
+                }
             }else{
                 viewHolder.title.setVisibility(TextView.GONE);
             }

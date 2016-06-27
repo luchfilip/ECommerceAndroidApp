@@ -222,7 +222,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()));
+                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
                         if (result == null) {
                             mDataset.get(holder.getAdapterPosition()).setFavorite(false);
                             notifyItemChanged(holder.getAdapterPosition());
@@ -284,7 +284,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     }
 
     private void addToShoppingCart(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId());
         DialogAddToShoppingCart dialogAddToShoppingCart =
                 DialogAddToShoppingCart.newInstance(product, mCurrentUser);
         dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
@@ -292,7 +292,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     }
 
     private void addToShoppingSale(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
+        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId());
         DialogAddToShoppingSale dialogAddToShoppingSale =
                 DialogAddToShoppingSale.newInstance(product, mCurrentUser);
         dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
@@ -303,9 +303,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         return (new OrderLineDB(mContext, mCurrentUser)).addProductToWishList(productId);
     }
 
-    private String removeFromWishList(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
-        return (new OrderLineDB(mContext, mCurrentUser)).removeProductFromWishList(product);
+    private String removeFromWishList(int productId) {
+        return (new OrderLineDB(mContext, mCurrentUser)).removeProductFromWishList(productId);
     }
 
     class CreateShareIntentThread extends Thread {

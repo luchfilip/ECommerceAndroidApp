@@ -97,7 +97,7 @@ public class MainPageProductSectionDB {
         if(!productsByProductSectionId.isEmpty()){
             ProductDB productDB = new ProductDB(context, user);
             for (int i = 0; i < productsByProductSectionId.size(); i++){
-                productsByProductSectionId.set(i, productDB.getProductById(productsByProductSectionId.get(i).getId(), false));
+                productsByProductSectionId.set(i, productDB.getProductById(productsByProductSectionId.get(i).getId()));
             }
         }
         return productsByProductSectionId;

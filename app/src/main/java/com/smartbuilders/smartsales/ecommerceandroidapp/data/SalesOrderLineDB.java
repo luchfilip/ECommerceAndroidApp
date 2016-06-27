@@ -189,9 +189,9 @@ public class SalesOrderLineDB {
                     "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, " +
                         " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE IS_ACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ? " +
+                    " WHERE BUSINESS_PARTNER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?" +
                     " ORDER BY CREATE_TIME DESC",
-                    new String[]{"Y", docType, String.valueOf(businessPartnerId)}, null);
+                    new String[]{String.valueOf(businessPartnerId), docType, "Y"}, null);
             if (c!=null) {
                 ProductDB productDB = new ProductDB(mContext, mCurrentUser);
                 while(c.moveToNext()){
@@ -203,7 +203,7 @@ public class SalesOrderLineDB {
                     salesOrderLine.setPrice(c.getDouble(4));
                     salesOrderLine.setTaxPercentage(c.getDouble(5));
                     salesOrderLine.setTotalLineAmount(c.getDouble(6));
-                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId(), true));
+                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
                     if(salesOrderLine.getProduct()!=null){
                         orderLines.add(salesOrderLine);
                     }
@@ -240,9 +240,9 @@ public class SalesOrderLineDB {
                     "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, " +
                         " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE IS_ACTIVE = ? AND DOC_TYPE = ? AND ECOMMERCE_SALES_ORDER_ID = ? " +
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?" +
                     " ORDER BY CREATE_TIME DESC",
-                    new String[]{"Y", docType, String.valueOf(salesOrderId)}, null);
+                    new String[]{String.valueOf(salesOrderId), docType, "Y"}, null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mCurrentUser);
                 while(c.moveToNext()){
@@ -254,7 +254,7 @@ public class SalesOrderLineDB {
                     salesOrderLine.setPrice(c.getDouble(4));
                     salesOrderLine.setTaxPercentage(c.getDouble(5));
                     salesOrderLine.setTotalLineAmount(c.getDouble(6));
-                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId(), true));
+                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
                     if(salesOrderLine.getProduct()!=null){
                         orderLines.add(salesOrderLine);
                     }

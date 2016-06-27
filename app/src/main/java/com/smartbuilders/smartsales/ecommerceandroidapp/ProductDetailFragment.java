@@ -79,7 +79,7 @@ public class ProductDetailFragment extends Fragment {
                     ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
 
                     try {
-                        mProduct = productDB.getProductById(mProductId, true);
+                        mProduct = productDB.getProductById(mProductId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -154,7 +154,7 @@ public class ProductDetailFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if(mProduct.isFavorite()) {
-                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).removeProductFromWishList(mProduct);
+                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).removeProductFromWishList(mProduct.getId());
                                                 if (result == null) {
                                                     mProduct.setFavorite(false);
                                                     favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);

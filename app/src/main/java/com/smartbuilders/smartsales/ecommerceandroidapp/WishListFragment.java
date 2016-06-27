@@ -137,7 +137,7 @@ public class WishListFragment extends Fragment {
 
     public void addToShoppingCart(OrderLine orderLine, User user) {
         Product product = (new ProductDB(getContext(), user))
-                .getProductById(orderLine.getProduct().getId(), false);
+                .getProductById(orderLine.getProduct().getId());
         DialogAddToShoppingCart dialogAddToShoppingCart =
                 DialogAddToShoppingCart.newInstance(product, user);
         dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
@@ -146,7 +146,7 @@ public class WishListFragment extends Fragment {
 
     public void addToShoppingSale(OrderLine orderLine, User user) {
         Product product = (new ProductDB(getContext(), user))
-                .getProductById(orderLine.getProduct().getId(), false);
+                .getProductById(orderLine.getProduct().getId());
         DialogAddToShoppingSale dialogAddToShoppingSale =
                 DialogAddToShoppingSale.newInstance(product, user);
         dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
