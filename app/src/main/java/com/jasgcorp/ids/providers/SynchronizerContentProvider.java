@@ -319,7 +319,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 * @return
 	 */
 	private Cursor signUp(Uri uri){
-		MatrixCursor cursor = new MatrixCursor(new String[]{"serverUserId", "authToken", "error_message", "exception_class"});
+		MatrixCursor cursor = new MatrixCursor(new String[]{"businessPartnerId", "userProfileId", "serverUserId", "authToken", "error_message", "exception_class"});
+		String businessPartnerId = "";
+        String userProfileId = "";
 		String serverUserId = "";
 		String authToken = "";
 		String errorMessage = null;
@@ -358,6 +360,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
 					JSONObject json = new JSONObject(((SoapPrimitive) response).toString());
+					businessPartnerId = json.getString("BUSINESS_PARTNER_ID");
+                    userProfileId = json.getString("USER_PROFILE_ID");
 					serverUserId = json.getString("SERVER_USER_ID");
 					authToken = json.getString("AUTH_TOKEN");
 				}else if (response != null){
@@ -387,7 +391,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 				exceptionClass = e.getClass().getName();
 			}
 		}
-		cursor.addRow(new Object[]{serverUserId, authToken, errorMessage, exceptionClass});
+		cursor.addRow(new Object[]{businessPartnerId, userProfileId, serverUserId, authToken, errorMessage, exceptionClass});
 		return cursor;
 	}
 	

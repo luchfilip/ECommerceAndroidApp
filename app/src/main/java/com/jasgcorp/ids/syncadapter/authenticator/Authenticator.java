@@ -92,6 +92,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
         String syncPeriodicity 		= am.getUserData(account, AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY);
         String syncNetworkMode 		= am.getUserData(account, AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE);
         String userId 				= am.getUserData(account, AccountGeneral.USERDATA_USER_ID);
+        int businessPartnerId	    = Integer.valueOf(am.getUserData(account, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID));
+        int userProfileId   	    = Integer.valueOf(am.getUserData(account, AccountGeneral.USERDATA_USER_PROFILE_ID));
         Long serverUserId 			= Long.valueOf(am.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID));
         String userName 			= am.getUserData(account, AccountGeneral.USERDATA_USER_NAME);
         boolean saveDBInExternalCard= am.getUserData(account, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true");
@@ -107,6 +109,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 try {
 //                    Log.d(TAG, "> re-authenticating with the existing password");
                     User user = new User(userId);
+                    user.setBusinessPartnerId(businessPartnerId);
+                    user.setUserProfileId(userProfileId);
                     user.setServerUserId(serverUserId);
                     user.setUserGroup(userGroup);
                     user.setUserName(userName);
@@ -115,7 +119,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     user.setSaveDBInExternalCard(saveDBInExternalCard);
 
                     sServerAuthenticate.userSignIn(user, authTokenType, mContext);
-                    if (user != null && user.getAuthToken()!=null) {
+                    if (user.getAuthToken()!=null) {
                         authToken = user.getAuthToken();
                         if(user.getGcmRegistrationId()!=null){
                             gcmRegistrationId = user.getGcmRegistrationId();
@@ -153,6 +157,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
             result.putString(AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY, syncPeriodicity);
             result.putString(AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE, syncNetworkMode);
             result.putString(AccountGeneral.USERDATA_USER_ID, userId);
+            result.putInt(AccountGeneral.USERDATA_BUSINESS_PARTNER_ID, businessPartnerId);
+            result.putInt(AccountGeneral.USERDATA_USER_PROFILE_ID, userProfileId);
             result.putLong(AccountGeneral.USERDATA_SERVER_USER_ID, serverUserId);
             result.putString(AccountGeneral.USERDATA_USER_NAME, userName);
             result.putString(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, String.valueOf(saveDBInExternalCard));

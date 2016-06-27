@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Febeca C.A.</string>
-    <string name="label"></string>
 
     <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca</string>
     <string name="authenticator_acount_type">com.smartbuilders.smartsales.auth.febeca</string>
-
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -102,8 +100,6 @@
     <string name="error_incorrect_client_code">This client code is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
-    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="title_activity_product_list">Productos</string>
     <string name="title_activity_shopping_cart">Pedido</string>
     <string name="title_activity_categories">Busqueda Por Categoría</string>
@@ -218,13 +214,12 @@
     <string name="cancel">Cancelar</string>
     <string name="exit">Salir</string>
     <string name="create_order">Crear Pedido</string>
-    <string name="title_activity_register_customer">RegisterCustomerActivity</string>
     <string name="action_settings">Settings</string>
     <string name="business_partner_name_label">Razón Social:</string>
     <string name="business_partner_name">Razón Social</string>
     <string name="business_partner_commercial_name_label">Nombre Comercial:</string>
     <string name="business_partner_commercial_name">Nombre Comercial</string>
-    <string name="business_partner_detail">Client: %1$s</string>
+    <string name="business_partner_detail">Cliente: %1$s</string>
     <string name="address">Dirección</string>
     <string name="address_detail">Dirección: %1$s</string>
     <string name="address_label">Dirección:</string>
@@ -248,11 +243,9 @@
     <string name="loading_data_wait_please">Cargando datos...</string>
     <string name="reset_password">Reestablecer contraseña</string>
     <string name="sign_up">¿No posees una contraseña?</string>
-    <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="email">Correo electrónico</string>
     <string name="email_detail">Correo electrónico: %1$s</string>
     <string name="action_sign_up">Registrarse</string>
-    <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="action_reset_password">Reestablecer Contraseña</string>
     <string name="register_business_partner">Registrar Cliente</string>
     <string name="sending_request_wait_please">Enviando petición, espere por favor...</string>
@@ -264,7 +257,6 @@
     <string name="title_activity_conctac_us">ConctacUsActivity</string>
     <string name="send_email">Enviar correo electrónico</string>
     <string name="send_error_report">Enviar reporte de error</string>
-    <string name="company_tax_id">RIF: J000033927</string>
     <string name="contact_center_label">Centro de Contacto</string>
     <string name="master_label">Master:</string>
     <string name="fax_label">Fax:</string>
@@ -279,6 +271,6 @@
         <item>@string/categories</item>
         <item>@string/brands</item>
     </string-array>
-    <string name="product_internalCode_and_name">Cod: %1$s - %2$s</string>
+    <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>
 </resources>

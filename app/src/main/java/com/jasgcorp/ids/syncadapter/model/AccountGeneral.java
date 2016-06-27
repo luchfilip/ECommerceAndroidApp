@@ -12,6 +12,8 @@ public class AccountGeneral {
     public static final String USERDATA_AUTO_SYNC_PERIODICITY = "userAutoSyncPeriodicity";
     public static final String USERDATA_AUTO_SYNC_NETWORK_MODE = "userAutoSyncNetworkMode";
     public static final String USERDATA_USER_ID = "userId";
+    public static final String USERDATA_BUSINESS_PARTNER_ID = "businessPartnerId";
+    public static final String USERDATA_USER_PROFILE_ID = "userProfileId";
     public static final String USERDATA_SERVER_USER_ID = "serverUserId";
     public static final String USERDATA_USER_NAME = "userName";
     public static final String USERDATA_USER_SESSION_TOKEN = "sessionToken";

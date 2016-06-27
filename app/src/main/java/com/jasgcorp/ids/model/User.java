@@ -15,6 +15,8 @@ public class User implements Parcelable {
     private Long serverUserId;
     private String userId;
     private boolean saveDBInExternalCard;
+    private int businessPartnerId;
+    private int userProfileId;
 
     public User(){
 
@@ -31,6 +33,8 @@ public class User implements Parcelable {
         dest.writeString(userGroup);
         dest.writeLong(serverUserId);
         dest.writeString(userId);
+        dest.writeInt(businessPartnerId);
+        dest.writeInt(userProfileId);
         //dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
     }
 
@@ -44,6 +48,8 @@ public class User implements Parcelable {
         userGroup = in.readString();
         serverUserId = in.readLong();
         userId = in.readString();
+        businessPartnerId = in.readInt();
+        userProfileId = in.readInt();
         //saveDBInExternalCard = in.readByte() != 0;
     }
 
@@ -201,4 +207,19 @@ public class User implements Parcelable {
 		this.saveDBInExternalCard = saveDBInExternalCard;
 	}
 
+    public int getBusinessPartnerId() {
+        return businessPartnerId;
+    }
+
+    public void setBusinessPartnerId(int businessPartnerId) {
+        this.businessPartnerId = businessPartnerId;
+    }
+
+    public int getUserProfileId() {
+        return userProfileId;
+    }
+
+    public void setUserProfileId(int userProfileId) {
+        this.userProfileId = userProfileId;
+    }
 }

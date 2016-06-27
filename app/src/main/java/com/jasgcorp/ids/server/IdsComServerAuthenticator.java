@@ -68,8 +68,10 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
         				}
         				throw new Exception(response.getString(response.getColumnIndex("error_message")));
 					}
-					user.setAuthToken(response.getString(response.getColumnIndex("authToken")));
+					user.setBusinessPartnerId(Integer.valueOf(response.getString(response.getColumnIndex("businessPartnerId"))));
+					user.setUserProfileId(Integer.valueOf(response.getString(response.getColumnIndex("userProfileId"))));
 					user.setServerUserId(Long.valueOf(response.getString(response.getColumnIndex("serverUserId"))));
+					user.setAuthToken(response.getString(response.getColumnIndex("authToken")));
 					user.setSessionToken(ApplicationUtilities.ST_NEW_USER_AUTHORIZED);
 //					switch (response.getInt(response.getColumnIndex("state"))) {
 //						case ApplicationUtilities.NEW_USER_AUTHORIZED:

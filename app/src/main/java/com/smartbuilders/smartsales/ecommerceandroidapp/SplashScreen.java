@@ -161,7 +161,7 @@ public class SplashScreen extends AppCompatActivity {
                                         .getString(AccountGeneral.USERDATA_USER_ID);
                                 final Account availableAccounts[] = mAccountManager
                                         .getAccountsByType(getString(R.string.authenticator_acount_type));
-                                if (availableAccounts!=null && availableAccounts.length>0) {
+                                if (availableAccounts.length>0) {
                                     for(Account account : availableAccounts){
                                         if(mAccountManager.getUserData(account,
                                                 AccountGeneral.USERDATA_USER_ID).equals(userId)){

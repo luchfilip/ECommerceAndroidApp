@@ -24,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS IDS_USER (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " SERVER_USER_ID INTEGER, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL DEFAULT 0, " +
                     " USER_PROFILE_ID INTEGER NOT NULL DEFAULT 0, " +
                     " AUTH_TOKEN TEXT, " +
                     " USER_NAME TEXT NOT NULL, " +
