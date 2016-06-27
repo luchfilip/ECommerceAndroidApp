@@ -204,25 +204,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PRIMARY KEY (APP_PARAMETER_ID))";
 
     /*********************************************************************************************************************/
-    //public static final String CREATE_IDS_INCOMING_FILE_SYNC =
-    //        "CREATE TABLE IF NOT EXISTS IDS_INCOMING_FILE_SYNC (" +
-    //                "INCOMING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    //                " FILE_SYNC_ID BIGINT UNSIGNED NOT NULL, " +
-    //                " FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, " +
-    //                " FILE_NAME VARCHAR(255) NOT NULL, " +
-    //                " FILE_SIZE INTEGER NOT NULL, " +
-    //                " ERROR_MESSAGE TEXT, " +
-    //                " IS_ACTIVE CHAR DEFAULT 'Y', " +
-    //                " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
-
-    //public static final String CREATE_IDS_OUTGOING_FILE_SYNC =
-    //        "CREATE TABLE IF NOT EXISTS IDS_OUTGOING_FILE_SYNC (" +
-    //                "OUTGOING_FILE_SYNC_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    //                " FOLDER_CLIENT_NAME VARCHAR(255) NOT NULL, " +
-    //                " FILE_PATH VARCHAR(512) NOT NULL, " +
-    //                " FILE_SIZE INTEGER NOT NULL, " +
-    //                " IS_ACTIVE CHAR DEFAULT 'Y', " +
-    //                " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 
     private static final String CREATE_LOG_TABLE 	=
             "CREATE TABLE IF NOT EXISTS IDS_SYNC_LOG (" +
@@ -253,6 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER (" +
                     "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
                     " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
@@ -266,7 +248,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_USER_APP_PARAMETER =
             "CREATE TABLE IF NOT EXISTS USER_APP_PARAMETER (" +
-                    "USER_NAME INTEGER NOT NULL, " +
+                    "USER_ID INTEGER NOT NULL, " +
                     " APP_PARAMETER_ID INTEGER NOT NULL, " +
                     " TEXT_VALUE TEXT DEFAULT NULL, " +
                     " INTEGER_VALUE INTEGER DEFAULT NULL, " +
@@ -275,13 +257,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DATE_VALUE DATE DEFAULT NULL, " +
                     " DATETIME_VALUE DATETIME DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " PRIMARY KEY (USER_NAME, APP_PARAMETER_ID))";
+                    " PRIMARY KEY (USER_ID, APP_PARAMETER_ID))";
 
     public static final String CREATE_ECOMMERCE_ORDER =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER (" +
-                    "ECOMMERCE_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "ECOMMERCE_ORDER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, " +
-                    " BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, " +
                     " LINES_NUMBER INTEGER DEFAULT 0, " +
                     " SUB_TOTAL DOUBLE DEFAULT 0, " +
                     " TAX DOUBLE DEFAULT 0, " +
@@ -293,11 +276,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_ORDERLINE =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE (" +
-                    "ECOMMERCE_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "ECOMMERCE_ORDERLINE_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
                     " QTY_REQUESTED INTEGER NOT NULL, " +
@@ -310,12 +295,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (ECOMMERCE_ORDERLINE_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_SALES_ORDER =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER (" +
-                    "ECOMMERCE_SALES_ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, " +
+                    "ECOMMERCE_SALES_ORDER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " LINES_NUMBER INTEGER DEFAULT 0, " +
                     " SUB_TOTAL DOUBLE DEFAULT 0, " +
                     " TAX DOUBLE DEFAULT 0, " +
@@ -328,11 +315,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (ECOMMERCE_SALES_ORDER_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_SALES_ORDERLINE =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDERLINE (" +
-                    "ECOMMERCE_SALES_ORDERLINE_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "ECOMMERCE_SALES_ORDERLINE_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
@@ -346,11 +335,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (ECOMMERCE_SALES_ORDERLINE_ID, USER_ID))";
 
     public static final String CREATE_RECENT_SEARCH =
             "CREATE TABLE IF NOT EXISTS RECENT_SEARCH (" +
-                    "RECENT_SEARCH_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "RECENT_SEARCH_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " TEXT_TO_SEARCH TEXT NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " SUBCATEGORY_ID INTEGER DEFAULT NULL, " +
@@ -358,21 +349,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (RECENT_SEARCH_ID, USER_ID))";
 
-	public static final String CREATE_RECENT_VIEW =
-            "CREATE TABLE IF NOT EXISTS RECENT_VIEW (" +
-                    "RECENT_VIEW_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	public static final String CREATE_PRODUCT_RECENTLY_SEEN =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_RECENTLY_SEEN (" +
+                    "PRODUCT_RECENTLY_SEEN_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (PRODUCT_RECENTLY_SEEN_ID, USER_ID))";
 
     public static final String CREATE_USER_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +
-                    "USER_BUSINESS_PARTNER_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
                     " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
@@ -386,27 +381,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL)";
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
 
     public static final String CREATE_USER_COMPANY =
-            "CREATE TABLE IF NOT EXISTS USER_COMPANY " +
-                    "(NAME TEXT DEFAULT NULL, " +
-                    "COMMERCIAL_NAME TEXT DEFAULT NULL, " +
-                    "TAX_ID VARCHAR(255) DEFAULT NULL, " +
-                    "ADDRESS TEXT DEFAULT NULL, " +
-                    "CONTACT_PERSON VARCHAR(255) DEFAULT NULL, " +
-                    "EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
-                    "CONTACT_CENTER_PHONE_NUMBER VARCHAR(128) DEFAULT NULL, " +
-                    "PHONE_NUMBER VARCHAR(128) DEFAULT NULL, " +
-                    "FAX_NUMBER VARCHAR(128) DEFAULT NULL, " +
-                    "WEB_PAGE VARCHAR(255) DEFAULT NULL, " +
-                    "IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    "CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
-                    "UPDATE_TIME DATETIME DEFAULT NULL, " +
-                    "APP_VERSION VARCHAR(128) NOT NULL, " +
-                    "APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    "DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    "PRIMARY KEY (APP_USER_NAME))";
+            "CREATE TABLE IF NOT EXISTS USER_COMPANY (" +
+                    "USER_COMPANY_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " NAME TEXT DEFAULT NULL, " +
+                    " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
+                    " TAX_ID VARCHAR(255) DEFAULT NULL, " +
+                    " ADDRESS TEXT DEFAULT NULL, " +
+                    " CONTACT_PERSON VARCHAR(255) DEFAULT NULL, " +
+                    " EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
+                    " CONTACT_CENTER_PHONE_NUMBER VARCHAR(128) DEFAULT NULL, " +
+                    " PHONE_NUMBER VARCHAR(128) DEFAULT NULL, " +
+                    " FAX_NUMBER VARCHAR(128) DEFAULT NULL, " +
+                    " WEB_PAGE VARCHAR(255) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " UPDATE_TIME DATETIME DEFAULT NULL, " +
+                    " APP_VERSION VARCHAR(128) NOT NULL, " +
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (USER_COMPANY_ID, USER_ID))";
 
 	/**
 	 * 
@@ -469,7 +467,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDER);
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDERLINE);
             db.execSQL(CREATE_RECENT_SEARCH);
-            db.execSQL(CREATE_RECENT_VIEW);
+            db.execSQL(CREATE_PRODUCT_RECENTLY_SEEN);
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_COMPANY);
 		}
