@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -68,7 +69,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "DELETE FROM ECOMMERCE_ORDERLINE WHERE PRODUCT_ID = ? AND DOC_TYPE = ?",
                             new String[]{String.valueOf(productId), WISHLIST_DOCTYPE});
             if (rowsAffected < 1) {
@@ -85,7 +86,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
                                 " UPDATE_TIME = ? WHERE ECOMMERCE_ORDERLINE_ID = ? AND DOC_TYPE=?",
                             new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested), "datetime('now')",
@@ -104,7 +105,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "UPDATE ECOMMERCE_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
                         " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                     " WHERE ECOMMERCE_ORDERLINE_ID = ?",
@@ -126,7 +127,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "DELETE FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDERLINE_ID = ?",
                     new String[]{String.valueOf(orderLine.getId())});
             if (rowsAffected < 1) {
@@ -143,7 +144,7 @@ public class OrderLineDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ?",
+                    new ContentValues(), "DELETE FROM ECOMMERCE_ORDERLINE WHERE DOC_TYPE = ?",
                     new String[]{WISHLIST_DOCTYPE});
         } catch (Exception e){
             e.printStackTrace();
@@ -207,7 +208,7 @@ public class OrderLineDB {
             ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "INSERT INTO ECOMMERCE_ORDERLINE (PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, " +
                         " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_ORDER_ID, IS_ACTIVE, " +
                         " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
@@ -322,7 +323,7 @@ public class OrderLineDB {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "UPDATE ECOMMERCE_ORDERLINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
                     " DOC_TYPE = ? WHERE IS_ACTIVE = ? AND DOC_TYPE = ?",
                     new String[]{String.valueOf(orderId), "datetime('now')", newDocType, "Y", currentDocType});

@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -121,7 +122,7 @@ public class OrderDB {
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                null,
+                                new ContentValues(),
                                 "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
                                         " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
@@ -163,7 +164,7 @@ public class OrderDB {
                         int rowsAffected = mContext.getContentResolver()
                                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                        null,
+                                        new ContentValues(),
                                         "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ?",
                                         new String[]{String.valueOf(orderId)});
                         if(rowsAffected <= 0){

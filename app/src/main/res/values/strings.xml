@@ -280,4 +280,5 @@
         <item>@string/brands</item>
     </string-array>
     <string name="product_internalCode_and_name">Cod: %1$s - %2$s</string>
+    <string name="product_internalCode">Código: %1$s</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -36,7 +37,7 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null,
+                    .build(), new ContentValues(),
                     "INSERT INTO RECENT_SEARCH (PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
                             " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(productId), String.valueOf(subCategoryId), text,
@@ -55,7 +56,7 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?",
+                    .build(), new ContentValues(), "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ?",
                     new String[]{String.valueOf(recentSearchId)});
         } catch (Exception e){
             e.printStackTrace();
@@ -106,7 +107,7 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-                    .build(), null, "DELETE FROM RECENT_SEARCH", new String[0]);
+                    .build(), new ContentValues(), "DELETE FROM RECENT_SEARCH", new String[0]);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -66,7 +67,7 @@ public class SalesOrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "UPDATE ECOMMERCE_SALES_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
                         " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                     " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?",
@@ -133,7 +134,7 @@ public class SalesOrderLineDB {
 
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "INSERT INTO ECOMMERCE_SALES_ORDERLINE (PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, " +
                         " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, IS_ACTIVE, " +
                         " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
@@ -159,7 +160,7 @@ public class SalesOrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                         " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ?",
                     new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId())});
@@ -318,7 +319,7 @@ public class SalesOrderLineDB {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "UPDATE ECOMMERCE_SALES_ORDERLINE SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, " +
                     " DOC_TYPE = ? WHERE IS_ACTIVE = ? AND DOC_TYPE = ? AND BUSINESS_PARTNER_ID = ?",
                     new String[]{String.valueOf(orderId), "datetime('now')", newDocType, "Y",
@@ -339,7 +340,7 @@ public class SalesOrderLineDB {
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND DOC_TYPE = ?",
                             new String[]{"N", "datetime('now','localtime')",

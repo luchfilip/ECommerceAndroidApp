@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -25,7 +26,7 @@ public class UserCompanyDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
+                    new ContentValues(),
                     "insert or replace into user_company (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
                             " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",

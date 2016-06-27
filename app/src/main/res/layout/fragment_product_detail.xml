@@ -87,6 +87,13 @@
                     android:focusable="false">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/product_internal_code"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/productDetailActivity_productInternalCode_text_size" />
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/product_brand"

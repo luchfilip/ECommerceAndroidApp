@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -201,7 +202,7 @@ public class SalesOrderDB {
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                                null,
+                                new ContentValues(),
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, APP_VERSION, " +
                                         " APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
@@ -244,7 +245,7 @@ public class SalesOrderDB {
                         int rowsAffected = mContext.getContentResolver()
                                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                                        null,
+                                        new ContentValues(),
                                         "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ?",
                                         new String[]{String.valueOf(salesOrderId)});
                         if(rowsAffected <= 0){
@@ -268,14 +269,14 @@ public class SalesOrderDB {
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "UPDATE ECOMMERCE_SALES_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? ",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId)});

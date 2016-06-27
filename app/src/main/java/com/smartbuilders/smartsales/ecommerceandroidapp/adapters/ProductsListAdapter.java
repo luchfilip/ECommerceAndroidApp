@@ -53,6 +53,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
+        public TextView productInternalCode;
         public ImageView productImage;
         public TextView productBrand;
         public TextView commercialPackage;
@@ -67,6 +68,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -117,6 +119,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getName());
+
+        if(holder.productInternalCode!=null){
+            if(mDataset.get(position).getInternalCode()!=null){
+                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                        mDataset.get(position).getInternalCode()));
+            }
+        }
 
         if(holder.linearLayoutContent != null){
             switch (mRedirectOption){

@@ -117,6 +117,11 @@ public class ProductDetailFragment extends Fragment {
                             try {
                                 ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
+                                if(mProduct.getInternalCode()!=null){
+                                    ((TextView) view.findViewById(R.id.product_internal_code))
+                                            .setText(getContext().getString(R.string.product_internalCode, mProduct.getInternalCode()));
+                                }
+
                                 if(mProduct.getRating()>=0){
                                     ((RatingBar) view.findViewById(R.id.product_ratingbar)).setRating(mProduct.getRating());
                                 }

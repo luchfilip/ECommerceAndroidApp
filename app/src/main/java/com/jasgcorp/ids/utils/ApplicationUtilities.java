@@ -34,7 +34,6 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
@@ -43,7 +42,6 @@ import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -264,23 +262,17 @@ public class ApplicationUtilities {
      * @param logVisibility
      * @param ctx
      */
-    public static void registerLogInDataBase(User user, String logType, String logMessage, String logMessageDetail, int logVisibility, Context ctx){
+    public static void registerLogInDataBase(User user, String logType, String logMessage,
+											 String logMessageDetail, int logVisibility, Context ctx){
 		try{
-			if(ctx!=null) {
-                if(user!=null){
-                    ctx.getContentResolver()
-                            .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                                    null,
-                                    new StringBuffer("INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) ")
-                                            .append("VALUES (?, ?, ?, ?, ?)").toString(),
-                                    new String[]{user.getUserId(), logType, logMessage, logMessageDetail, Integer.valueOf(logVisibility).toString()});
-                }else{
-                    Log.w(TAG, "registerLogInDataBase, user is null");
-                }
-			}else{
-                Log.w(TAG, "registerLogInDataBase, ctx is null");
-            }
+            ctx.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                            new ContentValues(),
+                            "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
+                                    " VALUES (?, ?, ?, ?, ?)",
+                            new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
+                                    Integer.valueOf(logVisibility).toString()});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -581,12 +573,12 @@ public class ApplicationUtilities {
     public static boolean removeSyncSchedulerData(User user, SchedulerSyncData data, Context ctx) throws Exception{
     	try{
     		if(user!=null && data!=null){
-    			int rowsAffceted = ctx.getContentResolver()
+    			int rowsAffected = ctx.getContentResolver()
 			    						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 			    								new ContentValues(), 
 			    								"DELETE FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=?",
 		    									new String[]{Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
-    			if(rowsAffceted>0){
+    			if(rowsAffected>0){
     				removeSyncSchedulerDataInAlarmManager(user, data, ctx);
     				return true;
     			}
