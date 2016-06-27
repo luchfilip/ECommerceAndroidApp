@@ -29,7 +29,8 @@ public class UserBusinessPartnerDB {
         try {
             String sql = "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                     " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from USER_BUSINESS_PARTNER where IS_ACTIVE = ? " +
+                    " from USER_BUSINESS_PARTNER " +
+                    " where IS_ACTIVE = ? " +
                     " order by USER_BUSINESS_PARTNER_ID desc";
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
@@ -129,8 +130,8 @@ public class UserBusinessPartnerDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
-                    "select COUNT(TAX_ID) from USER_BUSINESS_PARTNER where IS_ACTIVE = ? AND TAX_ID = ?",
-                    new String[]{"Y", taxID}, null);
+                    "select COUNT(TAX_ID) from USER_BUSINESS_PARTNER where TAX_ID = ? AND IS_ACTIVE = ? ",
+                    new String[]{taxID, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
             }

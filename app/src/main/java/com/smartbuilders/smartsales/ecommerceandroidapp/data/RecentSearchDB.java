@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
+
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -18,10 +18,12 @@ public class RecentSearchDB {
 
     private Context mContext;
     private User mCurrentUser;
+    private ProductSubCategoryDB mProductSubCategoryDB;
 
     public RecentSearchDB(Context context, User user){
         this.mContext = context;
         this.mCurrentUser = user;
+        this.mProductSubCategoryDB = new ProductSubCategoryDB(context);
     }
 
     /**
@@ -62,29 +64,27 @@ public class RecentSearchDB {
 
     /**
      *
-     * @param limit
      * @return
      */
-    public ArrayList<RecentSearch> getRecentSearches(int limit){
+    public ArrayList<RecentSearch> getRecentSearches(){
         ArrayList<RecentSearch> recentSearches = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
-                    "SELECT RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, RS.SUBCATEGORY_ID, RS.RECENT_SEARCH_ID, S.NAME, S.DESCRIPTION " +
-                    " FROM RECENT_SEARCH RS " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                    " ORDER BY RS.CREATE_TIME desc",
-                    new String[]{"Y"}, null);
+                    "SELECT RECENT_SEARCH_ID, TEXT_TO_SEARCH, PRODUCT_ID, SUBCATEGORY_ID " +
+                    " FROM RECENT_SEARCH " +
+                    " ORDER BY CREATE_TIME desc",
+                    null, null);
             if(c!=null){
                 while(c.moveToNext()){
                     RecentSearch recentSearch = new RecentSearch();
-                    recentSearch.setId(c.getInt(3));
-                    recentSearch.setTextToSearch(c.getString(0));
-                    recentSearch.setProductId(c.getInt(1));
-                    recentSearch.setSubcategoryId(c.getInt(2));
-                    recentSearch.setProductSubCategory(new ProductSubCategory(0, c.getInt(2), c.getString(4), c.getString(5)));
+                    recentSearch.setId(c.getInt(0));
+                    recentSearch.setTextToSearch(c.getString(1));
+                    recentSearch.setProductId(c.getInt(2));
+                    recentSearch.setSubcategoryId(c.getInt(3));
+                    recentSearch.setProductSubCategory(mProductSubCategoryDB.getActiveProductSubCategoryById(recentSearch.getSubcategoryId()));
                     recentSearches.add(recentSearch);
                 }
             }

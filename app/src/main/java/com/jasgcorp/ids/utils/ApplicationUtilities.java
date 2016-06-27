@@ -34,6 +34,7 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
@@ -42,6 +43,7 @@ import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -264,12 +266,21 @@ public class ApplicationUtilities {
      */
     public static void registerLogInDataBase(User user, String logType, String logMessage, String logMessageDetail, int logVisibility, Context ctx){
 		try{
-	    	ctx.getContentResolver()
-				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-						new ContentValues(), 
-						new StringBuffer("INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) ")
-									.append("VALUES (?, ?, ?, ?, ?)").toString(), 
-						new String[]{user.getUserId(), logType, logMessage, logMessageDetail, Integer.valueOf(logVisibility).toString()});
+			if(ctx!=null) {
+                if(user!=null){
+                    ctx.getContentResolver()
+                            .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                    null,
+                                    new StringBuffer("INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) ")
+                                            .append("VALUES (?, ?, ?, ?, ?)").toString(),
+                                    new String[]{user.getUserId(), logType, logMessage, logMessageDetail, Integer.valueOf(logVisibility).toString()});
+                }else{
+                    Log.w(TAG, "registerLogInDataBase, user is null");
+                }
+			}else{
+                Log.w(TAG, "registerLogInDataBase, ctx is null");
+            }
 		}catch(Exception e){
 			e.printStackTrace();
 		}

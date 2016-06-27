@@ -126,7 +126,8 @@ public class OrderDB {
                                         " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, IS_ACTIVE) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO", OrderLineDB.FINALIZED_ORDER_DOCTYPE,
-                                        Utils.getAppVersionName(mContext), user.getUserName(), Utils.getMacAddress(mContext), String.valueOf(orderLines.size()),
+                                        Utils.getAppVersionName(mContext), user.getUserName(), Utils.getMacAddress(mContext),
+                                        String.valueOf(orderLines!=null ? orderLines.size() : orderLineDB.getActiveShoppingCartLinesNumber()),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total), "Y"});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
@@ -152,7 +153,7 @@ public class OrderDB {
                     }
                 }
             }
-            if (insertOrderLinesInDB) {
+            if (orderLines!=null && insertOrderLinesInDB) {
                 for (OrderLine orderLine : orderLines) {
                     orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
                 }
@@ -198,10 +199,10 @@ public class OrderDB {
                             " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID " +
                         " FROM ECOMMERCE_ORDER O " +
                             " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                        " WHERE O.IS_ACTIVE = ? AND O.DOC_TYPE = ? " +
-                            " AND O.ECOMMERCE_SALES_ORDER_ID IS NOT NULL AND O.BUSINESS_PARTNER_ID IS NOT NULL " +
+                        " WHERE O.ECOMMERCE_SALES_ORDER_ID IS NOT NULL AND O.BUSINESS_PARTNER_ID IS NOT NULL " +
+                                " AND O.DOC_TYPE = ? AND O.IS_ACTIVE = ? " +
                         " ORDER BY O.ECOMMERCE_ORDER_ID desc",
-                        new String[]{"Y", "Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
+                        new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
             } else {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
@@ -210,9 +211,9 @@ public class OrderDB {
                             " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
                             " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
                         " FROM ECOMMERCE_ORDER " +
-                        " WHERE IS_ACTIVE = ? AND DOC_TYPE = ? " +
+                        " WHERE DOC_TYPE = ? AND IS_ACTIVE = ? " +
                         " ORDER BY ECOMMERCE_ORDER_ID desc",
-                        new String[]{"Y", OrderLineDB.FINALIZED_ORDER_DOCTYPE}, null);
+                        new String[]{OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
 
             }
             if(c!=null){

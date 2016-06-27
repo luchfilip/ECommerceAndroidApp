@@ -72,9 +72,9 @@ public class MainPageProductSectionDB {
                     "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = M.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE M.IS_ACTIVE = ? AND M.MAINPAGE_PRODUCT_SECTION_ID = ? " +
+                    " WHERE M.MAINPAGE_PRODUCT_SECTION_ID = ? AND M.IS_ACTIVE = ? " +
                     " ORDER BY M.PRIORITY ASC",
-                    new String[]{"Y", "Y", String.valueOf(productSectionId)}, null);
+                    new String[]{"Y", String.valueOf(productSectionId), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     Product p = new Product();

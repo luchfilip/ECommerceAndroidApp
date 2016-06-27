@@ -11,9 +11,11 @@ import java.util.Locale;
  */
 public class SalesOrderLine extends Model implements Parcelable {
 
+    private int productId;
     private Product product;
     private int quantityOrdered;
     private double price;
+    private int currencyId;
     private Currency currency;
     private double taxPercentage;
     private double totalLineAmount;
@@ -25,9 +27,11 @@ public class SalesOrderLine extends Model implements Parcelable {
 
     protected SalesOrderLine(Parcel in) {
         super(in);
+        productId = in.readInt();
         product = in.readParcelable(Product.class.getClassLoader());
         quantityOrdered = in.readInt();
         price = in.readDouble();
+        currencyId = in.readInt();
         currency = in.readParcelable(Currency.class.getClassLoader());
         taxPercentage = in.readDouble();
         totalLineAmount = in.readDouble();
@@ -37,9 +41,11 @@ public class SalesOrderLine extends Model implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeInt(productId);
         dest.writeParcelable(product, flags);
         dest.writeInt(quantityOrdered);
         dest.writeDouble(price);
+        dest.writeInt(currencyId);
         dest.writeParcelable(currency, flags);
         dest.writeDouble(taxPercentage);
         dest.writeDouble(totalLineAmount);
@@ -129,6 +135,22 @@ public class SalesOrderLine extends Model implements Parcelable {
 
     public void setBusinessPartnerId(int businessPartnerId) {
         this.businessPartnerId = businessPartnerId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(int currencyId) {
+        this.currencyId = currencyId;
     }
 
     @Override

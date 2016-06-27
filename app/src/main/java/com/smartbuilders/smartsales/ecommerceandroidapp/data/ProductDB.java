@@ -487,7 +487,7 @@ public class ProductDB {
         try {
             if (isNumeric) {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                        "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.NAME), P.INTERNAL_CODER, S.NAME, S.DESCRIPTION " +
+                        "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.NAME), P.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +

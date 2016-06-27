@@ -91,7 +91,7 @@ public class DialogAddToShoppingCart extends DialogFragment {
                         if (qtyRequested > mProduct.getAvailability()) {
                             throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
                         }
-                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
+                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct.getId(), qtyRequested);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
                                     Toast.LENGTH_LONG).show();

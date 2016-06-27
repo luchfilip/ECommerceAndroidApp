@@ -236,7 +236,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
+                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()).getId());
                         if (result == null) {
                             mDataset.get(holder.getAdapterPosition()).setFavorite(true);
                             notifyItemChanged(holder.getAdapterPosition());
@@ -299,9 +299,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
-    private String addToWishList(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId(), false);
-        return (new OrderLineDB(mContext, mCurrentUser)).addProductToWishList(product);
+    private String addToWishList(int productId) {
+        return (new OrderLineDB(mContext, mCurrentUser)).addProductToWishList(productId);
     }
 
     private String removeFromWishList(Product product) {

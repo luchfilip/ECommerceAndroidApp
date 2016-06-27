@@ -6,7 +6,6 @@ import android.database.Cursor;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderLineBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -28,12 +27,12 @@ public class SalesOrderLineDB {
         this.mCurrentUser = user;
     }
 
-    public String addProductToShoppingSale(Product product, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
-        return addSalesOrderLine(product, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE, null, businessPartnerId);
+    public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
+        return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE, null, businessPartnerId);
     }
 
     public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId, int businessPartnerId){
-        return addSalesOrderLine(orderLine.getProduct(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOCTYPE, orderId, businessPartnerId);
+        return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOCTYPE, orderId, businessPartnerId);
     }
 
     public ArrayList<SalesOrderLine> getShoppingSale(int businessPartnerId){
@@ -113,7 +112,7 @@ public class SalesOrderLineDB {
 
     /**
      *
-     * @param product
+     * @param productId
      * @param qtyRequested
      * @param productPrice
      * @param productTaxPercentage
@@ -122,15 +121,15 @@ public class SalesOrderLineDB {
      * @param businessPartnerId
      * @return
      */
-    private String addSalesOrderLine(Product product, int qtyRequested, double productPrice,
+    private String addSalesOrderLine(int productId, int qtyRequested, double productPrice,
                                 double productTaxPercentage, String docType, Integer orderId, int businessPartnerId) {
         try {
-            SalesOrderLine ol = new SalesOrderLine();
-            ol.setProduct(product);
-            ol.setPrice(productPrice);
-            ol.setQuantityOrdered(qtyRequested);
-            ol.setTaxPercentage(productTaxPercentage);
-            ol.setTotalLineAmount(SalesOrderLineBR.getTotalLine(ol));
+            SalesOrderLine salesOrderLine = new SalesOrderLine();
+            salesOrderLine.setProductId(productId);
+            salesOrderLine.setPrice(productPrice);
+            salesOrderLine.setQuantityOrdered(qtyRequested);
+            salesOrderLine.setTaxPercentage(productTaxPercentage);
+            salesOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(salesOrderLine));
 
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
@@ -139,9 +138,9 @@ public class SalesOrderLineDB {
                         " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, IS_ACTIVE, " +
                         " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(ol.getProduct().getId()), String.valueOf(businessPartnerId),
-                            String.valueOf(ol.getQuantityOrdered()), String.valueOf(ol.getPrice()),
-                            String.valueOf(ol.getTaxPercentage()), String.valueOf(ol.getTotalLineAmount()),
+                    new String[]{String.valueOf(salesOrderLine.getProductId()), String.valueOf(businessPartnerId),
+                            String.valueOf(salesOrderLine.getQuantityOrdered()), String.valueOf(salesOrderLine.getPrice()),
+                            String.valueOf(salesOrderLine.getTaxPercentage()), String.valueOf(salesOrderLine.getTotalLineAmount()),
                             docType, (orderId==null ? null : String.valueOf(orderId)), "Y",
                             Utils.getAppVersionName(mContext), mCurrentUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
@@ -194,18 +193,20 @@ public class SalesOrderLineDB {
                     " ORDER BY CREATE_TIME DESC",
                     new String[]{"Y", docType, String.valueOf(businessPartnerId)}, null);
             if (c!=null) {
+                ProductDB productDB = new ProductDB(mContext, mCurrentUser);
                 while(c.moveToNext()){
-                    SalesOrderLine orderLine = new SalesOrderLine();
-                    orderLine.setId(c.getInt(0));
-                    Product product = new Product();
-                    product.setId(c.getInt(1));
-                    orderLine.setBusinessPartnerId(c.getInt(2));
-                    orderLine.setQuantityOrdered(c.getInt(3));
-                    orderLine.setPrice(c.getDouble(4));
-                    orderLine.setTaxPercentage(c.getDouble(5));
-                    orderLine.setTotalLineAmount(c.getDouble(6));
-                    orderLine.setProduct(product);
-                    orderLines.add(orderLine);
+                    SalesOrderLine salesOrderLine = new SalesOrderLine();
+                    salesOrderLine.setId(c.getInt(0));
+                    salesOrderLine.setProductId(c.getInt(1));
+                    salesOrderLine.setBusinessPartnerId(c.getInt(2));
+                    salesOrderLine.setQuantityOrdered(c.getInt(3));
+                    salesOrderLine.setPrice(c.getDouble(4));
+                    salesOrderLine.setTaxPercentage(c.getDouble(5));
+                    salesOrderLine.setTotalLineAmount(c.getDouble(6));
+                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId(), true));
+                    if(salesOrderLine.getProduct()!=null){
+                        orderLines.add(salesOrderLine);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -219,17 +220,7 @@ public class SalesOrderLineDB {
                 }
             }
         }
-        ProductDB productDB = new ProductDB(mContext, mCurrentUser);
-        ArrayList<SalesOrderLine> orderLinesToDelete = new ArrayList<>();
-        for(SalesOrderLine orderLine : orderLines) {
-            orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId(), false));
-            if(orderLine.getProduct()==null){
-                orderLinesToDelete.add(orderLine);
-            }
-        }
-        if(!orderLinesToDelete.isEmpty()){
-            orderLines.removeAll(orderLinesToDelete);
-        }
+
         return orderLines;
     }
 
@@ -252,18 +243,22 @@ public class SalesOrderLineDB {
                     " WHERE IS_ACTIVE = ? AND DOC_TYPE = ? AND ECOMMERCE_SALES_ORDER_ID = ? " +
                     " ORDER BY CREATE_TIME DESC",
                     new String[]{"Y", docType, String.valueOf(salesOrderId)}, null);
-            while(c.moveToNext()){
-                SalesOrderLine orderLine = new SalesOrderLine();
-                orderLine.setId(c.getInt(0));
-                Product product = new Product();
-                product.setId(c.getInt(1));
-                orderLine.setBusinessPartnerId(c.getInt(2));
-                orderLine.setQuantityOrdered(c.getInt(3));
-                orderLine.setPrice(c.getDouble(4));
-                orderLine.setTaxPercentage(c.getDouble(5));
-                orderLine.setTotalLineAmount(c.getDouble(6));
-                orderLine.setProduct(product);
-                orderLines.add(orderLine);
+            if(c!=null){
+                ProductDB productDB = new ProductDB(mContext, mCurrentUser);
+                while(c.moveToNext()){
+                    SalesOrderLine salesOrderLine = new SalesOrderLine();
+                    salesOrderLine.setId(c.getInt(0));
+                    salesOrderLine.setProductId(c.getInt(1));
+                    salesOrderLine.setBusinessPartnerId(c.getInt(2));
+                    salesOrderLine.setQuantityOrdered(c.getInt(3));
+                    salesOrderLine.setPrice(c.getDouble(4));
+                    salesOrderLine.setTaxPercentage(c.getDouble(5));
+                    salesOrderLine.setTotalLineAmount(c.getDouble(6));
+                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId(), true));
+                    if(salesOrderLine.getProduct()!=null){
+                        orderLines.add(salesOrderLine);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,17 +271,7 @@ public class SalesOrderLineDB {
                 }
             }
         }
-        ProductDB productDB = new ProductDB(mContext, mCurrentUser);
-        ArrayList<SalesOrderLine> orderLinesToDelete = new ArrayList<>();
-        for(SalesOrderLine orderLine : orderLines) {
-            orderLine.setProduct(productDB.getProductById(orderLine.getProduct().getId(), false));
-            if(orderLine.getProduct()==null){
-                orderLinesToDelete.add(orderLine);
-            }
-        }
-        if(!orderLinesToDelete.isEmpty()){
-            orderLines.removeAll(orderLinesToDelete);
-        }
+
         return orderLines;
     }
 
@@ -304,7 +289,7 @@ public class SalesOrderLineDB {
                     "SELECT COUNT(ECOMMERCE_SALES_ORDERLINE_ID) FROM ECOMMERCE_SALES_ORDERLINE " +
                     " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(salesOrderId), "Y"}, null);
-            while(c.moveToNext()){
+            if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
         } catch (Exception e) {

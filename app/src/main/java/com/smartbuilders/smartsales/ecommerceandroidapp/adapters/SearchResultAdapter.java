@@ -44,7 +44,7 @@ public class SearchResultAdapter extends BaseAdapter {
         }
         if(mDataset == null){
             mDataset = new ArrayList<>();
-            mDataset.addAll(recentSearchDB.getRecentSearches(30));
+            mDataset.addAll(recentSearchDB.getRecentSearches());
         }else if(mDataset.isEmpty()){
             mDataset.add(context.getString(R.string.no_results_founds));
             mDataset.add(context.getString(R.string.search_by_category));
@@ -59,7 +59,7 @@ public class SearchResultAdapter extends BaseAdapter {
         }
         if(mDataset == null){
             mDataset = new ArrayList<>();
-            mDataset.addAll(recentSearchDB.getRecentSearches(30));
+            mDataset.addAll(recentSearchDB.getRecentSearches());
         }else if(mDataset.isEmpty()){
             mDataset.add(context.getString(R.string.no_results_founds));
             mDataset.add(context.getString(R.string.search_by_category));

@@ -33,34 +33,6 @@ public class SalesOrderDB {
         return createOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mCurrentUser)).getShoppingSale(businessPartnerId), validTo, false);
     }
 
-    //public int getLastFinalizedSalesOrderId() {
-    //    Cursor c = null;
-    //    try {
-    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
-    //                .build(), null,
-    //                "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) " +
-    //                " FROM ECOMMERCE_SALES_ORDER SO " +
-    //                    " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.ISACTIVE = ? " +
-    //                " WHERE SO.ISACTIVE = ? AND SO.DOC_TYPE = ?",
-    //                new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
-    //        if(c!=null && c.moveToNext()){
-    //            return c.getInt(0);
-    //        }
-    //    } catch (Exception e){
-    //        e.printStackTrace();
-    //    } finally {
-    //        if(c != null) {
-    //            try {
-    //                c.close();
-    //            } catch (Exception e) {
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //    return -1;
-    //}
-
     public SalesOrder getActiveSalesOrderById(int salesOrderId) {
         Cursor c = null;
         SalesOrder salesOrder = null;
@@ -122,12 +94,12 @@ public class SalesOrderDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
                     .build(), null,
-                    "SELECT COUNT(OL.BUSINESS_PARTNER_ID), OL.BUSINESS_PARTNER_ID " +
-                    " FROM ECOMMERCE_SALES_ORDERLINE OL " +
-                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = OL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                    " WHERE OL.IS_ACTIVE = ? AND OL.DOC_TYPE = ? " +
-                    " GROUP BY OL.BUSINESS_PARTNER_ID",
-                    new String[]{"Y", "Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE}, null);
+                    "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
+                    " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
+                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                    " GROUP BY SOL.BUSINESS_PARTNER_ID",
+                    new String[]{"Y", SalesOrderLineDB.SHOPPING_SALE_DOCTYPE, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     SalesOrder salesOrder = new SalesOrder();
@@ -166,9 +138,9 @@ public class SalesOrderDB {
                         " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                    " WHERE SO.IS_ACTIVE = ? AND SO.DOC_TYPE = ? " +
+                    " WHERE SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
                     " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
-                    new String[]{"Y", "Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE}, null);
+                    new String[]{"Y", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     SalesOrder salesOrder = new SalesOrder();
