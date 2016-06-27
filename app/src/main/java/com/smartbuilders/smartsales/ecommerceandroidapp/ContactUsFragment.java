@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -24,14 +26,7 @@ public class ContactUsFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
 
-        String companyName = getString(R.string.company_name);
-        String companyNameTaxId = getString(R.string.company_tax_id);
-        String companyContactCenterPhone = "0800-Febeca-0";
-        String companyMasterPhone = "+58-241-856.7200";
-        String companyFax = "+58-241-856.7120";
-        String companyEmailAddress = "atencionalcliente@febeca.com";
-        String companyWebPage = "atencionalcliente@febeca.com";
-        String companyAddress = "Av. Fundo La Unión, Parcela L13, L19, Zona industrial Castillito, San Diego, Edo. Carabobo. República Bolivariana de Venezuela.";
+        Company company = (new CompanyDB(getContext())).getCompany();
 
         TextView companyNameTextView = (TextView) view.findViewById(R.id.company_name);
         TextView companyTaxIdTextView = (TextView) view.findViewById(R.id.company_tax_id);
@@ -47,57 +42,55 @@ public class ContactUsFragment extends Fragment {
         TextView addressLabelTextView = (TextView) view.findViewById(R.id.address_label);
         TextView addressTextView = (TextView) view.findViewById(R.id.address);
 
-        if(!TextUtils.isEmpty(companyName)){
-            companyNameTextView.setText(companyName);
+        if(!TextUtils.isEmpty(company.getCommercialName())){
+            companyNameTextView.setText(company.getCommercialName());
         }else{
             companyNameTextView.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyNameTaxId)){
-            companyTaxIdTextView.setText(companyNameTaxId);
+        if(!TextUtils.isEmpty(company.getTaxId())){
+            companyTaxIdTextView.setText(company.getTaxId());
         }else{
             companyTaxIdTextView.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyContactCenterPhone)){
-            contactCenterPhoneTextView.setText(companyContactCenterPhone);
+        if(!TextUtils.isEmpty(company.getContactCenterPhoneNumber())){
+            contactCenterPhoneTextView.setText(company.getContactCenterPhoneNumber());
         }else{
             contactCenterLabelTextView.setVisibility(View.GONE);
             contactCenterPhoneTextView.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyMasterPhone)){
-            masterPhoneTextView.setText(companyMasterPhone);
+        if(!TextUtils.isEmpty(company.getPhoneNumber())){
+            masterPhoneTextView.setText(company.getPhoneNumber());
         }else{
             masterPhoneTableRow.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyFax)){
-            faxTextView.setText(companyFax);
+        if(!TextUtils.isEmpty(company.getFaxNumber())){
+            faxTextView.setText(company.getFaxNumber());
         }else{
             faxTableRow.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyEmailAddress)){
-            emailAddressTextView.setText(companyEmailAddress);
+        if(!TextUtils.isEmpty(company.getEmailAddress())){
+            emailAddressTextView.setText(company.getEmailAddress());
         }else{
             emailAddressTableRow.setVisibility(View.GONE);
         }
 
-        if(!TextUtils.isEmpty(companyWebPage)){
-            webPageTextView.setText(companyWebPage);
+        if(!TextUtils.isEmpty(company.getWebPage())){
+            webPageTextView.setText(company.getWebPage());
         }else{
             webPageTextView.setVisibility(View.GONE);
         }
 
-
-        if(!TextUtils.isEmpty(companyAddress)){
-            addressTextView.setText(companyAddress);
+        if(!TextUtils.isEmpty(company.getAddress())){
+            addressTextView.setText(company.getAddress());
         }else{
             addressLabelTextView.setVisibility(View.GONE);
             addressTextView.setVisibility(View.GONE);
         }
-
         return view;
     }
 }
