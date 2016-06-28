@@ -345,8 +345,8 @@ public class OrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
                     "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE " +
-                    " WHERE USER_ID = ? AND PRODUCT_ID=? AND DOC_TYPE=? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
+                    " WHERE PRODUCT_ID=? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(productId), String.valueOf(mUser.getServerUserId()),
                             WISHLIST_DOCTYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
