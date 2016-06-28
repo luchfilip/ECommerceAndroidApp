@@ -113,8 +113,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         if(mDataset==null || mDataset.get(position) == null){
             return;
         }
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
+
+        Utils.loadThumbImageByFileName(mContext, mCurrentUser,
+                mDataset.get(position).getImageFileName(), holder.productImage);
+
         holder.productName.setText(mDataset.get(position).getName());
 
         if(holder.productInternalCode!=null){
@@ -178,9 +180,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.commercialPackage.setVisibility(TextView.GONE);
             }
         }
-
-        Utils.loadThumbImageByFileName(mContext, mCurrentUser,
-                mDataset.get(position).getImageFileName(), holder.productImage);
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));

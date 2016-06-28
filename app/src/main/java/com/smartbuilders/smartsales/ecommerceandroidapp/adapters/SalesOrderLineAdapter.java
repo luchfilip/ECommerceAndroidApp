@@ -15,11 +15,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -77,8 +74,16 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
+        Utils.loadThumbImageByFileName(mContext, mUser,
+                mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
+
+        holder.productImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
+
         holder.productName.setText(mDataset.get(position).getProduct().getName());
         holder.productName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,16 +102,6 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             }
         }
 
-        Utils.loadThumbImageByFileName(mContext, mUser,
-                mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
-
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
-
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         holder.productPrice.setText(mContext.getString(R.string.sales_order_product_price,
@@ -115,7 +110,6 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
                 mDataset.get(position).getTaxPercentageStringFormat()));
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mDataset.get(position).getTotalLineAmountStringFormat()));
-
     }
 
     private void goToProductDetails(Product product) {
