@@ -178,36 +178,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.commercialPackage.setVisibility(TextView.GONE);
             }
         }
-        Utils.loadThumbImageByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName(), holder.productImage);
-        //if(!TextUtils.isEmpty(mDataset.get(position).getImageFileName())){
-        //    Utils.loadThumbImageByFileName(mContext, mDataset.get(position).getImageFileName(), holder.productImage);
-        //    File img = Utils.getFileThumbByFileName(mContext, mCurrentUser, mDataset.get(position).getImageFileName());
-        //    if(img!=null){
-        //        Picasso.with(mContext).load(img).error(R.drawable.no_image_available).into(holder.productImage);
-        //    }else{
-        //        Picasso.with(mContext)
-        //                .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
-        //                        + mDataset.get(position).getImageFileName())
-        //                .error(R.drawable.no_image_available)
-        //                //.into(holder.productImage, new Callback() {
-        //                //    @Override
-        //                //    public void onSuccess() {
-        //                //        Utils.createFileInThumbDir(mDataset.get(position).getImageFileName(),
-        //                //                ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
-        //                //                mCurrentUser, mContext);
-        //                //    }
-        //                //
-        //                //    @Override
-        //                //    public void onError() {
-        //                //    }
-        //                //});
-        //                .into(holder.productImage,
-        //                        new CallbackPicassoDownloadImage(mDataset.get(position).getImageFileName(),
-        //                                true, mCurrentUser, mContext));
-        //    }
-        //}else{
-        //    holder.productImage.setImageResource(R.drawable.no_image_available);
-        //}
+
+        Utils.loadThumbImageByFileName(mContext, mCurrentUser,
+                mDataset.get(position).getImageFileName(), holder.productImage);
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getAvailability()));

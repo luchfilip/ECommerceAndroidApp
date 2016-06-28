@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -323,6 +324,48 @@ public class Utils {
         return null;
     }
 
+    public static void loadOriginalImageByFileName(final Context context, final User user,
+                                                   final String fileName, final ImageView imageView){
+        try {
+            if(!TextUtils.isEmpty(fileName)){
+                Drawable drawable;
+                final File thumb = Utils.getFileThumbByFileName(context, fileName);
+                if (thumb!=null && thumb.exists()) {
+                    drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
+                } else {
+                    drawable = context.getResources().getDrawable(R.drawable.no_image_available);
+                }
+
+                File img = Utils.getFileInOriginalDirByFileName(context, fileName);
+                if(img!=null && img.exists()){
+                    Picasso.with(context).load(img).placeholder(drawable).error(drawable).into(imageView);
+                }else{
+                    Picasso.with(context)
+                            .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + fileName)
+                            .placeholder(drawable)
+                            .error(drawable)
+                            .into(imageView, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Utils.createFileInOriginalDir(fileName,
+                                            ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
+                                }
+
+                                @Override
+                                public void onError() { }
+                            });
+                }
+            }else{
+                imageView.setImageResource(R.drawable.no_image_available);
+            }
+        } catch (Exception e) {
+            if(imageView!=null){
+                imageView.setImageResource(R.drawable.no_image_available);
+            }
+            e.printStackTrace();
+        }
+    }
+
     public static File getFileInBannerDirByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesBannerFolderPath(context), fileName);
@@ -362,24 +405,26 @@ public class Utils {
     public static void loadThumbImageByFileName(final Context context, final User user,
                                                 final String fileName, final ImageView imageView){
         try {
-            File imgFile = new File(getImagesThumbFolderPath(context), fileName);
-            if(imgFile.exists()){
-                Picasso.with(context).load(imgFile).error(R.drawable.no_image_available).into(imageView);
-            }else if(!TextUtils.isEmpty(fileName)){
-                Picasso.with(context)
-                        .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
-                        .error(R.drawable.no_image_available)
-                        .into(imageView, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Utils.createFileInThumbDir(fileName,
-                                        ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
-                            }
+            if(!TextUtils.isEmpty(fileName)){
+                File imgFile = new File(getImagesThumbFolderPath(context), fileName);
+                if(imgFile.exists()){
+                    Picasso.with(context).load(imgFile).error(R.drawable.no_image_available).into(imageView);
+                }else{
+                    Picasso.with(context)
+                            .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
+                            .error(R.drawable.no_image_available)
+                            .placeholder(R.drawable.no_image_available)
+                            .into(imageView, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Utils.createFileInThumbDir(fileName,
+                                            ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
+                                }
 
-                            @Override
-                            public void onError() { }
-                        });
-                //new CallbackPicassoDownloadImage(fileName, true, user, context));
+                                @Override
+                                public void onError() { }
+                            });
+                }
             }else{
                 imageView.setImageResource(R.drawable.no_image_available);
             }
@@ -852,15 +897,12 @@ public class Utils {
             }
             inStream.close();
             outStream.close();
-            //Toast.makeText(getContext(), "El archivo fue creado en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Descarga completa, "+fileName)
                             .setContentText("El archivo se encuentra en \"Descargas\".");
             // Creates an explicit intent for an Activity in your app
-            //Intent resultIntent = new Intent(this, ResultActivity.class);
-
             final Intent resultIntent = new Intent(Intent.ACTION_VIEW);
             resultIntent.setDataAndType(Uri.fromFile(destinationFile), "application/pdf");
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

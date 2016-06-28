@@ -135,102 +135,40 @@ public class ProductDetailFragment extends Fragment {
                                             mProduct.getProductBrand().getDescription()));
                                 }
 
-                                if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                    final File thumb = Utils.getFileThumbByFileName(getContext(), mProduct.getImageFileName());
-                                    if (thumb!=null) {
-                                        Picasso.with(getContext())
-                                                .load(thumb).error(R.drawable.no_image_available)
-                                                .into((ImageView) view.findViewById(R.id.product_image));
-                                    } else {
-                                        ((ImageView) view.findViewById(R.id.product_image))
-                                                .setImageResource(R.drawable.no_image_available);
-                                    }
+                                final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
+                                favoriteImageView.setColorFilter(Utils.getColor(getContext(), R.color.dark_grey), PorterDuff.Mode.SRC_ATOP);
 
-                                    final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
-                                    favoriteImageView.setColorFilter(Utils.getColor(getContext(), R.color.dark_grey), PorterDuff.Mode.SRC_ATOP);
+                                if(mProduct.isFavorite()){
+                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                }else{
+                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                                }
 
-                                    if(mProduct.isFavorite()){
-                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
-                                    }else{
-                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
-                                    }
-
-                                    favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if(mProduct.isFavorite()) {
-                                                String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
-                                                if (result == null) {
-                                                    mProduct.setFavorite(false);
-                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
-                                                } else {
-                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                                                }
+                                favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(mProduct.isFavorite()) {
+                                            String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
+                                            if (result == null) {
+                                                mProduct.setFavorite(false);
+                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
                                             } else {
-                                                String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct.getId());
-                                                if (result == null) {
-                                                    mProduct.setFavorite(true);
-                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
-                                                } else {
-                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                                                }
+                                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                            }
+                                        } else {
+                                            String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct.getId());
+                                            if (result == null) {
+                                                mProduct.setFavorite(true);
+                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                            } else {
+                                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                             }
                                         }
-                                    });
-
-                                    File img = Utils.getFileInOriginalDirByFileName(getContext(), mProduct.getImageFileName());
-                                    if(img!=null){
-                                        Picasso.with(getContext())
-                                                .load(img).into((ImageView) view.findViewById(R.id.product_image));
-                                    }else{
-                                        Picasso.with(getContext())
-                                            .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
-                                                    + mProduct.getImageFileName())
-                                            //.into((ImageView) view.findViewById(R.id.product_image), new Callback() {
-                                            //    @Override
-                                            //    public void onSuccess() {
-                                            //        Utils.createFileInOriginalDir(mProduct.getImageFileName(),
-                                            //                ((BitmapDrawable)((ImageView) view.findViewById(R.id.product_image)).getDrawable()).getBitmap(),
-                                            //                mUser, getContext());
-                                            //    }
-                                            //
-                                            //    @Override
-                                            //    public void onError() {
-                                            //        if(thumb!=null){
-                                            //            Picasso.with(getContext())
-                                            //                    .load(thumb).error(R.drawable.no_image_available)
-                                            //                    .into((ImageView) view.findViewById(R.id.product_image));
-                                            //        }else{
-                                            //            ((ImageView) view.findViewById(R.id.product_image))
-                                            //                    .setImageResource(R.drawable.no_image_available);
-                                            //        }
-                                            //    }
-                                            //});
-                                            .into((ImageView) view.findViewById(R.id.product_image),
-                                                    new CallbackPicassoDownloadImage(mProduct.getImageFileName(),
-                                                            false, mUser, getContext()){
-                                                        @Override
-                                                        public void onSuccess() {
-                                                            super.onSuccess();
-                                                        }
-
-                                                        @Override
-                                                        public void onError() {
-                                                            if(thumb!=null){
-                                                                Picasso.with(getContext())
-                                                                        .load(thumb).error(R.drawable.no_image_available)
-                                                                        .into((ImageView) view.findViewById(R.id.product_image));
-                                                            }else{
-                                                                ((ImageView) view.findViewById(R.id.product_image))
-                                                                        .setImageResource(R.drawable.no_image_available);
-                                                            }
-                                                        }
-                                                    });
                                     }
-                                } else {
-                                    ((ImageView) view.findViewById(R.id.product_image))
-                                            .setImageResource(R.drawable.no_image_available);
-                                }
+                                });
+
+                                Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
+                                        (ImageView) view.findViewById(R.id.product_image));
 
                                  view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
                                      @Override

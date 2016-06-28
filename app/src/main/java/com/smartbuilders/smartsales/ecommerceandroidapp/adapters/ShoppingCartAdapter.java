@@ -117,35 +117,8 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             return;
         }
 
-        if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            File img = Utils.getFileThumbByFileName(mContext, mDataset.get(position).getProduct().getImageFileName());
-            if(img!=null){
-                Picasso.with(mContext)
-                        .load(img).error(R.drawable.no_image_available).into(holder.productImage);
-            }else{
-                Picasso.with(mContext)
-                        .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
-                                + mDataset.get(position).getProduct().getImageFileName())
-                        .error(R.drawable.no_image_available)
-                        //.into(holder.productImage, new com.squareup.picasso.Callback() {
-                        //    @Override
-                        //    public void onSuccess() {
-                        //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
-                        //                ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
-                        //                mUser, mContext);
-                        //    }
-                        //
-                        //    @Override
-                        //    public void onError() {
-                        //    }
-                        //});
-                        .into(holder.productImage,
-                                new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
-                                        true, mUser, mContext));
-            }
-        }else{
-            holder.productImage.setImageResource(R.drawable.no_image_available);
-        }
+        Utils.loadThumbImageByFileName(mContext, mUser,
+                mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
         holder.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
