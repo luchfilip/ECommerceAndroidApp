@@ -36,14 +36,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " CREATED_BY VARCHAR(255), " +
                     " UPDATE_TIME DATETIME, " +
                     " UPDATED_BY VARCHAR(255), " +
-                    " IS_ACTIVE CHAR(1), "+
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
                     " PRIMARY KEY(USER_ID, USER_GROUP))";
 
     private static final String CREATE_USER_PROFILE_TABLE 	=
             "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
                     "USER_PROFILE_ID INTEGER NOT NULL, " +
                     " NAME VARCHAR(255), " +
-                    " IS_ACTIVE CHAR(1), "+
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
                     " PRIMARY KEY(USER_PROFILE_ID))";
 
 	public static final String CREATE_PRODUCT =
@@ -228,7 +228,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " FRIDAY CHAR, " +
                     " SATURDAY CHAR, " +
                     " SUNDAY CHAR, " +
-                    " IS_ACTIVE CHAR DEFAULT 'Y', " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 
     public static final String CREATE_BUSINESS_PARTNER =
@@ -271,7 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TOTAL DOUBLE DEFAULT 0, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
@@ -290,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
@@ -310,7 +310,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " VALID_TO DATE DEFAULT NULL, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
@@ -330,7 +330,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
