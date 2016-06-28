@@ -52,19 +52,16 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
         // Creates Bitmap from InputStream and returns it
         private void downloadImage(String fileName, Context context, User user, boolean isThumb) {
             try {
-                String url = user.getServerAddress() + "/IntelligentDataSynchronizer/"
-                        + (isThumb ? "GetThumbImage" : "GetOriginalImage")
-                        + "?fileName=" + fileName;
                 OutputStream outputStream = null;
                 InputStream inputStream = null;
                 try {
-                    inputStream = getHttpConnection(url);
+                    inputStream = getHttpConnection(user.getServerAddress() + "/IntelligentDataSynchronizer/"
+                            + (isThumb ? "GetThumbImage" : "GetOriginalImage") + "?fileName=" + fileName);
                     // write the inputStream to a FileOutputStream
                     outputStream =
-                            new FileOutputStream(new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                                    .append(user.getUserName()).append(isThumb ? "/Data_In/thumb/" : "/Data_In/original/")
-                                    .append(fileName).toString()));
+                            new FileOutputStream(new File(context.getExternalFilesDir(null).toString() +
+                                    File.separator + user.getUserGroup() + File.separator + user.getUserName() +
+                                    (isThumb ? "/Data_In/thumb/" : "/Data_In/original/") + fileName));
                     int read = 0;
                     byte[] bytes = new byte[1024];
                     while ((read = inputStream.read(bytes)) != -1) {
@@ -82,7 +79,6 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
                     }
                     if (outputStream != null) {
                         try {
-                            // outputStream.flush();
                             outputStream.close();
                         } catch (IOException e) {
                             e.printStackTrace();

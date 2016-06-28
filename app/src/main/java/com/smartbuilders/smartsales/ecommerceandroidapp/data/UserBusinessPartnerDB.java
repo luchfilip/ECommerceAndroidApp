@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class UserBusinessPartnerDB {
 
     private Context mContext;
-    private User mCurrentUser;
+    private User mUser;
 
     public UserBusinessPartnerDB(Context context, User user){
         this.mContext = context;
-        this.mCurrentUser = user;
+        this.mUser = user;
     }
 
     public ArrayList<BusinessPartner> getActiveUserBusinessPartners(){
@@ -29,14 +29,14 @@ public class UserBusinessPartnerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
                     "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
                         " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from USER_BUSINESS_PARTNER " +
-                    " where IS_ACTIVE = ? " +
+                    " where USER_ID = ? AND IS_ACTIVE = ? " +
                     " order by USER_BUSINESS_PARTNER_ID desc",
-                    new String[]{"Y"}, null);
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     BusinessPartner businessPartner = new BusinessPartner();
@@ -67,16 +67,18 @@ public class UserBusinessPartnerDB {
 
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
         try {
+            int userBusinessPartnerId = getMaxUserBusinessPartnerId() + 1;
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
-                    "INSERT INTO USER_BUSINESS_PARTNER (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                        " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                    new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
+                    "INSERT INTO USER_BUSINESS_PARTNER (USER_BUSINESS_PARTNER_ID, USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
+                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                    new String[]{String.valueOf(userBusinessPartnerId), String.valueOf(mUser.getServerUserId()),
+                            businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mCurrentUser.getUserName(), Utils.getMacAddress(mContext)});
+                            mUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó el registro en la base de datos.";
             }
@@ -90,15 +92,16 @@ public class UserBusinessPartnerDB {
     public String updateUserBusinessPartner(BusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
                     "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
                         " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
-                    " where USER_BUSINESS_PARTNER_ID = ? ",
+                    " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mCurrentUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId())});
+                            mUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId()),
+                            String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -112,10 +115,10 @@ public class UserBusinessPartnerDB {
     public String deactivateUserBusinessPartner(int businessPartnerId){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId()).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
-                    "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ?",
-                    new String[]{"N", String.valueOf(businessPartnerId)});
+                    "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
+                    new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se desactivó el registro en la base de datos.";
             }
@@ -130,10 +133,10 @@ public class UserBusinessPartnerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select COUNT(TAX_ID) from USER_BUSINESS_PARTNER where TAX_ID = ? AND IS_ACTIVE = ? ",
-                    new String[]{taxID, "Y"}, null);
+                    "select COUNT(TAX_ID) from USER_BUSINESS_PARTNER where TAX_ID = ? AND USER_ID = ? AND IS_ACTIVE = ? ",
+                    new String[]{taxID, String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
             }
@@ -155,12 +158,12 @@ public class UserBusinessPartnerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mCurrentUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from USER_BUSINESS_PARTNER " +
-                    " where USER_BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+                    " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();
                 businessPartner.setId(businessPartnerId);
@@ -185,6 +188,31 @@ public class UserBusinessPartnerDB {
             }
         }
         return null;
+    }
+
+    private int getMaxUserBusinessPartnerId(){
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .build(), null,
+                    "select MAX(USER_BUSINESS_PARTNER_ID) from USER_BUSINESS_PARTNER where USER_ID = ?",
+                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
+            if(c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
     }
 
 }

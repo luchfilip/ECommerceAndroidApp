@@ -386,8 +386,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_USER_COMPANY =
             "CREATE TABLE IF NOT EXISTS USER_COMPANY (" +
-                    "USER_COMPANY_ID INTEGER NOT NULL, " +
-                    " USER_ID INTEGER NOT NULL, " +
+                    "USER_ID INTEGER NOT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
                     " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
                     " TAX_ID VARCHAR(255) DEFAULT NULL, " +
@@ -404,7 +403,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (USER_COMPANY_ID, USER_ID))";
+                    " PRIMARY KEY (USER_ID))";
 
 	/**
 	 * 

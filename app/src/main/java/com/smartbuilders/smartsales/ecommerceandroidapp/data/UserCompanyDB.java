@@ -27,13 +27,13 @@ public class UserCompanyDB {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
-                    "insert or replace into user_company (NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                            " EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                    new String[]{company.getName(), company.getCommercialName(), company.getTaxId(),
-                            company.getAddress(), company.getContactPerson(), company.getEmailAddress(),
-                            company.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mUser.getUserName(), Utils.getMacAddress(mContext)});
+                    "insert or replace into user_company (USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
+                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                    new String[]{String.valueOf(mUser.getServerUserId()) ,company.getName(),
+                            company.getCommercialName(), company.getTaxId(), company.getAddress(),
+                            company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
+                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó o actualizó el registro en la base de datos.";
             }
@@ -50,11 +50,11 @@ public class UserCompanyDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, " +
-                        " PHONE_NUMBER " +
+                    "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
+                        " EMAIL_ADDRESS, PHONE_NUMBER " +
                     " from USER_COMPANY " +
-                    " where IS_ACTIVE = ?",
-                    new String[]{"Y"}, null);
+                    " where USER_ID = ? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 Company company = new Company();
                 company.setName(c.getString(0));

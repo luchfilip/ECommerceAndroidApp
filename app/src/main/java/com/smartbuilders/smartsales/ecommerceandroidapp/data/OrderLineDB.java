@@ -164,10 +164,10 @@ public class OrderLineDB {
                     "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, " +
                         " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDERLINE " +
-                    " WHERE USER_ID = ? AND DOC_TYPE = ? AND ECOMMERCE_SALES_ORDER_ID = ? AND IS_ACTIVE = ? " +
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY ECOMMERCE_SALES_ORDERLINE_ID DESC",
-                    new String[]{String.valueOf(mUser.getServerUserId()),
-                            SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, String.valueOf(salesOrderId), "Y"},
+                    new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
+                            SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, "Y"},
                     null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mUser);
@@ -212,15 +212,15 @@ public class OrderLineDB {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
-                    "INSERT INTO ECOMMERCE_ORDERLINE (ECOMMERCE_ORDERLINE_ID, USER_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, " +
-                        " TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, ECOMMERCE_ORDER_ID, IS_ACTIVE, " +
-                        " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO ECOMMERCE_ORDERLINE (ECOMMERCE_ORDERLINE_ID, USER_ID, PRODUCT_ID, " +
+                        " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
+                        " ECOMMERCE_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(ol.getId()), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(ol.getProductId()), String.valueOf(ol.getQuantityOrdered()),
                             String.valueOf(ol.getPrice()), String.valueOf(ol.getTaxPercentage()),
                             String.valueOf(ol.getTotalLineAmount()), docType,
-                            (orderId==null ? null : String.valueOf(orderId)), "Y",
+                            (orderId==null ? null : String.valueOf(orderId)),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();
@@ -344,7 +344,8 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
-                    "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE USER_ID = ? AND PRODUCT_ID=? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+                    "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE " +
+                    " WHERE USER_ID = ? AND PRODUCT_ID=? AND DOC_TYPE=? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
                             WISHLIST_DOCTYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
