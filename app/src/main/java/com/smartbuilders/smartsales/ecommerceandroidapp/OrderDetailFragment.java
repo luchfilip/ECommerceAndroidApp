@@ -40,7 +40,7 @@ public class OrderDetailFragment extends Fragment {
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "Pedido";
 
-    private User mCurrentUser;
+    private User mUser;
     private int mOrderId;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -88,12 +88,12 @@ public class OrderDetailFragment extends Fragment {
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
 
-                    mOrderLines.addAll(new OrderLineDB(getContext(), mCurrentUser)
+                    mOrderLines.addAll(new OrderLineDB(getContext(), mUser)
                             .getActiveFinalizedOrderLinesByOrderId(mOrderId));
 
-                    mOrder = (new OrderDB(getContext(), mCurrentUser)).getActiveOrderById(mOrderId);
+                    mOrder = (new OrderDB(getContext(), mUser)).getActiveOrderById(mOrderId);
 
                     mShareIntent = createShareOrderIntent(mOrder, mOrderLines);
                 } catch (Exception e) {
@@ -110,7 +110,7 @@ public class OrderDetailFragment extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getActivity());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new OrderLineAdapter(getContext(), mOrderLines, mCurrentUser));
+                                recyclerView.setAdapter(new OrderLineAdapter(getContext(), mOrderLines, mUser));
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -197,7 +197,7 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mCurrentUser);
+            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext());
         }catch(Exception e){
             e.printStackTrace();
         }

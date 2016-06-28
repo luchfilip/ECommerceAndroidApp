@@ -44,7 +44,7 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private FragmentActivity mFragmentActivity;
     private ArrayList<Object> mDataset;
-    private User mCurrentUser;
+    private User mUser;
     private DisplayMetrics metrics;
 
     @Override
@@ -78,7 +78,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                User user) {
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
-        mCurrentUser = user;
+        mUser = user;
         metrics = new DisplayMetrics();
         fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
     }
@@ -150,7 +150,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(parent.getContext(), mFragmentActivity,
-                                mainPageProductSection.getProducts(), false, ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                                mainPageProductSection.getProducts(), false, ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mUser));
                     }
                     break;
                 }
@@ -186,20 +186,19 @@ public class MainActivityAdapter extends BaseAdapter {
     private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final Banner banner) {
         final ImageView image = new ImageView(context);
 
-        File img = Utils.getFileInBannerDirByFileName(context, mCurrentUser, banner.getImageFileName());
+        File img = Utils.getFileInBannerDirByFileName(context, banner.getImageFileName());
         if(img!=null){
             Picasso.with(context).load(img).into(image);
         }else{
             Picasso.with(context)
-                    .load(mCurrentUser.getServerAddress()
+                    .load(mUser.getServerAddress()
                             + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
                             + banner.getImageFileName())
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
                             Utils.createFileInBannerDir(banner.getImageFileName(),
-                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(),
-                                    mCurrentUser, context);
+                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(), context);
                         }
 
                         @Override

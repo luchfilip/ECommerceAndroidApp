@@ -26,7 +26,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
@@ -38,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -46,7 +44,7 @@ import java.util.ArrayList;
  */
 public class OrderDetailPDFCreator {
 
-    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user){
+    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx){
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -60,134 +58,6 @@ public class OrderDetailPDFCreator {
                 e1.printStackTrace();
             }
         }
-        ////create a new document
-        //Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
-        //
-        //if(pdfFile != null){
-        //    try {
-        //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //
-        //        PdfWriter.getInstance(document, baos);
-        //        document.open();
-        //
-        //        try{
-        //            //the company logo is stored in the assets which is read only
-        //            //get the logo and print on the document
-        //            InputStream inputStream = inputStream = ctx.getAssets().open("logoFebeca.jpeg");
-        //            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-        //            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        //            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        //            Image companyLogo = Image.getInstance(stream.toByteArray());
-        //            companyLogo.setAbsolutePosition(50,680);
-        //            companyLogo.scalePercent(60);
-        //            document.add(companyLogo);
-        //        }catch(Exception e){
-        //            e.printStackTrace();
-        //        }
-        //
-        //        BaseFont bf;
-        //        Font font;
-        //        try{
-        //            bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED);
-        //        }catch (Exception ex){
-        //            bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-        //        }
-        //        font = new Font(bf, 7.5f);
-        //
-        //        document.add(new Phrase("\n"));
-        //        document.add(new Phrase("\n"));
-        //        document.add(new Phrase("\n"));
-        //
-        //
-        //        Paragraph title = new Paragraph(new Phrase(20, "Orden de Pedido", new Font(bf, 15f)));
-        //        title.setAlignment(Element.ALIGN_CENTER);
-        //        document.add(title);
-        //
-        //        document.add(new Phrase("\n"));
-        //        document.add(new Phrase("\n"));
-        //
-        //
-        //        PdfPTable table = new PdfPTable(3);
-        //        // Defiles the relative width of the columns
-        //        float[] columnWidths = new float[] {30f, 150f, 100f};
-        //        table.setWidths(columnWidths);
-        //        for(OrderLine line : lines){
-        //            Bitmap bmp = null;
-        //            if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-        //                bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
-        //            }
-        //            if(bmp==null){
-        //                bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
-        //            }
-        //            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        //            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        //            Image productImage = Image.getInstance(stream.toByteArray());
-        //            PdfPCell cell = new PdfPCell(productImage, true);
-        //            cell.setPadding(3);
-        //            cell.setBorder(Rectangle.LEFT | Rectangle.TOP | Rectangle.BOTTOM);
-        //            cell.setUseVariableBorders(true);
-        //            cell.setBorderColorTop(BaseColor.LIGHT_GRAY);
-        //            cell.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-        //            cell.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-        //            table.addCell(cell);
-        //
-        //            PdfPCell cell2 = new PdfPCell();
-        //            cell2.setPadding(3);
-        //            cell2.setUseVariableBorders(true);
-        //            cell2.setBorderColorTop(BaseColor.LIGHT_GRAY);
-        //            cell2.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-        //            cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-        //            cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
-        //            cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-        //            //cell2.addElement(new Paragraph("Empaque de venta: ", font));
-        //            //cell2.addElement(new Paragraph("Precio: ", font));
-        //            //cell2.addElement(new Paragraph("Descuento (%): ", font));
-        //            table.addCell(cell2);
-        //
-        //            PdfPCell cell3 = new PdfPCell();
-        //            cell3.setPadding(3);
-        //            cell3.setBorder(Rectangle.RIGHT | Rectangle.TOP | Rectangle.BOTTOM);
-        //            cell3.setUseVariableBorders(true);
-        //            cell3.setBorderColorTop(BaseColor.LIGHT_GRAY);
-        //            cell3.setBorderColorBottom(BaseColor.LIGHT_GRAY);
-        //            cell3.setBorderColorRight(BaseColor.LIGHT_GRAY);
-        //            cell3.addElement(new Paragraph("Cant. pedida: "+line.getQuantityOrdered(), font));
-        //            //cell3.addElement(new Paragraph("Total Bs.: ", font));
-        //            table.addCell(cell3);
-        //        }
-        //
-        //        document.add(table);
-        //
-        //        document.add(new Phrase("\n"));
-        //        try {
-        //            document.add(new Phrase("Lineas totales: "+lines.size()));
-        //            document.add(new Phrase("\n"));
-        //        } catch (Exception e) {
-        //            e.printStackTrace();
-        //        }
-        //        document.close();
-        //
-        //        // Create a reader
-        //        PdfReader reader = new PdfReader(baos.toByteArray());
-        //        // Create a stamper
-        //        PdfStamper stamper
-        //                = new PdfStamper(reader, new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
-        //        // Loop over the pages and add a header to each page
-        //        //int n = reader.getNumberOfPages();
-        //        //for (int i = 1; i <= n; i++) {
-        //        //    getHeaderTable(i, n).writeSelectedRows(
-        //        //            0, -1, 50, 770, stamper.getOverContent(i));
-        //        //}
-        //        // Close the stamper
-        //        stamper.close();
-        //        reader.close();
-        //    }catch(Exception e){
-        //        e.printStackTrace();
-        //    }
-        //}else{
-        //    Log.d(TAG, "pdfFile is null");
-        //}
-
         //create a new document
         Document document = new Document(PageSize.LETTER, 40, 40, 130, 40);
 
@@ -210,7 +80,7 @@ public class OrderDetailPDFCreator {
                 addOrderTitle(document, ctx);
 
                 //se cargan las lineas del pedido
-                addOrderDetails(document, orderLines, ctx, user);
+                addOrderDetails(document, orderLines, ctx);
 
                 //se le agrega la informacion de subtotal, impuestos y total del pedido
                 //addOrderFooter(document, ctx, order);
@@ -224,7 +94,7 @@ public class OrderDetailPDFCreator {
                         new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
 
                 //Se le agrega la cabecera a cada pagina
-                addPageHeader(reader, stamper, company, ctx, user);
+                addPageHeader(reader, stamper, company, ctx);
 
                 // Close the stamper
                 stamper.close();
@@ -238,11 +108,11 @@ public class OrderDetailPDFCreator {
     }
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper, Company userCompany,
-                               Context ctx, User user) throws DocumentException, IOException {
+                               Context ctx) throws DocumentException, IOException {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx, user).writeSelectedRows(0, -1, 60, 760,
+            getHeaderTable(i, n, userCompany, ctx).writeSelectedRows(0, -1, 60, 760,
                     stamper.getOverContent(i));
         }
     }
@@ -253,8 +123,8 @@ public class OrderDetailPDFCreator {
      * @param y the total number of pages
      * @return a table that can be used as header
      */
-    public static PdfPTable getHeaderTable(int x, int y, Company userCompany, Context ctx,
-                                           User user) throws DocumentException, IOException {
+    public static PdfPTable getHeaderTable(int x, int y, Company userCompany, Context ctx)
+            throws DocumentException, IOException {
         Font companyNameFont;
         Font font;
         try{
@@ -386,7 +256,7 @@ public class OrderDetailPDFCreator {
     }
 
     private void addOrderDetails(Document document, ArrayList<OrderLine> orderLines,
-                                 Context ctx, User user) throws DocumentException, IOException {
+                                 Context ctx) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -417,7 +287,7 @@ public class OrderDetailPDFCreator {
             table.setWidthPercentage(100);
             Bitmap bmp = null;
             if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
+                bmp = Utils.getImageFromThumbDirByFileName(ctx, line.getProduct().getImageFileName());
             }
             if(bmp==null){
                 bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);

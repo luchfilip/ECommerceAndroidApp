@@ -23,7 +23,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  * Jesus Sarco
  */
 public class OrdersListActivity extends AppCompatActivity
-        implements OrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
+        implements OrdersListFragment.Callback, OrderDetailFragment.Callback,
+        NavigationView.OnNavigationItemSelectedListener {
 
     public static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
 
@@ -133,6 +134,16 @@ public class OrdersListActivity extends AppCompatActivity
         startActivity(new Intent(this, OrdersListActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
         finish();
+    }
+
+    @Override
+    public void orderDetailLoaded() {
+
+    }
+
+    @Override
+    public boolean isFragmentMenuVisible() {
+        return true;
     }
 
     @Override

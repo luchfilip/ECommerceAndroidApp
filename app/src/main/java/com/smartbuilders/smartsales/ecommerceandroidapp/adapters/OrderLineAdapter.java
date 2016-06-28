@@ -29,7 +29,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
 
     private ArrayList<OrderLine> mDataset;
     private Context mContext;
-    private User mCurrentUser;
+    private User mUser;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -54,7 +54,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     public OrderLineAdapter(Context context, ArrayList<OrderLine> myDataset, User user) {
         mContext = context;
         mDataset = myDataset;
-        mCurrentUser = user;
+        mUser = user;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -101,14 +101,13 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         });
 
         if(!TextUtils.isEmpty(mDataset.get(position).getProduct().getImageFileName())){
-            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
-                    mDataset.get(position).getProduct().getImageFileName());
+            File img = Utils.getFileThumbByFileName(mContext, mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
                 Picasso.with(mContext)
                         .load(img).error(R.drawable.no_image_available).into(holder.productImage);
             }else{
                 Picasso.with(mContext)
-                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
+                        .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
                         //.into(holder.productImage, new Callback() {
@@ -116,7 +115,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                         //    public void onSuccess() {
                         //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
                         //                ((BitmapDrawable)holder.productImage.getDrawable()).getBitmap(),
-                        //                mCurrentUser, mContext);
+                        //                mUser, mContext);
                         //    }
                         //
                         //    @Override
@@ -125,7 +124,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                         //});
                         .into(holder.productImage,
                                 new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
-                                        true, mCurrentUser, mContext));
+                                        true, mUser, mContext));
 
 
             }

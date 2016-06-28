@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.itextpdf.text.pdf.StringUtils;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
@@ -124,7 +123,7 @@ public class Utils {
                 }
             }
             if(productImage==null){
-                productImage = Utils.getImageFromThumbDirByFileName(context, user, product.getImageFileName());
+                productImage = Utils.getImageFromThumbDirByFileName(context, product.getImageFileName());
             }
             if(productImage!=null){
                 createFileInCacheDir(fileName, productImage, context);
@@ -225,10 +224,8 @@ public class Utils {
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            } catch (IOException e1) {
+            } catch (IOException | NullPointerException e1) {
                 e1.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -254,10 +251,8 @@ public class Utils {
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            } catch (IOException e1) {
+            } catch (IOException | NullPointerException e1) {
                 e1.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -268,11 +263,11 @@ public class Utils {
      * @param image
      * @param context
      */
-    public static void createFileInBannerDir(String fileName, Bitmap image, User user, Context context){
+    public static void createFileInBannerDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
-        } else if (!TextUtils.isEmpty(fileName) && image!=null && user!=null && context!=null
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
                 && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
             File imageFile = new File(getImagesBannerFolderPath(context), fileName);
@@ -283,11 +278,8 @@ public class Utils {
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            } catch (IOException e1) {
+            } catch (IOException | NullPointerException e1) {
                 e1.printStackTrace();
-                createImageFiles(context, user);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -298,11 +290,11 @@ public class Utils {
      * @param image
      * @param context
      */
-    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, User user, Context context){
+    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
-        } else if (!TextUtils.isEmpty(fileName) && image!=null && user!=null && context!=null
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
                 && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
             File imageFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
@@ -313,23 +305,15 @@ public class Utils {
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            } catch (IOException e1) {
+            } catch (IOException | NullPointerException e1) {
                 e1.printStackTrace();
-                createImageFiles(context, user);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         }
     }
 
-    public static File getFileInOriginalDirByFileName(Context context, User user, String fileName){
-        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-        //        || user==null){
-        //    return null;
-        //}
+    public static File getFileInOriginalDirByFileName(Context context, String fileName){
         try {
-            File imgFile = new File(context.getExternalFilesDir(null) + File.separator +
-                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/original/", fileName);
+            File imgFile = new File(getImagesOriginalFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -339,11 +323,7 @@ public class Utils {
         return null;
     }
 
-    public static File getFileInBannerDirByFileName(Context context, User user, String fileName){
-        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-        //        || user==null){
-        //    return null;
-        //}
+    public static File getFileInBannerDirByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesBannerFolderPath(context), fileName);
             if(imgFile.exists()){
@@ -355,11 +335,7 @@ public class Utils {
         return null;
     }
 
-    public static File getFileInProductBrandPromotionalDirByFileName(Context context, User user, String fileName){
-        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-        //        || user==null){
-        //    return null;
-        //}
+    public static File getFileInProductBrandPromotionalDirByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
             if(imgFile.exists()){
@@ -371,11 +347,7 @@ public class Utils {
         return null;
     }
 
-    public static File getFileThumbByFileName(Context context, User user, String fileName){
-        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-        //        || user==null){
-        //    return null;
-        //}
+    public static File getFileThumbByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){
@@ -405,8 +377,7 @@ public class Utils {
                             }
 
                             @Override
-                            public void onError() {
-                            }
+                            public void onError() { }
                         });
                 //new CallbackPicassoDownloadImage(fileName, true, user, context));
             }else{
@@ -432,7 +403,7 @@ public class Utils {
         return null;
     }
 
-    public static Bitmap getImageFromThumbDirByFileName(Context context, User user, String fileName){
+    public static Bitmap getImageFromThumbDirByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){
@@ -487,8 +458,7 @@ public class Utils {
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.no_image_available);
     }
 
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -506,9 +476,7 @@ public class Utils {
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmap(String pathName,
-                                       int reqWidth, int reqHeight) {
-
+    public static Bitmap decodeSampledBitmap(String pathName, int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;

@@ -44,7 +44,7 @@ public class ProductDetailFragment extends Fragment {
     private Product mProduct;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
-    private User mCurrentUser;
+    private User mUser;
 
     public ProductDetailFragment() {
     }
@@ -75,8 +75,8 @@ public class ProductDetailFragment extends Fragment {
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
-                    ProductDB productDB = new ProductDB(getContext(), mCurrentUser);
+                    mUser = Utils.getCurrentUser(getContext());
+                    ProductDB productDB = new ProductDB(getContext(), mUser);
 
                     try {
                         mProduct = productDB.getProductById(mProductId);
@@ -105,7 +105,7 @@ public class ProductDetailFragment extends Fragment {
                         e.printStackTrace();
                     }
                     if (mProduct!=null) {
-                        mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mCurrentUser);
+                        mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -136,7 +136,7 @@ public class ProductDetailFragment extends Fragment {
                                 }
 
                                 if (!TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                    final File thumb = Utils.getFileThumbByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                    final File thumb = Utils.getFileThumbByFileName(getContext(), mProduct.getImageFileName());
                                     if (thumb!=null) {
                                         Picasso.with(getContext())
                                                 .load(thumb).error(R.drawable.no_image_available)
@@ -159,7 +159,7 @@ public class ProductDetailFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if(mProduct.isFavorite()) {
-                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).removeProductFromWishList(mProduct.getId());
+                                                String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
                                                 if (result == null) {
                                                     mProduct.setFavorite(false);
                                                     favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
@@ -167,7 +167,7 @@ public class ProductDetailFragment extends Fragment {
                                                     Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                                 }
                                             } else {
-                                                String result = (new OrderLineDB(getContext(), mCurrentUser)).addProductToWishList(mProduct.getId());
+                                                String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct.getId());
                                                 if (result == null) {
                                                     mProduct.setFavorite(true);
                                                     favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
@@ -178,20 +178,20 @@ public class ProductDetailFragment extends Fragment {
                                         }
                                     });
 
-                                    File img = Utils.getFileInOriginalDirByFileName(getContext(), mCurrentUser, mProduct.getImageFileName());
+                                    File img = Utils.getFileInOriginalDirByFileName(getContext(), mProduct.getImageFileName());
                                     if(img!=null){
                                         Picasso.with(getContext())
                                                 .load(img).into((ImageView) view.findViewById(R.id.product_image));
                                     }else{
                                         Picasso.with(getContext())
-                                            .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
+                                            .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName="
                                                     + mProduct.getImageFileName())
                                             //.into((ImageView) view.findViewById(R.id.product_image), new Callback() {
                                             //    @Override
                                             //    public void onSuccess() {
                                             //        Utils.createFileInOriginalDir(mProduct.getImageFileName(),
                                             //                ((BitmapDrawable)((ImageView) view.findViewById(R.id.product_image)).getDrawable()).getBitmap(),
-                                            //                mCurrentUser, getContext());
+                                            //                mUser, getContext());
                                             //    }
                                             //
                                             //    @Override
@@ -208,7 +208,7 @@ public class ProductDetailFragment extends Fragment {
                                             //});
                                             .into((ImageView) view.findViewById(R.id.product_image),
                                                     new CallbackPicassoDownloadImage(mProduct.getImageFileName(),
-                                                            false, mCurrentUser, getContext()){
+                                                            false, mUser, getContext()){
                                                         @Override
                                                         public void onSuccess() {
                                                             super.onSuccess();
@@ -247,7 +247,7 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByShopping, false,
-                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mUser));
                                 } else {
                                     view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
                                 }
@@ -259,7 +259,7 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByBrandId, false,
-                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mUser));
 
                                     ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
                                             .setText(getString(R.string.related_products_by_brand_title,
@@ -277,7 +277,7 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsBySubCategoryId, false,
-                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser));
+                                            ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mUser));
                                 } else {
                                     view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
                                 }
@@ -294,7 +294,7 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                addToShoppingSale(mCurrentUser, mProduct);
+                                                addToShoppingSale(mUser, mProduct);
                                             }
                                         }
                                     );
@@ -305,7 +305,7 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                addToShoppingCart(mCurrentUser, mProduct);
+                                                addToShoppingCart(mUser, mProduct);
                                             }
                                         }
                                     );

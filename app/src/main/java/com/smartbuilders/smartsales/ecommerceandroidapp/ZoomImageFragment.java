@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.TouchImageView;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -20,17 +19,13 @@ public class ZoomImageFragment extends Fragment {
 
     private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
 
-    private User mUser;
     private String mImageFileName;
 
     public ZoomImageFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        mUser = Utils.getCurrentUser(getContext());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_IMAGE_FILE_NAME)){
@@ -54,7 +49,7 @@ public class ZoomImageFragment extends Fragment {
             view = touchImageView;
             view.setBackgroundColor(Color.WHITE);
         } else {
-            img = Utils.getImageFromThumbDirByFileName(getContext(), mUser, mImageFileName);
+            img = Utils.getImageFromThumbDirByFileName(getContext(), mImageFileName);
             if (img != null) {
                 TouchImageView touchImageView = new TouchImageView(getContext());
                 touchImageView.setImageBitmap(img);

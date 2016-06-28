@@ -40,7 +40,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     private Context mContext;
     private ShoppingSaleFragment mShoppingSaleFragment;
     private ArrayList<SalesOrderLine> mDataset;
-    private User mCurrentUser;
+    private User mUser;
     private SalesOrderLineDB mSalesOrderLineDB;
 
     /**
@@ -80,7 +80,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         mContext = context;
         mShoppingSaleFragment = shoppingSaleFragment;
         mDataset = data;
-        mCurrentUser = user;
+        mUser = user;
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
     }
 
@@ -121,14 +121,13 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         }
 
         if(mDataset.get(position).getProduct().getImageFileName()!=null){
-            File img = Utils.getFileThumbByFileName(mContext, mCurrentUser,
-                    mDataset.get(position).getProduct().getImageFileName());
+            File img = Utils.getFileThumbByFileName(mContext, mDataset.get(position).getProduct().getImageFileName());
             if(img!=null){
                 Picasso.with(mContext)
                         .load(img).error(R.drawable.no_image_available).into(holder.productImage);
             }else{
                 Picasso.with(mContext)
-                        .load(mCurrentUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
+                        .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName="
                                 + mDataset.get(position).getProduct().getImageFileName())
                         .error(R.drawable.no_image_available)
                         //.into(holder.productImage, new com.squareup.picasso.Callback() {
@@ -136,7 +135,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                         //    public void onSuccess() {
                         //        Utils.createFileInThumbDir(mDataset.get(holder.getAdapterPosition()).getProduct().getImageFileName(),
                         //                ((BitmapDrawable) holder.productImage.getDrawable()).getBitmap(),
-                        //                mCurrentUser, mContext);
+                        //                mUser, mContext);
                         //    }
                         //
                         //    @Override
@@ -145,7 +144,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                         //});
                         .into(holder.productImage,
                                 new CallbackPicassoDownloadImage(mDataset.get(position).getProduct().getImageFileName(),
-                                        true, mCurrentUser, mContext));
+                                        true, mUser, mContext));
             }
         }else{
             holder.productImage.setImageResource(R.drawable.no_image_available);

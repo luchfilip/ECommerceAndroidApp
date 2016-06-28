@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class WishListPDFCreator {
     private static final String TAG = WishListPDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx, User user){
+    public File generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx){
         Log.d(TAG, "generatePDF(ArrayList<OrderLine> lines, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
@@ -108,7 +108,7 @@ public class WishListPDFCreator {
                 for(OrderLine line : lines){
                     Bitmap bmp = null;
                     if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                        bmp = Utils.getImageFromThumbDirByFileName(ctx, user, line.getProduct().getImageFileName());
+                        bmp = Utils.getImageFromThumbDirByFileName(ctx, line.getProduct().getImageFileName());
                     }
                     if(bmp==null){
                         bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);

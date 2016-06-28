@@ -45,7 +45,7 @@ public class WishListFragment extends Fragment {
     private static final String fileName = "ListaDeDeseos";
 
 
-    private User mCurrentUser;
+    private User mUser;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private WishListAdapter mWishListAdapter;
@@ -73,12 +73,12 @@ public class WishListFragment extends Fragment {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
                         }
                     }
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
                     if (getActivity()!=null) {
-                        wishListLines.addAll((new OrderLineDB(getActivity(), mCurrentUser)).getWishList());
+                        wishListLines.addAll((new OrderLineDB(getActivity(), mUser)).getWishList());
                     }
                     if (getContext()!=null) {
-                        mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mCurrentUser);
+                        mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
                     }
                     mShareIntent = createSharedIntent(wishListLines);
                 } catch (Exception e) {
@@ -155,7 +155,7 @@ public class WishListFragment extends Fragment {
 
     public void reloadWishList(){
         if (getContext()!=null) {
-            reloadWishList((new OrderLineDB(getContext(), mCurrentUser)).getWishList());
+            reloadWishList((new OrderLineDB(getContext(), mUser)).getWishList());
         }
     }
 
@@ -211,7 +211,7 @@ public class WishListFragment extends Fragment {
                 .setMessage(getContext().getString(R.string.clear_wish_list_question))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = (new OrderLineDB(getContext(), mCurrentUser)).clearWishList();
+                        String result = (new OrderLineDB(getContext(), mUser)).clearWishList();
                         if(result == null){
                             reloadWishList();
                         } else {
@@ -255,7 +255,7 @@ public class WishListFragment extends Fragment {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                 try{
-                    new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext(), mCurrentUser);
+                    new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
                 }catch(Exception e) {
                     e.printStackTrace();
                 }

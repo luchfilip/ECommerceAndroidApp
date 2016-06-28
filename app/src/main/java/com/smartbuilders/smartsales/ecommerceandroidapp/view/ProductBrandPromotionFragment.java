@@ -58,7 +58,7 @@ public class ProductBrandPromotionFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.promotional_text))
                 .setText(mProductBrandPromotionalCard.getPromotionalText());
 
-        File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), user, mProductBrandPromotionalCard.getImageFileName());
+        File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), mProductBrandPromotionalCard.getImageFileName());
         if (img!=null) {
             Picasso.with(getContext())
                     .load(img).into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView));
@@ -71,7 +71,7 @@ public class ProductBrandPromotionFragment extends Fragment {
                         public void onSuccess() {
                             Utils.createFileInProductBrandPromotionalDir(mProductBrandPromotionalCard.getImageFileName(),
                                     ((BitmapDrawable)((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView)).getDrawable()).getBitmap(),
-                                    user, getContext());
+                                     getContext());
                         }
 
                         @Override
