@@ -332,8 +332,9 @@ public class SalesOrderLineDB {
                     "UPDATE ECOMMERCE_SALES_ORDERLINE " +
                     " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ? " +
                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(salesOrderId), "datetime('now')", String.valueOf(userBusinessPartnerId),
-                            String.valueOf(mUser.getServerUserId()), newDocType, currentDocType, "Y"});
+                    new String[]{String.valueOf(salesOrderId), "datetime('now')", newDocType,
+                            String.valueOf(userBusinessPartnerId), String.valueOf(mUser.getServerUserId()),
+                            currentDocType, "Y"});
         } catch (Exception e) {
             e.printStackTrace();
         }

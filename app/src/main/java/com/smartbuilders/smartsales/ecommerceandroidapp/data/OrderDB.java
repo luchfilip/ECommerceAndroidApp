@@ -100,7 +100,8 @@ public class OrderDB {
     private String createOrder(Integer salesOrderId, int businessPartnerId,
                                ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         OrderLineDB orderLineDB = new OrderLineDB(mContext, mUser);
-        if((orderLines!=null && insertOrderLinesInDB) || orderLineDB.getActiveShoppingCartLinesNumber()>0){
+        int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
+        if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
             int orderId;
             try {
                 double subTotal=0, tax=0, total=0;
@@ -117,7 +118,7 @@ public class OrderDB {
                                         String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOCTYPE, Utils.getAppVersionName(mContext),
                                         mUser.getUserName(), Utils.getMacAddress(mContext),
-                                        String.valueOf(orderLines!=null ? orderLines.size() : orderLineDB.getActiveShoppingCartLinesNumber()),
+                                        String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total)});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
@@ -165,35 +166,21 @@ public class OrderDB {
         ArrayList<Order> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            if (fromSalesOrder) {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                        .build(), null,
-                        "SELECT O.ECOMMERCE_ORDER_ID, O.DOC_STATUS, O.CREATE_TIME, O.UPDATE_TIME, " +
-                            " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
-                            " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID " +
-                        " FROM ECOMMERCE_ORDER O " +
-                            " INNER JOIN USER_BUSINESS_PARTNER BP ON O.USER_ID = BP.USER_ID " +
-                                " AND BP.USER_BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                        " WHERE O.USER_ID = ? AND O.ECOMMERCE_SALES_ORDER_ID IS NOT NULL AND O.BUSINESS_PARTNER_ID IS NOT NULL " +
-                                " AND O.DOC_TYPE = ? AND O.IS_ACTIVE = ? " +
-                        " ORDER BY O.ECOMMERCE_ORDER_ID desc",
-                        new String[]{"Y", String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
-            } else {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                        .build(), null,
-                        "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
-                            " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
-                            " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
-                        " FROM ECOMMERCE_ORDER " +
-                        " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                        " ORDER BY ECOMMERCE_ORDER_ID desc",
-                        new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
-
-            }
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .build(), null,
+                    "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
+                        " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
+                        " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
+                    " FROM ECOMMERCE_ORDER " +
+                    " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " ORDER BY ECOMMERCE_ORDER_ID desc",
+                    new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
+                    if(fromSalesOrder && c.getInt(10)<=0){
+                        continue;
+                    }
                     Order order = new Order();
                     order.setId(c.getInt(0));
                     try{

@@ -20,7 +20,7 @@ public class ZoomImageFragment extends Fragment {
 
     private static final String STATE_IMAGE_FILE_NAME = "state_image_file_name";
 
-    private User mCurrentUser;
+    private User mUser;
     private String mImageFileName;
 
     public ZoomImageFragment() {
@@ -30,7 +30,7 @@ public class ZoomImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mCurrentUser = Utils.getCurrentUser(getContext());
+        mUser = Utils.getCurrentUser(getContext());
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_IMAGE_FILE_NAME)){
@@ -46,7 +46,7 @@ public class ZoomImageFragment extends Fragment {
         }
 
         View view;
-        Bitmap img = Utils.getImageFromOriginalDirByFileName(getContext(), mCurrentUser, mImageFileName);
+        Bitmap img = Utils.getImageFromOriginalDirByFileName(getContext(), mImageFileName);
         if (img != null) {
             TouchImageView touchImageView = new TouchImageView(getContext());
             touchImageView.setImageBitmap(img);
@@ -54,7 +54,7 @@ public class ZoomImageFragment extends Fragment {
             view = touchImageView;
             view.setBackgroundColor(Color.WHITE);
         } else {
-            img = Utils.getImageFromThumbDirByFileName(getContext(), mCurrentUser, mImageFileName);
+            img = Utils.getImageFromThumbDirByFileName(getContext(), mUser, mImageFileName);
             if (img != null) {
                 TouchImageView touchImageView = new TouchImageView(getContext());
                 touchImageView.setImageBitmap(img);

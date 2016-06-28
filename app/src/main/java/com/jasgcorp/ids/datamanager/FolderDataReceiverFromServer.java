@@ -37,7 +37,7 @@ public class FolderDataReceiverFromServer extends Thread {
 	private String serverAddress;
 	private String authToken;
 	private Long serverUserId;
-	private File folder;
+	//private File folder;
 	private boolean sync = true;
 	private String exceptionMessage;
 	private String exceptionClass;
@@ -49,17 +49,17 @@ public class FolderDataReceiverFromServer extends Thread {
 		this.serverAddress = user.getServerAddress();
 		this.authToken = user.getAuthToken();
 		this.serverUserId = user.getServerUserId();
-		this.folder = new File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
-		// if the directory does not exist, create it
-		if (!folder.exists()) {
-		    try{
-		        if(!folder.mkdirs()){
-		        	Log.w(TAG, "Failed to create folder: "+folder.getPath()+".");
-		        }
-		    } catch(SecurityException se){
-		    	se.printStackTrace();
-		    }        
-		}
+		//this.folder = new File(context.getExternalFilesDir(null)+"/"+user.getUserGroup()+"/"+user.getUserName()+"/Data_In/thumb/");//-->Android/data/package.name/files/...
+		//// if the directory does not exist, create it
+		//if (!folder.exists()) {
+		//	try{
+		//		if(!folder.mkdirs()){
+		//			Log.w(TAG, "Failed to create folder: "+folder.getPath()+".");
+		//		}
+		//	} catch(SecurityException se){
+		//		se.printStackTrace();
+		//	}
+		//}
 		dbHelper = new DatabaseHelper(context, user);
 	}
 	/**
@@ -81,92 +81,93 @@ public class FolderDataReceiverFromServer extends Thread {
 	@Override
 	public void run() {
 		Log.d(TAG, "run()");
-		try {
-			if(sync){
-				initSync();
-				while (sync) {
-					//pullFileFromServer(getActiveFileSyncIdsInDb());
-				}
-			}
-		} catch (ConnectException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (SocketException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (IOException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (Exception e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		}
+		sync = false;
+		//try {
+		//	if(sync){
+		//		initSync();
+		//		while (sync) {
+		//			//pullFileFromServer(getActiveFileSyncIdsInDb());
+		//		}
+		//	}
+		//} catch (ConnectException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (SocketTimeoutException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (SocketException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//}
 	}
 	
-	/**
-	 * consulta del servidor los archivos que estan activos para sincronizar
-	 * @throws Exception
-	 */
-	private void initSync() throws Exception{
-		Log.d(TAG, "initSync() - begin");
-		LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
-		parameters.put("authToken", authToken);
-		parameters.put("userId", serverUserId);
-		ConsumeWebService a = new ConsumeWebService(context, 
-													serverAddress, 
-									    			"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl", 
-									    			"initSync", 
-									    			"urn:initSync", 
-									    			parameters);
-		try{
-			Object response = a.getWSResponse();
-			//se valida si el usuario no ha detenido la sincronizacion
-			if(sync){
-				if(response instanceof SoapPrimitive){
-					if(((SoapPrimitive) response).toString().equals("NOTHING_TO_SYNC")){
-						Log.d(TAG, "Nothing to sync.");
-						stopSynchronization();
-					}else{
-						//processActiveFileSyncIds(response);
-					}
-				}else if (response!=null){
-					throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
-				}else {
-					throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
-				}
-			}else{
-				Log.w(TAG, "La sincronizacion se detuvo.");
-			}
-		} catch (ConnectException e){
-			Log.e(TAG, "ConnectException");
-			e.printStackTrace();
-			throw e;
-		} catch(SocketTimeoutException e){
-			Log.e(TAG, "SocketTimeoutException");
-			e.printStackTrace();
-			throw e;
-		} catch (SocketException e){
-			Log.e(TAG, "SocketException");
-			e.printStackTrace();
-			throw e;
-		} catch (IOException e){
-			Log.e(TAG, "IOException");
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e){
-			Log.e(TAG, "Exception");
-			e.printStackTrace();
-			throw new Exception("Exception while execute initSync(), Exception Message: "+e.getMessage());
-		}
-	}
+	///**
+	// * consulta del servidor los archivos que estan activos para sincronizar
+	// * @throws Exception
+	// */
+	//private void initSync() throws Exception{
+	//	Log.d(TAG, "initSync() - begin");
+	//	LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+	//	parameters.put("authToken", authToken);
+	//	parameters.put("userId", serverUserId);
+	//	ConsumeWebService a = new ConsumeWebService(context,
+	//												serverAddress,
+	//												"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl",
+	//												"initSync",
+	//												"urn:initSync",
+	//												parameters);
+	//	try{
+	//		Object response = a.getWSResponse();
+	//		//se valida si el usuario no ha detenido la sincronizacion
+	//		if(sync){
+	//			if(response instanceof SoapPrimitive){
+	//				if(((SoapPrimitive) response).toString().equals("NOTHING_TO_SYNC")){
+	//					Log.d(TAG, "Nothing to sync.");
+	//					stopSynchronization();
+	//				}else{
+	//					//processActiveFileSyncIds(response);
+	//				}
+	//			}else if (response!=null){
+	//				throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
+	//			}else {
+	//				throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
+	//			}
+	//		}else{
+	//			Log.w(TAG, "La sincronizacion se detuvo.");
+	//		}
+	//	} catch (ConnectException e){
+	//		Log.e(TAG, "ConnectException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch(SocketTimeoutException e){
+	//		Log.e(TAG, "SocketTimeoutException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (SocketException e){
+	//		Log.e(TAG, "SocketException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (IOException e){
+	//		Log.e(TAG, "IOException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (Exception e){
+	//		Log.e(TAG, "Exception");
+	//		e.printStackTrace();
+	//		throw new Exception("Exception while execute initSync(), Exception Message: "+e.getMessage());
+	//	}
+	//}
 	
 	///**
 	// * elimina del cliente los archivos que no estan activos asi como de la
@@ -277,104 +278,104 @@ public class FolderDataReceiverFromServer extends Thread {
 	//	return filesReceived.toString();
 	//}
 	
-	/**
-	 * 
-	 * @param fileIdsInClient
-	 * @throws Exception 
-	 */
-	private void pullFileFromServer(String fileIdsInClient) throws Exception{
-		Log.d(TAG, "pullFileFromServer("+fileIdsInClient+")");
-		LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
-		parameters.put("authToken", authToken);
-		parameters.put("userId", serverUserId);
-		parameters.put("fileIdsInClient", fileIdsInClient);
-		ConsumeWebService a = new ConsumeWebService(context, 
-													serverAddress, 
-									    			"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl", 
-									    			"sendDataToClient", 
-									    			"urn:sendDataToClient", 
-									    			parameters);
-		try{
-			Object response = a.getWSResponse();
-			//se valida si el usuario no ha detenido la sincronizacion
-			if(sync){
-				if(response instanceof SoapPrimitive){
-					if(((SoapPrimitive) response).toString().equals("NOTHING_TO_SYNC")){
-						Log.d(TAG, "Nothing to sync.");
-						stopSynchronization();
-					}else{
-						processData(response);
-					}
-				}else if (response!=null){
-					throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
-				}else {
-					throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
-				}
-			}else{
-				Log.w(TAG, "La sincronizacion se detuvo.");
-			}
-		} catch (ConnectException e){
-			Log.e(TAG, "ConnectException");
-			e.printStackTrace();
-			throw e;
-		} catch(SocketTimeoutException e){
-			Log.e(TAG, "SocketTimeoutException");
-			e.printStackTrace();
-			throw e;
-		} catch (SocketException e){
-			Log.e(TAG, "SocketException");
-			e.printStackTrace();
-			throw e;
-		} catch (IOException e){
-			Log.e(TAG, "IOException");
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e){
-			Log.e(TAG, "Exception");
-			e.printStackTrace();
-			throw new Exception("Exception while execute pullFileFromServer("+fileIdsInClient+"), Exception Message: "+e.getMessage());
-		}
-	}
+	///**
+	// *
+	// * @param fileIdsInClient
+	// * @throws Exception
+	// */
+	//private void pullFileFromServer(String fileIdsInClient) throws Exception{
+	//	Log.d(TAG, "pullFileFromServer("+fileIdsInClient+")");
+	//	LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+	//	parameters.put("authToken", authToken);
+	//	parameters.put("userId", serverUserId);
+	//	parameters.put("fileIdsInClient", fileIdsInClient);
+	//	ConsumeWebService a = new ConsumeWebService(context,
+	//												serverAddress,
+	//												"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl",
+	//												"sendDataToClient",
+	//												"urn:sendDataToClient",
+	//												parameters);
+	//	try{
+	//		Object response = a.getWSResponse();
+	//		//se valida si el usuario no ha detenido la sincronizacion
+	//		if(sync){
+	//			if(response instanceof SoapPrimitive){
+	//				if(((SoapPrimitive) response).toString().equals("NOTHING_TO_SYNC")){
+	//					Log.d(TAG, "Nothing to sync.");
+	//					stopSynchronization();
+	//				}else{
+	//					processData(response);
+	//				}
+	//			}else if (response!=null){
+	//				throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
+	//			}else {
+	//				throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+"]");
+	//			}
+	//		}else{
+	//			Log.w(TAG, "La sincronizacion se detuvo.");
+	//		}
+	//	} catch (ConnectException e){
+	//		Log.e(TAG, "ConnectException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch(SocketTimeoutException e){
+	//		Log.e(TAG, "SocketTimeoutException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (SocketException e){
+	//		Log.e(TAG, "SocketException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (IOException e){
+	//		Log.e(TAG, "IOException");
+	//		e.printStackTrace();
+	//		throw e;
+	//	} catch (Exception e){
+	//		Log.e(TAG, "Exception");
+	//		e.printStackTrace();
+	//		throw new Exception("Exception while execute pullFileFromServer("+fileIdsInClient+"), Exception Message: "+e.getMessage());
+	//	}
+	//}
 	
-	private void processData(Object data) {
-		String errorMessage = null;
-		String fileSyncId = null;
-		String folderClientName = null;
-		String fileName = null;
-		Integer fileSize = null;
-		try {
-			JSONObject dataReceived = new JSONObject(((SoapPrimitive) data).toString());
-			//TODO insert in table
-			fileSyncId =  dataReceived.getString("1");
-			fileName = dataReceived.getString("2");
-			fileSize = Integer.valueOf(dataReceived.getString("3"));
-			folderClientName = dataReceived.getString("5");
-			try{
-				if(dataReceived.has("syncPercentage")){
-					syncPercentage = Float.valueOf(dataReceived.getString("syncPercentage"));
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			if(dataReceived.has("4")){
-				//ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.ungzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP),
-				//								folder.getPath().toString()+"/"+dataReceived.getString("2"));
-
-				ApplicationUtilities.saveToFile(Base64.decode(dataReceived.getString("4"), Base64.GZIP),
-						folder.getPath().toString()+"/"+dataReceived.getString("2"));
-				
-				//TODO: aqui se debe ir procesando el archivo de datos recibidos. Si hay algun problema al procesarlo se envia un 
-				//mensaje de error al servidor y se guarda en el log de errores.
-				Log.d(TAG, "File \""+dataReceived.getString("2")+"\" was received successfully from server.");
-			}else{
-				throw new Exception("Data is null.");
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			errorMessage = e.getMessage()!=null ? e.getMessage() : "Exception with message null while receive file.";
-		}
-		//insertIncomingFile(fileSyncId, folderClientName, fileName, fileSize, errorMessage);
-	}
+	//private void processData(Object data) {
+	//	String errorMessage = null;
+	//	String fileSyncId = null;
+	//	String folderClientName = null;
+	//	String fileName = null;
+	//	Integer fileSize = null;
+	//	try {
+	//		JSONObject dataReceived = new JSONObject(((SoapPrimitive) data).toString());
+	//		//TODO insert in table
+	//		fileSyncId =  dataReceived.getString("1");
+	//		fileName = dataReceived.getString("2");
+	//		fileSize = Integer.valueOf(dataReceived.getString("3"));
+	//		folderClientName = dataReceived.getString("5");
+	//		try{
+	//			if(dataReceived.has("syncPercentage")){
+	//				syncPercentage = Float.valueOf(dataReceived.getString("syncPercentage"));
+	//			}
+	//		}catch(Exception e){
+	//			e.printStackTrace();
+	//		}
+	//		if(dataReceived.has("4")){
+	//			//ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.ungzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP),
+	//			//								folder.getPath().toString()+"/"+dataReceived.getString("2"));
+	//
+	//			ApplicationUtilities.saveToFile(Base64.decode(dataReceived.getString("4"), Base64.GZIP),
+	//					folder.getPath().toString()+"/"+dataReceived.getString("2"));
+	//
+	//			//TODO: aqui se debe ir procesando el archivo de datos recibidos. Si hay algun problema al procesarlo se envia un
+	//			//mensaje de error al servidor y se guarda en el log de errores.
+	//			Log.d(TAG, "File \""+dataReceived.getString("2")+"\" was received successfully from server.");
+	//		}else{
+	//			throw new Exception("Data is null.");
+	//		}
+	//	} catch(Exception e) {
+	//		e.printStackTrace();
+	//		errorMessage = e.getMessage()!=null ? e.getMessage() : "Exception with message null while receive file.";
+	//	}
+	//	//insertIncomingFile(fileSyncId, folderClientName, fileName, fileSize, errorMessage);
+	//}
 	
 	///**
 	// *

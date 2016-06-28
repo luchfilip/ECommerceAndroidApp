@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.itextpdf.text.pdf.StringUtils;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
@@ -45,6 +47,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -109,7 +112,7 @@ public class Utils {
     public static Intent createShareProductIntent(Product product, Context context, User user){
         String fileName = "tmpImg.jpg";
         if(product.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, user, product.getImageFileName());
+            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, product.getImageFileName());
             if(productImage==null){
                 //Si el archivo no existe entonces se descarga
                 GetFileFromServlet getFileFromServlet =
@@ -146,26 +149,26 @@ public class Utils {
      *
      * @param fileName
      * @param resId
-     * @param ctx
+     * @param context
      */
-    public static void createFileInCacheDir(String fileName, int resId, Context ctx){
+    public static void createFileInCacheDir(String fileName, int resId, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
-        } else if (fileName!=null && ctx!=null){
+            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+        } else if (!TextUtils.isEmpty(fileName) && context!=null){
             //path for the image file in the external storage
-            File imageFile = new File(ctx.getCacheDir() + File.separator + fileName);
+            File imageFile = new File(context.getCacheDir() + File.separator + fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
-                Bitmap icon = BitmapFactory.decodeResource(ctx.getResources(), resId);
+                Bitmap icon = BitmapFactory.decodeResource(context.getResources(), resId);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_LONG).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -176,15 +179,15 @@ public class Utils {
      *
      * @param fileName
      * @param image
-     * @param ctx
+     * @param context
      */
-    public static void createFileInCacheDir(String fileName, Bitmap image, Context ctx){
+    public static void createFileInCacheDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
-        } else if (fileName!=null && image!=null && ctx!=null){
+            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null){
             //path for the image file in the external storage
-            File imageFile = new File(ctx.getCacheDir() + File.separator + fileName);
+            File imageFile = new File(context.getCacheDir() + File.separator + fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -194,7 +197,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(ctx, e1.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_LONG).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -205,18 +208,16 @@ public class Utils {
      *
      * @param fileName
      * @param image
-     * @param ctx
+     * @param context
      */
-    public static void createFileInThumbDir(String fileName, Bitmap image, User user, Context ctx){
+    public static void createFileInThumbDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else if (fileName!=null && image!=null && user!=null && ctx!=null
-                && ctx.getExternalFilesDir(null)!=null){
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(ctx.getExternalFilesDir(null).toString() + File.separator +
-                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/thumb/" +
-                    fileName);
+            File imageFile = new File(getImagesThumbFolderPath(context), fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -226,7 +227,6 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                createImageFiles(ctx, user);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -237,18 +237,16 @@ public class Utils {
      *
      * @param fileName
      * @param image
-     * @param ctx
+     * @param context
      */
-    public static void createFileInOriginalDir(String fileName, Bitmap image, User user, Context ctx){
+    public static void createFileInOriginalDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else if (fileName!=null && image!=null && user!=null && ctx!=null
-                && ctx.getExternalFilesDir(null)!=null){
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(ctx.getExternalFilesDir(null).toString() + File.separator +
-                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/original/" +
-                    fileName);
+            File imageFile = new File(getImagesOriginalFolderPath(context), fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -258,7 +256,6 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                createImageFiles(ctx, user);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -269,19 +266,16 @@ public class Utils {
      *
      * @param fileName
      * @param image
-     * @param ctx
+     * @param context
      */
-    public static void createFileInBannerDir(String fileName, Bitmap image, User user, Context ctx){
+    public static void createFileInBannerDir(String fileName, Bitmap image, User user, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else if (fileName!=null && image!=null && user!=null && ctx!=null
-                && ctx.getExternalFilesDir(null)!=null){
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && user!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/banner/")
-                    .append(fileName).toString());
+            File imageFile = new File(getImagesBannerFolderPath(context), fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -291,7 +285,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                createImageFiles(ctx, user);
+                createImageFiles(context, user);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -302,19 +296,16 @@ public class Utils {
      *
      * @param fileName
      * @param image
-     * @param ctx
+     * @param context
      */
-    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, User user, Context ctx){
+    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, User user, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Log.e(TAG, ctx.getString(R.string.external_storage_unavailable));
-        } else if (fileName!=null && image!=null && user!=null && ctx!=null
-                && ctx.getExternalFilesDir(null)!=null){
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && user!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(new StringBuffer(ctx.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/productBrandPromotional/")
-                    .append(fileName).toString());
+            File imageFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
@@ -324,7 +315,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                createImageFiles(ctx, user);
+                createImageFiles(context, user);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -332,15 +323,13 @@ public class Utils {
     }
 
     public static File getFileInOriginalDirByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
+        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+        //        || user==null){
+        //    return null;
+        //}
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/original/")
-                    .append(fileName).toString());
+            File imgFile = new File(context.getExternalFilesDir(null) + File.separator +
+                    user.getUserGroup() + File.separator + user.getUserName() + "/Data_In/original/", fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -351,15 +340,12 @@ public class Utils {
     }
 
     public static File getFileInBannerDirByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
+        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+        //        || user==null){
+        //    return null;
+        //}
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/banner/")
-                    .append(fileName).toString());
+            File imgFile = new File(getImagesBannerFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -370,15 +356,12 @@ public class Utils {
     }
 
     public static File getFileInProductBrandPromotionalDirByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
+        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+        //        || user==null){
+        //    return null;
+        //}
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/productBrandPromotional/")
-                    .append(fileName).toString());
+            File imgFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -389,15 +372,12 @@ public class Utils {
     }
 
     public static File getFileThumbByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
+        //if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
+        //        || user==null){
+        //    return null;
+        //}
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/thumb/")
-                    .append(fileName).toString());
+            File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -407,16 +387,42 @@ public class Utils {
         return null;
     }
 
-    public static Bitmap getImageFromOriginalDirByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
+    public static void loadThumbImageByFileName(final Context context, final User user,
+                                                final String fileName, final ImageView imageView){
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                    .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                    .append(user.getUserName()).append("/Data_In/original/")
-                    .append(fileName).toString());
+            File imgFile = new File(getImagesThumbFolderPath(context), fileName);
+            if(imgFile.exists()){
+                Picasso.with(context).load(imgFile).error(R.drawable.no_image_available).into(imageView);
+            }else if(!TextUtils.isEmpty(fileName)){
+                Picasso.with(context)
+                        .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
+                        .error(R.drawable.no_image_available)
+                        .into(imageView, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Utils.createFileInThumbDir(fileName,
+                                        ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
+                //new CallbackPicassoDownloadImage(fileName, true, user, context));
+            }else{
+                imageView.setImageResource(R.drawable.no_image_available);
+            }
+        } catch (Exception e) {
+            if(imageView!=null){
+                imageView.setImageResource(R.drawable.no_image_available);
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap getImageFromOriginalDirByFileName(Context context, String fileName){
+        try {
+            File imgFile = new File(getImagesOriginalFolderPath(context), fileName);
             if(imgFile.exists()){
                 return decodeSampledBitmap(imgFile.getAbsolutePath(), 250, 250);
             }
@@ -427,15 +433,8 @@ public class Utils {
     }
 
     public static Bitmap getImageFromThumbDirByFileName(Context context, User user, String fileName){
-        if(TextUtils.isEmpty(fileName) || context==null || context.getExternalFilesDir(null)==null
-                || user==null){
-            return null;
-        }
         try {
-            File imgFile = new File(new StringBuffer(context.getExternalFilesDir(null).toString())
-                            .append(File.separator).append(user.getUserGroup()).append(File.separator)
-                            .append(user.getUserName()).append("/Data_In/thumb/")
-                            .append(fileName).toString());
+            File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){
                 return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
             }
@@ -449,10 +448,8 @@ public class Utils {
         OutputStream outputStream = null;
         try {
             // write the inputStream to a FileOutputStream
-            outputStream =
-                    new FileOutputStream(new File(context.getExternalFilesDir(null).toString() +
-                            File.separator + user.getUserGroup() + File.separator + user.getUserName() +
-                            "/Data_In/user_company/user_company_logo.jpg"));
+            outputStream = new FileOutputStream(new File(getImagesUserCompanyFolderPath(context, user),
+                    "user_company_logo.jpg"));
             int read = 0;
             byte[] bytes = new byte[1024];
             while ((read = inputStream.read(bytes)) != -1) {
@@ -470,7 +467,6 @@ public class Utils {
             }
             if (outputStream != null) {
                 try {
-                    // outputStream.flush();
                     outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -481,13 +477,9 @@ public class Utils {
 
     public static Bitmap getImageFromUserCompanyDir(Context context, User user){
         try {
-            if(context!=null && context.getExternalFilesDir(null)!=null && user!=null){
-                File imgFile = new File(context.getExternalFilesDir(null).toString() + File.separator +
-                        user.getUserGroup() + File.separator + user.getUserName() +
-                        "/Data_In/user_company/user_company_logo.jpg");
-                if(imgFile.exists()){
-                    return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
-                }
+            File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");
+            if(imgFile.exists()){
+                return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -650,62 +642,99 @@ public class Utils {
         }
     }
 
+    private static String imagesThumbFolderPath;
+    public static String getImagesThumbFolderPath(Context context){
+        if(imagesThumbFolderPath==null){
+            imagesThumbFolderPath = context.getExternalFilesDir(null) + "/images/thumb/";
+        }
+        return imagesThumbFolderPath;
+    }
+
+    private static String imagesOriginalFolderPath;
+    public static String getImagesOriginalFolderPath(Context context){
+        if(imagesOriginalFolderPath==null){
+            imagesOriginalFolderPath = context.getExternalFilesDir(null) + "/images/original/";
+        }
+        return imagesOriginalFolderPath;
+    }
+
+    private static String imagesBannerFolderPath;
+    public static String getImagesBannerFolderPath(Context context){
+        if(imagesBannerFolderPath==null){
+            imagesBannerFolderPath = context.getExternalFilesDir(null) + "/images/banner/";
+        }
+        return imagesBannerFolderPath;
+    }
+
+    private static String imagesProductBrandPromotionalFolderPath;
+    public static String getImagesProductBrandPromotionalFolderPath(Context context){
+        if(imagesProductBrandPromotionalFolderPath==null){
+            imagesProductBrandPromotionalFolderPath = context.getExternalFilesDir(null) +
+                    "/images/productBrandPromotional/";
+        }
+        return imagesProductBrandPromotionalFolderPath;
+    }
+
+    public static String getImagesUserCompanyFolderPath(Context context, User user){
+        return context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
+                + File.separator + user.getUserName() + "/images/userCompany/";
+    }
+
     public static void createImageFiles(Context context, User user){
-        File folderThumb = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/thumb/");//-->Android/data/package.name/files/...
+        File folder = new File(getImagesThumbFolderPath(context));
         // if the directory does not exist, create it
-        if (!folderThumb.exists()) {
+        if (!folder.exists()) {
             try {
-                if (!folderThumb.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folderThumb.getPath() + ".");
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
             }
         }
-        File folderOriginal = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/original/");//-->Android/data/package.name/files/...
+
+        folder = new File(getImagesOriginalFolderPath(context));
         // if the directory does not exist, create it
-        if (!folderOriginal.exists()) {
+        if (!folder.exists()) {
             try {
-                if (!folderOriginal.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folderOriginal.getPath() + ".");
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
             }
         }
-        File folderBanner = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/banner/");//-->Android/data/package.name/files/...
+
+        folder = new File(getImagesBannerFolderPath(context));
         // if the directory does not exist, create it
-        if (!folderBanner.exists()) {
+        if (!folder.exists()) {
             try {
-                if (!folderBanner.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folderBanner.getPath() + ".");
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
             }
         }
-        File folderProductBrandPromotional = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/productBrandPromotional/");//-->Android/data/package.name/files/...
+
+        folder = new File(getImagesProductBrandPromotionalFolderPath(context));
         // if the directory does not exist, create it
-        if (!folderProductBrandPromotional.exists()) {
+        if (!folder.exists()) {
             try {
-                if (!folderProductBrandPromotional.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folderProductBrandPromotional.getPath() + ".");
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();
             }
         }
-        File folderCompanyLogo = new File(context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                + File.separator + user.getUserName() + "/Data_In/user_company/");//-->Android/data/package.name/files/...
+
+        folder = new File(getImagesUserCompanyFolderPath(context, user));
         // if the directory does not exist, create it
-        if (!folderCompanyLogo.exists()) {
+        if (!folder.exists()) {
             try {
-                if (!folderCompanyLogo.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folderCompanyLogo.getPath() + ".");
+                if (!folder.mkdirs()) {
+                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
                 }
             } catch (SecurityException se) {
                 se.printStackTrace();

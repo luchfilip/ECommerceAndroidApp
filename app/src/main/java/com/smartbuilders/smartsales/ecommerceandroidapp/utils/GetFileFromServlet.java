@@ -45,9 +45,9 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         if(bitmap!=null && mContext!=null && mUser!=null) {
             if(mIsThumb) {
-                Utils.createFileInThumbDir(mFileName, bitmap, mUser, mContext);
+                Utils.createFileInThumbDir(mFileName, bitmap, mContext);
             } else {
-                Utils.createFileInOriginalDir(mFileName, bitmap, mUser, mContext);
+                Utils.createFileInOriginalDir(mFileName, bitmap, mContext);
             }
         }
     }

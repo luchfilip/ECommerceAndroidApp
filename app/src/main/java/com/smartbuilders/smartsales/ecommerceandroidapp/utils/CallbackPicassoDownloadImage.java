@@ -58,10 +58,8 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
                     inputStream = getHttpConnection(user.getServerAddress() + "/IntelligentDataSynchronizer/"
                             + (isThumb ? "GetThumbImage" : "GetOriginalImage") + "?fileName=" + fileName);
                     // write the inputStream to a FileOutputStream
-                    outputStream =
-                            new FileOutputStream(new File(context.getExternalFilesDir(null).toString() +
-                                    File.separator + user.getUserGroup() + File.separator + user.getUserName() +
-                                    (isThumb ? "/Data_In/thumb/" : "/Data_In/original/") + fileName));
+                    outputStream = new FileOutputStream(new File(isThumb ? Utils.getImagesThumbFolderPath(context)
+                            : Utils.getImagesOriginalFolderPath(context), fileName));
                     int read = 0;
                     byte[] bytes = new byte[1024];
                     while ((read = inputStream.read(bytes)) != -1) {

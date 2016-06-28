@@ -31,7 +31,7 @@ public class SalesOrderDB {
     }
 
     public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo){
-        return createOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mUser))
+        return createSalesOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mUser))
                 .getShoppingSale(businessPartnerId), validTo, false);
     }
 
@@ -47,7 +47,7 @@ public class SalesOrderDB {
                     " FROM ECOMMERCE_SALES_ORDER SO " +
                         " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
                             " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND SO.IS_ACTIVE = ?",
+                    " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.USER_ID = ? AND SO.IS_ACTIVE = ?",
                     new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 salesOrder = new SalesOrder();
@@ -99,7 +99,7 @@ public class SalesOrderDB {
                     .build(), null,
                     "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
                     " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
-                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = AND SOL.USER_ID " +
+                        " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
                             " AND BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                     " GROUP BY SOL.BUSINESS_PARTNER_ID",
@@ -194,7 +194,7 @@ public class SalesOrderDB {
         return activeSalesOrders;
     }
 
-    public String createOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
+    public String createSalesOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
         int activeShoppingSalesLineNumber = salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId);
         if((orderLines != null && insertOrderLinesInDB) || activeShoppingSalesLineNumber>0){
