@@ -340,6 +340,14 @@ public class OrderLineDB {
     }
 
     public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
+        return getOrderLineByProductIdAndDocType(productId, SHOPPING_CART_DOCTYPE);
+    }
+
+    public OrderLine getOrderLineFromWishListByProductId(int productId){
+        return getOrderLineByProductIdAndDocType(productId, WISHLIST_DOCTYPE);
+    }
+
+    private OrderLine getOrderLineByProductIdAndDocType(int productId, String docType){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -349,7 +357,7 @@ public class OrderLineDB {
                     " WHERE PRODUCT_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY CREATE_TIME DESC",
                     new String[]{String.valueOf(productId), String.valueOf(mUser.getServerUserId()),
-                            SHOPPING_CART_DOCTYPE, "Y"}, null);
+                            docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
                 orderLine.setId(c.getInt(0));

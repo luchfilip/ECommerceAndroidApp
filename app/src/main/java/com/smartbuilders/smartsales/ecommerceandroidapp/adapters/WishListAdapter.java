@@ -171,7 +171,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWishListFragment.addToShoppingCart(mDataset.get(holder.getAdapterPosition()), mUser);
+                OrderLine orderLine = (new OrderLineDB(mContext, mUser))
+                        .getOrderLineFromShoppingCartByProductId(mDataset.get(holder.getAdapterPosition()).getProductId());
+                if(orderLine!=null){
+                    mWishListFragment.updateQtyOrderedInShoppingCart(orderLine, mUser);
+                }else{
+                    mWishListFragment.addToShoppingCart(mDataset.get(holder.getAdapterPosition()), mUser);
+                }
             }
         });
 

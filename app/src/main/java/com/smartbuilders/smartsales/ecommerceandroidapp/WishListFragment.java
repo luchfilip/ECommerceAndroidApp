@@ -144,6 +144,13 @@ public class WishListFragment extends Fragment {
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
+    public void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user) {
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, user);
+        dialogUpdateShoppingCartQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
+    }
+
     public void addToShoppingSale(OrderLine orderLine, User user) {
         Product product = (new ProductDB(getContext(), user))
                 .getProductById(orderLine.getProduct().getId());
@@ -152,6 +159,8 @@ public class WishListFragment extends Fragment {
         dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
                 DialogAddToShoppingSale.class.getSimpleName());
     }
+
+
 
     public void reloadWishList(){
         if (getContext()!=null) {

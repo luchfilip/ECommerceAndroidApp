@@ -44,7 +44,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private Context mContext;
     private boolean mUseDetailLayout;
     private int mRedirectOption;
-    private User mCurrentUser;
+    private User mUser;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -87,7 +87,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
-        mCurrentUser = user;
+        mUser = user;
         mUseDetailLayout = useDetailLayout;
         mRedirectOption = redirectOption;
 
@@ -116,7 +116,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             return;
         }
 
-        Utils.loadThumbImageByFileName(mContext, mCurrentUser,
+        Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getImageFileName(), holder.productImage);
 
         holder.productName.setText(mDataset.get(position).getName());
@@ -233,10 +233,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrderLine orderLine = (new OrderLineDB(mContext, mCurrentUser))
+                OrderLine orderLine = (new OrderLineDB(mContext, mUser))
                         .getOrderLineFromShoppingCartByProductId(mDataset.get(holder.getAdapterPosition()).getId());
                 if(orderLine!=null){
-                    updateQtyOrdered(orderLine);
+                    updateQtyOrderedInShoppingCart(orderLine);
                 }else{
                     addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
                 }
@@ -271,34 +271,34 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     }
 
     private void addToShoppingCart(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId());
+        product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
         DialogAddToShoppingCart dialogAddToShoppingCart =
-                DialogAddToShoppingCart.newInstance(product, mCurrentUser);
+                DialogAddToShoppingCart.newInstance(product, mUser);
         dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
-    public void updateQtyOrdered(OrderLine orderLine) {
+    public void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
         DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
-                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mCurrentUser);
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mUser);
         dialogUpdateShoppingCartQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
     private void addToShoppingSale(Product product) {
-        product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId());
+        product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
         DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, mCurrentUser);
+                DialogAddToShoppingSale.newInstance(product, mUser);
         dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
                 DialogAddToShoppingSale.class.getSimpleName());
     }
 
     private String addToWishList(int productId) {
-        return (new OrderLineDB(mContext, mCurrentUser)).addProductToWishList(productId);
+        return (new OrderLineDB(mContext, mUser)).addProductToWishList(productId);
     }
 
     private String removeFromWishList(int productId) {
-        return (new OrderLineDB(mContext, mCurrentUser)).removeProductFromWishList(productId);
+        return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
     }
 
     class CreateShareIntentThread extends Thread {
@@ -314,7 +314,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         public void run() {
             final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
-                    mContext, mCurrentUser), mContext.getString(R.string.share_image));
+                    mContext, mUser), mContext.getString(R.string.share_image));
             if(mActivity!=null){
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
