@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
@@ -44,6 +45,7 @@ public class RecommendedProductsListAdapter extends RecyclerView.Adapter<Recomme
         public TextView productBrand;
         public TextView commercialPackage;
         public ImageView shareImageView;
+        public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
         public RatingBar productRatingBar;
@@ -56,6 +58,7 @@ public class RecommendedProductsListAdapter extends RecyclerView.Adapter<Recomme
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
+            favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
@@ -146,6 +149,38 @@ public class RecommendedProductsListAdapter extends RecyclerView.Adapter<Recomme
             });
         }
 
+        if(holder.favoriteImageView!=null) {
+            if(mDataset.get(position).isFavorite()){
+                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                        if (result == null) {
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+                            notifyItemChanged(holder.getAdapterPosition());
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }else{
+                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                        if (result == null) {
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+                            notifyItemChanged(holder.getAdapterPosition());
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+
         holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,14 +223,22 @@ public class RecommendedProductsListAdapter extends RecyclerView.Adapter<Recomme
         }
     }
 
+    private String addToWishList(int productId) {
+        return (new OrderLineDB(mContext, mUser)).addProductToWishList(productId);
+    }
+
+    private String removeFromWishList(int productId) {
+        return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
+    }
+
     private void goToProductDetails(Product product) {
         Intent intent = new Intent(mContext, ProductDetailActivity.class);
         intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
         mContext.startActivity(intent);
     }
 
-    public void setData(ArrayList<Product> wishListLines) {
-        mDataset = wishListLines;
+    public void setData(ArrayList<Product> products) {
+        mDataset = products;
         notifyDataSetChanged();
     }
 }

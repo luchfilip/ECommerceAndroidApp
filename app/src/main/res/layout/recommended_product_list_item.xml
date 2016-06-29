@@ -95,6 +95,18 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/favorite_imageView"
+            style="@style/image_button_style"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/addToShoppingCart_imageView"
             android:src="@drawable/ic_add_shopping_cart_black_24dp"
             style="@style/image_button_style"
