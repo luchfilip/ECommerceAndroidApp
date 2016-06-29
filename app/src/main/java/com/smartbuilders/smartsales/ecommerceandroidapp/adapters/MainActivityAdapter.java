@@ -230,6 +230,11 @@ public class MainActivityAdapter extends BaseAdapter {
         viewFlipper.addView(image);
     }
 
+    public void setData(ArrayList<Object> data){
+        mDataset = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         if (mDataset!=null) {

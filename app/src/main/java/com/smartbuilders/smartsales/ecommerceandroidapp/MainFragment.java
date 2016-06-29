@@ -27,6 +27,8 @@ public class MainFragment extends Fragment {
     private int mListViewIndex;
     private int mListViewTop;
 
+    private boolean mIsInitialLoad;
+    private MainActivityAdapter mMainActivityAdapter;
     private ListView mListView;
     private User mCurrentUser;
 
@@ -52,6 +54,7 @@ public class MainFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
+                    mIsInitialLoad = true;
                     mCurrentUser = Utils.getCurrentUser(getActivity());
                     mainPageObjects.addAll((new MainPageSectionsDB(getActivity(), mCurrentUser)).getActiveMainPageSections());
                 } catch (Exception e) {
@@ -64,7 +67,8 @@ public class MainFragment extends Fragment {
                         public void run() {
                             try {
                                 mListView = (ListView) view.findViewById(R.id.main_categories_list);
-                                mListView.setAdapter(new MainActivityAdapter(getActivity(), mainPageObjects, mCurrentUser));
+                                mMainActivityAdapter = new MainActivityAdapter(getActivity(), mainPageObjects, mCurrentUser);
+                                mListView.setAdapter(mMainActivityAdapter);
                                 mListView.setVisibility(View.VISIBLE);
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
                             } catch (Exception e) {
@@ -80,6 +84,19 @@ public class MainFragment extends Fragment {
         }.start();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad =false;
+        }else{
+            if(mListView!=null && mMainActivityAdapter!=null){
+                mMainActivityAdapter.setData((new MainPageSectionsDB(getActivity(), mCurrentUser))
+                        .getActiveMainPageSections());
+            }
+        }
+        super.onStart();
     }
 
     @Override
