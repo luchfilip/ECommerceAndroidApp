@@ -107,7 +107,7 @@ public class ProductDetailFragment extends Fragment {
                         mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
                     }
 
-                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId);
+                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId, mUser.getBusinessPartnerId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

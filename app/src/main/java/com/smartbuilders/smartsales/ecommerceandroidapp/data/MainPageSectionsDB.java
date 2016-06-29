@@ -51,7 +51,7 @@ public class MainPageSectionsDB {
 
         try {
             ArrayList<Product> products =
-                    (new ProductRecentlySeenDB(mContext, mUser)).getProductsRecentlySeenList();
+                    (new ProductRecentlySeenDB(mContext, mUser)).getProductsRecentlySeen();
             if (products!=null && products.size()>12) {
                 MainPageProductSection mainPageProductSection = new MainPageProductSection();
                 mainPageProductSection.setName(mContext.getString(R.string.products_recently_seen));

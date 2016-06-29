@@ -356,13 +356,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS PRODUCT_RECENTLY_SEEN (" +
                     "PRODUCT_RECENTLY_SEEN_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (PRODUCT_ID, USER_ID))";
+                    " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID, PRODUCT_ID))";
+
+    public static final String CREATE_RECOMMENDED_PRODUCT =
+            "CREATE TABLE IF NOT EXISTS RECOMMENDED_PRODUCT (" +
+                    "BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, " +
+                    " PRODUCT_ID INTEGER DEFAULT NULL, " +
+                    " PRIORITY INTEGER NOT NULL DEFAULT 0, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " PRIMARY KEY (BUSINESS_PARTNER_ID, PRODUCT_ID))";
 
     public static final String CREATE_USER_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +
@@ -467,6 +476,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDERLINE);
             db.execSQL(CREATE_RECENT_SEARCH);
             db.execSQL(CREATE_PRODUCT_RECENTLY_SEEN);
+            db.execSQL(CREATE_RECOMMENDED_PRODUCT);
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_COMPANY);
 		}

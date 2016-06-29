@@ -24,22 +24,23 @@ public class ProductRecentlySeenDB {
         this.mUser = user;
     }
 
-    public void addProduct(int productId){
+    public void addProduct(int productId, int businessPartnerId){
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), new ContentValues(),
-                    "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, USER_ID, PRODUCT_ID, " +
-                            " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(getMaxProductRecentlySeenId() + 1), String.valueOf(mUser.getServerUserId()),
-                            String.valueOf(productId), Utils.getAppVersionName(mContext),
-                            mUser.getUserName(), Utils.getMacAddress(mContext)});
+                    "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, " +
+                        " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    new String[]{String.valueOf(getMaxProductRecentlySeenId() + 1), String.valueOf(businessPartnerId),
+                            String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
+                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public ArrayList<Product> getProductsRecentlySeenList(){
+    public ArrayList<Product> getProductsRecentlySeenByBusinessPartnerId(int businessPartnerId){
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
@@ -48,14 +49,18 @@ public class ProductRecentlySeenDB {
                     .build(), null,
                     "SELECT PRODUCT_ID " +
                     " FROM PRODUCT_RECENTLY_SEEN " +
-                    " WHERE USER_ID = ? " +
+                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? " +
                     " ORDER BY PRODUCT_RECENTLY_SEEN_ID desc " +
                     " LIMIT 30",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
+                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())}, null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mUser);
+                Product product;
                 while(c.moveToNext()){
-                    products.add(productDB.getProductById(c.getInt(0)));
+                    product = productDB.getProductById(c.getInt(0));
+                    if(product!=null){
+                        products.add(product);
+                    }
                 }
             }
         } catch (Exception e) {
