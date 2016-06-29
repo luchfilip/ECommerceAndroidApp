@@ -27,6 +27,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.RecommendedProductsPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
@@ -68,7 +69,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                         }
                     }
                     User user = Utils.getCurrentUser(getContext());
-                    if (getActivity()!=null) {
+                    if (getActivity()!=null && user!=null) {
                         recommendedProducts.addAll((new RecommendedProductDB(getActivity(), user))
                                 .getRecommendedProductsByBusinessPartnerId(user.getBusinessPartnerId()));
                     }
@@ -103,7 +104,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
-
 
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -210,11 +210,11 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
-                //try{
-                //    new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
-                //}catch(Exception e) {
-                //    e.printStackTrace();
-                //}
+                try{
+                    new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext());
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
 
                 //Add the attachment by specifying a reference to our custom ContentProvider
                 //and the specific file of interest
