@@ -24,6 +24,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -243,7 +244,13 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                addToShoppingCart(mUser, mProduct);
+                                                OrderLine orderLine = (new OrderLineDB(getContext(), mUser))
+                                                    .getOrderLineFromShoppingCartByProductId(mProductId);
+                                                if(orderLine!=null){
+                                                    updateQtyOrderedInShoppingCart(orderLine, mUser);
+                                                }else{
+                                                    addToShoppingCart(mUser, mProduct);
+                                                }
                                             }
                                         }
                                     );
@@ -306,6 +313,13 @@ public class ProductDetailFragment extends Fragment {
                 DialogAddToShoppingCart.newInstance(product, user);
         addToShoppingCartFragment.show(getActivity().getSupportFragmentManager(),
                 DialogAddToShoppingCart.class.getSimpleName());
+    }
+
+    public void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user) {
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, user);
+        dialogUpdateShoppingCartQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
     private void addToShoppingSale(User user, Product product) {
