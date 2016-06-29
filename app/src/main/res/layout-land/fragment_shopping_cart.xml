@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/empty_shopping_cart"
+            android:src="@drawable/company_logo_name"
             android:padding="10dp"
             android:visibility="visible"
             android:layout_centerInParent="true" />
