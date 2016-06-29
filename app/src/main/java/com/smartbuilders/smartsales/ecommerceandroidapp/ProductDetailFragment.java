@@ -24,14 +24,12 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductRecentlySeenDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.CallbackPicassoDownloadImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -108,6 +106,8 @@ public class ProductDetailFragment extends Fragment {
                     if (mProduct!=null) {
                         mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
                     }
+
+                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -362,7 +362,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (PRODUCT_RECENTLY_SEEN_ID, USER_ID))";
+                    " PRIMARY KEY (PRODUCT_ID, USER_ID))";
 
     public static final String CREATE_USER_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +

@@ -3,8 +3,10 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.Context;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
 
 import java.util.ArrayList;
@@ -42,6 +44,19 @@ public class MainPageSectionsDB {
                     && productBrandPromotionalSection.getProductBrandPromotionalCards()!=null
                     && !productBrandPromotionalSection.getProductBrandPromotionalCards().isEmpty()) {
                 mainPageList.add(productBrandPromotionalSection);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ArrayList<Product> products =
+                    (new ProductRecentlySeenDB(mContext, mUser)).getProductsRecentlySeenList();
+            if (products!=null && products.size()>12) {
+                MainPageProductSection mainPageProductSection = new MainPageProductSection();
+                mainPageProductSection.setName(mContext.getString(R.string.products_recently_seen));
+                mainPageProductSection.setProducts(products);
+                mainPageList.add(mainPageProductSection);
             }
         } catch (Exception e) {
             e.printStackTrace();
