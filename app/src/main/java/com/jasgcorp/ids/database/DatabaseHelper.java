@@ -367,8 +367,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_RECOMMENDED_PRODUCT =
             "CREATE TABLE IF NOT EXISTS RECOMMENDED_PRODUCT (" +
-                    "BUSINESS_PARTNER_ID INTEGER DEFAULT NULL, " +
-                    " PRODUCT_ID INTEGER DEFAULT NULL, " +
+                    "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " PRODUCT_ID INTEGER NOT NULL, " +
                     " PRIORITY INTEGER NOT NULL DEFAULT 0, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (BUSINESS_PARTNER_ID, PRODUCT_ID))";

@@ -30,10 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:src="@drawable/ic_favorite_black_24dp"/>
+                android:src="@drawable/ic_thumb_up_black_24dp"/>
 
             <TextView
-                android:text="@string/wish_list"
+                android:text="@string/recommended_products"
                 android:id="@+id/title_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -43,6 +43,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_wish_list" />
+    <include layout="@layout/content_recommended_products_list" />
 
 </LinearLayout>
