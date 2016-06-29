@@ -39,6 +39,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ContactUsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.RecommendedProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
@@ -607,6 +608,10 @@ public class Utils {
                 break;
             case R.id.nav_shopping_sale:
                 context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                break;
+            case R.id.nav_products_recommended_list:
+                context.startActivity(new Intent(context, RecommendedProductsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;
             case R.id.nav_wish_list:

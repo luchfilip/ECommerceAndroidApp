@@ -14,6 +14,13 @@
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="@string/wish_list" />
     </group>
+    <group
+        android:id="@+id/menu_products_recommended_list">
+        <item
+            android:id="@+id/nav_products_recommended_list"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
+            android:title="@string/products_recommended" />
+    </group>
     <item android:title="@string/my_purchases">
         <menu>
             <item

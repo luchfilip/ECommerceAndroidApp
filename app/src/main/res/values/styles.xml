@@ -57,50 +57,35 @@
 
     <style name="toolbar_products_list_style"></style>
 
-    <style name="business_partners_style">
-    </style>
+    <style name="business_partners_style"></style>
 
-    <style name="business_partners_list_style">
-    </style>
+    <style name="business_partners_list_style"></style>
 
-    <style name="categories_style">
-    </style>
+    <style name="categories_style"></style>
 
-    <style name="categories_list_style">
-    </style>
+    <style name="categories_list_style"></style>
 
-    <style name="sub_categories_style">
-    </style>
+    <style name="sub_categories_style"></style>
 
-    <style name="sub_categories_list_style">
-    </style>
+    <style name="sub_categories_list_style"></style>
 
-    <style name="orders_style">
-    </style>
+    <style name="orders_style"></style>
 
-    <style name="orders_list_style">
-    </style>
+    <style name="orders_list_style"></style>
 
-    <style name="shopping_sales_orders_style">
-    </style>
+    <style name="shopping_sales_orders_style"></style>
 
-    <style name="shopping_sales_orders_list_style">
-    </style>
+    <style name="shopping_sales_orders_list_style"></style>
 
-    <style name="sales_orders_style">
-    </style>
+    <style name="sales_orders_style"></style>
 
-    <style name="sales_orders_list_style">
-    </style>
+    <style name="sales_orders_list_style"></style>
 
-    <style name="wish_list_style">
-    </style>
+    <style name="wish_list_style"></style>
 
-    <style name="invoices_list_style">
-    </style>
+    <style name="invoices_list_style"></style>
 
-    <style name="brands_list_style">
-    </style>
+    <style name="brands_list_style"></style>
 
     <style name="title_style">
         <item name="android:background">@color/transparent_white</item>
