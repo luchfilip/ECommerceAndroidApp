@@ -272,32 +272,6 @@ public class OrderLineDB {
         return orderLines;
     }
 
-    //public int getOrderLineNumbersByOrderId(int orderId){
-    //    Cursor c = null;
-    //    try {
-    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-    //                .build(), null,
-    //                "SELECT COUNT(ECOMMERCE_ORDERLINE_ID) FROM ECOMMERCE_ORDERLINE " +
-    //                " WHERE ECOMMERCE_ORDER_ID=? AND IS_ACTIVE = ?",
-    //                new String[]{String.valueOf(orderId), "Y"}, null);
-    //        if(c!=null && c.moveToNext()){
-    //            return c.getInt(0);
-    //        }
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    } finally {
-    //        if(c!=null){
-    //            try {
-    //                c.close();
-    //            } catch (Exception e){
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //    return 0;
-    //}
-
     private int getActiveOrderLinesNumber(String docType) {
         Cursor c = null;
         try {
@@ -363,6 +337,44 @@ public class OrderLineDB {
             }
         }
         return false;
+    }
+
+    public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDERLINE " +
+                    " WHERE PRODUCT_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " ORDER BY CREATE_TIME DESC",
+                    new String[]{String.valueOf(productId), String.valueOf(mUser.getServerUserId()),
+                            SHOPPING_CART_DOCTYPE, "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                OrderLine orderLine = new OrderLine();
+                orderLine.setId(c.getInt(0));
+                orderLine.setProductId(c.getInt(1));
+                orderLine.setQuantityOrdered(c.getInt(2));
+                orderLine.setPrice(c.getDouble(3));
+                orderLine.setTaxPercentage(c.getDouble(4));
+                orderLine.setTotalLineAmount(c.getDouble(5));
+                orderLine.setProduct((new ProductDB(mContext, mUser)).getProductById(orderLine.getProductId()));
+                if(orderLine.getProduct()!=null){
+                    return orderLine;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     private int getMaxOrderLineId(){

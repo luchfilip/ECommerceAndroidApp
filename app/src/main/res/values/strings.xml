@@ -273,4 +273,5 @@
     </string-array>
     <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>
+    <string name="invalid_qty_requested">Cantidad solicitada inválida.</string>
 </resources>

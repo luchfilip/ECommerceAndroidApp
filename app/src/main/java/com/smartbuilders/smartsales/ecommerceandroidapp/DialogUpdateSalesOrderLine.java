@@ -69,6 +69,10 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             }
         }
 
+        final EditText productPriceEditText = (EditText) view.findViewById(R.id.product_price_editText);
+        final EditText productTaxEditText = (EditText) view.findViewById(R.id.product_tax_editText);
+        final EditText qtyRequestedEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
+
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability, mSaleOrderLine.getProduct().getAvailability()));
 
@@ -80,21 +84,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         });
 
         try {
-            ((EditText) view.findViewById(R.id.qty_requested_editText))
-                    .setText(String.valueOf(mSaleOrderLine.getQuantityOrdered()));
-            view.findViewById(R.id.qty_requested_editText).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mFocus = ShoppingSaleAdapter.FOCUS_QTY_ORDERED;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            ((EditText) view.findViewById(R.id.product_price_editText))
-                    .setText(String.valueOf(mSaleOrderLine.getPrice()));
-            view.findViewById(R.id.product_price_editText).setOnClickListener(new View.OnClickListener() {
+            productPriceEditText.setText(String.valueOf(mSaleOrderLine.getPrice()));
+            productPriceEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mFocus = ShoppingSaleAdapter.FOCUS_PRICE;
@@ -104,12 +95,22 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             e.printStackTrace();
         }
         try {
-            ((EditText) view.findViewById(R.id.product_tax_editText))
-                    .setText(String.valueOf(mSaleOrderLine.getTaxPercentage()));
-            view.findViewById(R.id.product_tax_editText).setOnClickListener(new View.OnClickListener() {
+            productTaxEditText.setText(String.valueOf(mSaleOrderLine.getTaxPercentage()));
+            productTaxEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mFocus = ShoppingSaleAdapter.FOCUS_TAX_PERCENTAGE;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            qtyRequestedEditText.setText(String.valueOf(mSaleOrderLine.getQuantityOrdered()));
+            qtyRequestedEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFocus = ShoppingSaleAdapter.FOCUS_QTY_ORDERED;
                 }
             });
         } catch (Exception e) {
@@ -121,25 +122,22 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             public void onClick(View v) {
                 try {
                     try {
-                        mSaleOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view
-                                .findViewById(R.id.qty_requested_editText)).getText().toString()));
+                        mSaleOrderLine.setQuantityOrdered(Integer.valueOf(qtyRequestedEditText.getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mSaleOrderLine.setQuantityOrdered(0);
                     }
                     if (mSaleOrderLine.getQuantityOrdered()<=0) {
-                        throw new Exception("Cantidad pedida inválida.");
+                        throw new Exception(getString(R.string.invalid_qty_requested));
                     }
                     try {
-                        mSaleOrderLine.setPrice(Double.valueOf(((EditText) view
-                                .findViewById(R.id.product_price_editText)).getText().toString()));
+                        mSaleOrderLine.setPrice(Double.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mSaleOrderLine.setPrice(0);
                     }
                     try {
-                        mSaleOrderLine.setTaxPercentage(Double.valueOf(((EditText) view
-                                .findViewById(R.id.product_tax_editText)).getText().toString()));
+                        mSaleOrderLine.setTaxPercentage(Double.valueOf(productTaxEditText.getText().toString()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         mSaleOrderLine.setTaxPercentage(0);
@@ -171,13 +169,16 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
         switch (mFocus) {
             case ShoppingSaleAdapter.FOCUS_PRICE:
-                view.findViewById(R.id.product_price_editText).requestFocus();
+                productPriceEditText.requestFocus();
+                productPriceEditText.setSelection(productPriceEditText.length());
                 break;
             case ShoppingSaleAdapter.FOCUS_TAX_PERCENTAGE:
-                view.findViewById(R.id.product_tax_editText).requestFocus();
+                productTaxEditText.requestFocus();
+                productTaxEditText.setSelection(productTaxEditText.length());
                 break;
             case ShoppingSaleAdapter.FOCUS_QTY_ORDERED:
-                view.findViewById(R.id.qty_requested_editText).requestFocus();
+                qtyRequestedEditText.requestFocus();
+                qtyRequestedEditText.setSelection(qtyRequestedEditText.length());
                 break;
         }
 

@@ -68,6 +68,11 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_update_qty_ordered, container);
 
+        final EditText qtyOrderedEditText = ((EditText) view.findViewById(R.id.qty_requested_editText));
+        qtyOrderedEditText.setText(String.valueOf(mOrderLine.getQuantityOrdered()));
+        //se coloca el indicador del focus al final del texto
+        qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
+
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
 
@@ -83,10 +88,10 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
             public void onClick(View v) {
                 int oldValue = mOrderLine.getQuantityOrdered();
                 try {
-                    mOrderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                    mOrderLine.setQuantityOrdered(Integer.valueOf(qtyOrderedEditText.getText().toString()));
                     //TODO: mandar estas validaciones a una clase de businessRules
                     if (mOrderLine.getQuantityOrdered()<=0) {
-                        throw new Exception("Cantidad pedida inválida.");
+                        throw new Exception(getString(R.string.invalid_qty_requested));
                     }
                     if ((mOrderLine.getQuantityOrdered() % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
                         throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
@@ -99,14 +104,18 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
                         result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
                     }
                     if(result == null){
-                        ((Callback) getTargetFragment()).reloadShoppingCart();
+                        if(getTargetFragment() instanceof Callback){
+                            ((Callback) getTargetFragment()).reloadShoppingCart();
+                        }else{
+                            Toast.makeText(getContext(), "Se actualizó la cantidad pedida.", Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         throw new Exception(result);
                     }
                     dismiss();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Cantidad pedida inválida.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     mOrderLine.setQuantityOrdered(oldValue);

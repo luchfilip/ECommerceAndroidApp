@@ -21,11 +21,13 @@ import java.util.ArrayList;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -231,7 +233,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
+                OrderLine orderLine = (new OrderLineDB(mContext, mCurrentUser))
+                        .getOrderLineFromShoppingCartByProductId(mDataset.get(holder.getAdapterPosition()).getId());
+                if(orderLine!=null){
+                    updateQtyOrdered(orderLine);
+                }else{
+                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
+                }
             }
         });
 
@@ -270,12 +278,19 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
+    public void updateQtyOrdered(OrderLine orderLine) {
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mCurrentUser);
+        dialogUpdateShoppingCartQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
+    }
+
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(mContext, mCurrentUser)).getProductById(product.getId());
         DialogAddToShoppingSale dialogAddToShoppingSale =
                 DialogAddToShoppingSale.newInstance(product, mCurrentUser);
         dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogAddToShoppingCart.class.getSimpleName());
+                DialogAddToShoppingSale.class.getSimpleName());
     }
 
     private String addToWishList(int productId) {

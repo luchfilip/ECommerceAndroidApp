@@ -73,7 +73,7 @@
                 android:focusableInTouchMode="true"
                 android:layout_weight="7"
                 android:paddingLeft="5dp"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -104,9 +104,9 @@
                 android:focusableInTouchMode="true"
                 android:layout_weight="3"
                 android:paddingLeft="5dp"
-                android:gravity="center_vertical|right"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_vertical" />
         </TableRow>
 
         <TableRow
@@ -139,9 +139,9 @@
                 android:focusableInTouchMode="true"
                 android:paddingLeft="5dp"
                 android:layout_gravity="center_vertical"
-                android:gravity="right"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
         </TableRow>
 
         <TableRow
