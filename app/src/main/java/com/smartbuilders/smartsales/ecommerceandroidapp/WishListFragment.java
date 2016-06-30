@@ -44,11 +44,12 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "ListaDeDeseos";
 
-
+    private boolean mIsInitialLoad;
     private User mUser;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private WishListAdapter mWishListAdapter;
+    private OrderLineDB mOrderLineDB;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
@@ -61,6 +62,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
+        mIsInitialLoad = true;
 
         final ArrayList<OrderLine> wishListLines = new ArrayList<>();
 
@@ -74,12 +76,11 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                         }
                     }
                     mUser = Utils.getCurrentUser(getContext());
-                    if (getActivity()!=null) {
-                        wishListLines.addAll((new OrderLineDB(getActivity(), mUser)).getWishList());
-                    }
-                    if (getContext()!=null) {
-                        mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
-                    }
+                    mOrderLineDB = new OrderLineDB(getContext(), mUser);
+
+                    wishListLines.addAll(mOrderLineDB.getWishList());
+
+                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
                     mShareIntent = createSharedIntent(wishListLines);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -136,6 +137,16 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            reloadWishList();
+        }
+        super.onStart();
+    }
+
+    @Override
     public void addToShoppingCart(int productId, User user) {
         Product product = (new ProductDB(getContext(), user))
                 .getProductById(productId);
@@ -164,8 +175,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     public void reloadWishList(){
-        if (getContext()!=null) {
-            reloadWishList((new OrderLineDB(getContext(), mUser)).getWishList());
+        if (mOrderLineDB!=null) {
+            reloadWishList(mOrderLineDB.getWishList());
         }
     }
 
@@ -222,11 +233,16 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 .setMessage(getContext().getString(R.string.clear_wish_list_question))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = (new OrderLineDB(getContext(), mUser)).clearWishList();
-                        if(result == null){
-                            reloadWishList();
-                        } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                        try {
+                            String result = mOrderLineDB.clearWishList();
+                            if(result == null){
+                                reloadWishList();
+                            } else {
+                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 })

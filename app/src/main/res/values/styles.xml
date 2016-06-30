@@ -63,25 +63,19 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
-    <style name="categories_style"></style>
+    <style name="categories_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
 
-    <style name="categories_list_style"></style>
-
-    <style name="sub_categories_style"></style>
-
-    <style name="sub_categories_list_style"></style>
-
-    <style name="orders_style"></style>
+    <style name="sub_categories_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
 
     <style name="orders_list_style"></style>
-
-    <style name="shopping_sales_orders_style"></style>
 
     <style name="shopping_sales_orders_list_style">
         <item name="android:background">@android:color/white</item>
     </style>
-
-    <style name="sales_orders_style"></style>
 
     <style name="sales_orders_list_style"></style>
 
