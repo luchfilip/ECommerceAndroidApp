@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
@@ -36,14 +34,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ViewHolder> {
 
-    public static final int REDIRECT_PRODUCT_LIST = 0;
-    public static final int REDIRECT_PRODUCT_DETAILS = 1;
-
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
     private Context mContext;
     private boolean mUseDetailLayout;
-    private int mRedirectOption;
     private User mUser;
 
     // Provide a reference to the views for each data item
@@ -57,7 +51,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productBrand;
         public TextView commercialPackage;
         public TextView productAvailability;
-        public LinearLayout linearLayoutContent;
+        public View goToProductDetails;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
@@ -69,7 +63,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productName = (TextView) v.findViewById(R.id.product_name);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productImage = (ImageView) v.findViewById(R.id.product_image);
-            linearLayoutContent = (LinearLayout) v.findViewById(R.id.linear_layout_content);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
@@ -82,15 +76,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductsListAdapter(Context context, FragmentActivity fragmentActivity, ArrayList<Product> myDataset,
-                               boolean useDetailLayout, int redirectOption, User user) {
+    public ProductsListAdapter(Context context, FragmentActivity fragmentActivity,
+                               ArrayList<Product> products, boolean useDetailLayout, User user) {
         mContext = context;
         mFragmentActivity = fragmentActivity;
-        mDataset = myDataset;
+        mDataset = products;
         mUser = user;
         mUseDetailLayout = useDetailLayout;
-        mRedirectOption = redirectOption;
-
     }
 
     // Create new views (invoked by the layout manager)
@@ -105,128 +97,57 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.product_min_info, parent, false);
         }
-
         return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mDataset==null || mDataset.get(position) == null){
-            return;
-        }
-
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getImageFileName(), holder.productImage);
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        if(holder.productInternalCode!=null){
-            if(mDataset.get(position).getInternalCode()!=null){
-                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                        mDataset.get(position).getInternalCode()));
-            }
-        }
-
-        if(holder.linearLayoutContent != null){
-            switch (mRedirectOption){
-                case REDIRECT_PRODUCT_DETAILS:
-                    holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId());
-                            mContext.startActivity(intent);
-                        }
-                    });
-                break;
-                case  REDIRECT_PRODUCT_LIST:
-                    holder.linearLayoutContent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mContext, ProductsListActivity.class);
-                            intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID,
-                                    mDataset.get(holder.getAdapterPosition()).getProductSubCategory().getId());
-                            mContext.startActivity(intent);
-                        }
-                    });
-                break;
-            }
-        }
-
-        if(holder.productBrand!=null){
-            if(mDataset.get(position).getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProductBrand().getDescription()));
-                holder.productBrand.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.productBrand.setVisibility(TextView.GONE);
-            }
-        }
-
-        if(holder.productRatingBar!=null){
-            if(mDataset.get(position).getRating()>=0){
-                ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
-                        .setRating(mDataset.get(position).getRating());
-            }
-        }
-
-        if(holder.commercialPackage!=null){
-            if(mDataset.get(position).getProductCommercialPackage()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
-                holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                                mDataset.get(position).getProductCommercialPackage().getUnits(), mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
-                holder.commercialPackage.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.commercialPackage.setVisibility(TextView.GONE);
-            }
-        }
-
         holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getAvailability()));
+                mDataset.get(position).getAvailability()));
 
-        if(holder.shareImageView!=null) {
-            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
+        holder.shareImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.shareImageView.setEnabled(false);
+                new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()),
+                        holder.shareImageView).start();
+            }
+        });
+
+        if(mDataset.get(position).isFavorite()){
+            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.shareImageView.setEnabled(false);
-                    new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()),
-                            holder.shareImageView).start();
+                    String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                    if (result == null) {
+                        mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+                        notifyItemChanged(holder.getAdapterPosition());
+                    } else {
+                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
-        }
-
-        if(holder.favoriteImageView!=null) {
-            if(mDataset.get(position).isFavorite()){
-                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
-                        if (result == null) {
-                            mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-                            notifyItemChanged(holder.getAdapterPosition());
-                        } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                        }
+        }else{
+            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String result = addToWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                    if (result == null) {
+                        mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+                        notifyItemChanged(holder.getAdapterPosition());
+                    } else {
+                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                     }
-                });
-            }else{
-                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()).getId());
-                        if (result == null) {
-                            mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-                            notifyItemChanged(holder.getAdapterPosition());
-                        } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
+                }
+            });
         }
 
         holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
@@ -250,6 +171,45 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
             }
         });
+
+        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+            }
+        });
+
+        if(mUseDetailLayout){
+            if(mDataset.get(position).getInternalCode()!=null){
+                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                        mDataset.get(position).getInternalCode()));
+            }
+
+            if(mDataset.get(position).getProductBrand()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
+                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                        mDataset.get(position).getProductBrand().getDescription()));
+                holder.productBrand.setVisibility(TextView.VISIBLE);
+            }else{
+                holder.productBrand.setVisibility(TextView.GONE);
+            }
+
+            if(mDataset.get(position).getRating()>=0){
+                ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
+                        .setRating(mDataset.get(position).getRating());
+            }
+
+            if(mDataset.get(position).getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
+                holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
+                                mDataset.get(position).getProductCommercialPackage().getUnits(),
+                        mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
+                holder.commercialPackage.setVisibility(TextView.VISIBLE);
+            }else{
+                holder.commercialPackage.setVisibility(TextView.GONE);
+            }
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

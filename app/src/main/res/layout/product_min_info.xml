@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/linear_layout_content">
+        android:id="@+id/go_to_product_details">
 
         <TextView
             android:layout_width="match_parent"

@@ -414,7 +414,7 @@ public class Utils {
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
                             .error(R.drawable.no_image_available)
-                            .placeholder(R.drawable.no_image_available)
+                            //.placeholder(R.drawable.no_image_available)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {

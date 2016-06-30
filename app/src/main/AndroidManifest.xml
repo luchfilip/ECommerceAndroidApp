@@ -178,12 +178,6 @@
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.OrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.InvoicesListActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.InvoiceDetailActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape"
-    style="@style/shape_style" >
+    style="@style/shape_style"
+    android:id="@+id/go_to_product_details">
 
     <ImageView
         android:layout_width="@dimen/order_line_item_image_width"
@@ -29,6 +30,12 @@
             android:maxLines="2"
             android:paddingTop="2dp"
             android:paddingBottom="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_internal_code"
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -10,7 +10,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linear_layout_content">
+        android:id="@+id/go_to_product_details">
 
         <ImageView
             android:layout_width="@dimen/productDetail_max_image_Width"

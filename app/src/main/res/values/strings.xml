@@ -108,8 +108,6 @@
     <string name="title_activity_checkout">Finalizar Pedido</string>
     <string name="title_activity_order_list">Pedidos</string>
     <string name="title_activity_order_detail">Detalle del Pedido</string>
-    <string name="title_activity_invoice_list">Facturas</string>
-    <string name="title_activity_invoice_detail">Detalle de la Factura</string>
     <string name="title_activity_wish_list">Lista de Favoritos</string>
     <string name="title_activity_statement_of_account">Estado de Cuenta</string>
     <string name="title_activity_filter_options">Busqueda Por</string>

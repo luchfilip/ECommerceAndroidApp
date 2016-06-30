@@ -10,7 +10,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/go_to_product_details">
 
         <ImageView
             android:layout_width="@dimen/wish_list_item_image_width"

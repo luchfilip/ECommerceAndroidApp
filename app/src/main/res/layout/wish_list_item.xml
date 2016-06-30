@@ -50,37 +50,45 @@
                     android:background="?attr/selectableItemBackground" />
             </LinearLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/product_brand"
-                android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productBrand_text_size"
-                android:maxLines="1" />
+                android:orientation="vertical"
+                android:id="@+id/go_to_product_details">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_commercial_package"
-                android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_brand"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/productDetailCardView_productBrand_text_size"
+                    android:maxLines="1" />
 
-            <TextView
-                android:id="@+id/product_availability"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/product_availability"
-                android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_productAvailability_text_size" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_commercial_package"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
 
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:progressTint="@color/ratingbar_progress"
-                android:numStars="5"
-                android:rating="2.5"
-                android:id="@+id/product_ratingbar" />
+                <TextView
+                    android:id="@+id/product_availability"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/product_availability"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/productDetailCardView_productAvailability_text_size" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="@color/ratingbar_progress"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:id="@+id/product_ratingbar" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

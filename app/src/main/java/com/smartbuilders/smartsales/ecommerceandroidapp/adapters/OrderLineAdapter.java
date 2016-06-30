@@ -33,16 +33,20 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
+        public TextView productInternalCode;
         public TextView productBrand;
         public ImageView productImage;
         public TextView qtyOrdered;
+        public View goToProductDetails;
 
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
 
@@ -86,15 +90,12 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
+
+        if(mDataset.get(position).getProduct().getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                    mDataset.get(position).getProduct().getInternalCode()));
+        }
 
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
@@ -108,15 +109,15 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             holder.productBrand.setVisibility(View.INVISIBLE);
         }
 
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
+                String.valueOf(mDataset.get(position).getQuantityOrdered())));
+
+        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
-
-        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
-                String.valueOf(mDataset.get(position).getQuantityOrdered())));
     }
 
     private void goToProductDetails(Product product) {

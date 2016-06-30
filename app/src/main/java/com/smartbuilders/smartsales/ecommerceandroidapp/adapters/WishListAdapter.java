@@ -52,6 +52,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
         public RatingBar productRatingBar;
+        public View goToProductDetails;
 
         public ViewHolder(View v) {
             super(v);
@@ -65,6 +66,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
 
@@ -113,10 +115,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mDataset==null || mDataset.get(position) == null){
-            return;
-        }
-
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
@@ -165,15 +163,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             }
         });
 
-        if(holder.shareImageView!=null) {
-            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
-                            mDataset.get(holder.getAdapterPosition()).getProduct(), mContext, mUser), mContext.getString(R.string.share_image)));
-                }
-            });
-        }
+        holder.shareImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
+                        mDataset.get(holder.getAdapterPosition()).getProduct(), mContext, mUser), mContext.getString(R.string.share_image)));
+            }
+        });
 
         holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
@@ -205,15 +201,20 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productBrand.setVisibility(View.INVISIBLE);
         }
 
-        if(holder.commercialPackage!=null){
-            if(mDataset.get(position).getProduct().getProductCommercialPackage()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription())){
-                holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                        mDataset.get(position).getProduct().getProductCommercialPackage().getUnits(), mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
-            }else{
-                holder.commercialPackage.setVisibility(TextView.GONE);
-            }
+        if(mDataset.get(position).getProduct().getProductCommercialPackage()!=null
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription())){
+            holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
+                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits(), mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+        }else{
+            holder.commercialPackage.setVisibility(TextView.GONE);
         }
+
+        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
     }
 
     private void goToProductDetails(Product product) {

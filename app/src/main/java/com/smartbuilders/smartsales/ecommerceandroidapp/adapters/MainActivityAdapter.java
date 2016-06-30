@@ -150,7 +150,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(parent.getContext(), mFragmentActivity,
-                                mainPageProductSection.getProducts(), false, ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mUser));
+                                mainPageProductSection.getProducts(), false, mUser));
                     }
                     break;
                 }

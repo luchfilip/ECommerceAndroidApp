@@ -34,22 +34,26 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView productName;
+        public TextView productInternalCode;
         public TextView productBrand;
         public ImageView productImage;
         public TextView qtyOrdered;
         public TextView productPrice;
         public TextView productTax;
         public TextView totalLineAmount;
+        public View goToProductDetails;
 
         public ViewHolder(View v) {
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
             productPrice = (TextView) v.findViewById(R.id.product_price_textView);
             productTax = (TextView) v.findViewById(R.id.product_tax_percentage_textView);
             totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
 
@@ -77,29 +81,19 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
-
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
 
-        if(holder.productBrand!=null){
-            if(mDataset.get(position).getProduct().getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProduct().getProductBrand().getDescription()));
-            }else{
-                holder.productBrand.setVisibility(TextView.GONE);
-            }
+        if(mDataset.get(position).getProduct().getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                    mDataset.get(position).getProduct().getInternalCode()));
+        }
+
+        if(mDataset.get(position).getProduct().getProductBrand()!=null
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+        }else{
+            holder.productBrand.setVisibility(TextView.GONE);
         }
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
@@ -110,6 +104,13 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
                 mDataset.get(position).getTaxPercentageStringFormat()));
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mDataset.get(position).getTotalLineAmountStringFormat()));
+
+        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
     }
 
     private void goToProductDetails(Product product) {

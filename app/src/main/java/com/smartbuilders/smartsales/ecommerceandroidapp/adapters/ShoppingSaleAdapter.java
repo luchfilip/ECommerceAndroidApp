@@ -136,15 +136,13 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             }
         });
 
-        if(holder.productBrand!=null){
-            if(mDataset.get(position).getProduct().getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProduct().getProductBrand().getDescription()));
-                holder.productBrand.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.productBrand.setVisibility(TextView.GONE);
-            }
+        if(mDataset.get(position).getProduct().getProductBrand()!=null
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+            holder.productBrand.setVisibility(TextView.VISIBLE);
+        }else{
+            holder.productBrand.setVisibility(TextView.GONE);
         }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {

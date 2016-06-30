@@ -132,15 +132,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }
         });
 
-        if(holder.productBrand!=null){
-            if(mDataset.get(position).getProduct().getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProduct().getProductBrand().getDescription()));
-                holder.productBrand.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.productBrand.setVisibility(TextView.GONE);
-            }
+        if(mDataset.get(position).getProduct().getProductBrand()!=null
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+            holder.productBrand.setVisibility(TextView.VISIBLE);
+        }else{
+            holder.productBrand.setVisibility(TextView.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

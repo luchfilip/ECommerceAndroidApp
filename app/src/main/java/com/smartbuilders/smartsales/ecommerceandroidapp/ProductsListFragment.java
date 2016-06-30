@@ -29,7 +29,7 @@ import java.util.ArrayList;
  */
 public class ProductsListFragment extends Fragment {
 
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
 
     private int productCategoryId;
     private int productSubCategoryId;
@@ -56,8 +56,8 @@ public class ProductsListFragment extends Fragment {
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     }
 
@@ -141,8 +141,7 @@ public class ProductsListFragment extends Fragment {
                                     categorySubcategoryResultsTextView.append(word);
                                 }
 
-                                mProductsListAdapter = new ProductsListAdapter(getContext(), getActivity(), products, true,
-                                        ProductsListAdapter.REDIRECT_PRODUCT_DETAILS, mCurrentUser);
+                                mProductsListAdapter = new ProductsListAdapter(getContext(), getActivity(), products, true, mCurrentUser);
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.product_list_result);
                                 // use this setting to improve performance if you know that changes
@@ -229,14 +228,14 @@ public class ProductsListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         try {
             if (linearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         linearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }
