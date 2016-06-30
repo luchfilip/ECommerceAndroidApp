@@ -23,7 +23,6 @@ public class ShoppingSaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ShoppingSaleFragment.Callback {
 
     public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
-    private static final String STATE_RELOAD_SHOPPING_SALES_LIST = "STATE_RELOAD_SHOPPING_SALES_LIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

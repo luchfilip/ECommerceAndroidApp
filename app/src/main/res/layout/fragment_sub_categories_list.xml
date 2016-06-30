@@ -42,7 +42,7 @@
             android:id="@+id/sub_categories_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/sub_categories_list_style" />
+            android:background="@android:color/white" />
     </LinearLayout>
 
 </FrameLayout>

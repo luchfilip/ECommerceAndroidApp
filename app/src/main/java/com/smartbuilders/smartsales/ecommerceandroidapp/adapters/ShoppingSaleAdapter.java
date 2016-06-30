@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,7 +19,6 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleFragment;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -35,7 +35,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     public static final int FOCUS_QTY_ORDERED = 3;
 
     private Context mContext;
-    private ShoppingSaleFragment mShoppingSaleFragment;
+    private Fragment mFragment;
     private ArrayList<SalesOrderLine> mDataset;
     private User mUser;
     private SalesOrderLineDB mSalesOrderLineDB;
@@ -70,12 +70,13 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     public interface Callback {
         void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
         void reloadShoppingSalesList();
+        void reloadShoppingSale();
     }
 
-    public ShoppingSaleAdapter(Context context, ShoppingSaleFragment shoppingSaleFragment,
-                               ArrayList<SalesOrderLine> data, User user) {
+    public ShoppingSaleAdapter(Context context, Fragment fragment, ArrayList<SalesOrderLine> data,
+                               User user) {
         mContext = context;
-        mShoppingSaleFragment = shoppingSaleFragment;
+        mFragment = fragment;
         mDataset = data;
         mUser = user;
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
@@ -158,8 +159,8 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                 if(result == null){
                                     mDataset.remove(holder.getAdapterPosition());
                                     notifyDataSetChanged();
-                                    mShoppingSaleFragment.reloadShoppingSale();
-                                    mShoppingSaleFragment.reloadShoppingSalesList();
+                                    ((Callback) mFragment).reloadShoppingSale();
+                                    ((Callback) mFragment).reloadShoppingSalesList();
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                 }
@@ -174,7 +175,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.productPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_PRICE);
+                ((Callback) mFragment).updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_PRICE);
             }
         });
 
@@ -182,7 +183,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_TAX_PERCENTAGE);
+                ((Callback) mFragment).updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_TAX_PERCENTAGE);
             }
         });
 
@@ -190,7 +191,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.qtyOrdered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShoppingSaleFragment.updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_QTY_ORDERED);
+                ((Callback) mFragment).updateSalesOrderLine(mDataset.get(holder.getAdapterPosition()), FOCUS_QTY_ORDERED);
             }
         });
 

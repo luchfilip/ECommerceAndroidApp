@@ -25,11 +25,7 @@
 
     <style name="sales_orders_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <!--<item name="android:background">@android:color/white</item>-->
-    </style>
-
-    <style name="invoices_list_style">
-        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="list_item_style">

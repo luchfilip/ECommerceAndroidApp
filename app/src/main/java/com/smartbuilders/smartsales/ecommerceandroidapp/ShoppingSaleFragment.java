@@ -269,11 +269,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                             waitPlease = null;
                         }
                     } else {
-                        //se manda a recargar la lista padre para que cuando se vuelva a la misma tenga
-                        //la informacion actualizada
-                        reloadShoppingSalesList();
                         startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
@@ -313,6 +310,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         ((Callback) getActivity()).reloadShoppingSalesList();
     }
 
+    @Override
     public void reloadShoppingSale(){
         mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser))
                 .getShoppingSale(mCurrentBusinessPartnerId);

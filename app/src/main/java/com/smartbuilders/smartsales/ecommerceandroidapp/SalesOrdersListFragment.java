@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,8 @@ public class SalesOrdersListFragment extends Fragment {
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
+    private boolean mIsInitialLoad;
+    private int mSalesOrdersListSize;
     private User mCurrentUser;
     private boolean mLoadOrdersFromSalesOrders;
     private ListView mListView;
@@ -45,7 +46,6 @@ public class SalesOrdersListFragment extends Fragment {
         void onItemSelected(Order order);
         void onListIsLoaded(ListView listView);
         void setSelectedIndex(int selectedIndex, ListView listView);
-        void reloadActivity();
     }
 
     public SalesOrdersListFragment() {
@@ -55,6 +55,8 @@ public class SalesOrdersListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sales_orders_list, container, false);
+
+        mIsInitialLoad = true;
 
         final ArrayList<Order> activeOrdersFromSalesOrders = new ArrayList<>();
         final ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
@@ -88,10 +90,11 @@ public class SalesOrdersListFragment extends Fragment {
 
                     if (mLoadOrdersFromSalesOrders) {
                         activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mCurrentUser)).getActiveOrdersFromSalesOrders());
+                        mSalesOrdersListSize = activeOrdersFromSalesOrders.size();
                     } else {
                         activeSalesOrders.addAll((new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders());
+                        mSalesOrdersListSize = activeSalesOrders.size();
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -149,19 +152,6 @@ public class SalesOrdersListFragment extends Fragment {
                                 }
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
-
-                                /*
-                                 * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
-                                 * performs a swipe-to-refresh gesture.
-                                 */
-                                ((SwipeRefreshLayout) view.findViewById(R.id.main_layout)).setOnRefreshListener(
-                                    new SwipeRefreshLayout.OnRefreshListener() {
-                                        @Override
-                                        public void onRefresh() {
-                                            ((Callback) getActivity()).reloadActivity();
-                                        }
-                                    }
-                                );
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -181,6 +171,30 @@ public class SalesOrdersListFragment extends Fragment {
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            if(mListView!=null && mListView.getAdapter()!=null && getContext()!=null
+                    && getActivity()!=null){
+                if (mLoadOrdersFromSalesOrders) {
+                    ((OrdersListAdapter) mListView.getAdapter()).setData((new OrderDB(getContext(),
+                            mCurrentUser)).getActiveOrdersFromSalesOrders());
+                }else{
+                    ((SalesOrdersListAdapter) mListView.getAdapter()).setData((new SalesOrderDB(
+                            getContext(), mCurrentUser)).getActiveSalesOrders());
+                }
+                if(mListView.getAdapter().getCount()!=mSalesOrdersListSize){
+                    ((Callback) getActivity()).onListIsLoaded(mListView);
+                }else{
+                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
+                }
+            }
+        }
+        super.onStart();
     }
 
     @Override

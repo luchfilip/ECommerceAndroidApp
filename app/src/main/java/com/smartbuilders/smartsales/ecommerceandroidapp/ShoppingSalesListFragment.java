@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
     private boolean mIsInitialLoad;
+    private int mShoppingSalesListSize;
     private ListView mListView;
     private int mListViewIndex;
     private int mListViewTop;
@@ -67,6 +67,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                     }
                     mSalesOrderDB = new SalesOrderDB(getContext(), Utils.getCurrentUser(getContext()));
                     mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getActiveShoppingSalesOrders());
+                    mShoppingSalesListSize = mShoppingSalesListAdapter.getCount();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,6 +131,11 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
         }else{
             if(mListView!=null && mShoppingSalesListAdapter!=null && mSalesOrderDB!=null){
                 mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+                if(mShoppingSalesListAdapter.getCount()!=mShoppingSalesListSize){
+                    ((Callback) getActivity()).onListIsLoaded();
+                }else{
+                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                }
             }
         }
         super.onStart();
@@ -137,12 +143,17 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
 
     @Override
     public void updateSalesOrderLine(SalesOrderLine orderLine, int focus) {
-
+        //do nothing
     }
 
     @Override
     public void reloadShoppingSalesList() {
         mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+    }
+
+    @Override
+    public void reloadShoppingSale() {
+        //do nothing
     }
 
     @Override

@@ -210,14 +210,11 @@ public class SplashScreen extends AppCompatActivity {
                         && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
-                        Log.d(TAG, "!ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
                         Bundle settingsBundle = new Bundle();
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                         ContentResolver.requestSync(account, getString(R.string.sync_adapter_content_authority), settingsBundle);
                         mSynchronizationState = SYNC_RUNNING;
-                    }else{
-                        Log.d(TAG, "ApplicationUtilities.isSyncActive(accounts[0] ,getString(R.string.sync_adapter_content_authority))");
                     }
                 } else {
                     //show network connection unavailable error.
