@@ -114,10 +114,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mDataset==null || mDataset.get(position) == null){
-            return;
-        }
-
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
@@ -140,7 +136,12 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                 && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProduct().getProductBrand().getDescription()));
-            holder.productBrand.setVisibility(TextView.VISIBLE);
+            holder.productBrand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                }
+            });
         }else{
             holder.productBrand.setVisibility(TextView.GONE);
         }

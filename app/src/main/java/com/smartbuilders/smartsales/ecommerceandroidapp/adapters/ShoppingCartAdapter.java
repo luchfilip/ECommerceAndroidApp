@@ -43,20 +43,24 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public ImageView productImage;
+        public TextView productInternalCode;
         public ImageView deleteItem;
         public TextView productName;
         public TextView productBrand;
         public TextView productAvailability;
         public EditText qtyOrdered;
+        public View goToProductDetails;
 
         public ViewHolder(View v) {
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
 
@@ -132,11 +136,15 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }
         });
 
+        if(mDataset.get(position).getProduct().getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                    mDataset.get(position).getProduct().getInternalCode()));
+        }
+
         if(mDataset.get(position).getProduct().getProductBrand()!=null
                 && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProduct().getProductBrand().getDescription()));
-            holder.productBrand.setVisibility(TextView.VISIBLE);
         }else{
             holder.productBrand.setVisibility(TextView.GONE);
         }
@@ -148,28 +156,28 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
-                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String result = null;
-                                if(mIsShoppingCart){
-                                    result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
-                                }
-                                if(result == null){
-                                    if(mIsShoppingCart){
-                                        ((Callback) mFragment).reloadShoppingCart();
-                                    }else{
-                                        mDataset.remove(holder.getAdapterPosition());
-                                        ((Callback) mFragment).reloadShoppingCart(mDataset);
-                                    }
-                                } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                }
+                    .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
+                            mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String result = null;
+                            if(mIsShoppingCart){
+                                result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                            if(result == null){
+                                if(mIsShoppingCart){
+                                    ((Callback) mFragment).reloadShoppingCart();
+                                }else{
+                                    mDataset.remove(holder.getAdapterPosition());
+                                    ((Callback) mFragment).reloadShoppingCart(mDataset);
+                                }
+                            } else {
+                                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
             }
         });
 
@@ -179,6 +187,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             @Override
             public void onClick(View v) {
                 ((Callback) mFragment).updateQtyOrdered(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
     }
