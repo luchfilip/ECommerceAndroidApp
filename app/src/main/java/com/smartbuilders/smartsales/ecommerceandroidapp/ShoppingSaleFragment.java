@@ -41,10 +41,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         DatePickerFragment.Callback {
 
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
 
     private User mCurrentUser;
+    private boolean mIsInitialLoad;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
     private View mBlankScreenView;
@@ -71,6 +72,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_sale, container, false);
+        mIsInitialLoad = true;
 
         new Thread() {
             @Override
@@ -80,8 +82,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
                             mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
-                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                         if(savedInstanceState.containsKey(STATE_VALID_TO)) {
                             mValidToText = savedInstanceState.getString(STATE_VALID_TO);
@@ -99,12 +101,13 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                     .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
                         }
                     }
+
                     mCurrentUser = Utils.getCurrentUser(getContext());
 
                     mSalesOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
                     mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mCurrentUser);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                        e.printStackTrace();
                 }
 
                 if (getActivity()!=null) {
@@ -193,6 +196,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            reloadShoppingSale();
+        }
+        super.onStart();
     }
 
     @Override
@@ -319,14 +332,14 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         outState.putString(STATE_VALID_TO, mValidToText);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

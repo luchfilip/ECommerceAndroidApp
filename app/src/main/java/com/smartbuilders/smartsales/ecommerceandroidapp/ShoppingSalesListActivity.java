@@ -34,7 +34,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
             "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
-    private static final int SHOW_SALES_ORDER_DETAIL_REQUEST = 1;
 
     private User mCurrentUser;
     private boolean mTwoPane;
@@ -118,9 +117,8 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                     .replace(R.id.shopping_sale_order_detail_container, fragment, SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
-            Intent intent = new Intent(this, ShoppingSaleActivity.class);
-            intent.putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
-            startActivityForResult(intent, SHOW_SALES_ORDER_DETAIL_REQUEST);
+            startActivity(new Intent(this, ShoppingSaleActivity.class)
+                    .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId()));
         }
     }
 
@@ -194,19 +192,4 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void reloadActivity() {
-        startActivity(new Intent(this, ShoppingSalesListActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-        finish();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SHOW_SALES_ORDER_DETAIL_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                reloadShoppingSalesList();
-            }
-        }
-    }
 }

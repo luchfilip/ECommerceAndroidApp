@@ -109,23 +109,18 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void reloadBusinessPartnersList() {
-        if (mListView != null) {
+        if (mListView != null && mUserBusinessPartnerDB!=null) {
             if (mListView.getAdapter()!=null) {
-                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
+                        mUserBusinessPartnerDB.getActiveUserBusinessPartners());
             } else {
-                mListView.setAdapter(new BusinessPartnersListAdapter(this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                        mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
             }
             if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
         }
-    }
-
-    @Override
-    public void reloadActivity() {
-        startActivity(new Intent(this, BusinessPartnersListActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-        finish();
     }
 
     private void showDialogCreateBusinessPartner() {
@@ -167,7 +162,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     @Override
     public void setSelectedIndex(int selectedIndex) {
         if (mTwoPane) {
-            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+            if (mListView!=null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
             }

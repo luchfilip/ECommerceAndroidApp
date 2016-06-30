@@ -39,6 +39,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        mIsInitialLoad = true;
 
         final ArrayList<Object> mainPageObjects = new ArrayList<>();
 
@@ -54,7 +55,6 @@ public class MainFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
                         }
                     }
-                    mIsInitialLoad = true;
                     mCurrentUser = Utils.getCurrentUser(getActivity());
                     mainPageObjects.addAll((new MainPageSectionsDB(getActivity(), mCurrentUser)).getActiveMainPageSections());
                 } catch (Exception e) {

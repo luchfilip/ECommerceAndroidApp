@@ -26,6 +26,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
+    private boolean mIsInitialLoad;
     private ListView mListView;
     private int mListViewIndex;
     private int mListViewTop;
@@ -38,7 +39,6 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
         void onItemLongSelected(SalesOrder salesOrder);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
-        void reloadActivity();
     }
 
     public ShoppingSalesListFragment() {
@@ -48,6 +48,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_sales_list, container, false);
+        mIsInitialLoad = true;
 
         new Thread() {
             @Override
@@ -101,19 +102,6 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                 });
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
-
-                                /*
-                                 * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
-                                 * performs a swipe-to-refresh gesture.
-                                 */
-                                ((SwipeRefreshLayout) view.findViewById(R.id.main_layout)).setOnRefreshListener(
-                                    new SwipeRefreshLayout.OnRefreshListener() {
-                                        @Override
-                                        public void onRefresh() {
-                                            ((Callback) getActivity()).reloadActivity();
-                                        }
-                                    }
-                                );
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -133,6 +121,18 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            if(mListView!=null && mShoppingSalesListAdapter!=null && mSalesOrderDB!=null){
+                mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+            }
+        }
+        super.onStart();
     }
 
     @Override

@@ -36,6 +36,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
 
+    private boolean mIsInitialLoad;
     private User mCurrentUser;
     private int mSalesOrderId;
     private int mBusinessPartnerId;
@@ -52,6 +53,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
+        mIsInitialLoad = true;
 
         new Thread() {
             @Override
@@ -87,6 +89,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     }
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
                             ShoppingCartFragment.this, mOrderLines, mIsShoppingCart,  mCurrentUser);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -144,6 +147,16 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            reloadShoppingCart();
+        }
+        super.onStart();
     }
 
     private void closeOrder(){
@@ -227,6 +240,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     }
 
     @Override
+    public void reloadShoppingCart(){
+        reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
+    }
+
+    @Override
     public void reloadShoppingCart(ArrayList<OrderLine> orderLines){
         mOrderLines = orderLines;
         mShoppingCartAdapter.setData(mOrderLines);
@@ -234,11 +252,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void reloadShoppingCart(){
-        reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
     }
 
     @Override

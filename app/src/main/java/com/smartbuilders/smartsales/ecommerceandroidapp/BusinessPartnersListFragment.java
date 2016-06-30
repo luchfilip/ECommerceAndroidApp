@@ -36,7 +36,6 @@ public class BusinessPartnersListFragment extends Fragment {
         void onItemLongSelected(int businessPartnerId, String businessPartnerCommercialName);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
-        void reloadActivity();
     }
 
     public BusinessPartnersListFragment() {
@@ -46,6 +45,7 @@ public class BusinessPartnersListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
+        mIsInitialLoad = true;
 
         new Thread() {
             @Override
@@ -65,7 +65,6 @@ public class BusinessPartnersListFragment extends Fragment {
                     mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
                     mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
                             mUserBusinessPartnerDB.getActiveUserBusinessPartners());
-                    mIsInitialLoad = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -128,7 +127,7 @@ public class BusinessPartnersListFragment extends Fragment {
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            if(mListView!=null && mBusinessPartnersListAdapter!=null) {
+            if(mListView!=null && mBusinessPartnersListAdapter!=null && mUserBusinessPartnerDB!=null) {
                 mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
             }
         }
