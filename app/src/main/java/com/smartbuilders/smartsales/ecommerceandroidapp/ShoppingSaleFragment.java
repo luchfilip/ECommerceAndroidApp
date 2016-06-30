@@ -272,8 +272,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         //se manda a recargar la lista padre para que cuando se vuelva a la misma tenga
                         //la informacion actualizada
                         reloadShoppingSalesList();
-
-                        startActivity(new Intent(getContext(), SalesOrdersListActivity.class));
+                        startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

@@ -71,7 +71,9 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
-    <style name="orders_list_style"></style>
+    <style name="orders_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
 
     <style name="shopping_sales_orders_list_style">
         <item name="android:background">@android:color/white</item>

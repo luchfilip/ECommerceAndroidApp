@@ -216,7 +216,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                    .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderDetailActivity.class);
@@ -300,8 +300,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)
                             .setMenuVisibility(true);
                 }
-                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)!=null){
-                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
                             .setMenuVisibility(false);
                 }
             }else{
@@ -309,8 +309,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     getSupportFragmentManager().findFragmentByTag(SALES_ORDER_DETAIL_FRAGMENT_TAG)
                             .setMenuVisibility(false);
                 }
-                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)!=null){
-                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDERDETAIL_FRAGMENT_TAG)
+                if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
                             .setMenuVisibility(true);
                 }
             }

@@ -37,7 +37,8 @@ import java.util.ArrayList;
 public class OrderDetailFragment extends Fragment {
 
     private static final String STATE_ORDER_ID = "STATE_ORDER_ID";
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION =
+            "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "Pedido";
 
     private User mUser;
@@ -69,8 +70,8 @@ public class OrderDetailFragment extends Fragment {
             public void run() {
                 try {
                     if (savedInstanceState!=null) {
-                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if (savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                         if (savedInstanceState.containsKey(STATE_ORDER_ID)) {
                             mOrderId = savedInstanceState.getInt(STATE_ORDER_ID);
@@ -214,14 +215,14 @@ public class OrderDetailFragment extends Fragment {
         outState.putInt(STATE_ORDER_ID, mOrderId);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

@@ -39,7 +39,7 @@
 
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
@@ -49,9 +49,9 @@
         <ListView
             android:id="@+id/orders_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             style="@style/orders_list_style" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
 </LinearLayout>

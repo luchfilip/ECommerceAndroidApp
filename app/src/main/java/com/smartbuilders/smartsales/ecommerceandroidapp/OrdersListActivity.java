@@ -26,7 +26,7 @@ public class OrdersListActivity extends AppCompatActivity
         implements OrdersListFragment.Callback, OrderDetailFragment.Callback,
         NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String ORDERDETAIL_FRAGMENT_TAG = "ORDERDETAIL_FRAGMENT_TAG";
+    public static final String ORDER_DETAIL_FRAGMENT_TAG = "ORDER_DETAIL_FRAGMENT_TAG";
 
     private boolean mTwoPane;
     private ListView mListView;
@@ -120,7 +120,7 @@ public class OrdersListActivity extends AppCompatActivity
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.order_detail_container, fragment, ORDERDETAIL_FRAGMENT_TAG)
+                    .replace(R.id.order_detail_container, fragment, ORDER_DETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderDetailActivity.class);
@@ -130,15 +130,8 @@ public class OrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void reloadActivity() {
-        startActivity(new Intent(this, OrdersListActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-        finish();
-    }
-
-    @Override
     public void orderDetailLoaded() {
-
+        //do nothing
     }
 
     @Override

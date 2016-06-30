@@ -29,8 +29,8 @@ public class SalesOrdersListFragment extends Fragment {
     public static final String KEY_LOAD_ORDERS_FROM_SALES_ORDERS = "KEY_LOAD_ORDERS_FROM_SALES_ORDERS";
     private static final String STATE_LOAD_ORDERS_FROM_SALES_ORDERS = "STATE_LOAD_ORDERS_FROM_SALES_ORDERS";
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     private User mCurrentUser;
     private boolean mLoadOrdersFromSalesOrders;
@@ -70,11 +70,11 @@ public class SalesOrdersListFragment extends Fragment {
                         if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)){
                             mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
 
@@ -187,15 +187,15 @@ public class SalesOrdersListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_LOAD_ORDERS_FROM_SALES_ORDERS, mLoadOrdersFromSalesOrders);
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
         super.onSaveInstanceState(outState);
