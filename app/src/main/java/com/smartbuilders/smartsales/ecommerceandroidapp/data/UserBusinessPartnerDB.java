@@ -94,10 +94,10 @@ public class UserBusinessPartnerDB {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     new ContentValues(),
-                    "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
+                    "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, TAX_ID = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
                         " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
                     " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
-                    new String[]{businessPartner.getName(), businessPartner.getCommercialName(),
+                    new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
                             mUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId()),
