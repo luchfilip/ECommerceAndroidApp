@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
@@ -25,6 +23,7 @@ public class BusinessPartnersListFragment extends Fragment {
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
 
+    private boolean mIsInitialLoad;
     private ListView mListView;
     private int mListViewIndex;
     private int mListViewTop;
@@ -66,6 +65,7 @@ public class BusinessPartnersListFragment extends Fragment {
                     mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), Utils.getCurrentUser(getContext()));
                     mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
                             mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                    mIsInitialLoad = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -102,19 +102,6 @@ public class BusinessPartnersListFragment extends Fragment {
                                 });
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
-
-                                /*
-                                 * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
-                                 * performs a swipe-to-refresh gesture.
-                                 */
-                                ((SwipeRefreshLayout) view.findViewById(R.id.main_layout)).setOnRefreshListener(
-                                    new SwipeRefreshLayout.OnRefreshListener() {
-                                        @Override
-                                        public void onRefresh() {
-                                            ((Callback) getActivity()).reloadActivity();
-                                        }
-                                    }
-                                );
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -134,6 +121,18 @@ public class BusinessPartnersListFragment extends Fragment {
             }
         }.start();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if(mIsInitialLoad){
+            mIsInitialLoad = false;
+        }else{
+            if(mListView!=null && mBusinessPartnersListAdapter!=null) {
+                mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+            }
+        }
+        super.onStart();
     }
 
     @Override

@@ -5,7 +5,7 @@
 
     <style name="business_partners_list_style">
         <item name="android:choiceMode">singleChoice</item>
-        <!--<item name="android:background">@android:color/white</item>-->
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="categories_list_style">

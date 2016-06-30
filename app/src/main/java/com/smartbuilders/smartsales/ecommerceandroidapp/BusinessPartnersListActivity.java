@@ -33,7 +33,6 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         DialogRegisterBusinessPartner.Callback {
 
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
-    private static int SHOW_BUSINESS_PARTNER_REGISTER_UPDATE = 2;
 
     private User mCurrentUser;
     private UserBusinessPartnerDB mUserBusinessPartnerDB;
@@ -82,8 +81,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                         //        .commit();
                         showDialogCreateBusinessPartner();
                     } else {
-                        startActivityForResult(new Intent(BusinessPartnersListActivity.this,
-                                RegisterBusinessPartnerActivity.class), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
+                        startActivity(new Intent(BusinessPartnersListActivity.this,
+                                RegisterBusinessPartnerActivity.class));
                     }
                 }
             });
@@ -132,6 +131,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     private void showDialogCreateBusinessPartner() {
         DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
                 DialogRegisterBusinessPartner.newInstance(mCurrentUser);
+        dialogRegisterBusinessPartner.setCancelable(false);
         dialogRegisterBusinessPartner.show(getSupportFragmentManager(),
                 DialogRegisterBusinessPartner.class.getSimpleName());
     }
@@ -186,8 +186,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     .replace(R.id.business_partner_detail_container, fragment, REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
                     .commit();
         } else {
-            startActivityForResult(new Intent(this, RegisterBusinessPartnerActivity.class)
-                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId), SHOW_BUSINESS_PARTNER_REGISTER_UPDATE);
+            startActivity(new Intent(this, RegisterBusinessPartnerActivity.class)
+                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId));
         }
     }
 
@@ -235,12 +235,4 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         reloadBusinessPartnersList();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SHOW_BUSINESS_PARTNER_REGISTER_UPDATE) {
-            if (resultCode == RESULT_OK) {
-                reloadBusinessPartnersList();
-            }
-        }
-    }
 }
