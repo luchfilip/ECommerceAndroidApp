@@ -219,7 +219,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         }
                     } else {
                         startActivity(new Intent(getContext(), OrdersListActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
+                                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

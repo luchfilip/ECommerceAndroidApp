@@ -273,7 +273,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         //la informacion actualizada
                         reloadShoppingSalesList();
                         startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
