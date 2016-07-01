@@ -77,6 +77,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/master_phone"
+                        android:autoLink="phone"
+                        android:textColorLink="#ff0099cc"
                         android:textColor="@color/black" />
                 </TableRow>
 
@@ -101,6 +103,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/fax_number"
+                        android:autoLink="phone"
+                        android:textColorLink="#ff0099cc"
                         android:textColor="@color/black" />
                 </TableRow>
 
@@ -122,6 +126,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/email_address"
+                        android:autoLink="email"
+                        android:textColorLink="@color/black"
                         android:layout_marginTop="2dp"
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical" />
@@ -133,6 +139,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/web_page"
+                android:autoLink="web"
+                android:textColorLink="@color/black"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"

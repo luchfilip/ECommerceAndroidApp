@@ -334,7 +334,7 @@ public class Utils {
                 if (thumb!=null && thumb.exists()) {
                     drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
                 } else {
-                    drawable = context.getResources().getDrawable(R.drawable.no_image_available);
+                    drawable = getNoImageAvailableDrawable(context);
                 }
 
                 File img = Utils.getFileInOriginalDirByFileName(context, fileName);
@@ -357,11 +357,11 @@ public class Utils {
                             });
                 }
             }else{
-                imageView.setImageResource(R.drawable.no_image_available);
+                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
             }
         } catch (Exception e) {
             if(imageView!=null){
-                imageView.setImageResource(R.drawable.no_image_available);
+                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
             }
             e.printStackTrace();
         }
@@ -409,11 +409,11 @@ public class Utils {
             if(!TextUtils.isEmpty(fileName)){
                 File imgFile = new File(getImagesThumbFolderPath(context), fileName);
                 if(imgFile.exists()){
-                    Picasso.with(context).load(imgFile).error(R.drawable.no_image_available).into(imageView);
+                    Picasso.with(context).load(imgFile).error(getNoImageAvailableDrawable(context)).into(imageView);
                 }else{
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
-                            .error(R.drawable.no_image_available)
+                            .error(getNoImageAvailableDrawable(context))
                             //.placeholder(R.drawable.no_image_available)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
@@ -427,11 +427,11 @@ public class Utils {
                             });
                 }
             }else{
-                imageView.setImageResource(R.drawable.no_image_available);
+                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
             }
         } catch (Exception e) {
             if(imageView!=null){
-                imageView.setImageResource(R.drawable.no_image_available);
+                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
             }
             e.printStackTrace();
         }
@@ -941,5 +941,18 @@ public class Utils {
             e.printStackTrace();
             Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private static Drawable noImageAvailable;
+
+    public static Drawable getNoImageAvailableDrawable(Context context){
+        if(noImageAvailable==null){
+            try {
+                noImageAvailable = context.getResources().getDrawable(R.drawable.no_image_available);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+        return noImageAvailable;
     }
 }

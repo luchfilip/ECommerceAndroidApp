@@ -49,7 +49,7 @@ public class ContactUsFragment extends Fragment {
         }
 
         if(!TextUtils.isEmpty(company.getTaxId())){
-            companyTaxIdTextView.setText(company.getTaxId());
+            companyTaxIdTextView.setText(getString(R.string.tax_id, company.getTaxId()));
         }else{
             companyTaxIdTextView.setVisibility(View.GONE);
         }
