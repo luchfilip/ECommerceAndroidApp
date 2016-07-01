@@ -36,9 +36,10 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
     }
 
     public static DialogRegisterBusinessPartner newInstance(User user){
-        DialogRegisterBusinessPartner editQtyRequestedDialogFragment = new DialogRegisterBusinessPartner();
-        editQtyRequestedDialogFragment.mCurrentUser = user;
-        return editQtyRequestedDialogFragment;
+        DialogRegisterBusinessPartner dialogRegisterBusinessPartner = new DialogRegisterBusinessPartner();
+        dialogRegisterBusinessPartner.setCancelable(false);
+        dialogRegisterBusinessPartner.mCurrentUser = user;
+        return dialogRegisterBusinessPartner;
     }
 
     @Override

@@ -126,7 +126,6 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     private void showDialogCreateBusinessPartner() {
         DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
                 DialogRegisterBusinessPartner.newInstance(mCurrentUser);
-        dialogRegisterBusinessPartner.setCancelable(false);
         dialogRegisterBusinessPartner.show(getSupportFragmentManager(),
                 DialogRegisterBusinessPartner.class.getSimpleName());
     }
