@@ -32,7 +32,6 @@ public class SalesOrdersListFragment extends Fragment {
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     private boolean mIsInitialLoad;
-    private int mSalesOrdersListSize;
     private User mCurrentUser;
     private boolean mLoadOrdersFromSalesOrders;
     private ListView mListView;
@@ -90,10 +89,8 @@ public class SalesOrdersListFragment extends Fragment {
 
                     if (mLoadOrdersFromSalesOrders) {
                         activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mCurrentUser)).getActiveOrdersFromSalesOrders());
-                        mSalesOrdersListSize = activeOrdersFromSalesOrders.size();
                     } else {
                         activeSalesOrders.addAll((new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders());
-                        mSalesOrdersListSize = activeSalesOrders.size();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -180,6 +177,7 @@ public class SalesOrdersListFragment extends Fragment {
         }else{
             if(mListView!=null && mListView.getAdapter()!=null && getContext()!=null
                     && getActivity()!=null){
+                int oldListSize = mListView.getAdapter().getCount();
                 if (mLoadOrdersFromSalesOrders) {
                     ((OrdersListAdapter) mListView.getAdapter()).setData((new OrderDB(getContext(),
                             mCurrentUser)).getActiveOrdersFromSalesOrders());
@@ -187,7 +185,7 @@ public class SalesOrdersListFragment extends Fragment {
                     ((SalesOrdersListAdapter) mListView.getAdapter()).setData((new SalesOrderDB(
                             getContext(), mCurrentUser)).getActiveSalesOrders());
                 }
-                if(mListView.getAdapter().getCount()!=mSalesOrdersListSize){
+                if(mListView.getAdapter().getCount()!=oldListSize){
                     ((Callback) getActivity()).onListIsLoaded(mListView);
                 }else{
                     ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);

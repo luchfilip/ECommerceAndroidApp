@@ -26,7 +26,6 @@ public class OrdersListFragment extends Fragment {
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     private boolean mIsInitialLoad;
-    private int mOrdersListSize;
     private ListView mListView;
     private OrdersListAdapter mOrdersListAdapter;
     private OrderDB mOrderDB;
@@ -69,7 +68,6 @@ public class OrdersListFragment extends Fragment {
 
                     mOrderDB = new OrderDB(getContext(), Utils.getCurrentUser(getContext()));
                     activeOrders.addAll(mOrderDB.getActiveOrders());
-                    mOrdersListSize = activeOrders.size();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -123,9 +121,10 @@ public class OrdersListFragment extends Fragment {
             mIsInitialLoad = false;
         }else{
             if(mListView!=null && mOrdersListAdapter!=null && mOrderDB!=null){
+                int oldListSize = mOrdersListAdapter.getCount();
                 mOrdersListAdapter.setData(mOrderDB.getActiveOrders());
                 if(mOrdersListAdapter.getCount()>0 && getActivity()!=null){
-                    if(mOrdersListAdapter.getCount()!=mOrdersListSize){
+                    if(mOrdersListAdapter.getCount()!=oldListSize){
                         ((Callback) getActivity()).onListIsLoaded();
                     }else{
                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);

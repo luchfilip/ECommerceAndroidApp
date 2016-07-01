@@ -276,7 +276,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        getActivity().finish();
                     }
                 }
             });

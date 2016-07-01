@@ -23,7 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class CategoriesListActivity extends AppCompatActivity implements
         CategoriesListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String SUBCATEGORYFRAGMENT_TAG = "SUBCATEGORYFRAGMENT_TAG";
+    private static final String SUBCATEGORY_FRAGMENT_TAG = "SUBCATEGORY_FRAGMENT_TAG";
 
     private boolean mTwoPane;
 
@@ -82,7 +82,7 @@ public class CategoriesListActivity extends AppCompatActivity implements
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.subcategory_list_container, fragment, SUBCATEGORYFRAGMENT_TAG)
+                    .replace(R.id.subcategory_list_container, fragment, SUBCATEGORY_FRAGMENT_TAG)
                     .commit();
         }else{
             Intent intent = new Intent(this, SubCategoriesListActivity.class);

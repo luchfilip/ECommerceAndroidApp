@@ -128,9 +128,9 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
             mIsInitialLoad = false;
         }else{
             if(mListView!=null && mShoppingSalesListAdapter!=null && mSalesOrderDB!=null){
-                int oldSize = mShoppingSalesListAdapter.getCount();
+                int oldListSize = mShoppingSalesListAdapter.getCount();
                 mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
-                if(mShoppingSalesListAdapter.getCount()!=oldSize){
+                if(mShoppingSalesListAdapter.getCount()!=oldListSize){
                     ((Callback) getActivity()).onListIsLoaded();
                 }else{
                     ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);

@@ -232,7 +232,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        getActivity().finish();
                     }
                 }
             });
