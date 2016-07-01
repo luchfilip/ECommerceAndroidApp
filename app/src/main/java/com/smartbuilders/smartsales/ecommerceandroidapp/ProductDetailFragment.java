@@ -3,15 +3,10 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,8 +35,6 @@ public class ProductDetailFragment extends Fragment {
 
     private int mProductId;
     private Product mProduct;
-    private ShareActionProvider mShareActionProvider;
-    private Intent mShareIntent;
     private User mUser;
 
     public ProductDetailFragment() {
@@ -102,10 +95,7 @@ public class ProductDetailFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (mProduct!=null) {
-                        mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
-                    }
-
+                    //Se agrega el producto a la lista de productos recientemente vistos
                     (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId, mUser.getBusinessPartnerId());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -134,6 +124,13 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
                                             mProduct.getProductBrand().getDescription()));
                                 }
+
+                                view.findViewById(R.id.share_imageView).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(Utils.createShareProductIntent(mProduct, getContext(), mUser));
+                                    }
+                                });
 
                                 final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
 
@@ -269,38 +266,6 @@ public class ProductDetailFragment extends Fragment {
 
         setHasOptionsMenu(true);
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.productdetailfragment, menu);
-
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        // Attach an intent to this ShareActionProvider. You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void addToShoppingCart(User user, Product product) {
