@@ -34,7 +34,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION =
+            "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
 
     private boolean mIsInitialLoad;
     private User mCurrentUser;
@@ -44,6 +45,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ArrayList<OrderLine> mOrderLines;
+    private TextView totalLines;
     private ProgressDialog waitPlease;
     private View mainLayout;
     private View mBlankScreenView;
@@ -66,8 +68,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
                             mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
-                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     } else  if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
@@ -129,8 +131,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                                         .show();
                                             }
                                         });
-                                ((TextView) view.findViewById(R.id.total_lines))
-                                        .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+                                totalLines = (TextView) view.findViewById(R.id.total_lines);
+                                totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -258,6 +260,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if (mOrderLines==null || mOrderLines.isEmpty()) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
+        }else{
+            mBlankScreenView.setVisibility(View.GONE);
+            mainLayout.setVisibility(View.VISIBLE);
+            totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
         }
     }
 
@@ -269,14 +275,14 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

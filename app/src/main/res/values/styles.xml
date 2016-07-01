@@ -102,6 +102,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <style name="GoldenButtonAppTheme">
@@ -110,6 +111,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <style name="GreyButtonAppTheme">
@@ -118,6 +120,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">8dp</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <style name="list_item_style">

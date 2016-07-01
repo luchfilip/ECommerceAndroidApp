@@ -161,7 +161,7 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT ECOMMERCE_SALES_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, " +
+                    "SELECT PRODUCT_ID, QTY_REQUESTED, " +
                         " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDERLINE " +
                     " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
@@ -171,14 +171,21 @@ public class OrderLineDB {
                     null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mUser);
+                cursor:
                 while(c.moveToNext()){
+                    //se revisa si ya se encuentra ese articulo en el pedido y se suman las cantidades
+                    for(OrderLine ol : orderLines){
+                        if(ol.getProductId() == c.getInt(0)){
+                            ol.setQuantityOrdered(ol.getQuantityOrdered() + c.getInt(1));
+                            continue cursor;
+                        }
+                    }
                     OrderLine orderLine = new OrderLine();
-                    orderLine.setId(c.getInt(0));
-                    orderLine.setProductId(c.getInt(1));
-                    orderLine.setQuantityOrdered(c.getInt(2));
-                    orderLine.setPrice(c.getDouble(3));
-                    orderLine.setTaxPercentage(c.getDouble(4));
-                    orderLine.setTotalLineAmount(c.getDouble(5));
+                    orderLine.setProductId(c.getInt(0));
+                    orderLine.setQuantityOrdered(c.getInt(1));
+                    orderLine.setPrice(c.getDouble(2));
+                    orderLine.setTaxPercentage(c.getDouble(3));
+                    orderLine.setTotalLineAmount(c.getDouble(4));
                     orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
                     if(orderLine.getProduct()!=null){
                         orderLines.add(orderLine);

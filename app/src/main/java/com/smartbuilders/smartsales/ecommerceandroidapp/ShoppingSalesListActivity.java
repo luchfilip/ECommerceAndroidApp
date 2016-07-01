@@ -145,9 +145,16 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     @Override
     public void onListIsLoaded() {
         if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+            mListView.setVisibility(View.VISIBLE);
             if (mTwoPane) {
+                findViewById(R.id.fragment_sales_order_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.VISIBLE);
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }else{
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.progressContainer).setVisibility(View.GONE);
             }
+            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
         } else {
             if (mTwoPane) {
                 findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
@@ -163,7 +170,9 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     @Override
     public void setSelectedIndex(int selectedIndex) {
         if (mTwoPane) {
-            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+            if (mListView!=null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount()>selectedIndex) {
+                mListView.setVisibility(View.VISIBLE);
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
             }
@@ -180,14 +189,16 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
             if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                mListView.setVisibility(View.VISIBLE);
+                findViewById(R.id.company_logo_name).setVisibility(View.GONE);
             } else if (mListView.getCount()>selectedIndex && mTwoPane) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
+                mListView.setVisibility(View.VISIBLE);
+                findViewById(R.id.company_logo_name).setVisibility(View.GONE);
             } else if(mListView.getCount()==0) { //se bloquea la pantalla
+                findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
                 mListView.setVisibility(View.GONE);
-                if (findViewById(R.id.company_logo_name)!=null) {
-                    findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-                }
             }
         }
     }

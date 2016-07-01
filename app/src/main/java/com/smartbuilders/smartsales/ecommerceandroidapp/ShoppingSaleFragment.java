@@ -204,6 +204,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mIsInitialLoad = false;
         }else{
             reloadShoppingSale();
+            reloadShoppingSalesList();
         }
         super.onStart();
     }

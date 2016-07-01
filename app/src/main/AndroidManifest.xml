@@ -181,9 +181,6 @@
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.StatementOfAccountActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name="com.smartbuilders.smartsales.ecommerceandroidapp.SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

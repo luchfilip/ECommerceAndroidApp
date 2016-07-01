@@ -22,11 +22,10 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleAdapter.Callback {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     private boolean mIsInitialLoad;
-    private int mShoppingSalesListSize;
     private ListView mListView;
     private int mListViewIndex;
     private int mListViewTop;
@@ -58,16 +57,15 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                         if(savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)){
                             mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
                     mSalesOrderDB = new SalesOrderDB(getContext(), Utils.getCurrentUser(getContext()));
                     mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getActiveShoppingSalesOrders());
-                    mShoppingSalesListSize = mShoppingSalesListAdapter.getCount();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,8 +128,9 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
             mIsInitialLoad = false;
         }else{
             if(mListView!=null && mShoppingSalesListAdapter!=null && mSalesOrderDB!=null){
+                int oldSize = mShoppingSalesListAdapter.getCount();
                 mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
-                if(mShoppingSalesListAdapter.getCount()!=mShoppingSalesListSize){
+                if(mShoppingSalesListAdapter.getCount()!=oldSize){
                     ((Callback) getActivity()).onListIsLoaded();
                 }else{
                     ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
@@ -159,15 +158,15 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
         super.onSaveInstanceState(outState);

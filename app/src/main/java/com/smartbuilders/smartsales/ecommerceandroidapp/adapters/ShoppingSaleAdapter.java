@@ -107,7 +107,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         try {
             return mDataset.get(position).getId();
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 
@@ -204,7 +204,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     }
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {
-        this.mDataset = salesOrderLines;
+        mDataset = salesOrderLines;
         notifyDataSetChanged();
     }
 }

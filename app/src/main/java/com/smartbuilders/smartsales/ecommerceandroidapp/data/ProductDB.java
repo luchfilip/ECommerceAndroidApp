@@ -179,7 +179,7 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE, " +
+                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +

@@ -39,6 +39,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">1dp</item>
     </style>
 
     <style name="Theme.MaterialMainButton" parent="AppTheme">
@@ -52,6 +53,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">1dp</item>
     </style>
 
     <style name="Theme.MaterialGoldenButton" parent="AppTheme">
@@ -65,6 +67,7 @@
         <item name="android:minHeight">10dip</item>
         <item name="android:minWidth">10dip</item>
         <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">1dp</item>
     </style>
 
     <style name="Theme.MaterialGreyButton" parent="AppTheme">

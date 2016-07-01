@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -137,12 +136,11 @@ public class ProductDetailFragment extends Fragment {
                                 }
 
                                 final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
-                                favoriteImageView.setColorFilter(Utils.getColor(getContext(), R.color.dark_grey), PorterDuff.Mode.SRC_ATOP);
 
                                 if(mProduct.isFavorite()){
-                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                                 }else{
-                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                 }
 
                                 favoriteImageView.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +150,7 @@ public class ProductDetailFragment extends Fragment {
                                             String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
                                             if (result == null) {
                                                 mProduct.setFavorite(false);
-                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_36dp);
+                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                             } else {
                                                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                             }
@@ -160,7 +158,7 @@ public class ProductDetailFragment extends Fragment {
                                             String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct.getId());
                                             if (result == null) {
                                                 mProduct.setFavorite(true);
-                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_black_36dp);
+                                                favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                                             } else {
                                                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                             }

@@ -109,7 +109,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void reloadBusinessPartnersList() {
-        if (mListView != null && mUserBusinessPartnerDB!=null) {
+        if (mListView!=null && mUserBusinessPartnerDB!=null) {
             if (mListView.getAdapter()!=null) {
                 ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
                         mUserBusinessPartnerDB.getActiveUserBusinessPartners());
@@ -228,7 +228,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void onBusinessPartnerUpdated() {
-        reloadBusinessPartnersList();
+        if (mListView!=null && mListView.getAdapter()!=null && mUserBusinessPartnerDB!=null) {
+            ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
+                    mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+        }
     }
 
 }

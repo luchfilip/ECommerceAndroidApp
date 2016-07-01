@@ -2,6 +2,7 @@
 <resources>
 
     <dimen name="viewpager_height">300dp</dimen>
+    <dimen name="product_detail_height">290dp</dimen>
 
     <dimen name="productMinInfo_cardView_Width">200dp</dimen>
     <dimen name="productMinInfo_max_image_Width">160dp</dimen>
@@ -32,7 +33,7 @@
     <dimen name="productDetailActivity_productPromo_text_size">17sp</dimen>
     <dimen name="productDetailActivity_productShare_text_size">17sp</dimen>
 
-    <dimen name="related_products_label_text_size">23sp</dimen>
+    <dimen name="related_products_label_text_size">22sp</dimen>
 
     <dimen name="shopping_sale_item_image_width">110dp</dimen>
     <dimen name="shopping_sale_item_image_height">110dp</dimen>

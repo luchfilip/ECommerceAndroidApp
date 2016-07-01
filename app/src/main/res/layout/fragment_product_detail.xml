@@ -61,22 +61,25 @@
                 <android.support.design.widget.CoordinatorLayout
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/viewpager_height"
+                        android:layout_height="@dimen/product_detail_height"
                         android:id="@+id/product_image"
+                        android:layout_gravity="center_horizontal"
                         android:focusable="false"
-                        android:layout_margin="4dp" />
+                        android:padding="5dp"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="15dp"
+                        android:padding="5dp"
                         android:layout_gravity="bottom|end"
                         android:id="@+id/favorite_imageView"
-                        android:elevation="2dp" />
+                        android:background="@drawable/favorite_image_dark_shape" />
                 </android.support.design.widget.CoordinatorLayout>
 
                 <LinearLayout
@@ -129,12 +132,11 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="fill_vertical">
+                    android:layout_height="match_parent" >
 
                     <Button
                         style="@style/MainButtonAppTheme"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:text="@string/buy"
                         android:id="@+id/product_addtoshoppingcart_button"
                         android:layout_weight="1"
@@ -143,7 +145,7 @@
 
                     <Button
                         style="@style/GoldenButtonAppTheme"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:text="@string/sell"
                         android:id="@+id/product_addtoshoppingsales_button"
                         android:layout_weight="1"
