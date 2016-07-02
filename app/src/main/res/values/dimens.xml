@@ -11,6 +11,8 @@
     <dimen name="productMinInfo_max_image_Height">165dp</dimen>
     <dimen name="productDetail_max_image_Width">130dp</dimen>
     <dimen name="productDetail_max_image_Height">130dp</dimen>
+    <dimen name="productLargeDetail_max_image_Width">240dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">240dp</dimen>
     <item name="radioButton_scale" format="float" type="integer">0.5</item>
     <dimen name="viewpager_height">200dp</dimen>
     <dimen name="product_detail_height">220dp</dimen>
@@ -22,6 +24,7 @@
     <dimen name="productDetailCardView_productInternalCode_text_size">12sp</dimen>
     <dimen name="productDetailCardView_productBrand_text_size">12sp</dimen>
     <dimen name="productDetailCardView_productCommercialPackage_text_size">13sp</dimen>
+    <dimen name="productDetailCardView_productDescription_text_size">13sp</dimen>
     <dimen name="productDetailCardView_productPrice_text_size">12sp</dimen>
     <dimen name="productDetailCardView_productPMVP_text_size">12sp</dimen>
     <dimen name="productDetailCardView_productAvailability_text_size">13sp</dimen>

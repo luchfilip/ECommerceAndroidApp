@@ -9,6 +9,8 @@
     <dimen name="productMinInfo_max_image_Height">160dp</dimen>
     <dimen name="productDetail_max_image_Width">150dp</dimen>
     <dimen name="productDetail_max_image_Height">150dp</dimen>
+    <dimen name="productLargeDetail_max_image_Width">280dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">280dp</dimen>
 
     <dimen name="mainpage_name_size">25sp</dimen>
     <dimen name="productMinInfo_availability_text_size">14sp</dimen>
@@ -18,6 +20,7 @@
     <dimen name="productDetailCardView_productInternalCode_text_size">16sp</dimen>
     <dimen name="productDetailCardView_productBrand_text_size">16sp</dimen>
     <dimen name="productDetailCardView_productCommercialPackage_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_productDescription_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPrice_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPMVP_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productAvailability_text_size">17sp</dimen>

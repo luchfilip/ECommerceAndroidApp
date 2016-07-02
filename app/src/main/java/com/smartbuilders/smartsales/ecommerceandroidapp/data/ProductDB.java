@@ -179,7 +179,7 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
@@ -220,20 +220,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                     }
-                    if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-                        p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                    }
-                    if(!TextUtils.isEmpty(c.getString(8))) {
-                        p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
-                    }
-                    p.setInternalCode(c.getString(9));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                    p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                    p.setAvailability(c.getInt(19));
-                    p.setImageFileName(c.getString(20));
-                    p.setRating(c.getFloat(21));
+                    p.setInternalCode(c.getString(6));
+                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                    p.setAvailability(c.getInt(16));
+                    p.setImageFileName(c.getString(17));
+                    p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -258,7 +252,7 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
@@ -280,20 +274,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                     }
-                    if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-                        p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                    }
-                    if(!TextUtils.isEmpty(c.getString(8))) {
-                        p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
-                    }
-                    p.setInternalCode(c.getString(9));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                    p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                    p.setAvailability(c.getInt(19));
-                    p.setImageFileName(c.getString(20));
-                    p.setRating(c.getFloat(21));
+                    p.setInternalCode(c.getString(6));
+                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                    p.setAvailability(c.getInt(16));
+                    p.setImageFileName(c.getString(17));
+                    p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -318,7 +306,7 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
@@ -341,20 +329,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                     }
-                    if(!TextUtils.isEmpty(c.getString(6))  && c.getString(6).length()>2) {
-                        p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                    }
-                    if(!TextUtils.isEmpty(c.getString(8))) {
-                        p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
-                    }
-                    p.setInternalCode(c.getString(9));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                    p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                    p.setAvailability(c.getInt(19));
-                    p.setImageFileName(c.getString(20));
-                    p.setRating(c.getFloat(21));
+                    p.setInternalCode(c.getString(6));
+                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                    p.setAvailability(c.getInt(16));
+                    p.setImageFileName(c.getString(17));
+                    p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -394,7 +376,7 @@ public class ProductDB {
             if(isNumeric) {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                            " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                            " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                         " FROM PRODUCT P " +
@@ -410,7 +392,7 @@ public class ProductDB {
             }else{
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                            " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                            " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
                         " FROM PRODUCT P " +
@@ -435,20 +417,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(5)) && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                     }
-                    if(!TextUtils.isEmpty(c.getString(6)) && c.getString(6).length()>2) {
-                        p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                    }
-                    if(!TextUtils.isEmpty(c.getString(8))) {
-                        p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
-                    }
-                    p.setInternalCode(c.getString(9));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                    p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                    p.setAvailability(c.getInt(19));
-                    p.setImageFileName(c.getString(20));
-                    p.setRating(c.getFloat(21));
+                    p.setInternalCode(c.getString(6));
+                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                    p.setAvailability(c.getInt(16));
+                    p.setImageFileName(c.getString(17));
+                    p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -579,8 +555,8 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.OBSERVATION, P.REFERENCE_ID, P.ORIGIN, P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
-                        " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, " +
+                        " B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
@@ -600,20 +576,14 @@ public class ProductDB {
                     if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
                         p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                     }
-                    if(!TextUtils.isEmpty(c.getString(6)) && c.getString(6).length()>2) {
-                        p.setDescription(p.getDescription()+".\nObservaciones: "+c.getString(6));
-                    }
-                    if(!TextUtils.isEmpty(c.getString(8))) {
-                        p.setDescription(p.getDescription()+".\nOrigen: "+c.getString(8));
-                    }
-                    p.setInternalCode(c.getString(9));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(10), c.getString(11)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(12), c.getString(13)));
-                    p.setProductCategory(new ProductCategory(c.getInt(14), c.getString(15), c.getString(16)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(14), c.getInt(1), c.getString(17), c.getString(18)));
-                    p.setAvailability(c.getInt(19));
-                    p.setImageFileName(c.getString(20));
-                    p.setRating(c.getFloat(21));
+                    p.setInternalCode(c.getString(6));
+                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                    p.setAvailability(c.getInt(16));
+                    p.setImageFileName(c.getString(17));
+                    p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     return p;
                 }

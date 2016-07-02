@@ -16,6 +16,7 @@
     <string name="related_shopping_products">Clientes que compraron este producto también compraron</string>
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="product_details_label">Detalles del Producto</string>
+    <string name="product_details_detail">Detalles del Producto: %1$s</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>

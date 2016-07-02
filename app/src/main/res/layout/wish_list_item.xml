@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="?android:attr/ratingBarStyleSmall"
-                    android:progressTint="@color/ratingbar_progress"
+                    android:progressTint="@color/rating_bar_progress"
                     android:numStars="5"
                     android:rating="2.5"
                     android:id="@+id/product_ratingbar" />

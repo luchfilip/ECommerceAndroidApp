@@ -34,11 +34,15 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ViewHolder> {
 
+    public static final int MASK_PRODUCT_MIN_INFO       = 0;
+    public static final int MASK_PRODUCT_DETAILS        = 1;
+    public static final int MASK_PRODUCT_LARGE_DETAILS  = 2;
+
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
     private Context mContext;
-    private boolean mUseDetailLayout;
     private User mUser;
+    private int mMask;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -49,6 +53,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productInternalCode;
         public ImageView productImage;
         public TextView productBrand;
+        public TextView productDetailsDescription;
         public TextView commercialPackage;
         public TextView productAvailability;
         public View goToProductDetails;
@@ -65,6 +70,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productDetailsDescription = (TextView) v.findViewById(R.id.product_details_description);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
@@ -77,25 +83,32 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ProductsListAdapter(Context context, FragmentActivity fragmentActivity,
-                               ArrayList<Product> products, boolean useDetailLayout, User user) {
+                               ArrayList<Product> products, int mask, User user) {
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = products;
         mUser = user;
-        mUseDetailLayout = useDetailLayout;
+        mMask = mask;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
     public ProductsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v;
-        if(mUseDetailLayout){
-            v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.product_details, parent, false);
-        }else{
-            v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.product_min_info, parent, false);
+        View v = null;
+        switch (mMask){
+            case MASK_PRODUCT_MIN_INFO:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.product_min_info, parent, false);
+                break;
+            case MASK_PRODUCT_DETAILS:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.product_details, parent, false);
+                break;
+            case MASK_PRODUCT_LARGE_DETAILS:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.product_large_details, parent, false);
+                break;
         }
         return new ViewHolder(v);
     }
@@ -103,8 +116,19 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Utils.loadThumbImageByFileName(mContext, mUser,
-                mDataset.get(position).getImageFileName(), holder.productImage);
+        if(mMask==MASK_PRODUCT_LARGE_DETAILS){
+            Utils.loadOriginalImageByFileName(mContext, mUser,
+                    mDataset.get(position).getImageFileName(), holder.productImage);
+        }else{
+            Utils.loadThumbImageByFileName(mContext, mUser,
+                    mDataset.get(position).getImageFileName(), holder.productImage);
+        }
+        holder.productImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+            }
+        });
 
         holder.productName.setText(mDataset.get(position).getName());
 
@@ -175,12 +199,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
             }
         });
 
-        if(mUseDetailLayout){
+        if(mMask== MASK_PRODUCT_DETAILS || mMask== MASK_PRODUCT_LARGE_DETAILS){
             if(mDataset.get(position).getInternalCode()!=null){
                 holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                         mDataset.get(position).getInternalCode()));
@@ -208,6 +231,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.commercialPackage.setVisibility(TextView.VISIBLE);
             }else{
                 holder.commercialPackage.setVisibility(TextView.GONE);
+            }
+
+            if(holder.productDetailsDescription !=null && !TextUtils.isEmpty(mDataset.get(position).getDescription())){
+                holder.productDetailsDescription.setText(mContext.getString(R.string.product_details_detail,
+                        mDataset.get(position).getDescription()));
             }
         }
     }
@@ -261,6 +289,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
     }
 
+    private void goToProductDetails(int productId){
+        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
+    }
+
     class CreateShareIntentThread extends Thread {
         private Activity mActivity;
         private Product mProduct;
@@ -284,6 +317,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
             }
+        }
+    }
+
+    public void setMask(int mask){
+        if(mask!=this.mMask){
+            this.mMask = mask;
+            notifyDataSetChanged();
         }
     }
 }

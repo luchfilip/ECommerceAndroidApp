@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
                         android:orientation="vertical"
-                        android:layout_weight="4"
+                        android:layout_weight="1"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp">
@@ -85,7 +85,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_margin="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
                             android:layout_gravity="bottom|end" >
 
                             <ImageView
@@ -113,7 +114,7 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="5"
+                        android:layout_weight="1"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp">
 
@@ -131,7 +132,8 @@
                             android:id="@+id/product_brand"
                             android:focusable="false"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
+                            android:textSize="@dimen/productDetailActivity_productBrand_text_size"
+                            android:maxLines="2" />
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -162,7 +164,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 style="?android:attr/ratingBarStyleIndicator"
-                                android:progressTint="@color/ratingbar_progress"
+                                android:progressTint="@color/rating_bar_progress"
                                 android:numStars="5"
                                 android:rating="2.5"
                                 android:id="@+id/product_ratingbar"

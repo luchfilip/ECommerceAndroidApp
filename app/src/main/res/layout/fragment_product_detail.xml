@@ -77,7 +77,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
-                        android:layout_margin="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -142,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/ratingBarStyleIndicator"
-                        android:progressTint="@color/ratingbar_progress"
+                        android:progressTint="@color/rating_bar_progress"
                         android:numStars="5"
                         android:rating="2.5"
                         android:id="@+id/product_ratingbar" />

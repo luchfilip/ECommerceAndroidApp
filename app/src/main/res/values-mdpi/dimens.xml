@@ -11,4 +11,6 @@
     <dimen name="productMinInfo_max_image_Height">140dp</dimen>
     <dimen name="productDetail_max_image_Width">130dp</dimen>
     <dimen name="productDetail_max_image_Height">130dp</dimen>
+    <dimen name="productLargeDetail_max_image_Width">240dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">240dp</dimen>
 </resources>

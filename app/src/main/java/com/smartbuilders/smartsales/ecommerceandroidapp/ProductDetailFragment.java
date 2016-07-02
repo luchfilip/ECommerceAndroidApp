@@ -180,7 +180,8 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByShopping, false, mUser));
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
+                                            relatedProductsByShopping, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
                                 } else {
                                     view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
                                 }
@@ -191,7 +192,8 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsByBrandId, false, mUser));
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
+                                            relatedProductsByBrandId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
 
                                     ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
                                             .setText(getString(R.string.related_products_by_brand_title,
@@ -208,7 +210,8 @@ public class ProductDetailFragment extends Fragment {
                                     // in content do not change the layout size of the RecyclerView
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(), relatedProductsBySubCategoryId, false, mUser));
+                                    mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
+                                            relatedProductsBySubCategoryId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
                                 } else {
                                     view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
                                 }
