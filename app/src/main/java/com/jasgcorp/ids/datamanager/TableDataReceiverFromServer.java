@@ -1,15 +1,5 @@
 package com.jasgcorp.ids.datamanager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -18,19 +8,14 @@ import org.codehaus.jettison.json.JSONException;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductThumbImage;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUserPasswordService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import net.iharder.Base64;
@@ -257,8 +242,6 @@ public class TableDataReceiverFromServer extends Thread {
             throw new Exception("Error while executing execQueryRemoteDB("+mUser.getServerAddress()+", "+sql+"), result is null.");
         }
 	}
-
-
 
 	/**
 	 *

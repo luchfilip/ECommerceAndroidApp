@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
@@ -16,17 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 
 /**
  * Created by stein on 3/7/2016.
  */
 public class LoadProductThumbImage extends IntentService {
-
-    private static final String TAG = LoadProductThumbImage.class.getSimpleName();
 
     public LoadProductThumbImage() {
         super(LoadProductThumbImage.class.getSimpleName());
@@ -47,14 +41,10 @@ public class LoadProductThumbImage extends IntentService {
     }
 
     private void getProductsThumbImageFromServer(Context context, User user){
-        Log.d(TAG, "getProductsThumbImageFromServer() init");
-        long initTime = System.currentTimeMillis();
         Cursor c = null;
         try {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "SELECT FILE_NAME "+
-                            " FROM PRODUCT_IMAGE " +
-                            " WHERE IS_ACTIVE = 'Y' AND PRIORITY = 1",
+                    "SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y' AND PRIORITY=1",
                     null, null);
             if(c!=null){
                 while(c.moveToNext()){
@@ -74,7 +64,6 @@ public class LoadProductThumbImage extends IntentService {
                 }
             }
         }
-        Log.d(TAG, "getImages total time: "+(System.currentTimeMillis() - initTime));
     }
 
     // Creates Bitmap from InputStream and returns it
@@ -110,14 +99,6 @@ public class LoadProductThumbImage extends IntentService {
                     }
                 }
             }
-        } catch (SocketTimeoutException e) {
-            Log.w("DownloadAndCreateImage", "SocketTimeoutException, " + e.getMessage());
-        } catch (SocketException e) {
-            Log.w("DownloadAndCreateImage", "SocketException, " + e.getMessage());
-        } catch(MalformedURLException e){
-            Log.e("DownloadAndCreateImage", "MalformedURLException, " + e.getMessage());
-        } catch (IOException e) {
-            Log.e("DownloadAndCreateImage", "IOException, " + e.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -127,7 +108,7 @@ public class LoadProductThumbImage extends IntentService {
     private InputStream getHttpConnection(String urlString) throws Exception {
         try {
             HttpURLConnection httpConnection = (HttpURLConnection) (new URL(urlString)).openConnection();
-            httpConnection.setConnectTimeout(600);
+            httpConnection.setConnectTimeout(1000);
             httpConnection.setRequestMethod("GET");
             httpConnection.connect();
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
