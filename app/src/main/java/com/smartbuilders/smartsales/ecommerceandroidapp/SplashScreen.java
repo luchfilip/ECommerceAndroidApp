@@ -22,6 +22,7 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductThumbImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -188,6 +189,8 @@ public class SplashScreen extends AppCompatActivity {
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
         Utils.createImageFiles(this, mCurrentUser);
+        //se manda a descargar todas las imagenes thumbs de los productos
+        startService(new Intent(this, LoadProductThumbImage.class));
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(i);
         finish();

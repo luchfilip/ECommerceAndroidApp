@@ -1,0 +1,143 @@
+package com.smartbuilders.smartsales.ecommerceandroidapp.services;
+
+import android.app.IntentService;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.util.Log;
+
+import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+
+/**
+ * Created by stein on 3/7/2016.
+ */
+public class LoadProductThumbImage extends IntentService {
+
+    private static final String TAG = LoadProductThumbImage.class.getSimpleName();
+
+    public LoadProductThumbImage() {
+        super(LoadProductThumbImage.class.getSimpleName());
+    }
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public LoadProductThumbImage(String name) {
+        super(name);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent workIntent) {
+        getProductsThumbImageFromServer(getApplicationContext(), Utils.getCurrentUser(getApplicationContext()));
+    }
+
+    private void getProductsThumbImageFromServer(Context context, User user){
+        Log.d(TAG, "getProductsThumbImageFromServer() init");
+        long initTime = System.currentTimeMillis();
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT FILE_NAME "+
+                            " FROM PRODUCT_IMAGE " +
+                            " WHERE IS_ACTIVE = 'Y' AND PRIORITY = 1",
+                    null, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    if(Utils.getFileInThumbDirByFileName(context, c.getString(0))==null){
+                        downloadImage(c.getString(0), context, user);
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Log.d(TAG, "getImages total time: "+(System.currentTimeMillis() - initTime));
+    }
+
+    // Creates Bitmap from InputStream and returns it
+    private void downloadImage(String fileName, Context context, User user) {
+        try {
+            OutputStream outputStream = null;
+            InputStream inputStream = null;
+            try {
+                inputStream = getHttpConnection(user.getServerAddress() +
+                        "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
+                // write the inputStream to a FileOutputStream
+                outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                int read = 0;
+                byte[] bytes = new byte[1024];
+                while ((read = inputStream.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (SocketTimeoutException e) {
+            Log.w("DownloadAndCreateImage", "SocketTimeoutException, " + e.getMessage());
+        } catch (SocketException e) {
+            Log.w("DownloadAndCreateImage", "SocketException, " + e.getMessage());
+        } catch(MalformedURLException e){
+            Log.e("DownloadAndCreateImage", "MalformedURLException, " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("DownloadAndCreateImage", "IOException, " + e.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // Makes HttpURLConnection and returns InputStream
+    private InputStream getHttpConnection(String urlString) throws Exception {
+        try {
+            HttpURLConnection httpConnection = (HttpURLConnection) (new URL(urlString)).openConnection();
+            httpConnection.setConnectTimeout(600);
+            httpConnection.setRequestMethod("GET");
+            httpConnection.connect();
+            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return httpConnection.getInputStream();
+            } else {
+                throw new Exception("httpConnection.getResponseCode(): " + httpConnection.getResponseCode());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
+}
