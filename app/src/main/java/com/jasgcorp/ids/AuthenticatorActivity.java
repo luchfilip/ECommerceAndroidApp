@@ -22,8 +22,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
@@ -136,18 +138,25 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 });
             }
         }
-    }
 
-    //private void setTypeFaceToViews(){
-    //    ((TextView) findViewById(R.id.company_phrase)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((EditText) findViewById(R.id.accountName)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((EditText) findViewById(R.id.accountPassword)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((EditText) findViewById(R.id.server_address)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((EditText) findViewById(R.id.user_group)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((Button) findViewById(R.id.submit)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((TextView) findViewById(R.id.reset_password_textView)).setTypeface(Utils.getGlobalTypeFace(this));
-    //    ((TextView) findViewById(R.id.sign_up_textView)).setTypeface(Utils.getGlobalTypeFace(this));
-    //}
+        final View activityRootView = findViewById(R.id.parent_layout);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            public void onGlobalLayout() {
+                if ((activityRootView.getRootView().getHeight() - activityRootView.getHeight()) > 100) {
+                    //se esta mostrando el teclado
+                    if(findViewById(R.id.fields_scrollView)!=null){
+                        View lastChild = ((ScrollView) findViewById(R.id.fields_scrollView))
+                                .getChildAt(((ScrollView) findViewById(R.id.fields_scrollView)).getChildCount() - 1);
+                        int delta = lastChild.getBottom() + findViewById(R.id.fields_scrollView).getPaddingBottom()
+                                - (findViewById(R.id.fields_scrollView).getScrollY() + findViewById(R.id.fields_scrollView).getHeight());
+                        ((ScrollView) findViewById(R.id.fields_scrollView)).smoothScrollBy(0, delta);
+                    }
+                } else {
+                    // keyboard is down
+                }
+            }
+        });
+    }
 
     @Override
     protected void onResume() {

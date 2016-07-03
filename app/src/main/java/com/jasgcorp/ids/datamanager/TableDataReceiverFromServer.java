@@ -1,5 +1,15 @@
 package com.jasgcorp.ids.datamanager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -8,12 +18,14 @@ import org.codehaus.jettison.json.JSONException;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -55,14 +67,18 @@ public class TableDataReceiverFromServer extends Thread {
 	public void run() {
 		Log.d(TAG, "run()");
 		try {
-			sync = Utils.appRequireInitialLoadOfGlobalData(context);
+            long initTime = System.currentTimeMillis();
+            sync = Utils.appRequireInitialLoadOfGlobalData(context);
 			if(sync){
 				loadInitialGlobalDataFromWS(context);
+                Utils.createImageFiles(context, mUser);
+                getProductsThumbImageFromServer();
 			}
 			sync = Utils.appRequireInitialLoadOfUserData(context, mUser);
 			if(sync){
 				loadInitialUserDataFromWS(context, mUser);
 			}
+            Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			exceptionMessage = e.getMessage();
@@ -72,8 +88,7 @@ public class TableDataReceiverFromServer extends Thread {
 	}
 
 	public void loadInitialGlobalDataFromWS(Context context) throws Exception {
-		long initTime = System.currentTimeMillis();
-        syncPercentage = 0;
+		syncPercentage = 0;
         if(sync){
             execRemoteQueryAndInsert(context, null,
                     "select APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
@@ -183,13 +198,11 @@ public class TableDataReceiverFromServer extends Thread {
 							" IMAGE_FILE_NAME, PROMOTIONAL_TEXT, BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, " +
 							" BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, " +
 							" PROMOTIONAL_TEXT_B_COLOR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			syncPercentage = 100;
+			syncPercentage = 96;
 		}
-		Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 	}
 
 	public void loadInitialUserDataFromWS(Context context, User user) throws Exception {
-		long initTime = System.currentTimeMillis();
 		syncPercentage = 0;
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
@@ -198,7 +211,7 @@ public class TableDataReceiverFromServer extends Thread {
                     " where BUSINESS_PARTNER_ID = "+user.getBusinessPartnerId()+" AND IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO RECOMMENDED_PRODUCT (BUSINESS_PARTNER_ID, PRODUCT_ID, PRIORITY) " +
                         " VALUES (?, ?, ?)");
-			syncPercentage = 50;
+			syncPercentage = 97;
 		}
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
@@ -210,7 +223,6 @@ public class TableDataReceiverFromServer extends Thread {
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			syncPercentage = 100;
 		}
-		Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 	}
 
 	/**
@@ -244,6 +256,99 @@ public class TableDataReceiverFromServer extends Thread {
             throw new Exception("Error while executing execQueryRemoteDB("+mUser.getServerAddress()+", "+sql+"), result is null.");
         }
 	}
+
+	private void getProductsThumbImageFromServer(){
+        Log.d(TAG, "getProductsThumbImageFromServer() init");
+        long initTime = System.currentTimeMillis();
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT FILE_NAME "+
+                    " FROM PRODUCT_IMAGE " +
+                    " WHERE IS_ACTIVE = 'Y' AND PRIORITY = 1",
+                    null, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    downloadImage(c.getString(0), context, mUser);
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Log.d(TAG, "getImages total time: "+(System.currentTimeMillis() - initTime));
+	}
+
+    // Creates Bitmap from InputStream and returns it
+    private void downloadImage(String fileName, Context context, User user) {
+        try {
+            OutputStream outputStream = null;
+            InputStream inputStream = null;
+            try {
+                inputStream = getHttpConnection(user.getServerAddress() +
+                        "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
+                // write the inputStream to a FileOutputStream
+                outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                int read = 0;
+                byte[] bytes = new byte[1024];
+                while ((read = inputStream.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (SocketTimeoutException e) {
+            Log.w("DownloadAndCreateImage", "SocketTimeoutException, " + e.getMessage());
+        } catch (SocketException e) {
+            Log.w("DownloadAndCreateImage", "SocketException, " + e.getMessage());
+        } catch(MalformedURLException e){
+            Log.e("DownloadAndCreateImage", "MalformedURLException, " + e.getMessage());
+        } catch (IOException e) {
+            Log.e("DownloadAndCreateImage", "IOException, " + e.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    // Makes HttpURLConnection and returns InputStream
+    private InputStream getHttpConnection(String urlString) throws Exception {
+        try {
+            HttpURLConnection httpConnection = (HttpURLConnection) (new URL(urlString)).openConnection();
+            httpConnection.setConnectTimeout(600);
+            httpConnection.setRequestMethod("GET");
+            httpConnection.connect();
+            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return httpConnection.getInputStream();
+            } else {
+                throw new Exception("httpConnection.getResponseCode(): " + httpConnection.getResponseCode());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
 
 	/**
 	 *

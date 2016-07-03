@@ -54,6 +54,14 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void ... voids) {
+        if(TextUtils.isEmpty(mFileName)){
+            return null;
+        }
+        if(mIsThumb && Utils.getFileInThumbDirByFileName(mContext, mFileName)!=null){
+            return null;
+        }else if(!mIsThumb && Utils.getFileInOriginalDirByFileName(mContext, mFileName)!=null){
+            return null;
+        }
         return downloadImage(url);
     }
 
@@ -62,10 +70,10 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
         if(TextUtils.isEmpty(mFileName)){
             return null;
         }
-        //BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        //bmOptions.inSampleSize = 1;
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inSampleSize = 1;
         try {
-            return BitmapFactory.decodeStream(getHttpConnection(url), null, null/*bmOptions*/);
+            return BitmapFactory.decodeStream(getHttpConnection(url), null, bmOptions);
         } catch (IOException | NullPointerException e1) {
             e1.printStackTrace();
         }

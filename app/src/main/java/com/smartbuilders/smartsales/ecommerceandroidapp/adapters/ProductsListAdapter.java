@@ -234,7 +234,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
 
             if(holder.productDetailsDescription !=null && !TextUtils.isEmpty(mDataset.get(position).getDescription())){
-                holder.productDetailsDescription.setText(mContext.getString(R.string.product_details_detail,
+                holder.productDetailsDescription.setText(mContext.getString(R.string.product_description_detail,
                         mDataset.get(position).getDescription()));
             }
         }
@@ -317,13 +317,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
             }
-        }
-    }
-
-    public void setMask(int mask){
-        if(mask!=this.mMask){
-            this.mMask = mask;
-            notifyDataSetChanged();
         }
     }
 }

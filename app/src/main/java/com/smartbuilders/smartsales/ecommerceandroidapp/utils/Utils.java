@@ -330,7 +330,7 @@ public class Utils {
         try {
             if(!TextUtils.isEmpty(fileName)){
                 Drawable drawable;
-                final File thumb = Utils.getFileThumbByFileName(context, fileName);
+                final File thumb = Utils.getFileInThumbDirByFileName(context, fileName);
                 if (thumb!=null && thumb.exists()) {
                     drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
                 } else {
@@ -391,7 +391,7 @@ public class Utils {
         return null;
     }
 
-    public static File getFileThumbByFileName(Context context, String fileName){
+    public static File getFileInThumbDirByFileName(Context context, String fileName){
         try {
             File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){

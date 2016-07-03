@@ -52,8 +52,7 @@ public class ProductsListActivity extends AppCompatActivity
     private int productBrandId;
     private String productName;
     private String mSearchPattern;
-    private ProductsListAdapter mProductsListAdapter;
-    private LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
 
@@ -142,23 +141,30 @@ public class ProductsListActivity extends AppCompatActivity
                                 changeLayoutImageButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        mRecyclerViewCurrentFirstPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
                                         if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
                                             mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
                                             if (useGridView()) {
-                                                linearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                                                if(!(mLinearLayoutManager instanceof GridLayoutManager)){
+                                                    mLinearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                                                }
                                             }else{
-                                                linearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                                if(mLinearLayoutManager instanceof GridLayoutManager){
+                                                    mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                                }
                                             }
-                                            recyclerView.setLayoutManager(linearLayoutManager);
-                                            mProductsListAdapter.setMask(mCurrentProductsListAdapterMask);
                                             changeLayoutImageButton.setImageResource(R.drawable.ic_view_headline_black_24dp);
                                         }else{
                                             mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS;
-                                            linearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
-                                            recyclerView.setLayoutManager(linearLayoutManager);
-                                            mProductsListAdapter.setMask(mCurrentProductsListAdapterMask);
+                                            if(mLinearLayoutManager instanceof GridLayoutManager){
+                                                mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                            }
                                             changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
                                         }
+                                        recyclerView.setLayoutManager(mLinearLayoutManager);
+                                        recyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
+                                                ProductsListActivity.this, products, mCurrentProductsListAdapterMask, user));
+                                        recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                     }
                                 });
                             }
@@ -205,20 +211,18 @@ public class ProductsListActivity extends AppCompatActivity
                                 categorySubcategoryResultsTextView.append(word);
                             }
 
-                            mProductsListAdapter = new ProductsListAdapter(ProductsListActivity.this,
-                                    ProductsListActivity.this, products, mCurrentProductsListAdapterMask, user);
-
                             // use this setting to improve performance if you know that changes
                             // in content do not change the layout size of the RecyclerView
                             recyclerView.setHasFixedSize(true);
                             if (mCurrentProductsListAdapterMask!=ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS
                                     && useGridView()) {
-                                linearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                                mLinearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
                             }else{
-                                linearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                             }
-                            recyclerView.setLayoutManager(linearLayoutManager);
-                            recyclerView.setAdapter(mProductsListAdapter);
+                            recyclerView.setLayoutManager(mLinearLayoutManager);
+                            recyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
+                                    ProductsListActivity.this, products, mCurrentProductsListAdapterMask, user));
 
                             if (mRecyclerViewCurrentFirstPosition!=0) {
                                 recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -348,12 +352,12 @@ public class ProductsListActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK, mCurrentProductsListAdapterMask);
         try {
-            if (linearLayoutManager instanceof GridLayoutManager) {
+            if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        linearLayoutManager.findFirstVisibleItemPosition());
+                        mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
