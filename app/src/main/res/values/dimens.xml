@@ -11,8 +11,8 @@
     <dimen name="productMinInfo_max_image_Height">165dp</dimen>
     <dimen name="productDetail_max_image_Width">130dp</dimen>
     <dimen name="productDetail_max_image_Height">130dp</dimen>
-    <dimen name="productLargeDetail_max_image_Width">240dp</dimen>
-    <dimen name="productLargeDetail_max_image_Height">240dp</dimen>
+    <dimen name="productLargeDetail_max_image_Width">230dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">230dp</dimen>
     <item name="radioButton_scale" format="float" type="integer">0.5</item>
     <dimen name="viewpager_height">200dp</dimen>
     <dimen name="product_detail_height">220dp</dimen>
