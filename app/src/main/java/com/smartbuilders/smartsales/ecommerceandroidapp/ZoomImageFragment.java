@@ -26,7 +26,6 @@ public class ZoomImageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(STATE_IMAGE_FILE_NAME)){
                 mImageFileName = savedInstanceState.getString(STATE_IMAGE_FILE_NAME);

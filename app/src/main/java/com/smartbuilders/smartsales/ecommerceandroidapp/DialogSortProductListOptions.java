@@ -1,12 +1,10 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RadioGroup;
 
 import com.jasgcorp.ids.model.User;
@@ -39,15 +37,6 @@ public class DialogSortProductListOptions extends DialogFragment {
 
     public interface Callback {
         void sortProductsList(int sortOption);
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-
-        // request a window without the title
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        return dialog;
     }
 
     @Override
@@ -119,6 +108,7 @@ public class DialogSortProductListOptions extends DialogFragment {
                     }
                 });
 
+        getDialog().setTitle(R.string.sort_by);
         return view;
     }
 
