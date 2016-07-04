@@ -7,7 +7,8 @@
 
     <RadioGroup
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/sort_products_list_option_radio_group">
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -15,7 +16,6 @@
             android:text="@string/sort_by_product_name_asc"
             android:id="@+id/sort_by_product_name_asc"
             android:layout_margin="1dp"
-            android:checked="false"
             android:textColor="@color/black" />
 
         <RadioButton
@@ -24,7 +24,6 @@
             android:text="@string/sort_by_product_name_desc"
             android:id="@+id/sort_by_product_name_desc"
             android:layout_margin="1dp"
-            android:checked="false"
             android:textColor="@color/black" />
 
         <RadioButton
@@ -33,7 +32,6 @@
             android:text="@string/sort_by_product_internal_code_asc"
             android:id="@+id/sort_by_product_internal_code_asc"
             android:layout_margin="1dp"
-            android:checked="false"
             android:textColor="@color/black" />
 
         <RadioButton
@@ -42,7 +40,22 @@
             android:text="@string/sort_by_product_internal_code_desc"
             android:id="@+id/sort_by_product_internal_code_desc"
             android:layout_margin="1dp"
-            android:checked="false"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_product_availability_asc"
+            android:id="@+id/sort_by_product_availability_asc"
+            android:layout_margin="1dp"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_product_availability_desc"
+            android:id="@+id/sort_by_product_availability_desc"
+            android:layout_margin="1dp"
             android:textColor="@color/black" />
     </RadioGroup>
 </LinearLayout>

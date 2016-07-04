@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -24,6 +24,8 @@ public class DialogSortProductListOptions extends DialogFragment {
     public static final int SORT_BY_PRODUCT_NAME_DESC = 1;
     public static final int SORT_BY_PRODUCT_INTERNAL_CODE_ASC = 2;
     public static final int SORT_BY_PRODUCT_INTERNAL_CODE_DESC = 3;
+    public static final int SORT_BY_PRODUCT_AVAILABILITY_ASC = 4;
+    public static final int SORT_BY_PRODUCT_AVAILABILITY_DESC = 5;
 
     private User mUser;
     private int mCurrentSortOption;
@@ -55,56 +57,67 @@ public class DialogSortProductListOptions extends DialogFragment {
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
+            if(savedInstanceState.containsKey(STATE_CURRENT_SORT_OPTION)){
+                mCurrentSortOption = savedInstanceState.getInt(STATE_CURRENT_SORT_OPTION);
+            }
         }
 
         final View view = inflater.inflate(R.layout.dialog_sort_product_list_options, container);
 
         switch (mCurrentSortOption){
             case SORT_BY_PRODUCT_NAME_ASC:
-                ((RadioButton) view.findViewById(R.id.sort_by_product_name_asc)).setChecked(true);
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_name_asc);
                 break;
             case SORT_BY_PRODUCT_NAME_DESC:
-                ((RadioButton) view.findViewById(R.id.sort_by_product_name_desc)).setChecked(true);
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_name_desc);
                 break;
             case SORT_BY_PRODUCT_INTERNAL_CODE_ASC:
-                ((RadioButton) view.findViewById(R.id.sort_by_product_internal_code_asc)).setChecked(true);
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_internal_code_asc);
                 break;
             case SORT_BY_PRODUCT_INTERNAL_CODE_DESC:
-                ((RadioButton) view.findViewById(R.id.sort_by_product_internal_code_desc)).setChecked(true);
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_internal_code_desc);
+                break;
+            case SORT_BY_PRODUCT_AVAILABILITY_ASC:
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_availability_asc);
+                break;
+            case SORT_BY_PRODUCT_AVAILABILITY_DESC:
+                ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                        .check(R.id.sort_by_product_availability_desc);
                 break;
         }
 
-        view.findViewById(R.id.sort_by_product_name_asc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC);
-                dismiss();
-            }
-        });
-
-        view.findViewById(R.id.sort_by_product_name_desc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC);
-                dismiss();
-            }
-        });
-
-        view.findViewById(R.id.sort_by_product_internal_code_asc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC);
-                dismiss();
-            }
-        });
-
-        view.findViewById(R.id.sort_by_product_internal_code_desc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC);
-                dismiss();
-            }
-        });
+        ((RadioGroup) view.findViewById(R.id.sort_products_list_option_radio_group))
+                .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId){
+                            case R.id.sort_by_product_name_asc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC);
+                                break;
+                            case R.id.sort_by_product_name_desc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC);
+                                break;
+                            case R.id.sort_by_product_internal_code_asc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC);
+                                break;
+                            case R.id.sort_by_product_internal_code_desc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC);
+                                break;
+                            case R.id.sort_by_product_availability_asc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_ASC);
+                                break;
+                            case R.id.sort_by_product_availability_desc:
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_DESC);
+                                break;
+                        }
+                        dismiss();
+                    }
+                });
 
         return view;
     }

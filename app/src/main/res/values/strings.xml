@@ -276,8 +276,10 @@
     <string name="products_recently_seen">Productos Recientemente Vistos</string>
     <string name="title_activity_products_recommended_list">ProductsRecommendedListActivity</string>
 
-    <string name="sort_by_product_name_asc">Nombre del producto, A -> Z</string>
-    <string name="sort_by_product_name_desc">Nombre del producto, Z -> A</string>
-    <string name="sort_by_product_internal_code_asc">Código del producto, 0 -> 9</string>
-    <string name="sort_by_product_internal_code_desc">Código del producto, 9 -> 1</string>
+    <string name="sort_by_product_name_asc">Nombre, A->Z</string>
+    <string name="sort_by_product_name_desc">Nombre, Z->A</string>
+    <string name="sort_by_product_internal_code_asc">Código, 0->9</string>
+    <string name="sort_by_product_internal_code_desc">Código, 9->0</string>
+    <string name="sort_by_product_availability_asc">Disponibilidad, ascendente.</string>
+    <string name="sort_by_product_availability_desc">Disponibilidad, descendente.</string>
 </resources>

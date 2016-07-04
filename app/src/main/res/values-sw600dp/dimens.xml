@@ -24,9 +24,8 @@
     <dimen name="productDetailCardView_productPurpose_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPrice_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPMVP_text_size">17sp</dimen>
-    <dimen name="productDetailCardView_productAvailability_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_productAvailability_text_size">18sp</dimen>
     <dimen name="productDetailCardView_productPromo_text_size">17sp</dimen>
-    <dimen name="productDetailCardView_productShare_text_size">18sp</dimen>
 
     <dimen name="productDetailActivity_productName_text_size">20sp</dimen>
     <dimen name="productDetailActivity_productInternalCode_text_size">15sp</dimen>

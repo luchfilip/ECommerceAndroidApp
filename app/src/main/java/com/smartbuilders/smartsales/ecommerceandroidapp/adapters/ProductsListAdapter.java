@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
@@ -44,7 +46,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private Context mContext;
     private User mUser;
     private int mMask;
-    private int mSortOption;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -93,10 +94,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mDataset = products;
         mUser = user;
         mMask = mask;
-        mSortOption = sortOption;
-        if(mSortOption != DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC){
-            sortProductList(sortOption);
-        }
+        sortProductList(sortOption);
     }
 
     // Create new views (invoked by the layout manager)
@@ -341,15 +339,32 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
     }
 
-    private void sortProductList(int sortOption){
-        System.out.println("sortProductList("+sortOption+")");
-    }
-
-    public void setSortOption(int sortOption){
-        if(sortOption!=mSortOption){
-            mSortOption = sortOption;
-            sortProductList(sortOption);
-            notifyDataSetChanged();
-        }
+    private void sortProductList(final int sortOption){
+        Collections.sort(mDataset, new Comparator<Product>() {
+            @Override
+            public int compare(Product lhs, Product rhs) {
+                try{
+                    switch (sortOption){
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC:
+                            return lhs.getName().compareTo(rhs.getName());
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_DESC:
+                            return rhs.getName().compareTo(lhs.getName());
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_ASC:
+                            return lhs.getInternalCode().compareTo(rhs.getInternalCode());
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC:
+                            return rhs.getInternalCode().compareTo(lhs.getInternalCode());
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC:
+                            return Integer.valueOf(lhs.getAvailability()).compareTo(rhs.getAvailability());
+                        case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC:
+                            return Integer.valueOf(rhs.getAvailability()).compareTo(lhs.getAvailability());
+                        default:
+                            return 0;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
     }
 }
