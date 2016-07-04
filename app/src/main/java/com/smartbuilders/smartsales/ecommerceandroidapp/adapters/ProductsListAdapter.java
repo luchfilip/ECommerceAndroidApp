@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogSortProductListOptions;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -43,6 +44,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private Context mContext;
     private User mUser;
     private int mMask;
+    private int mSortOption;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -85,12 +87,16 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ProductsListAdapter(Context context, FragmentActivity fragmentActivity,
-                               ArrayList<Product> products, int mask, User user) {
+                               ArrayList<Product> products, int mask, int sortOption, User user) {
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = products;
         mUser = user;
         mMask = mask;
+        mSortOption = sortOption;
+        if(mSortOption != DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC){
+            sortProductList(sortOption);
+        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -332,6 +338,18 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
             }
+        }
+    }
+
+    private void sortProductList(int sortOption){
+        System.out.println("sortProductList("+sortOption+")");
+    }
+
+    public void setSortOption(int sortOption){
+        if(sortOption!=mSortOption){
+            mSortOption = sortOption;
+            sortProductList(sortOption);
+            notifyDataSetChanged();
         }
     }
 }

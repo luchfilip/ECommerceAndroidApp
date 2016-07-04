@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * Jesus Sarco
  */
 public class ProductsListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener  {
+        implements NavigationView.OnNavigationItemSelectedListener, DialogSortProductListOptions.Callback {
 
     public static final String KEY_PRODUCT_CATEGORY_ID = "KEY_PRODUCT_CATEGORY_ID";
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
@@ -46,6 +46,7 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK = "STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK";
+    private static final String STATE_CURRENT_SORT_OPTION = "STATE_CURRENT_SORT_OPTION";
 
     private int productCategoryId;
     private int productSubCategoryId;
@@ -53,8 +54,10 @@ public class ProductsListActivity extends AppCompatActivity
     private String productName;
     private String mSearchPattern;
     private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView mRecyclerView;
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
+    private int mCurrentSortOption;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -90,6 +93,9 @@ public class ProductsListActivity extends AppCompatActivity
                         }
                         if(savedInstanceState.containsKey(STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK)){
                             mCurrentProductsListAdapterMask = savedInstanceState.getInt(STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK);
+                        }
+                        if(savedInstanceState.containsKey(STATE_CURRENT_SORT_OPTION)){
+                            mCurrentSortOption = savedInstanceState.getInt(STATE_CURRENT_SORT_OPTION);
                         }
                     }
 
@@ -128,7 +134,7 @@ public class ProductsListActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         try {
-                            final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.product_list_result);
+                            mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
 
                             final ImageButton changeLayoutImageButton = (ImageButton) findViewById(R.id.change_layout_button);
                             if(changeLayoutImageButton!=null){
@@ -161,13 +167,27 @@ public class ProductsListActivity extends AppCompatActivity
                                             }
                                             changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
                                         }
-                                        recyclerView.setLayoutManager(mLinearLayoutManager);
-                                        recyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
-                                                ProductsListActivity.this, products, mCurrentProductsListAdapterMask, user));
-                                        recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+                                        mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
+                                                ProductsListActivity.this, products, mCurrentProductsListAdapterMask, mCurrentSortOption, user));
+                                        mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                     }
                                 });
                             }
+
+                            final ImageButton sortProductsListImageButton = (ImageButton) findViewById(R.id.sort_products_list_button);
+                            if(sortProductsListImageButton!=null){
+                                sortProductsListImageButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        DialogSortProductListOptions dialogSortProductListOptions =
+                                                DialogSortProductListOptions.newInstance(user, 0);
+                                        dialogSortProductListOptions.show(ProductsListActivity.this.getSupportFragmentManager(),
+                                                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
+                                    }
+                                });
+                            }
+
                             TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
                             if(categorySubcategoryResultsTextView!=null){
                                 if(!products.isEmpty()) {
@@ -210,19 +230,19 @@ public class ProductsListActivity extends AppCompatActivity
 
                             // use this setting to improve performance if you know that changes
                             // in content do not change the layout size of the RecyclerView
-                            recyclerView.setHasFixedSize(true);
+                            mRecyclerView.setHasFixedSize(true);
                             if (mCurrentProductsListAdapterMask!=ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS
                                     && useGridView()) {
                                 mLinearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
                             }else{
                                 mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                             }
-                            recyclerView.setLayoutManager(mLinearLayoutManager);
-                            recyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
-                                    ProductsListActivity.this, products, mCurrentProductsListAdapterMask, user));
+                            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+                            mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
+                                    ProductsListActivity.this, products, mCurrentProductsListAdapterMask, mCurrentSortOption, user));
 
                             if (mRecyclerViewCurrentFirstPosition!=0) {
-                                recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                             }
 
                             if(findViewById(R.id.search_bar_linear_layout)!=null){
@@ -333,14 +353,16 @@ public class ProductsListActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(drawer!=null){
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -362,6 +384,14 @@ public class ProductsListActivity extends AppCompatActivity
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
+        outState.putInt(STATE_CURRENT_SORT_OPTION, mCurrentSortOption);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void sortProductsList(int sortOption) {
+        if(mRecyclerView!=null && mRecyclerView.getAdapter() instanceof ProductsListAdapter){
+            ((ProductsListAdapter) mRecyclerView.getAdapter()).setSortOption(sortOption);
+        }
     }
 }

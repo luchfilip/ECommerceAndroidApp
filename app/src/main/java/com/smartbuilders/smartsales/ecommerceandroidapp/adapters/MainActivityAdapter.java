@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogSortProductListOptions;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -150,7 +151,8 @@ public class MainActivityAdapter extends BaseAdapter {
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
 
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(parent.getContext(), mFragmentActivity,
-                                mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
+                                mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
+                                DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
                     }
                     break;
                 }

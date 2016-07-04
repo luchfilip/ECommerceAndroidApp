@@ -198,7 +198,8 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
-                                            relatedProductsByShopping, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
+                                            relatedProductsByShopping, ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
+                                            DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
                                 } else {
                                     view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
                                 }
@@ -210,7 +211,8 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
-                                            relatedProductsByBrandId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
+                                            relatedProductsByBrandId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
+                                            DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
 
                                     ((TextView) view.findViewById(R.id.related_products_by_brand_tv))
                                             .setText(getString(R.string.related_products_by_brand_title,
@@ -228,7 +230,8 @@ public class ProductDetailFragment extends Fragment {
                                     mRecyclerView.setHasFixedSize(true);
                                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                                     mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
-                                            relatedProductsBySubCategoryId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO, mUser));
+                                            relatedProductsBySubCategoryId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
+                                            DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
                                 } else {
                                     view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
                                 }
