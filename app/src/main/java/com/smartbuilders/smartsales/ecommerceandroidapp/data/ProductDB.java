@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
  * Created by Alberto on 22/4/2016.
  */
 public class ProductDB {
+    // Regular expression in Java to check if String is number or not
+    private static final Pattern patternIsNumeric = Pattern.compile(".*[^0-9].*");
 
     private Context mContext;
     private OrderLineDB mOrderLineDB;
@@ -364,16 +366,10 @@ public class ProductDB {
         }
         name = name.replaceAll("\\s+", " ").trim().toUpperCase();
 
-        boolean isNumeric = false;
-        // Regular expression in Java to check if String is number or not
-        Pattern pattern = Pattern.compile(".*[^0-9].*");
-        if(name.length()<8 && !pattern.matcher(name).matches()){
-            isNumeric = true;
-        }
-
         Cursor c = null;
         try {
-            if(isNumeric) {
+            //si es un numero
+            if(name.length()<8 && !patternIsNumeric.matcher(name).matches()) {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
@@ -452,12 +448,7 @@ public class ProductDB {
         }
         searchPattern = searchPattern.replaceAll("\\s+", " ").trim().toUpperCase();
 
-        boolean isNumeric = false;
-        // Regular expression in Java to check if String is number or not
-        Pattern pattern = Pattern.compile(".*[^0-9].*");
-        if(searchPattern.length()<8 && !pattern.matcher(searchPattern).matches()){
-            isNumeric = true;
-        }
+        boolean isNumeric = (searchPattern.length()<8 && !patternIsNumeric.matcher(searchPattern).matches());
 
         if(!isNumeric && (TextUtils.isEmpty(searchPattern) || searchPattern.length()<1)){
             return products;
@@ -567,26 +558,24 @@ public class ProductDB {
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
                     " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
                     new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(id), "Y"}, null);
-            if (c!=null) {
-                if(c.moveToNext()){
-                    Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(3));
-                    p.setDescription(c.getString(4));
-                    if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                        p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                    }
-                    p.setInternalCode(c.getString(6));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.setAvailability(c.getInt(16));
-                    p.setImageFileName(c.getString(17));
-                    p.setRating(c.getFloat(18));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
-                    return p;
+            if (c!=null && c.moveToNext()){
+                Product p = new Product();
+                p.setId(c.getInt(0));
+                p.setName(c.getString(3));
+                p.setDescription(c.getString(4));
+                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
+                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
                 }
+                p.setInternalCode(c.getString(6));
+                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
+                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
+                p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
+                p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
+                p.setAvailability(c.getInt(16));
+                p.setImageFileName(c.getString(17));
+                p.setRating(c.getFloat(18));
+                p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                return p;
             }
         } catch (Exception e) {
             e.printStackTrace();

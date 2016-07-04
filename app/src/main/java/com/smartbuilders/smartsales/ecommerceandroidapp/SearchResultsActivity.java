@@ -65,7 +65,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
         final ProductDB productDB = new ProductDB(this, mCurrentUser);
         ListView mListView = (ListView) findViewById(R.id.search_result_list);
-        mSearchResultAdapter = new SearchResultAdapter(this, null, mCurrentUser);
+        mSearchResultAdapter = new SearchResultAdapter(this, null, null, mCurrentUser);
         mListView.setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
@@ -104,9 +104,9 @@ public class SearchResultsActivity extends AppCompatActivity
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(TextUtils.isEmpty(s)){
-                        mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
                     }else{
-                        mSearchResultAdapter.setData(productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                        mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
                     }
                     mSearchResultAdapter.notifyDataSetChanged();
                 }
@@ -186,7 +186,7 @@ public class SearchResultsActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             (new RecentSearchDB(SearchResultsActivity.this, mCurrentUser))
                                     .deleteAllRecentSearches();
-                            mSearchResultAdapter.setData(null, SearchResultsActivity.this);
+                            mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
                             mSearchResultAdapter.notifyDataSetChanged();
                         }
                     })

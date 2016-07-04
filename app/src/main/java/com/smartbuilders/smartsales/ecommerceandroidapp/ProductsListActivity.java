@@ -168,47 +168,44 @@ public class ProductsListActivity extends AppCompatActivity
                                     }
                                 });
                             }
-
-                            if(!products.isEmpty()) {
-                                if (productCategoryId != 0) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
-                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
+                            TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
+                            if(categorySubcategoryResultsTextView!=null){
+                                if(!products.isEmpty()) {
+                                    if (productCategoryId != 0) {
+                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                    } else if (productSubCategoryId != 0) {
+                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
+                                        wordTwo.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_subcategory)),
+                                                0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.append(wordTwo);
+                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                    } else if (productBrandId != 0) {
+                                        Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    } else if (productName != null) {
+                                        Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
+                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
+                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        categorySubcategoryResultsTextView.setText(word);
+                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    }
+                                } else {
+                                    Spannable word = new SpannableString(getString(R.string.no_products_to_show));
+                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.black)), 0,
                                             word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
-                                } else if (productSubCategoryId != 0) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
-                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
-                                    wordTwo.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_subcategory)),
-                                            0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.append(wordTwo);
-                                    categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
-                                } else if (productBrandId != 0) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
-                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
-                                } else if (productName != null) {
-                                    TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-                                    Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
-                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.setText(word);
-                                    categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                    categorySubcategoryResultsTextView.append(word);
                                 }
-                            } else {
-                                TextView categorySubcategoryResultsTextView = (TextView) findViewById(R.id.category_subcategory_results);
-                                Spannable word = new SpannableString(getString(R.string.no_products_to_show));
-                                word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.black)), 0,
-                                        word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                categorySubcategoryResultsTextView.append(word);
                             }
 
                             // use this setting to improve performance if you know that changes
@@ -232,25 +229,27 @@ public class ProductsListActivity extends AppCompatActivity
                                 final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
                                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                                         ProductsListActivity.this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
-                                adapter.setDropDownViewResource(R.layout.search_by_option_item);
-                                searchByOptionsSpinner.setAdapter(adapter);
-                                searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        String selectedOption = (String) parent.getItemAtPosition(position);
-                                        if(selectedOption!=null){
-                                            if(selectedOption.equals(getString(R.string.categories))){
-                                                startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
-                                            }else if(selectedOption.equals(getString(R.string.brands))){
-                                                startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
+                                if(searchByOptionsSpinner!=null && adapter!=null){
+                                    adapter.setDropDownViewResource(R.layout.search_by_option_item);
+                                    searchByOptionsSpinner.setAdapter(adapter);
+                                    searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                            String selectedOption = (String) parent.getItemAtPosition(position);
+                                            if(selectedOption!=null){
+                                                if(selectedOption.equals(getString(R.string.categories))){
+                                                    startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
+                                                }else if(selectedOption.equals(getString(R.string.brands))){
+                                                    startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
+                                                }
                                             }
+                                            searchByOptionsSpinner.setSelection(0);
                                         }
-                                        searchByOptionsSpinner.setSelection(0);
-                                    }
 
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) { }
-                                });
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> parent) { }
+                                    });
+                                }
 
                                 findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -352,7 +351,8 @@ public class ProductsListActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK, mCurrentProductsListAdapterMask);
         try {
-            if (mLinearLayoutManager instanceof GridLayoutManager) {
+            if (mLinearLayoutManager instanceof GridLayoutManager
+                    || mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS) {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {

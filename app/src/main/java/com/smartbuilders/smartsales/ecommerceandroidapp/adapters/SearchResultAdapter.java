@@ -25,18 +25,24 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Alberto on 27/3/2016.
  */
 public class SearchResultAdapter extends BaseAdapter {
 
+    // Regular expression in Java to check if String is number or not
+    private static final Pattern patternIsNumeric = Pattern.compile(".*[^0-9].*");
+
     private Context mContext;
+    private String mTextToSearch;
     private List<Object> mDataset;
     private RecentSearchDB recentSearchDB;
 
-    public SearchResultAdapter(Context context, ArrayList data, User user) {
+    public SearchResultAdapter(Context context, String textToSearch, ArrayList data, User user) {
         mContext = context;
+        mTextToSearch = textToSearch;
         recentSearchDB = new RecentSearchDB(context, user);
         if(data!=null){
             mDataset = new ArrayList<>();
@@ -52,7 +58,8 @@ public class SearchResultAdapter extends BaseAdapter {
         }
     }
 
-    public void setData(ArrayList data, Context context){
+    public void setData(String textToSearch, ArrayList data, Context context){
+        mTextToSearch = textToSearch;
         if(data!=null){
             mDataset = new ArrayList<>();
             mDataset.addAll(data);
@@ -96,7 +103,8 @@ public class SearchResultAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
         if(mDataset.get(position) instanceof Product){
             if(!TextUtils.isEmpty(((Product) mDataset.get(position)).getName())){
-                if(((Product) mDataset.get(position)).getInternalCode()!=null) {
+                if((mTextToSearch!=null && mTextToSearch.length()<8 && !patternIsNumeric.matcher(mTextToSearch).matches())
+                        && ((Product) mDataset.get(position)).getInternalCode()!=null) {
                     viewHolder.title.setText(mContext.getString(R.string.product_internalCode_and_name,
                             ((Product) mDataset.get(position)).getInternalCode(),
                             ((Product) mDataset.get(position)).getName()));
