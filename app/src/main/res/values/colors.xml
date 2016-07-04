@@ -33,4 +33,5 @@
     <color name="golden_medium">#ffe450</color>
     <color name="button_text_color">#333333</color>
     <color name="black">#222222</color>
+    <color name="products_list_size_color">#1556bf</color>
 </resources>

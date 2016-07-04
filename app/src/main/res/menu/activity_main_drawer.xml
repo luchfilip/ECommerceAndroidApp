@@ -8,6 +8,13 @@
             android:title="@string/home" />
     </group>
     <group
+        android:id="@+id/menu_business_partners">
+        <item
+            android:id="@+id/nav_business_partners"
+            android:icon="@drawable/ic_supervisor_account_black_24dp"
+            android:title="@string/business_partners" />
+    </group>
+    <group
         android:id="@+id/menu_wish_list">
         <item
             android:id="@+id/nav_wish_list"
@@ -35,10 +42,6 @@
     </item>
     <item android:title="@string/my_sales_orders">
         <menu>
-            <item
-                android:id="@+id/nav_business_partners"
-                android:icon="@drawable/ic_supervisor_account_black_24dp"
-                android:title="@string/business_partners" />
             <item
                 android:id="@+id/nav_shopping_sale"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"

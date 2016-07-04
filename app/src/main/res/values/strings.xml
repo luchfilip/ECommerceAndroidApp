@@ -296,4 +296,8 @@
     <string name="sort_by_product_internal_code_desc">Código, 9->0</string>
     <string name="sort_by_product_availability_asc">Disponibilidad, ascendente.</string>
     <string name="sort_by_product_availability_desc">Disponibilidad, descendente.</string>
+    <string name="products_list_size_details">Resultados: %1$s</string>
+    <string name="category_detail">Categoría: %1$s</string>
+    <string name="subcategory_detail">Subcategoría: %1$s</string>
+    <string name="search_pattern_detail">Búsqueda: %1$s</string>
 </resources>

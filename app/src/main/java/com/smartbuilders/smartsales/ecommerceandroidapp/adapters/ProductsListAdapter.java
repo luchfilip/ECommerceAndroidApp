@@ -31,7 +31,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -43,11 +42,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public static final int MASK_PRODUCT_DETAILS        = 1;
     public static final int MASK_PRODUCT_LARGE_DETAILS  = 2;
 
-    public static final int FILTER_BY_PRODUCT_NAME          = 0;
-    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE = 1;
-    public static final int FILTER_BY_PRODUCT_BRAND         = 2;
-    public static final int FILTER_BY_PRODUCT_DESCRIPTION   = 3;
-    public static final int FILTER_BY_PRODUCT_PURPOSE       = 4;
+    public static final int FILTER_BY_PRODUCT_NAME              = 0;
+    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE     = 1;
+    public static final int FILTER_BY_PRODUCT_BRAND_DESCRIPTION = 2;
+    public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 3;
+    public static final int FILTER_BY_PRODUCT_PURPOSE           = 4;
 
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
@@ -398,14 +397,16 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                     break;
                 case FILTER_BY_PRODUCT_INTERNAL_CODE:
-                    for (Product product : arraylist) {
-                        if (!TextUtils.isEmpty(product.getInternalCode()) &&
-                                product.getInternalCode().toLowerCase(Locale.getDefault()).contains(charText)) {
-                            mDataset.add(product);
+                    if(charText.length()<8){
+                        for (Product product : arraylist) {
+                            if (!TextUtils.isEmpty(product.getInternalCode()) &&
+                                    product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
+                                mDataset.add(product);
+                            }
                         }
                     }
                     break;
-                case FILTER_BY_PRODUCT_BRAND:
+                case FILTER_BY_PRODUCT_BRAND_DESCRIPTION:
                     for (Product product : arraylist) {
                         if (product.getProductBrand()!=null &&
                                 !TextUtils.isEmpty(product.getProductBrand().getDescription()) &&

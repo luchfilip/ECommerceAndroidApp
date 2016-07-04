@@ -27,7 +27,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -53,6 +55,9 @@ public class ProductsListActivity extends AppCompatActivity
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK = "STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK";
     private static final String STATE_CURRENT_SORT_OPTION = "STATE_CURRENT_SORT_OPTION";
+    private static final String STATE_CURRENT_FILTER_TEXT = "STATE_CURRENT_FILTER_TEXT";
+    private static final String STATE_CURRENT_FILTER_OPTION = "STATE_CURRENT_FILTER_OPTION";
+    private static final String STATE_SPINNER_SELECTED_ITEM_POSITION = "STATE_SPINNER_SELECTED_ITEM_POSITION";
 
     private int productCategoryId;
     private int productSubCategoryId;
@@ -66,12 +71,16 @@ public class ProductsListActivity extends AppCompatActivity
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
     private int mCurrentSortOption;
+    private String mCurrentFilterText;
+    private int mCurrentFilterOption;
+    private int mSpinnerSelectedItemPosition;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 
+        //evita que se despliegue el teclado cuando se crea el activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mUser = Utils.getCurrentUser(this);
@@ -104,6 +113,15 @@ public class ProductsListActivity extends AppCompatActivity
                         }
                         if(savedInstanceState.containsKey(STATE_CURRENT_SORT_OPTION)){
                             mCurrentSortOption = savedInstanceState.getInt(STATE_CURRENT_SORT_OPTION);
+                        }
+                        if(savedInstanceState.containsKey(STATE_CURRENT_FILTER_TEXT)){
+                            mCurrentFilterText = savedInstanceState.getString(STATE_CURRENT_FILTER_TEXT);
+                        }
+                        if(savedInstanceState.containsKey(STATE_CURRENT_FILTER_OPTION)){
+                            mCurrentFilterOption = savedInstanceState.getInt(STATE_CURRENT_FILTER_OPTION);
+                        }
+                        if(savedInstanceState.containsKey(STATE_SPINNER_SELECTED_ITEM_POSITION)){
+                            mSpinnerSelectedItemPosition = savedInstanceState.getInt(STATE_SPINNER_SELECTED_ITEM_POSITION);
                         }
                     }
 
@@ -144,7 +162,7 @@ public class ProductsListActivity extends AppCompatActivity
                         try {
                             mRecyclerView = (RecyclerView) findViewById(R.id.product_list_result);
 
-                            final ImageButton changeLayoutImageButton = (ImageButton) findViewById(R.id.change_layout_button);
+                            final ImageView changeLayoutImageButton = (ImageView) findViewById(R.id.change_layout_button);
                             if(changeLayoutImageButton!=null){
                                 if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
                                     changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
@@ -183,7 +201,7 @@ public class ProductsListActivity extends AppCompatActivity
                                 });
                             }
 
-                            final ImageButton sortProductsListImageButton = (ImageButton) findViewById(R.id.sort_products_list_button);
+                            final ImageView sortProductsListImageButton = (ImageView) findViewById(R.id.sort_products_list_button);
                             if(sortProductsListImageButton!=null){
                                 sortProductsListImageButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -200,39 +218,20 @@ public class ProductsListActivity extends AppCompatActivity
                             if(categorySubcategoryResultsTextView!=null){
                                 if(!products.isEmpty()) {
                                     if (productCategoryId != 0) {
-                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " ");
-                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        categorySubcategoryResultsTextView.setText(word);
-                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
+                                                products.get(0).getProductCategory().getDescription()));
                                     } else if (productSubCategoryId != 0) {
-                                        Spannable word = new SpannableString(products.get(0).getProductCategory().getDescription() + " >> ");
-                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        categorySubcategoryResultsTextView.setText(word);
-                                        Spannable wordTwo = new SpannableString(" "+products.get(0).getProductSubCategory().getDescription()+" ");
-                                        wordTwo.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_subcategory)),
-                                                0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        categorySubcategoryResultsTextView.append(wordTwo);
-                                        categorySubcategoryResultsTextView.append(new SpannableString(" ("+products.size()+" Resultados) "));
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
+                                                products.get(0).getProductSubCategory().getDescription()));
                                     } else if (productBrandId != 0) {
-                                        Spannable word = new SpannableString(products.get(0).getProductBrand().getDescription() + " ");
-                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        categorySubcategoryResultsTextView.setText(word);
-                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.brand_detail,
+                                                products.get(0).getProductBrand().getDescription()));
                                     } else if (productName != null) {
-                                        Spannable word = new SpannableString("Búsqueda: \""+productName+"\" ");
-                                        word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.product_category)), 0,
-                                                word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        categorySubcategoryResultsTextView.setText(word);
-                                        categorySubcategoryResultsTextView.append(new SpannableString("("+products.size()+" Resultados) "));
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
+                                                productName));
                                     }
                                 } else {
-                                    Spannable word = new SpannableString(getString(R.string.no_products_to_show));
-                                    word.setSpan(new ForegroundColorSpan(Utils.getColor(ProductsListActivity.this, R.color.black)), 0,
-                                            word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    categorySubcategoryResultsTextView.append(word);
+                                    categorySubcategoryResultsTextView.setText(getString(R.string.no_products_to_show));
                                 }
                             }
 
@@ -254,8 +253,14 @@ public class ProductsListActivity extends AppCompatActivity
                             }
 
                             if(findViewById(R.id.filter_bar_linear_layout)!=null){
+                                final TextView productsListSize = (TextView) findViewById(R.id.products_list_size);
+                                if(productsListSize!=null){
+                                    productsListSize.setText(getString(R.string.products_list_size_details,
+                                            String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                }
+
                                 final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
-                                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                                final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                                         ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
                                 if(filterByOptionsSpinner!=null && adapter!=null){
                                     adapter.setDropDownViewResource(R.layout.search_by_option_item);
@@ -263,24 +268,39 @@ public class ProductsListActivity extends AppCompatActivity
                                     filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            //String selectedOption = (String) parent.getItemAtPosition(position);
-                                            //if(selectedOption!=null){
-                                            //    if(selectedOption.equals(getString(R.string.categories))){
-                                            //        startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
-                                            //    }else if(selectedOption.equals(getString(R.string.brands))){
-                                            //        startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
-                                            //    }
-                                            //}
-                                            //filterByOptionsSpinner.setSelection(0);
+                                            mSpinnerSelectedItemPosition = position;
+                                            final String selectedOption = (String) parent.getItemAtPosition(position);
+                                            if(selectedOption!=null){
+                                                if(selectedOption.equals(getString(R.string.filter_by_product_name))){
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_NAME;
+                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_internal_code))){
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_INTERNAL_CODE;
+                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_brand_description))){
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_BRAND_DESCRIPTION;
+                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_description))){
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_DESCRIPTION;
+                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_purpose))){
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_PURPOSE;
+                                                }
+                                                if(!TextUtils.isEmpty(mCurrentFilterText)){
+                                                    ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, mCurrentFilterOption);
+                                                    if(productsListSize!=null){
+                                                        productsListSize.setText(getString(R.string.products_list_size_details,
+                                                                String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                                    }
+                                                }
+                                            }
                                         }
 
                                         @Override
                                         public void onNothingSelected(AdapterView<?> parent) { }
                                     });
+                                    filterByOptionsSpinner.setSelection(mSpinnerSelectedItemPosition);
                                 }
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null) {
+                                    filterProduct.setText(mCurrentFilterText);
                                     filterProduct.setFocusable(true);
                                     filterProduct.setFocusableInTouchMode(true);
                                     filterProduct.addTextChangedListener(new TextWatcher() {
@@ -291,7 +311,12 @@ public class ProductsListActivity extends AppCompatActivity
 
                                         @Override
                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(s.toString(), 0);
+                                            mCurrentFilterText = s.toString();
+                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, mCurrentFilterOption);
+                                            if(productsListSize!=null){
+                                                productsListSize.setText(getString(R.string.products_list_size_details,
+                                                        String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                            }
                                         }
 
                                         @Override
@@ -299,6 +324,7 @@ public class ProductsListActivity extends AppCompatActivity
 
                                         }
                                     });
+                                    filterProduct.setSelection(filterProduct.length());
                                 }
                             }
                         } catch (Exception e) {
@@ -419,6 +445,9 @@ public class ProductsListActivity extends AppCompatActivity
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         outState.putInt(STATE_CURRENT_SORT_OPTION, mCurrentSortOption);
+        outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        outState.putInt(STATE_CURRENT_FILTER_OPTION, mCurrentFilterOption);
+        outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
         super.onSaveInstanceState(outState);
     }
 
