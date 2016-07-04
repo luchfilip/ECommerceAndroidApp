@@ -117,7 +117,24 @@ public class ProductDetailFragment extends Fragment {
                                 }
 
                                 if (mProduct.getDescription() != null) {
-                                    ((TextView) view.findViewById(R.id.product_detail_description)).setText(mProduct.getDescription());
+                                    ((TextView) view.findViewById(R.id.product_description)).setText(mProduct.getDescription());
+                                }
+
+                                if(!TextUtils.isEmpty(mProduct.getDescription()) || !TextUtils.isEmpty(mProduct.getPurpose())) {
+                                    if (!TextUtils.isEmpty(mProduct.getDescription())) {
+                                        ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
+                                                mProduct.getDescription()));
+                                    } else {
+                                        view.findViewById(R.id.product_description).setVisibility(View.GONE);
+                                    }
+                                    if (!TextUtils.isEmpty(mProduct.getPurpose())) {
+                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
+                                                mProduct.getPurpose()));
+                                    } else {
+                                        view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
+                                    }
+                                }else{
+                                    view.findViewById(R.id.card_product_details).setVisibility(View.GONE);
                                 }
 
                                 if (mProduct.getProductBrand() != null && mProduct.getProductBrand().getDescription() != null) {

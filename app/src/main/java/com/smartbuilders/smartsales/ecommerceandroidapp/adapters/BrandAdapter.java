@@ -130,6 +130,9 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
     }
 
     public void filter(String charText) {
+        if(charText == null){
+            return;
+        }
         charText = charText.toLowerCase(Locale.getDefault());
         mDataset.clear();
         if (charText.length() == 0) {

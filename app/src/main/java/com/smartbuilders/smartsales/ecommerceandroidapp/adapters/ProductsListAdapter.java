@@ -53,7 +53,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productInternalCode;
         public ImageView productImage;
         public TextView productBrand;
-        public TextView productDetailsDescription;
+        public TextView productDescription;
+        public TextView productPurpose;
         public TextView commercialPackage;
         public TextView productAvailability;
         public View goToProductDetails;
@@ -70,7 +71,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
-            productDetailsDescription = (TextView) v.findViewById(R.id.product_details_description);
+            productDescription = (TextView) v.findViewById(R.id.product_description);
+            productPurpose = (TextView) v.findViewById(R.id.product_purpose);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
@@ -203,7 +205,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         });
 
-        if(mMask== MASK_PRODUCT_DETAILS || mMask== MASK_PRODUCT_LARGE_DETAILS){
+        if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
             if(mDataset.get(position).getInternalCode()!=null){
                 holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                         mDataset.get(position).getInternalCode()));
@@ -233,9 +235,22 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.commercialPackage.setVisibility(TextView.GONE);
             }
 
-            if(holder.productDetailsDescription !=null && !TextUtils.isEmpty(mDataset.get(position).getDescription())){
-                holder.productDetailsDescription.setText(mContext.getString(R.string.product_description_detail,
-                        mDataset.get(position).getDescription()));
+            if(holder.productDescription!=null){
+                if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
+                    holder.productDescription.setText(mContext.getString(R.string.product_description_detail,
+                            mDataset.get(position).getDescription()));
+                }else{
+                    holder.productDescription.setVisibility(View.GONE);
+                }
+            }
+
+            if(holder.productPurpose!=null){
+                if(!TextUtils.isEmpty(mDataset.get(position).getPurpose())){
+                    holder.productPurpose.setText(mContext.getString(R.string.product_purpose_detail,
+                            mDataset.get(position).getPurpose()));
+                }else{
+                    holder.productPurpose.setVisibility(View.GONE);
+                }
             }
         }
     }

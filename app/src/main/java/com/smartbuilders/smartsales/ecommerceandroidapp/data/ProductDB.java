@@ -219,9 +219,7 @@ public class ProductDB {
                     p.setId(c.getInt(0));
                     p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
-                    if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                        p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                    }
+                    p.setPurpose(c.getString(5));
                     p.setInternalCode(c.getString(6));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
@@ -273,9 +271,7 @@ public class ProductDB {
                     p.setId(c.getInt(0));
                     p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
-                    if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                        p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                    }
+                    p.setPurpose(c.getString(5));
                     p.setInternalCode(c.getString(6));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
@@ -328,9 +324,7 @@ public class ProductDB {
                     p.setId(c.getInt(0));
                     p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
-                    if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                        p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                    }
+                    p.setPurpose(c.getString(5));
                     p.setInternalCode(c.getString(6));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
@@ -390,7 +384,7 @@ public class ProductDB {
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, OL.PRODUCT_ID, PR.RATING " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -410,9 +404,7 @@ public class ProductDB {
                     p.setId(c.getInt(0));
                     p.setName(c.getString(3));
                     p.setDescription(c.getString(4));
-                    if(!TextUtils.isEmpty(c.getString(5)) && c.getString(5).length()>2) {
-                        p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                    }
+                    p.setPurpose(c.getString(5));
                     p.setInternalCode(c.getString(6));
                     p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
@@ -563,9 +555,7 @@ public class ProductDB {
                 p.setId(c.getInt(0));
                 p.setName(c.getString(3));
                 p.setDescription(c.getString(4));
-                if(!TextUtils.isEmpty(c.getString(5))  && c.getString(5).length()>2) {
-                    p.setDescription(p.getDescription()+".\nUso: "+c.getString(5));
-                }
+                p.setPurpose(c.getString(5));
                 p.setInternalCode(c.getString(6));
                 p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));

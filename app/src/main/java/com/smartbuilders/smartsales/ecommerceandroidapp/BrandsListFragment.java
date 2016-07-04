@@ -20,15 +20,15 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BrandAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductBrandDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class BrandsListFragment extends Fragment {
 
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
+    private static final String STATE_FILTER_TEXT = "STATE_FILTER_TEXT";
 
     // save index and top position
     int mListViewIndex;
@@ -36,6 +36,7 @@ public class BrandsListFragment extends Fragment {
 
     private ListView mListView;
     private BrandAdapter mBrandAdapter;
+    private String mFilterText;
 
     public BrandsListFragment() {
     }
@@ -51,15 +52,19 @@ public class BrandsListFragment extends Fragment {
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_FILTER_TEXT)){
+                            mFilterText = savedInstanceState.getString(STATE_FILTER_TEXT);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
+                        }
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
                     mBrandAdapter = new BrandAdapter(getContext(), new ProductBrandDB(getContext())
                             .getActiveProductBrands());
+                    mBrandAdapter.filter(mFilterText);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,25 +115,49 @@ public class BrandsListFragment extends Fragment {
         SearchManager searchManager =
                 (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.filter_brand);
-        final SearchView searchView =
-                (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint(getString(R.string.filter_title));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.post(new Runnable() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                // Some code here
-                return false;
+            public void run() {
+                if(mFilterText!=null){
+                    MenuItemCompat.expandActionView(searchItem);
+                    searchView.setQuery(mFilterText, false);
+                    searchView.clearFocus();
+                }
+
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        // Some code here
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        if (mBrandAdapter!=null) {
+                            mFilterText = s;
+                            mBrandAdapter.filter(s);
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mFilterText = mFilterText==null ? "" : mFilterText;
+                return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
-                // Some code here
-                if (mBrandAdapter!=null) {
-                    mBrandAdapter.filter(s);
-                }
-                return false;
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mFilterText = null;
+                return true;
             }
         });
     }
@@ -136,16 +165,17 @@ public class BrandsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
+        outState.putString(STATE_FILTER_TEXT, mFilterText);
         super.onSaveInstanceState(outState);
     }
 }

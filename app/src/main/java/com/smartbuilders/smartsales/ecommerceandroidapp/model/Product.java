@@ -13,6 +13,7 @@ public class Product extends Model implements Parcelable {
     private String name;
     private String internalCode;
     private String description;
+    private String purpose;
     private String imageFileName;
     private int productCategoryId;
     private ProductCategory productCategory;
@@ -33,6 +34,7 @@ public class Product extends Model implements Parcelable {
         name = in.readString();
         internalCode = in.readString();
         description = in.readString();
+        purpose = in.readString();
         imageFileName = in.readString();
         availability = in.readInt();
         productBrandId = in.readInt();
@@ -53,6 +55,7 @@ public class Product extends Model implements Parcelable {
         dest.writeString(name);
         dest.writeString(internalCode);
         dest.writeString(description);
+        dest.writeString(purpose);
         dest.writeString(imageFileName);
         dest.writeInt(availability);
         dest.writeInt(productBrandId);
@@ -114,6 +117,14 @@ public class Product extends Model implements Parcelable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     public String getImageFileName() {

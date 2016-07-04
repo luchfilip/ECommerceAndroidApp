@@ -21,6 +21,7 @@
     <dimen name="productDetailCardView_productBrand_text_size">16sp</dimen>
     <dimen name="productDetailCardView_productCommercialPackage_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productDescription_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_productPurpose_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPrice_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPMVP_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productAvailability_text_size">17sp</dimen>
