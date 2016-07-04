@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -73,33 +72,13 @@
                         android:focusable="false"
                         android:padding="5dp"/>
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            android:layout_marginRight="4dp"
-                            android:id="@+id/share_imageView"
-                            android:background="@drawable/image_dark_shape"
-                            android:src="@drawable/ic_share_black_24dp"
-                            style='style="@style/image_button_style"' />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            android:layout_marginLeft="4dp"
-                            android:id="@+id/favorite_imageView"
-                            android:background="@drawable/image_dark_shape"
-                            style='style="@style/image_button_style"' />
-                    </LinearLayout>
+                        android:layout_marginRight="4dp"
+                        android:src="@drawable/ic_zoom_out_map_black_24dp"
+                        style='style="@style/image_button_style"' />
 
                 </android.support.design.widget.CoordinatorLayout>
 
@@ -139,14 +118,50 @@
                         android:textColor="@color/product_availability"
                         android:textSize="@dimen/productDetailActivity_productAvailability_text_size" />
 
-                    <RatingBar
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="?android:attr/ratingBarStyleIndicator"
-                        android:progressTint="@color/rating_bar_progress"
-                        android:numStars="5"
-                        android:rating="2.5"
-                        android:id="@+id/product_ratingbar" />
+                        android:layout_gravity="bottom|end"
+                        android:orientation="horizontal"
+                        android:gravity="bottom"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?android:attr/ratingBarStyleIndicator"
+                                android:progressTint="@color/rating_bar_progress"
+                                android:numStars="5"
+                                android:rating="2.5"
+                                android:id="@+id/product_ratingbar" />
+                        </FrameLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:layout_marginRight="4dp"
+                            android:id="@+id/share_imageView"
+                            android:background="@drawable/image_dark_shape"
+                            android:src="@drawable/ic_share_black_24dp"
+                            style='style="@style/image_button_style"' />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:layout_marginLeft="4dp"
+                            android:id="@+id/favorite_imageView"
+                            android:background="@drawable/image_dark_shape"
+                            style='style="@style/image_button_style"' />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -171,7 +186,7 @@
                         android:id="@+id/product_addtoshoppingsales_button"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dp" />
+                        android:layout_marginRight="0dp" />
 
                 </LinearLayout>
 
@@ -299,4 +314,4 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</FrameLayout>

@@ -167,7 +167,7 @@ public class ProductsListActivity extends AppCompatActivity
                                 if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
                                     changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
                                 }else{
-                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_headline_black_24dp);
+                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_black_24dp);
                                 }
 
                                 changeLayoutImageButton.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +185,7 @@ public class ProductsListActivity extends AppCompatActivity
                                                     mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                                                 }
                                             }
-                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_headline_black_24dp);
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_black_24dp);
                                         }else{
                                             mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS;
                                             if(mLinearLayoutManager instanceof GridLayoutManager){
