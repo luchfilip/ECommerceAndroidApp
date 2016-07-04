@@ -67,7 +67,7 @@ public class LoadProductThumbImage extends IntentService {
     }
 
     // Creates Bitmap from InputStream and returns it
-    private void downloadImage(String fileName, Context context, User user) {
+    private void downloadImage(String fileName, Context context, User user) throws IOException {
         try {
             OutputStream outputStream = null;
             InputStream inputStream = null;
@@ -82,7 +82,7 @@ public class LoadProductThumbImage extends IntentService {
                     outputStream.write(bytes, 0, read);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw e;
             } finally {
                 if (inputStream != null) {
                     try {
@@ -99,6 +99,8 @@ public class LoadProductThumbImage extends IntentService {
                     }
                 }
             }
+        } catch (IOException e){
+            throw e;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
