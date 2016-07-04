@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class CategoriesListFragment extends Fragment {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     // save index and top position
     int mListViewIndex;
@@ -32,8 +32,8 @@ public class CategoriesListFragment extends Fragment {
     private int mCurrentSelectedIndex;
 
     public interface Callback {
-        void onItemSelected(ProductCategory productCategory);
-        void onItemLongSelected(ProductCategory productCategory);
+        void onItemSelected(int productCategoryId);
+        void onItemLongSelected(int productCategoryId);
         void onCategoriesListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -61,11 +61,11 @@ public class CategoriesListFragment extends Fragment {
                         if (savedInstanceState.containsKey(STATE_CURRENT_SELECTED_INDEX)) {
                             mCurrentSelectedIndex = savedInstanceState.getInt(STATE_CURRENT_SELECTED_INDEX) ;
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
                     productCategories.addAll(new ProductCategoryDB(getContext())
@@ -90,7 +90,7 @@ public class CategoriesListFragment extends Fragment {
                                         // if it cannot seek to that position.
                                         ProductCategory productCategory = (ProductCategory) adapterView.getItemAtPosition(position);
                                         if (productCategory != null) {
-                                            ((Callback) getActivity()).onItemSelected(productCategory);
+                                            ((Callback) getActivity()).onItemSelected(productCategory.getId());
                                         }
                                     }
                                 });
@@ -100,7 +100,7 @@ public class CategoriesListFragment extends Fragment {
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         ProductCategory productCategory = (ProductCategory) parent.getItemAtPosition(position);
                                         if (productCategory != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(productCategory);
+                                            ((Callback) getActivity()).onItemLongSelected(productCategory.getId());
                                         }
                                         return true;
                                     }
@@ -130,15 +130,15 @@ public class CategoriesListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         super.onSaveInstanceState(outState);
     }
