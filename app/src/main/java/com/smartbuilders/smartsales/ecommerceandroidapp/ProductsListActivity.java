@@ -13,11 +13,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +23,8 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
@@ -65,7 +60,7 @@ public class ProductsListActivity extends AppCompatActivity
     private String productName;
     private String mSearchPattern;
     private User mUser;
-    private final ArrayList<Product> products = new ArrayList<>();
+    private ArrayList<Product> products;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private int mRecyclerViewCurrentFirstPosition;
@@ -143,6 +138,8 @@ public class ProductsListActivity extends AppCompatActivity
                         }
                     }
 
+                    products = new ArrayList<Product>();
+
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, mUser).getProductsByCategoryId(productCategoryId));
                     } else if (productSubCategoryId != 0) {
@@ -218,14 +215,20 @@ public class ProductsListActivity extends AppCompatActivity
                             if(categorySubcategoryResultsTextView!=null){
                                 if(!products.isEmpty()) {
                                     if (productCategoryId != 0) {
-                                        categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
-                                                products.get(0).getProductCategory().getDescription()));
+                                        if(products.get(0).getProductCategory()!=null){
+                                            categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
+                                                    products.get(0).getProductCategory().getDescription()));
+                                        }
                                     } else if (productSubCategoryId != 0) {
-                                        categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
-                                                products.get(0).getProductSubCategory().getDescription()));
+                                        if(products.get(0).getProductSubCategory()!=null){
+                                            categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
+                                                    products.get(0).getProductSubCategory().getDescription()));
+                                        }
                                     } else if (productBrandId != 0) {
-                                        categorySubcategoryResultsTextView.setText(getString(R.string.brand_detail,
-                                                products.get(0).getProductBrand().getDescription()));
+                                        if(products.get(0).getProductBrand()!=null){
+                                            categorySubcategoryResultsTextView.setText(getString(R.string.brand_detail,
+                                                    products.get(0).getProductBrand().getDescription()));
+                                        }
                                     } else if (productName != null) {
                                         categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
                                                 productName));
@@ -301,13 +304,9 @@ public class ProductsListActivity extends AppCompatActivity
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null) {
                                     filterProduct.setText(mCurrentFilterText);
-                                    filterProduct.setFocusable(true);
-                                    filterProduct.setFocusableInTouchMode(true);
                                     filterProduct.addTextChangedListener(new TextWatcher() {
                                         @Override
-                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                                         @Override
                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -320,9 +319,7 @@ public class ProductsListActivity extends AppCompatActivity
                                         }
 
                                         @Override
-                                        public void afterTextChanged(Editable s) {
-
-                                        }
+                                        public void afterTextChanged(Editable s) { }
                                     });
                                     filterProduct.setSelection(filterProduct.length());
                                 }
@@ -455,8 +452,8 @@ public class ProductsListActivity extends AppCompatActivity
     public void sortProductsList(int sortOption) {
         if(mRecyclerView!=null && mRecyclerView.getAdapter() instanceof ProductsListAdapter){
             mCurrentSortOption = sortOption;
-            mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
-                    ProductsListActivity.this, products, mCurrentProductsListAdapterMask, mCurrentSortOption, mUser));
+            mRecyclerView.setAdapter(new ProductsListAdapter(this, this, products,
+                    mCurrentProductsListAdapterMask, mCurrentSortOption, mUser));
         }
     }
 }
