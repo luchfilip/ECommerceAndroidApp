@@ -12,14 +12,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -66,6 +72,8 @@ public class ProductsListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,8 +90,6 @@ public class ProductsListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(ProductsListActivity.this);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mUser.getUserName()));
-
-
 
         new Thread() {
             @Override
@@ -247,25 +253,25 @@ public class ProductsListActivity extends AppCompatActivity
                                 mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                             }
 
-                            if(findViewById(R.id.search_bar_linear_layout)!=null){
-                                final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
+                            if(findViewById(R.id.filter_bar_linear_layout)!=null){
+                                final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
                                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                                        ProductsListActivity.this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
-                                if(searchByOptionsSpinner!=null && adapter!=null){
+                                        ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
+                                if(filterByOptionsSpinner!=null && adapter!=null){
                                     adapter.setDropDownViewResource(R.layout.search_by_option_item);
-                                    searchByOptionsSpinner.setAdapter(adapter);
-                                    searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    filterByOptionsSpinner.setAdapter(adapter);
+                                    filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            String selectedOption = (String) parent.getItemAtPosition(position);
-                                            if(selectedOption!=null){
-                                                if(selectedOption.equals(getString(R.string.categories))){
-                                                    startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
-                                                }else if(selectedOption.equals(getString(R.string.brands))){
-                                                    startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
-                                                }
-                                            }
-                                            searchByOptionsSpinner.setSelection(0);
+                                            //String selectedOption = (String) parent.getItemAtPosition(position);
+                                            //if(selectedOption!=null){
+                                            //    if(selectedOption.equals(getString(R.string.categories))){
+                                            //        startActivity(new Intent(ProductsListActivity.this, CategoriesListActivity.class));
+                                            //    }else if(selectedOption.equals(getString(R.string.brands))){
+                                            //        startActivity(new Intent(ProductsListActivity.this, BrandsListActivity.class));
+                                            //    }
+                                            //}
+                                            //filterByOptionsSpinner.setSelection(0);
                                         }
 
                                         @Override
@@ -273,19 +279,27 @@ public class ProductsListActivity extends AppCompatActivity
                                     });
                                 }
 
-                                findViewById(R.id.search_product_editText).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class));
-                                    }
-                                });
+                                final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
+                                if(filterProduct!=null) {
+                                    filterProduct.setFocusable(true);
+                                    filterProduct.setFocusableInTouchMode(true);
+                                    filterProduct.addTextChangedListener(new TextWatcher() {
+                                        @Override
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                                findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(ProductsListActivity.this, SearchResultsActivity.class));
-                                    }
-                                });
+                                        }
+
+                                        @Override
+                                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(s.toString(), 0);
+                                        }
+
+                                        @Override
+                                        public void afterTextChanged(Editable s) {
+
+                                        }
+                                    });
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -359,6 +373,24 @@ public class ProductsListActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         }
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_products_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                startActivity(new Intent(this, SearchResultsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

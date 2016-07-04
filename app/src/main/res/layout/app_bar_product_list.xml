@@ -24,40 +24,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:layout_scrollFlags="scroll|enterAlways" />-->
 
-        <include layout="@layout/search_bar_layout" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:divider="@color/black">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/category_subcategory_results"
-                android:padding="4dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:maxLines="2" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/change_layout_button"
-                android:src="@drawable/ic_view_headline_black_24dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/sort_products_list_button"
-                android:src="@drawable/ic_sort_black_24dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp" />
-        </LinearLayout>
+        <include layout="@layout/filter_bar_layout" />
 
     </android.support.design.widget.AppBarLayout>
 

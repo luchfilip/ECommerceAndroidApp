@@ -20,7 +20,7 @@
         android:layout_marginLeft="3dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:background="@drawable/searchbox_bg"
+        android:background="@drawable/search_box_bg"
         android:foregroundGravity="center_vertical"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"

@@ -49,6 +49,8 @@
     <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
     <string name="search_title">Buscar</string>
     <string name="filter_title">Filtrar</string>
+    <string name="filter">Filtrar</string>
+    <string name="filter_by">Filtrar Por</string>
     <string name="external_storage_unavailable">El almacenamiento externo no se encuentra disponible o no se tiene permiso para escribir.</string>
     <string name="company_name">Febeca C.A.</string>
     <string name="brands">Marcas</string>
@@ -114,9 +116,6 @@
     <string name="title_activity_brands_list">Busqueda Por Marca</string>
     <string name="commercial_package">Empaque comercial: %1$s %2$s.</string>
     <string name="availability">Disponibilidad: %1$s</string>
-    <string name="search_by">BUSCAR POR</string>
-    <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
-    <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
     <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
@@ -265,10 +264,25 @@
     <string name="company_logo_label">Logo de la compañía:</string>
     <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
     <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
+    <string name="search_by">BUSCAR POR</string>
+    <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
+    <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string-array name="search_by_options">
         <item>@string/search_by</item>
         <item>@string/categories</item>
         <item>@string/brands</item>
+    </string-array>
+    <string name="filter_by_product_name">NOMBRE</string>
+    <string name="filter_by_product_internal_code">CÓDIGO</string>
+    <string name="filter_by_product_brand_description">MARCA</string>
+    <string name="filter_by_product_description">DESCRIPCIÓN</string>
+    <string name="filter_by_product_purpose">USO</string>
+    <string-array name="filter_by_options">
+        <item>@string/filter_by_product_name</item>
+        <item>@string/filter_by_product_internal_code</item>
+        <item>@string/filter_by_product_brand_description</item>
+        <item>@string/filter_by_product_description</item>
+        <item>@string/filter_by_product_purpose</item>
     </string-array>
     <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>

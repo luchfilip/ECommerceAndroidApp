@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
@@ -30,6 +31,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -41,11 +43,18 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public static final int MASK_PRODUCT_DETAILS        = 1;
     public static final int MASK_PRODUCT_LARGE_DETAILS  = 2;
 
+    public static final int FILTER_BY_PRODUCT_NAME          = 0;
+    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE = 1;
+    public static final int FILTER_BY_PRODUCT_BRAND         = 2;
+    public static final int FILTER_BY_PRODUCT_DESCRIPTION   = 3;
+    public static final int FILTER_BY_PRODUCT_PURPOSE       = 4;
+
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
     private Context mContext;
     private User mUser;
     private int mMask;
+    private ArrayList<Product> arraylist;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -92,6 +101,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = products;
+        this.arraylist = new ArrayList<>();
+        this.arraylist.addAll(mDataset);
         mUser = user;
         mMask = mask;
         sortProductList(sortOption);
@@ -366,5 +377,61 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 return 0;
             }
         });
+    }
+
+    public void filter(String charText, int filterBy) {
+        if(charText == null){
+            return;
+        }
+        charText = charText.toLowerCase(Locale.getDefault());
+        mDataset.clear();
+        if (charText.length() == 0) {
+            mDataset.addAll(arraylist);
+        } else {
+            switch (filterBy){
+                case FILTER_BY_PRODUCT_NAME:
+                    for (Product product : arraylist) {
+                        if (!TextUtils.isEmpty(product.getName()) &&
+                                product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            mDataset.add(product);
+                        }
+                    }
+                    break;
+                case FILTER_BY_PRODUCT_INTERNAL_CODE:
+                    for (Product product : arraylist) {
+                        if (!TextUtils.isEmpty(product.getInternalCode()) &&
+                                product.getInternalCode().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            mDataset.add(product);
+                        }
+                    }
+                    break;
+                case FILTER_BY_PRODUCT_BRAND:
+                    for (Product product : arraylist) {
+                        if (product.getProductBrand()!=null &&
+                                !TextUtils.isEmpty(product.getProductBrand().getDescription()) &&
+                                product.getProductBrand().getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            mDataset.add(product);
+                        }
+                    }
+                    break;
+                case FILTER_BY_PRODUCT_DESCRIPTION:
+                    for (Product product : arraylist) {
+                        if (!TextUtils.isEmpty(product.getDescription()) &&
+                                product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            mDataset.add(product);
+                        }
+                    }
+                    break;
+                case FILTER_BY_PRODUCT_PURPOSE:
+                    for (Product product : arraylist) {
+                        if (!TextUtils.isEmpty(product.getPurpose()) &&
+                                product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            mDataset.add(product);
+                        }
+                    }
+                    break;
+            }
+        }
+        notifyDataSetChanged();
     }
 }
