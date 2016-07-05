@@ -46,7 +46,8 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:id="@+id/main_layout"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:orientation="vertical"
@@ -59,10 +60,10 @@
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="@color/light_grey" />
 
             <View style="@style/Divider"
-                android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
             <TextView
@@ -81,7 +82,10 @@
             android:layout_height="match_parent"
             android:layout_weight="7"
             android:gravity="bottom"
-            android:layout_margin="5dp">
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp">
 
             <Button
                 style="@style/MainButtonAppTheme"

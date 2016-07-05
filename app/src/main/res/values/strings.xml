@@ -301,4 +301,5 @@
     <string name="subcategory_detail">Subcategoría: %1$s</string>
     <string name="search_pattern_detail">Búsqueda: %1$s</string>
     <string name="sort_by">Ordenar por...</string>
+    <string name="business_partner_name_detail">Cliente: %1$s</string>
 </resources>

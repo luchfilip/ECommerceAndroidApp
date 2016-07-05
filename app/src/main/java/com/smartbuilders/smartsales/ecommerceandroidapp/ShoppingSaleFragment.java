@@ -21,9 +21,12 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.DatePickerFragment;
@@ -43,6 +46,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
+    private static final String STATE_SHOW_BUSINESS_PARTNER_INFO = "STATE_SHOW_BUSINESS_PARTNER_INFO";
 
     private User mCurrentUser;
     private boolean mIsInitialLoad;
@@ -56,6 +60,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView mTotalAmount;
     private int mRecyclerViewCurrentFirstPosition;
     private LinearLayoutManager mLinearLayoutManager;
+    private boolean mShowBusinessPartnerInfo;
     private int mCurrentBusinessPartnerId;
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
@@ -88,6 +93,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(savedInstanceState.containsKey(STATE_VALID_TO)) {
                             mValidToText = savedInstanceState.getString(STATE_VALID_TO);
                         }
+                        if(savedInstanceState.containsKey(STATE_SHOW_BUSINESS_PARTNER_INFO)){
+                            mShowBusinessPartnerInfo = savedInstanceState.getBoolean(STATE_SHOW_BUSINESS_PARTNER_INFO);
+                        }
                     }
 
                     if(getArguments()!=null){
@@ -99,6 +107,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
                             mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+                            mShowBusinessPartnerInfo = true;
                         }
                     }
 
@@ -115,6 +124,17 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         @Override
                         public void run() {
                             try {
+                                if(mShowBusinessPartnerInfo){
+                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mCurrentUser))
+                                            .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
+                                    if(businessPartner!=null){
+                                        TextView businessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
+                                        businessPartnerCommercialName.setText(getString(R.string.business_partner_name_detail, businessPartner.getCommercialName()));
+                                        businessPartnerCommercialName.setVisibility(View.VISIBLE);
+                                        view.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+                                    }
+                                }
+
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
@@ -339,6 +359,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
+        outState.putBoolean(STATE_SHOW_BUSINESS_PARTNER_INFO, mShowBusinessPartnerInfo);
         super.onSaveInstanceState(outState);
     }
 }
