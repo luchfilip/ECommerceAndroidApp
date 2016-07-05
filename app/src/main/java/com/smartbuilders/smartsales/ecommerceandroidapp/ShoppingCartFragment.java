@@ -36,6 +36,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION =
             "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_ORDER_LINES = "STATE_ORDER_LINES";
 
     private boolean mIsInitialLoad;
     private User mCurrentUser;
@@ -71,6 +72,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
+                        if(savedInstanceState.containsKey(STATE_ORDER_LINES)){
+                            mOrderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
+                        }
                     } else  if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
                                 && getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
@@ -87,7 +91,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     if (mIsShoppingCart) {
                         mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
                     }else {
-                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
+                        if(mOrderLines==null){
+                            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
+                        }
                     }
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
                             ShoppingCartFragment.this, mOrderLines, mIsShoppingCart,  mCurrentUser);
@@ -249,7 +255,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void reloadShoppingCart(){
-        reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
+        if(mIsShoppingCart){
+            reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
+        }else{
+            mShoppingCartAdapter.setData(mOrderLines);
+        }
     }
 
     @Override
@@ -271,6 +281,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if (!mIsShoppingCart) {
             outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
             outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
+            outState.putParcelableArrayList(STATE_ORDER_LINES, mOrderLines);
         }
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {

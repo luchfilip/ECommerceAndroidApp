@@ -114,10 +114,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(mDataset==null || mDataset.get(position) == null){
-            return;
-        }
-
         Utils.loadThumbImageByFileName(mContext, mUser,
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
