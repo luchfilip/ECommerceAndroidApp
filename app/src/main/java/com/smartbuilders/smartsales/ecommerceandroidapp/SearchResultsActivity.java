@@ -64,91 +64,98 @@ public class SearchResultsActivity extends AppCompatActivity
                 .setText(getString(R.string.welcome_user, Utils.getCurrentUser(this).getUserName()));
 
         final ProductDB productDB = new ProductDB(this, mCurrentUser);
-        ListView mListView = (ListView) findViewById(R.id.search_result_list);
+        ListView listView = (ListView) findViewById(R.id.search_result_list);
         mSearchResultAdapter = new SearchResultAdapter(this, null, null, mCurrentUser);
-        mListView.setAdapter(mSearchResultAdapter);
+        listView.setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                     this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
-            adapter.setDropDownViewResource(R.layout.search_by_option_item);
-            searchByOptionsSpinner.setAdapter(adapter);
-            searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String selectedOption = (String) parent.getItemAtPosition(position);
-                    if(selectedOption!=null){
-                        if(selectedOption.equals(getString(R.string.categories))){
-                            startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
-                        }else if(selectedOption.equals(getString(R.string.brands))){
-                            startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
+            if(searchByOptionsSpinner!=null && adapter!=null){
+                adapter.setDropDownViewResource(R.layout.search_by_option_item);
+                searchByOptionsSpinner.setAdapter(adapter);
+                searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedOption = (String) parent.getItemAtPosition(position);
+                        if(selectedOption!=null){
+                            if(selectedOption.equals(getString(R.string.categories))){
+                                startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
+                            }else if(selectedOption.equals(getString(R.string.brands))){
+                                startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
+                            }
                         }
+                        searchByOptionsSpinner.setSelection(0);
                     }
-                    searchByOptionsSpinner.setSelection(0);
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) { }
-            });
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) { }
+                });
+            }
 
             final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
-            searchEditText.setFocusable(true);
-            searchEditText.setFocusableInTouchMode(true);
-            searchEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if(searchEditText!=null){
+                searchEditText.setFocusable(true);
+                searchEditText.setFocusableInTouchMode(true);
+                searchEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(TextUtils.isEmpty(s)){
-                        mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
-                    }else{
-                        mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
                     }
-                    mSearchResultAdapter.notifyDataSetChanged();
-                }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-            searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(actionId == EditorInfo.IME_ACTION_SEARCH
-                            && searchEditText.getText()!=null){
-                        new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
-                                .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
-                        Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
-                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
-                        startActivity(intent);
-                        return true;
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if(TextUtils.isEmpty(s)){
+                            mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
+                        }else{
+                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()), SearchResultsActivity.this);
+                        }
+                        mSearchResultAdapter.notifyDataSetChanged();
                     }
-                    return false;
-                }
-            });
 
-            findViewById(R.id.image_search_bar_layout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
-                            .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
-                    Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
-                    intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
-                    startActivity(intent);
-                }
-            });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if(actionId==EditorInfo.IME_ACTION_SEARCH && searchEditText.getText()!=null){
+                            new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                                    .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
+                            startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                    .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+
+            View imageSearchBarLayout = findViewById(R.id.image_search_bar_layout);
+            if(imageSearchBarLayout!=null){
+                imageSearchBarLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(searchEditText!=null && searchEditText.getText()!=null){
+                            new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                                    .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
+                            Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
+                            intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
         }
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -160,7 +167,9 @@ public class SearchResultsActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(drawer!=null){
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
