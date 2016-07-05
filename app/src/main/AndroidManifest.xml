@@ -136,7 +136,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductThumbImage"
+            android:name="com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductsThumbImage"
             android:exported="false" />
 
         <receiver

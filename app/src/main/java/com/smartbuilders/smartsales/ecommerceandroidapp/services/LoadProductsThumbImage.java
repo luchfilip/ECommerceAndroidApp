@@ -20,10 +20,10 @@ import java.net.URL;
 /**
  * Created by stein on 3/7/2016.
  */
-public class LoadProductThumbImage extends IntentService {
+public class LoadProductsThumbImage extends IntentService {
 
-    public LoadProductThumbImage() {
-        super(LoadProductThumbImage.class.getSimpleName());
+    public LoadProductsThumbImage() {
+        super(LoadProductsThumbImage.class.getSimpleName());
     }
 
     /**
@@ -31,7 +31,7 @@ public class LoadProductThumbImage extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public LoadProductThumbImage(String name) {
+    public LoadProductsThumbImage(String name) {
         super(name);
     }
 

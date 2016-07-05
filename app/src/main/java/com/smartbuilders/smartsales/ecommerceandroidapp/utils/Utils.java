@@ -357,11 +357,11 @@ public class Utils {
                             });
                 }
             }else{
-                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
+                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
             }
         } catch (Exception e) {
             if(imageView!=null){
-                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
+                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
             }
             e.printStackTrace();
         }
@@ -427,11 +427,11 @@ public class Utils {
                             });
                 }
             }else{
-                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
+                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
             }
         } catch (Exception e) {
             if(imageView!=null){
-                imageView.setImageDrawable(getNoImageAvailableDrawable(context));
+                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
             }
             e.printStackTrace();
         }
