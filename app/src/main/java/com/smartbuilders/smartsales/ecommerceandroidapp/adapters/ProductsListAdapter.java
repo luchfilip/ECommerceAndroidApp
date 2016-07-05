@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
@@ -47,6 +48,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public static final int FILTER_BY_PRODUCT_BRAND_DESCRIPTION = 2;
     public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 3;
     public static final int FILTER_BY_PRODUCT_PURPOSE           = 4;
+    // Regular expression in Java to check if String is number or not
+    private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
@@ -380,6 +383,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     public void filter(String charText, int filterBy) {
         if(charText == null){
+            System.out.println("public void filter(String charText, int filterBy), charText == null");
             return;
         }
         charText = charText.toLowerCase(Locale.getDefault());
@@ -397,13 +401,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                     break;
                 case FILTER_BY_PRODUCT_INTERNAL_CODE:
-                    if(charText.length()<8){
+                    if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
                         for (Product product : arraylist) {
                             if (!TextUtils.isEmpty(product.getInternalCode()) &&
                                     product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
                                 mDataset.add(product);
                             }
                         }
+                    }else{
+                        mDataset.clear();
                     }
                     break;
                 case FILTER_BY_PRODUCT_BRAND_DESCRIPTION:

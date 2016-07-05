@@ -120,7 +120,7 @@ public class SearchResultsActivity extends AppCompatActivity
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if(actionId == EditorInfo.IME_ACTION_SEARCH
-                            && !TextUtils.isEmpty(searchEditText.getText())){
+                            && searchEditText.getText()!=null){
                         new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
                                 .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                         Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);

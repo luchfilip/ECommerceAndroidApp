@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 public class SearchResultAdapter extends BaseAdapter {
 
     // Regular expression in Java to check if String is number or not
-    private static final Pattern patternIsNumeric = Pattern.compile(".*[^0-9].*");
+    private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
     private Context mContext;
     private String mTextToSearch;
@@ -103,7 +103,7 @@ public class SearchResultAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder(view);
         if(mDataset.get(position) instanceof Product){
             if(!TextUtils.isEmpty(((Product) mDataset.get(position)).getName())){
-                if((mTextToSearch!=null && mTextToSearch.length()<8 && !patternIsNumeric.matcher(mTextToSearch).matches())
+                if((mTextToSearch!=null && mTextToSearch.length()<8 && !patternIsNotNumeric.matcher(mTextToSearch).matches())
                         && ((Product) mDataset.get(position)).getInternalCode()!=null) {
                     viewHolder.title.setText(mContext.getString(R.string.product_internalCode_and_name,
                             ((Product) mDataset.get(position)).getInternalCode(),

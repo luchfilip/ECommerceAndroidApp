@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class ProductDB {
     // Regular expression in Java to check if String is number or not
-    private static final Pattern patternIsNumeric = Pattern.compile(".*[^0-9].*");
+    private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
     private Context mContext;
     private OrderLineDB mOrderLineDB;
@@ -354,7 +354,7 @@ public class ProductDB {
     public ArrayList<Product> getProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
-        if(TextUtils.isEmpty(name) || name.length()>120
+        if(/*TextUtils.isEmpty(name) || */name.length()>120
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
@@ -363,7 +363,7 @@ public class ProductDB {
         Cursor c = null;
         try {
             //si es un numero
-            if(name.length()<8 && !patternIsNumeric.matcher(name).matches()) {
+            if(name.length()<8 && !patternIsNotNumeric.matcher(name).matches()) {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
@@ -440,7 +440,7 @@ public class ProductDB {
         }
         searchPattern = searchPattern.replaceAll("\\s+", " ").trim().toUpperCase();
 
-        boolean isNumeric = (searchPattern.length()<8 && !patternIsNumeric.matcher(searchPattern).matches());
+        boolean isNumeric = (searchPattern.length()<8 && !patternIsNotNumeric.matcher(searchPattern).matches());
 
         if(!isNumeric && (TextUtils.isEmpty(searchPattern) || searchPattern.length()<1)){
             return products;

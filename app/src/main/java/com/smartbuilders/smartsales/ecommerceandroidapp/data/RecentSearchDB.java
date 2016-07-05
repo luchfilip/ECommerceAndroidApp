@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
@@ -35,15 +36,17 @@ public class RecentSearchDB {
      */
     public void insertRecentSearch(String text, int productId, int subCategoryId){
         try {
-            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), new ContentValues(),
-                    "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
-                            " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
-                            String.valueOf(productId), String.valueOf(subCategoryId), text,
-                            Utils.getAppVersionName(mContext), mUser.getUserName(),
-                            Utils.getMacAddress(mContext)});
+            if(!TextUtils.isEmpty(text)){
+                mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                        .build(), new ContentValues(),
+                        "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
+                                " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
+                                String.valueOf(productId), String.valueOf(subCategoryId), text,
+                                Utils.getAppVersionName(mContext), mUser.getUserName(),
+                                Utils.getMacAddress(mContext)});
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
