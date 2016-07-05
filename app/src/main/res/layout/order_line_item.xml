@@ -10,16 +10,18 @@
 
     <ImageView
         android:layout_width="@dimen/order_line_item_image_width"
-        android:layout_height="@dimen/order_line_item_image_height"
+        android:layout_height="match_parent"
         android:id="@+id/product_image"
         android:layout_gravity="center|top"
-        android:layout_margin="4dp" />
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="2dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="2dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,29 +29,31 @@
             android:id="@+id/product_name"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:maxLines="2"
             android:paddingTop="2dp"
-            android:paddingBottom="2dp" />
+            android:paddingBottom="2dp"
+            android:lines="2" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_internal_code"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:lines="1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_brand"
             android:minLines="1"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:lines="1" />
 
         <View style="@style/Divider"
             android:layout_marginBottom="4dp" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/qty_requested_textView"
             android:gravity="bottom|right"
             android:textColor="@color/black" />
