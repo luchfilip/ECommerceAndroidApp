@@ -88,13 +88,17 @@ public class OrdersListActivity extends AppCompatActivity
         if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
             if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                findViewById(R.id.fragment_order_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+            }else{
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
             }
+            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
         } else {
             if (mTwoPane) {
                 findViewById(R.id.fragment_order_list).setVisibility(View.GONE);
                 findViewById(R.id.order_detail_container).setVisibility(View.GONE);
             } else {
-                findViewById(R.id.progressContainer).setVisibility(View.GONE);
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
             }
             findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);

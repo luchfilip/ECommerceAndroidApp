@@ -176,9 +176,10 @@ public class OrderDB {
                         " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
                         " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
                     " FROM ECOMMERCE_ORDER " +
-                    " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY ECOMMERCE_ORDER_ID desc",
-                    new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
+                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     if(fromSalesOrder && c.getInt(10)<=0){
