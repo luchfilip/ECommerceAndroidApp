@@ -56,7 +56,7 @@ public class MainFragment extends Fragment {
                         }
                     }
                     mCurrentUser = Utils.getCurrentUser(getActivity());
-                    mainPageObjects.addAll((new MainPageSectionsDB(getActivity(), mCurrentUser)).getActiveMainPageSections());
+                    mainPageObjects.addAll((new MainPageSectionsDB(getActivity(), getContext(), mCurrentUser)).getActiveMainPageSections());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,7 +92,7 @@ public class MainFragment extends Fragment {
             mIsInitialLoad =false;
         }else{
             if(mListView!=null && mMainActivityAdapter!=null){
-                mMainActivityAdapter.setData((new MainPageSectionsDB(getActivity(), mCurrentUser))
+                mMainActivityAdapter.setData((new MainPageSectionsDB(getActivity(), getContext(), mCurrentUser))
                         .getActiveMainPageSections());
             }
         }

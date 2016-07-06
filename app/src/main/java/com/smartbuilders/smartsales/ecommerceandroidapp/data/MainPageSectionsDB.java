@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.jasgcorp.ids.model.User;
@@ -8,6 +9,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -16,10 +18,12 @@ import java.util.ArrayList;
  */
 public class MainPageSectionsDB {
 
+    private Activity mActivity;
     private Context mContext;
     private User mUser;
 
-    public MainPageSectionsDB(Context context, User user){
+    public MainPageSectionsDB(Activity activity, Context context, User user){
+        this.mActivity = activity;
         this.mContext = context;
         this.mUser = user;
     }
@@ -51,7 +55,7 @@ public class MainPageSectionsDB {
 
         try {
             ArrayList<Product> products = (new ProductRecentlySeenDB(mContext, mUser))
-                    .getProductsRecentlySeenByBusinessPartnerId(mUser.getBusinessPartnerId());
+                    .getProductsRecentlySeenByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(mActivity, mUser));
             if (products!=null && products.size()>12) {
                 MainPageProductSection mainPageProductSection = new MainPageProductSection();
                 mainPageProductSection.setName(mContext.getString(R.string.products_recently_seen));

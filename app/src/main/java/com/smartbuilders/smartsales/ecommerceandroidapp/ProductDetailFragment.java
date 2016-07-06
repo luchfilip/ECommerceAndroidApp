@@ -96,7 +96,7 @@ public class ProductDetailFragment extends Fragment {
                         e.printStackTrace();
                     }
                     //Se agrega el producto a la lista de productos recientemente vistos
-                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId, mUser.getBusinessPartnerId());
+                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId, Utils.getAppCurrentBusinessPartnerId(getActivity(), mUser));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

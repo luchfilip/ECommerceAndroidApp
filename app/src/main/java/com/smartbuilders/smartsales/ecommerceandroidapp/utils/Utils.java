@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
@@ -46,6 +47,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.WishListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.squareup.picasso.Picasso;
@@ -954,5 +956,26 @@ public class Utils {
             }
         }
         return noImageAvailable;
+    }
+
+    /**
+     * Devuelve el actual businessPartnerId que se está usando en la aplicacion
+     * @param activity
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public static int getAppCurrentBusinessPartnerId(Activity activity, User user) throws Exception {
+        if(user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                return user.getBusinessPartnerId();
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                return activity.getPreferences(Context.MODE_PRIVATE)
+                        .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
+            }
+            throw new Exception("UserProfileId no identificado en getCurrentBusinessPartnerId(...)");
+        }else{
+            throw new Exception("Usuario es null en getCurrentBusinessPartnerId(...)");
+        }
     }
 }

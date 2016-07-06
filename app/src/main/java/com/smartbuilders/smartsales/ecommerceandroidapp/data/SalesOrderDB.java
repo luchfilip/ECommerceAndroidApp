@@ -57,8 +57,12 @@ public class SalesOrderDB {
                 }catch(ParseException ex){
                     try {
                         salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
-                    } catch (ParseException e) { }
-                }catch(Exception ex){ }
+                    } catch (ParseException e) {
+                        //empty
+                    }
+                }catch(Exception ex){
+                    //empty
+                }
                 salesOrder.setLinesNumber(c.getInt(2));
                 salesOrder.setSubTotalAmount(c.getDouble(3));
                 salesOrder.setTaxAmount(c.getDouble(4));
@@ -157,8 +161,12 @@ public class SalesOrderDB {
                     }catch(ParseException ex){
                         try {
                             salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
-                        } catch (ParseException e) { }
-                    }catch(Exception ex){ }
+                        } catch (ParseException e) {
+                            //empty
+                        }
+                    }catch(Exception ex){
+                        //empty
+                    }
                     salesOrder.setLinesNumber(c.getInt(6));
                     salesOrder.setSubTotalAmount(c.getDouble(7));
                     salesOrder.setTaxAmount(c.getDouble(8));

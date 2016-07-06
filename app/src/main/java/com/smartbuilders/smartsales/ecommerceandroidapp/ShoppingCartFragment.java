@@ -39,7 +39,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private static final String STATE_ORDER_LINES = "STATE_ORDER_LINES";
 
     private boolean mIsInitialLoad;
-    private User mCurrentUser;
+    private User mUser;
     private int mSalesOrderId;
     private int mBusinessPartnerId;
     private ShoppingCartAdapter mShoppingCartAdapter;
@@ -86,17 +86,17 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
 
                     if (mIsShoppingCart) {
-                        mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getShoppingCart();
+                        mOrderLines = (new OrderLineDB(getContext(), mUser)).getShoppingCart();
                     }else {
                         if(mOrderLines==null){
-                            mOrderLines = (new OrderLineDB(getContext(), mCurrentUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
+                            mOrderLines = (new OrderLineDB(getContext(), mUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
                         }
                     }
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
-                            ShoppingCartFragment.this, mOrderLines, mIsShoppingCart,  mCurrentUser);
+                            ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -174,11 +174,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             public void run() {
                 String result = null;
                 try {
-                    OrderDB orderDB = new OrderDB(getContext(), mCurrentUser);
+                    OrderDB orderDB = new OrderDB(getContext(), mUser);
                     if (mSalesOrderId > 0) {
                         result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
                     } else {
-                        result = orderDB.createOrderFromShoppingCart(mCurrentUser.getBusinessPartnerId());
+                        result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getActivity(), mUser));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -247,7 +247,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void updateQtyOrdered(OrderLine orderLine) {
         DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
-                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, mIsShoppingCart, mCurrentUser);
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, mIsShoppingCart, mUser);
         dialogUpdateShoppingCartQtyOrdered.setTargetFragment(this, 0);
         dialogUpdateShoppingCartQtyOrdered.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
@@ -256,7 +256,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     @Override
     public void reloadShoppingCart(){
         if(mIsShoppingCart){
-            reloadShoppingCart((new OrderLineDB(getActivity(), mCurrentUser)).getShoppingCart());
+            reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getShoppingCart());
         }else{
             mShoppingCartAdapter.setData(mOrderLines);
         }
