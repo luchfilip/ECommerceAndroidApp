@@ -32,7 +32,7 @@
     <dimen name="productDetailActivity_productBrand_text_size">15sp</dimen>
     <dimen name="productDetailActivity_productCommercialPackage_text_size">17sp</dimen>
     <dimen name="productDetailActivity_productPrice_text_size">17sp</dimen>
-    <dimen name="productDetailActivity_productAvailability_text_size">17sp</dimen>
+    <dimen name="productDetailActivity_productAvailability_text_size">19sp</dimen>
     <dimen name="productDetailActivity_productPromo_text_size">17sp</dimen>
     <dimen name="productDetailActivity_productShare_text_size">17sp</dimen>
 
