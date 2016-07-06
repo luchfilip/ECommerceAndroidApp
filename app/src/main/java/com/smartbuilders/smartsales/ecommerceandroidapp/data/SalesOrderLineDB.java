@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class SalesOrderLineDB {
 
-    public static final String SHOPPING_SALE_DOCTYPE = "SS";
-    public static final String FINALIZED_SALES_ORDER_DOCTYPE = "FSO";
+    public static final String SHOPPING_SALE_DOC_TYPE = "SS";
+    public static final String FINALIZED_SALES_ORDER_DOC_TYPE = "FSO";
 
     private Context mContext;
     private User mUser;
@@ -28,23 +28,23 @@ public class SalesOrderLineDB {
     }
 
     public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
-        return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOCTYPE, null, businessPartnerId);
+        return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
     }
 
     public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId, int businessPartnerId){
-        return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOCTYPE, orderId, businessPartnerId);
+        return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOC_TYPE, orderId, businessPartnerId);
     }
 
     public ArrayList<SalesOrderLine> getShoppingSale(int businessPartnerId){
-        return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOCTYPE, businessPartnerId);
+        return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOC_TYPE, businessPartnerId);
     }
 
     public ArrayList<SalesOrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId){
-        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOCTYPE, orderId);
+        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOC_TYPE, orderId);
     }
 
     public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int businessPartnerId, int orderId) {
-        return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_SALES_ORDER_DOCTYPE, SHOPPING_SALE_DOCTYPE);
+        return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_SALES_ORDER_DOC_TYPE, SHOPPING_SALE_DOC_TYPE);
     }
 
     /**
@@ -93,7 +93,7 @@ public class SalesOrderLineDB {
                     "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDERLINE " +
                         " WHERE BUSINESS_PARTNER_ID=? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
-                            SHOPPING_SALE_DOCTYPE, "Y"}, null);
+                            SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
@@ -354,7 +354,7 @@ public class SalesOrderLineDB {
                             "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                             new String[]{"N", "datetime('now','localtime')",
-                                    String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), SHOPPING_SALE_DOCTYPE});
+                                    String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), SHOPPING_SALE_DOC_TYPE});
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();

@@ -129,7 +129,7 @@ public class SalesOrderDB {
                                 " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                                 " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", String.valueOf(mUser.getServerUserId()),
-                                SalesOrderLineDB.SHOPPING_SALE_DOCTYPE, "Y"}, null);
+                                SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -141,7 +141,7 @@ public class SalesOrderDB {
                         " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                         " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                                String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.SHOPPING_SALE_DOCTYPE, "Y"}, null);
+                                String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             }
 
             if(c!=null){
@@ -194,7 +194,7 @@ public class SalesOrderDB {
                         " WHERE SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
                         " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                         new String[]{"Y", String.valueOf(mUser.getServerUserId()),
-                                SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, "Y"}, null);
+                                SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
             }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -208,7 +208,7 @@ public class SalesOrderDB {
                         " WHERE SO.BUSINESS_PARTNER_ID = ? SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
                         " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                         new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                                String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, "Y"}, null);
+                                String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
             }
 
             if(c!=null){
@@ -289,7 +289,7 @@ public class SalesOrderDB {
                                         " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
                                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
-                                        String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE,
+                                        String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
                                         Utils.getAppVersionName(mContext), mUser.getUserName(),
                                         Utils.getMacAddress(mContext), String.valueOf(orderLines!=null ? orderLines.size() : activeShoppingSalesLineNumber),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total),

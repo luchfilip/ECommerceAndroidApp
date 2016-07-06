@@ -169,7 +169,7 @@ public class OrderLineDB {
                     " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY ECOMMERCE_SALES_ORDERLINE_ID DESC",
                     new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
-                            SalesOrderLineDB.FINALIZED_SALES_ORDER_DOCTYPE, "Y"},
+                            SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"},
                     null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mUser);
