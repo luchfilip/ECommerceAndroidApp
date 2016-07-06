@@ -316,8 +316,9 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDERLINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
-                    " DOC_TYPE = ? WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                    " DOC_TYPE = ? WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
                     new String[]{String.valueOf(orderId), "datetime('now')", newDocType,
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), currentDocType, "Y"});
         } catch (Exception e) {
             e.printStackTrace();
