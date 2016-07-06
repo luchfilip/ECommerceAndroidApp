@@ -83,13 +83,13 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                                 .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
                         //TODO: mandar estas validaciones a una clase de businessRules
                         if (qtyRequested<=0) {
-                            throw new Exception("Cantidad pedida inválida.");
+                            throw new Exception(getString(R.string.invalid_qty_requested));
                         }
                         if ((qtyRequested % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
-                            throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
+                            throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                         }
                         if (qtyRequested > mOrderLine.getProduct().getAvailability()) {
-                            throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
+                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
                         }
                         OrderLineDB orderLineDB = new OrderLineDB(getContext(), mUser);
                         String result = orderLineDB.moveOrderLineToShoppingCart(mOrderLine, qtyRequested);
@@ -102,7 +102,7 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                         dismiss();
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Cantidad pedida inválida.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.invalid_qty_requested), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

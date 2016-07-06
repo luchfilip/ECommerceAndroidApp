@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
@@ -43,6 +44,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
     private Spinner businessPartnersSpinner;
     private View buttonsContainer;
     private View registerBusinessPartnerButton;
+    private ArrayList<BusinessPartner> businessPartners;
 
     public DialogAddToShoppingSale() {
         // Empty constructor required for DialogFragment
@@ -113,22 +115,26 @@ public class DialogAddToShoppingSale extends DialogFragment {
                                 .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
                         //TODO: mandar estas validaciones a una clase de businessRules
                         if (qtyRequested<=0) {
-                            throw new Exception("Cantidad pedida inválida.");
+                            throw new Exception(getString(R.string.invalid_qty_requested));
                         }
                         double productPrice = 0;
                         try {
                             productPrice = Double
                                     .valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString());
-                        } catch (Exception e) { }
+                        } catch (Exception e) {
+                            //empty
+                        }
                         double productTaxPercentage = 0;
                         try {
                             productTaxPercentage = Double
                                     .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString());
-                        } catch (Exception e) { }
+                        } catch (Exception e) {
+                            //empty
+                        }
 
                         String result = (new SalesOrderLineDB(getContext(), mUser))
                                 .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice,
-                                        productTaxPercentage, sharedPref.getInt("current_business_partner_id", 0));
+                                        productTaxPercentage, sharedPref.getInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, 0));
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_LONG).show();
@@ -138,7 +144,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Cantidad pedida inválida.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.invalid_qty_requested), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -172,8 +178,16 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     public void initViews(){
-        final ArrayList<BusinessPartner> businessPartners =
-                (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
+        if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+            businessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
+        }else if(mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                    .getActiveBusinessPartnerById(sharedPref.getInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, 0));
+            if(businessPartner!=null){
+                businessPartners = new ArrayList<>();
+                businessPartners.add(businessPartner);
+            }
+        }
         if (businessPartners!=null && !businessPartners.isEmpty()) {
             int index = 0;
             int selectedIndex = 0;
@@ -197,8 +211,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt("current_business_partner_id", businessPartners.get(position).getId());
-                    editor.commit();
+                    editor.putInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, businessPartners.get(position).getId());
+                    editor.apply();
                 }
 
                 @Override

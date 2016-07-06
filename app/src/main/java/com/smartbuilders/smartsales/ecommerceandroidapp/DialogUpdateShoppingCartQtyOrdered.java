@@ -22,7 +22,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
  */
 public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
 
-    private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
+    private static final String STATE_CURRENT_ORDER_LINE = "STATE_CURRENT_ORDER_LINE";
     private static final String STATE_IS_SHOPPING_CART = "STATE_IS_SHOPPING_CART";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
@@ -55,8 +55,8 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_CURRENT_ORDERLINE)){
-                mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
+            if(savedInstanceState.containsKey(STATE_CURRENT_ORDER_LINE)){
+                mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDER_LINE);
             }
             if(savedInstanceState.containsKey(STATE_IS_SHOPPING_CART)){
                 mIsShoppingCart = savedInstanceState.getBoolean(STATE_IS_SHOPPING_CART);
@@ -94,10 +94,10 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
                         throw new Exception(getString(R.string.invalid_qty_requested));
                     }
                     if ((mOrderLine.getQuantityOrdered() % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
-                        throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
+                        throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                     }
                     if (mOrderLine.getQuantityOrdered() > mOrderLine.getProduct().getAvailability()) {
-                        throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
+                        throw new Exception(getString(R.string.invalid_availability_qty_requested));
                     }
                     String result = null;
                     if (mIsShoppingCart) {
@@ -107,7 +107,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
                         if(getTargetFragment() instanceof Callback){
                             ((Callback) getTargetFragment()).reloadShoppingCart();
                         }else{
-                            Toast.makeText(getContext(), "Se actualizó la cantidad pedida.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getString(R.string.qty_requested_updated), Toast.LENGTH_LONG).show();
                         }
                     } else {
                         throw new Exception(result);
@@ -142,7 +142,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mUser);
         outState.putBoolean(STATE_IS_SHOPPING_CART, mIsShoppingCart);
-        outState.putParcelable(STATE_CURRENT_ORDERLINE, mOrderLine);
+        outState.putParcelable(STATE_CURRENT_ORDER_LINE, mOrderLine);
         super.onSaveInstanceState(outState);
     }
 }

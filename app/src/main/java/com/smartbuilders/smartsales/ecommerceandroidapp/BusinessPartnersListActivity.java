@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -24,6 +26,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartner
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -213,7 +216,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(final int businessPartnerId, String businessPartnerCommercialName, User user) {
+    public void onItemLongSelected(final int businessPartnerId, final String businessPartnerCommercialName, User user) {
         if(user!=null){
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 new AlertDialog.Builder(this)
@@ -224,9 +227,11 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 if (result==null) {
                                     if (mListView != null) {
                                         if (mListView.getAdapter()!=null) {
-                                            ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                                            ((BusinessPartnersListAdapter) mListView.getAdapter())
+                                                    .setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
                                         } else {
-                                            mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                                            mListView.setAdapter(new BusinessPartnersListAdapter(
+                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
                                         }
                                         if (mTwoPane) {
                                             if(mListView.getAdapter().getCount()>0) {
@@ -251,7 +256,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                         .setMessage(getString(R.string.init_session_business_partner, businessPartnerCommercialName))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-
+                                SharedPreferences sharedPref = BusinessPartnersListActivity.this.getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, businessPartnerId);
+                                editor.apply();
+                                Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
+                                        businessPartnerCommercialName), Toast.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)

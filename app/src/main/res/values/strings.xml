@@ -290,9 +290,9 @@
     <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>
     <string name="invalid_qty_requested">Cantidad solicitada inválida.</string>
+    <string name="invalid_commercial_package_qty_requested">La cantidad pedida debe ser multiplo del empaque comercial.</string>
+    <string name="invalid_availability_qty_requested">La cantidad pedida no puede ser mayor a la disponibilidad.</string>
     <string name="products_recently_seen">Productos Recientemente Vistos</string>
-    <string name="title_activity_products_recommended_list">ProductsRecommendedListActivity</string>
-
     <string name="sort_by_product_name_asc">Nombre, A->Z</string>
     <string name="sort_by_product_name_desc">Nombre, Z->A</string>
     <string name="sort_by_product_internal_code_asc">Código, 0->9</string>
@@ -307,4 +307,6 @@
     <string name="business_partner_name_detail">Cliente: %1$s</string>
     <string name="business_partner_internal_code_detail">Código Cliente: %1$s</string>
     <string name="business_partner">Cliente</string>
+    <string name="session_loaded_detail">Se ha iniciado sessión con el cliente \"%1$s\".</string>
+    <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
 </resources>

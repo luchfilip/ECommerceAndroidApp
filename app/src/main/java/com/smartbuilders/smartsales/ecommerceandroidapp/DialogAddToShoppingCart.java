@@ -86,10 +86,10 @@ public class DialogAddToShoppingCart extends DialogFragment {
                             throw new Exception(getString(R.string.invalid_qty_requested));
                         }
                         if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
-                            throw new Exception("La cantidad pedida debe ser multiplo del empaque comercial.");
+                            throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                         }
                         if (qtyRequested > mProduct.getAvailability()) {
-                            throw new Exception("La cantidad pedida no puede ser mayor a la disponibilidad.");
+                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
                         }
                         String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct.getId(), qtyRequested);
                         if(result == null){
