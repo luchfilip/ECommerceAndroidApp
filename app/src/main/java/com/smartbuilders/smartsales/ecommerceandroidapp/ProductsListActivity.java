@@ -310,22 +310,23 @@ public class ProductsListActivity extends AppCompatActivity
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
-                                    filterProduct.setText(mCurrentFilterText);
+                                    final View.OnClickListener filterImageViewOnClickListener =
+                                            new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    filterProduct.setText(null);
+                                                }
+                                            };
                                     filterProduct.addTextChangedListener(new TextWatcher() {
                                         @Override
                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                                         @Override
                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                            if(s.length()==1){
+                                            if(s.length()>1){
                                                 filterImageView.setImageResource(R.drawable.ic_close_black_24dp);
-                                                filterImageView.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        filterProduct.setText(null);
-                                                    }
-                                                });
-                                            }else if (s.length()==0){
+                                                filterImageView.setOnClickListener(filterImageViewOnClickListener);
+                                            }else{
                                                 filterImageView.setImageResource(R.drawable.ic_filter_list_black_24dp);
                                                 filterImageView.setOnClickListener(null);
                                             }
@@ -338,6 +339,7 @@ public class ProductsListActivity extends AppCompatActivity
                                         @Override
                                         public void afterTextChanged(Editable s) { }
                                     });
+                                    filterProduct.setText(mCurrentFilterText);
                                     filterProduct.setSelection(filterProduct.length());
                                 }
                             }
