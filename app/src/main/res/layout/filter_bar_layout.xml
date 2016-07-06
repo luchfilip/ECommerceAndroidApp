@@ -49,11 +49,8 @@
                 android:layout_marginBottom="3dp"
                 android:inputType="text"
                 android:id="@+id/filter_product_editText"
-                android:enabled="true"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp" />
+                android:focusable="false"
+                android:padding="2dp" />
 
             <ImageView
                 android:layout_width="wrap_content"

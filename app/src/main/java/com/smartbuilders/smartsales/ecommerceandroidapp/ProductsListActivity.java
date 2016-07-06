@@ -19,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -75,9 +74,6 @@ public class ProductsListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_list);
 
-        //evita que se despliegue el teclado cuando se crea el activity
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,8 +91,8 @@ public class ProductsListActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mUser.getUserName()));
 
-
-        //por cuestiones esteticas se carga el spinner de una vez aqui
+        //por cuestiones esteticas se carga el spinner de una vez aqui para que se coloque la barra
+        //de filtrar del tamaño definitivo
         final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
@@ -148,7 +144,7 @@ public class ProductsListActivity extends AppCompatActivity
                         }
                     }
 
-                    products = new ArrayList<Product>();
+                    products = new ArrayList<>();
 
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, mUser).getProductsByCategoryId(productCategoryId));
@@ -310,6 +306,8 @@ public class ProductsListActivity extends AppCompatActivity
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
+                                    filterProduct.setFocusableInTouchMode(true);
+
                                     final View.OnClickListener filterImageViewOnClickListener =
                                             new View.OnClickListener() {
                                                 @Override
@@ -323,7 +321,7 @@ public class ProductsListActivity extends AppCompatActivity
 
                                         @Override
                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                            if(s.length()>1){
+                                            if(s.length()>0){
                                                 filterImageView.setImageResource(R.drawable.ic_close_black_24dp);
                                                 filterImageView.setOnClickListener(filterImageViewOnClickListener);
                                             }else{
