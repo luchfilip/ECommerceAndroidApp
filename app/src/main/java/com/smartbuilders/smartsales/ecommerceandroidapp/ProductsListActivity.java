@@ -95,9 +95,9 @@ public class ProductsListActivity extends AppCompatActivity
         //de filtrar del tamaño definitivo
         final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
+                ProductsListActivity.this, R.array.filter_by_options, R.layout.spinner_custom_prompt_item);
         if(filterByOptionsSpinner!=null && adapter!=null) {
-            adapter.setDropDownViewResource(R.layout.search_by_option_item);
+            adapter.setDropDownViewResource(R.layout.spinner_custom_item);
             filterByOptionsSpinner.setAdapter(adapter);
         }
 

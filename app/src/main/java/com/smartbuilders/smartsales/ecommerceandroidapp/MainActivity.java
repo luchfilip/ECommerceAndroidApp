@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                    this, R.array.search_by_options, R.layout.search_by_option_prompt_item);
-            adapter.setDropDownViewResource(R.layout.search_by_option_item);
+                    this, R.array.search_by_options, R.layout.spinner_custom_prompt_item);
+            adapter.setDropDownViewResource(R.layout.spinner_custom_item);
             searchByOptionsSpinner.setAdapter(adapter);
             searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
