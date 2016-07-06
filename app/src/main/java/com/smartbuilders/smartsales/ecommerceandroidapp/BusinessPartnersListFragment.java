@@ -72,11 +72,12 @@ public class BusinessPartnersListFragment extends Fragment {
                         if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                             mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                                    mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0);
                         }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                             mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mBusinessPartnerDB.getActiveBusinessPartners());
+                                    mBusinessPartnerDB.getActiveBusinessPartners(),
+                                    Utils.getAppCurrentBusinessPartnerId(getActivity(), user));
                         }
                     }
                 } catch (Exception e) {

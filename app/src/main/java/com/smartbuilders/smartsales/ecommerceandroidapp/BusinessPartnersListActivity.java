@@ -43,13 +43,14 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     private BusinessPartnerDB mBusinessPartnerDB;
     private boolean mTwoPane;
     private ListView mListView;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_partners_list);
 
-        final User user = Utils.getCurrentUser(this);
+        mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -62,44 +63,44 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+        if(navigationView!=null && mUser!=null){
+            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
             }
             navigationView.setNavigationItemSelectedListener(this);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, user.getUserName()));
+                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab!=null) {
-            if(user!=null){
-                if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            if(mUser!=null){
+                if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (mTwoPane) {
-                                showDialogCreateBusinessPartner(user);
+                                showDialogCreateBusinessPartner(mUser);
                             } else {
                                 startActivity(new Intent(BusinessPartnersListActivity.this,
                                         RegisterBusinessPartnerActivity.class));
                             }
                         }
                     });
-                }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                     fab.setVisibility(View.GONE);
                 }
             }
         }
 
         mTwoPane = findViewById(R.id.business_partner_detail_container)!=null;
-        if(user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                mUserBusinessPartnerDB = new UserBusinessPartnerDB(this, user);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                mBusinessPartnerDB = new BusinessPartnerDB(this, user);
+        if(mUser!=null){
+            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                mUserBusinessPartnerDB = new UserBusinessPartnerDB(this, mUser);
+            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                mBusinessPartnerDB = new BusinessPartnerDB(this, mUser);
             }
         }
 
@@ -133,18 +134,23 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                             mUserBusinessPartnerDB.getActiveUserBusinessPartners());
                 } else {
                     mListView.setAdapter(new BusinessPartnersListAdapter(this,
-                            mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                            mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0));
                 }
             }else if(mBusinessPartnerDB != null){
                 if (mListView.getAdapter() != null) {
                     ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
                             mBusinessPartnerDB.getActiveBusinessPartners());
                 } else {
-                    mListView.setAdapter(new BusinessPartnersListAdapter(this,
-                            mBusinessPartnerDB.getActiveBusinessPartners()));
+                    try{
+                        mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                                mBusinessPartnerDB.getActiveBusinessPartners(),
+                                Utils.getAppCurrentBusinessPartnerId(this, mUser)));
+                    }catch (Exception e){
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
-            if (mTwoPane) {
+            if (mTwoPane && mListView.getAdapter()!=null) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
         }
@@ -226,12 +232,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
                                 if (result==null) {
                                     if (mListView != null) {
-                                        if (mListView.getAdapter()!=null) {
+                                        if (mListView.getAdapter()!=null && (mListView.getAdapter() instanceof BusinessPartnersListAdapter)) {
                                             ((BusinessPartnersListAdapter) mListView.getAdapter())
                                                     .setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
                                         } else {
                                             mListView.setAdapter(new BusinessPartnersListAdapter(
-                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0));
                                         }
                                         if (mTwoPane) {
                                             if(mListView.getAdapter().getCount()>0) {
@@ -260,6 +266,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
                                 editor.apply();
+                                if (mListView.getAdapter() instanceof BusinessPartnersListAdapter) {
+                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setAppCurrentBusinessPartnerId(businessPartnerId);
+                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                                }
                                 Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
                                         businessPartnerCommercialName), Toast.LENGTH_LONG).show();
                             }
