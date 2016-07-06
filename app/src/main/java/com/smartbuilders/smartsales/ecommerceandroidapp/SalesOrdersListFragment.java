@@ -32,7 +32,7 @@ public class SalesOrdersListFragment extends Fragment {
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     private boolean mIsInitialLoad;
-    private User mCurrentUser;
+    private User mUser;
     private boolean mLoadOrdersFromSalesOrders;
     private ListView mListView;
     private int mListViewIndex;
@@ -41,7 +41,7 @@ public class SalesOrdersListFragment extends Fragment {
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
-        void onItemLongSelected(SalesOrder salesOrder, ListView listView);
+        void onItemLongSelected(SalesOrder salesOrder, ListView listView, User user);
         void onItemSelected(Order order);
         void onListIsLoaded(ListView listView);
         void setSelectedIndex(int selectedIndex, ListView listView);
@@ -85,12 +85,12 @@ public class SalesOrdersListFragment extends Fragment {
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
 
                     if (mLoadOrdersFromSalesOrders) {
-                        activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mCurrentUser)).getActiveOrdersFromSalesOrders());
+                        activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mUser)).getActiveOrdersFromSalesOrders());
                     } else {
-                        activeSalesOrders.addAll((new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrders());
+                        activeSalesOrders.addAll((new SalesOrderDB(getContext(), mUser)).getActiveSalesOrders());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -141,7 +141,7 @@ public class SalesOrdersListFragment extends Fragment {
                                             // if it cannot seek to that position.
                                             SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                                             if (salesOrder != null) {
-                                                ((Callback) getActivity()).onItemLongSelected(salesOrder, mListView);
+                                                ((Callback) getActivity()).onItemLongSelected(salesOrder, mListView, mUser);
                                             }
                                             return true;
                                         }
@@ -180,10 +180,10 @@ public class SalesOrdersListFragment extends Fragment {
                 int oldListSize = mListView.getAdapter().getCount();
                 if (mLoadOrdersFromSalesOrders) {
                     ((OrdersListAdapter) mListView.getAdapter()).setData((new OrderDB(getContext(),
-                            mCurrentUser)).getActiveOrdersFromSalesOrders());
+                            mUser)).getActiveOrdersFromSalesOrders());
                 }else{
                     ((SalesOrdersListAdapter) mListView.getAdapter()).setData((new SalesOrderDB(
-                            getContext(), mCurrentUser)).getActiveSalesOrders());
+                            getContext(), mUser)).getActiveSalesOrders());
                 }
                 if(mListView.getAdapter().getCount()!=oldListSize){
                     ((Callback) getActivity()).onListIsLoaded(mListView);

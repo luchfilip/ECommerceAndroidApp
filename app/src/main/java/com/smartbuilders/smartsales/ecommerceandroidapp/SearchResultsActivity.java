@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
@@ -38,7 +39,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 public class SearchResultsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private User mCurrentUser;
     private SearchResultAdapter mSearchResultAdapter;
 
     @Override
@@ -46,7 +46,7 @@ public class SearchResultsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        mCurrentUser = Utils.getCurrentUser(this);
+        final User user = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -59,14 +59,19 @@ public class SearchResultsActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, Utils.getCurrentUser(this).getUserName()));
+        if(navigationView!=null && user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+            }
+            navigationView.setNavigationItemSelectedListener(this);
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(getString(R.string.welcome_user, user.getUserName()));
+        }
 
-        final ProductDB productDB = new ProductDB(this, mCurrentUser);
-        ListView listView = (ListView) findViewById(R.id.search_result_list);
-        mSearchResultAdapter = new SearchResultAdapter(this, null, null, mCurrentUser);
-        listView.setAdapter(mSearchResultAdapter);
+        mSearchResultAdapter = new SearchResultAdapter(this, null, null, user);
+        ((ListView) findViewById(R.id.search_result_list)).setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
             final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
@@ -96,13 +101,12 @@ public class SearchResultsActivity extends AppCompatActivity
 
             final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
+                final ProductDB productDB = new ProductDB(this, user);
                 searchEditText.setFocusable(true);
                 searchEditText.setFocusableInTouchMode(true);
                 searchEditText.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -115,15 +119,13 @@ public class SearchResultsActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
+                    public void afterTextChanged(Editable s) { }
                 });
                 searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if(actionId==EditorInfo.IME_ACTION_SEARCH && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                            new RecentSearchDB(SearchResultsActivity.this, user)
                                     .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                             startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
                                     .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
@@ -140,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if(searchEditText!=null && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, mCurrentUser)
+                            new RecentSearchDB(SearchResultsActivity.this, user)
                                     .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                             Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
                             intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
@@ -193,7 +195,7 @@ public class SearchResultsActivity extends AppCompatActivity
                     .setMessage(getString(R.string.delete_all_recent_searches_question))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            (new RecentSearchDB(SearchResultsActivity.this, mCurrentUser))
+                            (new RecentSearchDB(SearchResultsActivity.this, Utils.getCurrentUser(SearchResultsActivity.this)))
                                     .deleteAllRecentSearches();
                             mSearchResultAdapter.setData(null, null, SearchResultsActivity.this);
                             mSearchResultAdapter.notifyDataSetChanged();

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
@@ -31,7 +32,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager;
  * Jesus Sarco, 12.05.2016
  */
 public class SalesOrdersListActivity extends AppCompatActivity
-        implements SalesOrdersListFragment.Callback, NavigationView.OnNavigationItemSelectedListener,
+        implements NavigationView.OnNavigationItemSelectedListener, SalesOrdersListFragment.Callback,
         SalesOrderDetailFragment.Callback, OrderDetailFragment.Callback {
 
     private static final String SALES_ORDER_DETAIL_FRAGMENT_TAG = "SALES_ORDER_DETAIL_FRAGMENT_TAG";
@@ -39,7 +40,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
     public static final String KEY_CURRENT_TAB_SELECTED = "KEY_CURRENT_TAB_SELECTED";
 
     private boolean mThreePane;
-    private User mCurrentUser;
     private TabLayout mTabLayout;
     private int mCurrentTabSelected;
 
@@ -48,19 +48,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_orders_list);
 
-        if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
-                mCurrentTabSelected = savedInstanceState.getInt(STATE_CURRENT_TAB_SELECTED);
-            }
-        }
-
-        if(getIntent()!=null && getIntent().getExtras()!=null){
-            if(getIntent().getExtras().containsKey(KEY_CURRENT_TAB_SELECTED)){
-                mCurrentTabSelected = getIntent().getExtras().getInt(KEY_CURRENT_TAB_SELECTED);
-            }
-        }
-
-        mCurrentUser = Utils.getCurrentUser(this);
+        User user = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -73,9 +61,28 @@ public class SalesOrdersListActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                .setText(getString(R.string.welcome_user, mCurrentUser.getUserName()));
+        if(navigationView!=null && user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+            }
+            navigationView.setNavigationItemSelectedListener(this);
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(getString(R.string.welcome_user, user.getUserName()));
+        }
+
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
+                mCurrentTabSelected = savedInstanceState.getInt(STATE_CURRENT_TAB_SELECTED);
+            }
+        }
+
+        if(getIntent()!=null && getIntent().getExtras()!=null){
+            if(getIntent().getExtras().containsKey(KEY_CURRENT_TAB_SELECTED)){
+                mCurrentTabSelected = getIntent().getExtras().getInt(KEY_CURRENT_TAB_SELECTED);
+            }
+        }
 
         mThreePane = findViewById(R.id.sales_order_detail_container) != null
                 && findViewById(R.id.order_detail_container) != null;
@@ -151,7 +158,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -163,7 +170,9 @@ public class SalesOrdersListActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(drawer!=null){
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
@@ -187,16 +196,16 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(final SalesOrder salesOrder, final ListView listView) {
+    public void onItemLongSelected(final SalesOrder salesOrder, final ListView listView, final User user) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
                         salesOrder.getBusinessPartner().getCommercialName()))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = (new SalesOrderDB(SalesOrdersListActivity.this, mCurrentUser))
+                        String result = (new SalesOrderDB(SalesOrdersListActivity.this, user))
                                 .deactiveSalesOrderById(salesOrder.getId());
                         if (result==null) {
-                            reloadSalesOrdersList(listView);
+                            reloadSalesOrdersList(listView, user);
                         } else {
                             Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -234,12 +243,12 @@ public class SalesOrdersListActivity extends AppCompatActivity
         }
     }
 
-    private void reloadSalesOrdersList(ListView listView){
+    private void reloadSalesOrdersList(ListView listView, User user){
         if (listView!=null && listView.getAdapter()!=null) {
             int oldListSize = listView.getCount();
             int selectedIndex = listView.getCheckedItemPosition();
             ((SalesOrdersListAdapter) listView.getAdapter())
-                    .setData(new SalesOrderDB(this, mCurrentUser).getActiveSalesOrders());
+                    .setData(new SalesOrderDB(this, user).getActiveSalesOrders());
 
             if (listView.getCount()<oldListSize && listView.getCount()>0 && mThreePane) {
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);

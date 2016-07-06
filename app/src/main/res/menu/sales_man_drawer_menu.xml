@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/menu_home">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home" />
+    </group>
+    <group
+        android:id="@+id/menu_business_partners">
+        <item
+            android:id="@+id/nav_business_partners"
+            android:icon="@drawable/ic_supervisor_account_black_24dp"
+            android:title="@string/business_partners" />
+    </group>
+    <group
+        android:id="@+id/menu_wish_list">
+        <item
+            android:id="@+id/nav_wish_list"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/wish_list" />
+    </group>
+    <group
+        android:id="@+id/menu_products_recommended_list">
+        <item
+            android:id="@+id/nav_products_recommended_list"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
+            android:title="@string/recommended_products" />
+    </group>
+    <item android:title="@string/my_orders">
+        <menu>
+            <item
+                android:id="@+id/nav_shopping_cart"
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
+                android:title="@string/shopping_cart" />
+            <item
+                android:id="@+id/nav_orders"
+                android:icon="@drawable/ic_view_list_black_24dp"
+                android:title="@string/orders_list" />
+        </menu>
+    </item>
+    <item android:title="@string/my_sales_orders">
+        <menu>
+            <item
+                android:id="@+id/nav_shopping_sale"
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
+                android:title="@string/open_shopping_sale" />
+            <item
+                android:id="@+id/nav_sales_orders"
+                android:icon="@drawable/ic_view_list_black_24dp"
+                android:title="@string/closed_sales_orders" />
+        </menu>
+    </item>
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_conctac_us"
+                android:icon="@drawable/ic_email_black_24dp"
+                android:title="@string/contact_us" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/invite" />
+        </menu>
+    </item>
+    <!--<item android:title="@string/value_us">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_value_us"-->
+                <!--android:icon="@drawable/google_play_icon"-->
+                <!--android:title="@string/google_play" />-->
+        <!--</menu>-->
+    <!--</item>-->
+    <item android:title="@string/action_setting">
+        <menu>
+            <!--<item-->
+                <!--android:id="@+id/nav_my_company"-->
+                <!--android:icon="@drawable/ic_business_black_24dp"-->
+                <!--android:title="@string/my_company" />-->
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/nav_report_error"
+                android:icon="@drawable/ic_report_problem_black_24dp"
+                android:title="@string/report_error" />
+        </menu>
+    </item>
+
+</menu>

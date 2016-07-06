@@ -69,7 +69,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
 
     public interface Callback {
         void updateSalesOrderLine(SalesOrderLine orderLine, int focus);
-        void reloadShoppingSalesList();
+        void reloadShoppingSalesList(User user);
         void reloadShoppingSale();
     }
 
@@ -159,7 +159,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                     mDataset.remove(holder.getAdapterPosition());
                                     notifyDataSetChanged();
                                     ((Callback) mFragment).reloadShoppingSale();
-                                    ((Callback) mFragment).reloadShoppingSalesList();
+                                    ((Callback) mFragment).reloadShoppingSalesList(mUser);
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                 }

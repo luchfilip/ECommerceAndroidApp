@@ -142,6 +142,7 @@
     <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
     <string name="brand_detail">Marca: %1$s</string>
     <string name="my_purchases">Mis Compras</string>
+    <string name="my_orders">Mis Pedidos</string>
     <string name="my_sales_orders">Mis Cotizaciones</string>
     <string name="ranking_label">Valoración:</string>
     <string name="no_results_founds">No se encontraron resultados.</string>

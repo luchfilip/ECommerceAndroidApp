@@ -26,7 +26,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.DatePickerFragment;
@@ -48,7 +47,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
     private static final String STATE_SHOW_BUSINESS_PARTNER_INFO = "STATE_SHOW_BUSINESS_PARTNER_INFO";
 
-    private User mCurrentUser;
+    private User mUser;
     private boolean mIsInitialLoad;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
@@ -70,7 +69,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public interface Callback {
-        void reloadShoppingSalesList();
+        void reloadShoppingSalesList(User user);
     }
 
     @Override
@@ -111,10 +110,10 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
 
-                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mCurrentUser)).getShoppingSale(mCurrentBusinessPartnerId);
-                    mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mCurrentUser);
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale(mCurrentBusinessPartnerId);
+                    mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -125,7 +124,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         public void run() {
                             try {
                                 if(mShowBusinessPartnerInfo){
-                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mCurrentUser))
+                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                                             .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
                                     if(businessPartner!=null){
                                         TextView businessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
@@ -224,7 +223,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mIsInitialLoad = false;
         }else{
             reloadShoppingSale();
-            reloadShoppingSalesList();
+            reloadShoppingSalesList(mUser);
         }
         super.onStart();
     }
@@ -242,7 +241,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = new SalesOrderDB(getContext(), mCurrentUser)
+                    result = new SalesOrderDB(getContext(), mUser)
                             .createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId, validTo);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -318,21 +317,21 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public void updateSalesOrderLine(SalesOrderLine orderLine, int focus) {
         DialogUpdateSalesOrderLine dialogUpdateSalesOrderLine =
-                DialogUpdateSalesOrderLine.newInstance(orderLine, mCurrentUser, focus);
+                DialogUpdateSalesOrderLine.newInstance(orderLine, mUser, focus);
         dialogUpdateSalesOrderLine.setTargetFragment(this, 0);
         dialogUpdateSalesOrderLine.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateSalesOrderLine.class.getSimpleName());
     }
 
     @Override
-    public void reloadShoppingSalesList() {
+    public void reloadShoppingSalesList(User user) {
         //manda a refrescar la lista de la izquierda cuando se esta en pantalla dividida
-        ((Callback) getActivity()).reloadShoppingSalesList();
+        ((Callback) getActivity()).reloadShoppingSalesList(user);
     }
 
     @Override
     public void reloadShoppingSale(){
-        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mCurrentUser))
+        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mUser))
                 .getShoppingSale(mCurrentBusinessPartnerId);
         mShoppingSaleAdapter.setData(mSalesOrderLines);
 

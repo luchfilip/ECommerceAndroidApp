@@ -36,7 +36,7 @@ public class DialogSortProductListOptions extends DialogFragment {
     }
 
     public interface Callback {
-        void sortProductsList(int sortOption);
+        void sortProductsList(int sortOption, User user);
     }
 
     @Override
@@ -86,22 +86,22 @@ public class DialogSortProductListOptions extends DialogFragment {
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         switch (checkedId){
                             case R.id.sort_by_product_name_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC, mUser);
                                 break;
                             case R.id.sort_by_product_name_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC, mUser);
                                 break;
                             case R.id.sort_by_product_internal_code_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC, mUser);
                                 break;
                             case R.id.sort_by_product_internal_code_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC, mUser);
                                 break;
                             case R.id.sort_by_product_availability_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_ASC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_ASC, mUser);
                                 break;
                             case R.id.sort_by_product_availability_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_DESC);
+                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_DESC, mUser);
                                 break;
                         }
                         dismiss();

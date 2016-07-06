@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSalesListAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
@@ -35,7 +36,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
-        void onItemLongSelected(SalesOrder salesOrder);
+        void onItemLongSelected(SalesOrder salesOrder, User user);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -49,6 +50,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
         final View view = inflater.inflate(R.layout.fragment_shopping_sales_list, container, false);
         mIsInitialLoad = true;
 
+        final User user = Utils.getCurrentUser(getContext());
         new Thread() {
             @Override
             public void run() {
@@ -64,7 +66,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                             mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
-                    mSalesOrderDB = new SalesOrderDB(getContext(), Utils.getCurrentUser(getContext()));
+                    mSalesOrderDB = new SalesOrderDB(getContext(), user);
                     mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getActiveShoppingSalesOrders());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -94,7 +96,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                                         if (salesOrder != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(salesOrder);
+                                            ((Callback) getActivity()).onItemLongSelected(salesOrder, user);
                                         }
                                         return true;
                                     }
@@ -146,7 +148,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     }
 
     @Override
-    public void reloadShoppingSalesList() {
+    public void reloadShoppingSalesList(User user) {
         mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
     }
 
