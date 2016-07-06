@@ -95,6 +95,16 @@ public class ProductsListActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                 .setText(getString(R.string.welcome_user, mUser.getUserName()));
 
+
+        //por cuestiones esteticas se carga el spinner de una vez aqui
+        final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
+        if(filterByOptionsSpinner!=null && adapter!=null) {
+            adapter.setDropDownViewResource(R.layout.search_by_option_item);
+            filterByOptionsSpinner.setAdapter(adapter);
+        }
+
         new Thread() {
             @Override
             public void run() {
@@ -256,18 +266,15 @@ public class ProductsListActivity extends AppCompatActivity
                             }
 
                             if(findViewById(R.id.filter_bar_linear_layout)!=null){
+                                final ImageView filterImageView = (ImageView) findViewById(R.id.filter_imageView);
+
                                 final TextView productsListSize = (TextView) findViewById(R.id.products_list_size);
                                 if(productsListSize!=null){
                                     productsListSize.setText(getString(R.string.products_list_size_details,
                                             String.valueOf(mRecyclerView.getAdapter().getItemCount())));
                                 }
 
-                                final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
-                                final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                                        ProductsListActivity.this, R.array.filter_by_options, R.layout.search_by_option_prompt_item);
                                 if(filterByOptionsSpinner!=null && adapter!=null){
-                                    adapter.setDropDownViewResource(R.layout.search_by_option_item);
-                                    filterByOptionsSpinner.setAdapter(adapter);
                                     filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -302,7 +309,7 @@ public class ProductsListActivity extends AppCompatActivity
                                 }
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
-                                if(filterProduct!=null) {
+                                if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
                                     filterProduct.setText(mCurrentFilterText);
                                     filterProduct.addTextChangedListener(new TextWatcher() {
                                         @Override
@@ -310,12 +317,22 @@ public class ProductsListActivity extends AppCompatActivity
 
                                         @Override
                                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                            if(s.length()==1){
+                                                filterImageView.setImageResource(R.drawable.ic_close_black_24dp);
+                                                filterImageView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        filterProduct.setText(null);
+                                                    }
+                                                });
+                                            }else if (s.length()==0){
+                                                filterImageView.setImageResource(R.drawable.ic_filter_list_black_24dp);
+                                                filterImageView.setOnClickListener(null);
+                                            }
                                             mCurrentFilterText = s.toString();
                                             ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, mCurrentFilterOption);
-                                            if(productsListSize!=null){
-                                                productsListSize.setText(getString(R.string.products_list_size_details,
+                                            productsListSize.setText(getString(R.string.products_list_size_details,
                                                         String.valueOf(mRecyclerView.getAdapter().getItemCount())));
-                                            }
                                         }
 
                                         @Override
