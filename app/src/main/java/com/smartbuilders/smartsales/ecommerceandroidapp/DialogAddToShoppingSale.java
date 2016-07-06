@@ -134,7 +134,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
                         String result = (new SalesOrderLineDB(getContext(), mUser))
                                 .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice,
-                                        productTaxPercentage, sharedPref.getInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, 0));
+                                        productTaxPercentage, sharedPref.getInt(BusinessPartner.CURRENT_BP_ID_SHARED_PREFS_KEY, 0));
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_LONG).show();
@@ -178,12 +178,12 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     public void initViews(){
-        if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+        if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
             businessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
-        }else if(mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+        } else if (mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
             BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                    .getActiveBusinessPartnerById(sharedPref.getInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, 0));
-            if(businessPartner!=null){
+                    .getActiveBusinessPartnerById(sharedPref.getInt(BusinessPartner.CURRENT_BP_ID_SHARED_PREFS_KEY, 0));
+            if (businessPartner!=null) {
                 businessPartners = new ArrayList<>();
                 businessPartners.add(businessPartner);
             }
@@ -193,7 +193,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
             int selectedIndex = 0;
             List<String> spinnerArray =  new ArrayList<>();
             for (BusinessPartner businessPartner : businessPartners) {
-                if(businessPartner.getId() == sharedPref.getInt("current_business_partner_id", 0)){
+                if(businessPartner.getId() == sharedPref.getInt(BusinessPartner.CURRENT_BP_ID_SHARED_PREFS_KEY, 0)){
                     selectedIndex = index;
                 }
                 spinnerArray.add(businessPartner.getCommercialName() + " - " +
@@ -211,7 +211,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, businessPartners.get(position).getId());
+                    editor.putInt(BusinessPartner.CURRENT_BP_ID_SHARED_PREFS_KEY, businessPartners.get(position).getId());
                     editor.apply();
                 }
 
@@ -222,9 +222,11 @@ public class DialogAddToShoppingSale extends DialogFragment {
             buttonsContainer.setVisibility(View.VISIBLE);
             registerBusinessPartnerButton.setVisibility(View.GONE);
         } else {
-            businessPartnersSpinner.setVisibility(View.GONE);
+            if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                businessPartnersSpinner.setVisibility(View.GONE);
+                registerBusinessPartnerButton.setVisibility(View.VISIBLE);
+            }
             buttonsContainer.setVisibility(View.GONE);
-            registerBusinessPartnerButton.setVisibility(View.VISIBLE);
         }
     }
 

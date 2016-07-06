@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 public class BusinessPartner extends Model implements Parcelable {
 
-    public static final String CURRENT_BP_SHARED_PREFERENCES_KEY = "current_business_partner_id";
+    public static final String CURRENT_BP_ID_SHARED_PREFS_KEY = "current_business_partner_id";
 
     private String name;
     private String commercialName;

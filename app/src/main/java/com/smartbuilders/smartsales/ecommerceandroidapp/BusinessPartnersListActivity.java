@@ -258,7 +258,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 SharedPreferences sharedPref = BusinessPartnersListActivity.this.getPreferences(Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putInt(BusinessPartner.CURRENT_BP_SHARED_PREFERENCES_KEY, businessPartnerId);
+                                editor.putInt(BusinessPartner.CURRENT_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
                                 editor.apply();
                                 Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
                                         businessPartnerCommercialName), Toast.LENGTH_LONG).show();
