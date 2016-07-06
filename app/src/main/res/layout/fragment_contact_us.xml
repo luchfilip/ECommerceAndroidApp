@@ -78,7 +78,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/master_phone"
                         android:autoLink="phone"
-                        android:textColorLink="#ff0099cc"
+                        android:textColorLink="@color/phoneNumberLinkColor"
                         android:textColor="@color/black" />
                 </TableRow>
 
@@ -104,7 +104,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/fax_number"
                         android:autoLink="phone"
-                        android:textColorLink="#ff0099cc"
+                        android:textColorLink="@color/phoneNumberLinkColor"
                         android:textColor="@color/black" />
                 </TableRow>
 
@@ -127,9 +127,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/email_address"
                         android:autoLink="email"
-                        android:textColorLink="@color/black"
+                        android:textColorLink="@color/emailLinkColor"
                         android:layout_marginTop="2dp"
-                        android:textColor="@color/black"
                         android:layout_gravity="center_vertical" />
                 </TableRow>
             </TableLayout>

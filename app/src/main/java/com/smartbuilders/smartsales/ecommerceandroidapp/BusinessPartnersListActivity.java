@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.BusinessPartnersListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -36,6 +37,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
 
     private UserBusinessPartnerDB mUserBusinessPartnerDB;
+    private BusinessPartnerDB mBusinessPartnerDB;
     private boolean mTwoPane;
     private ListView mListView;
 
@@ -90,7 +92,14 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         }
 
         mTwoPane = findViewById(R.id.business_partner_detail_container)!=null;
-        mUserBusinessPartnerDB = new UserBusinessPartnerDB(this, user);
+        if(user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                mUserBusinessPartnerDB = new UserBusinessPartnerDB(this, user);
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                mBusinessPartnerDB = new BusinessPartnerDB(this, user);
+            }
+        }
+
         mListView = (ListView) findViewById(R.id.business_partners_list);
     }
 
@@ -114,13 +123,23 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void reloadBusinessPartnersList() {
-        if (mListView!=null && mUserBusinessPartnerDB!=null) {
-            if (mListView.getAdapter()!=null) {
-                ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                        mUserBusinessPartnerDB.getActiveUserBusinessPartners());
-            } else {
-                mListView.setAdapter(new BusinessPartnersListAdapter(this,
-                        mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+        if (mListView!=null) {
+            if (mUserBusinessPartnerDB != null) {
+                if (mListView.getAdapter() != null) {
+                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
+                            mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                } else {
+                    mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                            mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                }
+            }else if(mBusinessPartnerDB != null){
+                if (mListView.getAdapter() != null) {
+                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
+                            mBusinessPartnerDB.getActiveBusinessPartners());
+                } else {
+                    mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                            mBusinessPartnerDB.getActiveBusinessPartners()));
+                }
             }
             if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
@@ -194,37 +213,51 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(final int businessPartnerId, String businessPartnerCommercialName) {
-        new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.delete_business_partner, businessPartnerCommercialName))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
-                        if (result==null) {
-                            if (mListView != null) {
-                                if (mListView.getAdapter()!=null) {
-                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
-                                } else {
-                                    mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
-                                }
-                                if (mTwoPane) {
-                                    if(mListView.getAdapter().getCount()>0) {
-                                        mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                                    } else {
-                                        getSupportFragmentManager().beginTransaction()
-                                                .replace(R.id.business_partner_detail_container,
-                                                        new RegisterBusinessPartnerFragment(), REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
-                                                .commit();
+    public void onItemLongSelected(final int businessPartnerId, String businessPartnerCommercialName, User user) {
+        if(user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.delete_business_partner, businessPartnerCommercialName))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
+                                if (result==null) {
+                                    if (mListView != null) {
+                                        if (mListView.getAdapter()!=null) {
+                                            ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                                        } else {
+                                            mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners()));
+                                        }
+                                        if (mTwoPane) {
+                                            if(mListView.getAdapter().getCount()>0) {
+                                                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                                            } else {
+                                                getSupportFragmentManager().beginTransaction()
+                                                        .replace(R.id.business_partner_detail_container,
+                                                                new RegisterBusinessPartnerFragment(), REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
+                                                        .commit();
+                                            }
+                                        }
                                     }
+                                } else {
+                                    Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_LONG).show();
                                 }
                             }
-                        } else {
-                            Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.init_session_business_partner, businessPartnerCommercialName))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        }
     }
 
     @Override

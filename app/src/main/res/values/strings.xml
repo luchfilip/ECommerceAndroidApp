@@ -55,13 +55,13 @@
     <string name="company_name">Febeca C.A.</string>
     <string name="brands">Marcas</string>
 
-    <string name="new_user_authorized">New User Authorized</string>
-    <string name="error_validating_user_return_null">Error validating user, query return null.</string>
+    <string name="new_user_authorized">Nuevo usuario autorizado</string>
+    <string name="error_validating_user_return_null">Error validando usuario, consulta devolvió null.</string>
     <string name="error_validating_user_response_move_to_next_false">Error validating user, response.moveToNext() is false in userSignIn.</string>
-    <string name="user_authorized">User Authorized</string>
-    <string name="user_not_authorized">User Not Authorized</string>
-    <string name="user_wrong_password">User Wrong Password</string>
-    <string name="user_not_exist_in_server">User Not Exist in Server</string>
+    <string name="user_authorized">Usuario Autorizado</string>
+    <string name="user_not_authorized">Usuario NO Autorizado</string>
+    <string name="user_wrong_password">Contraseña incorrecta</string>
+    <string name="user_not_exist_in_server">Usuario no existe en el servidor</string>
     <string name="user_response_move_to_next_false">response.moveToNext() is false in userSignIn</string>
     <string name="user_session_token_null">Session token is null or 0-length</string>
     <string name="general_authorization_error">General Authorization Error</string>
@@ -97,12 +97,12 @@
 
     <!-- Strings related to login -->
     <string name="prompt_rif">R.I.F.</string>
-    <string name="prompt_client_code">Client code</string>
+    <string name="prompt_client_code">Código del Cliente</string>
     <string name="action_sign_in">Iniciar Sesión</string>
-    <string name="error_invalid_rif">This R.I.F. is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_client_code">This client code is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_rif">Este R.I.F. es inválido</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_client_code">El código de cliente es incorrecto</string>
+    <string name="error_field_required">Este campo es requerido</string>
 
     <string name="title_activity_product_list">Productos</string>
     <string name="title_activity_shopping_cart">Pedido</string>
@@ -152,6 +152,7 @@
     <string name="clear_wish_list">Limpiar lista de favoritos</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsqueda?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
+    <string name="init_session_business_partner">¿Desea iniciar sesión con el cliente %1$s?</string>
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
     <string name="price_label">Precio:</string>
@@ -216,6 +217,7 @@
     <string name="action_settings">Settings</string>
     <string name="business_partner_name_label">Razón Social:</string>
     <string name="business_partner_name">Razón Social</string>
+    <string name="business_partner_internal_code_label">Código del Cliente:</string>
     <string name="business_partner_commercial_name_label">Nombre Comercial:</string>
     <string name="business_partner_commercial_name">Nombre Comercial</string>
     <string name="business_partner_detail">Cliente: %1$s</string>
@@ -303,4 +305,6 @@
     <string name="search_pattern_detail">Búsqueda: %1$s</string>
     <string name="sort_by">Ordenar por...</string>
     <string name="business_partner_name_detail">Cliente: %1$s</string>
+    <string name="business_partner_internal_code_detail">Código Cliente: %1$s</string>
+    <string name="business_partner">Cliente</string>
 </resources>

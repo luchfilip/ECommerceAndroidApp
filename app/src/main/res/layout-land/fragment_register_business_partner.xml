@@ -39,6 +39,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1">
 
             <TableLayout
@@ -46,6 +47,34 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape"
                 android:padding="10dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/business_partner_internal_code_tableRow"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_partner_internal_code_label"
+                        android:id="@+id/business_partner_internal_code_textView"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/business_partner_internal_code_editText"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:layout_weight="1"
+                        android:visibility="gone"/>
+                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -179,6 +208,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
+                        android:autoLink="email"
+                        android:textColorLink="@color/emailLinkColor"
                         android:ems="10"
                         android:id="@+id/business_partner_email_address_editText"
                         android:paddingEnd="5dp"
@@ -203,6 +234,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
+                        android:autoLink="phone"
+                        android:textColorLink="@color/phoneNumberLinkColor"
                         android:ems="10"
                         android:id="@+id/business_partner_phone_number_editText"
                         android:paddingStart="5dp"
@@ -218,7 +251,9 @@
             android:text="@string/register"
             android:id="@+id/save_button"
             android:layout_gravity="right"
-            android:layout_margin="5dp" />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
 </LinearLayout>

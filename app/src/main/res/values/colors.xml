@@ -34,4 +34,6 @@
     <color name="button_text_color">#333333</color>
     <color name="black">#222222</color>
     <color name="products_list_size_color">#1556bf</color>
+    <color name="phoneNumberLinkColor">#ff0099cc</color>
+    <color name="emailLinkColor">#222222</color>
 </resources>

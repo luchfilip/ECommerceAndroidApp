@@ -18,6 +18,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 
 import java.io.ByteArrayOutputStream;
@@ -33,12 +34,12 @@ import java.util.ArrayList;
 public class RecommendedProductsPDFCreator {
     private static final String TAG = RecommendedProductsPDFCreator.class.getSimpleName();
 
-    public File generatePDF(ArrayList<Product> products, String fileName, Context ctx){
+    public File generatePDF(ArrayList<Product> products, String fileName, Context ctx) throws Exception {
         Log.d(TAG, "generatePDF(ArrayList<Product> products, String fileName, Context ctx)");
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, "External Storage not available or you don't have permission to write", Toast.LENGTH_LONG).show();
+            throw new Exception(ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the PDF file in the external storage
             pdfFile = new File(ctx.getCacheDir() + File.separator + fileName);

@@ -30,7 +30,7 @@ public class BusinessPartnerDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
                     "select BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, INTERNAL_CODE " +
                     " from BUSINESS_PARTNER " +
                     " where USER_ID = ? AND IS_ACTIVE = ? " +
                     " order by BUSINESS_PARTNER_ID desc",
@@ -46,6 +46,7 @@ public class BusinessPartnerDB {
                     businessPartner.setContactPerson(c.getString(5));
                     businessPartner.setEmailAddress(c.getString(6));
                     businessPartner.setPhoneNumber(c.getString(7));
+                    businessPartner.setInternalCode(c.getString(8));
                     activeBusinessPartners.add(businessPartner);
                 }
             }
@@ -70,7 +71,7 @@ public class BusinessPartnerDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
                     "select NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, INTERNAL_CODE " +
                     " from BUSINESS_PARTNER " +
                     " where BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), "Y"},
@@ -85,6 +86,7 @@ public class BusinessPartnerDB {
                 businessPartner.setContactPerson(c.getString(4));
                 businessPartner.setEmailAddress(c.getString(5));
                 businessPartner.setPhoneNumber(c.getString(6));
+                businessPartner.setInternalCode(c.getString(7));
                 return businessPartner;
             }
         } catch (Exception e) {

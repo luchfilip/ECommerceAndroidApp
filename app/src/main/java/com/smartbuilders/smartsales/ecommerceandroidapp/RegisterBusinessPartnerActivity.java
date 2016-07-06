@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -25,11 +27,18 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_business_partner);
 
+        User user = Utils.getCurrentUser(this);
+
         if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_BUSINESS_PARTNER_ID)) {
                 if (findViewById(R.id.title_textView)!=null) {
-                    ((TextView) findViewById(R.id.title_textView))
-                            .setText(getString(R.string.update_business_partner));
+                    if(user!=null && user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                        ((TextView) findViewById(R.id.title_textView))
+                                .setText(getString(R.string.update_business_partner));
+                    }else if(user!=null && user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                        ((TextView) findViewById(R.id.title_textView))
+                                .setText(getString(R.string.business_partner));
+                    }
                     ((ImageView) findViewById(R.id.toolbar_imageView))
                             .setImageResource(R.drawable.ic_person_black_24dp);
                 }

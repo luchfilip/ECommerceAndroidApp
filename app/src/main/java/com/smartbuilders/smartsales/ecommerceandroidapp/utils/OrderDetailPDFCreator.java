@@ -44,11 +44,11 @@ import java.util.ArrayList;
  */
 public class OrderDetailPDFCreator {
 
-    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx){
+    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx) throws Exception {
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(ctx, ctx.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            throw new Exception(ctx.getString(R.string.external_storage_unavailable));
         } else {
             //path for the PDF file in the external storage
             pdfFile = new File(ctx.getCacheDir() + File.separator + fileName);

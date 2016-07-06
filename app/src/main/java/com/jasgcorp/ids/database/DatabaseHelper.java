@@ -246,6 +246,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (BUSINESS_PARTNER_ID))";
 
+    public static final String CREATE_USER_BUSINESS_PARTNER =
+            "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +
+                    "USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
+                    " NAME TEXT DEFAULT NULL, " +
+                    " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
+                    " TAX_ID VARCHAR(255) DEFAULT NULL, " +
+                    " ADDRESS TEXT DEFAULT NULL, " +
+                    " CONTACT_PERSON VARCHAR(255) DEFAULT NULL, " +
+                    " EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
+                    " PHONE_NUMBER VARCHAR(255) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " UPDATE_TIME DATETIME DEFAULT NULL, " +
+                    " APP_VERSION VARCHAR(128) NOT NULL, " +
+                    " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
+
     public static final String CREATE_USER_APP_PARAMETER =
             "CREATE TABLE IF NOT EXISTS USER_APP_PARAMETER (" +
                     "USER_ID INTEGER NOT NULL, " +
@@ -372,26 +392,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PRIORITY INTEGER NOT NULL DEFAULT 0, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (BUSINESS_PARTNER_ID, PRODUCT_ID))";
-
-    public static final String CREATE_USER_BUSINESS_PARTNER =
-            "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +
-                    "USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
-                    " USER_ID INTEGER NOT NULL, " +
-                    " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
-                    " NAME TEXT DEFAULT NULL, " +
-                    " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
-                    " TAX_ID VARCHAR(255) DEFAULT NULL, " +
-                    " ADDRESS TEXT DEFAULT NULL, " +
-                    " CONTACT_PERSON VARCHAR(255) DEFAULT NULL, " +
-                    " EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
-                    " PHONE_NUMBER VARCHAR(255) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
-                    " UPDATE_TIME DATETIME DEFAULT NULL, " +
-                    " APP_VERSION VARCHAR(128) NOT NULL, " +
-                    " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
-                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
 
     public static final String CREATE_USER_COMPANY =
             "CREATE TABLE IF NOT EXISTS USER_COMPANY (" +

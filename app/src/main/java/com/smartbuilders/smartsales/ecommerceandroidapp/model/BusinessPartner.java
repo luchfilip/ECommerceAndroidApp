@@ -10,6 +10,7 @@ public class BusinessPartner extends Model implements Parcelable {
 
     private String name;
     private String commercialName;
+    private String internalCode;
     private String taxId;
     private String address;
     private String contactPerson;
@@ -24,6 +25,7 @@ public class BusinessPartner extends Model implements Parcelable {
         super(in);
         name = in.readString();
         commercialName = in.readString();
+        internalCode = in.readString();
         taxId = in.readString();
         address = in.readString();
         contactPerson = in.readString();
@@ -36,6 +38,7 @@ public class BusinessPartner extends Model implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(name);
         dest.writeString(commercialName);
+        dest.writeString(internalCode);
         dest.writeString(taxId);
         dest.writeString(address);
         dest.writeString(contactPerson);
@@ -74,6 +77,14 @@ public class BusinessPartner extends Model implements Parcelable {
 
     public void setCommercialName(String commercialName) {
         this.commercialName = commercialName;
+    }
+
+    public String getInternalCode() {
+        return internalCode;
+    }
+
+    public void setInternalCode(String internalCode) {
+        this.internalCode = internalCode;
     }
 
     public String getTaxId() {

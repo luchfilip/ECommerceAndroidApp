@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,14 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
+        if(!TextUtils.isEmpty(mDataset.get(position).getInternalCode())){
+            viewHolder.businessPartnerInternalCode.setText(mContext.
+                    getString(R.string.business_partner_internal_code_detail, mDataset.get(position).getInternalCode()));
+            viewHolder.businessPartnerInternalCode.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.businessPartnerInternalCode.setVisibility(View.GONE);
+        }
+
         viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getCommercialName());
         viewHolder.businessPartnerTaxId.setText(mContext.getString(R.string.tax_id, mDataset.get(position).getTaxId()));
 
@@ -80,10 +89,12 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView businessPartnerCommercialName;
         public TextView businessPartnerTaxId;
+        public TextView businessPartnerInternalCode;
 
         public ViewHolder(View v) {
             businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             businessPartnerTaxId = (TextView) v.findViewById(R.id.business_partner_tax_id_textView);
+            businessPartnerInternalCode = (TextView) v.findViewById(R.id.business_partner_internal_code_textView);
         }
     }
 
