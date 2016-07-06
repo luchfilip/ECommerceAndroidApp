@@ -77,7 +77,7 @@ public class BusinessPartnersListFragment extends Fragment {
                             mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
                                     mBusinessPartnerDB.getActiveBusinessPartners(),
-                                    Utils.getAppCurrentBusinessPartnerId(getActivity(), user));
+                                    Utils.getAppCurrentBusinessPartnerId(getContext(), user));
                         }
                     }
                 } catch (Exception e) {

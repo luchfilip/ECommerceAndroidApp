@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -262,10 +263,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                         .setMessage(getString(R.string.init_session_business_partner, businessPartnerCommercialName))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferences sharedPref = BusinessPartnersListActivity.this.getPreferences(Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
-                                editor.apply();
+                                Utils.setAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, businessPartnerId);
                                 if (mListView.getAdapter() instanceof BusinessPartnersListAdapter) {
                                     ((BusinessPartnersListAdapter) mListView.getAdapter()).setAppCurrentBusinessPartnerId(businessPartnerId);
                                     ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();

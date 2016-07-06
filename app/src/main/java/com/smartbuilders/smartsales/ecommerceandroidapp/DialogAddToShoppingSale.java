@@ -1,8 +1,6 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +24,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartner
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
     private Product mProduct;
     private User mUser;
-    private SharedPreferences sharedPref;
     private Spinner businessPartnersSpinner;
     private View buttonsContainer;
     private View registerBusinessPartnerButton;
@@ -82,7 +80,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
 
-        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
         buttonsContainer = view.findViewById(R.id.buttons_container);
         registerBusinessPartnerButton = view.findViewById(R.id.register_business_partner_button);
@@ -102,12 +99,12 @@ public class DialogAddToShoppingSale extends DialogFragment {
         }
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismiss();
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
                 }
+            }
         );
 
         view.findViewById(R.id.add_to_shopping_sale_button).setOnClickListener(
@@ -138,7 +135,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
                         String result = (new SalesOrderLineDB(getContext(), mUser))
                                 .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice,
-                                        productTaxPercentage, sharedPref.getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0));
+                                        productTaxPercentage, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_LONG).show();
@@ -182,22 +179,31 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     public void initViews(){
+        int appCurrentBusinessPartnerId = 0;
+        try{
+            appCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
             businessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
         } else if (mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
             BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                    .getActiveBusinessPartnerById(sharedPref.getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0));
+                    .getActiveBusinessPartnerById(appCurrentBusinessPartnerId);
             if (businessPartner!=null) {
                 businessPartners = new ArrayList<>();
                 businessPartners.add(businessPartner);
             }
         }
+
         if (businessPartners!=null && !businessPartners.isEmpty()) {
             int index = 0;
             int selectedIndex = 0;
             List<String> spinnerArray =  new ArrayList<>();
+
             for (BusinessPartner businessPartner : businessPartners) {
-                if(businessPartner.getId() == sharedPref.getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0)){
+                if(businessPartner.getId() == appCurrentBusinessPartnerId){
                     selectedIndex = index;
                 }
                 spinnerArray.add(businessPartner.getCommercialName() + " - " +
@@ -214,9 +220,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
             businessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartners.get(position).getId());
-                    editor.apply();
+                    Utils.setAppCurrentBusinessPartnerId(getContext(), businessPartners.get(position).getId());
                 }
 
                 @Override
@@ -226,6 +230,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
             buttonsContainer.setVisibility(View.VISIBLE);
             registerBusinessPartnerButton.setVisibility(View.GONE);
         } else {
+            if(appCurrentBusinessPartnerId!=0){
+                Utils.setAppCurrentBusinessPartnerId(getContext(), 0);
+            }
+
             if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                 businessPartnersSpinner.setVisibility(View.GONE);
                 registerBusinessPartnerButton.setVisibility(View.VISIBLE);

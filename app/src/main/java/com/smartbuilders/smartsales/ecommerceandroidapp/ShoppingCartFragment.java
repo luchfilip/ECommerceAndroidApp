@@ -178,7 +178,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     if (mSalesOrderId > 0) {
                         result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
                     } else {
-                        result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getActivity(), mUser));
+                        result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

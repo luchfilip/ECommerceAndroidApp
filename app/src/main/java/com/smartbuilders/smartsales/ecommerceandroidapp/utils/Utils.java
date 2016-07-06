@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
@@ -959,18 +961,30 @@ public class Utils {
     }
 
     /**
+     *
+     * @param context
+     * @param businessPartnerId
+     */
+    public static void setAppCurrentBusinessPartnerId(Context context, int businessPartnerId){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
+        editor.apply();
+    }
+
+    /**
      * Devuelve el actual businessPartnerId que se está usando en la aplicacion
-     * @param activity
+     * @param context
      * @param user
-     * @return
+     * @return businessPartnerId
      * @throws Exception
      */
-    public static int getAppCurrentBusinessPartnerId(Activity activity, User user) throws Exception {
+    public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
         if(user!=null){
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 return user.getBusinessPartnerId();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                return activity.getPreferences(Context.MODE_PRIVATE)
+
+                return PreferenceManager.getDefaultSharedPreferences(context)
                         .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
             }
             throw new Exception("UserProfileId no identificado en getCurrentBusinessPartnerId(...)");

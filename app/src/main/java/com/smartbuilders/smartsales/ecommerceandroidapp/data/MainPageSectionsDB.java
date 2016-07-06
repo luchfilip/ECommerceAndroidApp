@@ -18,12 +18,10 @@ import java.util.ArrayList;
  */
 public class MainPageSectionsDB {
 
-    private Activity mActivity;
     private Context mContext;
     private User mUser;
 
-    public MainPageSectionsDB(Activity activity, Context context, User user){
-        this.mActivity = activity;
+    public MainPageSectionsDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
     }
@@ -55,7 +53,7 @@ public class MainPageSectionsDB {
 
         try {
             ArrayList<Product> products = (new ProductRecentlySeenDB(mContext, mUser))
-                    .getProductsRecentlySeenByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(mActivity, mUser));
+                    .getProductsRecentlySeenByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
             if (products!=null && products.size()>12) {
                 MainPageProductSection mainPageProductSection = new MainPageProductSection();
                 mainPageProductSection.setName(mContext.getString(R.string.products_recently_seen));

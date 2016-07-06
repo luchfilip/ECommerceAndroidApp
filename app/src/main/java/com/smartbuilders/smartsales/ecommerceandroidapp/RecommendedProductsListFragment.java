@@ -71,7 +71,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     User user = Utils.getCurrentUser(getContext());
                     if (getActivity()!=null && user!=null) {
                         recommendedProducts.addAll((new RecommendedProductDB(getActivity(), user))
-                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getActivity(), user)));
+                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), user)));
                     }
                     if (getContext()!=null) {
                         mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
