@@ -103,4 +103,29 @@ public class BusinessPartnerDB {
         return null;
     }
 
+    public int getMaxActiveBusinessPartnerId(){
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .build(), null,
+                    "select MAX(BUSINESS_PARTNER_ID) from BUSINESS_PARTNER where USER_ID = ? AND IS_ACTIVE = ? ",
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
 }

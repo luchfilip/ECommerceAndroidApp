@@ -44,6 +44,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.RecommendedProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.SettingsActivity;
@@ -61,6 +62,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -983,7 +985,11 @@ public class Utils {
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 return user.getBusinessPartnerId();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-
+                if(!PreferenceManager.getDefaultSharedPreferences(context)
+                        .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)){
+                    setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
+                            .getMaxActiveBusinessPartnerId());
+                }
                 return PreferenceManager.getDefaultSharedPreferences(context)
                         .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
             }
