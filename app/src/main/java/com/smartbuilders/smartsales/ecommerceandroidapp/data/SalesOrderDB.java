@@ -260,10 +260,10 @@ public class SalesOrderDB {
                 salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-            BusinessPartnerDB BusinessPartnerDB = new BusinessPartnerDB(mContext, mUser);
+            BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
             for(SalesOrder salesOrder : activeSalesOrders){
                 salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId()));
-                salesOrder.setBusinessPartner(BusinessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+                salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }
         return activeSalesOrders;

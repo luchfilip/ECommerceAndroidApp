@@ -114,7 +114,7 @@ public class UserBusinessPartnerDB {
     public String deactivateUserBusinessPartner(int businessPartnerId){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
                     new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
