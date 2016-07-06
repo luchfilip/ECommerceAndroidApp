@@ -21,13 +21,13 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 /**
  * Created by stein on 5/1/2016.
  */
-public class DialogRegisterBusinessPartner extends DialogFragment {
+public class DialogRegisterUserBusinessPartner extends DialogFragment {
 
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private User mCurrentUser;
 
-    public DialogRegisterBusinessPartner() {
+    public DialogRegisterUserBusinessPartner() {
         // Empty constructor required for DialogFragment
     }
 
@@ -35,11 +35,11 @@ public class DialogRegisterBusinessPartner extends DialogFragment {
         void reloadBusinessPartnersList();
     }
 
-    public static DialogRegisterBusinessPartner newInstance(User user){
-        DialogRegisterBusinessPartner dialogRegisterBusinessPartner = new DialogRegisterBusinessPartner();
-        dialogRegisterBusinessPartner.setCancelable(false);
-        dialogRegisterBusinessPartner.mCurrentUser = user;
-        return dialogRegisterBusinessPartner;
+    public static DialogRegisterUserBusinessPartner newInstance(User user){
+        DialogRegisterUserBusinessPartner dialogRegisterUserBusinessPartner = new DialogRegisterUserBusinessPartner();
+        dialogRegisterUserBusinessPartner.setCancelable(false);
+        dialogRegisterUserBusinessPartner.mCurrentUser = user;
+        return dialogRegisterUserBusinessPartner;
     }
 
     @Override

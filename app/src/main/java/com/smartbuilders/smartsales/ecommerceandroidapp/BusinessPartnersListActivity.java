@@ -35,7 +35,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 public class BusinessPartnersListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BusinessPartnersListFragment.Callback, RegisterBusinessPartnerFragment.Callback,
-        DialogRegisterBusinessPartner.Callback {
+        DialogRegisterUserBusinessPartner.Callback {
 
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
 
@@ -151,10 +151,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     private void showDialogCreateBusinessPartner(User user) {
-        DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
-                DialogRegisterBusinessPartner.newInstance(user);
-        dialogRegisterBusinessPartner.show(getSupportFragmentManager(),
-                DialogRegisterBusinessPartner.class.getSimpleName());
+        DialogRegisterUserBusinessPartner dialogRegisterUserBusinessPartner =
+                DialogRegisterUserBusinessPartner.newInstance(user);
+        dialogRegisterUserBusinessPartner.show(getSupportFragmentManager(),
+                DialogRegisterUserBusinessPartner.class.getSimpleName());
     }
 
     @Override

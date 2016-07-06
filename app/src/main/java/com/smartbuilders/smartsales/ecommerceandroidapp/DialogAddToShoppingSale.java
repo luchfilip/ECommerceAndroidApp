@@ -90,12 +90,16 @@ public class DialogAddToShoppingSale extends DialogFragment {
         //TODO: eliminar este codigo duro, leerlo de la tabla ProductTax
         ((EditText) view.findViewById(R.id.product_tax_editText)).setText("12");
 
-        registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogCreateBusinessPartner();
-            }
-        });
+        if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDialogCreateBusinessPartner();
+                }
+            });
+        }else if(mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            registerBusinessPartnerButton.setVisibility(View.GONE);
+        }
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -171,10 +175,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
     private void showDialogCreateBusinessPartner() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        DialogRegisterBusinessPartner dialogRegisterBusinessPartner =
-                DialogRegisterBusinessPartner.newInstance(mUser);
-        dialogRegisterBusinessPartner.setTargetFragment(this, 0);
-        dialogRegisterBusinessPartner.show(fm, DialogRegisterBusinessPartner.class.getSimpleName());
+        DialogRegisterUserBusinessPartner dialogRegisterUserBusinessPartner =
+                DialogRegisterUserBusinessPartner.newInstance(mUser);
+        dialogRegisterUserBusinessPartner.setTargetFragment(this, 0);
+        dialogRegisterUserBusinessPartner.show(fm, DialogRegisterUserBusinessPartner.class.getSimpleName());
     }
 
     public void initViews(){
