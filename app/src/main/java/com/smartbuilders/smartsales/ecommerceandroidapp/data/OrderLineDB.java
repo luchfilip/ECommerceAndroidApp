@@ -224,7 +224,7 @@ public class OrderLineDB {
                     "INSERT INTO ECOMMERCE_ORDERLINE (ECOMMERCE_ORDERLINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
                         " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
                         " ECOMMERCE_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(ol.getId()), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(ol.getProductId()), String.valueOf(ol.getQuantityOrdered()),
