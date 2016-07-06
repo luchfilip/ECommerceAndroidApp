@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.jasgcorp.ids.model.User;

@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -65,8 +64,12 @@ public class OrderDB {
                 }catch(ParseException ex){
                     try {
                         order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
-                    } catch (ParseException e) { }
-                }catch(Exception ex){ }
+                    } catch (ParseException e) {
+                        //empty
+                    }
+                }catch(Exception ex){
+                    //empty
+                }
                 order.setLinesNumber(c.getInt(3));
                 order.setSubTotalAmount(c.getDouble(4));
                 order.setTaxAmount(c.getDouble(5));
@@ -113,7 +116,7 @@ public class OrderDB {
                                 null,
                                 "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_ORDER_ID, USER_ID, ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
                                         " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL) " +
-                                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
                                         String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOCTYPE, Utils.getAppVersionName(mContext),
@@ -188,8 +191,12 @@ public class OrderDB {
                     }catch(ParseException ex){
                         try {
                             order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
-                        } catch (ParseException e) { }
-                    }catch(Exception ex){ }
+                        } catch (ParseException e) {
+                            //empty
+                        }
+                    }catch(Exception ex){
+                        //empty
+                    }
                     order.setLinesNumber(c.getInt(6));
                     order.setSubTotalAmount(c.getDouble(7));
                     order.setTaxAmount(c.getDouble(8));
