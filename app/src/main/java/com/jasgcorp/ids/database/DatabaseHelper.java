@@ -303,6 +303,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE (" +
                     "ECOMMERCE_ORDERLINE_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
                     " QTY_REQUESTED INTEGER NOT NULL, " +

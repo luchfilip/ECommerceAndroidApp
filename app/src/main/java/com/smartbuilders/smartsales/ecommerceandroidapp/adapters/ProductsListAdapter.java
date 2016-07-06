@@ -359,9 +359,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 try{
                     switch (sortOption){
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC:
-                            return lhs.getName().compareTo(rhs.getName());
+                            return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_DESC:
-                            return rhs.getName().compareTo(lhs.getName());
+                            return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_ASC:
                             return lhs.getInternalCode().compareTo(rhs.getInternalCode());
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC:

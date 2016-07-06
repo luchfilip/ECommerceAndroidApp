@@ -70,7 +70,7 @@ public class UserBusinessPartnerDB {
             int userBusinessPartnerId = getMaxUserBusinessPartnerId() + 1;
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "INSERT INTO USER_BUSINESS_PARTNER (USER_BUSINESS_PARTNER_ID, USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
@@ -93,7 +93,7 @@ public class UserBusinessPartnerDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, TAX_ID = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
                         " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
                     " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
@@ -116,7 +116,7 @@ public class UserBusinessPartnerDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
                     new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){

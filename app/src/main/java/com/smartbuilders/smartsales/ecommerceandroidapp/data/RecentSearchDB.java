@@ -39,7 +39,7 @@ public class RecentSearchDB {
             if(!TextUtils.isEmpty(text)){
                 mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                        .build(), new ContentValues(),
+                        .build(), null,
                         "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
                                 " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                         new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
@@ -60,7 +60,7 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), new ContentValues(), "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ? AND USER_ID = ?",
+                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(recentSearchId), String.valueOf(mUser.getServerUserId())});
         } catch (Exception e){
             e.printStackTrace();
@@ -112,7 +112,7 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), new ContentValues(), "DELETE FROM RECENT_SEARCH WHERE USER_ID = ?",
+                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE USER_ID = ?",
                     new String[]{String.valueOf(mUser.getServerUserId())});
         } catch (Exception e){
             e.printStackTrace();

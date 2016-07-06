@@ -67,7 +67,7 @@ public class SalesOrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE ECOMMERCE_SALES_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
                         " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                     " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ? AND USER_ID = ?",
@@ -136,7 +136,7 @@ public class SalesOrderLineDB {
 
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "INSERT INTO ECOMMERCE_SALES_ORDERLINE (ECOMMERCE_SALES_ORDERLINE_ID, USER_ID, " +
                         " PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, " +
                         " TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
@@ -163,7 +163,7 @@ public class SalesOrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                         " WHERE ECOMMERCE_SALES_ORDERLINE_ID = ? AND USER_ID = ?",
                     new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId()),
@@ -328,7 +328,7 @@ public class SalesOrderLineDB {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE ECOMMERCE_SALES_ORDERLINE " +
                     " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ? " +
                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
@@ -351,7 +351,7 @@ public class SalesOrderLineDB {
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            new ContentValues(),
+                            null,
                             "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                             new String[]{"N", "datetime('now','localtime')",

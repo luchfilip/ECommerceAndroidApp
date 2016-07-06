@@ -26,7 +26,7 @@ public class UserCompanyDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "insert or replace into user_company (USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",

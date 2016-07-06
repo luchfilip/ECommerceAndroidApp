@@ -16,6 +16,7 @@ public class OrderLine extends Model implements Parcelable {
     private Currency currency;
     private double taxPercentage;
     private double totalLineAmount;
+    private int businessPartnerId;
 
     public OrderLine(){
 
@@ -31,6 +32,7 @@ public class OrderLine extends Model implements Parcelable {
         currency = in.readParcelable(Currency.class.getClassLoader());
         taxPercentage = in.readDouble();
         totalLineAmount = in.readDouble();
+        businessPartnerId = in.readInt();
     }
 
     @Override
@@ -44,6 +46,7 @@ public class OrderLine extends Model implements Parcelable {
         dest.writeParcelable(currency, flags);
         dest.writeDouble(taxPercentage);
         dest.writeDouble(totalLineAmount);
+        dest.writeInt(businessPartnerId);
     }
 
     @Override
@@ -125,6 +128,14 @@ public class OrderLine extends Model implements Parcelable {
 
     public void setCurrencyId(int currencyId) {
         this.currencyId = currencyId;
+    }
+
+    public int getBusinessPartnerId() {
+        return businessPartnerId;
+    }
+
+    public void setBusinessPartnerId(int businessPartnerId) {
+        this.businessPartnerId = businessPartnerId;
     }
 
     @Override

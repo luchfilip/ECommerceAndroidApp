@@ -67,11 +67,13 @@ public class OrderLineDB {
 
     public String removeProductFromWishList(int productId){
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            int rowsAffected =
+                    mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            new ContentValues(),
-                            "DELETE FROM ECOMMERCE_ORDERLINE WHERE USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
-                            new String[]{String.valueOf(mUser.getServerUserId()), String.valueOf(productId), WISHLIST_DOCTYPE});
+                            null,
+                            "DELETE FROM ECOMMERCE_ORDERLINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
+                            new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                                    String.valueOf(mUser.getServerUserId()), String.valueOf(productId), WISHLIST_DOCTYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -86,7 +88,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            new ContentValues(),
+                            null,
                             "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
                                 " UPDATE_TIME = ? WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
                             new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested), "datetime('now')",
@@ -106,7 +108,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE ECOMMERCE_ORDERLINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
                         " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                     " WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ?",
@@ -128,7 +130,7 @@ public class OrderLineDB {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "DELETE FROM ECOMMERCE_ORDERLINE WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
@@ -145,8 +147,9 @@ public class OrderLineDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(), "DELETE FROM ECOMMERCE_ORDERLINE WHERE USER_ID = ? AND DOC_TYPE = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId()), WISHLIST_DOCTYPE});
+                    null, "DELETE FROM ECOMMERCE_ORDERLINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
+                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), WISHLIST_DOCTYPE});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
@@ -218,12 +221,13 @@ public class OrderLineDB {
             ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
-                    "INSERT INTO ECOMMERCE_ORDERLINE (ECOMMERCE_ORDERLINE_ID, USER_ID, PRODUCT_ID, " +
-                        " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
+                    null,
+                    "INSERT INTO ECOMMERCE_ORDERLINE (ECOMMERCE_ORDERLINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
+                        " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
                         " ECOMMERCE_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(ol.getId()), String.valueOf(mUser.getServerUserId()),
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(ol.getProductId()), String.valueOf(ol.getQuantityOrdered()),
                             String.valueOf(ol.getPrice()), String.valueOf(ol.getTaxPercentage()),
                             String.valueOf(ol.getTotalLineAmount()), docType,
@@ -246,9 +250,10 @@ public class OrderLineDB {
                     "SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_ORDERLINE " +
                     " WHERE " + (orderId!=null ? " ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
-                        " USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                        " BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null){
                 ProductDB productDB = new ProductDB(mContext, mUser);
                 while(c.moveToNext()){
@@ -285,8 +290,10 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE WHERE USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+                    "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE " +
+                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
@@ -308,7 +315,7 @@ public class OrderLineDB {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    new ContentValues(),
+                    null,
                     "UPDATE ECOMMERCE_ORDERLINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
                     " DOC_TYPE = ? WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
                     new String[]{String.valueOf(orderId), "datetime('now')", newDocType,
@@ -326,9 +333,9 @@ public class OrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
                     "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE " +
-                    " WHERE PRODUCT_ID=? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(productId), String.valueOf(mUser.getServerUserId()),
-                            WISHLIST_DOCTYPE, "Y"}, null);
+                    " WHERE PRODUCT_ID=? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+                    new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), WISHLIST_DOCTYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
             }
@@ -361,10 +368,10 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT ECOMMERCE_ORDERLINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_ORDERLINE " +
-                    " WHERE PRODUCT_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " WHERE PRODUCT_ID = ? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                     " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(productId), String.valueOf(mUser.getServerUserId()),
-                            docType, "Y"}, null);
+                    new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
                 orderLine.setId(c.getInt(0));
