@@ -560,9 +560,9 @@ public class Utils {
         return -1;
     }
 
-    public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, final boolean goToHome){
+    public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, boolean goHome){
         toolbar.setTitle("");
-        if (goToHome) {
+        if (goHome) {
             for(int i = 0; i < toolbar.getChildCount(); i++){
                 View view = toolbar.getChildAt(i);
                 if(view instanceof ImageView){

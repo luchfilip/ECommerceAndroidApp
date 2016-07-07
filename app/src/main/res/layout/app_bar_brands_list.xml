@@ -15,51 +15,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            style="@style/toolbar_products_list_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black"
-            android:padding="6dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/search_box_bg"
-                android:foregroundGravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:gravity="center_vertical">
-
-                <EditText
-                    android:id="@+id/filter_editText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/lateral_menu_bg_color"
-                    android:hint="@string/filter"
-                    android:textColor="@color/black"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:inputType="text"
-                    android:focusable="false"
-                    android:padding="2dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/filter_imageView"
-                    android:src="@drawable/ic_filter_list_black_24dp" />
-
-            </LinearLayout>
-        </LinearLayout>
+        <include layout="@layout/brands_list_bar_layout" />
 
     </android.support.design.widget.AppBarLayout>
 
