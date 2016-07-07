@@ -5,6 +5,7 @@ import android.content.Context;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
@@ -27,6 +28,16 @@ public class MainPageSectionsDB {
 
     public ArrayList<Object> getActiveMainPageSections(){
         ArrayList<Object> mainPageList = new ArrayList<>();
+
+        try {
+            BusinessPartner businessPartner = (new BusinessPartnerDB(mContext, mUser))
+                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+            if (businessPartner!=null && businessPartner.getCommercialName()!=null) {
+                mainPageList.add(businessPartner.getCommercialName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             BannerSection bannerSection = (new BannerSectionDB(mContext)).getBannerSection();

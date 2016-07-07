@@ -39,9 +39,10 @@ import java.util.ArrayList;
  */
 public class MainActivityAdapter extends BaseAdapter {
 
-    private static final int VIEW_TYPE_VIEWFLIPPER = 0;
-    private static final int VIEW_TYPE_RECYCLERVIEW = 1;
+    private static final int VIEW_TYPE_VIEW_FLIPPER = 0;
+    private static final int VIEW_TYPE_RECYCLER_VIEW = 1;
     private static final int VIEW_TYPE_VIEWPAGER = 2;
+    private static final int VIEW_TYPE_STRING = 3;
 
     private FragmentActivity mFragmentActivity;
     private ArrayList<Object> mDataset;
@@ -51,11 +52,13 @@ public class MainActivityAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if (mDataset.get(position) instanceof BannerSection) {
-            return VIEW_TYPE_VIEWFLIPPER;
+            return VIEW_TYPE_VIEW_FLIPPER;
         } else if (mDataset.get(position) instanceof MainPageProductSection) {
-            return VIEW_TYPE_RECYCLERVIEW;
+            return VIEW_TYPE_RECYCLER_VIEW;
         } else if (mDataset.get(position) instanceof ProductBrandPromotionalSection) {
             return VIEW_TYPE_VIEWPAGER;
+        } else if (mDataset.get(position) instanceof String) {
+            return VIEW_TYPE_STRING;
         }
         return -1;
     }
@@ -65,12 +68,14 @@ public class MainActivityAdapter extends BaseAdapter {
         public RecyclerView mRecyclerView;
         public ViewFlipper mViewFlipper;
         public ViewPager mViewPager;
+        public TextView mTextView;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name);
             mRecyclerView = (RecyclerView) v.findViewById(R.id.product_list);
             mViewFlipper = (ViewFlipper) v.findViewById(R.id.banner_flipper);
             mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
+            mTextView = (TextView) v.findViewById(R.id.textView);
         }
     }
 
@@ -89,11 +94,11 @@ public class MainActivityAdapter extends BaseAdapter {
         // create a new view
         View view = null;
         switch (getItemViewType(position)) {
-            case VIEW_TYPE_VIEWFLIPPER:
+            case VIEW_TYPE_VIEW_FLIPPER:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.banner, parent, false);
                 break;
-            case VIEW_TYPE_RECYCLERVIEW:
+            case VIEW_TYPE_RECYCLER_VIEW:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.category_product_list, parent, false);
                 break;
@@ -101,12 +106,16 @@ public class MainActivityAdapter extends BaseAdapter {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.view_pager_layout, parent, false);
                 break;
+            case VIEW_TYPE_STRING:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.welcome_user_layout, parent, false);
+                break;
         }
 
         if (view != null) {
             ViewHolder viewHolder = new ViewHolder(view);
             switch (getItemViewType(position)) {
-                case VIEW_TYPE_VIEWFLIPPER: {
+                case VIEW_TYPE_VIEW_FLIPPER:
                     if (mDataset!=null && mDataset.get(position)!=null
                             && mDataset.get(position) instanceof BannerSection
                             &&  ((BannerSection) mDataset.get(position)).getBanners()!=null) {
@@ -117,8 +126,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mViewFlipper.startFlipping();
                     }
                     break;
-                }
-                case VIEW_TYPE_RECYCLERVIEW: {
+                case VIEW_TYPE_RECYCLER_VIEW:
                     MainPageProductSection mainPageProductSection = (MainPageProductSection) mDataset.get(position);
 
                     if(mainPageProductSection !=null && mainPageProductSection.getProducts()!=null
@@ -155,7 +163,6 @@ public class MainActivityAdapter extends BaseAdapter {
                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
                     }
                     break;
-                }
                 case VIEW_TYPE_VIEWPAGER:
                     ProductBrandPromotionalSection productBrandPromotionalSection =
                             (ProductBrandPromotionalSection) mDataset.get(position);
@@ -177,6 +184,12 @@ public class MainActivityAdapter extends BaseAdapter {
                                 new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager());
                         productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());
                         viewHolder.mViewPager.setAdapter(productBrandPromotionalAdapter);
+                    }
+                    break;
+                case VIEW_TYPE_STRING:
+                    if (mDataset!=null && mDataset.get(position) instanceof String && viewHolder.mTextView!=null){
+                        viewHolder.mTextView.setText(parent.getContext()
+                                .getString(R.string.welcome_user_detail, ((String) mDataset.get(position))));
                     }
                     break;
             }
