@@ -71,7 +71,7 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
                         filterImageView.setOnClickListener(null);
                     }
                     mCurrentFilterText = s.toString();
-                    if(listView!=null && listView.getAdapter()!=null && listView.getAdapter().getCount()>0) {
+                    if(listView!=null && (listView.getAdapter() instanceof BrandsListAdapter)) {
                         ((BrandsListAdapter) listView.getAdapter()).filter(mCurrentFilterText);
                     }
                 }
