@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -224,9 +225,13 @@ public class OrderDB {
         ArrayList<Order> ordersToRemove = new ArrayList<>();
         for(Order order : activeOrders){
             if(order.getBusinessPartnerId()>0){
-                if(order.getSalesOrderId()>0){
-                    order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
-                }else{
+                if(mUser!=null && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                    if(order.getSalesOrderId()>0){
+                        order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+                    }else{
+                        order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                    }
+                }else if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
                     order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
                 }
             }

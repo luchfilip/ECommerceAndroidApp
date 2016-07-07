@@ -205,7 +205,7 @@ public class SalesOrderDB {
                         " FROM ECOMMERCE_SALES_ORDER SO " +
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                        " WHERE SO.BUSINESS_PARTNER_ID = ? SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
+                        " WHERE SO.BUSINESS_PARTNER_ID = ? AND SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
                         " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                         new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                 String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
