@@ -3,7 +3,8 @@
     <color name="colorPrimary">#009bef</color>
     <color name="colorPrimaryMedium">#4db5e7</color>
     <color name="colorPrimaryLight">#640692d6</color>
-    <color name="colorPrimaryDark">#008def</color>
+    <color name="colorPrimaryDark">#c8008def</color>
+    <color name="default_background_color">#555555</color>
     <color name="colorAccent">#cccccc</color>
     <color name="link">#0000EE</color>
     <color name="lateral_menu_bg_color">#FEFEFE</color>

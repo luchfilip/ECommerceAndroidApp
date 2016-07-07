@@ -77,11 +77,11 @@ public class ProductsListActivity extends AppCompatActivity
         final User user = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(ProductsListActivity.this, toolbar, true);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(ProductsListActivity.this,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -102,7 +102,7 @@ public class ProductsListActivity extends AppCompatActivity
         //de filtrar del tamaño definitivo
         final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                ProductsListActivity.this, R.array.filter_by_options, R.layout.spinner_custom_prompt_item);
+                this, R.array.filter_by_options, R.layout.spinner_custom_prompt_item);
         if(filterByOptionsSpinner!=null && adapter!=null) {
             adapter.setDropDownViewResource(R.layout.spinner_custom_item);
             filterByOptionsSpinner.setAdapter(adapter);
@@ -134,20 +134,20 @@ public class ProductsListActivity extends AppCompatActivity
                     }
 
                     if(getIntent()!=null && getIntent().getExtras()!=null) {
-                        if(getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID)){
-                            productCategoryId = getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID);
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_CATEGORY_ID)){
+                            productCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_CATEGORY_ID);
                         }
-                        if(getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID)){
-                            productSubCategoryId = getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID);
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_SUBCATEGORY_ID)){
+                            productSubCategoryId = getIntent().getExtras().getInt(KEY_PRODUCT_SUBCATEGORY_ID);
                         }
-                        if(getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_BRAND_ID)){
-                            productBrandId = getIntent().getExtras().getInt(ProductsListActivity.KEY_PRODUCT_BRAND_ID);
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_BRAND_ID)){
+                            productBrandId = getIntent().getExtras().getInt(KEY_PRODUCT_BRAND_ID);
                         }
-                        if(getIntent().getExtras().containsKey(ProductsListActivity.KEY_PRODUCT_NAME)){
-                            productName = getIntent().getExtras().getString(ProductsListActivity.KEY_PRODUCT_NAME);
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_NAME)){
+                            productName = getIntent().getExtras().getString(KEY_PRODUCT_NAME);
                         }
-                        if(getIntent().getExtras().containsKey(ProductsListActivity.KEY_SEARCH_PATTERN)){
-                            mSearchPattern = getIntent().getExtras().getString(ProductsListActivity.KEY_SEARCH_PATTERN);
+                        if(getIntent().getExtras().containsKey(KEY_SEARCH_PATTERN)){
+                            mSearchPattern = getIntent().getExtras().getString(KEY_SEARCH_PATTERN);
                         }
                     }
 

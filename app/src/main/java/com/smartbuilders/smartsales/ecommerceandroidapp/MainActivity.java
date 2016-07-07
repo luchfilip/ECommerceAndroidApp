@@ -32,7 +32,29 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = Utils.getCurrentUser(this);
+        final User user = Utils.getCurrentUser(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.setCustomToolbarTitle(this, toolbar, true);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if(navigationView!=null && user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+            }
+            navigationView.setNavigationItemSelectedListener(this);
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(getString(R.string.welcome_user, user.getUserName()));
+        }
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -48,28 +70,6 @@ public class MainActivity extends AppCompatActivity
                 //Log.e(TAG, "combine is null");
                 //url = "http://www.example.com";
             }
-        }
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, false);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
-            }
-            navigationView.setNavigationItemSelectedListener(this);
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, user.getUserName()));
         }
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
