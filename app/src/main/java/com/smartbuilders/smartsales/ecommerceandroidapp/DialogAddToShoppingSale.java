@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -24,7 +26,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartner
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +136,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
                         String result = (new SalesOrderLineDB(getContext(), mUser))
                                 .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice,
-                                        productTaxPercentage, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                        productTaxPercentage, PreferenceManager.getDefaultSharedPreferences(getContext())
+                                                .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0));
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_LONG).show();
@@ -181,7 +183,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
     public void initViews(){
         int appCurrentBusinessPartnerId = 0;
         try{
-            appCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+            appCurrentBusinessPartnerId = PreferenceManager.getDefaultSharedPreferences(getContext())
+                    .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -220,7 +223,9 @@ public class DialogAddToShoppingSale extends DialogFragment {
             businessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Utils.setAppCurrentBusinessPartnerId(getContext(), businessPartners.get(position).getId());
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                    editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartners.get(position).getId());
+                    editor.apply();
                 }
 
                 @Override
@@ -231,7 +236,9 @@ public class DialogAddToShoppingSale extends DialogFragment {
             registerBusinessPartnerButton.setVisibility(View.GONE);
         } else {
             if(appCurrentBusinessPartnerId!=0){
-                Utils.setAppCurrentBusinessPartnerId(getContext(), 0);
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
+                editor.apply();
             }
 
             if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
