@@ -11,5 +11,6 @@
         android:textColor="@color/black"
         android:layout_margin="10dp"
         android:textStyle="bold" />
-    <View style="@style/Divider" android:layout_marginTop="5dp"/>
+
+    <View style="@style/Divider"/>
 </LinearLayout>

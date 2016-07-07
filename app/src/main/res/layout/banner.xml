@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="2dp"
-    android:layout_marginBottom="10dp" >
+    android:layout_marginBottom="20dp">
 
     <ViewFlipper
         android:id="@+id/banner_flipper"
@@ -14,5 +13,7 @@
         android:outAnimation="@anim/slide_in_left">
 
     </ViewFlipper>
+
+    <View style="@style/Divider" android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

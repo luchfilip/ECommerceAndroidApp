@@ -7,6 +7,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageTitleSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -81,7 +82,8 @@ public class MainPageSectionsDB {
                 for (MainPageProductSection mainPageProductSection : mainPageProductSections) {
                     if(mainPageProductSection!=null && mainPageProductSection.getProducts()!=null
                             && !mainPageProductSection.getProducts().isEmpty()) {
-                        mainPageList.add(mainPageProductSection);
+                        mainPageList.add(new MainPageTitleSection(mainPageProductSection.getName()));
+                        mainPageList.addAll(mainPageProductSection.getProducts());
                     }
                 }
             }

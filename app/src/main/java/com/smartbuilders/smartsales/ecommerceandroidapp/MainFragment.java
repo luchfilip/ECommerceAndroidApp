@@ -67,7 +67,7 @@ public class MainFragment extends Fragment {
                         public void run() {
                             try {
                                 mListView = (ListView) view.findViewById(R.id.main_categories_list);
-                                mMainActivityAdapter = new MainActivityAdapter(getActivity(), mainPageObjects, mCurrentUser);
+                                mMainActivityAdapter = new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser);
                                 mListView.setAdapter(mMainActivityAdapter);
                                 mListView.setVisibility(View.VISIBLE);
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);

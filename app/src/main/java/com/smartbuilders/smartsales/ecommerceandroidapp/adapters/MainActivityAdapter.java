@@ -1,12 +1,15 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +17,27 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingCart;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogSortProductListOptions;
+import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Banner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageProductSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageTitleSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ViewIdGenerator;
@@ -39,11 +52,14 @@ import java.util.ArrayList;
  */
 public class MainActivityAdapter extends BaseAdapter {
 
-    private static final int VIEW_TYPE_VIEW_FLIPPER = 0;
-    private static final int VIEW_TYPE_RECYCLER_VIEW = 1;
-    private static final int VIEW_TYPE_VIEWPAGER = 2;
-    private static final int VIEW_TYPE_STRING = 3;
+    private static final int VIEW_TYPE_VIEW_FLIPPER     = 0;
+    private static final int VIEW_TYPE_RECYCLER_VIEW    = 1;
+    private static final int VIEW_TYPE_VIEWPAGER        = 2;
+    private static final int VIEW_TYPE_STRING           = 3;
+    private static final int VIEW_TYPE_TITLE            = 4;
+    private static final int VIEW_TYPE_PRODUCT          = 5;
 
+    private Context mContext;
     private FragmentActivity mFragmentActivity;
     private ArrayList<Object> mDataset;
     private User mUser;
@@ -59,6 +75,10 @@ public class MainActivityAdapter extends BaseAdapter {
             return VIEW_TYPE_VIEWPAGER;
         } else if (mDataset.get(position) instanceof String) {
             return VIEW_TYPE_STRING;
+        } else if (mDataset.get(position) instanceof MainPageTitleSection) {
+            return VIEW_TYPE_TITLE;
+        } else if (mDataset.get(position) instanceof Product) {
+            return VIEW_TYPE_PRODUCT;
         }
         return -1;
     }
@@ -69,6 +89,18 @@ public class MainActivityAdapter extends BaseAdapter {
         public ViewFlipper mViewFlipper;
         public ViewPager mViewPager;
         public TextView mTextView;
+        public TextView mTitleTextView;
+
+        /*********************************************/
+        public TextView productName;
+        public ImageView productImage;
+        public TextView productAvailability;
+        public View goToProductDetails;
+        public ImageView shareImageView;
+        public ImageView favoriteImageView;
+        public ImageView addToShoppingCartImage;
+        public ImageView addToShoppingSaleImage;
+        /*********************************************/
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name);
@@ -76,12 +108,24 @@ public class MainActivityAdapter extends BaseAdapter {
             mViewFlipper = (ViewFlipper) v.findViewById(R.id.banner_flipper);
             mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
             mTextView = (TextView) v.findViewById(R.id.textView);
+            mTitleTextView = (TextView) v.findViewById(R.id.title_textView);
+            /*********************************************/
+            productName = (TextView) v.findViewById(R.id.product_name);
+            productImage = (ImageView) v.findViewById(R.id.product_image);
+            goToProductDetails = v.findViewById(R.id.go_to_product_details);
+            productAvailability = (TextView) v.findViewById(R.id.product_availability);
+            shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
+            favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
+            addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
+            addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            /***************************************************/
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityAdapter(FragmentActivity fragmentActivity, ArrayList<Object> myDataset,
+    public MainActivityAdapter(Context context, FragmentActivity fragmentActivity, ArrayList<Object> myDataset,
                                User user) {
+        mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
         mUser = user;
@@ -95,32 +139,40 @@ public class MainActivityAdapter extends BaseAdapter {
         View view = null;
         switch (getItemViewType(position)) {
             case VIEW_TYPE_VIEW_FLIPPER:
-                view = LayoutInflater.from(parent.getContext())
+                view = LayoutInflater.from(mContext)
                         .inflate(R.layout.banner, parent, false);
                 break;
             case VIEW_TYPE_RECYCLER_VIEW:
-                view = LayoutInflater.from(parent.getContext())
+                view = LayoutInflater.from(mContext)
                         .inflate(R.layout.category_product_list, parent, false);
                 break;
             case VIEW_TYPE_VIEWPAGER:
-                view = LayoutInflater.from(parent.getContext())
+                view = LayoutInflater.from(mContext)
                         .inflate(R.layout.view_pager_layout, parent, false);
                 break;
             case VIEW_TYPE_STRING:
-                view = LayoutInflater.from(parent.getContext())
+                view = LayoutInflater.from(mContext)
                         .inflate(R.layout.welcome_user_layout, parent, false);
+                break;
+            case VIEW_TYPE_TITLE:
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.main_page_title_section_layout, parent, false);
+                break;
+            case VIEW_TYPE_PRODUCT:
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.product_main_activity, parent, false);
                 break;
         }
 
         if (view != null) {
-            ViewHolder viewHolder = new ViewHolder(view);
+            final ViewHolder viewHolder = new ViewHolder(view);
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_VIEW_FLIPPER:
                     if (mDataset!=null && mDataset.get(position)!=null
                             && mDataset.get(position) instanceof BannerSection
                             &&  ((BannerSection) mDataset.get(position)).getBanners()!=null) {
                         for (Banner banner : ((BannerSection) mDataset.get(position)).getBanners()) {
-                            setFlipperImage(parent.getContext(), viewHolder.mViewFlipper, banner);
+                            setFlipperImage(viewHolder.mViewFlipper, banner);
                         }
                         /** Start Flipping */
                         viewHolder.mViewFlipper.startFlipping();
@@ -154,11 +206,11 @@ public class MainActivityAdapter extends BaseAdapter {
                         //    e.printStackTrace();
                         //}
 
-                        viewHolder.mRecyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext(),
-                                LinearLayoutManager.HORIZONTAL, false));
-                        //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(parent.getContext(), spanCount));
+                        viewHolder.mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,
+                                LinearLayoutManager.VERTICAL, false));
+                        //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, spanCount));
 
-                        viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(parent.getContext(), mFragmentActivity,
+                        viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mContext, mFragmentActivity,
                                 mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
                     }
@@ -188,8 +240,99 @@ public class MainActivityAdapter extends BaseAdapter {
                     break;
                 case VIEW_TYPE_STRING:
                     if (mDataset!=null && mDataset.get(position) instanceof String && viewHolder.mTextView!=null){
-                        viewHolder.mTextView.setText(parent.getContext()
+                        viewHolder.mTextView.setText(mContext
                                 .getString(R.string.welcome_user_detail, ((String) mDataset.get(position))));
+                    }
+                    break;
+                case VIEW_TYPE_TITLE:
+                    if (mDataset!=null && mDataset.get(position) instanceof MainPageTitleSection && viewHolder.mTitleTextView!=null){
+                        viewHolder.mTitleTextView.setText(((MainPageTitleSection) mDataset.get(position)).getTitle());
+                    }
+                    break;
+                case VIEW_TYPE_PRODUCT:
+                    if (mDataset!=null && mDataset.get(position) instanceof Product){
+                        final Product product = (Product) mDataset.get(position);
+                        Utils.loadOriginalImageByFileName(mContext, mUser,
+                                product.getImageFileName(), viewHolder.productImage);
+
+                        viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goToProductDetails(product.getId());
+                            }
+                        });
+
+                        viewHolder.productName.setText(product.getName());
+
+                        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                                product.getAvailability()));
+
+                        viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                viewHolder.shareImageView.setEnabled(false);
+                                new CreateShareIntentThread(mFragmentActivity, product, viewHolder.shareImageView).start();
+                            }
+                        });
+
+                        if(product.isFavorite()){
+                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String result = removeFromWishList(product.getId());
+                                    if (result == null) {
+                                        ((Product) mDataset.get(position)).setFavorite(false);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }else{
+                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String result = addToWishList(product.getId());
+                                    if (result == null) {
+                                        ((Product) mDataset.get(position)).setFavorite(true);
+                                        notifyDataSetChanged();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+
+                        viewHolder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                        viewHolder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                OrderLine orderLine = (new OrderLineDB(mContext, mUser))
+                                        .getOrderLineFromShoppingCartByProductId(product.getId());
+                                if(orderLine!=null){
+                                    updateQtyOrderedInShoppingCart(orderLine);
+                                }else{
+                                    addToShoppingCart(product);
+                                }
+                            }
+                        });
+
+                        viewHolder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+                        viewHolder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                addToShoppingSale(product);
+                            }
+                        });
+
+                        viewHolder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goToProductDetails(product.getId());
+                            }
+                        });
                     }
                     break;
             }
@@ -198,14 +341,14 @@ public class MainActivityAdapter extends BaseAdapter {
         return view;
     }
 
-    private void setFlipperImage(final Context context, ViewFlipper viewFlipper, final Banner banner) {
-        final ImageView image = new ImageView(context);
+    private void setFlipperImage(ViewFlipper viewFlipper, final Banner banner) {
+        final ImageView image = new ImageView(mContext);
 
-        File img = Utils.getFileInBannerDirByFileName(context, banner.getImageFileName());
+        File img = Utils.getFileInBannerDirByFileName(mContext, banner.getImageFileName());
         if(img!=null){
-            Picasso.with(context).load(img).into(image);
+            Picasso.with(mContext).load(img).into(image);
         }else{
-            Picasso.with(context)
+            Picasso.with(mContext)
                     .load(mUser.getServerAddress()
                             + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
                             + banner.getImageFileName())
@@ -213,7 +356,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         @Override
                         public void onSuccess() {
                             Utils.createFileInBannerDir(banner.getImageFileName(),
-                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(), context);
+                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(), mContext);
                         }
 
                         @Override
@@ -225,16 +368,16 @@ public class MainActivityAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(banner.getProductId()>0){
-                    context.startActivity(new Intent(context, ProductDetailActivity.class)
+                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
                             .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, banner.getProductId()));
                 } else if (banner.getProductBrandId()>0) {
-                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                    mContext.startActivity(new Intent(mContext, ProductsListActivity.class)
                             .putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, banner.getProductBrandId()));
                 } else if (banner.getProductSubCategoryId()>0) {
-                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                    mContext.startActivity(new Intent(mContext, ProductsListActivity.class)
                             .putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, banner.getProductSubCategoryId()));
                 } else if (banner.getProductCategoryId()>0) {
-                    context.startActivity(new Intent(context, ProductsListActivity.class)
+                    mContext.startActivity(new Intent(mContext, ProductsListActivity.class)
                             .putExtra(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID, banner.getProductCategoryId()));
                 }
             }
@@ -243,6 +386,68 @@ public class MainActivityAdapter extends BaseAdapter {
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
         image.setAdjustViewBounds(true);
         viewFlipper.addView(image);
+    }
+
+    private void addToShoppingCart(Product product) {
+        product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
+        DialogAddToShoppingCart dialogAddToShoppingCart =
+                DialogAddToShoppingCart.newInstance(product, mUser);
+        dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogAddToShoppingCart.class.getSimpleName());
+    }
+
+    public void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
+        DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
+                DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mUser);
+        dialogUpdateShoppingCartQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
+    }
+
+    private void addToShoppingSale(Product product) {
+        product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
+        DialogAddToShoppingSale dialogAddToShoppingSale =
+                DialogAddToShoppingSale.newInstance(product, mUser);
+        dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogAddToShoppingSale.class.getSimpleName());
+    }
+
+    private String addToWishList(int productId) {
+        return (new OrderLineDB(mContext, mUser)).addProductToWishList(productId);
+    }
+
+    private String removeFromWishList(int productId) {
+        return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
+    }
+
+    private void goToProductDetails(int productId){
+        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
+    }
+
+    class CreateShareIntentThread extends Thread {
+        private Activity mActivity;
+        private Product mProduct;
+        private ImageView mShareProductImageView;
+
+        CreateShareIntentThread(Activity activity, Product product, ImageView shareProductImageView) {
+            mActivity = activity;
+            mProduct = product;
+            mShareProductImageView = shareProductImageView;
+        }
+
+        public void run() {
+            final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
+                    mContext, mUser), mContext.getString(R.string.share_image));
+            if(mActivity!=null){
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContext.startActivity(shareIntent);
+                        mShareProductImageView.setEnabled(true);
+                    }
+                });
+            }
+        }
     }
 
     public void setData(ArrayList<Object> data){
