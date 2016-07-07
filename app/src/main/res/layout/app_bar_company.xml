@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:src="@drawable/ic_business_black_24dp"/>
+                android:src="@drawable/ic_business_white_24dp"/>
 
             <TextView
                 android:text="@string/my_company"

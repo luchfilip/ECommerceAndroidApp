@@ -40,7 +40,7 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
                                 .setText(getString(R.string.business_partner));
                     }
                     ((ImageView) findViewById(R.id.toolbar_imageView))
-                            .setImageResource(R.drawable.ic_person_black_24dp);
+                            .setImageResource(R.drawable.ic_person_white_24dp);
                 }
             }
         }
