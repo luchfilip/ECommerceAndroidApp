@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Created by Alberto on 9/4/2016.
  */
-public class BrandAdapter extends BaseAdapter implements SectionIndexer {
+public class BrandsListAdapter extends BaseAdapter implements SectionIndexer {
 
     private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
@@ -30,7 +30,7 @@ public class BrandAdapter extends BaseAdapter implements SectionIndexer {
     private ArrayList<ProductBrand> mDataset;
     private ArrayList<ProductBrand> arraylist;
 
-    public BrandAdapter(Context context, ArrayList<ProductBrand> data) {
+    public BrandsListAdapter(Context context, ArrayList<ProductBrand> data) {
         mContext = context;
         mDataset = data;
 
