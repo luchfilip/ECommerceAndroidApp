@@ -58,19 +58,24 @@ public class SearchResultAdapter extends BaseAdapter {
         }
     }
 
-    public void setData(String textToSearch, ArrayList data, Context context){
+    public void setData(String textToSearch, ArrayList data){
         mTextToSearch = textToSearch;
         if(data!=null){
             mDataset = new ArrayList<>();
             mDataset.addAll(data);
         }
-        if(mDataset == null){
+        if(mDataset==null){
             mDataset = new ArrayList<>();
-            mDataset.addAll(recentSearchDB.getRecentSearches());
-        }else if(mDataset.isEmpty()){
-            mDataset.add(context.getString(R.string.no_results_founds));
-            mDataset.add(context.getString(R.string.search_by_category));
-            mDataset.add(context.getString(R.string.search_by_brand));
+        }
+
+        if(mDataset.isEmpty()){
+            if(TextUtils.isEmpty(textToSearch)){
+                mDataset.addAll(recentSearchDB.getRecentSearches());
+            }else{
+                mDataset.add(mContext.getString(R.string.no_results_founds));
+                mDataset.add(mContext.getString(R.string.search_by_category));
+                mDataset.add(mContext.getString(R.string.search_by_brand));
+            }
         }
     }
 
