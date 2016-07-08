@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="15dp"
+        android:background="@color/grey_medium"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/category_name"
-        android:textSize="@dimen/mainpage_name_size"
+        android:textSize="@dimen/mainPageTitleSection_textSize"
         android:textStyle="bold|italic"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />

@@ -207,7 +207,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         //}
 
                         viewHolder.mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,
-                                LinearLayoutManager.VERTICAL, false));
+                                LinearLayoutManager.HORIZONTAL, false));
                         //viewHolder.mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, spanCount));
 
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mContext, mFragmentActivity,

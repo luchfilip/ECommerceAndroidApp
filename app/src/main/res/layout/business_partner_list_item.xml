@@ -37,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/business_partner_tax_id_textView"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <ImageView
