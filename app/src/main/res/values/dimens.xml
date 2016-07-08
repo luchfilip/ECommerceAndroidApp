@@ -44,6 +44,12 @@
     <dimen name="productDetailActivity_details_label_text_size">17sp</dimen>
     <dimen name="productDetailActivity_details_text_size">15sp</dimen>
 
+    <dimen name="productMainActivity_productName_text_size">13sp</dimen>
+    <dimen name="productMainActivity_productInternalCode_text_size">11sp</dimen>
+    <dimen name="productMainActivity_productAvailability_text_size">13sp</dimen>
+    <dimen name="productMainActivity_productImage_width">100dp</dimen>
+    <dimen name="productMainActivity_productImage_height">100dp</dimen>
+
     <dimen name="related_products_label_text_size">17sp</dimen>
 
     <dimen name="appBarTitleSize">25sp</dimen>
