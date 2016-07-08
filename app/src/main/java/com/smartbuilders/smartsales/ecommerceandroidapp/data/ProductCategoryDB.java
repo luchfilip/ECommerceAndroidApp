@@ -30,9 +30,11 @@ public class ProductCategoryDB {
                     " FROM CATEGORY C " +
                         " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                        " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                     " WHERE C.IS_ACTIVE = ? " +
                     " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ",
-                    new String[]{"Y", "Y", "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     ProductCategory productCategory = new ProductCategory();

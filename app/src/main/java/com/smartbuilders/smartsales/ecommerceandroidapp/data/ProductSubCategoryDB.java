@@ -58,12 +58,13 @@ public class ProductSubCategoryDB {
                     "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN PRODUCT_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
                     " WHERE S.CATEGORY_ID = ? AND S.IS_ACTIVE = ? " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " ORDER BY S.NAME ASC",
-                    new String[]{"Y", "Y", "Y", String.valueOf(categoryId), "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(categoryId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     ProductSubCategory productSubCategory = new ProductSubCategory();
