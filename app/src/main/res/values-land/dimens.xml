@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="productMainActivity_marginLeftAndRight">30dp</dimen>
+
+</resources>
