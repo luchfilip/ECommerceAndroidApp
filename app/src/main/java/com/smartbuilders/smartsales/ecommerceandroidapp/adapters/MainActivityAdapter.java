@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -176,9 +174,9 @@ public class MainActivityAdapter extends BaseAdapter {
                         }
                         int height;
                         if(metrics.widthPixels < metrics.heightPixels){
-                            height = (int) (metrics.heightPixels / 4);
+                            height = (metrics.heightPixels / 4);
                         } else {
-                            height = (int) (metrics.widthPixels / 5);
+                            height = (metrics.widthPixels / 5);
                         }
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewFlipper.setLayoutParams(lp);
@@ -233,9 +231,9 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mViewPager.setClipToPadding(false);
                         int height;
                         if(metrics.widthPixels < metrics.heightPixels){
-                            height = (int) (metrics.heightPixels / 5);
+                            height = (metrics.heightPixels / 5);
                         } else {
-                            height = (int) (metrics.widthPixels / 6);
+                            height = (metrics.widthPixels / 6);
                         }
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);
