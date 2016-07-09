@@ -174,6 +174,14 @@ public class MainActivityAdapter extends BaseAdapter {
                         for (Banner banner : ((BannerSection) mDataset.get(position)).getBanners()) {
                             setFlipperImage(viewHolder.mViewFlipper, banner);
                         }
+                        int height;
+                        if(metrics.widthPixels < metrics.heightPixels){
+                            height = (int) (metrics.heightPixels / 4);
+                        } else {
+                            height = (int) (metrics.widthPixels / 5);
+                        }
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
+                        viewHolder.mViewFlipper.setLayoutParams(lp);
                         /** Start Flipping */
                         viewHolder.mViewFlipper.startFlipping();
                     }
@@ -225,15 +233,15 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mViewPager.setClipToPadding(false);
                         int height;
                         if(metrics.widthPixels < metrics.heightPixels){
-                            height = (int) (metrics.heightPixels / 4.5);
+                            height = (int) (metrics.heightPixels / 5);
                         } else {
-                            height = (int) (metrics.widthPixels / 4.5);
+                            height = (int) (metrics.widthPixels / 6);
                         }
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);
                         viewHolder.mViewPager.setPageMargin(12);
                         ProductBrandPromotionalAdapter productBrandPromotionalAdapter =
-                                new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager());
+                                new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager(), metrics);
                         productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());
                         viewHolder.mViewPager.setAdapter(productBrandPromotionalAdapter);
                     }

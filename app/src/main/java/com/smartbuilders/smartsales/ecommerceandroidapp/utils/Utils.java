@@ -498,6 +498,18 @@ public class Utils {
         }
     }
 
+    public static File getFileInUserCompanyDir(Context context, User user){
+        try {
+            File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");
+            if(imgFile.exists()){
+                return imgFile;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Bitmap getImageFromUserCompanyDir(Context context, User user){
         try {
             File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");

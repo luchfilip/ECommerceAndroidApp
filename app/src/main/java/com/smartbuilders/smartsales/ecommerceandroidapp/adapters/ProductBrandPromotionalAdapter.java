@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.DisplayMetrics;
 
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalCard;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.ProductBrandPromotionFragment;
@@ -16,9 +17,11 @@ import java.util.List;
 public class ProductBrandPromotionalAdapter extends FragmentStatePagerAdapter {
 
     private List<ProductBrandPromotionalCard> mProductBrandPromotinalCards;
+    private DisplayMetrics mDisplayMetrics;
 
-    public ProductBrandPromotionalAdapter(FragmentManager fm){
+    public ProductBrandPromotionalAdapter(FragmentManager fm, DisplayMetrics displayMetrics){
         super(fm);
+        this.mDisplayMetrics = displayMetrics;
     }
 
     public void setData(ArrayList<ProductBrandPromotionalCard> productBrandPromotionalCards){
@@ -47,6 +50,10 @@ public class ProductBrandPromotionalAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public float getPageWidth (int position) {
-        return 0.90f;
+        if(mDisplayMetrics.widthPixels < mDisplayMetrics.heightPixels){
+            return 0.90f;
+        } else {
+            return 0.45f;
+        }
     }
 }
