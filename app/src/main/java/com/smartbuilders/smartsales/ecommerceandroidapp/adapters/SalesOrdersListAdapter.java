@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 
@@ -18,10 +20,12 @@ import java.util.ArrayList;
 public class SalesOrdersListAdapter extends BaseAdapter {
 
     private Context mContext;
+    private User mUser;
     private ArrayList<SalesOrder> mDataset;
 
-    public SalesOrdersListAdapter(Context context, ArrayList<SalesOrder> data) {
+    public SalesOrdersListAdapter(Context context, User user, ArrayList<SalesOrder> data) {
         mContext = context;
+        mUser = user;
         mDataset = data;
     }
 
@@ -59,7 +63,13 @@ public class SalesOrdersListAdapter extends BaseAdapter {
         viewHolder.salesOrderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
         viewHolder.salesOrderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getLinesNumber())));
-        viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
+        if(mUser!=null && mUser.getUserProfileId()== UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            viewHolder.businessPartnerCommercialName.setText(mContext.getString(R.string.business_partner_detail,
+                    mDataset.get(position).getBusinessPartner().getCommercialName()));
+            viewHolder.businessPartnerCommercialName.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.businessPartnerCommercialName.setVisibility(View.GONE);
+        }
 
         return view;
     }

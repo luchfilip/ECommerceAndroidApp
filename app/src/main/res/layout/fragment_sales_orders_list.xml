@@ -45,7 +45,23 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/business_partner_commercial_name_textView"
+            android:padding="5dp"
+            android:background="@android:color/white"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <View style="@style/Divider"
+            android:layout_marginTop="1dp"
+            android:id="@+id/business_partner_info_separator"
+            android:visibility="gone" />
 
         <ListView
             android:id="@+id/sales_orders_list"
