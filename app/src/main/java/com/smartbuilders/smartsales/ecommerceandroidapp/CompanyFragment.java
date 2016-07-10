@@ -107,7 +107,7 @@ public class CompanyFragment extends Fragment {
                                 rootView.findViewById(R.id.crop_image_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Bitmap cropped = companyLogoCropImageView.getCroppedImage(50, 50);
+                                        Bitmap cropped = companyLogoCropImageView.getCroppedImage(230, 80);
                                         if (cropped != null){
                                             companyLogoCropImageView.setImageBitmap(cropped);
                                             Utils.createFileInUserCompanyDir(cropped, getContext(), mUser);
