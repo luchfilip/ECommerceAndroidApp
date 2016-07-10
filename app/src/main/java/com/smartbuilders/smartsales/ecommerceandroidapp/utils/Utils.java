@@ -467,7 +467,35 @@ public class Utils {
         return null;
     }
 
-    public static void createImageInUserCompanyDir(Context context, User user, InputStream inputStream){
+    /**
+     *
+     * @param fileName
+     * @param image
+     * @param context
+     */
+    public static void createFileInUserCompanyDir(Bitmap image, Context context, User user){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (image!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
+            //path for the image file in the external storage
+            File imageFile = new File(getImagesUserCompanyFolderPath(context, user),
+                    "user_company_logo.jpg");
+            try {
+                imageFile.createNewFile();
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException | NullPointerException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    public static void createFileInUserCompanyDir(Context context, User user, InputStream inputStream){
         OutputStream outputStream = null;
         try {
             // write the inputStream to a FileOutputStream
