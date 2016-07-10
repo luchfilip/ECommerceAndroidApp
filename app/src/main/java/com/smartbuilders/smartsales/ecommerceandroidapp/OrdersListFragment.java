@@ -134,6 +134,7 @@ public class OrdersListFragment extends Fragment {
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
+            setHeader();
             if(mListView!=null && mOrdersListAdapter!=null && mOrderDB!=null){
                 int oldListSize = mOrdersListAdapter.getCount();
                 mOrdersListAdapter.setData(mOrderDB.getActiveOrders());
