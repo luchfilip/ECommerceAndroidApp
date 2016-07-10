@@ -48,6 +48,29 @@
         android:id="@+id/main_layout"
         android:background="@android:color/white">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/business_partner_commercial_name_textView"
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/sales_order_number_textView"
+            android:visibility="gone"
+            android:textColor="@color/black" />
+
+        <View style="@style/Divider"
+            android:layout_marginTop="1dp"
+            android:id="@+id/sales_order_info_separator"
+            android:visibility="gone" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shoppingCart_items_list"
             android:scrollbars="vertical"

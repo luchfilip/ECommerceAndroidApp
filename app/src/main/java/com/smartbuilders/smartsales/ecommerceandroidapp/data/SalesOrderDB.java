@@ -178,7 +178,6 @@ public class SalesOrderDB {
     }
 
     public ArrayList<SalesOrder> getActiveSalesOrders(){
-        System.out.println("getActiveSalesOrders()");
         ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
         Cursor c = null;
         try {
@@ -214,7 +213,6 @@ public class SalesOrderDB {
 
             if(c!=null){
                 while(c.moveToNext()){
-                    System.out.println("salesOrder.setId("+c.getInt(0)+");");
                     SalesOrder salesOrder = new SalesOrder();
                     salesOrder.setId(c.getInt(0));
                     try{
@@ -259,14 +257,12 @@ public class SalesOrderDB {
             UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
             for(SalesOrder salesOrder : activeSalesOrders){
                 salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId()));
-                System.out.println("userBusinessPartnerDB.getActiveUserBusinessPartnerById("+salesOrder.getBusinessPartnerId()+")");
                 salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
             for(SalesOrder salesOrder : activeSalesOrders){
                 salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId()));
-                System.out.println("businessPartnerDB.getActiveBusinessPartnerById("+salesOrder.getBusinessPartnerId()+")");
                 salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }

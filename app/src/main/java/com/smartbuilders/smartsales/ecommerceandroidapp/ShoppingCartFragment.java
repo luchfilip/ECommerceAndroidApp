@@ -17,11 +17,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -108,6 +114,39 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             try {
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
+
+                                if(mUser!=null
+                                        && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                                    if(!mIsShoppingCart){
+                                        SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                                        if(salesOrder!=null){
+                                            BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                                                    .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                                            if(businessPartner!=null){
+                                                ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
+                                                        .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                                                view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+
+                                                ((TextView) view.findViewById(R.id.sales_order_number_textView))
+                                                        .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                                                view.findViewById(R.id.sales_order_number_textView).setVisibility(View.VISIBLE);
+
+                                                view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    }
+                                }else if(mUser!=null
+                                        && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+                                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                                            .getActiveUserBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                    if(businessPartner!=null){
+                                        ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
+                                                .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                                        view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+
+                                        view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
+                                    }
+                                }
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
                                 // use this setting to improve performance if you know that changes
