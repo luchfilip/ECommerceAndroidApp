@@ -137,14 +137,33 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     }
                                 }else if(mUser!=null
                                         && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                                            .getActiveUserBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                                    if(businessPartner!=null){
-                                        ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
-                                                .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                                        view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+                                    if(mIsShoppingCart){
+                                        BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                                .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                        if(businessPartner!=null){
+                                            ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
+                                                    .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                                            view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
 
-                                        view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
+                                            view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
+                                        }
+                                    }else{
+                                        SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                                        if(salesOrder!=null){
+                                            BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                                                    .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                                            if(businessPartner!=null){
+                                                ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
+                                                        .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                                                view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+
+                                                ((TextView) view.findViewById(R.id.sales_order_number_textView))
+                                                        .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                                                view.findViewById(R.id.sales_order_number_textView).setVisibility(View.VISIBLE);
+
+                                                view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
+                                            }
+                                        }
                                     }
                                 }
 
