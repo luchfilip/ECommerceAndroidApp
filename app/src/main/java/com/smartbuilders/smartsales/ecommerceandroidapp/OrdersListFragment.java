@@ -7,9 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -32,6 +37,9 @@ public class OrdersListFragment extends Fragment {
     private int mListViewIndex;
     private int mListViewTop;
     private int mCurrentSelectedIndex;
+    private User mUser;
+    private TextView mBusinessPartnerCommercialName;
+    private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
         void onItemSelected(Order order);
@@ -66,7 +74,9 @@ public class OrdersListFragment extends Fragment {
                         }
                     }
 
-                    mOrderDB = new OrderDB(getContext(), Utils.getCurrentUser(getContext()));
+                    mUser = Utils.getCurrentUser(getContext());
+
+                    mOrderDB = new OrderDB(getContext(), mUser);
                     activeOrders.addAll(mOrderDB.getActiveOrders());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -76,6 +86,10 @@ public class OrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+                                setHeader();
+
                                 mOrdersListAdapter = new OrdersListAdapter(getActivity(), activeOrders);
 
                                 mListView = (ListView) view.findViewById(R.id.orders_list);
@@ -133,6 +147,22 @@ public class OrdersListFragment extends Fragment {
             }
         }
         super.onStart();
+    }
+
+    private void setHeader(){
+        if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+            try {
+                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                if(businessPartner!=null){
+                    mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                    mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

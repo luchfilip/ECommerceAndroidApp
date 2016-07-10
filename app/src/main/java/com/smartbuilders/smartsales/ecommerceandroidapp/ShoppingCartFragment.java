@@ -30,6 +30,8 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -57,6 +59,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private View mainLayout;
     private View mBlankScreenView;
     private boolean mIsShoppingCart = true;
+    private TextView mBusinessPartnerCommercialName;
+    private TextView mSalesOrderNumber;
+    private View mSalesOrderInfoSeparator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,57 +120,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
-                                if(mUser!=null
-                                        && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                                    if(!mIsShoppingCart){
-                                        SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                                        if(salesOrder!=null){
-                                            BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                                                    .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                                            if(businessPartner!=null){
-                                                ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
-                                                        .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                                                view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mSalesOrderNumber = (TextView) view.findViewById(R.id.sales_order_number_textView);
+                                mSalesOrderInfoSeparator = view.findViewById(R.id.sales_order_info_separator);
 
-                                                ((TextView) view.findViewById(R.id.sales_order_number_textView))
-                                                        .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                                                view.findViewById(R.id.sales_order_number_textView).setVisibility(View.VISIBLE);
-
-                                                view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
-                                            }
-                                        }
-                                    }
-                                }else if(mUser!=null
-                                        && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                                    if(mIsShoppingCart){
-                                        BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                                .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                                        if(businessPartner!=null){
-                                            ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
-                                                    .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                                            view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
-
-                                            view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
-                                        }
-                                    }else{
-                                        SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                                        if(salesOrder!=null){
-                                            BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                                                    .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                                            if(businessPartner!=null){
-                                                ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
-                                                        .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                                                view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
-
-                                                ((TextView) view.findViewById(R.id.sales_order_number_textView))
-                                                        .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                                                view.findViewById(R.id.sales_order_number_textView).setVisibility(View.VISIBLE);
-
-                                                view.findViewById(R.id.sales_order_info_separator).setVisibility(View.VISIBLE);
-                                            }
-                                        }
-                                    }
-                                }
+                                setHeader();
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingCart_items_list);
                                 // use this setting to improve performance if you know that changes
@@ -312,8 +271,62 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
+    private void setHeader(){
+        if(mUser!=null
+                && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            if(!mIsShoppingCart){
+                SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                if(salesOrder!=null){
+                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                    if(businessPartner!=null){
+                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+
+                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                        mSalesOrderNumber.setVisibility(View.VISIBLE);
+
+                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }else if(mUser!=null
+                && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+            if(mIsShoppingCart){
+                try {
+                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                    if (businessPartner != null) {
+                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+
+                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{
+                SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                if(salesOrder!=null){
+                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                    if(businessPartner!=null){
+                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+
+                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                        mSalesOrderNumber.setVisibility(View.VISIBLE);
+
+                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void reloadShoppingCart(){
+        setHeader();
         if(mIsShoppingCart){
             reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getShoppingCart());
         }else{
