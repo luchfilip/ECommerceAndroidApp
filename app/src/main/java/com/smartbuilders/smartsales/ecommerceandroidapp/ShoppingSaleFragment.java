@@ -291,6 +291,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                     } else {
                         startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

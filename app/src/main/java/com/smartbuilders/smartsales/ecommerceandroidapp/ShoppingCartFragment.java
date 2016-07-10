@@ -234,6 +234,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
                                     .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
                         }
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

@@ -8,8 +8,8 @@ android {
         applicationId "com.smartbuilders.smartsales.ecommerceandroidapp"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.5.1"
+        versionCode 9
+        versionName "1.6"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -36,5 +36,5 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.2.+'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.2.3'
 }

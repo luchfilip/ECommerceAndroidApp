@@ -74,4 +74,6 @@
 
     <dimen name="button_height">35dp</dimen>
 
+    <dimen name="company_logo_imageView_min_height">350dp</dimen>
+
 </resources>
