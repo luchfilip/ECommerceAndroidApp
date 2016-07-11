@@ -33,7 +33,7 @@
                 android:src="@drawable/ic_shopping_cart_white_24dp"/>
 
             <TextView
-                android:text="@string/open_shopping_sale"
+                android:text="@string/open_shopping_sales"
                 android:id="@+id/title_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
