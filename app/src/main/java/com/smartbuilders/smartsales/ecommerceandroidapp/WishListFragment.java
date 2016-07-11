@@ -20,12 +20,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -54,6 +58,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
     private View mainLayout;
+    private TextView mBusinessPartnerCommercialName;
+    private View mBusinessPartnerInfoSeparator;
 
     public WishListFragment() {
     }
@@ -92,6 +98,10 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                             try {
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
+
+                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+                                setHeader();
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.wish_list);
                                 // use this setting to improve performance if you know that changes
@@ -136,6 +146,22 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         return view;
     }
 
+    private void setHeader(){
+        if(mUser!=null && mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID){
+            try {
+                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                if(businessPartner!=null){
+                    mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                    mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void onStart() {
         if(mIsInitialLoad){
@@ -175,6 +201,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     public void reloadWishList(){
+        setHeader();
         if (mOrderLineDB!=null) {
             reloadWishList(mOrderLineDB.getWishList());
         }
@@ -188,6 +215,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         if (wishListLines==null || wishListLines.size()==0) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
+        }else{
+            mainLayout.setVisibility(View.VISIBLE);
+            mBlankScreenView.setVisibility(View.GONE);
         }
     }
 

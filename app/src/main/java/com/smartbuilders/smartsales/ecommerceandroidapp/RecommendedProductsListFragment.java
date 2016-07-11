@@ -18,12 +18,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.RecommendedProductsListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.WishListAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecommendedProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -41,6 +47,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "ProductosRecomendados";
 
+    private boolean mIsInitialLoad;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private RecommendedProductsListAdapter mRecommendedProductsListAdapter;
@@ -48,6 +55,9 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
     private View mainLayout;
+    private User mUser;
+    private TextView mBusinessPartnerCommercialName;
+    private View mBusinessPartnerInfoSeparator;
 
     public RecommendedProductsListFragment() {
     }
@@ -56,6 +66,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recommended_products_list, container, false);
+        mIsInitialLoad = true;
 
         final ArrayList<Product> recommendedProducts = new ArrayList<>();
 
@@ -63,25 +74,25 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
             @Override
             public void run() {
                 try {
-                    if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
+                    if (savedInstanceState != null) {
+                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
                         }
                     }
-                    User user = Utils.getCurrentUser(getContext());
-                    if (getActivity()!=null && user!=null) {
-                        recommendedProducts.addAll((new RecommendedProductDB(getActivity(), user))
-                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), user)));
+                    mUser = Utils.getCurrentUser(getContext());
+                    if (getActivity() != null && mUser != null) {
+                        recommendedProducts.addAll((new RecommendedProductDB(getActivity(), mUser))
+                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser)));
                     }
-                    if (getContext()!=null) {
+                    if (getContext() != null) {
                         mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
-                                RecommendedProductsListFragment.this, recommendedProducts, user);
+                                RecommendedProductsListFragment.this, recommendedProducts, mUser);
                     }
                     mShareIntent = createSharedIntent(recommendedProducts);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (getActivity()!=null) {
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -89,19 +100,23 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
+                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+                                setHeader();
+
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recommended_products_list);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
                                 recyclerView.setHasFixedSize(true);
                                 if (useGridView()) {
                                     mLinearLayoutManager = new GridLayoutManager(getContext(), getSpanCount());
-                                }else{
+                                } else {
                                     mLinearLayoutManager = new LinearLayoutManager(getContext());
                                 }
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
                                 recyclerView.setAdapter(mRecommendedProductsListAdapter);
 
-                                if (mRecyclerViewCurrentFirstPosition!=0) {
+                                if (mRecyclerViewCurrentFirstPosition != 0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
@@ -129,6 +144,53 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    private void setHeader() {
+        if (mUser != null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+            try {
+                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                if (businessPartner != null) {
+                    mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                    mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        if (mIsInitialLoad) {
+            mIsInitialLoad = false;
+        } else {
+            setHeader();
+            reloadRecommendedProductsList();
+        }
+        super.onStart();
+    }
+
+    private void reloadRecommendedProductsList() {
+        setHeader();
+        try {
+            ArrayList<Product> recommendedProducts = (new RecommendedProductDB(getActivity(), mUser))
+                    .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+            mRecommendedProductsListAdapter.setData(recommendedProducts);
+            //Se debe recargar el documento pdf que se tiene para compartir
+            new ReloadShareIntentThread(recommendedProducts).start();
+            if (recommendedProducts == null || recommendedProducts.size() == 0) {
+                mBlankScreenView.setVisibility(View.VISIBLE);
+                mainLayout.setVisibility(View.GONE);
+            }else{
+                mainLayout.setVisibility(View.VISIBLE);
+                mBlankScreenView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -178,15 +240,15 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_share:
                 mShareActionProvider.setShareIntent(mShareIntent);
                 break;
             case R.id.action_download:
-                if(mShareIntent!=null){
+                if (mShareIntent != null) {
                     Utils.createPdfFileInDownloadFolder(getContext(),
-                            getContext().getCacheDir() + File.separator + (fileName+".pdf"),
-                            fileName+".pdf");
+                            getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                            fileName + ".pdf");
                 }
                 break;
         }
@@ -195,7 +257,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
     private Intent createSharedIntent(ArrayList<Product> products) {
         try {
-            if (products!=null && !products.isEmpty()) {
+            if (products != null && !products.isEmpty()) {
                 String subject = "";
                 String message = "";
 
@@ -210,15 +272,15 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
-                try{
+                try {
                     new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext());
-                }catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 //Add the attachment by specifying a reference to our custom ContentProvider
                 //and the specific file of interest
-                shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
                         + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
                 return shareIntent;
             }
@@ -226,6 +288,21 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    class ReloadShareIntentThread extends Thread {
+
+        private ArrayList<Product> mProducts;
+
+        public ReloadShareIntentThread(ArrayList<Product> products) {
+            this.mProducts = products;
+        }
+
+        public void run() {
+            mShareIntent = createSharedIntent(mProducts);
+            mShareActionProvider.setShareIntent(mShareIntent);
+        }
     }
 
     private boolean useGridView(){

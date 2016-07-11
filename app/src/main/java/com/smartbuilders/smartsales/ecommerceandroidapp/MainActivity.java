@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         final User user = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, true);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
