@@ -18,9 +18,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrderLineAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -105,6 +108,16 @@ public class OrderDetailFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                    if(businessPartner!=null){
+                                        ((TextView) view.findViewById(R.id.business_partner_commercial_name_textView))
+                                                .setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
+                                        view.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+                                    }
+                                }
+
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.order_lines);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView

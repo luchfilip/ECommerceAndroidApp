@@ -7,8 +7,10 @@ import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -24,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -43,6 +46,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ContactUsActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.RecommendedProductsListActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -469,9 +473,9 @@ public class Utils {
 
     /**
      *
-     * @param fileName
      * @param image
      * @param context
+     * @param user
      */
     public static void createFileInUserCompanyDir(Bitmap image, Context context, User user){
         //check if external storage is available so that we can dump our PDF file there
@@ -653,8 +657,24 @@ public class Utils {
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;
             case R.id.nav_shopping_sale:
-                context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                User user = getCurrentUser(context);
+                if(user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+                    try {
+                        context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                                .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID,
+                                        Utils.getAppCurrentBusinessPartnerId(context, user))
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        new AlertDialog.Builder(context)
+                                .setMessage(e.getMessage())
+                                .setPositiveButton(R.string.accept, null)
+                                .show();
+                    }
+                }else{
+                    context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                }
                 break;
             case R.id.nav_products_recommended_list:
                 context.startActivity(new Intent(context, RecommendedProductsListActivity.class)

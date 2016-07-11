@@ -21,7 +21,8 @@
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>
-    <string name="open_shopping_sale">Cotizaciones Abiertas</string>
+    <string name="open_shopping_sales">Cotizaciones Abiertas</string>
+    <string name="open_shopping_sale">Cotización Abierta</string>
     <string name="home">Páginal Principal</string>
     <string name="wish_list">Lista de Favoritos</string>
     <string name="recommended_products">Productos Recomendados</string>
