@@ -176,13 +176,28 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        if (mTwoPane) {
-            if (mListView!=null && mListView.getAdapter()!=null
-                    && mListView.getAdapter().getCount()>selectedIndex) {
+        if (mListView!=null && mListView.getAdapter()!=null
+                && mListView.getAdapter().getCount()>selectedIndex) {
+            if (mTwoPane) {
                 mListView.setVisibility(View.VISIBLE);
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
+                findViewById(R.id.fragment_sales_order_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.VISIBLE);
+            }else{
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.progressContainer).setVisibility(View.GONE);
             }
+            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
+        } else {
+            if (mTwoPane) {
+                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
+                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                findViewById(R.id.main_layout).setVisibility(View.GONE);
+            }
+            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
         }
     }
 
