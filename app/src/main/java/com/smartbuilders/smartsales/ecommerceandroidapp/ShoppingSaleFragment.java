@@ -340,6 +340,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
         }else{
+            mainLayout.setVisibility(View.VISIBLE);
+            mBlankScreenView.setVisibility(View.GONE);
             fillFields();
         }
     }
