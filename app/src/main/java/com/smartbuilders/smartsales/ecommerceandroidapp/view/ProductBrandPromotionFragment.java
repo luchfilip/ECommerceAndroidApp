@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.view;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -58,26 +59,25 @@ public class ProductBrandPromotionFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.promotional_text))
                 .setText(mProductBrandPromotionalCard.getPromotionalText());
 
-        File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), mProductBrandPromotionalCard.getImageFileName());
+        final boolean isLandscape = getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), isLandscape, mProductBrandPromotionalCard.getImageFileName());
         if (img!=null) {
             Picasso.with(getContext())
                     .load(img).into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView));
-        } else {
+        } else if (user!=null) {
             Picasso.with(getContext())
                     .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
-                            + mProductBrandPromotionalCard.getImageFileName())
+                            + mProductBrandPromotionalCard.getImageFileName() + Utils.getUrlScreenParameters(isLandscape, getContext()))
                     .into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView), new Callback() {
                         @Override
                         public void onSuccess() {
-                            Utils.createFileInProductBrandPromotionalDir(mProductBrandPromotionalCard.getImageFileName(),
-                                    ((BitmapDrawable)((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView)).getDrawable()).getBitmap(),
-                                     getContext());
+                            Utils.createFileInProductBrandPromotionalDir(getContext(), isLandscape,
+                                    mProductBrandPromotionalCard.getImageFileName(),
+                                    ((BitmapDrawable)((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView)).getDrawable()).getBitmap());
                         }
 
                         @Override
-                        public void onError() {
-
-                        }
+                        public void onError() { }
                     });
         }
 

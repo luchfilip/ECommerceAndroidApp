@@ -10,6 +10,7 @@ import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,12 @@ public class LoadProductsThumbImage extends IntentService {
                 inputStream = getHttpConnection(user.getServerAddress() +
                         "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
                 // write the inputStream to a FileOutputStream
-                outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                try{
+                    outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                } catch (FileNotFoundException e){
+                    (new File(Utils.getImagesThumbFolderPath(context))).mkdirs();
+                    outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                }
                 int read = 0;
                 byte[] bytes = new byte[1024];
                 while ((read = inputStream.read(bytes)) != -1) {

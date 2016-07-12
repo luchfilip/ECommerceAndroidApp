@@ -64,6 +64,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
     private String mValidToText;
+    private TextView mBusinessPartnerCommercialName;
+    private View mDivider;
 
     public ShoppingSaleFragment() {
     }
@@ -123,16 +125,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         @Override
                         public void run() {
                             try {
-                                if(mShowBusinessPartnerInfo){
-                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                            .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
-                                    if(businessPartner!=null){
-                                        TextView businessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
-                                        businessPartnerCommercialName.setText(getString(R.string.business_partner_name_detail, businessPartner.getCommercialName()));
-                                        businessPartnerCommercialName.setVisibility(View.VISIBLE);
-                                        view.findViewById(R.id.divider).setVisibility(View.VISIBLE);
-                                    }
-                                }
+                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
+                                mDivider = view.findViewById(R.id.divider);
 
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
@@ -173,6 +167,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 });
                                 mValidToEditText.setText(mValidToText);
 
+                                fillFields();
+
                                 view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
                                     .setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -198,7 +194,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                         }
                                     });
 
-                                fillFields();
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -303,6 +299,15 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
+        if(mShowBusinessPartnerInfo){
+            BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                    .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
+            if(businessPartner!=null){
+                mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_name_detail, businessPartner.getCommercialName()));
+                mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                mDivider.setVisibility(View.VISIBLE);
+            }
+        }
         if (mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));

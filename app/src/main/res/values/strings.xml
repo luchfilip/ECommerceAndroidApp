@@ -313,4 +313,5 @@
     <string name="session_loaded_detail">Se ha iniciado sesión con el cliente \"%1$s\".</string>
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
+    <string name="smallest_width">default</string>
 </resources>

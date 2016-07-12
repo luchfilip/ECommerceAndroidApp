@@ -188,7 +188,7 @@ public class SplashScreen extends AppCompatActivity {
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
-        Utils.createImageFiles(this, mCurrentUser);
+        //Utils.createImageFiles(this, mCurrentUser);
         //se manda a descargar todas las imagenes thumbs de los productos
         startService(new Intent(this, LoadProductsThumbImage.class));
         Intent i = new Intent(SplashScreen.this, MainActivity.class);

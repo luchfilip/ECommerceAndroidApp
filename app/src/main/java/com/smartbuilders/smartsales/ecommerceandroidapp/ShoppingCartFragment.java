@@ -30,8 +30,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**

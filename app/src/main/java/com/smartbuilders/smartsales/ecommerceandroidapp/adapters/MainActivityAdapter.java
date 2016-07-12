@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
@@ -62,6 +63,8 @@ public class MainActivityAdapter extends BaseAdapter {
     private ArrayList<Object> mDataset;
     private User mUser;
     private DisplayMetrics metrics;
+    private String mUrlScreenParameters;
+    private boolean mIsLandscape;
 
     @Override
     public int getItemViewType(int position) {
@@ -129,6 +132,9 @@ public class MainActivityAdapter extends BaseAdapter {
         mUser = user;
         metrics = new DisplayMetrics();
         fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        mIsLandscape = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        mUrlScreenParameters = Utils.getUrlScreenParameters(mIsLandscape, context);
     }
 
     @Override
@@ -349,20 +355,19 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private void setFlipperImage(ViewFlipper viewFlipper, final Banner banner) {
         final ImageView image = new ImageView(mContext);
+        File img = Utils.getFileInBannerDirByFileName(mContext, mIsLandscape, banner.getImageFileName());
 
-        File img = Utils.getFileInBannerDirByFileName(mContext, banner.getImageFileName());
         if(img!=null){
             Picasso.with(mContext).load(img).into(image);
         }else{
             Picasso.with(mContext)
-                    .load(mUser.getServerAddress()
-                            + "/IntelligentDataSynchronizer/GetBannerImage?fileName="
-                            + banner.getImageFileName())
+                    .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetBannerImage?fileName=" +
+                            banner.getImageFileName() + mUrlScreenParameters)
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Utils.createFileInBannerDir(banner.getImageFileName(),
-                                    ((BitmapDrawable)(image).getDrawable()).getBitmap(), mContext);
+                            Utils.createFileInBannerDir(mContext, mIsLandscape, banner.getImageFileName(),
+                                    ((BitmapDrawable)(image).getDrawable()).getBitmap());
                         }
 
                         @Override

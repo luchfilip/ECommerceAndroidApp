@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,6 +61,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -227,7 +229,13 @@ public class Utils {
             //path for the image file in the external storage
             File imageFile = new File(getImagesThumbFolderPath(context), fileName);
             try {
-                imageFile.createNewFile();
+                try {
+                    imageFile.createNewFile();
+                } catch (IOException e) {
+                    new File(getImagesThumbFolderPath(context)).mkdirs();
+                    imageFile = new File(getImagesThumbFolderPath(context), fileName);
+                    imageFile.createNewFile();
+                }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -254,7 +262,50 @@ public class Utils {
             //path for the image file in the external storage
             File imageFile = new File(getImagesOriginalFolderPath(context), fileName);
             try {
-                imageFile.createNewFile();
+                try {
+                    imageFile.createNewFile();
+                } catch (IOException e) {
+                    new File(getImagesOriginalFolderPath(context)).mkdirs();
+                    imageFile = new File(getImagesOriginalFolderPath(context), fileName);
+                    imageFile.createNewFile();
+                }
+                FileOutputStream fo = new FileOutputStream(imageFile);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (IOException | NullPointerException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     *
+     * @param context
+     * @param isLandscape
+     * @param fileName
+     * @param image
+     */
+    public static void createFileInBannerDir(Context context, boolean isLandscape, String fileName, Bitmap image){
+        //check if external storage is available so that we can dump our PDF file there
+        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
+            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
+        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
+                && context.getExternalFilesDir(null)!=null){
+            //path for the image file in the external storage
+            File imageFile = new File(isLandscape ? getImagesBannerLandscapeFolderPath(context)
+                    : getImagesBannerPortraitFolderPath(context), fileName);
+            try {
+                try {
+                    imageFile.createNewFile();
+                } catch (IOException e) {
+                    new File(isLandscape ? getImagesBannerLandscapeFolderPath(context)
+                            : getImagesBannerPortraitFolderPath(context)).mkdirs();
+                    imageFile = new File(isLandscape ? getImagesBannerLandscapeFolderPath(context)
+                            : getImagesBannerPortraitFolderPath(context), fileName);
+                    imageFile.createNewFile();
+                }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -272,43 +323,25 @@ public class Utils {
      * @param image
      * @param context
      */
-    public static void createFileInBannerDir(String fileName, Bitmap image, Context context){
+    public static void createFileInProductBrandPromotionalDir(Context context, boolean isLandscape, String fileName, Bitmap image){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
         } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
                 && context.getExternalFilesDir(null)!=null){
             //path for the image file in the external storage
-            File imageFile = new File(getImagesBannerFolderPath(context), fileName);
+            File imageFile = new File(isLandscape ? getImagesProductBrandPromotionalLandscapeFolderPath(context)
+                    : getImagesProductBrandPromotionalPortraitFolderPath(context), fileName);
             try {
-                imageFile.createNewFile();
-                FileOutputStream fo = new FileOutputStream(imageFile);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                fo.write(bytes.toByteArray());
-                fo.close();
-            } catch (IOException | NullPointerException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     *
-     * @param fileName
-     * @param image
-     * @param context
-     */
-    public static void createFileInProductBrandPromotionalDir(String fileName, Bitmap image, Context context){
-        //check if external storage is available so that we can dump our PDF file there
-        if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Log.e(TAG, context.getString(R.string.external_storage_unavailable));
-        } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null
-                && context.getExternalFilesDir(null)!=null){
-            //path for the image file in the external storage
-            File imageFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
-            try {
-                imageFile.createNewFile();
+                try {
+                    imageFile.createNewFile();
+                } catch (IOException e) {
+                    new File(isLandscape ? getImagesProductBrandPromotionalLandscapeFolderPath(context)
+                            : getImagesProductBrandPromotionalPortraitFolderPath(context)).mkdirs();
+                    imageFile = new File(isLandscape ? getImagesProductBrandPromotionalLandscapeFolderPath(context)
+                            : getImagesProductBrandPromotionalPortraitFolderPath(context), fileName);
+                    imageFile.createNewFile();
+                }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -374,9 +407,10 @@ public class Utils {
         }
     }
 
-    public static File getFileInBannerDirByFileName(Context context, String fileName){
+    public static File getFileInBannerDirByFileName(Context context, boolean isLandscape, String fileName){
         try {
-            File imgFile = new File(getImagesBannerFolderPath(context), fileName);
+            File imgFile = new File(isLandscape ? getImagesBannerLandscapeFolderPath(context)
+                    : getImagesBannerPortraitFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -386,9 +420,10 @@ public class Utils {
         return null;
     }
 
-    public static File getFileInProductBrandPromotionalDirByFileName(Context context, String fileName){
+    public static File getFileInProductBrandPromotionalDirByFileName(Context context, boolean isLandscape, String fileName){
         try {
-            File imgFile = new File(getImagesProductBrandPromotionalFolderPath(context), fileName);
+            File imgFile = new File(isLandscape ? getImagesProductBrandPromotionalLandscapeFolderPath(context)
+                    : getImagesProductBrandPromotionalPortraitFolderPath(context), fileName);
             if(imgFile.exists()){
                 return imgFile;
             }
@@ -484,7 +519,14 @@ public class Utils {
             File imageFile = new File(getImagesUserCompanyFolderPath(context, user),
                     "user_company_logo.jpg");
             try {
-                imageFile.createNewFile();
+                try {
+                    imageFile.createNewFile();
+                } catch (IOException e) {
+                    new File(getImagesUserCompanyFolderPath(context, user)).mkdirs();
+                    imageFile = new File(getImagesUserCompanyFolderPath(context, user),
+                            "user_company_logo.jpg");
+                    imageFile.createNewFile();
+                }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -500,8 +542,14 @@ public class Utils {
         OutputStream outputStream = null;
         try {
             // write the inputStream to a FileOutputStream
-            outputStream = new FileOutputStream(new File(getImagesUserCompanyFolderPath(context, user),
-                    "user_company_logo.jpg"));
+            try {
+                outputStream = new FileOutputStream(new File(getImagesUserCompanyFolderPath(context, user),
+                        "user_company_logo.jpg"));
+            } catch (FileNotFoundException e) {
+                new File(getImagesUserCompanyFolderPath(context, user)).mkdirs();
+                outputStream = new FileOutputStream(new File(getImagesUserCompanyFolderPath(context, user),
+                        "user_company_logo.jpg"));
+            }
             int read = 0;
             byte[] bytes = new byte[1024];
             while ((read = inputStream.read(bytes)) != -1) {
@@ -525,18 +573,6 @@ public class Utils {
                 }
             }
         }
-    }
-
-    public static File getFileInUserCompanyDir(Context context, User user){
-        try {
-            File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");
-            if(imgFile.exists()){
-                return imgFile;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public static Bitmap getImageFromUserCompanyDir(Context context, User user){
@@ -739,88 +775,43 @@ public class Utils {
         return imagesOriginalFolderPath;
     }
 
-    private static String imagesBannerFolderPath;
-    public static String getImagesBannerFolderPath(Context context){
-        if(imagesBannerFolderPath==null){
-            imagesBannerFolderPath = context.getExternalFilesDir(null) + "/images/banner/";
+    private static String imagesBannerPortraitFolderPath;
+    public static String getImagesBannerPortraitFolderPath(Context context){
+        if(imagesBannerPortraitFolderPath==null){
+            imagesBannerPortraitFolderPath = context.getExternalFilesDir(null) + "/images/banner/portrait/";
         }
-        return imagesBannerFolderPath;
+        return imagesBannerPortraitFolderPath;
     }
 
-    private static String imagesProductBrandPromotionalFolderPath;
-    public static String getImagesProductBrandPromotionalFolderPath(Context context){
-        if(imagesProductBrandPromotionalFolderPath==null){
-            imagesProductBrandPromotionalFolderPath = context.getExternalFilesDir(null) +
-                    "/images/productBrandPromotional/";
+    private static String imagesBannerLandscapeFolderPath;
+    public static String getImagesBannerLandscapeFolderPath(Context context){
+        if(imagesBannerLandscapeFolderPath==null){
+            imagesBannerLandscapeFolderPath = context.getExternalFilesDir(null) + "/images/banner/landscape/";
         }
-        return imagesProductBrandPromotionalFolderPath;
+        return imagesBannerLandscapeFolderPath;
+    }
+
+    private static String imagesProductBrandPromotionalPortraitFolderPath;
+    public static String getImagesProductBrandPromotionalPortraitFolderPath(Context context){
+        if(imagesProductBrandPromotionalPortraitFolderPath==null){
+            imagesProductBrandPromotionalPortraitFolderPath = context.getExternalFilesDir(null) +
+                    "/images/productBrandPromotional/portrait/";
+        }
+        return imagesProductBrandPromotionalPortraitFolderPath;
+    }
+
+    private static String imagesProductBrandPromotionalLandscapeFolderPath;
+    public static String getImagesProductBrandPromotionalLandscapeFolderPath(Context context){
+        if(imagesProductBrandPromotionalLandscapeFolderPath==null){
+            imagesProductBrandPromotionalLandscapeFolderPath = context.getExternalFilesDir(null) +
+                    "/images/productBrandPromotional/landscape/";
+        }
+        return imagesProductBrandPromotionalLandscapeFolderPath;
     }
 
     public static String getImagesUserCompanyFolderPath(Context context, User user){
         return context.getExternalFilesDir(null) + File.separator + user.getUserGroup()
                 + File.separator + user.getUserName() + "/images/userCompany/";
-    }
-
-    public static void createImageFiles(Context context, User user){
-        File folder = new File(getImagesThumbFolderPath(context));
-        // if the directory does not exist, create it
-        if (!folder.exists()) {
-            try {
-                if (!folder.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
-                }
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-        }
-
-        folder = new File(getImagesOriginalFolderPath(context));
-        // if the directory does not exist, create it
-        if (!folder.exists()) {
-            try {
-                if (!folder.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
-                }
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-        }
-
-        folder = new File(getImagesBannerFolderPath(context));
-        // if the directory does not exist, create it
-        if (!folder.exists()) {
-            try {
-                if (!folder.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
-                }
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-        }
-
-        folder = new File(getImagesProductBrandPromotionalFolderPath(context));
-        // if the directory does not exist, create it
-        if (!folder.exists()) {
-            try {
-                if (!folder.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
-                }
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-        }
-
-        folder = new File(getImagesUserCompanyFolderPath(context, user));
-        // if the directory does not exist, create it
-        if (!folder.exists()) {
-            try {
-                if (!folder.mkdirs()) {
-                    Log.w(TAG, "Failed to create folder: " + folder.getPath() + ".");
-                }
-            } catch (SecurityException se) {
-                se.printStackTrace();
-            }
-        }
     }
 
     public static boolean appRequireInitialLoadOfGlobalData(Context context) {
@@ -1054,5 +1045,37 @@ public class Utils {
         }else{
             throw new Exception("Usuario es null en getCurrentBusinessPartnerId(...)");
         }
+    }
+
+    public static String getUrlScreenParameters(boolean mIsLandscape, Context context){
+        String urlScreenParameters = new String();
+        try {
+            urlScreenParameters += mIsLandscape ? "&orientation=landscape" : "&orientation=portrait";
+            switch (context.getResources().getDisplayMetrics().densityDpi) {
+                case DisplayMetrics.DENSITY_LOW:    urlScreenParameters += "&screenPlayDensity=LOW";    break;
+                case DisplayMetrics.DENSITY_MEDIUM: urlScreenParameters += "&screenPlayDensity=MEDIUM"; break;
+                case DisplayMetrics.DENSITY_TV:     urlScreenParameters += "&screenPlayDensity=TV";     break;
+                case DisplayMetrics.DENSITY_HIGH:   urlScreenParameters += "&screenPlayDensity=HIGH";   break;
+                case DisplayMetrics.DENSITY_280:    urlScreenParameters += "&screenPlayDensity=280";    break;
+                case DisplayMetrics.DENSITY_XHIGH:  urlScreenParameters += "&screenPlayDensity=XHIGH";  break;
+                case DisplayMetrics.DENSITY_360:    urlScreenParameters += "&screenPlayDensity=360";    break;
+                case DisplayMetrics.DENSITY_400:    urlScreenParameters += "&screenPlayDensity=400";    break;
+                case DisplayMetrics.DENSITY_420:    urlScreenParameters += "&screenPlayDensity=420";    break;
+                case DisplayMetrics.DENSITY_XXHIGH: urlScreenParameters += "&screenPlayDensity=XXHIGH"; break;
+                case DisplayMetrics.DENSITY_560:    urlScreenParameters += "&screenPlayDensity=560";    break;
+                case DisplayMetrics.DENSITY_XXXHIGH: urlScreenParameters += "&screenPlayDensity=XXXHIGH"; break;
+                default: urlScreenParameters += "&screenPlayDensity="+context.getResources().getDisplayMetrics().densityDpi; break;
+            }
+            switch(context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) {
+                case Configuration.SCREENLAYOUT_SIZE_LARGE: urlScreenParameters += "&screenSize=LARGE"; break;
+                case Configuration.SCREENLAYOUT_SIZE_NORMAL: urlScreenParameters += "&screenSize=NORMAL"; break;
+                case Configuration.SCREENLAYOUT_SIZE_SMALL: urlScreenParameters += "&screenSize=SMALL"; break;
+                default: urlScreenParameters += "&screenSize="+(context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK); break;
+            }
+            urlScreenParameters += "&smallestWidth="+context.getString(R.string.smallest_width);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return urlScreenParameters;
     }
 }
