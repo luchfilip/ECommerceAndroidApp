@@ -197,19 +197,20 @@ public class ApplicationUtilities {
      * @return
      */
     public static ArrayList<LogSyncData> getSyncLogByUser(User user, int logVisibility, Context ctx){
-    	ArrayList<LogSyncData> syncLog = new ArrayList<LogSyncData>();
+    	ArrayList<LogSyncData> syncLog = new ArrayList<>();
     	Cursor c = null;
     	try{
     		if(user!=null){
 				c = ctx.getContentResolver()
 						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
-								new StringBuffer("SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL FROM IDS_SYNC_LOG ")
-										.append(" WHERE USER_ID=").append(user.getUserId())
-										.append(" AND LOG_VISIBILITY=").append(logVisibility).toString(),
-								null, null);
-				while(c.moveToNext()){
-					syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), ctx));
+								"SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL " +
+                                    " FROM IDS_SYNC_LOG WHERE USER_ID=? AND LOG_VISIBILITY= ?",
+								new String[]{String.valueOf(user.getUserId()), String.valueOf(logVisibility)}, null);
+				if(c!=null){
+					while(c.moveToNext()){
+						syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), ctx));
+					}
 				}
 			}
 		}catch(Exception e){
@@ -229,7 +230,7 @@ public class ApplicationUtilities {
      * @return
      */
     public static ArrayList<LogSyncData> getSyncLogByUser(User user, Context ctx){
-    	ArrayList<LogSyncData> syncLog = new ArrayList<LogSyncData>();
+    	ArrayList<LogSyncData> syncLog = new ArrayList<>();
     	Cursor c = null;
     	try{
     		if(user!=null){
@@ -335,22 +336,22 @@ public class ApplicationUtilities {
 	 * @throws Exception 
 	 */
 	public static String getNewUserId(Context ctx) throws Exception{
-		Cursor request = null;
+		Cursor cursor = null;
 		try{
-			request = ctx.getContentResolver()
+			cursor = ctx.getContentResolver()
 							.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 									null, 
 									"SELECT MAX(USER_ID)+1 FROM IDS_USER",
 									null, null);
-			if(request.moveToNext()){
-				return request.getString(0)!=null ? request.getString(0) : "1";
+			if(cursor!=null && cursor.moveToNext()){
+				return cursor.getString(0)!=null ? cursor.getString(0) : "1";
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new Exception("Error getting a new UserId. "+e.getMessage());
 		}finally{
-			if(request!=null){
-				request.close();
+			if(cursor!=null){
+				cursor.close();
 			}
 		}
 		return "1";
@@ -360,24 +361,16 @@ public class ApplicationUtilities {
 	 * 
 	 * @return
 	 */
-	public static boolean isExternalStorageReadOnly() {  
-		String extStorageState = Environment.getExternalStorageState();  
-		if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {  
-			return true;  
-		}  
-		return false;  
+	public static boolean isExternalStorageReadOnly() {
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState());
 	}  
  
 	/**
 	 * 
 	 * @return
 	 */
-	public static boolean isExternalStorageAvailable() {  
-		String extStorageState = Environment.getExternalStorageState();  
-		if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {  
-			return true;  
-		}  
-		return false;  
+	public static boolean isExternalStorageAvailable() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
 	}  
 	
 	/**
@@ -388,7 +381,7 @@ public class ApplicationUtilities {
     public static void zip(String[] _files, String zipFileName) {
 		try {
 			int BUFFER = 20000;
-			BufferedInputStream origin = null;
+			BufferedInputStream origin;
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFileName)));
 			byte data[] = new byte[BUFFER];
 
@@ -437,10 +430,12 @@ public class ApplicationUtilities {
 						    			.append(" AND SATURDAY='").append(data.isSaturday()?"Y":"N").append("' ")
 						    			.append(" AND SUNDAY='").append(data.isSunday()?"Y":"N").append("'").toString(),
 								null, null);
-				if(c.moveToNext() && c.getInt(0)>0){
+				if(c!=null && c.moveToNext() && c.getInt(0)>0){
 					throw new Exception(ctx.getString(R.string.alarm_already_set));
 				}
-    			c.close();
+                if(c!=null){
+    			    c.close();
+                }
     			
     			ctx.getContentResolver()
     				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
@@ -465,7 +460,7 @@ public class ApplicationUtilities {
 								null, 
 								"SELECT MAX(SCHEDULER_SYNC_ID) FROM IDS_SCHEDULER_SYNC",
 								null, null);
-				if(c.moveToNext()){
+				if(c!=null && c.moveToNext()){
 					data.setSchedulerSyncDataId(c.getInt(0)==0?1:c.getInt(0));
 					data.setActive(true);
 					registerSyncSchedulerDataInAlarmManager(user, data, ctx);
@@ -664,19 +659,21 @@ public class ApplicationUtilities {
 										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 										.append(" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=").append(user.getUserId()).toString(),
 										null, null);
-				while(c.moveToNext()){
-					data.add(new SchedulerSyncData(c.getInt(0),
-													c.getInt(1), 
-													c.getInt(2), 
-													c.getString(3).equals("Y"), 
-													c.getString(4).equals("Y"), 
-													c.getString(5).equals("Y"), 
-													c.getString(6).equals("Y"), 
-													c.getString(7).equals("Y"), 
-													c.getString(8).equals("Y"), 
-													c.getString(9).equals("Y"),
-													c.getString(10).equals("Y")));
-				}
+                if(c!=null){
+                    while(c.moveToNext()){
+                        data.add(new SchedulerSyncData(c.getInt(0),
+                                                        c.getInt(1),
+                                                        c.getInt(2),
+                                                        c.getString(3).equals("Y"),
+                                                        c.getString(4).equals("Y"),
+                                                        c.getString(5).equals("Y"),
+                                                        c.getString(6).equals("Y"),
+                                                        c.getString(7).equals("Y"),
+                                                        c.getString(8).equals("Y"),
+                                                        c.getString(9).equals("Y"),
+                                                        c.getString(10).equals("Y")));
+                    }
+                }
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -700,11 +697,11 @@ public class ApplicationUtilities {
 			c = ctx.getContentResolver()
 					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 							null, 
-							new StringBuffer("SELECT HOUR, MINUTE, MONDAY, TUESDAY, ")
+							new StringBuilder("SELECT HOUR, MINUTE, MONDAY, TUESDAY, ")
 									.append("WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 									.append("FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=").append(schedulerSyncDataId).toString(),
 									null, null);
-			if(c.moveToNext()){
+			if(c!=null && c.moveToNext()){
 				return new SchedulerSyncData(schedulerSyncDataId,
 												c.getInt(0), 
 												c.getInt(1), 
@@ -990,23 +987,58 @@ public class ApplicationUtilities {
 	 * @return
 	 */
 	public static User getUserByIdFromAccountManager(Context ctx, String userId) {
-    	try{
-    		AccountManager mAccountManager = AccountManager.get(ctx);
-			for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
-				if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
-					User user = new User(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                    user.setBusinessPartnerId(Integer.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)));
-                    user.setUserProfileId(Integer.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_PROFILE_ID)));
-					user.setServerUserId(Long.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
-					user.setUserName(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
-					user.setUserPass(mAccountManager.getPassword(account));
-					user.setServerAddress(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS));
-					user.setUserGroup(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP));
-					user.setGcmRegistrationId(mAccountManager.getUserData(account, AccountGeneral.USERDATA_GCM_REGISTRATION_ID));
-					user.setSaveDBInExternalCard(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
-					user.setAuthToken(mAccountManager. peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
-					return user;
+		return getUserFromAccountManager(ctx, userId, null);
+	}
+
+	/**
+	 *
+	 * @param ctx
+	 * @param serverUserId
+     * @return
+     */
+	public static User getUserByServerUserIdFromAccountManager(Context ctx, String serverUserId) {
+		return getUserFromAccountManager(ctx, null, serverUserId);
+	}
+
+	/**
+	 *
+	 * @param ctx
+	 * @param userId
+	 * @param serverUserId
+     * @return
+     */
+	private static User getUserFromAccountManager(Context ctx, String userId, String serverUserId) {
+		try{
+			AccountManager mAccountManager = AccountManager.get(ctx);
+			Account userAccount = null;
+			if(userId!=null) {
+				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
+					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
+						userAccount = account;
+						break;
+					}
 				}
+			} else if (serverUserId!=null) {
+				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
+					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID).equals(serverUserId)){
+						userAccount = account;
+						break;
+					}
+				}
+			}
+			if (userAccount!=null) {
+				User user = new User(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_ID));
+				user.setBusinessPartnerId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)));
+				user.setUserProfileId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_PROFILE_ID)));
+				user.setServerUserId(Long.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SERVER_USER_ID)));
+				user.setUserName(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_NAME));
+				user.setUserPass(mAccountManager.getPassword(userAccount));
+				user.setServerAddress(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SERVER_ADDRESS));
+				user.setUserGroup(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_GROUP));
+				user.setGcmRegistrationId(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_GCM_REGISTRATION_ID));
+				user.setSaveDBInExternalCard(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
+				user.setAuthToken(mAccountManager. peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
+				return user;
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1183,7 +1215,7 @@ public class ApplicationUtilities {
     		ArrayList<User> registeredUsers = new ArrayList<User>();
 			c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, 
 													null, 
-													new StringBuffer("SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER").toString(),
+													"SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
 													null, null);
 			while(c.moveToNext()){
 				User user = new User(c.getString(0));
@@ -1208,7 +1240,7 @@ public class ApplicationUtilities {
 					try{
 						c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, 
 															null, 
-															new StringBuffer("SELECT SCHEDULER_SYNC_ID FROM IDS_SCHEDULER_SYNC ")
+															new StringBuilder("SELECT SCHEDULER_SYNC_ID FROM IDS_SCHEDULER_SYNC ")
 																.append(" WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
 															null, null);
 						while(c.moveToNext()){
@@ -1226,14 +1258,14 @@ public class ApplicationUtilities {
 			    	ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 								new ContentValues(), 
-								new StringBuffer("DELETE FROM IDS_SYNC_LOG WHERE USER_ID=").append(userRemoved.getUserId()).toString(), 
+								new StringBuilder("DELETE FROM IDS_SYNC_LOG WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
 								null);
 			    	
 			    	//delete user in database
 			    	ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 								new ContentValues(), 
-								new StringBuffer("DELETE FROM IDS_USER WHERE USER_ID=").append(userRemoved.getUserId()).toString(), 
+								new StringBuilder("DELETE FROM IDS_USER WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
 								null);
 			    	
 			    	//delete specific database for user
