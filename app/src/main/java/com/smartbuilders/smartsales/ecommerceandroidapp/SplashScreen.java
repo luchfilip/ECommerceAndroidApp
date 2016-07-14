@@ -64,6 +64,10 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
                             if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
                                 initApp();
+                                //se manda a descargar todas las imagenes thumbs de los productos aqui
+                                //porque en la sincronizacion inicial no se descargan ya que aun la
+                                //productImage esta vacia
+                                startService(new Intent(SplashScreen.this, LoadProductsThumbImage.class));
                                 mSynchronizationState = SYNC_FINISHED;
                             }else{
                                 mSynchronizationState = SYNC_ERROR;
@@ -190,7 +194,7 @@ public class SplashScreen extends AppCompatActivity {
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
         //Utils.createImageFiles(this, mCurrentUser);
         //se manda a descargar todas las imagenes thumbs de los productos
-        startService(new Intent(this, LoadProductsThumbImage.class));
+        //startService(new Intent(this, LoadProductsThumbImage.class));
         Intent i = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -212,7 +216,7 @@ public class SplashScreen extends AppCompatActivity {
                 if(NetworkConnectionUtilities.isOnline(this)
                         && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                    if(!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
+                    if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
                         Bundle settingsBundle = new Bundle();
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                         settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -229,6 +233,12 @@ public class SplashScreen extends AppCompatActivity {
                 }
         } else if (mCurrentUser!=null) {
             mSynchronizationState = SYNC_FINISHED;
+            if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                ContentResolver.requestSync(account, getString(R.string.sync_adapter_content_authority), settingsBundle);
+            }
             initApp();
         } else {
             //TODO: mostrar error en pantalla

@@ -117,8 +117,8 @@ public class ApplicationUtilities {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
 	
-	public static final String GCM_API_KEY = "366626445053";
-	public static final String SERVER_API_KEY = "AIzaSyDRi4TmpjRnNLtLuP2rwc31aHNUAriNacs";
+	public static final String FEBECA_GCM_API_KEY = "767398413220";
+	public static final String FEBECA_SERVER_API_KEY = "AIzaSyDn5EDknRWxI5ibM8tgksjMU0RSLJ6EPXc";
     
     public static final String TIME_FORMAT_1 = "%02d:%02d:%02d";
     public static final String TIME_FORMAT_2 = "%02d H, %02d m, %02d s";
@@ -237,13 +237,16 @@ public class ApplicationUtilities {
 				c = ctx.getContentResolver()
 						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
-								new StringBuffer("SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL ")
+								new StringBuilder("SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL ")
 									.append("FROM IDS_SYNC_LOG ")
 									.append("WHERE USER_ID=").append(user.getUserId()).toString(),
 								null, null);
-				while(c.moveToNext()){
-					syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), ctx));
-				}
+                if(c!=null){
+				    while(c.moveToNext()){
+				    	syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)),
+                                c.getString(1), c.getString(2), c.getString(3), ctx));
+				    }
+                }
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -418,7 +421,7 @@ public class ApplicationUtilities {
     			c = ctx.getContentResolver()
     					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
-								new StringBuffer("SELECT COUNT(*) FROM IDS_SCHEDULER_SYNC ")
+								new StringBuilder("SELECT COUNT(*) FROM IDS_SCHEDULER_SYNC ")
 						    			.append(" WHERE USER_ID=").append(user.getUserId())
 						    			.append(" AND HOUR=").append(data.getHour())
 						    			.append(" AND MINUTE=").append(data.getMinute())
@@ -440,7 +443,7 @@ public class ApplicationUtilities {
     			ctx.getContentResolver()
     				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 							new ContentValues(), 
-							new StringBuffer()
+							new StringBuilder()
 								.append("INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
 								.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) ")
 								.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").toString(), 
@@ -655,7 +658,7 @@ public class ApplicationUtilities {
 				c = ctx.getContentResolver()
 						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
-								new StringBuffer("SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
+								new StringBuilder("SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
 										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 										.append(" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=").append(user.getUserId()).toString(),
 										null, null);
@@ -1010,22 +1013,7 @@ public class ApplicationUtilities {
 	private static User getUserFromAccountManager(Context ctx, String userId, String serverUserId) {
 		try{
 			AccountManager mAccountManager = AccountManager.get(ctx);
-			Account userAccount = null;
-			if(userId!=null) {
-				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
-					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
-						userAccount = account;
-						break;
-					}
-				}
-			} else if (serverUserId!=null) {
-				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
-					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID).equals(serverUserId)){
-						userAccount = account;
-						break;
-					}
-				}
-			}
+			Account userAccount = getAccountFromAccountManager(ctx, userId, serverUserId);
 			if (userAccount!=null) {
 				User user = new User(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_ID));
 				user.setBusinessPartnerId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)));
@@ -1039,6 +1027,55 @@ public class ApplicationUtilities {
 				user.setSaveDBInExternalCard(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
 				user.setAuthToken(mAccountManager. peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 				return user;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param ctx
+	 * @param userId
+	 * @return
+	 */
+	public static Account getAccountByIdFromAccountManager(Context ctx, String userId) {
+		return getAccountFromAccountManager(ctx, userId, null);
+	}
+
+	/**
+	 *
+	 * @param ctx
+	 * @param serverUserId
+	 * @return
+	 */
+	public static Account getAccountByServerUserIdFromAccountManager(Context ctx, String serverUserId) {
+		return getAccountFromAccountManager(ctx, null, serverUserId);
+	}
+
+	/**
+	 *
+	 * @param ctx
+	 * @param userId
+	 * @param serverUserId
+	 * @return
+	 */
+	private static Account getAccountFromAccountManager(Context ctx, String userId, String serverUserId) {
+		try{
+			AccountManager mAccountManager = AccountManager.get(ctx);
+			if(userId!=null) {
+				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
+					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
+						return account;
+					}
+				}
+			} else if (serverUserId!=null) {
+				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
+					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID).equals(serverUserId)){
+						return account;
+					}
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();

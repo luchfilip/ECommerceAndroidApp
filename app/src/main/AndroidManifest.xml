@@ -148,9 +148,10 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <!-- <action android:name="com.google.android.c2dm.intent.REGISTRATION" /> -->
 
-                <category android:name="com.smartbuilders.smartsales.ecommerceandroidapp" />
+                <category android:name="com.smartbuilders.smartsales.ecommerceandroidapp.febeca" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver"
             android:enabled="true">
@@ -158,6 +159,7 @@
                 <action android:name="com.jasgcorp.ids.scheduler.AlarmReceiver.Action" />
             </intent-filter>
         </receiver>
+
         <!--
         Para revisar el estado de la sincronizacion automatica cuando cambia
         el tipo de conexion de red. Ya sea que se apague o encienda el wi-fi, se conecte

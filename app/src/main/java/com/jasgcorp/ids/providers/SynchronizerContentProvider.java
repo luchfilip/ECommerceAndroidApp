@@ -13,6 +13,7 @@ import com.jasgcorp.ids.datamanager.FolderDataReceiverFromServer;
 import com.jasgcorp.ids.datamanager.FolderDataTransferToServer;
 import com.jasgcorp.ids.datamanager.TableDataReceiverFromServer;
 import com.jasgcorp.ids.datamanager.TableDataTransferToServer;
+import com.jasgcorp.ids.datamanager.ThumbImagesReceiverFromServer;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
@@ -74,6 +75,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	private FolderDataReceiverFromServer dataReceiveFromServerThread;
 	private TableDataTransferToServer tableDataTransferToServerThread;
 	private TableDataReceiverFromServer tableDataReceiveFromServerThread;
+	private ThumbImagesReceiverFromServer thumbImagesReceiverFromServer;
 	
 	static{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -168,10 +170,12 @@ public class SynchronizerContentProvider extends ContentProvider{
 				dataReceiveFromServerThread = new FolderDataReceiverFromServer(user, getContext());
 				tableDataTransferToServerThread = new TableDataTransferToServer(user, getContext());
 				tableDataReceiveFromServerThread = new TableDataReceiverFromServer(user, getContext());
+				thumbImagesReceiverFromServer = new ThumbImagesReceiverFromServer(user, getContext());
 				dataTransferToServerThread.start();
 				dataReceiveFromServerThread.start();
 				tableDataTransferToServerThread.start();
 				tableDataReceiveFromServerThread.start();
+				thumbImagesReceiverFromServer.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {
 				exceptionClass = e.getClass().getName();
@@ -190,6 +194,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 				}
 				if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 					tableDataReceiveFromServerThread.stopSynchronization();
+				}
+				if(thumbImagesReceiverFromServer!=null && thumbImagesReceiverFromServer.isAlive()){
+					thumbImagesReceiverFromServer.stopSynchronization();
 				}
 				errorMessage = e.getMessage();
 			}
@@ -227,6 +234,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 			if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 				tableDataReceiveFromServerThread.stopSynchronization();
 			}
+			if(thumbImagesReceiverFromServer!=null && thumbImagesReceiverFromServer.isAlive()){
+				thumbImagesReceiverFromServer.stopSynchronization();
+			}
 			
 			//Esperar a que los hilos de sincronizacion se detengan
 			if(dataTransferToServerThread!=null){
@@ -237,6 +247,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 				while(tableDataTransferToServerThread.isAlive()){ }
 			}else if(tableDataReceiveFromServerThread!=null){
 				while(tableDataReceiveFromServerThread.isAlive()){ }
+			}else if(thumbImagesReceiverFromServer!=null){
+				while(thumbImagesReceiverFromServer.isAlive()){ }
 			}
 			result = true;
 		}
@@ -264,7 +276,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 			if(!dataReceiveFromServerThread.isAlive() 
 					&& !dataTransferToServerThread.isAlive()
 					&& !tableDataReceiveFromServerThread.isAlive() 
-					&& !tableDataTransferToServerThread.isAlive()){
+					&& !tableDataTransferToServerThread.isAlive()
+					&& !thumbImagesReceiverFromServer.isAlive()){
 				if(dataReceiveFromServerThread.getExceptionMessage()!=null){
 					errorMessage = dataReceiveFromServerThread.getExceptionMessage();
 					exceptionClass = dataReceiveFromServerThread.getExceptionClass();
@@ -287,11 +300,18 @@ public class SynchronizerContentProvider extends ContentProvider{
 									: tableDataTransferToServerThread.getExceptionMessage();
 					exceptionClass = tableDataTransferToServerThread.getExceptionClass();
 				}
-				
+				if(thumbImagesReceiverFromServer.getExceptionMessage()!=null){
+					errorMessage = errorMessage!=null
+							? (errorMessage+" | "+thumbImagesReceiverFromServer.getExceptionMessage())
+							: thumbImagesReceiverFromServer.getExceptionMessage();
+					exceptionClass = thumbImagesReceiverFromServer.getExceptionClass();
+				}
+
 				if(dataReceiveFromServerThread.getExceptionMessage()==null 
 						&& dataTransferToServerThread.getExceptionMessage()==null
 						&& tableDataReceiveFromServerThread.getExceptionMessage()==null 
-						&& tableDataTransferToServerThread.getExceptionMessage()==null){
+						&& tableDataTransferToServerThread.getExceptionMessage()==null
+						&& thumbImagesReceiverFromServer.getExceptionMessage()==null){
 					syncPercentage = 100F;
 				}
 			}else{
@@ -306,6 +326,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 				}
 				if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
+				}
+				if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
+					syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
 				}
 			}
 		}

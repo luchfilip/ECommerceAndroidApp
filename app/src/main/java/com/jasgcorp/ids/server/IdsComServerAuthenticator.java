@@ -35,7 +35,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
     	
         //Nos registramos en los servidores de GCM
 		try {
-			user.setGcmRegistrationId(GoogleCloudMessaging.getInstance(ctx).register(ApplicationUtilities.GCM_API_KEY));
+			user.setGcmRegistrationId(GoogleCloudMessaging.getInstance(ctx).register(ApplicationUtilities.FEBECA_GCM_API_KEY));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,7 +172,11 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 		    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ctx);
 	        //Nos registramos en los servidores de GCM
 			try {
-				String gcmRegId = gcm.register(ApplicationUtilities.GCM_API_KEY);
+				String gcmRegId = null;
+                System.out.println("ctx.getPackageName(): "+ctx.getPackageName());
+				if(ctx.getPackageName().equals("com.smartbuilders.smartsales.ecommerceandroidapp.febeca")){
+					gcmRegId = gcm.register(ApplicationUtilities.FEBECA_GCM_API_KEY);
+				}
 				if(gcmRegId!=null){
 					final AccountManager mAccountManager = AccountManager.get(ctx);
 					for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
