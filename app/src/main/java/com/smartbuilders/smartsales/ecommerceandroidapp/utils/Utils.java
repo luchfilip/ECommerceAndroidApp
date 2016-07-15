@@ -369,11 +369,8 @@ public class Utils {
                                                    final String fileName, final ImageView imageView){
         try {
             if(!TextUtils.isEmpty(fileName)){
-                Drawable drawable;
-                final File thumb = Utils.getFileInThumbDirByFileName(context, fileName);
-                if (thumb!=null && thumb.exists()) {
-                    drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
-                } else {
+                Drawable drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
+                if (drawable==null) {
                     drawable = getNoImageAvailableDrawable(context);
                 }
 
@@ -998,7 +995,6 @@ public class Utils {
     }
 
     private static Drawable noImageAvailable;
-
     public static Drawable getNoImageAvailableDrawable(Context context){
         if(noImageAvailable==null){
             try {

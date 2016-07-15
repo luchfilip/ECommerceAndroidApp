@@ -19,7 +19,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -30,7 +29,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
@@ -168,11 +166,8 @@ public class MyGcmListenerService extends GcmListenerService {
                                     Account userAccount = ApplicationUtilities
                                             .getAccountByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
                                     if(userAccount!=null){
-                                        if (!ApplicationUtilities.isSyncActive(userAccount, DataBaseContentProvider.AUTHORITY)) {
-                                            Bundle settingsBundle = new Bundle();
-                                            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                                            settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                                            ContentResolver.requestSync(userAccount, DataBaseContentProvider.AUTHORITY, settingsBundle);
+                                        if (!ApplicationUtilities.isSyncActive(this, userAccount)) {
+                                            ApplicationUtilities.initSyncByAccount(this, userAccount);
                                             sendResponseToServer(getApplicationContext(), requestId,
                                                     "user: "+userAccount.name+", synchronization initialized.", null);
                                         }else{

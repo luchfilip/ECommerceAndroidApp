@@ -34,7 +34,6 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
@@ -62,6 +61,7 @@ import android.database.MatrixCursor;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
@@ -140,23 +140,35 @@ public class ApplicationUtilities {
 	        throw new RuntimeException("Error al obtener version: " + e);
 	    }
 	}
-	
-	/**
-	 * 
-	 * @param account
-	 * @param authority
-	 * @return
-	 */
-	public static boolean isSyncActive(Account account, String authority) {
+
+    /**
+     *
+     * @param context
+     * @param account
+     * @return
+     */
+	public static boolean isSyncActive(Context context, Account account) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return isSyncActiveHoneycomb(account, authority);
+            return isSyncActiveHoneycomb(account, context.getString(R.string.sync_adapter_content_authority));
         } else {
             @SuppressWarnings("deprecation")
 			SyncInfo currentSync = ContentResolver.getCurrentSync();
             return currentSync != null && currentSync.account.equals(account) 
-                    && currentSync.authority.equals(authority);
+                    && currentSync.authority.equals(context.getString(R.string.sync_adapter_content_authority));
         }
     }
+
+	/**
+	 *
+	 * @param context
+	 * @param account
+     */
+	public static void initSyncByAccount(Context context, Account account) {
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
+	}
 
 	/**
 	 * 

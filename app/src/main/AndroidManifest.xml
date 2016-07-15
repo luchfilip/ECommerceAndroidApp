@@ -22,13 +22,13 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <!-- used by por GCM -->
+    <!-- used by GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <permission
         android:name="com.smartbuilders.smartsales.ecommerceandroidapp.febeca.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.smartbuilders.smartsales.ecommerceandroidapp.febeca.permission.C2D_MESSAGE" />
-    <!-- used by por GCM -->
+    <!-- used by GCM -->
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
     <!-- necesarion para consultar el mac address del dispositivo -->
@@ -156,17 +156,6 @@
                 <category android:name="com.smartbuilders.smartsales.ecommerceandroidapp.febeca" />
             </intent-filter>
         </receiver>
-        <!--<receiver-->
-            <!--android:name="com.jasgcorp.ids.gcm.GcmBroadcastReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-                <!--&lt;!&ndash; <action android:name="com.google.android.c2dm.intent.REGISTRATION" /> &ndash;&gt;-->
-
-                <!--<category android:name="com.smartbuilders.smartsales.ecommerceandroidapp.febeca" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
         <service
             android:name="com.jasgcorp.ids.gcm.MyGcmListenerService"
             android:exported="false" >

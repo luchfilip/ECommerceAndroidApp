@@ -1,6 +1,5 @@
 package com.jasgcorp.ids.system.broadcastreceivers;
 
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.scheduler.SchedulerSyncData;
@@ -10,7 +9,6 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,12 +42,9 @@ public class AlarmReceiver extends BroadcastReceiver{
 									// si la alarma no se repite ningun dia entonces se desactiva
 									ApplicationUtilities.setActiveSyncSchedulerData(user, data, context);
 								}
-						        Bundle settingsBundle = new Bundle();
-						        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-						        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 
-						        if(!ApplicationUtilities.isSyncActive(account, DataBaseContentProvider.AUTHORITY)){
-						        	ContentResolver.requestSync(account, DataBaseContentProvider.AUTHORITY, settingsBundle);
+						        if(!ApplicationUtilities.isSyncActive(context, account)){
+						        	ApplicationUtilities.initSyncByAccount(context, account);
 						        	Toast.makeText(context, "Automatic synchronization of Intelligent Data Synchronizer for user "+account.name+" has begun!!!",
 									        Toast.LENGTH_LONG).show();
 								    // Vibrate the mobile phone

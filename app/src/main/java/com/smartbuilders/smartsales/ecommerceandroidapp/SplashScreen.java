@@ -225,11 +225,8 @@ public class SplashScreen extends AppCompatActivity {
                 if(NetworkConnectionUtilities.isOnline(this)
                         && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                    if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
-                        Bundle settingsBundle = new Bundle();
-                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                        ContentResolver.requestSync(account, getString(R.string.sync_adapter_content_authority), settingsBundle);
+                    if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                        ApplicationUtilities.initSyncByAccount(this, account);
                         mSynchronizationState = SYNC_RUNNING;
                     }
                 } else {
@@ -242,11 +239,8 @@ public class SplashScreen extends AppCompatActivity {
                 }
         } else if (mCurrentUser!=null) {
             mSynchronizationState = SYNC_FINISHED;
-            if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                ContentResolver.requestSync(account, getString(R.string.sync_adapter_content_authority), settingsBundle);
+            if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                ApplicationUtilities.initSyncByAccount(this, account);
             }
             initApp();
         } else {
