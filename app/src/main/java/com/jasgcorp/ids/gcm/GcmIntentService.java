@@ -36,7 +36,7 @@ import java.util.LinkedHashMap;
 /**
  * http://developer.android.com/training/sync-adapters/running-sync-adapter.html
  * @author jsarco
- *
+ * @deprecated
  */
 public class GcmIntentService extends IntentService {
 

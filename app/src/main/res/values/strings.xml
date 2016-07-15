@@ -314,4 +314,5 @@
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
     <string name="smallest_width">default</string>
+    <string name="package_name_febeca">com.smartbuilders.smartsales.ecommerceandroidapp.febeca</string>
 </resources>

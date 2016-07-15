@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -211,9 +212,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     }
                 }else{
                     try {
-                        if(userName!=null && !userName.isEmpty()
-                                && userPass!=null && !userPass.isEmpty()
-                                && serverAddress!=null && !serverAddress.isEmpty()){
+                        if(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userPass)
+                                && !TextUtils.isEmpty(serverAddress)){
                             URL url = new URL(serverAddress);
                             URLConnection conn = url.openConnection();
                             conn.setConnectTimeout(1000*5);//5 seconds

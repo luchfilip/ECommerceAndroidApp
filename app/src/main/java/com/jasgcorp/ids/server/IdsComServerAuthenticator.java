@@ -6,16 +6,16 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.jasgcorp.ids.gcm.RegistrationIntentService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.syncadapter.model.ServerAuthenticate;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,10 +32,11 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
     @Override
     public void userSignUp(User user, String authType, Context ctx) throws Exception {
     	Log.d(TAG, "userSignUp("+user+", "+authType+", Context ctx)");
-    	
-        //Nos registramos en los servidores de GCM
+
 		try {
-			user.setGcmRegistrationId(GoogleCloudMessaging.getInstance(ctx).register(ApplicationUtilities.FEBECA_GCM_API_KEY));
+            //Nos registramos en los servidores de GCM
+            user.setGcmRegistrationId(InstanceID.getInstance(ctx).getToken(ctx.getString(R.string.gcm_defaultSenderId),
+                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -169,30 +170,9 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
         	}
         }
 		if(getGcmRegId){
-		    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ctx);
-	        //Nos registramos en los servidores de GCM
-			try {
-				String gcmRegId = null;
-                System.out.println("ctx.getPackageName(): "+ctx.getPackageName());
-				if(ctx.getPackageName().equals("com.smartbuilders.smartsales.ecommerceandroidapp.febeca")){
-					gcmRegId = gcm.register(ApplicationUtilities.FEBECA_GCM_API_KEY);
-				}
-				if(gcmRegId!=null){
-					final AccountManager mAccountManager = AccountManager.get(ctx);
-					for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_acount_type))){
-						if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(user.getUserId())){
-							mAccountManager.setUserData(account, AccountGeneral.USERDATA_GCM_REGISTRATION_ID, gcmRegId);
-							break;
-						}
-					}
-					ctx.getContentResolver()
-						.query(SynchronizerContentProvider.REGISTER_GCM_ID_IN_SERVER_URI.buildUpon()
-								.appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId()).build(), 
-				        		null, null, null, null);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            //Nos registramos en los servidores de GCM
+            ctx.startService(new Intent(ctx, RegistrationIntentService.class)
+                    .putExtra(RegistrationIntentService.KEY_USER_ID, user.getUserId()));
 		}
 		if (TextUtils.isEmpty(user.getSessionToken())) {
 			user.setSessionToken(ctx.getString(R.string.user_session_token_null));

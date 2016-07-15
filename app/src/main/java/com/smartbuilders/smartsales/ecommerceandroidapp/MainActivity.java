@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
+import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -111,6 +112,16 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, SearchResultsActivity.class));
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!ApplicationUtilities.checkPlayServices(this)){
+            findViewById(R.id.drawer_layout).setVisibility(View.GONE);
+        }else if(findViewById(R.id.drawer_layout).getVisibility()==View.GONE){
+            findViewById(R.id.drawer_layout).setVisibility(View.VISIBLE);
         }
     }
 

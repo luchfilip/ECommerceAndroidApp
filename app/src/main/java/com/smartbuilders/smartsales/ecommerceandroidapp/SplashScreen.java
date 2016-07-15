@@ -134,7 +134,6 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-
         if (availableAccounts != null && availableAccounts.length > 0) {
             if(mSynchronizationState==SYNC_ERROR){
                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
@@ -146,6 +145,16 @@ public class SplashScreen extends AppCompatActivity {
             addNewAccount(getString(R.string.authenticator_acount_type),
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             finishActivityOnResultOperationCanceledException = true;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!ApplicationUtilities.checkPlayServices(this)){
+            findViewById(R.id.parent_layout).setVisibility(View.GONE);
+        }else if(findViewById(R.id.parent_layout).getVisibility()==View.GONE){
+            findViewById(R.id.parent_layout).setVisibility(View.VISIBLE);
         }
     }
 
@@ -253,7 +262,9 @@ public class SplashScreen extends AppCompatActivity {
         super.onStop();
         try{
             unregisterReceiver(syncAdapterReceiver);
-        }catch(Exception e){ }
+        }catch(Exception e){
+            //do nothing
+        }
     }
 
     @Override

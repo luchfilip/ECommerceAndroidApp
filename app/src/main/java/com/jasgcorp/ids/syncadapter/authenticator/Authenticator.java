@@ -1,7 +1,6 @@
 package com.jasgcorp.ids.syncadapter.authenticator;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.SocketException;
 
 import com.jasgcorp.ids.AuthenticatorActivity;
@@ -17,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
@@ -27,7 +25,6 @@ import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthentic
  */
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    private static final String TAG = Authenticator.class.getSimpleName();
     private final Context mContext;
 
     public Authenticator(Context context) {
@@ -40,8 +37,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
                              String accountType, String authTokenType,
                              String[] requiredFeatures, Bundle options)
             throws NetworkErrorException {
-        Log.d(TAG, "> addAccount");
-
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
@@ -71,8 +66,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle getAuthToken(AccountAuthenticatorResponse response,
                                Account account, String authTokenType, Bundle options)
             throws NetworkErrorException {
-        Log.d(TAG, "> getAuthToken");
-
         // If the caller requested an authToken type we don't support, then
         // return an error
         if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY)
@@ -100,14 +93,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d(TAG, "> peekAuthToken returned - " + authToken);
-
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
             final String userPass = am.getPassword(account);
             if (userPass != null) {
                 try {
-//                    Log.d(TAG, "> re-authenticating with the existing password");
+                    //Log.d(TAG, "> re-authenticating with the existing password");
                     User user = new User(userId);
                     user.setBusinessPartnerId(businessPartnerId);
                     user.setUserProfileId(userProfileId);
@@ -125,18 +116,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
                             gcmRegistrationId = user.getGcmRegistrationId();
                         }
                     }
-                } catch (ConnectException e) {
-                    Log.e(TAG, "ConnectException");
-                    e.printStackTrace();
                 } catch (SocketException e) {
-                    Log.e(TAG, "SocketException");
                     e.printStackTrace();
                 } catch (IOException e) {
-                    Log.e(TAG, "IOException");
                     e.printStackTrace();
                     throw new NetworkErrorException(e.getMessage(), e.getCause());
                 } catch (Exception e) {
-                    Log.e(TAG, "Exception");
                     e.printStackTrace();
                     final Bundle result = new Bundle();
                     result.putString(AccountManager.KEY_ERROR_MESSAGE, e.getMessage());

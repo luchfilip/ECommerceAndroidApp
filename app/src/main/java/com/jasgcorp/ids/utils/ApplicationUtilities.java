@@ -33,6 +33,7 @@ import org.codehaus.jettison.json.JSONException;
 import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
@@ -117,8 +118,8 @@ public class ApplicationUtilities {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
 	
-	public static final String FEBECA_GCM_API_KEY = "767398413220";
-	public static final String FEBECA_SERVER_API_KEY = "AIzaSyDn5EDknRWxI5ibM8tgksjMU0RSLJ6EPXc";
+	public static final String FEBECA_GCM_SENDER_ID = "767398413220";
+	public static final String FEBECA_GCM_SERVER_API_KEY = "AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U";
     
     public static final String TIME_FORMAT_1 = "%02d:%02d:%02d";
     public static final String TIME_FORMAT_2 = "%02d H, %02d m, %02d s";
@@ -172,23 +173,44 @@ public class ApplicationUtilities {
         }
         return false;
     }
-    
-    /**
-     * 
-     * @param activity
-     * @return
-     */
+
+	/**
+	 * Check the device to make sure it has the Google Play Services APK. If
+	 * it doesn't, display a dialog that allows users to download the APK from
+	 * the Google Play Store or enable it in the device's system settings.
+	 */
 	public static boolean checkPlayServices(Activity activity) {
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity);
 		if (resultCode != ConnectionResult.SUCCESS) {
-		    if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-		        GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-		                PLAY_SERVICES_RESOLUTION_REQUEST).show();
-		    }
-		    return false;
+			if (apiAvailability.isUserResolvableError(resultCode)) {
+				apiAvailability.getErrorDialog(activity, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+						.show();
+			} else {
+				Log.i(TAG, "This device is not supported.");
+				activity.finish();
+			}
+			return false;
 		}
-	    return true;
+		return true;
 	}
+
+	///**
+	// *
+	// * @param activity
+	// * @return
+	// */
+	//public static boolean checkPlayServices(Activity activity) {
+	//	int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+	//	if (resultCode != ConnectionResult.SUCCESS) {
+	//		if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+	//			GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
+	//					PLAY_SERVICES_RESOLUTION_REQUEST).show();
+	//		}
+	//		return false;
+	//	}
+	//	return true;
+	//}
     
     /**
      * 

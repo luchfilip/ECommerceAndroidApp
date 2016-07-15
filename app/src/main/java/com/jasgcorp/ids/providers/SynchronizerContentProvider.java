@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * 
@@ -33,8 +32,6 @@ import android.util.Log;
  *
  */
 public class SynchronizerContentProvider extends ContentProvider{
-	
-	private static final String TAG = SynchronizerContentProvider.class.getSimpleName();
 	
 	public static final String AUTHORITY =
             "com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca";
@@ -58,8 +55,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final String KEY_USER_SAVE_DB_EXTERNAL_CARD 	= "USER_SAVE_DB_EXTERNAL_CARD";
 	public static final String KEY_USER_GCM_ID 					= "USER_GCM_ID";
 	public static final String KEY_USER_SYNC_STATE 				= "USER_SYNC_STATE";
-	
-	final String HELPER_KEY = "synchronizerContentProviderHelperKey";
 	
 	private static final int START 						= 1;
 	private static final int STOP 						= 2;
@@ -164,7 +159,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			Log.d(TAG, "startSynchronization("+user+")");
 			try {
 				dataTransferToServerThread = new FolderDataTransferToServer(user, getContext());
 				dataReceiveFromServerThread = new FolderDataReceiverFromServer(user, getContext());
@@ -218,9 +212,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			Log.d(TAG, "stopSynchronization("+user+")");
-			
 			if(dataTransferToServerThread!=null && dataTransferToServerThread.isAlive()){
 				dataTransferToServerThread.stopSynchronization();
 			}
@@ -264,7 +255,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 * @return
 	 */
 	private Cursor getSyncProgressPercentage(Uri uri){
-//		Log.d(TAG, "getSyncProgressPercentage("+serverAddress+", "+userId+", "+userGroup+")");
 		MatrixCursor cursor = new MatrixCursor(new String[]{"state", "error_message", "exception_class"});
 		String errorMessage = null;
 		String exceptionClass = null;
@@ -272,7 +262,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			//User user = ApplicationUtilities.getUserById(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			if(!dataReceiveFromServerThread.isAlive() 
 					&& !dataTransferToServerThread.isAlive()
 					&& !tableDataReceiveFromServerThread.isAlive() 
@@ -365,7 +354,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			user.setGcmRegistrationId(uri.getQueryParameter(KEY_USER_GCM_ID));
 			user.setSaveDBInExternalCard(uri.getQueryParameter(KEY_USER_SAVE_DB_EXTERNAL_CARD).equals("true"));
 			//TODO: validar el authenticationToken
-			Log.d(TAG, "signUp("+user+")");
 			
 			try {
 				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
@@ -435,7 +423,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			user.setAuthToken(uri.getQueryParameter(KEY_USER_AUTH_TOKEN));
 			//TODO: validar el authenticationToken
-			Log.d(TAG, "signIn("+user+")");
 			
 			try {
 				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
@@ -500,7 +487,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			String syncState = uri.getQueryParameter(KEY_USER_SYNC_STATE);
 			//TODO: validar el authenticationToken
-			Log.d(TAG, "signOut("+user+", "+syncState+")");
 			
 			try {
 				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
@@ -558,7 +544,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 		String errorMessage = null;
 		String exceptionClass = null;
 		Boolean result = false;
-		if(uri.getQueryParameter(KEY_USER_ID)==null){
+		if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter(KEY_USER_GCM_ID)==null){
 			throw new IllegalArgumentException("No userId or gcmId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
@@ -566,7 +552,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
-			parameters.put("gcmId", user.getGcmRegistrationId());
+			parameters.put("gcmId", uri.getQueryParameter(KEY_USER_GCM_ID));
 	    	ConsumeWebService a = new ConsumeWebService(getContext(),
 														user.getServerAddress(), 
 										    			"/IntelligentDataSynchronizer/services/ManageUser?wsdl", 
