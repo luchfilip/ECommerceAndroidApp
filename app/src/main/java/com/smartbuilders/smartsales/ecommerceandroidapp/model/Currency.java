@@ -91,7 +91,7 @@ public class Currency extends Model implements Parcelable {
 
     public String getName() {
         if(unicodeDecimal!=null){
-            String[] unicodeDecimalValues = ",".split(unicodeDecimal.replaceAll("\\s+", "").trim());
+            String[] unicodeDecimalValues = unicodeDecimal.replaceAll("\\s+", "").trim().split(",");
             StringBuilder name = new StringBuilder();
             try {
                 for (String unicodeDecimalValue : unicodeDecimalValues) {
