@@ -97,14 +97,22 @@ public class TableDataReceiverFromServer extends Thread {
 		}
 		if(sync){
 			execRemoteQueryAndInsert(context, null,
+					"select CURRENCY_ID, COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX " +
+							" from CURRENCY where IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO CURRENCY (CURRENCY_ID, COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX) " +
+							" VALUES (?, ?, ?, ?, ?, ?)");
+			syncPercentage = 15;
+		}
+		if(sync){
+			execRemoteQueryAndInsert(context, null,
 					"select PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, DESCRIPTION, PURPOSE, " +
 						" OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, COMMERCIAL_PACKAGE_UNITS, " +
-						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
+						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, TAX_ID " +
 					" from PRODUCT where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT (PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, " +
 						" DESCRIPTION, PURPOSE, OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, " +
 						" COMMERCIAL_PACKAGE_UNITS, COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, " +
-						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
+						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, TAX_ID) " +
 					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 20;
 		}
@@ -199,6 +207,16 @@ public class TableDataReceiverFromServer extends Thread {
                         " VALUES (?, ?, ?)");
 			syncPercentage = 97;
 		}
+        if(sync){
+            execRemoteQueryAndInsert(context, null,
+                    "select USER_ID, APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
+                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
+                            " from USER_APP_PARAMETER where USER_ID = "+user.getServerUserId()+" AND IS_ACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO USER_APP_PARAMETER (USER_ID, APP_PARAMETER_ID, PARAMETER_DESCRIPTION, " +
+                            " TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            syncPercentage = 98;
+        }
 		if(sync){
 			execRemoteQueryAndInsert(context, user,
 					"select BUSINESS_PARTNER_ID, USER_ID, INTERNAL_CODE, NAME, COMMERCIAL_NAME, TAX_ID, " +

@@ -10,9 +10,10 @@ public class Currency extends Model implements Parcelable {
 
     private String symbol;
     private String countryName;
+    private String currencyName;
     private String internationalCode;
     private String name;
-    private int unicodeDecimal;
+    private String unicodeDecimal;
     private String unicodeHex;
 
     public Currency() {
@@ -23,9 +24,10 @@ public class Currency extends Model implements Parcelable {
         super(in);
         symbol = in.readString();
         countryName = in.readString();
+        currencyName = in.readString();
         internationalCode = in.readString();
         name = in.readString();
-        unicodeDecimal = in.readInt();
+        unicodeDecimal = in.readString();
         unicodeHex = in.readString();
     }
 
@@ -34,9 +36,10 @@ public class Currency extends Model implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeString(symbol);
         dest.writeString(countryName);
+        dest.writeString(currencyName);
         dest.writeString(internationalCode);
         dest.writeString(name);
-        dest.writeInt(unicodeDecimal);
+        dest.writeString(unicodeDecimal);
         dest.writeString(unicodeHex);
     }
 
@@ -73,6 +76,14 @@ public class Currency extends Model implements Parcelable {
         this.countryName = countryName;
     }
 
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
     public String getInternationalCode() {
         return internationalCode;
     }
@@ -89,11 +100,11 @@ public class Currency extends Model implements Parcelable {
         this.name = name;
     }
 
-    public int getUnicodeDecimal() {
+    public String getUnicodeDecimal() {
         return unicodeDecimal;
     }
 
-    public void setUnicodeDecimal(int unicodeDecimal) {
+    public void setUnicodeDecimal(String unicodeDecimal) {
         this.unicodeDecimal = unicodeDecimal;
     }
 

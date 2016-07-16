@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " INVENTORY_PACKAGE_UNITS INTEGER DEFAULT NULL," +
                     " INVENTORY_PACKAGE VARCHAR(20) DEFAULT NULL," +
                     " LAST_RECEIVED_DATE DATE DEFAULT NULL, " +
-                    " PRODUCT_TAX_ID INTEGER DEFAULT NULL, " +
+                    " TAX_ID INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
@@ -98,21 +98,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
-	public static final String CREATE_TAX =
-            "CREATE TABLE IF NOT EXISTS TAX (" +
-                    " TAX_ID INTEGER NOT NULL, " +
+	public static final String CREATE_PRODUCT_TAX =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_TAX (" +
+                    " PRODUCT_TAX_ID INTEGER NOT NULL, " +
                     " PERCENTAGE DOUBLE NOT NULL, " +
                     " NAME VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " PRIMARY KEY (TAX_ID))";
+                    " PRIMARY KEY (PRODUCT_TAX_ID))";
 
     public static final String CREATE_CURRENCY =
             "CREATE TABLE IF NOT EXISTS CURRENCY (" +
                     "CURRENCY_ID INTEGER NOT NULL, " +
-                    " COUNTRY_NAME VARCHAR(255) NOT NULL, " +
+                    " COUNTRY_NAME VARCHAR(128) NOT NULL, " +
+                    " CURRENCY_NAME VARCHAR(128) NOT NULL, " +
                     " CODE VARCHAR(3) DEFAULT 0 NOT NULL, " +
-                    " UNICODE_DECIMAL INTEGER, " +
-                    " UNICODE_HEX VARCHAR(10), " +
+                    " UNICODE_DECIMAL VARCHAR(32), " +
+                    " UNICODE_HEX VARCHAR(32), " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (CURRENCY_ID))";
 
@@ -289,6 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS USER_APP_PARAMETER (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " APP_PARAMETER_ID INTEGER NOT NULL, " +
+                    " PARAMETER_DESCRIPTION VARCHAR(255) DEFAULT NULL, " +
                     " TEXT_VALUE TEXT DEFAULT NULL, " +
                     " INTEGER_VALUE INTEGER DEFAULT NULL, " +
                     " DOUBLE_VALUE DOUBLE DEFAULT NULL, " +
@@ -473,7 +475,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("create index product_image_idx on product_image (product_id)");
             db.execSQL(CREATE_PRODUCT_RATING);
             db.execSQL("create index product_rating_idx on product_rating (product_id)");
-            db.execSQL(CREATE_TAX);
+            db.execSQL(CREATE_PRODUCT_TAX);
             db.execSQL(CREATE_CURRENCY);
             db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
             db.execSQL("create index product_shopping_related_idx on product_shopping_related (product_id)");
@@ -510,8 +512,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(this.dataBaseName.equals(DATABASE_NAME) && oldVersion<5) {
             db.execSQL(CREATE_PRODUCT_PRICE);
             db.execSQL("create index product_price_idx on product_price (product_id)");
-            db.execSQL("DROP TABLE PRODUCT_TAX");
-            db.execSQL(CREATE_TAX);
             db.execSQL(CREATE_CURRENCY);
         }
 	}
