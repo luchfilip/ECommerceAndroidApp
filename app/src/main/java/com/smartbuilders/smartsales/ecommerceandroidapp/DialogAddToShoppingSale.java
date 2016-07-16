@@ -22,13 +22,13 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.TaxDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductTaxDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Tax;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductTax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,9 +88,9 @@ public class DialogAddToShoppingSale extends DialogFragment {
         buttonsContainer = view.findViewById(R.id.buttons_container);
         registerBusinessPartnerButton = view.findViewById(R.id.register_business_partner_button);
 
-        Tax tax = (new TaxDB(getContext())).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
+        ProductTax productTax = (new ProductTaxDB(getContext())).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
         ((EditText) view.findViewById(R.id.product_tax_editText))
-                .setText(tax!=null ? String.valueOf(tax.getPercentageStringFormat()) : "0,00");
+                .setText(productTax !=null ? String.valueOf(productTax.getPercentageStringFormat()) : "0,00");
 
         if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {

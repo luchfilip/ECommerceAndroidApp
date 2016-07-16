@@ -21,8 +21,8 @@ public class Product extends Model implements Parcelable {
     private ProductSubCategory productSubCategory;
     private int productCommercialPackageId;
     private ProductCommercialPackage productCommercialPackage;
-    private int taxId;
-    private Tax tax;
+    private int productTaxId;
+    private ProductTax productTax;
     private float price;
     private int currencyId;
     private Currency currency;
@@ -49,8 +49,8 @@ public class Product extends Model implements Parcelable {
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackageId = in.readInt();
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
-        taxId = in.readInt();
-        tax = in.readParcelable(Tax.class.getClassLoader());
+        productTaxId = in.readInt();
+        productTax = in.readParcelable(ProductTax.class.getClassLoader());
         price = in.readFloat();
         currencyId = in.readInt();
         currency = in.readParcelable(Currency.class.getClassLoader());
@@ -75,8 +75,8 @@ public class Product extends Model implements Parcelable {
         dest.writeParcelable(productSubCategory, flags);
         dest.writeInt(productCommercialPackageId);
         dest.writeParcelable(productCommercialPackage, flags);
-        dest.writeInt(taxId);
-        dest.writeParcelable(tax, flags);
+        dest.writeInt(productTaxId);
+        dest.writeParcelable(productTax, flags);
         dest.writeFloat(price);
         dest.writeInt(currencyId);
         dest.writeParcelable(currency, flags);
@@ -166,20 +166,20 @@ public class Product extends Model implements Parcelable {
         this.productCommercialPackage = productCommercialPackage;
     }
 
-    public int getTaxId() {
-        return taxId;
+    public int getProductTaxId() {
+        return productTaxId;
     }
 
-    public void setTaxId(int taxId) {
-        this.taxId = taxId;
+    public void setProductTaxId(int productTaxId) {
+        this.productTaxId = productTaxId;
     }
 
-    public Tax getTax() {
-        return tax;
+    public ProductTax getProductTax() {
+        return productTax;
     }
 
-    public void setTax(Tax tax) {
-        this.tax = tax;
+    public void setProductTax(ProductTax productTax) {
+        this.productTax = productTax;
     }
 
     public float getPrice() {

@@ -4,33 +4,33 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Tax;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductTax;
 
 import java.util.ArrayList;
 
 /**
  * Created by stein on 16/7/2016.
  */
-public class TaxDB {
+public class ProductTaxDB {
 
     private Context mContext;
 
-    public TaxDB(Context context){
+    public ProductTaxDB(Context context){
         this.mContext = context;
     }
 
-    public Tax getActiveTaxById(int taxId) {
+    public ProductTax getActiveTaxById(int taxId) {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "SELECT PERCENTAGE, NAME FROM TAX WHERE TAX_ID=? AND IS_ACTIVE=?",
+                    "SELECT PERCENTAGE, NAME FROM PRODUCT_TAX WHERE PRODUCT_TAX_ID=? AND IS_ACTIVE=?",
                     new String[]{String.valueOf(taxId), "Y"}, null);
             if(c!=null && c.moveToNext()){
-                Tax tax = new Tax();
-                tax.setId(taxId);
-                tax.setPercentage(c.getFloat(0));
-                tax.setName(c.getString(1));
-                return tax;
+                ProductTax productTax = new ProductTax();
+                productTax.setId(taxId);
+                productTax.setPercentage(c.getFloat(0));
+                productTax.setName(c.getString(1));
+                return productTax;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,8 +46,8 @@ public class TaxDB {
         return null;
     }
 
-    public ArrayList<Tax> getActiveTaxesList() {
-        ArrayList<Tax> activeTaxes = new ArrayList<>();
+    public ArrayList<ProductTax> getActiveTaxesList() {
+        ArrayList<ProductTax> activeProductTaxes = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
@@ -55,11 +55,11 @@ public class TaxDB {
                     new String[]{}, null);
             if(c!=null) {
                 while(c.moveToNext()) {
-                    Tax tax = new Tax();
-                    tax.setId(c.getInt(0));
-                    tax.setPercentage(c.getFloat(1));
-                    tax.setName(c.getString(2));
-                    activeTaxes.add(tax);
+                    ProductTax productTax = new ProductTax();
+                    productTax.setId(c.getInt(0));
+                    productTax.setPercentage(c.getFloat(1));
+                    productTax.setName(c.getString(2));
+                    activeProductTaxes.add(productTax);
                 }
             }
         } catch (Exception e) {
@@ -73,6 +73,6 @@ public class TaxDB {
                 }
             }
         }
-        return activeTaxes;
+        return activeProductTaxes;
     }
 }

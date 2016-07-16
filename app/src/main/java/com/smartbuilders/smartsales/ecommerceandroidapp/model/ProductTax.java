@@ -8,16 +8,16 @@ import java.util.Locale;
 /**
  * Created by stein on 16/7/2016.
  */
-public class Tax extends Model implements Parcelable {
+public class ProductTax extends Model implements Parcelable {
 
     private float percentage;
     private String name;
 
-    public Tax() {
+    public ProductTax() {
         super();
     }
 
-    protected Tax(Parcel in) {
+    protected ProductTax(Parcel in) {
         super(in);
         percentage = in.readFloat();
         name = in.readString();
@@ -35,15 +35,15 @@ public class Tax extends Model implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Tax> CREATOR = new Creator<Tax>() {
+    public static final Creator<ProductTax> CREATOR = new Creator<ProductTax>() {
         @Override
-        public Tax createFromParcel(Parcel in) {
-            return new Tax(in);
+        public ProductTax createFromParcel(Parcel in) {
+            return new ProductTax(in);
         }
 
         @Override
-        public Tax[] newArray(int size) {
-            return new Tax[size];
+        public ProductTax[] newArray(int size) {
+            return new ProductTax[size];
         }
     };
 
