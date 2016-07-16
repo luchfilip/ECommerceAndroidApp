@@ -157,6 +157,7 @@
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
     <string name="price_label">Precio:</string>
+    <string name="price_currency_label_detail">Precio (%1$s):</string>
     <string name="tax_label">(%) Imp.:</string>
     <string name="product_tax_percentage">(%%) Imp.: %1$s</string>
     <string name="total_label">Total:</string>

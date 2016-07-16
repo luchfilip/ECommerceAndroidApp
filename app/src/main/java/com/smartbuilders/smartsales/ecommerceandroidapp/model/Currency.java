@@ -12,7 +12,6 @@ public class Currency extends Model implements Parcelable {
     private String countryName;
     private String currencyName;
     private String internationalCode;
-    private String name;
     private String unicodeDecimal;
     private String unicodeHex;
 
@@ -26,7 +25,6 @@ public class Currency extends Model implements Parcelable {
         countryName = in.readString();
         currencyName = in.readString();
         internationalCode = in.readString();
-        name = in.readString();
         unicodeDecimal = in.readString();
         unicodeHex = in.readString();
     }
@@ -38,7 +36,6 @@ public class Currency extends Model implements Parcelable {
         dest.writeString(countryName);
         dest.writeString(currencyName);
         dest.writeString(internationalCode);
-        dest.writeString(name);
         dest.writeString(unicodeDecimal);
         dest.writeString(unicodeHex);
     }
@@ -93,11 +90,19 @@ public class Currency extends Model implements Parcelable {
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        if(unicodeDecimal!=null){
+            String[] unicodeDecimalValues = ",".split(unicodeDecimal.replaceAll("\\s+", "").trim());
+            StringBuilder name = new StringBuilder();
+            try {
+                for (String unicodeDecimalValue : unicodeDecimalValues) {
+                    name.append(Character.toChars(Integer.valueOf(unicodeDecimalValue)));
+                }
+                return name.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "N/A";
     }
 
     public String getUnicodeDecimal() {
