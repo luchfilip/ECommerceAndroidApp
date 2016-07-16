@@ -90,7 +90,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
         ProductTax productTax = (new ProductTaxDB(getContext())).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
         ((EditText) view.findViewById(R.id.product_tax_editText))
-                .setText(productTax !=null ? String.valueOf(productTax.getPercentageStringFormat()) : "0,00");
+                .setText(productTax !=null ? String.valueOf(productTax.getPercentage()) : "0.0");
 
         if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
