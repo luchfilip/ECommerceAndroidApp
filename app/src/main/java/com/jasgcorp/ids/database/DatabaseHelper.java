@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -74,6 +74,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
+    public static final String CREATE_PRODUCT_PRICE =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE (" +
+                    "PRODUCT_ID INTEGER NOT NULL, " +
+                    " PRICE_LIST_ID INTEGER DEFAULT 0, " +
+                    " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
+                    " PRICE DECIMAL DEFAULT 0 NOT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " PRIMARY KEY (PRODUCT_ID, PRICE_LIST_ID))";
+
 	public static final String CREATE_PRODUCT_IMAGE =
             "CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
@@ -89,13 +98,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
-	public static final String CREATE_PRODUCT_TAX =
-            "CREATE TABLE IF NOT EXISTS PRODUCT_TAX (" +
-                    " PRODUCT_TAX_ID INTEGER NOT NULL, " +
-                    " TAX_PERCENTAGE DOUBLE NOT NULL, " +
-                    " TAX_NAME VARCHAR(255) DEFAULT NULL, " +
+	public static final String CREATE_TAX =
+            "CREATE TABLE IF NOT EXISTS TAX (" +
+                    " TAX_ID INTEGER NOT NULL, " +
+                    " PERCENTAGE DOUBLE NOT NULL, " +
+                    " NAME VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " PRIMARY KEY (PRODUCT_TAX_ID))";
+                    " PRIMARY KEY (TAX_ID))";
+
+    public static final String CREATE_CURRENCY =
+            "CREATE TABLE IF NOT EXISTS CURRENCY (" +
+                    "CURRENCY_ID INTEGER NOT NULL, " +
+                    " COUNTRY VARCHAR(255) NOT NULL, " +
+                    " CODE VARCHAR(3) DEFAULT 0 NOT NULL, " +
+                    " UNICODE_DECIMAL INTEGER, " +
+                    " UNICODE_HEX VARCHAR(10), " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " PRIMARY KEY (CURRENCY_ID))";
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
             "CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED (" +
@@ -446,13 +465,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_PROFILE_TABLE);
             db.execSQL(CREATE_PRODUCT);
             db.execSQL("create index product_idx on product (product_id)");
+            db.execSQL(CREATE_PRODUCT_PRICE);
+            db.execSQL("create index product_price_idx on product_price (product_id)");
             db.execSQL(CREATE_PRODUCT_AVAILABILITY);
             db.execSQL("create index product_availability_idx on product_availability (product_id)");
             db.execSQL(CREATE_PRODUCT_IMAGE);
             db.execSQL("create index product_image_idx on product_image (product_id)");
             db.execSQL(CREATE_PRODUCT_RATING);
             db.execSQL("create index product_rating_idx on product_rating (product_id)");
-            db.execSQL(CREATE_PRODUCT_TAX);
+            db.execSQL(CREATE_TAX);
+            db.execSQL(CREATE_CURRENCY);
             db.execSQL(CREATE_PRODUCT_SHOPPING_RELATED);
             db.execSQL("create index product_shopping_related_idx on product_shopping_related (product_id)");
             db.execSQL(CREATE_BRAND);
@@ -485,7 +507,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(this.dataBaseName.equals(DATABASE_NAME)) {
+        if(this.dataBaseName.equals(DATABASE_NAME) && oldVersion<5) {
+            db.execSQL(CREATE_PRODUCT_PRICE);
+            db.execSQL("create index product_price_idx on product_price (product_id)");
+            db.execSQL("DROP TABLE PRODUCT_TAX");
+            db.execSQL(CREATE_TAX);
+            db.execSQL(CREATE_CURRENCY);
         }
 	}
 

@@ -116,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textColor="@color/product_availability"
+                        android:textColor="@color/product_availability_color"
                         android:textSize="@dimen/productDetailActivity_productAvailability_text_size" />
 
                     <LinearLayout

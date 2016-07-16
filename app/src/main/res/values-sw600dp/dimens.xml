@@ -14,18 +14,20 @@
 
     <dimen name="mainpage_name_size">25sp</dimen>
     <dimen name="productMinInfo_availability_text_size">14sp</dimen>
+    <dimen name="productMinInfo_price_text_size">14sp</dimen>
     <dimen name="productMinInfo_product_name_text_size">13sp</dimen>
 
-    <dimen name="productDetailCardView_productName_text_size">18sp</dimen>
-    <dimen name="productDetailCardView_productInternalCode_text_size">16sp</dimen>
-    <dimen name="productDetailCardView_productBrand_text_size">16sp</dimen>
-    <dimen name="productDetailCardView_productCommercialPackage_text_size">17sp</dimen>
-    <dimen name="productDetailCardView_productDescription_text_size">17sp</dimen>
-    <dimen name="productDetailCardView_productPurpose_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_name_text_size">18sp</dimen>
+    <dimen name="productDetailCardView_internalCode_text_size">16sp</dimen>
+    <dimen name="productDetailCardView_brand_text_size">16sp</dimen>
+    <dimen name="productDetailCardView_commercialPackage_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_description_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_purpose_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPrice_text_size">17sp</dimen>
     <dimen name="productDetailCardView_productPMVP_text_size">17sp</dimen>
-    <dimen name="productDetailCardView_productAvailability_text_size">18sp</dimen>
-    <dimen name="productDetailCardView_productPromo_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_price_text_size">18sp</dimen>
+    <dimen name="productDetailCardView_availability_text_size">18sp</dimen>
+    <dimen name="productDetailCardView_promo_text_size">17sp</dimen>
 
     <dimen name="productDetailActivity_productName_text_size">20sp</dimen>
     <dimen name="productDetailActivity_productInternalCode_text_size">15sp</dimen>

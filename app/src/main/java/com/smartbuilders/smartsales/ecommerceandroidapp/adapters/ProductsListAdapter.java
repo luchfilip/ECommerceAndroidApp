@@ -56,7 +56,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private Context mContext;
     private User mUser;
     private int mMask;
-    private ArrayList<Product> arraylist;
+    private ArrayList<Product> filterAux;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -70,6 +70,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productDescription;
         public TextView productPurpose;
         public TextView commercialPackage;
+        public TextView productPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -88,6 +89,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
@@ -103,8 +105,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = products;
-        this.arraylist = new ArrayList<>();
-        this.arraylist.addAll(mDataset);
+        this.filterAux = new ArrayList<>();
+        this.filterAux.addAll(mDataset);
         mUser = user;
         mMask = mask;
         sortProductList(sortOption);
@@ -150,6 +152,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         });
 
         holder.productName.setText(mDataset.get(position).getName());
+
+        holder.productAvailability.setText(mContext.getString(R.string.price_detail,
+                mDataset.get(position).getPrice()));
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getAvailability()));
@@ -389,11 +394,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         charText = charText.toLowerCase(Locale.getDefault());
         mDataset.clear();
         if (charText.length() == 0) {
-            mDataset.addAll(arraylist);
+            mDataset.addAll(filterAux);
         } else {
             switch (filterBy){
                 case FILTER_BY_PRODUCT_NAME:
-                    for (Product product : arraylist) {
+                    for (Product product : filterAux) {
                         if (!TextUtils.isEmpty(product.getName()) &&
                                 product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                             mDataset.add(product);
@@ -402,7 +407,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     break;
                 case FILTER_BY_PRODUCT_INTERNAL_CODE:
                     if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
-                        for (Product product : arraylist) {
+                        for (Product product : filterAux) {
                             if (!TextUtils.isEmpty(product.getInternalCode()) &&
                                     product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
                                 mDataset.add(product);
@@ -413,7 +418,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                     break;
                 case FILTER_BY_PRODUCT_BRAND_DESCRIPTION:
-                    for (Product product : arraylist) {
+                    for (Product product : filterAux) {
                         if (product.getProductBrand()!=null &&
                                 !TextUtils.isEmpty(product.getProductBrand().getDescription()) &&
                                 product.getProductBrand().getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
@@ -422,7 +427,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                     break;
                 case FILTER_BY_PRODUCT_DESCRIPTION:
-                    for (Product product : arraylist) {
+                    for (Product product : filterAux) {
                         if (!TextUtils.isEmpty(product.getDescription()) &&
                                 product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
                             mDataset.add(product);
@@ -430,7 +435,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                     break;
                 case FILTER_BY_PRODUCT_PURPOSE:
-                    for (Product product : arraylist) {
+                    for (Product product : filterAux) {
                         if (!TextUtils.isEmpty(product.getPurpose()) &&
                                 product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
                             mDataset.add(product);

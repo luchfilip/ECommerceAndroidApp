@@ -137,7 +137,7 @@
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:focusable="false"
-                                android:textColor="@color/product_availability"
+                                android:textColor="@color/product_availability_color"
                                 android:textSize="@dimen/productDetailActivity_productAvailability_text_size" />
 
                             <LinearLayout

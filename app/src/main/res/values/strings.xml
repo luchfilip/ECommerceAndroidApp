@@ -316,4 +316,5 @@
     <string name="smallest_width">default</string>
     <string name="package_name_febeca">com.smartbuilders.smartsales.ecommerceandroidapp.febeca</string>
     <string name="ids_sync_group">catalogo-febeca</string>
+    <string name="price_detail">Precio: %1$s</string>
 </resources>

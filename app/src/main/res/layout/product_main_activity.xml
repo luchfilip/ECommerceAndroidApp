@@ -48,7 +48,7 @@
                     android:id="@+id/product_availability"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/product_availability"
+                    android:textColor="@color/product_availability_color"
                     android:textStyle="bold"
                     android:textSize="@dimen/productMainActivity_productAvailability_text_size" />
 

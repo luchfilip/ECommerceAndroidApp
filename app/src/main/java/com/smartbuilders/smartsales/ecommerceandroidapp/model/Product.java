@@ -21,6 +21,11 @@ public class Product extends Model implements Parcelable {
     private ProductSubCategory productSubCategory;
     private int productCommercialPackageId;
     private ProductCommercialPackage productCommercialPackage;
+    private int taxId;
+    private Tax tax;
+    private float price;
+    private int currencyId;
+    private Currency currency;
     private int availability;
     private boolean isFavorite;
     private float rating = -1;
@@ -31,41 +36,51 @@ public class Product extends Model implements Parcelable {
 
     protected Product(Parcel in) {
         super(in);
+        productBrandId = in.readInt();
+        productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
         name = in.readString();
         internalCode = in.readString();
         description = in.readString();
         purpose = in.readString();
         imageFileName = in.readString();
-        availability = in.readInt();
-        productBrandId = in.readInt();
-        productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
         productCategoryId = in.readInt();
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategoryId = in.readInt();
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
         productCommercialPackageId = in.readInt();
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
-        isFavorite = in.readByte() == 1;
+        taxId = in.readInt();
+        tax = in.readParcelable(Tax.class.getClassLoader());
+        price = in.readFloat();
+        currencyId = in.readInt();
+        currency = in.readParcelable(Currency.class.getClassLoader());
+        availability = in.readInt();
+        isFavorite = in.readByte() != 0;
         rating = in.readFloat();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeInt(productBrandId);
+        dest.writeParcelable(productBrand, flags);
         dest.writeString(name);
         dest.writeString(internalCode);
         dest.writeString(description);
         dest.writeString(purpose);
         dest.writeString(imageFileName);
-        dest.writeInt(availability);
-        dest.writeInt(productBrandId);
-        dest.writeParcelable(productBrand, flags);
         dest.writeInt(productCategoryId);
         dest.writeParcelable(productCategory, flags);
         dest.writeInt(productSubCategoryId);
         dest.writeParcelable(productSubCategory, flags);
         dest.writeInt(productCommercialPackageId);
         dest.writeParcelable(productCommercialPackage, flags);
+        dest.writeInt(taxId);
+        dest.writeParcelable(tax, flags);
+        dest.writeFloat(price);
+        dest.writeInt(currencyId);
+        dest.writeParcelable(currency, flags);
+        dest.writeInt(availability);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
     }
@@ -149,6 +164,46 @@ public class Product extends Model implements Parcelable {
 
     public void setProductCommercialPackage(ProductCommercialPackage productCommercialPackage) {
         this.productCommercialPackage = productCommercialPackage;
+    }
+
+    public int getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(int taxId) {
+        this.taxId = taxId;
+    }
+
+    public Tax getTax() {
+        return tax;
+    }
+
+    public void setTax(Tax tax) {
+        this.tax = tax;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public int getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(int currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public int getAvailability() {

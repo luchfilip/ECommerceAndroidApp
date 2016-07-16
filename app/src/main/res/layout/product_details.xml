@@ -33,7 +33,7 @@
                 android:id="@+id/product_name"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productName_text_size"
+                android:textSize="@dimen/productDetailCardView_name_text_size"
                 android:maxLines="2" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_internal_code"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productInternalCode_text_size"
+                android:textSize="@dimen/productDetailCardView_internalCode_text_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productBrand_text_size"
+                android:textSize="@dimen/productDetailCardView_brand_text_size"
                 android:maxLines="1" />
 
             <TextView
@@ -57,15 +57,23 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_commercial_package"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size" />
+                android:textSize="@dimen/productDetailCardView_commercialPackage_text_size" />
+
+            <TextView
+                android:id="@+id/product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/product_price_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_price_text_size" />
 
             <TextView
                 android:id="@+id/product_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/product_availability"
+                android:textColor="@color/product_availability_color"
                 android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_productAvailability_text_size" />
+                android:textSize="@dimen/productDetailCardView_availability_text_size" />
 
             <RatingBar
                 android:layout_width="wrap_content"

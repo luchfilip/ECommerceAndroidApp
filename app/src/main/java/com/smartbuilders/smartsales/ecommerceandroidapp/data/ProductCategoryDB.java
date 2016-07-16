@@ -15,17 +15,17 @@ import java.util.Comparator;
  */
 public class ProductCategoryDB {
 
-    private Context context;
+    private Context mContext;
 
     public ProductCategoryDB(Context context){
-        this.context = context;
+        this.mContext = context;
     }
 
     public ArrayList<ProductCategory> getActiveProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
                         " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -74,7 +74,7 @@ public class ProductCategoryDB {
     public ProductCategory getActiveProductCategoryById(int productCategoryId){
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND IS_ACTIVE=?",
                     new String[]{String.valueOf(productCategoryId), "Y"}, null);
             if(c!=null && c.moveToNext()){

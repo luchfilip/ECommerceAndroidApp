@@ -35,7 +35,7 @@
                 android:id="@+id/product_name"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productName_text_size"
+                android:textSize="@dimen/productDetailCardView_name_text_size"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_internal_code"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productInternalCode_text_size"
+                android:textSize="@dimen/productDetailCardView_internalCode_text_size"
                 android:textStyle="bold"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productBrand_text_size"
+                android:textSize="@dimen/productDetailCardView_brand_text_size"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
@@ -65,7 +65,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productDescription_text_size" />
+                android:textSize="@dimen/productDetailCardView_description_text_size" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,14 +74,14 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productPurpose_text_size" />
+                android:textSize="@dimen/productDetailCardView_purpose_text_size" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_commercial_package"
                 android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_productCommercialPackage_text_size"
+                android:textSize="@dimen/productDetailCardView_commercialPackage_text_size"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
@@ -89,9 +89,9 @@
                 android:id="@+id/product_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/product_availability"
+                android:textColor="@color/product_availability_color"
                 android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_productAvailability_text_size"
+                android:textSize="@dimen/productDetailCardView_availability_text_size"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
