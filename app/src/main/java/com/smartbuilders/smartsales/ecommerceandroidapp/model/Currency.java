@@ -9,8 +9,11 @@ import android.os.Parcelable;
 public class Currency extends Model implements Parcelable {
 
     private String symbol;
+    private String countryName;
     private String internationalCode;
     private String name;
+    private int unicodeDecimal;
+    private String unicodeHex;
 
     public Currency() {
         super();
@@ -19,16 +22,22 @@ public class Currency extends Model implements Parcelable {
     protected Currency(Parcel in) {
         super(in);
         symbol = in.readString();
+        countryName = in.readString();
         internationalCode = in.readString();
         name = in.readString();
+        unicodeDecimal = in.readInt();
+        unicodeHex = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(symbol);
+        dest.writeString(countryName);
         dest.writeString(internationalCode);
         dest.writeString(name);
+        dest.writeInt(unicodeDecimal);
+        dest.writeString(unicodeHex);
     }
 
     @Override
@@ -56,6 +65,14 @@ public class Currency extends Model implements Parcelable {
         this.symbol = symbol;
     }
 
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
     public String getInternationalCode() {
         return internationalCode;
     }
@@ -70,5 +87,21 @@ public class Currency extends Model implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getUnicodeDecimal() {
+        return unicodeDecimal;
+    }
+
+    public void setUnicodeDecimal(int unicodeDecimal) {
+        this.unicodeDecimal = unicodeDecimal;
+    }
+
+    public String getUnicodeHex() {
+        return unicodeHex;
+    }
+
+    public void setUnicodeHex(String unicodeHex) {
+        this.unicodeHex = unicodeHex;
     }
 }

@@ -109,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_CURRENCY =
             "CREATE TABLE IF NOT EXISTS CURRENCY (" +
                     "CURRENCY_ID INTEGER NOT NULL, " +
-                    " COUNTRY VARCHAR(255) NOT NULL, " +
+                    " COUNTRY_NAME VARCHAR(255) NOT NULL, " +
                     " CODE VARCHAR(3) DEFAULT 0 NOT NULL, " +
                     " UNICODE_DECIMAL INTEGER, " +
                     " UNICODE_HEX VARCHAR(10), " +

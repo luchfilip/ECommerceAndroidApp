@@ -23,7 +23,8 @@ public class ParameterDB {
     private static final String DATE_VALUE_COLUMN_NAME = "DATE_VALUE";
     private static final String DATETIME_VALUE_COLUMN_NAME = "DATETIME_VALUE";
 
-    public static final int DEFAULT_CURRENCY_PARAM_ID = 1;
+    public static final int DEFAULT_CURRENCY_ID_PARAM_ID = 1;
+    public static final int DEFAULT_TAX_ID_PARAM_ID = 2;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
