@@ -107,12 +107,12 @@ public class TableDataReceiverFromServer extends Thread {
 			execRemoteQueryAndInsert(context, null,
 					"select PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, DESCRIPTION, PURPOSE, " +
 						" OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, COMMERCIAL_PACKAGE_UNITS, " +
-						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, TAX_ID " +
+						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
 					" from PRODUCT where IS_ACTIVE = 'Y'",
 					"INSERT OR REPLACE INTO PRODUCT (PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, " +
 						" DESCRIPTION, PURPOSE, OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, " +
 						" COMMERCIAL_PACKAGE_UNITS, COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, " +
-						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, TAX_ID) " +
+						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
 					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             syncPercentage = 20;
 		}
@@ -160,8 +160,8 @@ public class TableDataReceiverFromServer extends Thread {
 		}
         if(sync){
             execRemoteQueryAndInsert(context, null,
-                    "select PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME from PRODUCT_TAX where IS_ACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO PRODUCT_TAX (PRODUCT_TAX_ID, TAX_PERCENTAGE, TAX_NAME) VALUES (?, ?, ?)");
+                    "select PRODUCT_TAX_ID, PERCENTAGE, NAME from PRODUCT_TAX where IS_ACTIVE = 'Y'",
+                    "INSERT OR REPLACE INTO PRODUCT_TAX (PRODUCT_TAX_ID, PERCENTAGE, NAME) VALUES (?, ?, ?)");
             syncPercentage = 80;
         }
         if(sync){
@@ -208,7 +208,7 @@ public class TableDataReceiverFromServer extends Thread {
 			syncPercentage = 97;
 		}
         if(sync){
-            execRemoteQueryAndInsert(context, null,
+            execRemoteQueryAndInsert(context, user,
                     "select USER_ID, APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
                             " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
                             " from USER_APP_PARAMETER where USER_ID = "+user.getServerUserId()+" AND IS_ACTIVE = 'Y'",

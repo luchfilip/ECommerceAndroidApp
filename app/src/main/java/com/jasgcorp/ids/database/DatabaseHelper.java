@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " INVENTORY_PACKAGE_UNITS INTEGER DEFAULT NULL," +
                     " INVENTORY_PACKAGE VARCHAR(20) DEFAULT NULL," +
                     " LAST_RECEIVED_DATE DATE DEFAULT NULL, " +
-                    " TAX_ID INTEGER DEFAULT NULL, " +
+                    " PRODUCT_TAX_ID INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
