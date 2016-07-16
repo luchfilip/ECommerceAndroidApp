@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
@@ -24,6 +25,8 @@ import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthentic
  * Created by Alberto on 23/3/2016.
  */
 public class Authenticator extends AbstractAccountAuthenticator {
+
+    private static final String TAG = Authenticator.class.getSimpleName();
 
     private final Context mContext;
 
@@ -155,9 +158,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // an intent to display our AuthenticatorActivity.
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
+        intent.putExtra(AuthenticatorActivity.ARG_USER_ID, userId);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
         intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);

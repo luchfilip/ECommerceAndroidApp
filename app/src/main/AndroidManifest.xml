@@ -95,7 +95,7 @@
         <provider
             android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"
             android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca"
-            android:exported="false"
+            android:exported="true"
             android:syncable="true"
             tools:ignore="ExportedContentProvider" />
 

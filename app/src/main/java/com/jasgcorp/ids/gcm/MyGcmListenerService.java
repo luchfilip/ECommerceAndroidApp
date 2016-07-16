@@ -194,7 +194,9 @@ public class MyGcmListenerService extends GcmListenerService {
                                     Account userAccount = ApplicationUtilities
                                             .getAccountByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
                                     if(userAccount!=null){
-                                        accountManager.invalidateAuthToken(getString(R.string.authenticator_acount_type),
+                                        accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
+                                                accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
+                                        accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
                                         sendResponseToServer(getApplicationContext(), requestId,
                                                 "user: "+userAccount.name+", authentication token invalidated.", null);

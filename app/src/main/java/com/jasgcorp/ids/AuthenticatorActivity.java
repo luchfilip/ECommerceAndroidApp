@@ -42,12 +42,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public final static String ARG_ACCOUNT_TYPE 			= "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE 				= "AUTH_TYPE";
-    public final static String ARG_ACCOUNT_NAME 			= "ACCOUNT_NAME";
+    public final static String ARG_USER_ID 			        = "USER_ID";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT 	= "IS_ADDING_ACCOUNT";
-    public final static String STATE_USERNAME 		= "com.jasgcorp.ids.AuthenticatorActivity.state_username";
-    public final static String STATE_USERPASS 		= "com.jasgcorp.ids.AuthenticatorActivity.state_userpass";
-    public final static String STATE_SERVERADDRESS 	= "com.jasgcorp.ids.AuthenticatorActivity.state_serveraddress";
-    public final static String STATE_USERGROUP 	= "com.jasgcorp.ids.AuthenticatorActivity.state_usergroup";
+    public final static String STATE_USERNAME 		        = "com.jasgcorp.ids.AuthenticatorActivity.state_username";
+    public final static String STATE_USER_PASS              = "com.jasgcorp.ids.AuthenticatorActivity.state_userpass";
+    public final static String STATE_SERVER_ADDRESS         = "com.jasgcorp.ids.AuthenticatorActivity.state_serveraddress";
+    public final static String STATE_USER_GROUP             = "com.jasgcorp.ids.AuthenticatorActivity.state_usergroup";
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
     public final static String PARAM_USER_PASS = "USER_PASS";
@@ -68,40 +68,24 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        if (Utils.getCurrentUser(getApplicationContext())!=null) {
+        if (getIntent()!=null && getIntent().getBooleanExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true)
+                && Utils.getCurrentUser(getApplicationContext())!=null) {
             finish();
         } else {
-            //setTypeFaceToViews();
             mAccountManager = AccountManager.get(getBaseContext());
 
-            String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-            String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
             mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-            if (mAuthTokenType == null)
+            if (mAuthTokenType == null) {
                 mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
-            if(accountType!=null && accountName!=null){
-                for(Account account : mAccountManager.getAccountsByType(accountType)){
-                    if(account.name.equals(accountName)){
-                        mAccount = account;
-                        user = new User(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                        user.setBusinessPartnerId(Integer.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)));
-                        user.setUserProfileId(Integer.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_PROFILE_ID)));
-                        user.setServerUserId(Long.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
-                        user.setUserName(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
-                        user.setUserPass(mAccountManager.getPassword(account));
-                        user.setServerAddress(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS));
-                        user.setUserGroup(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP));
-                        user.setSaveDBInExternalCard(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD).equals("true"));
-                        break;
-                    }
-                }
-                if(user!=null){
+            }
+            if(getIntent().getStringExtra(ARG_USER_ID)!=null){
+                user = ApplicationUtilities.getUserByIdFromAccountManager(this, getIntent().getStringExtra(ARG_USER_ID));
+                mAccount = ApplicationUtilities.getAccountByIdFromAccountManager(this, getIntent().getStringExtra(ARG_USER_ID));
+                if(user!=null && mAccount!=null){
                     findViewById(R.id.accountName).setEnabled(false);
-                    findViewById(R.id.server_address).setEnabled(false);
                     findViewById(R.id.user_group).setEnabled(false);
 
-                    ((EditText) findViewById(R.id.accountName)).setText(accountName);
+                    ((EditText) findViewById(R.id.accountName)).setText(user.getUserName());
                     ((EditText) findViewById(R.id.accountPassword)).setText(user.getUserPass());
                     ((EditText) findViewById(R.id.server_address)).setText(user.getServerAddress());
                     ((EditText) findViewById(R.id.user_group)).setText(user.getUserGroup());
@@ -109,9 +93,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             } else if (savedInstanceState != null) {
 
                 ((EditText) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
-                ((EditText) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USERPASS));
-                ((EditText) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVERADDRESS));
-                ((EditText) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USERGROUP));
+                ((EditText) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USER_PASS));
+                ((EditText) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVER_ADDRESS));
+                ((EditText) findViewById(R.id.user_group)).setText(savedInstanceState.getString(STATE_USER_GROUP));
             }
 
             findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
@@ -172,15 +156,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(STATE_USERNAME, ((EditText) findViewById(R.id.accountName)).getText().toString());
-        outState.putString(STATE_USERPASS, ((EditText) findViewById(R.id.accountPassword)).getText().toString());
-        outState.putString(STATE_SERVERADDRESS, ((EditText) findViewById(R.id.server_address)).getText().toString());
-        outState.putString(STATE_USERGROUP, ((EditText) findViewById(R.id.user_group)).getText().toString());
+        outState.putString(STATE_USER_PASS, ((EditText) findViewById(R.id.accountPassword)).getText().toString());
+        outState.putString(STATE_SERVER_ADDRESS, ((EditText) findViewById(R.id.server_address)).getText().toString());
+        outState.putString(STATE_USER_GROUP, ((EditText) findViewById(R.id.user_group)).getText().toString());
         super.onSaveInstanceState(outState);
     }
 
     public void submit() {
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
-        final String userGroup 		= "catalogo-febeca";
+        final String userGroup 		= getString(R.string.ids_sync_group);;
         final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();
@@ -197,15 +181,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 if(user!=null){//entra aqui cuando hay problemas con la clave del usuario
                     try {
                         user.setUserPass(userPass);
-                        sServerAuthenticate.userSignIn(user, getString(R.string.authenticator_acount_type), getBaseContext());
+                        sServerAuthenticate.userGetAuthToken(user, getString(R.string.authenticator_account_type), getBaseContext());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     if(user.getSessionToken().equals(ApplicationUtilities.ST_NEW_USER_AUTHORIZED)
                             || user.getSessionToken().equals(ApplicationUtilities.ST_USER_AUTHORIZED)){
                         data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
-                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_acount_type));
-                        data.putString(AccountManager.KEY_AUTHTOKEN, user.getSessionToken());
+                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
+                        data.putString(AccountManager.KEY_AUTHTOKEN, user.getAuthToken());
                         data.putString(PARAM_USER_PASS, userPass);
                     }else{
                         data.putString(KEY_ERROR_MESSAGE, user.getSessionToken());
@@ -232,7 +216,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                                 if(user.getSessionToken().equals(ApplicationUtilities.ST_NEW_USER_AUTHORIZED)
                                         || user.getSessionToken().equals(ApplicationUtilities.ST_USER_AUTHORIZED)){
                                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
-                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_acount_type));
+                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
                                     data.putString(AccountManager.KEY_AUTHTOKEN, user.getAuthToken());
 
                                     // We keep the server address and GCM_REG_ID as an extra data on the account.
@@ -293,7 +277,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            mAccount = new Account(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), getString(R.string.authenticator_acount_type));
+            mAccount = new Account(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), getString(R.string.authenticator_account_type));
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)

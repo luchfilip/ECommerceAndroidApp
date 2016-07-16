@@ -34,6 +34,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.jasgcorp.ids.AuthenticatorActivity;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
@@ -875,8 +876,20 @@ public class Utils {
         try {
             AccountManager accountManager = AccountManager.get(context);
             final Account availableAccounts[] = accountManager
-                    .getAccountsByType(context.getString(R.string.authenticator_acount_type));
+                    .getAccountsByType(context.getString(R.string.authenticator_account_type));
             if (availableAccounts.length>0) {
+                //String authToken = accountManager.blockingGetAuthToken(availableAccounts[0],
+                //        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                //if(TextUtils.isEmpty(authToken)){
+                //    Log.d(TAG, "AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS: "+AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                //    Log.d(TAG, "availableAccounts[0].type: "+availableAccounts[0].type);
+                //    final Intent intent = new Intent(context, AuthenticatorActivity.class);
+                //    intent.putExtra(AuthenticatorActivity.ARG_USER_ID, accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
+                //    intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                //    intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
+                //    context.startActivity(intent);
+                //    return null;
+                //}
                 return ApplicationUtilities.getUserByIdFromAccountManager(context,
                         accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
             }

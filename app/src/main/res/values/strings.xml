@@ -2,7 +2,7 @@
     <string name="app_name">Febeca C.A.</string>
 
     <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca</string>
-    <string name="authenticator_acount_type">com.smartbuilders.smartsales.auth.febeca</string>
+    <string name="authenticator_account_type">com.smartbuilders.smartsales.auth.febeca</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -315,4 +315,5 @@
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
     <string name="smallest_width">default</string>
     <string name="package_name_febeca">com.smartbuilders.smartsales.ecommerceandroidapp.febeca</string>
+    <string name="ids_sync_group">catalogo-febeca</string>
 </resources>

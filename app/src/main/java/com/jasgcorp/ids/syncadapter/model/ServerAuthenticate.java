@@ -27,6 +27,15 @@ public interface ServerAuthenticate {
      * @throws Exception
      */
     public void userSignIn(final User user, final String authType, Context ctx) throws Exception;
+
+	/**
+	 * Se usa para recuperar el authToken del usuario del servidor
+	 * @param user
+	 * @param authType
+	 * @param ctx
+	 * @throws Exception
+	 */
+	public void userGetAuthToken(final User user, final String authType, Context ctx) throws Exception;
     
     /**
      * Se usa para avisarle al servidor la sincronizacion finalizo

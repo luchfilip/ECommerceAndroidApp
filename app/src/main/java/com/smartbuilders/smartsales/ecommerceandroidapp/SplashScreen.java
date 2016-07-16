@@ -4,26 +4,35 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jasgcorp.ids.AuthenticatorActivity;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+
+import java.io.IOException;
 
 /**
  * Created by stein on 2/6/2016.
@@ -112,10 +121,10 @@ public class SplashScreen extends AppCompatActivity {
         }
 
         mAccountManager = AccountManager.get(this);
-        mCurrentUser = Utils.getCurrentUser(this);
+//        mCurrentUser = Utils.getCurrentUser(this);
 
         final Account availableAccounts[] = mAccountManager
-                .getAccountsByType(getString(R.string.authenticator_acount_type));
+                .getAccountsByType(getString(R.string.authenticator_account_type));
 
         findViewById(R.id.exit_app_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,17 +143,68 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        if (availableAccounts != null && availableAccounts.length > 0) {
+        if (availableAccounts.length > 0) {
             if(mSynchronizationState==SYNC_ERROR){
                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.progressContainer).setVisibility(View.GONE);
             }else{
-                checkInitialLoad(mAccountManager, availableAccounts[0]);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        final StringBuilder authToken = new StringBuilder();
+                        final StringBuilder exceptionMessage = new StringBuilder();
+                        try {
+                            String aux = mAccountManager.blockingGetAuthToken(availableAccounts[0],
+                                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                            if(aux!=null){
+                                authToken.append(aux);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            exceptionMessage.append(e.getMessage());
+                        } finally {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(TextUtils.isEmpty(exceptionMessage)){
+                                        if(TextUtils.isEmpty(authToken)){
+                                            final Intent intent = new Intent(SplashScreen.this, AuthenticatorActivity.class);
+                                            intent.putExtra(AuthenticatorActivity.ARG_USER_ID, mAccountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
+                                            intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                                            intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
+                                            startActivityForResult(intent, 100);
+                                        }else{
+                                            checkInitialLoad(mAccountManager, availableAccounts[0]);
+                                        }
+                                    }else{
+                                        findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                        new AlertDialog.Builder(SplashScreen.this)
+                                                .setTitle("Error iniciando la aplicación")
+                                                .setMessage(exceptionMessage)
+                                                .setPositiveButton(R.string.accept, null)
+                                                .setCancelable(false)
+                                                .show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }.start();
             }
         } else {
-            addNewAccount(getString(R.string.authenticator_acount_type),
+            addNewAccount(getString(R.string.authenticator_account_type),
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             finishActivityOnResultOperationCanceledException = true;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            if(resultCode==RESULT_OK){
+                initApp();
+            }
         }
     }
 
@@ -174,7 +234,7 @@ public class SplashScreen extends AppCompatActivity {
                                 String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
                                         .getString(AccountGeneral.USERDATA_USER_ID);
                                 final Account availableAccounts[] = mAccountManager
-                                        .getAccountsByType(getString(R.string.authenticator_acount_type));
+                                        .getAccountsByType(getString(R.string.authenticator_account_type));
                                 if (availableAccounts.length>0) {
                                     for(Account account : availableAccounts){
                                         if(mAccountManager.getUserData(account,

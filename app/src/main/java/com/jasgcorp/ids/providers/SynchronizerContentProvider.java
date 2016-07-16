@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 /**
  * 
@@ -43,6 +44,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final Uri SYNC_PROGRESS_PERCENTAGE_URI 	= Uri.withAppendedPath(CONTENT_URI, "syncprogress");
 	public static final Uri USER_SIGN_UP_URI 				= Uri.withAppendedPath(CONTENT_URI, "signUp");
 	public static final Uri USER_SIGN_IN_URI 				= Uri.withAppendedPath(CONTENT_URI, "signIn");
+	public static final Uri USER_GET_AUTH_TOKEN_URI 		= Uri.withAppendedPath(CONTENT_URI, "getAuthToken");
 	public static final Uri USER_SIGN_OUT_URI 				= Uri.withAppendedPath(CONTENT_URI, "signOut");
 	public static final Uri REGISTER_GCM_ID_IN_SERVER_URI	= Uri.withAppendedPath(CONTENT_URI, "registerGcmIdInServer");
 	
@@ -61,8 +63,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 	private static final int SYNC_PROGRESS_PERCENTAGE 	= 3;
 	private static final int SIGN_UP 					= 4;
 	private static final int SIGN_IN 					= 5;
-	private static final int SIGN_OUT 					= 6;
-	private static final int REGISTER_GCM_ID_IN_SERVER	= 7;
+    private static final int GET_AUTH_TOKEN				= 6;
+	private static final int SIGN_OUT 					= 7;
+	private static final int REGISTER_GCM_ID_IN_SERVER	= 8;
 	
 	private static final UriMatcher uriMatcher;
 	
@@ -79,24 +82,25 @@ public class SynchronizerContentProvider extends ContentProvider{
 		uriMatcher.addURI(AUTHORITY, "syncprogress", SYNC_PROGRESS_PERCENTAGE);
 		uriMatcher.addURI(AUTHORITY, "signUp", SIGN_UP);
 		uriMatcher.addURI(AUTHORITY, "signIn", SIGN_IN);
+        uriMatcher.addURI(AUTHORITY, "getAuthToken", GET_AUTH_TOKEN);
 		uriMatcher.addURI(AUTHORITY, "signOut", SIGN_OUT);
 		uriMatcher.addURI(AUTHORITY, "registerGcmIdInServer", REGISTER_GCM_ID_IN_SERVER);
 	}
 	
 	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+	public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public String getType(Uri uri) {
+	public String getType(@NonNull Uri uri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	public Uri insert(@NonNull Uri uri, ContentValues values) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -108,8 +112,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
+	public Cursor query(@NonNull Uri uri, String[] projection, String selection,
+						String[] selectionArgs, String sortOrder) {
 		Cursor response = null;
 		switch (uriMatcher.match(uri)) {
 			case START:
@@ -127,6 +131,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 	        case SIGN_IN:
 	        	response = signIn(uri);
 	        break;
+            case GET_AUTH_TOKEN:
+                response = getAuthToken(uri);
+                break;
 	        case SIGN_OUT:
 	        	response = signOut(uri);
 	        break;
@@ -140,8 +147,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 	}
 	
 	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
+	public int update(@NonNull Uri uri, ContentValues values, String selection,
+					  String[] selectionArgs) {
 		return -1;
 	}
 	
@@ -356,7 +363,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			//TODO: validar el authenticationToken
 			
 			try {
-				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 				parameters.put("userName", user.getUserName());
 				parameters.put("userGroup", user.getUserGroup());
 				parameters.put("userPass", user.getUserPass());
@@ -425,7 +432,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			//TODO: validar el authenticationToken
 			
 			try {
-				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 				parameters.put("authToken", user.getAuthToken());
 				parameters.put("userId", user.getServerUserId());
 				parameters.put("userPass", user.getUserPass());
@@ -438,7 +445,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 											    			parameters);
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
-					codeResult = Integer.valueOf(((SoapPrimitive) response).toString());
+					codeResult = Integer.valueOf(response.toString());
 				}else if (response != null){
 					throw new ClassCastException("response classCastException, "+user+".");
 				}else {
@@ -469,6 +476,65 @@ public class SynchronizerContentProvider extends ContentProvider{
 		cursor.addRow(new Object[]{codeResult, errorMessage, exceptionClass});
 		return cursor;
 	}
+
+    /**
+     *
+     * @param uri
+     * @return
+     */
+    private Cursor getAuthToken(Uri uri){
+        MatrixCursor cursor = new MatrixCursor(new String[]{"authToken", "error_message", "exception_class"});
+        String authToken = null;
+        String errorMessage = null;
+        String exceptionClass = null;
+        if(uri.getQueryParameter(KEY_USER_ID)==null){
+            throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
+        }else{
+            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
+            try {
+                LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+                parameters.put("userId", user.getServerUserId());
+                parameters.put("userPass", user.getUserPass());
+
+                ConsumeWebService a = new ConsumeWebService(getContext(),
+                        user.getServerAddress(),
+                        "/IntelligentDataSynchronizer/services/ManageUser?wsdl",
+                        "getAuthToken",
+                        "urn:getAuthToken",
+                        parameters);
+                Object response =  a.getWSResponse();
+                if(response instanceof SoapPrimitive){
+                    authToken = response.toString();
+                }else if (response != null){
+                    throw new ClassCastException("response classCastException, "+user+".");
+                }else {
+                    throw new NullPointerException("response is null, "+user+".");
+                }
+            } catch(ConnectException e){
+                e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "ConnectException, "+user+"." : e.getMessage();
+                exceptionClass = e.getClass().getName();
+            } catch(SocketTimeoutException e){
+                e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "SocketTimeoutException, "+user+"." : e.getMessage();
+                exceptionClass = e.getClass().getName();
+            } catch(SocketException e){
+                e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "SocketException, "+user+"." : e.getMessage();
+                exceptionClass = e.getClass().getName();
+            } catch(IOException e){
+                e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "IOException, "+user+"." : e.getMessage();
+                exceptionClass = e.getClass().getName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Exception, "+user+"." : e.getMessage();
+                exceptionClass = e.getClass().getName();
+            }
+        }
+        cursor.addRow(new Object[]{authToken, errorMessage, exceptionClass});
+        return cursor;
+    }
 	
 	/**
 	 *
@@ -489,7 +555,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			//TODO: validar el authenticationToken
 			
 			try {
-				LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 				parameters.put("authToken", user.getAuthToken());
 				parameters.put("userId", user.getServerUserId());
 				parameters.put("syncState", syncState);
@@ -502,7 +568,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 											    			parameters);
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
-					result = ((SoapPrimitive) response).toString();
+					result = response.toString();
 				}else if (response != null){
 					throw new ClassCastException("response classCastException, "+user+".");
 				}else {
@@ -549,7 +615,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			
-			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
 			parameters.put("gcmId", uri.getQueryParameter(KEY_USER_GCM_ID));
@@ -562,7 +628,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	    	try{
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
-					result = ((SoapPrimitive) response).toString().equals("true");
+					result = response.toString().equals("true");
 				}else if (response instanceof Exception){
 					throw (Exception) response;
 				}else if (response == null){

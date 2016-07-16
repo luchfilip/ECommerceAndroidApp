@@ -127,7 +127,8 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 				if(response.moveToNext()){
 					//Se revisa si hubo alguna excepcion al ejecutar la consulta
 					if(response.getString(response.getColumnIndex("error_message"))!=null){
-						String exceptionClass = response.getColumnIndex("exception_class")<0 ? null : response.getString(response.getColumnIndex("exception_class"));
+						String exceptionClass = response.getColumnIndex("exception_class")<0
+								? null : response.getString(response.getColumnIndex("exception_class"));
         				if(exceptionClass!=null && 
     						(exceptionClass.equals(ConnectException.class.getName())
 								|| exceptionClass.equals(SocketTimeoutException.class.getName())
@@ -179,7 +180,62 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 		}
     }
 
-	@Override
+    @Override
+    public void userGetAuthToken(User user, String authType, Context ctx) throws Exception {
+        Log.d(TAG, "userGetAuthToken");
+        boolean getGcmRegId = false;
+        Cursor response = null;
+        try{
+            response = ctx.getContentResolver()
+                    .query(SynchronizerContentProvider.USER_GET_AUTH_TOKEN_URI.buildUpon()
+                                    .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                            null, null, null, null);
+            if(response == null){
+                user.setSessionToken(ctx.getString(R.string.error_validating_user_return_null));
+            }else{
+                if(response.moveToNext()){
+                    //Se revisa si hubo alguna excepcion al ejecutar la consulta
+                    if(response.getString(response.getColumnIndex("error_message"))!=null){
+                        String exceptionClass = response.getColumnIndex("exception_class")<0
+                                ? null : response.getString(response.getColumnIndex("exception_class"));
+                        if(exceptionClass!=null &&
+                                (exceptionClass.equals(ConnectException.class.getName())
+                                        || exceptionClass.equals(SocketTimeoutException.class.getName())
+                                        || exceptionClass.equals(SocketException.class.getName())
+                                        || exceptionClass.equals(IOException.class.getName()))){
+                            throw new IOException(response.getString(response.getColumnIndex("error_message")));
+                        }
+                        throw new Exception(response.getString(response.getColumnIndex("error_message")));
+                    }
+                    user.setAuthToken(response.getString(response.getColumnIndex("authToken")));
+                    if(user.getAuthToken()!=null){
+                        getGcmRegId=true;
+                        //TODO: leer este valor del servidor en la tabla IDS_USER
+                        user.setSessionToken(ApplicationUtilities.ST_USER_AUTHORIZED);
+                    }
+                }else{
+                    user.setSessionToken(ctx.getString(R.string.user_response_move_to_next_false));
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+            if(response!=null){
+                response.close();
+            }
+        }
+        if(getGcmRegId){
+            //Nos registramos en los servidores de GCM
+            ctx.startService(new Intent(ctx, RegistrationIntentService.class)
+                    .putExtra(RegistrationIntentService.KEY_USER_ID, user.getUserId()));
+        }
+        if (TextUtils.isEmpty(user.getSessionToken())) {
+            user.setSessionToken(ctx.getString(R.string.user_session_token_null));
+        }
+    }
+
+    @Override
 	public void userSignOut(User user, String syncState, Context ctx)
 			throws Exception {
     	Log.d(TAG, "userSignOut("+user+", "+syncState+", Context ctx)");

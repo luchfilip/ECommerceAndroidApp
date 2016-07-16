@@ -27,7 +27,7 @@ public class NetworkReceiver extends BroadcastReceiver {
         if(networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
             try {
                 Account[] accounts = AccountManager.get(context)
-                        .getAccountsByType(context.getString(R.string.authenticator_acount_type));
+                        .getAccountsByType(context.getString(R.string.authenticator_account_type));
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(context, account)){
                         ApplicationUtilities.initSyncByAccount(context, account);

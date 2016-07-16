@@ -16,6 +16,8 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
@@ -131,8 +133,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					            SyncResult syncResult) {
 //    	Log.d(TAG, "debug> onPerformSync for account[" + account.name + "]");
         long syncInitTime = System.currentTimeMillis();
-    	AccountManager mAccountManager = AccountManager.get(getContext());
-        User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+    	AccountManager accountManager = AccountManager.get(getContext());
+        User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(),
+				accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
         
         boolean isAPeriodicSync = false;
     	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
@@ -142,10 +145,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         	syncStatus = SYNCHRONIZATION_CANCELLED;
         	
     		// Get the auth token for the current account
-//    		String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+    		String authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
     		sServerAuthenticate.userSignIn(user, account.type, getContext());
-//    		Log.d(TAG, "debug>  authToken: "+authToken);
-//			Log.d(TAG, "debug>  sessionToken: "+user.getSessionToken());
+    		Log.d(TAG, "debug>  authToken: "+authToken);
+			Log.d(TAG, "debug>  sessionToken: "+user.getSessionToken());
 			
 			switch (user.getSessionToken()) {
 				case ApplicationUtilities.ST_NEW_USER_AUTHORIZED:
@@ -161,8 +164,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		        	throw new AuthenticatorException(getContext().getString(R.string.user_not_exist_in_server));
 				case ApplicationUtilities.ST_USER_WRONG_PASSWORD:
 					//invalidate authentication token
-	        		mAccountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_acount_type), 
-	        											mAccountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
+	        		accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+	        											accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 					//notify authenticator error
 		        	syncStatus = SYNCHRONIZATION_CANCELLED;
 	        		throw new AuthenticatorException(getContext().getString(R.string.user_wrong_password));

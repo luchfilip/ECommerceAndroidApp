@@ -7,9 +7,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -18,8 +15,6 @@ import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
@@ -144,7 +139,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         if(mCurrentUser != null){
             mAccountManager = AccountManager.get(getApplicationContext());
-            final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_acount_type));
+            final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type));
             for(Account account : availableAccounts){
                 if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())){
                     mAccount = account;

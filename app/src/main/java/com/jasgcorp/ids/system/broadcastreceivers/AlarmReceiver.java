@@ -29,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 					&& extras.containsKey(KEY_CURRENT_USER_ID) 
 					&& extras.containsKey(KEY_CURRENT_ALARM_ID)){
 				AccountManager mAccountManager = AccountManager.get(context);
-				final Account availableAccounts[] = mAccountManager.getAccountsByType(context.getString(R.string.authenticator_acount_type));
+				final Account availableAccounts[] = mAccountManager.getAccountsByType(context.getString(R.string.authenticator_account_type));
 				if(availableAccounts.length>0){
 					for(Account account : availableAccounts){
 						if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(extras.getString(KEY_CURRENT_USER_ID))){
