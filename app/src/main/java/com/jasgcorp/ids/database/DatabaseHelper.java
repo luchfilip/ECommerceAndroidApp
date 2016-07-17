@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -67,19 +67,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID))";
 
-	public static final String CREATE_PRODUCT_AVAILABILITY =
-            "CREATE TABLE IF NOT EXISTS PRODUCT_AVAILABILITY (" +
+	public static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE_AVAILABILITY (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
-                    " AVAILABILITY INTEGER DEFAULT 0 NOT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " PRIMARY KEY (PRODUCT_ID))";
-
-    public static final String CREATE_PRODUCT_PRICE =
-            "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE (" +
-                    "PRODUCT_ID INTEGER NOT NULL, " +
-                    " PRICE_LIST_ID INTEGER DEFAULT 0, " +
-                    " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
+                    " PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRICE DECIMAL DEFAULT 0 NOT NULL, " +
+                    " AVAILABILITY INTEGER DEFAULT 0 NOT NULL, " +
+                    " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
+                    " PRIORITY INTEGER DEFAULT 1 NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " PRIMARY KEY (PRODUCT_ID, PRICE_LIST_ID))";
 
@@ -452,7 +447,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public DatabaseHelper(Context context, User user){
 		super(context, 
-				user.isSaveDBInExternalCard() 
+				user.isSaveDBInExternalCard()
 					? context.getExternalFilesDir(null).getAbsolutePath()+ File.separator + ApplicationUtilities.getDatabaseNameByUser(user)
 					: ApplicationUtilities.getDatabaseNameByUser(user), 
 				null, 
@@ -466,11 +461,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_USER_TABLE);
             db.execSQL(CREATE_USER_PROFILE_TABLE);
             db.execSQL(CREATE_PRODUCT);
-            db.execSQL("create index product_idx on product (product_id)");
-            db.execSQL(CREATE_PRODUCT_PRICE);
-            db.execSQL("create index product_price_idx on product_price (product_id)");
-            db.execSQL(CREATE_PRODUCT_AVAILABILITY);
-            db.execSQL("create index product_availability_idx on product_availability (product_id)");
+            db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
             db.execSQL(CREATE_PRODUCT_IMAGE);
             db.execSQL("create index product_image_idx on product_image (product_id)");
             db.execSQL(CREATE_PRODUCT_RATING);
@@ -509,10 +500,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(this.dataBaseName.equals(DATABASE_NAME) && oldVersion<5) {
-            db.execSQL(CREATE_PRODUCT_PRICE);
-            db.execSQL("create index product_price_idx on product_price (product_id)");
-            db.execSQL(CREATE_CURRENCY);
+        if(this.dataBaseName.equals(DATABASE_NAME) && oldVersion<6) {
+            db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
         }
 	}
 

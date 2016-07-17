@@ -818,7 +818,7 @@ public class Utils {
         Cursor c = null;
         try{
             String[] tables = new String[]{"PRODUCT", "BRAND", "CATEGORY", "MAINPAGE_PRODUCT",
-                    "MAINPAGE_PRODUCT_SECTION", "PRODUCT_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
+                    "MAINPAGE_PRODUCT_SECTION", "PRODUCT_PRICE_AVAILABILITY", "PRODUCT_IMAGE", "SUBCATEGORY"};
             for (String table : tables){
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
                         null, "select count(*) from " + table, null, null);

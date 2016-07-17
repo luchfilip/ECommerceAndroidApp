@@ -142,8 +142,8 @@ public class TableDataReceiverFromServer extends Thread {
         }
         if(sync){
 			execRemoteQueryAndInsert(context, null,
-					"SELECT PRODUCT_ID, AVAILABILITY FROM PRODUCT_AVAILABILITY WHERE IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_AVAILABILITY (PRODUCT_ID, AVAILABILITY) VALUES (?, ?)");
+					"SELECT PRODUCT_ID, PRICE_LIST_ID, PRICE, AVAILABILITY, CURRENCY_ID, PRIORITY WHERE IS_ACTIVE = 'Y'",
+					"INSERT OR REPLACE INTO PRODUCT_PRICE_AVAILABILITY (PRODUCT_ID, PRICE_LIST_ID, PRICE, AVAILABILITY, CURRENCY_ID, PRIORITY) VALUES (?, ?, ?, ?, ?, ?)");
             syncPercentage = 60;
         }
         if(sync){
