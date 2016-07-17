@@ -49,24 +49,24 @@ public class FolderDataTransferToServer extends Thread {
 	 * @throws Exception 
 	 */
 	public FolderDataTransferToServer(User user, Context context) throws Exception{
-		this.context = context;
-		this.serverAddress = user.getServerAddress();
-		this.authToken = user.getAuthToken();
-		this.serverUserId = user.getServerUserId();
-		this.userGroup = user.getUserGroup();
-		this.userName = user.getUserName();
-		this.folder = new File(context.getExternalFilesDir(null)+"/"+userGroup+"/"+userName+"/Data_Out/");//-->Android/data/package.name/files/...
-		// if the directory does not exist, create it
-		if (!folder.exists()) {
-		    try{
-		        if(!folder.mkdirs()){
-		        	Log.w(TAG, "Failed to create folder: "+folder.getPath()+".");
-		        }
-		    } catch(SecurityException se){
-		    	se.printStackTrace();
-		    }        
-		}
-		dbHelper = new DatabaseHelper(context, user);
+		//this.context = context;
+		//this.serverAddress = user.getServerAddress();
+		//this.authToken = user.getAuthToken();
+		//this.serverUserId = user.getServerUserId();
+		//this.userGroup = user.getUserGroup();
+		//this.userName = user.getUserName();
+		//this.folder = new File(context.getExternalFilesDir(null)+"/"+userGroup+"/"+userName+"/Data_Out/");//-->Android/data/package.name/files/...
+		//// if the directory does not exist, create it
+		//if (!folder.exists()) {
+		//	try{
+		//		if(!folder.mkdirs()){
+		//			Log.w(TAG, "Failed to create folder: "+folder.getPath()+".");
+		//		}
+		//	} catch(SecurityException se){
+		//		se.printStackTrace();
+		//	}
+		//}
+		//dbHelper = new DatabaseHelper(context, user);
 	}
 	
 	/**
@@ -90,153 +90,153 @@ public class FolderDataTransferToServer extends Thread {
 	 */
 	public void run() {
 		Log.d(TAG, "run()");
-		try {
-			if(sync){
-				initSync();
-				while (sync) {
-					sendFileToServer();
-				}
-			}
-		} catch (ConnectException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (SocketException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (IOException e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		} catch (Exception e) {
-			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
-		}
+		sync = false;
+		//try {
+		//	if(sync){
+		//		initSync();
+		//		while (sync) {
+		//			sendFileToServer();
+		//		}
+		//	}
+		//} catch (ConnectException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (SocketTimeoutException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (SocketException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//	exceptionMessage = e.getMessage();
+		//	exceptionClass = e.getClass().getName();
+		//}
 	}
 	
-	/**
-	 * 
-	 */
-	private void initSync(){
-		ArrayList<String> foldersToTransfer = getFoldersToTransfer();
-		if(foldersToTransfer==null || foldersToTransfer.size()<=0){
-			stopSynchronization();
-		}else{
-			for(String folderClientName : foldersToTransfer){
-				ArrayList<String> filesToTransfer = ApplicationUtilities
-						.getFilesInFolder(context.getExternalFilesDir(null)+"/"+userGroup+"/"+userName+"/Data_Out/"+folderClientName+"/");
-				if(filesToTransfer==null || filesToTransfer.size()<=0){
-					stopSynchronization();
-				}else{
-					SQLiteDatabase database = null; 
-					ContentValues values = null;
-					try{
-						File file = null;
-						database = dbHelper.getWritableDatabase();
-						for(String fileToTransfer : filesToTransfer){
-							file = new File(fileToTransfer);
-							values = new ContentValues(); 
-							values.put("FOLDER_CLIENT_NAME", folderClientName); 
-							values.put("FILE_PATH", file.getAbsolutePath()); 
-							values.put("FILE_SIZE", Long.valueOf(file.getTotalSpace()).intValue()); 
-							database.insert("OUTGOING_FILE_SYNC_ID", null, values);
-							file = null;
-						}
-					}catch(Exception e){
-						e.printStackTrace();
-					}finally{
-						if(database!=null){
-							database.close();
-						}
-					}
-					
-				}
-			}
-		}
-	}
+	///**
+	// *
+	// */
+	//private void initSync(){
+	//	ArrayList<String> foldersToTransfer = getFoldersToTransfer();
+	//	if(foldersToTransfer==null || foldersToTransfer.size()<=0){
+	//		stopSynchronization();
+	//	}else{
+	//		for(String folderClientName : foldersToTransfer){
+	//			ArrayList<String> filesToTransfer = ApplicationUtilities
+	//					.getFilesInFolder(context.getExternalFilesDir(null)+"/"+userGroup+"/"+userName+"/Data_Out/"+folderClientName+"/");
+	//			if(filesToTransfer==null || filesToTransfer.size()<=0){
+	//				stopSynchronization();
+	//			}else{
+	//				SQLiteDatabase database = null;
+	//				ContentValues values = null;
+	//				try{
+	//					File file = null;
+	//					database = dbHelper.getWritableDatabase();
+	//					for(String fileToTransfer : filesToTransfer){
+	//						file = new File(fileToTransfer);
+	//						values = new ContentValues();
+	//						values.put("FOLDER_CLIENT_NAME", folderClientName);
+	//						values.put("FILE_PATH", file.getAbsolutePath());
+	//						values.put("FILE_SIZE", Long.valueOf(file.getTotalSpace()).intValue());
+	//						database.insert("OUTGOING_FILE_SYNC_ID", null, values);
+	//						file = null;
+	//					}
+	//				}catch(Exception e){
+	//					e.printStackTrace();
+	//				}finally{
+	//					if(database!=null){
+	//						database.close();
+	//					}
+	//				}
+	//
+	//			}
+	//		}
+	//	}
+	//}
 	
-	private ArrayList<String> getFoldersToTransfer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	//private ArrayList<String> getFoldersToTransfer() {
+	//	// TODO Auto-generated method stub
+	//	return null;
+	//}
 
-	/**
-	 *
-	 * @return
-	 * @throws Exception 
-	 */
-	private void sendFileToServer() throws Exception{
-		Log.d(TAG, "sendFileToServer() - begin");
-		String fileName = getNextFileToTransfer();
-		if(fileName==null || fileName.isEmpty()){
-			stopSynchronization();
-		}else{
-			String dataFile = ApplicationUtilities.encodeFileToBase64Binary(new File(folder.getPath().toString()+"/"+fileName));
-			
-			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
-			parameters.put("authToken", authToken);
-			parameters.put("userId", serverUserId);
-			parameters.put("fileName", fileName);
-			parameters.put("dataFile", dataFile);
-			ConsumeWebService a = new ConsumeWebService(context,
-														serverAddress, 
-										    			"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl", 
-										    			"receiveDataFromClient", 
-										    			"urn:receiveDataFromClient", 
-										    			parameters);
-			boolean result = false;
-			try{
-				Object response = a.getWSResponse();
-				//No se valida si el usuario ha detenido la sincronizacion ya que no se puede detener el envio
-				//del archivo ni tampoco se puede hacer que el servidor no procese el archivo,
-				//asi que si se envio el archivo y el servidor lo proceso es bueno saber si lo hizo correctamente o no.
-				if(response instanceof SoapPrimitive){
-					result = ((SoapPrimitive) response).toString().equals("true");
-				}else if (response==null){
-					throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+", dataFile: "+dataFile+"]");
-				}else{
-					throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+", dataFile: "+dataFile+"]");
-				}
-			} catch (ConnectException e){
-				Log.e(TAG, "ConnectException");
-				e.printStackTrace();
-				throw e;
-			} catch(SocketTimeoutException e){
-				Log.e(TAG, "SocketTimeoutException");
-				e.printStackTrace();
-				throw e;
-			} catch (SocketException e){
-				Log.e(TAG, "SocketException");
-				e.printStackTrace();
-				throw e;
-			} catch (IOException e){
-				Log.e(TAG, "IOException");
-				e.printStackTrace();
-				throw e;
-			} catch (Exception e){
-				Log.e(TAG, "Exception");
-				e.printStackTrace();
-				throw new Exception("Exception while execute sendFileToServer(), Exception Message: "+e.getMessage());
-			}
-			Log.d(TAG, "result: "+result);
-		}
-		Log.d(TAG, "sendFileToServer() - ends");
-	}
+	///**
+	// *
+	// * @return
+	// * @throws Exception
+	// */
+	//private void sendFileToServer() throws Exception{
+	//	Log.d(TAG, "sendFileToServer() - begin");
+	//	String fileName = getNextFileToTransfer();
+	//	if(fileName==null || fileName.isEmpty()){
+	//		stopSynchronization();
+	//	}else{
+	//		String dataFile = ApplicationUtilities.encodeFileToBase64Binary(new File(folder.getPath().toString()+"/"+fileName));
+	//
+	//		LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+	//		parameters.put("authToken", authToken);
+	//		parameters.put("userId", serverUserId);
+	//		parameters.put("fileName", fileName);
+	//		parameters.put("dataFile", dataFile);
+	//		ConsumeWebService a = new ConsumeWebService(context,
+	//													serverAddress,
+	//													"/IntelligentDataSynchronizer/services/ManageFolderDataTransfer?wsdl",
+	//													"receiveDataFromClient",
+	//													"urn:receiveDataFromClient",
+	//													parameters);
+	//		boolean result = false;
+	//		try{
+	//			Object response = a.getWSResponse();
+	//			//No se valida si el usuario ha detenido la sincronizacion ya que no se puede detener el envio
+	//			//del archivo ni tampoco se puede hacer que el servidor no procese el archivo,
+	//			//asi que si se envio el archivo y el servidor lo proceso es bueno saber si lo hizo correctamente o no.
+	//			if(response instanceof SoapPrimitive){
+	//				result = ((SoapPrimitive) response).toString().equals("true");
+	//			}else if (response==null){
+	//				throw new Exception("response is null, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+", dataFile: "+dataFile+"]");
+	//			}else{
+	//				throw new Exception("response classCastException, [serverAddress: "+serverAddress+", serverUserId: "+serverUserId+", dataFile: "+dataFile+"]");
+	//			}
+	//		} catch (ConnectException e){
+	//			Log.e(TAG, "ConnectException");
+	//			e.printStackTrace();
+	//			throw e;
+	//		} catch(SocketTimeoutException e){
+	//			Log.e(TAG, "SocketTimeoutException");
+	//			e.printStackTrace();
+	//			throw e;
+	//		} catch (SocketException e){
+	//			Log.e(TAG, "SocketException");
+	//			e.printStackTrace();
+	//			throw e;
+	//		} catch (IOException e){
+	//			Log.e(TAG, "IOException");
+	//			e.printStackTrace();
+	//			throw e;
+	//		} catch (Exception e){
+	//			Log.e(TAG, "Exception");
+	//			e.printStackTrace();
+	//			throw new Exception("Exception while execute sendFileToServer(), Exception Message: "+e.getMessage());
+	//		}
+	//		Log.d(TAG, "result: "+result);
+	//	}
+	//	Log.d(TAG, "sendFileToServer() - ends");
+	//}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	private String getNextFileToTransfer() {
-
-		return null;
-	}
+	///**
+	// *
+	// * @return
+	// */
+	//private String getNextFileToTransfer() {
+	//	return null;
+	//}
 
 	public float getSyncPercentage() {
 		return syncPercentage;

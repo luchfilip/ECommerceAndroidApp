@@ -4,15 +4,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,12 +24,9 @@ import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
-
-import java.io.IOException;
 
 /**
  * Created by stein on 2/6/2016.
@@ -264,8 +258,8 @@ public class SplashScreen extends AppCompatActivity {
         //Utils.createImageFiles(this, mCurrentUser);
         //se manda a descargar todas las imagenes thumbs de los productos
         //startService(new Intent(this, LoadProductsThumbImage.class));
-        Intent i = new Intent(SplashScreen.this, MainActivity.class);
-        startActivity(i);
+        startActivity(new Intent(SplashScreen.this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
     }
 

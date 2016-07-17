@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -75,11 +77,24 @@ public class ThumbImagesReceiverFromServer extends Thread {
 					"SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y' AND PRIORITY=1",
 					null, null);
 			if(c!=null){
+				List<String> filesName = new ArrayList<>();
 				while(c.moveToNext()){
+					filesName.add(c.getString(0));
 					if(Utils.getFileInThumbDirByFileName(context, c.getString(0))==null){
 						downloadImage(c.getString(0), context, user);
 					}
 				}
+                //se limpia la carpeta de los archivos que ya no pertenezcan
+				List<String> filesInThumbDir = Utils.getListOfFilesInThumbDir(context);
+                filesInThumbDir.removeAll(filesName);
+                for (String fileNameToRemove : filesInThumbDir) {
+                    try {
+                        (new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error removing file: \""+fileNameToRemove+
+                                "\", ExceptionMessage: "+e.getMessage());
+                    }
+                }
 			}
 		} catch (Exception e){
 			e.printStackTrace();

@@ -67,6 +67,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -1074,5 +1076,34 @@ public class Utils {
             e.printStackTrace();
         }
         return urlScreenParameters;
+    }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static List<String> getListOfFilesInThumbDir(Context context) {
+        return getListOfFilesByFolder(new File (getImagesThumbFolderPath(context)));
+    }
+
+    /**
+     * Devuelve una lista con los nombres de los archivos que se encuentran en el fichero
+     * @param folder
+     * @return
+     */
+    private static List<String> getListOfFilesByFolder(final File folder) {
+        if (folder!=null) {
+            List<String> filesName = new ArrayList<>();
+            for (final File fileEntry : folder.listFiles()) {
+                if (fileEntry.isDirectory()) {
+                    getListOfFilesByFolder(fileEntry);
+                } else {
+                    filesName.add(fileEntry.getName());
+                }
+            }
+            return filesName;
+        }
+        return null;
     }
 }
