@@ -96,7 +96,7 @@ public class SplashScreen extends AppCompatActivity {
             intentFilter.addAction(SyncAdapter.IO_EXCEPTION);
             intentFilter.addAction(SyncAdapter.OPERATION_CANCELED_EXCEPTION);
             intentFilter.addAction(SyncAdapter.XML_PULL_PARSE_EXCEPTION);
-            getApplicationContext().registerReceiver(syncAdapterReceiver, intentFilter);
+            registerReceiver(syncAdapterReceiver, intentFilter);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +115,6 @@ public class SplashScreen extends AppCompatActivity {
         }
 
         mAccountManager = AccountManager.get(this);
-//        mCurrentUser = Utils.getCurrentUser(this);
 
         final Account availableAccounts[] = mAccountManager
                 .getAccountsByType(getString(R.string.authenticator_account_type));

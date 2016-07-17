@@ -12,8 +12,8 @@
     <string name="share">Compartir</string>
     <string name="download">Descargar</string>
     <string name="title_activity_product_detail">Detalle del Producto</string>
-    <string name="related_products">Productos Relacionados</string>
-    <string name="related_shopping_products">Clientes que compraron este producto también compraron</string>
+    <string name="related_products">Más productos de la misma categoría</string>
+    <string name="related_shopping_products">Productos relacionados según pedidos</string>
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="product_details_label">Detalles del Producto</string>
     <string name="product_description_detail">Descripción: %1$s</string>

@@ -51,7 +51,7 @@ public class ProductDB {
                     " ORDER BY R.TIMES DESC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    sql, new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(productId),
+                    sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(productId), "Y",
                     String.valueOf(1), "Y", "Y", String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){

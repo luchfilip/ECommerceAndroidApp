@@ -257,6 +257,7 @@
                     android:id="@+id/related_shopping_products"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:textColor="@color/label_color"
+                    android:textStyle="bold"
                     android:focusable="false" />
 
                 <android.support.v7.widget.RecyclerView
@@ -283,6 +284,7 @@
                     android:id="@+id/related_products_by_brand_tv"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:textColor="@color/label_color"
+                    android:textStyle="bold"
                     android:focusable="false" />
 
                 <android.support.v7.widget.RecyclerView
@@ -310,6 +312,7 @@
                     android:id="@+id/related_products"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:focusable="false"
+                    android:textStyle="bold"
                     android:textColor="@color/label_color" />
 
                 <android.support.v7.widget.RecyclerView
