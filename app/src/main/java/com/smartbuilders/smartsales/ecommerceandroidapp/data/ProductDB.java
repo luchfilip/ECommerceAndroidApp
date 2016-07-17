@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
@@ -36,7 +37,7 @@ public class ProductDB {
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -61,6 +62,7 @@ public class ProductDB {
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -85,7 +87,7 @@ public class ProductDB {
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -109,6 +111,7 @@ public class ProductDB {
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -133,7 +136,7 @@ public class ProductDB {
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, PR.RATING " +
+                        " PA.AVAILABILITY, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -157,6 +160,7 @@ public class ProductDB {
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -183,7 +187,7 @@ public class ProductDB {
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -228,6 +232,7 @@ public class ProductDB {
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -254,7 +259,7 @@ public class ProductDB {
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
@@ -280,6 +285,7 @@ public class ProductDB {
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -306,7 +312,7 @@ public class ProductDB {
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, PA.CURRENCY_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -333,6 +339,7 @@ public class ProductDB {
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -368,7 +375,7 @@ public class ProductDB {
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, PA.CURRENCY_ID " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -384,7 +391,7 @@ public class ProductDB {
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, PA.CURRENCY_ID " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -413,6 +420,7 @@ public class ProductDB {
                     p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
+                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
                 }
@@ -540,16 +548,17 @@ public class ProductDB {
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, " +
                         " B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING " +
+                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
+                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
                         " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
                     " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
-                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(id), "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(id), "Y"}, null);
             if (c!=null && c.moveToNext()){
                 Product p = new Product();
                 p.setId(c.getInt(0));
@@ -564,6 +573,8 @@ public class ProductDB {
                 p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                 p.setImageFileName(c.getString(17));
                 p.setRating(c.getFloat(18));
+                p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
+                p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
                 p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                 return p;
             }

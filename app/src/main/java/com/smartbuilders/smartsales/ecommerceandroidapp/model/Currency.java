@@ -19,6 +19,11 @@ public class Currency extends Model implements Parcelable {
         super();
     }
 
+    public Currency(int id, String unicodeDecimal) {
+        setId(id);
+        setUnicodeDecimal(unicodeDecimal);
+    }
+
     protected Currency(Parcel in) {
         super(in);
         symbol = in.readString();
