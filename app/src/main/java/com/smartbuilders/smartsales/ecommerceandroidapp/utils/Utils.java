@@ -1093,7 +1093,7 @@ public class Utils {
      * @return
      */
     private static List<String> getListOfFilesByFolder(final File folder) {
-        if (folder!=null) {
+        if (folder!=null && folder.listFiles()!=null) {
             List<String> filesName = new ArrayList<>();
             for (final File fileEntry : folder.listFiles()) {
                 if (fileEntry.isDirectory()) {

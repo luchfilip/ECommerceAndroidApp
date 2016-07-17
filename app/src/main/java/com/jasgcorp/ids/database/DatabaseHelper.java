@@ -70,13 +70,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
             "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE_AVAILABILITY (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
-                    " PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL, " +
+                    " PRODUCT_PRICE_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRICE DECIMAL DEFAULT 0 NOT NULL, " +
                     " AVAILABILITY INTEGER DEFAULT 0 NOT NULL, " +
                     " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRIORITY INTEGER DEFAULT 1 NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " PRIMARY KEY (PRODUCT_ID, PRICE_LIST_ID))";
+                    " PRIMARY KEY (PRODUCT_ID, PRODUCT_PRICE_ID))";
 
 	public static final String CREATE_PRODUCT_IMAGE =
             "CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE (" +
