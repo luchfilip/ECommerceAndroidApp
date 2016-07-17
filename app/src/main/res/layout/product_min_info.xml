@@ -11,6 +11,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="3dp"
         android:id="@+id/go_to_product_details">
 
         <TextView
@@ -30,6 +31,7 @@
             android:layout_width="@dimen/productMinInfo_max_image_Width"
             android:layout_height="@dimen/productMinInfo_max_image_Height"
             android:id="@+id/product_image"
+            android:layout_marginBottom="3dp"
             android:layout_gravity="center" />
 
         <TextView
@@ -38,7 +40,6 @@
             android:id="@+id/product_price"
             android:textSize="@dimen/productMinInfo_price_text_size"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="2dp"
             android:textColor="@color/product_price_color"
             android:singleLine="false"
             android:lines="1" />
@@ -49,7 +50,6 @@
             android:id="@+id/product_availability"
             android:textSize="@dimen/productMinInfo_availability_text_size"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="2dp"
             android:textColor="@color/product_availability_color"
             android:singleLine="false"
             android:lines="1" />
@@ -63,7 +63,6 @@
             android:rating="2.5"
             android:id="@+id/product_ratingbar"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="2dp"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -76,7 +75,6 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:baselineAligned="false">
