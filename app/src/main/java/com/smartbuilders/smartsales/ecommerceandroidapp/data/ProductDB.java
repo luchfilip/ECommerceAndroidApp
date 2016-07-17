@@ -59,7 +59,7 @@ public class ProductDB {
                     p.setImageFileName(c.getString(2));
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.setAvailability(c.getInt(10));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
@@ -107,7 +107,7 @@ public class ProductDB {
                     p.setImageFileName(c.getString(2));
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.setAvailability(c.getInt(10));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
@@ -155,7 +155,7 @@ public class ProductDB {
                     p.setImageFileName(c.getString(2));
                     p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.setAvailability(c.getInt(10));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
                     p.setRating(c.getFloat(11));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
                     products.add(p);
@@ -225,7 +225,7 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
                     p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.setAvailability(c.getInt(16));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
@@ -277,7 +277,7 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
                     p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.setAvailability(c.getInt(16));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
@@ -330,7 +330,7 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
                     p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.setAvailability(c.getInt(16));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
@@ -410,7 +410,7 @@ public class ProductDB {
                     p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
                     p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
                     p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.setAvailability(c.getInt(16));
+                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                     p.setImageFileName(c.getString(17));
                     p.setRating(c.getFloat(18));
                     p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
@@ -561,7 +561,7 @@ public class ProductDB {
                 p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
                 p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
                 p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                p.setAvailability(c.getInt(16));
+                p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
                 p.setImageFileName(c.getString(17));
                 p.setRating(c.getFloat(18));
                 p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
