@@ -42,6 +42,7 @@ public class RecommendedProductsListAdapter extends
         // each data item is just a string in this case
         public ImageView productImage;
         public TextView productName;
+        public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
         public TextView commercialPackage;
@@ -56,6 +57,7 @@ public class RecommendedProductsListAdapter extends
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
@@ -122,8 +124,14 @@ public class RecommendedProductsListAdapter extends
                     .setRating(mDataset.get(holder.getAdapterPosition()).getRating());
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getAvailability()));
+        if(mDataset.get(position).getDefaultProductPriceAvailability()!=null) {
+            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                    mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
+
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

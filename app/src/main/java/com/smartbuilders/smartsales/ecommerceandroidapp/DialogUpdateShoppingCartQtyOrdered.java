@@ -73,8 +73,17 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         //se coloca el indicador del focus al final del texto
         qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
 
-        ((TextView) view.findViewById(R.id.product_availability_textView))
-                .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
+
+        if(mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
+            ((TextView) view.findViewById(R.id.product_price_textView))
+                    .setText(getString(R.string.price_detail,
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getPrice()));
+
+            ((TextView) view.findViewById(R.id.product_availability_textView))
+                    .setText(getContext().getString(R.string.availability,
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,8 +105,10 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
                     if ((mOrderLine.getQuantityOrdered() % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
                         throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                     }
-                    if (mOrderLine.getQuantityOrdered() > mOrderLine.getProduct().getAvailability()) {
-                        throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                    if (mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
+                        if (mOrderLine.getQuantityOrdered() > mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
+                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                        }
                     }
                     String result = null;
                     if (mIsShoppingCart) {

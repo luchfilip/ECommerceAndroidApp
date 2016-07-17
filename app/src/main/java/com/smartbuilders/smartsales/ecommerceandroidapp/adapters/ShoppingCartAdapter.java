@@ -47,6 +47,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public ImageView deleteItem;
         public TextView productName;
         public TextView productBrand;
+        public TextView productPrice;
         public TextView productAvailability;
         public EditText qtyOrdered;
         public View goToProductDetails;
@@ -57,6 +58,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
@@ -145,8 +147,14 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.productBrand.setVisibility(TextView.GONE);
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProduct().getAvailability()));
+        if(mDataset.get(position).getProduct().getDefaultProductPriceAvailability()!=null) {
+            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

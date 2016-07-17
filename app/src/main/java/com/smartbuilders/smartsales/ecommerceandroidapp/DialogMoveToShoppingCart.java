@@ -62,9 +62,16 @@ public class DialogMoveToShoppingCart extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_move_to_shopping_cart, container);
 
-        ((TextView) view.findViewById(R.id.product_availability_textView))
-                .setText(getContext().getString(R.string.availability, mOrderLine.getProduct().getAvailability()));
+        if(mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
+            ((TextView) view.findViewById(R.id.product_price_textView))
+                    .setText(getString(R.string.price_detail,
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getPrice()));
 
+            ((TextView) view.findViewById(R.id.product_availability_textView))
+                    .setText(getContext().getString(R.string.availability,
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+        }
         view.findViewById(R.id.cancel_button).setOnClickListener(
             new View.OnClickListener() {
                 @Override
@@ -88,8 +95,10 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                         if ((qtyRequested % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
                             throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                         }
-                        if (qtyRequested > mOrderLine.getProduct().getAvailability()) {
-                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                        if(mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
+                            if (qtyRequested > mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
+                                throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                            }
                         }
                         OrderLineDB orderLineDB = new OrderLineDB(getContext(), mUser);
                         String result = orderLineDB.moveOrderLineToShoppingCart(mOrderLine, qtyRequested);

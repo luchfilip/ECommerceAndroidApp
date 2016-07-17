@@ -91,7 +91,7 @@ public class ThumbImagesReceiverFromServer extends Thread {
                     try {
                         (new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
                     } catch (Exception e) {
-                        Log.e(TAG, "Error removing file: \""+fileNameToRemove+
+                        Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
                                 "\", ExceptionMessage: "+e.getMessage());
                     }
                 }

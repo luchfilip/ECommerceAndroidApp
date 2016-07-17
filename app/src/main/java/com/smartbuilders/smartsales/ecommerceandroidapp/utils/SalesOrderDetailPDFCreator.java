@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -27,9 +26,12 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 
@@ -43,6 +45,8 @@ import java.util.ArrayList;
  * Created by Alberto on 6/4/2016.
  */
 public class SalesOrderDetailPDFCreator {
+
+    private Currency currency;
 
     public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName,
                             Context ctx, User user) throws Exception {
@@ -62,7 +66,7 @@ public class SalesOrderDetailPDFCreator {
         //create a new document
         Document document = new Document(PageSize.LETTER, 40, 40, 130, 40);
 
-        if(pdfFile != null){
+        if(pdfFile.exists()){
             try {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -74,6 +78,8 @@ public class SalesOrderDetailPDFCreator {
                     userCompany = new Company();
                 }
 
+                currency = (new CurrencyDB(ctx)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(ctx, user));
+
                 //se agrega la informacion del cliente, numero de cotizacion, fecha de emision, etc.
                 addSalesOrderHeader(document, ctx, userCompany, salesOrder);
 
@@ -81,7 +87,7 @@ public class SalesOrderDetailPDFCreator {
                 addSalesOrderTitle(document, ctx);
 
                 //se cargan las lineas de la cotizacion
-                addSalesOrderDetails(document, lines, ctx, user);
+                addSalesOrderDetails(document, lines, ctx);
 
                 //se le agrega la informacion de subtotal, impuestos y total de la cotizacion
                 addSalesOrderFooter(document, ctx, salesOrder);
@@ -253,7 +259,7 @@ public class SalesOrderDetailPDFCreator {
     }
 
     private void addSalesOrderDetails(Document document, ArrayList<SalesOrderLine> lines,
-                                      Context ctx, User user) throws DocumentException, IOException {
+                                      Context ctx) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -306,8 +312,12 @@ public class SalesOrderDetailPDFCreator {
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price, line.getPriceStringFormat()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount, line.getTaxPercentageStringFormat()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price,
+                    currency!=null ? currency.getName() : "",
+                    line.getPriceStringFormat()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
+                    currency!=null ? currency.getName() : "",
+                    line.getTaxPercentageStringFormat()), font));
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
@@ -315,7 +325,9 @@ public class SalesOrderDetailPDFCreator {
             cell3.setPadding(3);
             cell3.setBorder(PdfPCell.NO_BORDER);
             cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered, String.valueOf(line.getQuantityOrdered())), font));
-            cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount, line.getTotalLineAmountStringFormat()), font));
+            cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount,
+                    currency!=null ? currency.getName() : "",
+                    line.getTotalLineAmountStringFormat()), font));
             table.addCell(cell3);
             /*****************************************/
 
@@ -358,10 +370,13 @@ public class SalesOrderDetailPDFCreator {
         salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_amount,
+                currency!=null ? currency.getName() : "",
                 salesOrder.getSubTotalAmountStringFormat()), font));
         salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
+                currency!=null ? currency.getName() : "",
                 salesOrder.getTaxAmountStringFormat()), font));
         salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_total_amount,
+                currency!=null ? currency.getName() : "",
                 salesOrder.getTotalAmountStringFormat()), font));
         salesOrderNumberTable.addCell(salesOrderNumberCell);
         document.add(salesOrderNumberTable);

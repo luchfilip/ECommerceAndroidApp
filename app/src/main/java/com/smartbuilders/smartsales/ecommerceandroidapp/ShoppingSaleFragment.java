@@ -22,10 +22,13 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.view.DatePickerFragment;
@@ -311,11 +314,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         if (mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));
+            Currency currency = (new CurrencyDB(getContext()))
+                    .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
             mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
+                    currency!=null ? currency.getName() : "",
                     SalesOrderBR.getSubTotalAmountStringFormat(mSalesOrderLines)));
             mTaxAmount.setText(getString(R.string.sales_order_tax_amount,
+                    currency!=null ? currency.getName() : "",
                     SalesOrderBR.getTaxAmountStringFormat(mSalesOrderLines)));
             mTotalAmount.setText(getString(R.string.sales_order_total_amount,
+                    currency!=null ? currency.getName() : "",
                     SalesOrderBR.getTotalAmountStringFormat(mSalesOrderLines)));
         }
     }

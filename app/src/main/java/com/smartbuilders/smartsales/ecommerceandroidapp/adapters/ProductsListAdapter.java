@@ -27,10 +27,13 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogSortProductListOptions;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -153,11 +156,14 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        holder.productAvailability.setText(mContext.getString(R.string.price_detail,
-                mDataset.get(position).getPrice()));
+        if(mDataset.get(position).getDefaultProductPriceAvailability()!=null) {
+            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                    mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getAvailability()));
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,9 +378,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC:
                             return rhs.getInternalCode().compareTo(lhs.getInternalCode());
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC:
-                            return Integer.valueOf(lhs.getAvailability()).compareTo(rhs.getAvailability());
+                            return Integer.valueOf(lhs.getDefaultProductPriceAvailability().getAvailability())
+                                    .compareTo(rhs.getDefaultProductPriceAvailability().getAvailability());
                         case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC:
-                            return Integer.valueOf(rhs.getAvailability()).compareTo(lhs.getAvailability());
+                            return Integer.valueOf(rhs.getDefaultProductPriceAvailability().getAvailability())
+                                    .compareTo(lhs.getDefaultProductPriceAvailability().getAvailability());
                         default:
                             return 0;
                     }

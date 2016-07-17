@@ -45,6 +45,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
+        public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
         public TextView commercialPackage;
@@ -54,10 +55,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public RatingBar productRatingBar;
         public View goToProductDetails;
 
+
         public ViewHolder(View v) {
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
@@ -138,8 +141,14 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                     .setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProduct().getAvailability()));
+        if(mDataset.get(position).getProduct().getDefaultProductPriceAvailability()!=null) {
+            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

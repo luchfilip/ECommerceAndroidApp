@@ -15,8 +15,11 @@ import android.widget.Toast;
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderLineBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -74,7 +77,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         final EditText qtyRequestedEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
-                .setText(getContext().getString(R.string.availability, mSaleOrderLine.getProduct().getAvailability()));
+                .setText(getContext().getString(R.string.availability,
+                        mSaleOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +86,11 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                 dismiss();
             }
         });
+
+        Currency currency = (new CurrencyDB(getContext())).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+        ((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
+                ? getString(R.string.price_currency_label_detail, currency.getName())
+                : getString(R.string.price_label));
 
         try {
             productPriceEditText.setText(String.valueOf(mSaleOrderLine.getPrice()));

@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -27,6 +30,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
     private ArrayList<SalesOrderLine> mDataset;
     private Context mContext;
     private User mUser;
+    private String mCurrencyName;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -62,6 +66,9 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         mDataset = myDataset;
         mUser = user;
         mContext = context;
+        Currency currency = (new CurrencyDB(mContext))
+                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        mCurrencyName = currency!=null ? currency.getName() : "";
     }
 
     // Create new views (invoked by the layout manager)
@@ -99,11 +106,11 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         holder.productPrice.setText(mContext.getString(R.string.sales_order_product_price,
-                mDataset.get(position).getPriceStringFormat()));
+                mCurrencyName, mDataset.get(position).getPriceStringFormat()));
         holder.productTax.setText(mContext.getString(R.string.product_tax_percentage,
                 mDataset.get(position).getTaxPercentageStringFormat()));
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
-                mDataset.get(position).getTotalLineAmountStringFormat()));
+                mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override

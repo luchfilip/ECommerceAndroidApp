@@ -95,6 +95,7 @@ public class MainActivityAdapter extends BaseAdapter {
         /*********************************************/
         public TextView productName;
         public ImageView productImage;
+        public TextView productPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -114,6 +115,7 @@ public class MainActivityAdapter extends BaseAdapter {
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
@@ -276,8 +278,14 @@ public class MainActivityAdapter extends BaseAdapter {
 
                         viewHolder.productName.setText(product.getName());
 
-                        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
-                                product.getAvailability()));
+                        if(product.getDefaultProductPriceAvailability()!=null) {
+                            viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
+                                    product.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                    product.getDefaultProductPriceAvailability().getPrice()));
+
+                            viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                                    product.getDefaultProductPriceAvailability().getAvailability()));
+                        }
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override

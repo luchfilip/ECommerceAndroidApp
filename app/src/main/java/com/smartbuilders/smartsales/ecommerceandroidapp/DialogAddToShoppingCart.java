@@ -61,9 +61,17 @@ public class DialogAddToShoppingCart extends DialogFragment {
         }
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
-        
-        ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
+
+        if(mProduct.getDefaultProductPriceAvailability()!=null) {
+            ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
+                    .setText(getString(R.string.price_detail,
+                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                            mProduct.getDefaultProductPriceAvailability().getPrice()));
+
+            ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
+                    .setText(getString(R.string.availability,
+                            mProduct.getDefaultProductPriceAvailability().getAvailability()));
+        }
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
             new View.OnClickListener() {
@@ -88,8 +96,10 @@ public class DialogAddToShoppingCart extends DialogFragment {
                         if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
                             throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                         }
-                        if (qtyRequested > mProduct.getAvailability()) {
-                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                        if(mProduct.getDefaultProductPriceAvailability()!=null){
+                            if (qtyRequested > mProduct.getDefaultProductPriceAvailability().getAvailability()) {
+                                throw new Exception(getString(R.string.invalid_availability_qty_requested));
+                            }
                         }
                         String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct.getId(), qtyRequested);
                         if(result == null){

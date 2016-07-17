@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -39,6 +42,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     private ArrayList<SalesOrderLine> mDataset;
     private User mUser;
     private SalesOrderLineDB mSalesOrderLineDB;
+    private String productPriceLabelText;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -53,6 +57,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         public EditText productPrice;
         public EditText productTaxPercentage;
         public EditText totalLineAmount;
+        public TextView productPriceLabel;
 
         public ViewHolder(View v) {
             super(v);
@@ -64,6 +69,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
+            productPriceLabel = (TextView) v.findViewById(R.id.product_price_label_textView);
         }
     }
 
@@ -80,6 +86,10 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         mDataset = data;
         mUser = user;
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
+        Currency currency = (new CurrencyDB(mContext)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        productPriceLabelText = currency!=null
+                ? mContext.getString(R.string.price_currency_label_detail, currency.getName())
+                : mContext.getString(R.string.price_label);
     }
 
     // Create new views (invoked by the layout manager)
@@ -169,6 +179,8 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                         .show();
             }
         });
+
+        holder.productPriceLabel.setText(productPriceLabelText);
 
         holder.productPrice.setText(mDataset.get(position).getPriceStringFormat());
         holder.productPrice.setOnClickListener(new View.OnClickListener() {

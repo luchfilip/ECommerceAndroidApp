@@ -46,6 +46,7 @@
 
     <dimen name="productMainActivity_productName_text_size">13sp</dimen>
     <dimen name="productMainActivity_productInternalCode_text_size">11sp</dimen>
+    <dimen name="productMainActivity_productPrice_text_size">13sp</dimen>
     <dimen name="productMainActivity_productAvailability_text_size">13sp</dimen>
     <dimen name="productMainActivity_productImage_width">100dp</dimen>
     <dimen name="productMainActivity_productImage_height">100dp</dimen>

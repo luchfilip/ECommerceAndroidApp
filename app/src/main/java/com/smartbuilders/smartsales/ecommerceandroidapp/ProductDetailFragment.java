@@ -271,10 +271,22 @@ public class ProductDetailFragment extends Fragment {
                                     );
                                 }
 
-                                if (view.findViewById(R.id.product_availability) != null) {
-                                    ((TextView) view.findViewById(R.id.product_availability))
-                                            .setText(getString(R.string.availability, mProduct.getAvailability()));
+                                if(mProduct.getDefaultProductPriceAvailability()!=null) {
+                                    if (view.findViewById(R.id.product_price) != null) {
+                                        ((TextView) view.findViewById(R.id.product_price))
+                                                .setText(getString(R.string.price_detail,
+                                                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                                        mProduct.getDefaultProductPriceAvailability().getPrice()));
+                                    }
+
+                                    if (view.findViewById(R.id.product_availability) != null) {
+                                        ((TextView) view.findViewById(R.id.product_availability))
+                                                .setText(getString(R.string.availability,
+                                                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                                    }
                                 }
+
+
                             } catch (Exception e){
                                 e.printStackTrace();
                             } finally {

@@ -19,8 +19,11 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.SalesOrderLineAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
@@ -40,7 +43,7 @@ public class SalesOrderDetailFragment extends Fragment {
     private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "Cotizacion";
 
-    private User mCurrentUser;
+    private User mUser;
     private int mSalesOrderId;
     private SalesOrder mSalesOrder;
     private LinearLayoutManager mLinearLayoutManager;
@@ -87,14 +90,14 @@ public class SalesOrderDetailFragment extends Fragment {
                         }
                     }
 
-                    mCurrentUser = Utils.getCurrentUser(getContext());
+                    mUser = Utils.getCurrentUser(getContext());
 
                     if (mSalesOrderId>0) {
-                        mSalesOrder = (new SalesOrderDB(getContext(), mCurrentUser)).getActiveSalesOrderById(mSalesOrderId);
+                        mSalesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
                     }
 
                     if (mSalesOrder != null) {
-                        orderLines.addAll((new SalesOrderLineDB(getContext(), mCurrentUser))
+                        orderLines.addAll((new SalesOrderLineDB(getContext(), mUser))
                                 .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId()));
                         mShareIntent = createShareSalesOrderIntent(mSalesOrder, orderLines);
                     }
@@ -107,13 +110,16 @@ public class SalesOrderDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 if (mSalesOrder != null) {
+                                    Currency currency = (new CurrencyDB(getContext()))
+                                            .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+
                                     RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sales_order_lines);
                                     // use this setting to improve performance if you know that changes
                                     // in content do not change the layout size of the RecyclerView
                                     recyclerView.setHasFixedSize(true);
                                     mLinearLayoutManager = new LinearLayoutManager(getActivity());
                                     recyclerView.setLayoutManager(mLinearLayoutManager);
-                                    recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), orderLines, mCurrentUser));
+                                    recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), orderLines, mUser));
 
                                     if (mRecyclerViewCurrentFirstPosition!=0) {
                                         recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -130,7 +136,9 @@ public class SalesOrderDetailFragment extends Fragment {
 
                                     if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
-                                                .setText(getContext().getString(R.string.sales_order_sub_total_amount, mSalesOrder.getSubTotalAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_sub_total_amount,
+                                                        currency!=null ? currency.getName() : "",
+                                                        mSalesOrder.getSubTotalAmountStringFormat()));
                                     }
 
                                     if(mSalesOrder.getValidTo()!=null){
@@ -143,11 +151,15 @@ public class SalesOrderDetailFragment extends Fragment {
 
                                     if(view.findViewById(R.id.sales_order_total_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_total_tv))
-                                                .setText(getContext().getString(R.string.sales_order_total_amount, mSalesOrder.getTotalAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_total_amount,
+                                                        currency!=null ? currency.getName() : "",
+                                                        mSalesOrder.getTotalAmountStringFormat()));
                                     }
                                     if(view.findViewById(R.id.sales_order_tax_tv) != null) {
                                         ((TextView) view.findViewById(R.id.sales_order_tax_tv))
-                                                .setText(getContext().getString(R.string.sales_order_tax_amount, mSalesOrder.getTaxAmountStringFormat()));
+                                                .setText(getContext().getString(R.string.sales_order_tax_amount,
+                                                        currency!=null ? currency.getName() : "",
+                                                        mSalesOrder.getTaxAmountStringFormat()));
                                     }
 
                                     view.findViewById(R.id.create_order_button)
@@ -241,7 +253,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
         try{
             new SalesOrderDetailPDFCreator().generatePDF(salesOrder, salesOrderLines, fileName+".pdf",
-                    getContext(), mCurrentUser);
+                    getContext(), mUser);
         }catch(Exception e){
             e.printStackTrace();
         }

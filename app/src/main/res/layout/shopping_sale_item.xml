@@ -78,7 +78,8 @@
                         android:textColor="@color/black"
                         android:layout_gravity="center_vertical|right"
                         android:textStyle="bold"
-                        android:layout_marginRight="4dp" />
+                        android:layout_marginRight="4dp"
+                        android:id="@+id/product_price_label_textView" />
 
                     <EditText
                         android:layout_width="0dp"

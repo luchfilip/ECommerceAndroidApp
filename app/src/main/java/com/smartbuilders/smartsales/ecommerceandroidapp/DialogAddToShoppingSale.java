@@ -84,7 +84,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_sale, container);
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                .setText(getContext().getString(R.string.availability, mProduct.getAvailability()));
+                .setText(getContext().getString(R.string.availability,
+                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
 
         businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
         buttonsContainer = view.findViewById(R.id.buttons_container);

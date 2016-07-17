@@ -3,6 +3,9 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Alberto on 23/3/2016.
  */
@@ -23,16 +26,88 @@ public class Product extends Model implements Parcelable {
     private ProductCommercialPackage productCommercialPackage;
     private int productTaxId;
     private ProductTax productTax;
-    private float price;
-    private int currencyId;
-    private Currency currency;
-    private int availability;
+    //private float price;
+    //private int currencyId;
+    //private Currency currency;
+    //private int availability;
+    private ProductPriceAvailability defaultProductPriceAvailability;
+    private List<ProductPriceAvailability> productPriceAvailabilities;
     private boolean isFavorite;
     private float rating = -1;
 
     public Product(){
         super();
+        productPriceAvailabilities = new ArrayList<>();
+        defaultProductPriceAvailability = new ProductPriceAvailability();
     }
+
+    //protected Product(Parcel in) {
+    //    super(in);
+    //    productBrandId = in.readInt();
+    //    productBrand = in.readParcelable(ProductBrand.class.getClassLoader());
+    //    name = in.readString();
+    //    internalCode = in.readString();
+    //    description = in.readString();
+    //    purpose = in.readString();
+    //    imageFileName = in.readString();
+    //    productCategoryId = in.readInt();
+    //    productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
+    //    productSubCategoryId = in.readInt();
+    //    productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
+    //    productCommercialPackageId = in.readInt();
+    //    productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
+    //    productTaxId = in.readInt();
+    //    productTax = in.readParcelable(ProductTax.class.getClassLoader());
+    //    price = in.readFloat();
+    //    currencyId = in.readInt();
+    //    currency = in.readParcelable(Currency.class.getClassLoader());
+    //    availability = in.readInt();
+    //    isFavorite = in.readByte() != 0;
+    //    rating = in.readFloat();
+    //}
+    //
+    //@Override
+    //public void writeToParcel(Parcel dest, int flags) {
+    //    super.writeToParcel(dest, flags);
+    //    dest.writeInt(productBrandId);
+    //    dest.writeParcelable(productBrand, flags);
+    //    dest.writeString(name);
+    //    dest.writeString(internalCode);
+    //    dest.writeString(description);
+    //    dest.writeString(purpose);
+    //    dest.writeString(imageFileName);
+    //    dest.writeInt(productCategoryId);
+    //    dest.writeParcelable(productCategory, flags);
+    //    dest.writeInt(productSubCategoryId);
+    //    dest.writeParcelable(productSubCategory, flags);
+    //    dest.writeInt(productCommercialPackageId);
+    //    dest.writeParcelable(productCommercialPackage, flags);
+    //    dest.writeInt(productTaxId);
+    //    dest.writeParcelable(productTax, flags);
+    //    dest.writeFloat(price);
+    //    dest.writeInt(currencyId);
+    //    dest.writeParcelable(currency, flags);
+    //    dest.writeInt(availability);
+    //    dest.writeByte((byte) (isFavorite ? 1 : 0));
+    //    dest.writeFloat(rating);
+    //}
+    //
+    //@Override
+    //public int describeContents() {
+    //    return 0;
+    //}
+    //
+    //public static final Creator<Product> CREATOR = new Creator<Product>() {
+    //    @Override
+    //    public Product createFromParcel(Parcel in) {
+    //        return new Product(in);
+    //    }
+    //
+    //    @Override
+    //    public Product[] newArray(int size) {
+    //        return new Product[size];
+    //    }
+    //};
 
     protected Product(Parcel in) {
         super(in);
@@ -51,12 +126,9 @@ public class Product extends Model implements Parcelable {
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
         productTaxId = in.readInt();
         productTax = in.readParcelable(ProductTax.class.getClassLoader());
-        price = in.readFloat();
-        currencyId = in.readInt();
-        currency = in.readParcelable(Currency.class.getClassLoader());
-        availability = in.readInt();
         isFavorite = in.readByte() != 0;
         rating = in.readFloat();
+        defaultProductPriceAvailability = in.readParcelable(ProductPriceAvailability.class.getClassLoader());
     }
 
     @Override
@@ -77,12 +149,9 @@ public class Product extends Model implements Parcelable {
         dest.writeParcelable(productCommercialPackage, flags);
         dest.writeInt(productTaxId);
         dest.writeParcelable(productTax, flags);
-        dest.writeFloat(price);
-        dest.writeInt(currencyId);
-        dest.writeParcelable(currency, flags);
-        dest.writeInt(availability);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
+        dest.writeParcelable(defaultProductPriceAvailability, flags);
     }
 
     @Override
@@ -182,36 +251,52 @@ public class Product extends Model implements Parcelable {
         this.productTax = productTax;
     }
 
-    public float getPrice() {
-        return price;
+    //public float getPrice() {
+    //    return price;
+    //}
+    //
+    //public void setPrice(float price) {
+    //    this.price = price;
+    //}
+    //
+    //public int getCurrencyId() {
+    //    return currencyId;
+    //}
+    //
+    //public void setCurrencyId(int currencyId) {
+    //    this.currencyId = currencyId;
+    //}
+    //
+    //public Currency getCurrency() {
+    //    return currency;
+    //}
+    //
+    //public void setCurrency(Currency currency) {
+    //    this.currency = currency;
+    //}
+    //
+    //public int getAvailability() {
+    //    return availability;
+    //}
+    //
+    //public void setAvailability(int availability) {
+    //    this.availability = availability;
+    //}
+
+    public ProductPriceAvailability getDefaultProductPriceAvailability(){
+        return defaultProductPriceAvailability;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+    //public void setDefaultProductPriceAvailability(ProductPriceAvailability productPriceAvailability) {
+    //    this.defaultProductPriceAvailability = productPriceAvailability;
+    //}
 
-    public int getCurrencyId() {
-        return currencyId;
-    }
+    //public List<ProductPriceAvailability> getProductPriceAvailabilities() {
+    //    return productPriceAvailabilities;
+    //}
 
-    public void setCurrencyId(int currencyId) {
-        this.currencyId = currencyId;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
-    public int getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(int availability) {
-        this.availability = availability;
+    public void setProductPriceAvailabilities(List<ProductPriceAvailability> productPriceAvailabilities) {
+        this.productPriceAvailabilities = productPriceAvailabilities;
     }
 
     public boolean isFavorite() {
