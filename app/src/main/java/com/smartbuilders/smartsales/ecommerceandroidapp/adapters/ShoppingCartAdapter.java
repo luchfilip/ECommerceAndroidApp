@@ -47,6 +47,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public ImageView deleteItem;
         public TextView productName;
         public TextView productBrand;
+        public TextView productTaxPercentage;
         public TextView productPrice;
         public TextView productAvailability;
         public EditText qtyOrdered;
@@ -58,6 +59,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
@@ -151,6 +153,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+
+            holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
+                    mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
 
             holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));

@@ -25,12 +25,6 @@ public class ProductCategory extends Model implements Parcelable {
     private String description;
     private int productsActiveQty;
 
-    public ProductCategory(int id, String name, String description){
-        setId(id);
-        setName(name);
-        setDescription(description);
-    }
-
     public ProductCategory(){
         super();
     }

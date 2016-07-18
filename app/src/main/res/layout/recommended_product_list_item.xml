@@ -55,7 +55,7 @@
                 android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/product_price_color"
+                android:textColor="@color/product_details_price_color"
                 android:textStyle="bold"
                 android:textSize="@dimen/productDetailCardView_price_text_size" />
 

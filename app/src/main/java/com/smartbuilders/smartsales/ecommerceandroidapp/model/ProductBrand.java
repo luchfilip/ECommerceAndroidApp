@@ -18,12 +18,6 @@ public class ProductBrand extends Model implements Parcelable {
         super();
     }
 
-    public ProductBrand(int id, String name, String description){
-        setId(id);
-        setName(name);
-        setDescription(description);
-    }
-
     protected ProductBrand(Parcel in) {
         super(in);
         name = in.readString();

@@ -12,12 +12,7 @@ public class ProductCommercialPackage implements Parcelable {
     private String unitDescription;
 
     public ProductCommercialPackage(){
-
-    }
-
-    public ProductCommercialPackage(int units, String unitDescription){
-        setUnits(units);
-        setUnitDescription(unitDescription);
+        super();
     }
 
     protected ProductCommercialPackage(Parcel in) {

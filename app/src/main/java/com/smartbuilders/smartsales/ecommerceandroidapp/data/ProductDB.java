@@ -543,7 +543,10 @@ public class ProductDB {
         product.setInternalCode(cursor.getString(6));
         product.getProductCommercialPackage().setUnits(cursor.getInt(7));
         product.getProductCommercialPackage().setUnitDescription(cursor.getString(8));
-        product.setProductBrand(new ProductBrand(cursor.getInt(2), cursor.getString(9), cursor.getString(10)));
+        product.setProductBrandId(cursor.getInt(2));
+        product.getProductBrand().setId(cursor.getInt(2));
+        product.getProductBrand().setName(cursor.getString(9));
+        product.getProductBrand().setDescription(cursor.getString(10));
         product.setProductCategoryId(cursor.getInt(11));
         product.getProductCategory().setId(cursor.getInt(11));
         product.getProductCategory().setName(cursor.getString(12));
@@ -588,7 +591,10 @@ public class ProductDB {
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(1));
         product.setImageFileName(cursor.getString(2));
-        product.setProductBrand(new ProductBrand(cursor.getInt(3), cursor.getString(4), cursor.getString(5)));
+        product.setProductBrandId(cursor.getInt(3));
+        product.getProductBrand().setId(cursor.getInt(3));
+        product.getProductBrand().setName(cursor.getString(4));
+        product.getProductBrand().setDescription(cursor.getString(5));
         product.setProductCategoryId(cursor.getInt(6));
         product.setProductSubCategoryId(cursor.getInt(7));
         product.getProductSubCategory().setProductCategoryId(cursor.getInt(6));

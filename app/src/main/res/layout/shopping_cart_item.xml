@@ -54,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_internal_code"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -64,10 +65,18 @@
                 android:maxLines="1" />
 
             <TextView
+                android:id="@+id/product_tax_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_tax_text_size" />
+
+            <TextView
                 android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/product_price_color"
+                android:textColor="@color/product_details_price_color"
                 android:textStyle="bold"
                 android:textSize="@dimen/productDetailCardView_price_text_size" />
 
@@ -81,13 +90,14 @@
         </LinearLayout>
 
         <View style="@style/Divider"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginTop="2dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom">
+            android:gravity="bottom"
+            android:layout_margin="2dp">
 
             <TextView
                 android:layout_width="wrap_content"

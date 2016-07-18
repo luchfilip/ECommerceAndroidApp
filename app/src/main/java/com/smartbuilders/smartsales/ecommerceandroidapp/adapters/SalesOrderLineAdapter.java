@@ -107,7 +107,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         holder.productPrice.setText(mContext.getString(R.string.sales_order_product_price,
                 mCurrencyName, mDataset.get(position).getPriceStringFormat()));
-        holder.productTax.setText(mContext.getString(R.string.product_tax_percentage,
+        holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
                 mDataset.get(position).getTaxPercentageStringFormat()));
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));

@@ -159,7 +159,7 @@
     <string name="price_label">Precio:</string>
     <string name="price_currency_label_detail">Precio (%1$s):</string>
     <string name="tax_label">Imp. (%):</string>
-    <string name="product_tax_percentage">Imp. (%%): %1$s</string>
+    <string name="product_tax_percentage_detail">Imp. (%%): %1$s</string>
     <string name="total_label">Total:</string>
     <string name="total_line_amount_label">Sub-Total:</string>
 
