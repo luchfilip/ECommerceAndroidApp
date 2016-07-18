@@ -26,4 +26,11 @@ public class NetworkConnectionUtilities {
         NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         return networkInfo.isConnected();
     }
+
+    public static boolean isEthernetConnected(Context context){
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
+        return networkInfo.isConnected();
+    }
 }

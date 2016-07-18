@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.AuthenticatorActivity;
@@ -46,6 +47,7 @@ public class SplashScreen extends AppCompatActivity {
     private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
     private int mSynchronizationState;
+    private String mSyncErrorMessage;
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
         @Override
@@ -75,6 +77,10 @@ public class SplashScreen extends AppCompatActivity {
                             }else{
                                 mSynchronizationState = SYNC_ERROR;
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                                if(extras.containsKey(SyncAdapter.LOG_MESSAGE_DETAIL)) {
+                                    mSyncErrorMessage = String.valueOf(extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL));
+                                    ((TextView) findViewById(R.id.error_message)).setText(mSyncErrorMessage);
+                                }
                                 findViewById(R.id.progressContainer).setVisibility(View.GONE);
                             }
                         }
@@ -276,7 +282,7 @@ public class SplashScreen extends AppCompatActivity {
         if (mCurrentUser!=null && (Utils.appRequireInitialLoadOfGlobalData(this)
                 || Utils.appRequireInitialLoadOfUserData(this, mCurrentUser))) {
                 if(NetworkConnectionUtilities.isOnline(this)
-                        && (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
+                        /*&& (NetworkConnectionUtilities.isWifiConnected(this)||NetworkConnectionUtilities.isMobileConnected(this))*/) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
                         ApplicationUtilities.initSyncByAccount(this, account);
@@ -287,6 +293,7 @@ public class SplashScreen extends AppCompatActivity {
                     Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
                     //TODO: mostrar en pantalla error de conexion
                     findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                    ((TextView) findViewById(R.id.error_message)).setText(R.string.network_connection_unavailable);
                     findViewById(R.id.progressContainer).setVisibility(View.GONE);
                     mSynchronizationState = SYNC_ERROR;
                 }

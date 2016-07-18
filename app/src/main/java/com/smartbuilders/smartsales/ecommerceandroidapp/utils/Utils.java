@@ -900,13 +900,14 @@ public class Utils {
     }
 
     public static String getMacAddress (Context context) {
+        String macAddress = null;
         try {
-            return (((WifiManager) context.getSystemService(Context.WIFI_SERVICE))
+            macAddress = (((WifiManager) context.getSystemService(Context.WIFI_SERVICE))
                     .getConnectionInfo()).getMacAddress();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "null";
+        return macAddress!=null ? macAddress : "NOT AVAILABLE";
     }
 
     public static int getColor(Context context, int id) {
