@@ -7,7 +7,6 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
