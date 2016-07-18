@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
