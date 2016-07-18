@@ -13,13 +13,13 @@
         android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="@integer/two_pane_left_side_weight" />
 
     <FrameLayout
         android:id="@+id/sales_order_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="@integer/two_pane_right_side_weight"
         android:background="@android:color/white"
         android:visibility="visible" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/order_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="@integer/two_pane_right_side_weight"
         android:background="@android:color/white"
         android:visibility="gone" />
 

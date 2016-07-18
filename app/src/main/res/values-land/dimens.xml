@@ -2,4 +2,7 @@
 
     <dimen name="productMainActivity_marginLeftAndRight">30dp</dimen>
 
+    <integer name="two_pane_left_side_weight">3</integer>
+    <integer name="two_pane_right_side_weight">6</integer>
+
 </resources>

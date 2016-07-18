@@ -17,14 +17,14 @@
         android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="@integer/two_pane_left_side_weight"
         tools:layout="@android:layout/list_content" />
 
     <FrameLayout
         android:id="@+id/subcategory_list_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="@integer/two_pane_right_side_weight"
         android:background="@android:color/white" />
 
 </LinearLayout>

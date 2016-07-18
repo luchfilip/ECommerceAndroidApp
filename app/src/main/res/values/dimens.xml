@@ -78,4 +78,7 @@
 
     <dimen name="company_logo_imageView_min_height">350dp</dimen>
 
+    <integer name="two_pane_left_side_weight">3</integer>
+    <integer name="two_pane_right_side_weight">4</integer>
+
 </resources>

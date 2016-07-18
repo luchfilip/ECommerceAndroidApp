@@ -119,7 +119,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                     mDataset.get(position).getProduct().getProductBrand().getDescription()));
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
-            holder.productBrand.setVisibility(View.INVISIBLE);
+            holder.productBrand.setVisibility(View.GONE);
         }
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
