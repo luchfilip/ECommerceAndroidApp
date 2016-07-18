@@ -80,7 +80,7 @@ public class ProductPriceAvailability extends Model implements Parcelable {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
+    //public void setCurrency(Currency currency) {
+    //    this.currency = currency;
+    //}
 }

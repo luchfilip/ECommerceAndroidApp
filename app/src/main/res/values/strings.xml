@@ -162,14 +162,23 @@
     <string name="product_tax_percentage">Imp. (%%): %1$s</string>
     <string name="total_label">Total:</string>
     <string name="total_line_amount_label">Sub-Total:</string>
+
     <string name="sales_order_product_price">Precio (%1$s): %2$s</string>
     <string name="sales_order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
     <string name="sales_order_valid_to">Válida hasta: %1$s</string>
     <string name="sales_order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
     <string name="sales_order_tax_amount">Impuestos (%1$s): %2$s</string>
     <string name="sales_order_total_amount">Total (%1$s): %2$s</string>
-    <string name="order_lines_title">Líneas del Pedido</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
+
+    <string name="order_product_price">Precio (%1$s): %2$s</string>
+    <string name="order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
+    <string name="order_valid_to">Válida hasta: %1$s</string>
+    <string name="order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
+    <string name="order_tax_amount">Impuestos (%1$s): %2$s</string>
+    <string name="order_total_amount">Total (%1$s): %2$s</string>
+    <string name="order_lines_title">Líneas del Pedido</string>
+
     <string name="price_title">Precio</string>
     <string name="tax_title">Impuesto (%)</string>
     <string name="qty_ordered_title">Cantidad pedida</string>

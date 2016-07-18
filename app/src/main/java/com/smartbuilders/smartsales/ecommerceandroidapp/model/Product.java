@@ -37,8 +37,13 @@ public class Product extends Model implements Parcelable {
 
     public Product(){
         super();
+        //Se inicializan estos objetos para evitar NullPointerException
         productPriceAvailabilities = new ArrayList<>();
         defaultProductPriceAvailability = new ProductPriceAvailability();
+        productTax = new ProductTax();
+        productCategory = new ProductCategory();
+        productSubCategory = new ProductSubCategory();
+        productCommercialPackage = new ProductCommercialPackage();
     }
 
     //protected Product(Parcel in) {
@@ -175,17 +180,17 @@ public class Product extends Model implements Parcelable {
         return productCategory;
     }
 
-    public void setProductCategory(ProductCategory productCategory) {
-        this.productCategory = productCategory;
-    }
+    //public void setProductCategory(ProductCategory productCategory) {
+    //    this.productCategory = productCategory;
+    //}
 
     public ProductSubCategory getProductSubCategory() {
         return productSubCategory;
     }
 
-    public void setProductSubCategory(ProductSubCategory productSubCategory) {
-        this.productSubCategory = productSubCategory;
-    }
+    //public void setProductSubCategory(ProductSubCategory productSubCategory) {
+    //    this.productSubCategory = productSubCategory;
+    //}
 
     public String getName() {
         return name;
@@ -231,9 +236,9 @@ public class Product extends Model implements Parcelable {
         return productCommercialPackage;
     }
 
-    public void setProductCommercialPackage(ProductCommercialPackage productCommercialPackage) {
-        this.productCommercialPackage = productCommercialPackage;
-    }
+    //public void setProductCommercialPackage(ProductCommercialPackage productCommercialPackage) {
+    //    this.productCommercialPackage = productCommercialPackage;
+    //}
 
     public int getProductTaxId() {
         return productTaxId;
@@ -247,9 +252,9 @@ public class Product extends Model implements Parcelable {
         return productTax;
     }
 
-    public void setProductTax(ProductTax productTax) {
-        this.productTax = productTax;
-    }
+    //public void setProductTax(ProductTax productTax) {
+    //    this.productTax = productTax;
+    //}
 
     //public float getPrice() {
     //    return price;

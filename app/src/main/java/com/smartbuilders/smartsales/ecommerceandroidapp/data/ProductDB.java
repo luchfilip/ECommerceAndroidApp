@@ -6,12 +6,8 @@ import android.text.TextUtils;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrand;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCategory;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductCommercialPackage;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -56,17 +52,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(1));
-                    p.setImageFileName(c.getString(2));
-                    p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
-                    p.setRating(c.getFloat(11));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(12), c.getString(13)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(14));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillLightProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -108,17 +94,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(1));
-                    p.setImageFileName(c.getString(2));
-                    p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
-                    p.setRating(c.getFloat(11));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(12), c.getString(13)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(14));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillLightProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -160,17 +136,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(1));
-                    p.setImageFileName(c.getString(2));
-                    p.setProductBrand(new ProductBrand(c.getInt(3), c.getString(4), c.getString(5)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(6), c.getInt(7), c.getString(8), c.getString(9)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(10));
-                    p.setRating(c.getFloat(11));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(12));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(12), c.getString(13)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(14));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillLightProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -230,22 +196,7 @@ public class ProductDB {
                         }
                     }
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(3));
-                    p.setDescription(c.getString(4));
-                    p.setPurpose(c.getString(5));
-                    p.setInternalCode(c.getString(6));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
-                    p.setImageFileName(c.getString(17));
-                    p.setRating(c.getFloat(18));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(21));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -286,22 +237,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(3));
-                    p.setDescription(c.getString(4));
-                    p.setPurpose(c.getString(5));
-                    p.setInternalCode(c.getString(6));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
-                    p.setImageFileName(c.getString(17));
-                    p.setRating(c.getFloat(18));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(21));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -343,22 +279,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(3));
-                    p.setDescription(c.getString(4));
-                    p.setPurpose(c.getString(5));
-                    p.setInternalCode(c.getString(6));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
-                    p.setImageFileName(c.getString(17));
-                    p.setRating(c.getFloat(18));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(21));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -428,22 +349,7 @@ public class ProductDB {
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(3));
-                    p.setDescription(c.getString(4));
-                    p.setPurpose(c.getString(5));
-                    p.setInternalCode(c.getString(6));
-                    p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                    p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                    p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                    p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                    p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
-                    p.setImageFileName(c.getString(17));
-                    p.setRating(c.getFloat(18));
-                    p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
-                    p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
-                    p.getDefaultProductPriceAvailability().setPrice(c.getFloat(21));
-                    p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                    fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
             }
@@ -540,7 +446,8 @@ public class ProductDB {
                         p.setName(c.getString(2));
                     }
                     p.setInternalCode(c.getString(3));
-                    p.setProductSubCategory(new ProductSubCategory(0, c.getInt(1), null, null));
+                    p.setProductSubCategoryId(c.getInt(1));
+                    p.getProductSubCategory().setId(c.getInt(1));
                     if(!isNumeric && products.contains(p)){
                         continue;
                     }
@@ -583,22 +490,7 @@ public class ProductDB {
                     new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", String.valueOf(id), "Y"}, null);
             if (c!=null && c.moveToNext()){
                 Product p = new Product();
-                p.setId(c.getInt(0));
-                p.setName(c.getString(3));
-                p.setDescription(c.getString(4));
-                p.setPurpose(c.getString(5));
-                p.setInternalCode(c.getString(6));
-                p.setProductCommercialPackage(new ProductCommercialPackage(c.getInt(7), c.getString(8)));
-                p.setProductBrand(new ProductBrand(c.getInt(2), c.getString(9), c.getString(10)));
-                p.setProductCategory(new ProductCategory(c.getInt(11), c.getString(12), c.getString(13)));
-                p.setProductSubCategory(new ProductSubCategory(c.getInt(11), c.getInt(1), c.getString(14), c.getString(15)));
-                p.getDefaultProductPriceAvailability().setAvailability(c.getInt(16));
-                p.setImageFileName(c.getString(17));
-                p.setRating(c.getFloat(18));
-                p.getDefaultProductPriceAvailability().setCurrencyId(c.getInt(19));
-                p.getDefaultProductPriceAvailability().setCurrency(new Currency(c.getInt(19), c.getString(20)));
-                p.getDefaultProductPriceAvailability().setPrice(c.getFloat(21));
-                p.setFavorite(mOrderLineDB.isProductInWishList(p.getId()));
+                fillFullProductInfoFromCursor(p, c);
                 return p;
             }
         } catch (Exception e) {
@@ -613,5 +505,102 @@ public class ProductDB {
             }
         }
         return null;
+    }
+
+
+    /**
+     * Carga el objeto Product que se pasa por parametro a partir de un cursor que posea las siguientes columnas:
+     *     0) PRODUCT.PRODUCT_ID,
+     *     1) PRODUCT.SUBCATEGORY_ID,
+     *     2) PRODUCT.BRAND_ID,
+     *     3) PRODUCT.NAME,
+     *     4) PRODUCT.DESCRIPTION,
+     *     5) PRODUCT.PURPOSE,
+     *     6) PRODUCT.INTERNAL_CODE,
+     *     7) PRODUCT.COMMERCIAL_PACKAGE_UNITS,
+     *     8) PRODUCT.COMMERCIAL_PACKAGE,
+     *     9) BRAND.NAME,
+     *     10) BRAND.DESCRIPTION,
+     *     11) CATEGORY.CATEGORY_ID,
+     *     12) CATEGORY.NAME,
+     *     13) CATEGORY.DESCRIPTION,
+     *     14) SUBCATEGORY.NAME,
+     *     15) SUBCATEGORY.DESCRIPTION,
+     *     16) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY,
+     *     17) PRODUCT_IMAGE.FILE_NAME,
+     *     18) PRODUCT_RATING.RATING,
+     *     19) CURRENCY.CURRENCY_ID,
+     *     20) CURRENCY.UNICODE_DECIMAL,
+     *     21) PRODUCT_PRICE_AVAILABILITY.PRICE
+     * @param product
+     * @param cursor
+     */
+    private void fillFullProductInfoFromCursor(Product product, Cursor cursor) {
+        product.setId(cursor.getInt(0));
+        product.setName(cursor.getString(3));
+        product.setDescription(cursor.getString(4));
+        product.setPurpose(cursor.getString(5));
+        product.setInternalCode(cursor.getString(6));
+        product.getProductCommercialPackage().setUnits(cursor.getInt(7));
+        product.getProductCommercialPackage().setUnitDescription(cursor.getString(8));
+        product.setProductBrand(new ProductBrand(cursor.getInt(2), cursor.getString(9), cursor.getString(10)));
+        product.setProductCategoryId(cursor.getInt(11));
+        product.getProductCategory().setId(cursor.getInt(11));
+        product.getProductCategory().setName(cursor.getString(12));
+        product.getProductCategory().setDescription(cursor.getString(13));
+        product.setProductSubCategoryId(cursor.getInt(1));
+        product.getProductSubCategory().setProductCategoryId(cursor.getInt(11));
+        product.getProductSubCategory().setId(cursor.getInt(1));
+        product.getProductSubCategory().setName(cursor.getString(14));
+        product.getProductSubCategory().setDescription(cursor.getString(15));
+        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(16));
+        product.setImageFileName(cursor.getString(17));
+        product.setRating(cursor.getFloat(18));
+        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(19));
+        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(19));
+        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(20));
+        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(21));
+        product.setFavorite(mOrderLineDB.isProductInWishList(product.getId()));
+    }
+
+
+    /**
+     * Carga el objeto Product que se pasa por parametro a partir de un cursor que posea las siguientes columnas:
+     * 0) PRODUCT.PRODUCT_ID,
+     * 1) PRODUCT.NAME,
+     * 2) PRODUCT_IMAGE.FILE_NAME,
+     * 3) BRAND.BRAND_ID,
+     * 4) BRAND.NAME,
+     * 5) BRAND.DESCRIPTION,
+     * 6) SUBCATEGORY.CATEGORY_ID,
+     * 7) SUBCATEGORY.SUBCATEGORY_ID,
+     * 8) SUBCATEGORY.NAME,
+     * 9) SUBCATEGORY.DESCRIPTION,
+     * 10) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY,
+     * 11) PRODUCT_RATING.RATING,
+     * 12) CURRENCY.CURRENCY_ID,
+     * 13) CURRENCY.UNICODE_DECIMAL,
+     * 14) PRODUCT_PRICE_AVAILABILITY.PRICE
+     * @param product
+     * @param cursor
+     */
+    private void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
+        product.setId(cursor.getInt(0));
+        product.setName(cursor.getString(1));
+        product.setImageFileName(cursor.getString(2));
+        product.setProductBrand(new ProductBrand(cursor.getInt(3), cursor.getString(4), cursor.getString(5)));
+        product.setProductCategoryId(cursor.getInt(6));
+        product.setProductSubCategoryId(cursor.getInt(7));
+        product.getProductSubCategory().setProductCategoryId(cursor.getInt(6));
+        product.getProductSubCategory().setId(cursor.getInt(7));
+        product.getProductSubCategory().setName(cursor.getString(8));
+        product.getProductSubCategory().setDescription(cursor.getString(9));
+        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(10));
+        product.setRating(cursor.getFloat(11));
+        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(12));
+        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(12));
+        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(13));
+        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(14));
+        product.setFavorite(mOrderLineDB.isProductInWishList(product.getId()));
     }
 }

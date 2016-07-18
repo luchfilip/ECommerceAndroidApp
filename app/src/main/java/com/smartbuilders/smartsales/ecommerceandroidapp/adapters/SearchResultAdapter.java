@@ -19,7 +19,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -201,9 +200,7 @@ public class SearchResultAdapter extends BaseAdapter {
                             ((RecentSearch) mDataset.get(position)).getSubcategoryId()>0) {
                         Product product = new Product();
                         product.setId(((RecentSearch) mDataset.get(position)).getProductId());
-                        ProductSubCategory productSubCategory = new ProductSubCategory();
-                        productSubCategory.setId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
-                        product.setProductSubCategory(productSubCategory);
+                        product.setProductSubCategoryId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
                         goToProductList(((RecentSearch) mDataset.get(position)).getTextToSearch(), product);
                     }else{
                         Intent intent = new Intent(mContext, ProductsListActivity.class);
@@ -219,7 +216,7 @@ public class SearchResultAdapter extends BaseAdapter {
 
     private void goToProductList(String searchPattern, Product product){
         Intent intent = new Intent(mContext, ProductsListActivity.class);
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategory().getId());
+        intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategoryId());
         intent.putExtra(ProductsListActivity.KEY_SEARCH_PATTERN, searchPattern);
         mContext.startActivity(intent);
     }

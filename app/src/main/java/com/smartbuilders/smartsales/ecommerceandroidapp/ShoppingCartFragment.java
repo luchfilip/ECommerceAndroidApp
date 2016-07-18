@@ -19,14 +19,18 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -52,7 +56,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ArrayList<OrderLine> mOrderLines;
-    private TextView totalLines;
+    private TextView mTotalLines;
+    private TextView mSubTotalAmount;
+    private TextView mTaxAmount;
+    private TextView mTotalAmount;
     private ProgressDialog waitPlease;
     private View mainLayout;
     private View mBlankScreenView;
@@ -152,8 +159,12 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                                         .show();
                                             }
                                         });
-                                totalLines = (TextView) view.findViewById(R.id.total_lines);
-                                totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+                                mTotalLines = (TextView) view.findViewById(R.id.total_lines);
+                                mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
+                                mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
+                                mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+
+                                fillFields();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -322,6 +333,24 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }
     }
 
+    public void fillFields(){
+        if (mOrderLines!=null && !mOrderLines.isEmpty()) {
+            mTotalLines.setText(getString(R.string.order_lines_number,
+                    String.valueOf(mOrderLines.size())));
+            Currency currency = (new CurrencyDB(getContext()))
+                    .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+            mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
+                    currency!=null ? currency.getName() : "",
+                    OrderBR.getSubTotalAmountStringFormat(mOrderLines)));
+            mTaxAmount.setText(getString(R.string.order_tax_amount,
+                    currency!=null ? currency.getName() : "",
+                    OrderBR.getTaxAmountStringFormat(mOrderLines)));
+            mTotalAmount.setText(getString(R.string.order_total_amount,
+                    currency!=null ? currency.getName() : "",
+                    OrderBR.getTotalAmountStringFormat(mOrderLines)));
+        }
+    }
+
     @Override
     public void reloadShoppingCart(){
         setHeader();
@@ -342,7 +371,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }else{
             mBlankScreenView.setVisibility(View.GONE);
             mainLayout.setVisibility(View.VISIBLE);
-            totalLines.setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+            fillFields();
         }
     }
 
