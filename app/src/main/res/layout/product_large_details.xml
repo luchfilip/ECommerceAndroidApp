@@ -75,7 +75,7 @@
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/product_price_color"
+            android:textColor="@color/product_details_price_color"
             android:textStyle="bold"
             android:textSize="@dimen/productDetailCardView_price_text_size" />
 
@@ -98,14 +98,14 @@
 
     </LinearLayout>
 
-    <View style="@style/Divider"/>
+    <View style="@style/Divider"
+        android:layout_marginTop="2dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|right"
-        android:layout_marginTop="2dp"
         android:baselineAligned="false">
 
         <ImageView

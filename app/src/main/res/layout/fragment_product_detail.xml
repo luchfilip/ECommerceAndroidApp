@@ -116,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textColor="@color/product_price_color"
+                        android:textColor="@color/product_details_price_color"
                         android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
 
                     <TextView
@@ -217,6 +217,7 @@
                     android:textSize="@dimen/productDetailActivity_details_label_text_size"
                     android:layout_marginBottom="2dp"
                     android:textColor="@color/label_color"
+                    android:textStyle="bold"
                     android:focusable="false" />
 
                 <TextView

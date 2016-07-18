@@ -41,7 +41,7 @@
             android:textSize="@dimen/productMinInfo_price_text_size"
             android:layout_marginLeft="5dp"
             android:textColor="@color/product_price_color"
-            android:singleLine="false"
+            android:textStyle="bold"
             android:lines="1" />
 
         <TextView
@@ -51,7 +51,7 @@
             android:textSize="@dimen/productMinInfo_availability_text_size"
             android:layout_marginLeft="5dp"
             android:textColor="@color/product_availability_color"
-            android:singleLine="false"
+            android:textStyle="bold"
             android:lines="1" />
 
         <RatingBar
