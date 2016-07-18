@@ -86,15 +86,17 @@ public class ThumbImagesReceiverFromServer extends Thread {
 				}
                 //se limpia la carpeta de los archivos que ya no pertenezcan
 				List<String> filesInThumbDir = Utils.getListOfFilesInThumbDir(context);
-                filesInThumbDir.removeAll(filesName);
-                for (String fileNameToRemove : filesInThumbDir) {
-                    try {
-                        (new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
-                                "\", ExceptionMessage: "+e.getMessage());
-                    }
-                }
+				if(filesInThumbDir!=null && !filesInThumbDir.isEmpty()){
+					filesInThumbDir.removeAll(filesName);
+					for (String fileNameToRemove : filesInThumbDir) {
+						try {
+							(new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
+						} catch (Exception e) {
+							Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
+									"\", ExceptionMessage: "+e.getMessage());
+						}
+					}
+				}
 			}
 		} catch (Exception e){
 			e.printStackTrace();
