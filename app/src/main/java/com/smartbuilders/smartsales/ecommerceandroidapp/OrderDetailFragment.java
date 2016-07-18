@@ -21,11 +21,14 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.OrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.OrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
@@ -139,6 +142,24 @@ public class OrderDetailFragment extends Fragment {
 
                                     ((TextView) view.findViewById(R.id.order_date_tv))
                                             .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
+
+                                    Currency currency = (new CurrencyDB(getContext()))
+                                            .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+
+                                    ((TextView) view.findViewById(R.id.order_sub_total_tv))
+                                            .setText(getContext().getString(R.string.order_sub_total_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mOrder.getSubTotalAmountStringFormat()));
+
+                                    ((TextView) view.findViewById(R.id.order_tax_tv))
+                                            .setText(getContext().getString(R.string.order_tax_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mOrder.getTaxAmountStringFormat()));
+
+                                    ((TextView) view.findViewById(R.id.order_total_tv))
+                                            .setText(getContext().getString(R.string.order_total_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mOrder.getTotalAmountStringFormat()));
                                 }
                                 view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
                                     @Override

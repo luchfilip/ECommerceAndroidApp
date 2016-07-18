@@ -6,6 +6,8 @@ import android.database.Cursor;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Order;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -108,8 +110,11 @@ public class OrderDB {
         if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
             int orderId;
             try {
-                double subTotal=0, tax=0, total=0;
                 orderId = getMaxOrderId() + 1;
+
+                double subTotal = OrderBR.getSubTotalAmount(orderLines),
+                        tax = OrderBR.getTaxAmount(orderLines),
+                        total = OrderBR.getTotalAmount(orderLines);
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

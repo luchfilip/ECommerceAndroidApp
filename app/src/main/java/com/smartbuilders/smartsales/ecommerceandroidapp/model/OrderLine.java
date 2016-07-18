@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerceandroidapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 /**
  * Created by Alberto on 5/4/2016.
  */
@@ -74,6 +76,10 @@ public class OrderLine extends Model implements Parcelable {
         this.price = price;
     }
 
+    public String getPriceStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getPrice());
+    }
+
     public int getQuantityOrdered() {
         return quantityOrdered;
     }
@@ -106,12 +112,20 @@ public class OrderLine extends Model implements Parcelable {
         this.taxPercentage = taxPercentage;
     }
 
+    public String getTaxPercentageStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getTaxPercentage());
+    }
+
     public double getTotalLineAmount() {
         return totalLineAmount;
     }
 
     public void setTotalLineAmount(double totalLineAmount) {
         this.totalLineAmount = totalLineAmount;
+    }
+
+    public String getTotalLineAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getTotalLineAmount());
     }
 
     public int getProductId() {

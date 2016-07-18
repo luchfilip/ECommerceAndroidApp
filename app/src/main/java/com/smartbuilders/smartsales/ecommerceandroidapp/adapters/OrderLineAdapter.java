@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -26,6 +29,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     private ArrayList<OrderLine> mDataset;
     private Context mContext;
     private User mUser;
+    private String mCurrencyName;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -37,6 +41,9 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         public TextView productBrand;
         public ImageView productImage;
         public TextView qtyOrdered;
+        public TextView productPrice;
+        public TextView productTax;
+        public TextView totalLineAmount;
         public View goToProductDetails;
 
         public ViewHolder(View v) {
@@ -46,6 +53,9 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
+            productPrice = (TextView) v.findViewById(R.id.product_price_textView);
+            productTax = (TextView) v.findViewById(R.id.product_tax_percentage_textView);
+            totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
@@ -55,6 +65,9 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         mContext = context;
         mDataset = myDataset;
         mUser = user;
+        Currency currency = (new CurrencyDB(mContext))
+                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        mCurrencyName = currency!=null ? currency.getName() : "";
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -111,6 +124,12 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
+        holder.productPrice.setText(mContext.getString(R.string.order_product_price,
+                mCurrencyName, mDataset.get(position).getPriceStringFormat()));
+        holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
+                mDataset.get(position).getTaxPercentageStringFormat()));
+        holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override

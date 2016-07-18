@@ -30,15 +30,15 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:lines="2" />
+            android:paddingBottom="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/product_internal_code"
             android:textColor="@color/black"
-            android:lines="1" />
+            android:lines="1"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,14 +49,78 @@
             android:lines="1" />
 
         <View style="@style/Divider"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginTop="2dp" />
 
-        <TextView
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/qty_requested_textView"-->
+            <!--android:gravity="bottom|right"-->
+            <!--android:textColor="@color/black" />-->
+
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/qty_requested_textView"
-            android:gravity="bottom|right"
-            android:textColor="@color/black" />
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/qty_requested_textView"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_tax_percentage_textView"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:padding="2dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_price_textView"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:layout_span="2"
+                    android:padding="2dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/total_line_amount_textView"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:layout_span="2"
+                    android:textStyle="bold"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="1dp"
+                    android:paddingTop="1dp" />
+            </TableRow>
+
+        </TableLayout>
 
     </LinearLayout>
 

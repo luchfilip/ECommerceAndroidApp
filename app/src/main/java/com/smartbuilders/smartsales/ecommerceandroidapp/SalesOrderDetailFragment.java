@@ -134,12 +134,20 @@ public class SalesOrderDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.sales_order_date_tv))
                                             .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
 
-                                    if(view.findViewById(R.id.sales_order_sub_total_tv) != null) {
-                                        ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
-                                                .setText(getContext().getString(R.string.sales_order_sub_total_amount,
-                                                        currency!=null ? currency.getName() : "",
-                                                        mSalesOrder.getSubTotalAmountStringFormat()));
-                                    }
+                                    ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
+                                            .setText(getContext().getString(R.string.sales_order_sub_total_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mSalesOrder.getSubTotalAmountStringFormat()));
+
+                                    ((TextView) view.findViewById(R.id.sales_order_tax_tv))
+                                            .setText(getContext().getString(R.string.sales_order_tax_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mSalesOrder.getTaxAmountStringFormat()));
+
+                                    ((TextView) view.findViewById(R.id.sales_order_total_tv))
+                                            .setText(getContext().getString(R.string.sales_order_total_amount,
+                                                    currency!=null ? currency.getName() : "",
+                                                    mSalesOrder.getTotalAmountStringFormat()));
 
                                     if(mSalesOrder.getValidTo()!=null){
                                         ((TextView) view.findViewById(R.id.sales_order_valid_to_tv))
@@ -147,19 +155,6 @@ public class SalesOrderDetailFragment extends Fragment {
                                     }else{
                                         ((TextView) view.findViewById(R.id.sales_order_valid_to_tv))
                                                 .setText(getContext().getString(R.string.sales_order_valid_to, getString(R.string.undefined)));
-                                    }
-
-                                    if(view.findViewById(R.id.sales_order_total_tv) != null) {
-                                        ((TextView) view.findViewById(R.id.sales_order_total_tv))
-                                                .setText(getContext().getString(R.string.sales_order_total_amount,
-                                                        currency!=null ? currency.getName() : "",
-                                                        mSalesOrder.getTotalAmountStringFormat()));
-                                    }
-                                    if(view.findViewById(R.id.sales_order_tax_tv) != null) {
-                                        ((TextView) view.findViewById(R.id.sales_order_tax_tv))
-                                                .setText(getContext().getString(R.string.sales_order_tax_amount,
-                                                        currency!=null ? currency.getName() : "",
-                                                        mSalesOrder.getTaxAmountStringFormat()));
                                     }
 
                                     view.findViewById(R.id.create_order_button)

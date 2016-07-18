@@ -44,16 +44,24 @@ public class Order extends Model implements Parcelable {
         this.subTotalAmount = subTotalAmount;
     }
 
+    public String getSubTotalAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getSubTotalAmount());
+    }
+
     public double getTaxAmount() {
         return taxAmount;
+    }
+
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
     }
 
     public double getTruncatedTaxAmount(){
         return new BigDecimal(taxAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
-    public void setTaxAmount(double taxAmount) {
-        this.taxAmount = taxAmount;
+    public String getTaxAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getTaxAmount());
     }
 
     public double getTotalAmount() {
@@ -66,6 +74,10 @@ public class Order extends Model implements Parcelable {
 
     public double getTruncatedTotalAmount() {
         return new BigDecimal(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    public String getTotalAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getTotalAmount());
     }
 
     public int getSalesOrderId() {

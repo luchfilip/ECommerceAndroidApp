@@ -148,8 +148,6 @@ public class SalesOrder extends Model implements Parcelable {
         dest.writeLong(validTo!=null ? validTo.getTime() : 0);
     }
 
-
-
     @Override
     public int describeContents() {
         return 0;
