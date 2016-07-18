@@ -101,7 +101,7 @@ public class DialogAddToShoppingCart extends DialogFragment {
                                 throw new Exception(getString(R.string.invalid_availability_qty_requested));
                             }
                         }
-                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct.getId(), qtyRequested);
+                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
                                     Toast.LENGTH_LONG).show();

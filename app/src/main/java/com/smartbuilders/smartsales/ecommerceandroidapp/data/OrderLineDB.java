@@ -7,6 +7,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -29,11 +30,13 @@ public class OrderLineDB {
     }
 
     public String addOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
-        return addOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_ORDER_DOCTYPE, orderId);
+        return addOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(),
+                orderLine.getPrice(), orderLine.getTaxPercentage(), FINALIZED_ORDER_DOCTYPE, orderId);
     }
 
-    public String addProductToShoppingCart(int productId, int qtyRequested){
-        return addOrderLine(productId, qtyRequested, 0, 0, SHOPPING_CART_DOCTYPE, null);
+    public String addProductToShoppingCart(Product product, int qtyRequested){
+        return addOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
+                product.getProductTax().getPercentage(), SHOPPING_CART_DOCTYPE, null);
     }
 
     public String addProductToWishList(int productId){
@@ -85,12 +88,18 @@ public class OrderLineDB {
 
     public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){
         try {
+            orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
+            orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null,
                             "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
-                                " UPDATE_TIME = ? WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
-                            new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested), "datetime('now')",
+                                " SALES_PRICE = ?, TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                            " WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
+                            new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested),
+                                    String.valueOf(orderLine.getPrice()),
+                                    String.valueOf(orderLine.getTaxPercentage()),
+                                    String.valueOf(OrderLineBR.getTotalLine(orderLine)), "datetime('now')",
                                     String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
                                     WISHLIST_DOCTYPE});
             if (rowsAffected < 1) {
@@ -185,11 +194,11 @@ public class OrderLineDB {
                     OrderLine orderLine = new OrderLine();
                     orderLine.setProductId(c.getInt(0));
                     orderLine.setQuantityOrdered(c.getInt(1));
-                    orderLine.setPrice(c.getDouble(2));
-                    orderLine.setTaxPercentage(c.getDouble(3));
-                    orderLine.setTotalLineAmount(c.getDouble(4));
                     orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
                     if(orderLine.getProduct()!=null){
+                        orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
+                        orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+                        orderLine.setTotalLineAmount(OrderLineBR.getTotalLine(orderLine));
                         orderLines.add(orderLine);
                     }
                 }

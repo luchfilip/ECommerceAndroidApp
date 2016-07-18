@@ -26,8 +26,7 @@ public class OrderBR {
     public static double getTaxAmount(ArrayList<OrderLine> orderLines){
         double tax=0;
         for(OrderLine orderLine : orderLines){
-            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() *
-                    (orderLine.getProduct().getProductTax().getPercentage()/100);
+            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
         }
         return new BigDecimal(tax).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
