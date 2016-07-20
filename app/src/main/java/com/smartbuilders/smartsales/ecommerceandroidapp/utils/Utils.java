@@ -911,11 +911,11 @@ public class Utils {
         return macAddress!=null ? macAddress : "NOT AVAILABLE";
     }
 
-    public static int getColor(Context context, int id) {
+    public static int getColor(Context context, int resId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return ContextCompat.getColor(context, id);
+            return ContextCompat.getColor(context, resId);
         } else {
-            return context.getResources().getColor(id);
+            return context.getResources().getColor(resId);
         }
     }
 

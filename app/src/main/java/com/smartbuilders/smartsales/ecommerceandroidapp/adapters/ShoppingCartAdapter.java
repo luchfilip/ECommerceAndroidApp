@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -197,6 +198,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     .show();
             }
         });
+
+        if (mDataset.get(position).isQuantityOrderedInvalid()) {
+            holder.qtyOrdered.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorQtyOrderedError));
+        } else {
+            holder.qtyOrdered.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryLight));
+        }
 
         holder.qtyOrdered.setText(String.valueOf(mDataset.get(position).getQuantityOrdered()));
 

@@ -18,6 +18,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
@@ -109,6 +110,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mOrderLines = (new OrderLineDB(getContext(), mUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
                         }
                     }
+                    OrderLineBR.validateQtyOrderInOrderLines(mOrderLines);
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
                             ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
 

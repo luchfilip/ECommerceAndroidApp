@@ -13,6 +13,7 @@ public class OrderLine extends Model implements Parcelable {
     private int productId;
     private Product product;
     private int quantityOrdered;
+    private boolean isQuantityOrderedInvalid;
     private double price;
     private int currencyId;
     private Currency currency;
@@ -29,6 +30,7 @@ public class OrderLine extends Model implements Parcelable {
         productId = in.readInt();
         product = in.readParcelable(Product.class.getClassLoader());
         quantityOrdered = in.readInt();
+        isQuantityOrderedInvalid = in.readByte() != 0;
         price = in.readDouble();
         currencyId = in.readInt();
         currency = in.readParcelable(Currency.class.getClassLoader());
@@ -43,6 +45,7 @@ public class OrderLine extends Model implements Parcelable {
         dest.writeInt(productId);
         dest.writeParcelable(product, flags);
         dest.writeInt(quantityOrdered);
+        dest.writeByte((byte) (isQuantityOrderedInvalid ? 1 : 0));
         dest.writeDouble(price);
         dest.writeInt(currencyId);
         dest.writeParcelable(currency, flags);
@@ -86,6 +89,14 @@ public class OrderLine extends Model implements Parcelable {
 
     public void setQuantityOrdered(int quantityOrdered) {
         this.quantityOrdered = quantityOrdered;
+    }
+
+    public boolean isQuantityOrderedInvalid() {
+        return isQuantityOrderedInvalid;
+    }
+
+    public void setQuantityOrderedInvalid(boolean quantityOrderedInvalid) {
+        isQuantityOrderedInvalid = quantityOrderedInvalid;
     }
 
     public Product getProduct() {

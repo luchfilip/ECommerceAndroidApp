@@ -1,6 +1,11 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.businessRules;
 
+import android.content.Context;
+
+import com.jasgcorp.ids.model.User;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,5 +47,19 @@ public class OrderBR {
 
     public static String getTotalAmountStringFormat(ArrayList<OrderLine> orderLines){
         return String.format(new Locale("es", "VE"), "%,.2f", getTotalAmount(orderLines));
+    }
+
+    public static void validateQuantityOrderedInOrderLines(ArrayList<OrderLine> orderLines, Context context, User user) {
+        if (orderLines!=null && !orderLines.isEmpty()) {
+            ProductDB productDB = new ProductDB(context, user);
+            for (OrderLine orderLine : orderLines) {
+                Product product = productDB.getProductById(orderLine.getProductId());
+                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                //esa linea del pedido tiene error en la cantidad pedida.
+                orderLine.setQuantityOrderedInvalid((orderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                        || (orderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0));
+            }
+        }
     }
 }

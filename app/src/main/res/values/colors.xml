@@ -39,4 +39,5 @@
     <color name="products_list_size_color">#1556bf</color>
     <color name="phoneNumberLinkColor">#ff0099cc</color>
     <color name="emailLinkColor">#222222</color>
+    <color name="colorQtyOrderedError">#e73740</color>
 </resources>
