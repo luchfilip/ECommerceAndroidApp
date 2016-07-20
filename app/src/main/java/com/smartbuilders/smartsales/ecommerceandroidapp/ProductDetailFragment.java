@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductRecentlySeenDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 
@@ -271,20 +272,19 @@ public class ProductDetailFragment extends Fragment {
                                     );
                                 }
 
-                                if(mProduct.getDefaultProductPriceAvailability()!=null) {
-                                    if (view.findViewById(R.id.product_price) != null) {
-                                        ((TextView) view.findViewById(R.id.product_price))
-                                                .setText(getString(R.string.price_detail,
-                                                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                                                        mProduct.getDefaultProductPriceAvailability().getPrice()));
-                                    }
-
-                                    if (view.findViewById(R.id.product_availability) != null) {
-                                        ((TextView) view.findViewById(R.id.product_availability))
-                                                .setText(getString(R.string.availability,
-                                                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
-                                    }
+                                if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+                                    ((TextView) view.findViewById(R.id.product_price))
+                                            .setText(getString(R.string.price_detail,
+                                                    mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                                    mProduct.getDefaultProductPriceAvailability().getPrice()));
+                                    view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+                                } else {
+                                    view.findViewById(R.id.product_price).setVisibility(View.GONE);
                                 }
+
+                                ((TextView) view.findViewById(R.id.product_availability))
+                                        .setText(getString(R.string.availability,
+                                                mProduct.getDefaultProductPriceAvailability().getAvailability()));
 
 
                             } catch (Exception e){

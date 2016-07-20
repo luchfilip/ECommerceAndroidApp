@@ -16,6 +16,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 /**
  * Created by stein on 5/1/2016.
@@ -62,16 +63,19 @@ public class DialogAddToShoppingCart extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
 
-        if(mProduct.getDefaultProductPriceAvailability()!=null) {
+        if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
                     .setText(getString(R.string.price_detail,
                             mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
                             mProduct.getDefaultProductPriceAvailability().getPrice()));
-
-            ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                    .setText(getString(R.string.availability,
-                            mProduct.getDefaultProductPriceAvailability().getAvailability()));
+            view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
         }
+
+        ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
+                .setText(getString(R.string.availability,
+                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
             new View.OnClickListener() {

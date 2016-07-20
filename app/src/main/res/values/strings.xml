@@ -173,7 +173,6 @@
 
     <string name="order_product_price">Precio (%1$s): %2$s</string>
     <string name="order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
-    <string name="order_valid_to">Válida hasta: %1$s</string>
     <string name="order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
     <string name="order_tax_amount">Impuestos (%1$s): %2$s</string>
     <string name="order_total_amount">Total (%1$s): %2$s</string>

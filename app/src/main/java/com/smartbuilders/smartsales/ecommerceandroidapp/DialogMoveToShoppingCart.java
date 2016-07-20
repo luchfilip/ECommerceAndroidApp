@@ -16,6 +16,7 @@ import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 /**
  * Created by stein on 5/1/2016.
@@ -62,16 +63,20 @@ public class DialogMoveToShoppingCart extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_move_to_shopping_cart, container);
 
-        if(mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
+        if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_price_textView))
                     .setText(getString(R.string.price_detail,
                             mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                             mOrderLine.getProduct().getDefaultProductPriceAvailability().getPrice()));
-
-            ((TextView) view.findViewById(R.id.product_availability_textView))
-                    .setText(getContext().getString(R.string.availability,
-                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+            view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.product_price_textView).setVisibility(View.GONE);
         }
+
+        ((TextView) view.findViewById(R.id.product_availability_textView))
+                .setText(getContext().getString(R.string.availability,
+                        mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+
         view.findViewById(R.id.cancel_button).setOnClickListener(
             new View.OnClickListener() {
                 @Override
@@ -95,10 +100,8 @@ public class DialogMoveToShoppingCart extends DialogFragment {
                         if ((qtyRequested % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
                             throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
                         }
-                        if(mOrderLine.getProduct().getDefaultProductPriceAvailability()!=null) {
-                            if (qtyRequested > mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
-                                throw new Exception(getString(R.string.invalid_availability_qty_requested));
-                            }
+                        if (qtyRequested > mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
+                            throw new Exception(getString(R.string.invalid_availability_qty_requested));
                         }
                         OrderLineDB orderLineDB = new OrderLineDB(getContext(), mUser);
                         String result = orderLineDB.moveOrderLineToShoppingCart(mOrderLine, qtyRequested);

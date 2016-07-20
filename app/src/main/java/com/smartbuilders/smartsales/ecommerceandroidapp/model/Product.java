@@ -169,10 +169,6 @@ public class Product extends Model implements Parcelable {
         return defaultProductPriceAvailability;
     }
 
-    public void setProductPriceAvailabilities(List<ProductPriceAvailability> productPriceAvailabilities) {
-        this.productPriceAvailabilities = productPriceAvailabilities;
-    }
-
     public boolean isFavorite() {
         return isFavorite;
     }

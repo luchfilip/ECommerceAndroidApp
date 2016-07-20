@@ -31,7 +31,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Company;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 

@@ -23,7 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.providers.CachedFileProvider;

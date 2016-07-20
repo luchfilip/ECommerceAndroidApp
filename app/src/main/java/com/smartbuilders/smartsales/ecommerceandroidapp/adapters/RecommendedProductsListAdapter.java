@@ -20,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class RecommendedProductsListAdapter extends
     private Fragment mFragment;
     private ArrayList<Product> mDataset;
     private User mUser;
+    private boolean mIsManagePriceInOrder;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -82,6 +84,7 @@ public class RecommendedProductsListAdapter extends
         mFragment = fragment;
         mDataset = data;
         mUser = user;
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
     }
 
     // Create new views (invoked by the layout manager)
@@ -124,14 +127,17 @@ public class RecommendedProductsListAdapter extends
                     .setRating(mDataset.get(holder.getAdapterPosition()).getRating());
         }
 
-        if(mDataset.get(position).getDefaultProductPriceAvailability()!=null) {
+        if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
-
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+            holder.productPrice.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
         }
+
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -124,7 +124,7 @@ public class OrderDB {
                                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
                                         String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO",
-                                        OrderLineDB.FINALIZED_ORDER_DOCTYPE, Utils.getAppVersionName(mContext),
+                                        OrderLineDB.FINALIZED_ORDER_DOC_TYPE, Utils.getAppVersionName(mContext),
                                         mUser.getUserName(), Utils.getMacAddress(mContext),
                                         String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total)});
@@ -184,7 +184,7 @@ public class OrderDB {
                                 " FROM ECOMMERCE_ORDER " +
                                 " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                                 " ORDER BY ECOMMERCE_ORDER_ID desc",
-                        new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
+                        new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
             }else if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -196,7 +196,7 @@ public class OrderDB {
                                 " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                                 " ORDER BY ECOMMERCE_ORDER_ID desc",
                         new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                                String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOCTYPE, "Y"}, null);
+                                String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
             }
 
             if(c!=null){

@@ -21,6 +21,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private User mUser;
     private OrderLineDB orderLineDB;
     private boolean mIsShoppingCart;
+    private boolean mIsManagePriceInOrder;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -82,6 +84,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         mIsShoppingCart = isShoppingCart;
         mUser = user;
         orderLineDB = new OrderLineDB(context, user);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
     }
 
     // Create new views (invoked by the layout manager)
@@ -149,17 +152,22 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.productBrand.setVisibility(TextView.GONE);
         }
 
-        if(mDataset.get(position).getProduct().getDefaultProductPriceAvailability()!=null) {
+        if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+            holder.productPrice.setVisibility(View.VISIBLE);
 
             holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
                     mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
-
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+            holder.productTaxPercentage.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
+            holder.productTaxPercentage.setVisibility(View.GONE);
         }
+
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

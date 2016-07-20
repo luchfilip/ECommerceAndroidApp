@@ -27,14 +27,12 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogSortProductListOptions;
 import com.smartbuilders.smartsales.ecommerceandroidapp.DialogUpdateShoppingCartQtyOrdered;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -60,6 +58,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private User mUser;
     private int mMask;
     private ArrayList<Product> filterAux;
+    private boolean mIsManagePriceInOrder;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -112,6 +111,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         this.filterAux.addAll(mDataset);
         mUser = user;
         mMask = mask;
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
         sortProductList(sortOption);
     }
 
@@ -156,14 +156,17 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        if(mDataset.get(position).getDefaultProductPriceAvailability()!=null) {
+        if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
-
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+            holder.productPrice.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
         }
+
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

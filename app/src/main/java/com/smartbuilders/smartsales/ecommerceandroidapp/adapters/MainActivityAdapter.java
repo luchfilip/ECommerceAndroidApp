@@ -38,6 +38,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.MainPageTitleSecti
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductBrandPromotionalSection;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.ViewIdGenerator;
 import com.squareup.picasso.Callback;
@@ -65,6 +66,7 @@ public class MainActivityAdapter extends BaseAdapter {
     private DisplayMetrics metrics;
     private String mUrlScreenParameters;
     private boolean mIsLandscape;
+    private boolean mIsManagePriceInOrder;
 
     @Override
     public int getItemViewType(int position) {
@@ -137,6 +139,7 @@ public class MainActivityAdapter extends BaseAdapter {
 
         mIsLandscape = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         mUrlScreenParameters = Utils.getUrlScreenParameters(mIsLandscape, context);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
     }
 
     @Override
@@ -278,14 +281,17 @@ public class MainActivityAdapter extends BaseAdapter {
 
                         viewHolder.productName.setText(product.getName());
 
-                        if(product.getDefaultProductPriceAvailability()!=null) {
+                        if (mIsManagePriceInOrder) {
                             viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
                                     product.getDefaultProductPriceAvailability().getCurrency().getName(),
                                     product.getDefaultProductPriceAvailability().getPrice()));
-
-                            viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
-                                    product.getDefaultProductPriceAvailability().getAvailability()));
+                            viewHolder.productPrice.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.productPrice.setVisibility(View.GONE);
                         }
+
+                        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                                product.getDefaultProductPriceAvailability().getAvailability()));
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override

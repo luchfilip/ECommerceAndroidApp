@@ -8,6 +8,7 @@ import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -17,42 +18,48 @@ import java.util.ArrayList;
  */
 public class OrderLineDB {
 
-    public static final String WISHLIST_DOCTYPE = "WL";
-    public static final String SHOPPING_CART_DOCTYPE = "SC";
-    public static final String FINALIZED_ORDER_DOCTYPE = "FO";
+    public static final String WISH_LIST_DOC_TYPE = "WL";
+    public static final String SHOPPING_CART_DOC_TYPE = "SC";
+    public static final String FINALIZED_ORDER_DOC_TYPE = "FO";
 
     private Context mContext;
     private User mUser;
+    private boolean mIsManagePriceInOrder;
 
     public OrderLineDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
+        this.mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, mUser);
     }
 
     public String addOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
         return addOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(),
-                orderLine.getPrice(), orderLine.getTaxPercentage(), FINALIZED_ORDER_DOCTYPE, orderId);
+                orderLine.getPrice(), orderLine.getTaxPercentage(), FINALIZED_ORDER_DOC_TYPE, orderId);
     }
 
     public String addProductToShoppingCart(Product product, int qtyRequested){
-        return addOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
-                product.getProductTax().getPercentage(), SHOPPING_CART_DOCTYPE, null);
+        if (mIsManagePriceInOrder) {
+            return addOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
+                    product.getProductTax().getPercentage(), SHOPPING_CART_DOC_TYPE, null);
+        } else {
+            return addOrderLine(product.getId(), qtyRequested, 0, 0, SHOPPING_CART_DOC_TYPE, null);
+        }
     }
 
     public String addProductToWishList(int productId){
-        return addOrderLine(productId, 0, 0, 0, WISHLIST_DOCTYPE, null);
+        return addOrderLine(productId, 0, 0, 0, WISH_LIST_DOC_TYPE, null);
     }
 
     public ArrayList<OrderLine> getShoppingCart(){
-        return getOrderLines(SHOPPING_CART_DOCTYPE, null);
+        return getOrderLines(SHOPPING_CART_DOC_TYPE, null);
     }
 
     public ArrayList<OrderLine> getWishList(){
-        return getOrderLines(WISHLIST_DOCTYPE, null);
+        return getOrderLines(WISH_LIST_DOC_TYPE, null);
     }
 
     public ArrayList<OrderLine> getActiveFinalizedOrderLinesByOrderId(int orderId){
-        return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOCTYPE, orderId);
+        return getActiveOrderLinesByOrderId(FINALIZED_ORDER_DOC_TYPE, orderId);
     }
 
     private ArrayList<OrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
@@ -60,11 +67,11 @@ public class OrderLineDB {
     }
 
     public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
-        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOCTYPE, SHOPPING_CART_DOCTYPE);
+        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOC_TYPE, SHOPPING_CART_DOC_TYPE);
     }
 
     public int getActiveShoppingCartLinesNumber(){
-        return getActiveOrderLinesNumber(SHOPPING_CART_DOCTYPE);
+        return getActiveOrderLinesNumber(SHOPPING_CART_DOC_TYPE);
     }
 
     public String removeProductFromWishList(int productId){
@@ -75,7 +82,7 @@ public class OrderLineDB {
                             null,
                             "DELETE FROM ECOMMERCE_ORDERLINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
                             new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                                    String.valueOf(mUser.getServerUserId()), String.valueOf(productId), WISHLIST_DOCTYPE});
+                                    String.valueOf(mUser.getServerUserId()), String.valueOf(productId), WISH_LIST_DOC_TYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -88,20 +95,22 @@ public class OrderLineDB {
 
     public String moveOrderLineToShoppingCart(OrderLine orderLine, int qtyRequested){
         try {
-            orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
-            orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+            if (mIsManagePriceInOrder) {
+                orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
+                orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+            }
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null,
                             "UPDATE ECOMMERCE_ORDERLINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
                                 " SALES_PRICE = ?, TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                             " WHERE ECOMMERCE_ORDERLINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
-                            new String[]{SHOPPING_CART_DOCTYPE, String.valueOf(qtyRequested),
+                            new String[]{SHOPPING_CART_DOC_TYPE, String.valueOf(qtyRequested),
                                     String.valueOf(orderLine.getPrice()),
                                     String.valueOf(orderLine.getTaxPercentage()),
                                     String.valueOf(OrderLineBR.getTotalLine(orderLine)), "datetime('now')",
                                     String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
-                                    WISHLIST_DOCTYPE});
+                                    WISH_LIST_DOC_TYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -157,7 +166,7 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null, "DELETE FROM ECOMMERCE_ORDERLINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                     new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                            String.valueOf(mUser.getServerUserId()), WISHLIST_DOCTYPE});
+                            String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
@@ -196,8 +205,10 @@ public class OrderLineDB {
                     orderLine.setQuantityOrdered(c.getInt(1));
                     orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
                     if(orderLine.getProduct()!=null){
-                        orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
-                        orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+                        if (mIsManagePriceInOrder) {
+                            orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
+                            orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+                        }
                         orderLine.setTotalLineAmount(OrderLineBR.getTotalLine(orderLine));
                         orderLines.add(orderLine);
                     }
@@ -344,7 +355,7 @@ public class OrderLineDB {
                     "SELECT COUNT(*) FROM ECOMMERCE_ORDERLINE " +
                     " WHERE PRODUCT_ID=? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                            String.valueOf(mUser.getServerUserId()), WISHLIST_DOCTYPE, "Y"}, null);
+                            String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0)>0;
             }
@@ -363,11 +374,11 @@ public class OrderLineDB {
     }
 
     public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
-        return getOrderLineByProductIdAndDocType(productId, SHOPPING_CART_DOCTYPE);
+        return getOrderLineByProductIdAndDocType(productId, SHOPPING_CART_DOC_TYPE);
     }
 
     public OrderLine getOrderLineFromWishListByProductId(int productId){
-        return getOrderLineByProductIdAndDocType(productId, WISHLIST_DOCTYPE);
+        return getOrderLineByProductIdAndDocType(productId, WISH_LIST_DOC_TYPE);
     }
 
     private OrderLine getOrderLineByProductIdAndDocType(int productId, String docType){

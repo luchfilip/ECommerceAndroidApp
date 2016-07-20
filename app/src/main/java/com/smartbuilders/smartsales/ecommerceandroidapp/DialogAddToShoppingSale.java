@@ -27,7 +27,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.ProductTaxDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.ProductTax;

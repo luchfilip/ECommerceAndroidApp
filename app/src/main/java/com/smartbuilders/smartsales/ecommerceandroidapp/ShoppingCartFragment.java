@@ -3,8 +3,6 @@ package com.smartbuilders.smartsales.ecommerceandroidapp;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -30,7 +28,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -333,17 +331,28 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if (mOrderLines!=null && !mOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mOrderLines.size())));
-            Currency currency = (new CurrencyDB(getContext()))
-                    .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
-            mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
-                    currency!=null ? currency.getName() : "",
-                    OrderBR.getSubTotalAmountStringFormat(mOrderLines)));
-            mTaxAmount.setText(getString(R.string.order_tax_amount,
-                    currency!=null ? currency.getName() : "",
-                    OrderBR.getTaxAmountStringFormat(mOrderLines)));
-            mTotalAmount.setText(getString(R.string.order_total_amount,
-                    currency!=null ? currency.getName() : "",
-                    OrderBR.getTotalAmountStringFormat(mOrderLines)));
+            if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+                Currency currency = (new CurrencyDB(getContext()))
+                        .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+                mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
+                        currency!=null ? currency.getName() : "",
+                        OrderBR.getSubTotalAmountStringFormat(mOrderLines)));
+                mSubTotalAmount.setVisibility(View.VISIBLE);
+
+                mTaxAmount.setText(getString(R.string.order_tax_amount,
+                        currency!=null ? currency.getName() : "",
+                        OrderBR.getTaxAmountStringFormat(mOrderLines)));
+                mTaxAmount.setVisibility(View.VISIBLE);
+
+                mTotalAmount.setText(getString(R.string.order_total_amount,
+                        currency!=null ? currency.getName() : "",
+                        OrderBR.getTotalAmountStringFormat(mOrderLines)));
+                mTotalAmount.setVisibility(View.VISIBLE);
+            } else {
+                mSubTotalAmount.setVisibility(View.GONE);
+                mTaxAmount.setVisibility(View.GONE);
+                mTotalAmount.setVisibility(View.GONE);
+            }
         }
     }
 

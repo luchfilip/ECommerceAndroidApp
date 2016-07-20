@@ -22,6 +22,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     private ArrayList<OrderLine> mDataset;
     private User mUser;
     private OrderLineDB orderLineDB;
+    private boolean mIsManagePriceInOrder;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -86,6 +88,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         mDataset = data;
         mUser = user;
         orderLineDB = new OrderLineDB(context, user);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
     }
 
     // Create new views (invoked by the layout manager)
@@ -141,14 +144,17 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                     .setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
         }
 
-        if(mDataset.get(position).getProduct().getDefaultProductPriceAvailability()!=null) {
+        if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
-
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+            holder.productPrice.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
         }
+
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

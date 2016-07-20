@@ -15,7 +15,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Currency;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerceandroidapp.model.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.Product;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -30,6 +30,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     private Context mContext;
     private User mUser;
     private String mCurrencyName;
+    private boolean mIsManagePriceInOrder;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -68,6 +69,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         Currency currency = (new CurrencyDB(mContext))
                 .getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
         mCurrencyName = currency!=null ? currency.getName() : "";
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, mUser);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -124,12 +126,23 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
-        holder.productPrice.setText(mContext.getString(R.string.order_product_price,
-                mCurrencyName, mDataset.get(position).getPriceStringFormat()));
-        holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
-                mDataset.get(position).getTaxPercentageStringFormat()));
-        holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
-                mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
+        if (mIsManagePriceInOrder) {
+            holder.productPrice.setText(mContext.getString(R.string.order_product_price,
+                    mCurrencyName, mDataset.get(position).getPriceStringFormat()));
+            holder.productPrice.setVisibility(View.VISIBLE);
+
+            holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
+                    mDataset.get(position).getTaxPercentageStringFormat()));
+            holder.productTax.setVisibility(View.VISIBLE);
+
+            holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                    mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
+            holder.totalLineAmount.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
+            holder.productTax.setVisibility(View.GONE);
+            holder.totalLineAmount.setVisibility(View.GONE);
+        }
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override

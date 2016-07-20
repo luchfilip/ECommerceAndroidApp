@@ -25,71 +25,103 @@ public class ParameterDB {
 
     public static final int DEFAULT_CURRENCY_ID_PARAM_ID = 1;
     public static final int DEFAULT_TAX_ID_PARAM_ID = 2;
+    public static final int MANAGE_PRICE_IN_ORDER = 3;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static String getParameterStringValue(Context context, User user, int parameterId) {
-        return (String) getParameterValue(context, user, parameterId, TEXT_VALUE_COLUMN_NAME);
+    public static String getParameterStringValue(Context context, User user, int parameterId, String defaultValue) {
+        try {
+            return (String) getParameterValue(context, user, parameterId, TEXT_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static int getParameterIntValue(Context context, User user, int parameterId) {
-        return (int) getParameterValue(context, user, parameterId, INTEGER_VALUE_COLUMN_NAME);
+    public static int getParameterIntValue(Context context, User user, int parameterId, int defaultValue) {
+        try {
+            return (int) getParameterValue(context, user, parameterId, INTEGER_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static double getParameterDoubleValue(Context context, User user, int parameterId) {
-        return (double) getParameterValue(context, user, parameterId, DOUBLE_VALUE_COLUMN_NAME);
+    public static double getParameterDoubleValue(Context context, User user, int parameterId, double defaultValue) {
+        try {
+            return (double) getParameterValue(context, user, parameterId, DOUBLE_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static boolean getParameterBooleanValue(Context context, User user, int parameterId) {
-        return (boolean) getParameterValue(context, user, parameterId, BOOLEAN_VALUE_COLUMN_NAME);
+    public static boolean getParameterBooleanValue(Context context, User user, int parameterId, boolean defaultValue) {
+        try {
+            return (boolean) getParameterValue(context, user, parameterId, BOOLEAN_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static Date getParameterDateValue(Context context, User user, int parameterId) {
-        return (Date) getParameterValue(context, user, parameterId, DATE_VALUE_COLUMN_NAME);
+    public static Date getParameterDateValue(Context context, User user, int parameterId, Date defaultValue) {
+        try {
+            return (Date) getParameterValue(context, user, parameterId, DATE_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
      * @param context
      * @param parameterId
+     * @param defaultValue
      * @return
      */
-    public static Timestamp getParameterTimestampValue(Context context, User user, int parameterId) {
-        return (Timestamp) getParameterValue(context, user, parameterId, DATETIME_VALUE_COLUMN_NAME);
+    public static Timestamp getParameterTimestampValue(Context context, User user, int parameterId, Timestamp defaultValue) {
+        try {
+            return (Timestamp) getParameterValue(context, user, parameterId, DATETIME_VALUE_COLUMN_NAME);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     private static Object getParameterValue(Context context, User user, int parameterId,
-                                            final String tableColumn) {
+                                            final String tableColumn) throws Exception {
         Cursor c = null;
         String result = null;
+        boolean paramFound = false;
         try {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
@@ -98,6 +130,7 @@ public class ParameterDB {
                     new String[]{String.valueOf(user.getUserId()), String.valueOf(parameterId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 result = c.getString(0);
+                paramFound = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,13 +143,14 @@ public class ParameterDB {
                 }
             }
         }
-        if (result==null) {
+        if (!paramFound) {
             try {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT "+tableColumn+" FROM APP_PARAMETER WHERE APP_PARAMETER_ID=? AND IS_ACTIVE=?" ,
                         new String[]{String.valueOf(parameterId), "Y"}, null);
                 if(c!=null && c.moveToNext()){
                     result = c.getString(0);
+                    paramFound = true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -130,7 +164,7 @@ public class ParameterDB {
                 }
             }
         }
-        if(result!=null){
+        if(paramFound){
             try {
                 switch (tableColumn) {
                     case INTEGER_VALUE_COLUMN_NAME:
@@ -156,17 +190,19 @@ public class ParameterDB {
                                 e.printStackTrace();
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            throw e;
                         }
                         break;
                     case TEXT_VALUE_COLUMN_NAME:
                         return result;
                 }
+                return result;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw e;
             }
+        } else {
+            throw new Exception("The parameter with the id: " + parameterId + " was not found.");
         }
-        return null;
     }
 
 }
