@@ -110,7 +110,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mOrderLines = (new OrderLineDB(getContext(), mUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
                         }
                     }
-                    OrderLineBR.validateQtyOrderInOrderLines(mOrderLines);
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
                             ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
 

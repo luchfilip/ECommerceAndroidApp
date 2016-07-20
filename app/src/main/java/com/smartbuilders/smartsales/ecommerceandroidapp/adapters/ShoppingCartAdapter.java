@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerceandroidapp.ProductDetailActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.model.OrderLine;
@@ -82,6 +83,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         mContext = context;
         mFragment = shoppingCartFragment;
         mDataset = data;
+        OrderBR.validateQuantityOrderedInOrderLines(mDataset, mContext, mUser);
         mIsShoppingCart = isShoppingCart;
         mUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -230,6 +232,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     public void setData(ArrayList<OrderLine> orderLines) {
         mDataset = orderLines;
+        OrderBR.validateQuantityOrderedInOrderLines(mDataset, mContext, mUser);
         notifyDataSetChanged();
     }
 }
