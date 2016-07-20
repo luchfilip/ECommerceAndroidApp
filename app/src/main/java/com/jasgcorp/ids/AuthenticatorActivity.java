@@ -170,7 +170,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();
         final boolean saveDBInExternalCard = false;
 
-        waitPlease = ProgressDialog.show(this, getString(R.string.authenticating_user), getString(R.string.wait_please), true, false);
+        Utils.lockScreenOrientation(this);
+        waitPlease = ProgressDialog.show(this, getString(R.string.authenticating_user),
+                getString(R.string.wait_please), true, false);
 
         new AsyncTask<Context, Void, Intent>() {
 
@@ -264,6 +266,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             protected void onPostExecute(Intent intent) {
                 waitPlease.dismiss();
+                Utils.unlockScreenOrientation(AuthenticatorActivity.this);
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
                     Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                 } else {

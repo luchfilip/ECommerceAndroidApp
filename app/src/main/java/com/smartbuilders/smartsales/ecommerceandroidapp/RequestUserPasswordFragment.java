@@ -140,11 +140,7 @@ public class RequestUserPasswordFragment extends Fragment {
     }
 
     private void lockScreen(){
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        }
+        Utils.lockScreenOrientation(getActivity());
         if (waitPlease==null || !waitPlease.isShowing()){
             waitPlease = ProgressDialog.show(getContext(), null,
                     getString(R.string.sending_request_wait_please), true, false);
@@ -163,13 +159,13 @@ public class RequestUserPasswordFragment extends Fragment {
                             .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                    Utils.unlockScreenOrientation(getActivity());
                                 }
                             })
                             .setCancelable(false)
                             .show();
                 } else {
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    Utils.unlockScreenOrientation(getActivity());
                 }
                 submit.setEnabled(true);
                 if (waitPlease!=null && waitPlease.isShowing()) {

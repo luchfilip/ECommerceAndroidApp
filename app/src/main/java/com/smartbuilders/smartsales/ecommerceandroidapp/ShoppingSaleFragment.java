@@ -255,11 +255,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private void lockScreen() {
         if (getActivity()!=null) {
             //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-            } else {
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-            }
+            Utils.lockScreenOrientation(getActivity());
             if (waitPlease==null || !waitPlease.isShowing()){
                 waitPlease = ProgressDialog.show(getContext(), null,
                         getString(R.string.closing_sales_order_wait_please), true, false);
@@ -278,7 +274,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                                        Utils.unlockScreenOrientation(getActivity());
                                     }
                                 })
                                 .setCancelable(false)
@@ -290,7 +286,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                     } else {
                         startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                        Utils.unlockScreenOrientation(getActivity());
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

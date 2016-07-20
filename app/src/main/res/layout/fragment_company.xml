@@ -64,7 +64,8 @@
                     android:id="@+id/business_partner_commercial_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:hint="@string/business_partner_commercial_name" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -83,7 +84,8 @@
                     android:id="@+id/business_partner_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:hint="@string/business_partner_name" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -102,7 +104,8 @@
                     android:id="@+id/business_partner_tax_id_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:hint="@string/business_partner_tax_id" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -121,7 +124,8 @@
                     android:id="@+id/business_partner_address_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:hint="@string/address" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -140,7 +144,8 @@
                     android:id="@+id/business_partner_contact_person_name_editText"
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:hint="@string/contact_person" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -160,7 +165,8 @@
                     android:ems="10"
                     android:id="@+id/business_partner_email_address_editText"
                     android:paddingEnd="5dp"
-                    android:paddingStart="5dp" />
+                    android:paddingStart="5dp"
+                    android:hint="@string/email_address" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -180,7 +186,8 @@
                     android:ems="10"
                     android:id="@+id/business_partner_phone_number_editText"
                     android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:paddingEnd="5dp"
+                    android:hint="@string/phone_number" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -39,7 +39,8 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/business_partner_commercial_name" />
             </TableRow>
 
             <TableRow
@@ -62,7 +63,8 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/business_partner_name" />
             </TableRow>
 
             <TableRow
@@ -85,7 +87,8 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/business_partner_tax_id" />
             </TableRow>
 
             <TableRow
@@ -108,7 +111,8 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/address" />
             </TableRow>
 
             <TableRow
@@ -131,7 +135,8 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/contact_person" />
             </TableRow>
 
             <TableRow
@@ -155,7 +160,8 @@
                     android:id="@+id/business_partner_email_address_editText"
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/email_address" />
             </TableRow>
 
             <TableRow
@@ -179,7 +185,8 @@
                     android:id="@+id/business_partner_phone_number_editText"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:hint="@string/phone_number" />
             </TableRow>
         </TableLayout>
     </ScrollView>
