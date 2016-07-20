@@ -62,4 +62,22 @@ public class OrderBR {
             }
         }
     }
+
+    public static String isValidQuantityOrderedInOrderLines(ArrayList<OrderLine> orderLines, Context context, User user) {
+        StringBuilder result = new StringBuilder();
+        if (orderLines!=null && !orderLines.isEmpty()) {
+            ProductDB productDB = new ProductDB(context, user);
+            for (OrderLine orderLine : orderLines) {
+                Product product = productDB.getProductById(orderLine.getProductId());
+                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                //esa linea del pedido tiene error en la cantidad pedida.
+                if ((orderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                        || (orderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0)) {
+                    result.append("Error en cantidad pedida del articulo "+product.getName()+".\n");
+                }
+            }
+        }
+        return result.toString();
+    }
 }
