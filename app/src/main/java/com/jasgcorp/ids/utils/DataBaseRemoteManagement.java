@@ -31,26 +31,25 @@ public class DataBaseRemoteManagement {
     public static Object getJsonBase64CompressedQueryResult(Context context, User user, float batchMaxLength, String sql){
         ArrayList<String> preview;
         ArrayList<String> result;
-        Cursor cursor;
-        if (user==null) {
-            cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
-                    null, sql, null, null);
-        } else {
-            cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                    null, sql, null, null);
-        }
-
+        Cursor cursor = null;
         try {
-
+            if (user==null) {
+                cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
+                        null, sql, null, null);
+            } else {
+                cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                        null, sql, null, null);
+            }
             result = new ArrayList<>();
             preview = new ArrayList<>();
             if(cursor != null){
                 int columnCount = cursor.getColumnCount();
 
                 JSONObject json = new JSONObject();
-                for(int i = 1; i <= columnCount; i++){
+                for(int i = 0; i < columnCount; i++){
                     try {
+
                         json.put(String.valueOf(i), cursor.getColumnName(i));
                     } catch(NullPointerException e){
                         json.remove(String.valueOf(i));
@@ -58,7 +57,7 @@ public class DataBaseRemoteManagement {
                 }
                 preview.add(json.toString());
 
-                //for(int i = 1; i <= columnCount; i++){
+                //for(int i = 0; i < columnCount; i++){
                 //    try {
                 //        json.put(String.valueOf(i), rs.getMetaData().getColumnType(i));
                 //    } catch(NullPointerException e){
@@ -67,27 +66,25 @@ public class DataBaseRemoteManagement {
                 //}
                 //preview.add(json.toString());
 
-                if (cursor!=null) {
-                    while (cursor.moveToNext()){
-                        for(int i = 1; i <= columnCount; i++){
-                            try{
-                                json.put(String.valueOf(i), cursor.getString(i).trim());
-                            } catch(NullPointerException e){
-                                json.remove(String.valueOf(i));
-                            } catch (JSONException e) {	}
+                while (cursor.moveToNext()){
+                    for(int i = 0; i < columnCount; i++){
+                        try{
+                            json.put(String.valueOf(i), cursor.getString(i).trim());
+                        } catch(NullPointerException e){
+                            json.remove(String.valueOf(i));
+                        } catch (JSONException e) {	}
+                    }
+                    preview.add(json.toString());
+                    //Si el tamano del archivo es mayor a batchMaxLenght Bytes
+                    if(preview.toString().getBytes("UTF-8").length>batchMaxLength){
+                        if(result.isEmpty()){
+                            result.add((new StringBuilder("{\"")).append(result.size()).append("\":\"")
+                                    .append(Base64.encodeBytes(gzip(preview.toString()), Base64.GZIP)).append("\"").toString());
+                        }else{
+                            result.add((new StringBuilder("\"")).append(result.size()).append("\":\"")
+                                    .append(Base64.encodeBytes(gzip(preview.toString()), Base64.GZIP)).append("\"").toString());
                         }
-                        preview.add(json.toString());
-                        //Si el tamano del archivo es mayor a batchMaxLenght Bytes
-                        if(preview.toString().getBytes("UTF-8").length>batchMaxLength){
-                            if(result.isEmpty()){
-                                result.add((new StringBuilder("{\"")).append(result.size()).append("\":\"")
-                                        .append(Base64.encodeBytes(gzip(preview.toString()), Base64.GZIP)).append("\"").toString());
-                            }else{
-                                result.add((new StringBuilder("\"")).append(result.size()).append("\":\"")
-                                        .append(Base64.encodeBytes(gzip(preview.toString()), Base64.GZIP)).append("\"").toString());
-                            }
-                            preview.clear();
-                        }
+                        preview.clear();
                     }
                 }
             }

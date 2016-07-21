@@ -26,6 +26,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.jasgcorp.ids.model.User;
@@ -72,7 +73,7 @@ public class MyGcmListenerService extends GcmListenerService {
      * solicita a la aplicacion que realice una consulta a la base de datos, segun el SERVER_USER_ID
      * que se reciba en la solicitud
      */
-    public static final String KEY_REQUEST_SQL_QUERY = "com.jasgcorp.ids.gcm.KEY_REQUEST_SQL_QUERY";
+    public static final String KEY_REQUEST_QUERY_DATA_BASE = "com.jasgcorp.ids.gcm.KEY_REQUEST_QUERY_DATA_BASE";
 
     /**
      * consulta sql que se realizara en la base de datos
@@ -133,6 +134,7 @@ public class MyGcmListenerService extends GcmListenerService {
      * en la consulta, o no.
      */
     public static final String KEY_PARAM_FOLDER_PATH = "com.jasgcorp.ids.gcm.KEY_PARAM_FOLDER_PATH";
+    private static final String TAG = MyGcmListenerService.class.getSimpleName();
 
     /**
      * Called when message is received.
@@ -147,16 +149,18 @@ public class MyGcmListenerService extends GcmListenerService {
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
+            Log.d(TAG, "onMessageReceived("+from+", Bundle data)");
             // normal downstream message.
             //Run the Sync Adapter When Server Data Changes
-            if(data.containsKey("action")){
+            if(data.containsKey("action") && data.containsKey("requestMethodName")){
                 String action = data.getString("action");
+                String requestMethodName = data.getString("requestMethodName");
                 if(action!=null && data.containsKey(KEY_REQUEST_ID)) {
                     int requestId = 0;
                     try {
                         requestId = Integer.valueOf(data.getString(KEY_REQUEST_ID));
                     } catch (NumberFormatException e) {
-                        sendResponseToServer(getApplicationContext(), requestId, null, e.getMessage());
+                        sendResponseToServer(getApplicationContext(), requestMethodName, requestId, null, e.getMessage());
                     }
                     if(requestId>0){
                         if(action.equals(KEY_REQUEST_SYNC)
@@ -169,7 +173,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                     if(userAccount!=null){
                                         if (!ApplicationUtilities.isSyncActive(this, userAccount)) {
                                             ApplicationUtilities.initSyncByAccount(this, userAccount);
-                                            sendResponseToServer(getApplicationContext(), requestId,
+                                            sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                                     "user: "+userAccount.name+", synchronization initialized.", null);
                                         }else{
                                             throw new Exception("the synchronization is active.");
@@ -182,7 +186,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_SYNC) " +
                                                 "&& data.containsKey(KEY_PARAM_SERVER_USER_ID)", e.getMessage());
                             }
@@ -199,7 +203,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
                                         accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
-                                        sendResponseToServer(getApplicationContext(), requestId,
+                                        sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                                 "user: "+userAccount.name+", authentication token invalidated.", null);
                                     }else{
                                         throw new Exception("userAccount is null.");
@@ -209,11 +213,11 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_INVALIDATE_USER_AUTH_TOKEN) " +
                                                 "&& data.containsKey(KEY_PARAM_SERVER_USER_ID)", e.getMessage());
                             }
-                        }else if(action.equals(KEY_REQUEST_SQL_QUERY)
+                        }else if(action.equals(KEY_REQUEST_QUERY_DATA_BASE)
                                 && data.containsKey(KEY_PARAM_SQL_QUERY)){
                             try {
                                 User user = null;
@@ -232,7 +236,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 Object result = DataBaseRemoteManagement
                                         .getJsonBase64CompressedQueryResult(getApplicationContext(), user, 1000, data.getString(KEY_PARAM_SQL_QUERY));
                                 if (result instanceof String) {
-                                    sendResponseToServer(getApplicationContext(), requestId, (String) result, null);
+                                    sendResponseToServer(getApplicationContext(), requestMethodName, requestId, (String) result, null);
                                 } else if (result instanceof Exception) {
                                     throw (Exception) result;
                                 } else {
@@ -240,15 +244,15 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
-                                        "action.equals(KEY_REQUEST_SQL_QUERY) " +
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
+                                        "action.equals(KEY_REQUEST_QUERY_DATA_BASE) " +
                                                 "&& data.containsKey(KEY_PARAM_SQL_QUERY)", e.getMessage());
                             }
                         }else if(action.equals(KEY_REQUEST_INSTALLED_APP_VERSION)){
                             try {
                                 PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
                                 if(packageInfo!=null){
-                                    sendResponseToServer(getApplicationContext(),
+                                    sendResponseToServer(getApplicationContext(), requestMethodName,
                                             requestId, "versionName: " + packageInfo.versionName +
                                                     ", versionCode: "+packageInfo.versionCode+".", null);
                                 }else{
@@ -256,16 +260,16 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_INSTALLED_APP_VERSION)", e.getMessage());
                             }
                         }else if(action.equals(KEY_REQUEST_ANDROID_API_VERSION)){
                             try {
-                                sendResponseToServer(getApplicationContext(),
+                                sendResponseToServer(getApplicationContext(), requestMethodName,
                                         requestId, "androidApiVersion: " + android.os.Build.VERSION.SDK_INT + ".", null);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_ANDROID_API_VERSION)", e.getMessage());
                             }
                         }else if(action.equals(KEY_REQUEST_FILE_INFO)
@@ -281,7 +285,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                 File file = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
                                                         + File.separator + user.getUserName(), filePath);
                                                 if(file.exists()){
-                                                    sendResponseToServer(getApplicationContext(),
+                                                    sendResponseToServer(getApplicationContext(), requestMethodName,
                                                             requestId, "file: \"" + file.getAbsolutePath() + "\", "+getFileInfo(file), null);
                                                 }else{
                                                     throw new Exception("file: \"" + file.getAbsolutePath() + "\" does not exists.");
@@ -295,7 +299,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                     }else{
                                         File file = new File(getApplicationContext().getExternalFilesDir(null), filePath);
                                         if(file.exists()){
-                                            sendResponseToServer(getApplicationContext(),
+                                            sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "file: \"" + file.getAbsolutePath() + "\", "+getFileInfo(file), null);
                                         }else{
                                             throw new Exception("file: \"" + file.getAbsolutePath() + "\" does not exists.");
@@ -306,7 +310,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_FILE_INFO) " +
                                                 "&& data.containsKey(KEY_PARAM_FILE_PATH)", e.getMessage());
                             }
@@ -324,7 +328,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                         + File.separator + user.getUserName(), filePath);
                                                 if(file.exists()){
                                                     if(file.delete()){
-                                                        sendResponseToServer(getApplicationContext(),
+                                                        sendResponseToServer(getApplicationContext(), requestMethodName,
                                                                 requestId, "file: \"" + file.getAbsolutePath() + "\" deleted successfully.", null);
                                                     }else{
                                                         throw new Exception("file: \"" + file.getAbsolutePath() + "\" was not deleted.");
@@ -342,7 +346,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                         File file = new File(getApplicationContext().getExternalFilesDir(null), filePath);
                                         if(file.exists()){
                                             if(file.delete()){
-                                                sendResponseToServer(getApplicationContext(),
+                                                sendResponseToServer(getApplicationContext(), requestMethodName,
                                                         requestId, "file: \"" + file.getAbsolutePath() + "\" deleted successfully.", null);
                                             }else{
                                                 throw new Exception("file: \"" + file.getAbsolutePath() + "\" was not deleted.");
@@ -356,7 +360,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_DELETE_FILE) " +
                                                 "&& data.containsKey(KEY_PARAM_FILE_PATH)", e.getMessage());
                             }
@@ -374,7 +378,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                     File folder = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
                                                             + File.separator + user.getUserName(), folderPath);
                                                     if(folder.exists()){
-                                                        sendResponseToServer(getApplicationContext(),
+                                                        sendResponseToServer(getApplicationContext(), requestMethodName,
                                                                 requestId, "folder: \"" + folder.getAbsolutePath() +
                                                                         "\", files: "+String.valueOf(listFilesByFolder(folder)), null);
                                                     }else{
@@ -392,7 +396,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                     }else{
                                         File folder = new File(getApplicationContext().getExternalFilesDir(null), folderPath);
                                         if(folder.exists()){
-                                            sendResponseToServer(getApplicationContext(),
+                                            sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "folder: \"" + folder.getAbsolutePath() +
                                                             "\", files: "+String.valueOf(listFilesByFolder(folder)), null);
                                         }else{
@@ -404,7 +408,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_FILES_NAME_BY_FOLDER) " +
                                                 "&& data.containsKey(KEY_PARAM_FOLDER_PATH)", e.getMessage());
                             }
@@ -421,7 +425,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                 File folder = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
                                                         + File.separator + user.getUserName(), folderPath);
                                                 if(folder.exists()){
-                                                    sendResponseToServer(getApplicationContext(),
+                                                    sendResponseToServer(getApplicationContext(), requestMethodName,
                                                             requestId, "folder: \"" + folder.getAbsolutePath() + "\", "+getFolderInfo(folder), null);
                                                 }else{
                                                     throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" does not exists.");
@@ -435,7 +439,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                     }else{
                                         File folder = new File(getApplicationContext().getExternalFilesDir(null), folderPath);
                                         if(folder.exists()){
-                                            sendResponseToServer(getApplicationContext(),
+                                            sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "folder: \"" + folder.getAbsolutePath() + "\", "+getFolderInfo(folder), null);
                                         }else{
                                             throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" does not exists.");
@@ -446,7 +450,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_FOLDER_INFO) " +
                                                 "&& data.containsKey(KEY_PARAM_FOLDER_PATH)", e.getMessage());
                             }
@@ -464,7 +468,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                         + File.separator + user.getUserName(), folderPath);
                                                 if(folder.exists()){
                                                     if(folder.delete()){
-                                                        sendResponseToServer(getApplicationContext(),
+                                                        sendResponseToServer(getApplicationContext(), requestMethodName,
                                                                 requestId, "folder: \"" + folder.getAbsolutePath() + "\" deleted successfully.", null);
                                                     }else{
                                                         throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" was not deleted.");
@@ -482,7 +486,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                         File folder = new File(getApplicationContext().getExternalFilesDir(null), folderPath);
                                         if(folder.exists()){
                                             if(folder.delete()){
-                                                sendResponseToServer(getApplicationContext(),
+                                                sendResponseToServer(getApplicationContext(), requestMethodName,
                                                         requestId, "folder: \"" + folder.getAbsolutePath() + "\" deleted successfully.", null);
                                             }else{
                                                 throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" was not deleted.");
@@ -496,27 +500,27 @@ public class MyGcmListenerService extends GcmListenerService {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                sendResponseToServer(getApplicationContext(), requestId,
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_DELETE_FOLDER) " +
                                                 "&& data.containsKey(KEY_PARAM_FOLDER_PATH)", e.getMessage());
                             }
                         }else{
-                            sendResponseToServer(getApplicationContext(), requestId, null, "action no es compatible con ninguna de las opciones");
+                            sendResponseToServer(getApplicationContext(), requestMethodName, requestId, null, "action no es compatible con ninguna de las opciones");
                         }
                     }else{
-                        sendResponseToServer(getApplicationContext(), -1, null, "KEY_REQUEST_ID<=0");
+                        sendResponseToServer(getApplicationContext(), requestMethodName, -1, null, "KEY_REQUEST_ID<=0");
                     }
                 }else{
                     if(action==null && !data.containsKey(KEY_REQUEST_ID)){
-                        sendResponseToServer(getApplicationContext(), -1, null, "action==null && !data.containsKey(KEY_REQUEST_ID)");
+                        sendResponseToServer(getApplicationContext(), requestMethodName, -1, null, "action==null && !data.containsKey(KEY_REQUEST_ID)");
                     }else if (action==null){
-                        sendResponseToServer(getApplicationContext(), -1, null, "action==null");
+                        sendResponseToServer(getApplicationContext(), requestMethodName, -1, null, "action==null");
                     }else{
-                        sendResponseToServer(getApplicationContext(), -1, null, "!data.containsKey(KEY_REQUEST_ID)");
+                        sendResponseToServer(getApplicationContext(), requestMethodName, -1, null, "!data.containsKey(KEY_REQUEST_ID)");
                     }
                 }
             }else{
-                sendResponseToServer(getApplicationContext(), -1, null, "!data.containsKey(\"action\")");
+                sendResponseToServer(getApplicationContext(), null, -1, null, "!data.containsKey(\"action\") || !data.containsKey(\"requestMethodName\")");
             }
         }
 
@@ -599,7 +603,7 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param response
      * @param errorMessage
      */
-    private void sendResponseToServer(Context context, int requestId, String response, String errorMessage){
+    private void sendResponseToServer(Context context, String requestMethodName, int requestId, String response, String errorMessage){
         User user = Utils.getCurrentUser(getApplicationContext());
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
         parameters.put("serverUserId", user.getServerUserId());
@@ -607,6 +611,7 @@ public class MyGcmListenerService extends GcmListenerService {
         parameters.put("userName", user.getUserName());
         parameters.put("authToken", user.getAuthToken());
         parameters.put("appVersion", Utils.getAppVersionName(context));
+        parameters.put("requestMethodName", requestMethodName);
         parameters.put("requestId", requestId);
         parameters.put("response", response);
         parameters.put("errorMessage", errorMessage);
