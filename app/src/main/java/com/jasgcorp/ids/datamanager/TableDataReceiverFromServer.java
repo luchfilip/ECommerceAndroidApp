@@ -78,21 +78,17 @@ public class TableDataReceiverFromServer extends Thread {
 	}
 
     private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
-        try {
-            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-            parameters.put("authToken", mUser.getAuthToken());
-            parameters.put("userGroupName", mUser.getUserGroup());
-            parameters.put("userId", mUser.getServerUserId());
-            ConsumeWebService a = new ConsumeWebService(context,
-                    mUser.getServerAddress(),
-                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                    "getGlobalTablesToSync",
-                    "urn:getGlobalTablesToSync",
-                    parameters);
-            return (List<SoapPrimitive>) a.getWSResponse();
-        } catch (Exception e) {
-            throw e;
-        }
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "getGlobalTablesToSync",
+                "urn:getGlobalTablesToSync",
+                parameters);
+        return (List<SoapPrimitive>) a.getWSResponse();
     }
 
 	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
@@ -107,21 +103,17 @@ public class TableDataReceiverFromServer extends Thread {
 	}
 
     private List<SoapPrimitive> getUserTablesToSync() throws Exception {
-        try {
-            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-            parameters.put("authToken", mUser.getAuthToken());
-            parameters.put("userGroupName", mUser.getUserGroup());
-            parameters.put("userId", mUser.getServerUserId());
-            ConsumeWebService a = new ConsumeWebService(context,
-                    mUser.getServerAddress(),
-                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                    "getUserTablesToSync",
-                    "urn:getUserTablesToSync",
-                    parameters);
-            return (List<SoapPrimitive>) a.getWSResponse();
-        } catch (Exception e) {
-            throw e;
-        }
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "getUserTablesToSync",
+                "urn:getUserTablesToSync",
+                parameters);
+        return (List<SoapPrimitive>) a.getWSResponse();
     }
 
 	public void getUserDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
