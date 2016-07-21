@@ -78,7 +78,6 @@
                     android:layout_marginRight="10dp"
                     android:focusable="false"
                     android:textColor="@color/black" />
-
             </LinearLayout>
 
             <LinearLayout

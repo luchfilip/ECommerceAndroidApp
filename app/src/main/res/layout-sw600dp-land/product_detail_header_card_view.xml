@@ -17,7 +17,9 @@
         android:textSize="@dimen/productDetailActivity_productName_text_size"
         android:focusable="false"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp" />
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="4dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,39 +27,53 @@
         android:layout_height="wrap_content"
         android:baselineAligned="false">
 
-        <android.support.design.widget.CoordinatorLayout
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:minWidth="@dimen/product_detail_width"
+            android:minHeight="@dimen/product_detail_height"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:layout_marginBottom="5dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="3dp" >
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/product_detail_height"
-                android:id="@+id/product_image"
-                android:layout_gravity="center_horizontal"
-                android:focusable="false"
-                android:padding="5dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:src="@drawable/ic_zoom_out_map_black_24dp"
-                style='style="@style/image_button_style"' />
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp">
 
-        </android.support.design.widget.CoordinatorLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/product_detail_height"
+                    android:minWidth="@dimen/product_detail_width"
+                    android:id="@+id/product_image"
+                    android:layout_gravity="center_horizontal"
+                    android:focusable="false" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/ic_zoom_out_map_black_24dp"
+                    style='style="@style/image_button_style"' />
+
+            </android.support.design.widget.CoordinatorLayout>
+
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp">
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="3dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,15 +150,15 @@
                             android:focusable="false" />
                     </FrameLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginRight="4dp"
-                        android:id="@+id/share_imageView"
-                        android:background="@drawable/image_dark_shape"
-                        android:src="@drawable/ic_share_black_24dp"
-                        style='style="@style/image_button_style"' />
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:layout_marginRight="4dp"-->
+                        <!--android:id="@+id/share_imageView"-->
+                        <!--android:background="@drawable/image_dark_shape"-->
+                        <!--android:src="@drawable/ic_share_black_24dp"-->
+                        <!--style='style="@style/image_button_style"' />-->
 
                     <ImageView
                         android:layout_width="wrap_content"

@@ -15,6 +15,7 @@
     <dimen name="productLargeDetail_max_image_Height">220dp</dimen>
     <item name="radioButton_scale" format="float" type="integer">0.5</item>
     <dimen name="viewpager_height">200dp</dimen>
+    <dimen name="product_detail_width">220dp</dimen>
     <dimen name="product_detail_height">220dp</dimen>
     <dimen name="mainpage_name_size">20sp</dimen>
     <dimen name="productMinInfo_availability_text_size">13sp</dimen>

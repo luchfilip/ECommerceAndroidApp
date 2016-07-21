@@ -2,6 +2,7 @@
 <resources>
 
     <dimen name="viewpager_height">300dp</dimen>
+    <dimen name="product_detail_width">290dp</dimen>
     <dimen name="product_detail_height">290dp</dimen>
 
     <dimen name="productMinInfo_cardView_Width">200dp</dimen>
