@@ -32,6 +32,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.jasgcorp.ids.utils.DataBaseRemoteManagement;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -215,22 +216,27 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_SQL_QUERY)
                                 && data.containsKey(KEY_PARAM_SQL_QUERY)){
                             try {
+                                User user = null;
                                 if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
                                     String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
                                     if (serverUserId != null) {
-                                        User user = ApplicationUtilities
+                                        user = ApplicationUtilities
                                                 .getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
-                                        if (user != null) {
-
-                                            //TODO: enviar respuesta al servidor
-                                        } else {
+                                        if (user == null) {
                                             throw new Exception("serverUserId is "+serverUserId+" but user is null.");
                                         }
                                     }else{
                                         throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                     }
-                                }else{
-                                    //TODO: enviar respuesta al servidor
+                                }
+                                Object result = DataBaseRemoteManagement
+                                        .getJsonBase64CompressedQueryResult(getApplicationContext(), user, 1000, data.getString(KEY_PARAM_SQL_QUERY));
+                                if (result instanceof String) {
+                                    sendResponseToServer(getApplicationContext(), requestId, (String) result, null);
+                                } else if (result instanceof Exception) {
+                                    throw (Exception) result;
+                                } else {
+                                    throw new Exception("result is null for sql: "+String.valueOf(data.getString(KEY_PARAM_SQL_QUERY)));
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
