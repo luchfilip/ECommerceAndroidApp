@@ -599,32 +599,37 @@ public class MyGcmListenerService extends GcmListenerService {
     /**
      *
      * @param context
+     * @param requestMethodName
      * @param requestId
      * @param response
      * @param errorMessage
      */
     private void sendResponseToServer(Context context, String requestMethodName, int requestId, String response, String errorMessage){
         User user = Utils.getCurrentUser(getApplicationContext());
-        LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
-        parameters.put("serverUserId", user.getServerUserId());
-        parameters.put("userGroup", user.getUserGroup());
-        parameters.put("userName", user.getUserName());
-        parameters.put("authToken", user.getAuthToken());
-        parameters.put("appVersion", Utils.getAppVersionName(context));
-        parameters.put("requestMethodName", requestMethodName);
-        parameters.put("requestId", requestId);
-        parameters.put("response", response);
-        parameters.put("errorMessage", errorMessage);
-        ConsumeWebService a = new ConsumeWebService(context,
-                user.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageUserResponse?wsdl",
-                "insertMessageResponse",
-                "urn:insertMessageResponse",
-                parameters);
-        try{
-            a.getWSResponse();
-        } catch (Exception e){
-            e.printStackTrace();
+        if (user!=null) {
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("serverUserId", user.getServerUserId());
+            parameters.put("userGroup", user.getUserGroup());
+            parameters.put("userName", user.getUserName());
+            parameters.put("authToken", user.getAuthToken());
+            parameters.put("appVersion", Utils.getAppVersionName(context));
+            parameters.put("requestMethodName", requestMethodName);
+            parameters.put("requestId", requestId);
+            parameters.put("response", response);
+            parameters.put("errorMessage", errorMessage);
+            ConsumeWebService a = new ConsumeWebService(context,
+                    user.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageUserResponse?wsdl",
+                    "insertMessageResponse",
+                    "urn:insertMessageResponse",
+                    parameters);
+            try{
+                a.getWSResponse();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            Log.e(TAG, "sendResponseToServer(...) - user is null");
         }
     }
 
