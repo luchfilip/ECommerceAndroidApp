@@ -12,6 +12,7 @@ import org.ksoap2.serialization.SoapPrimitive;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
@@ -279,7 +280,10 @@ public class TableDataReceiverFromServer extends Thread {
 					//Fin de preparacion de la data que se insertara
 				}
 				db.setTransactionSuccessful();
-			} catch (Exception e) {
+			} catch (SQLiteException e) {
+                e.printStackTrace();
+                reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
+            } catch (Exception e) {
 				e.printStackTrace();
                 throw e;
 			} finally {
