@@ -358,7 +358,7 @@ public class FolderDataReceiverFromServer extends Thread {
 	//			e.printStackTrace();
 	//		}
 	//		if(dataReceived.has("4")){
-	//			//ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.ungzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP),
+	//			//ApplicationUtilities.saveToFile(Base64.decode(ApplicationUtilities.unGzip(Base64.decode(dataReceived.getString("4"), Base64.GZIP)), Base64.GZIP),
 	//			//								folder.getPath().toString()+"/"+dataReceived.getString("2"));
 	//
 	//			ApplicationUtilities.saveToFile(Base64.decode(dataReceived.getString("4"), Base64.GZIP),

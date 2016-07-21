@@ -848,7 +848,7 @@ public class ApplicationUtilities {
      * @return
      * @throws Exception
      */
-    public static String ungzip(byte[] bytes) throws Exception{
+    public static String unGzip(byte[] bytes) throws Exception{
         InputStreamReader isr = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8");
         StringWriter sw = new StringWriter();
         char[] chars = new char[1024];
@@ -1438,12 +1438,12 @@ public class ApplicationUtilities {
     	MatrixCursor cursor = null;
 		int counterEntireCompressedData = 0;
 		int counter = 0;
-		JSONArray jsonArray = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(data, Base64.GZIP)));
+		JSONArray jsonArray = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(data, Base64.GZIP)));
 		Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
 		if(keys.hasNext()){
 			int columnCount = 0;
 			Object columnValues[] = null;
-			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
 			HashMap<String, String> colsIndex;
 			SparseArray <String> colsType;
 			
@@ -1484,7 +1484,7 @@ public class ApplicationUtilities {
 				if(++counter>=jsonArray2.length()){
 					if(keys.hasNext()){
 						counter = 0;
-						jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+						jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
 						if(jsonArray2.length()<1){
 							break;
 						}
@@ -1494,7 +1494,7 @@ public class ApplicationUtilities {
 						}else{
 							counter = 0;
 							keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-							jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
 							if(jsonArray2.length()<1){
 								break;
 							}

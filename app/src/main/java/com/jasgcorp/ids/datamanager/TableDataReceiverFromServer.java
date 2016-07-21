@@ -271,11 +271,11 @@ public class TableDataReceiverFromServer extends Thread {
 	public void insertDataFromWSResultData(String data, String insertSentence, Context context, User user) throws Exception {
 		int counterEntireCompressedData = 0;
 		int counter = 0;
-		JSONArray jsonArray = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(data, Base64.GZIP)));
+		JSONArray jsonArray = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(data, Base64.GZIP)));
 		Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
 		if(keys.hasNext()){
 			int columnCount = 0;
-			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
 			try{
 				counter = 1;
 				Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
@@ -304,7 +304,7 @@ public class TableDataReceiverFromServer extends Thread {
 					if (++counter >= jsonArray2.length()) {
 						if (keys.hasNext()) {
 							counter = 0;
-							jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
 							if (jsonArray2.length() < 1) {
 								break;
 							}
@@ -314,7 +314,7 @@ public class TableDataReceiverFromServer extends Thread {
 							} else {
 								counter = 0;
 								keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-								jsonArray2 = new JSONArray(ApplicationUtilities.ungzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+								jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
 								if (jsonArray2.length() < 1) {
 									break;
 								}

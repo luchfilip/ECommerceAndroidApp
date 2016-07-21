@@ -75,7 +75,7 @@ public class DataBaseRemoteManagement {
                         } catch (JSONException e) {	}
                     }
                     preview.add(json.toString());
-                    //Si el tamano del archivo es mayor a batchMaxLenght Bytes
+                    //Si el tamano del archivo es mayor a batchMaxLength Bytes
                     if(preview.toString().getBytes("UTF-8").length>batchMaxLength){
                         if(result.isEmpty()){
                             result.add((new StringBuilder("{\"")).append(result.size()).append("\":\"")
