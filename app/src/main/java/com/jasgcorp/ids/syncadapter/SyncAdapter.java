@@ -16,8 +16,6 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
@@ -237,9 +235,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     	        		//notify synchronization canceled
     	        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_canceled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
         				throw new OperationCanceledException(e.getMessage());
-    	        	}catch(Exception e){
-        				throw e;
-        			}finally{
+    	        	}finally{
         				if(result!=null){
         					result.close();
         				}
@@ -277,10 +273,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		            		    Thread.currentThread().interrupt();
 		            		}
 	        			}
-        			}catch(IOException e){
-        				e.printStackTrace();
-        				throw e;
-        			}catch(Exception e){
+        			} catch(Exception e){
         				e.printStackTrace();
         				throw e;
         			}finally{
