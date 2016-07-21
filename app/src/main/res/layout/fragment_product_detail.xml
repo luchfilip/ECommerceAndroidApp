@@ -45,46 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
-                android:background="@drawable/shape"
-                android:id="@+id/card_product_details"
-                android:layout_margin="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/product_details_label"
-                    android:textSize="@dimen/productDetailActivity_details_label_text_size"
-                    android:layout_marginBottom="2dp"
-                    android:textColor="@color/label_color"
-                    android:textStyle="bold"
-                    android:focusable="false" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_description"
-                    android:textSize="@dimen/productDetailActivity_details_text_size"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:focusable="false"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_purpose"
-                    android:textSize="@dimen/productDetailActivity_details_text_size"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:focusable="false"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="false"
                 android:id="@+id/related_shopping_products_card_view"
                 android:background="@drawable/shape"
                 android:layout_margin="4dp">

@@ -49,7 +49,7 @@ public class OrderBR {
         return String.format(new Locale("es", "VE"), "%,.2f", getTotalAmount(orderLines));
     }
 
-    public static void validateQuantityOrderedInOrderLines(ArrayList<OrderLine> orderLines, Context context, User user) {
+    public static void validateQuantityOrderedInOrderLines(Context context, User user, ArrayList<OrderLine> orderLines) {
         if (orderLines!=null && !orderLines.isEmpty()) {
             ProductDB productDB = new ProductDB(context, user);
             for (OrderLine orderLine : orderLines) {
@@ -63,8 +63,7 @@ public class OrderBR {
         }
     }
 
-    public static String isValidQuantityOrderedInOrderLines(ArrayList<OrderLine> orderLines, Context context, User user) {
-        StringBuilder result = new StringBuilder();
+    public static String isValidQuantityOrderedInOrderLines(Context context, User user, ArrayList<OrderLine> orderLines) {
         if (orderLines!=null && !orderLines.isEmpty()) {
             ProductDB productDB = new ProductDB(context, user);
             for (OrderLine orderLine : orderLines) {
@@ -74,10 +73,10 @@ public class OrderBR {
                 //esa linea del pedido tiene error en la cantidad pedida.
                 if ((orderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
                         || (orderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0)) {
-                    result.append("Error en cantidad pedida del articulo "+product.getName()+".\n");
+                    return "Error en cantidad pedida del articulo "+product.getName();
                 }
             }
         }
-        return result.toString();
+        return null;
     }
 }

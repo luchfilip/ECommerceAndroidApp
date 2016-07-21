@@ -129,7 +129,7 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_description)).setText(mProduct.getDescription());
                                 }
 
-                                if(!TextUtils.isEmpty(mProduct.getDescription()) || !TextUtils.isEmpty(mProduct.getPurpose())) {
+//                                if(!TextUtils.isEmpty(mProduct.getDescription()) || !TextUtils.isEmpty(mProduct.getPurpose())) {
                                     if (!TextUtils.isEmpty(mProduct.getDescription())) {
                                         ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
                                                 mProduct.getDescription()));
@@ -142,9 +142,10 @@ public class ProductDetailFragment extends Fragment {
                                     } else {
                                         view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
                                     }
-                                }else{
-                                    view.findViewById(R.id.card_product_details).setVisibility(View.GONE);
-                                }
+//                                }else{
+//                                    view.findViewById(R.id.product_description).setVisibility(View.GONE);
+//                                    view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
+//                                }
 
                                 if (mProduct.getProductBrand() != null && mProduct.getProductBrand().getDescription() != null) {
                                     ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
@@ -334,6 +335,9 @@ public class ProductDetailFragment extends Fragment {
             case R.id.action_share:
                 mShareActionProvider.setShareIntent(mShareIntent);
                 break;
+            case R.id.search:
+                startActivity(new Intent(getContext(), SearchResultsActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

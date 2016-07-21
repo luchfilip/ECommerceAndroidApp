@@ -70,10 +70,12 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="2dp"
-            android:layout_marginLeft="3dp">
+            android:layout_marginLeft="3dp"
+            android:minHeight="@dimen/product_detail_height"
+            android:layout_gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -92,6 +94,22 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailActivity_productBrand_text_size"
                 android:maxLines="2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_description"
+                android:textSize="@dimen/productDetailActivity_description_text_size"
+                android:focusable="false"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_purpose"
+                android:textSize="@dimen/productDetailActivity_description_text_size"
+                android:focusable="false"
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:orientation="vertical"

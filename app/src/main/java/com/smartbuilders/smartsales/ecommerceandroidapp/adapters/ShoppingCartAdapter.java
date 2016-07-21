@@ -83,7 +83,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         mContext = context;
         mFragment = shoppingCartFragment;
         mDataset = data;
-        OrderBR.validateQuantityOrderedInOrderLines(mDataset, mContext, mUser);
+        OrderBR.validateQuantityOrderedInOrderLines(mContext, mUser, mDataset);
         mIsShoppingCart = isShoppingCart;
         mUser = user;
         orderLineDB = new OrderLineDB(context, user);
@@ -232,7 +232,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     public void setData(ArrayList<OrderLine> orderLines) {
         mDataset = orderLines;
-        OrderBR.validateQuantityOrderedInOrderLines(mDataset, mContext, mUser);
+        OrderBR.validateQuantityOrderedInOrderLines(mContext, mUser, mDataset);
         notifyDataSetChanged();
     }
 }

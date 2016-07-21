@@ -50,7 +50,7 @@ public class OrderLineDB {
         return addOrderLine(productId, 0, 0, 0, WISH_LIST_DOC_TYPE, null);
     }
 
-    public ArrayList<OrderLine> getShoppingCart(){
+    public ArrayList<OrderLine> getActiveOrderLinesFromShoppingCart(){
         return getOrderLines(SHOPPING_CART_DOC_TYPE, null);
     }
 

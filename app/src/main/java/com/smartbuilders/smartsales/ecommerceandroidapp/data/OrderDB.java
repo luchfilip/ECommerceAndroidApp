@@ -35,7 +35,7 @@ public class OrderDB {
     }
 
     public String createOrderFromShoppingCart(int businessPartnerId){
-        return createOrder(null, businessPartnerId, (new OrderLineDB(mContext, mUser)).getShoppingCart(), false);
+        return createOrder(null, businessPartnerId, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
     }
 
     public ArrayList<Order> getActiveOrders(){

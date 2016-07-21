@@ -18,7 +18,6 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerceandroidapp.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderBR;
-import com.smartbuilders.smartsales.ecommerceandroidapp.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.data.OrderDB;
@@ -104,7 +103,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     mUser = Utils.getCurrentUser(getContext());
 
                     if (mIsShoppingCart) {
-                        mOrderLines = (new OrderLineDB(getContext(), mUser)).getShoppingCart();
+                        mOrderLines = (new OrderLineDB(getContext(), mUser)).getActiveOrderLinesFromShoppingCart();
                     }else {
                         if(mOrderLines==null){
                             mOrderLines = (new OrderLineDB(getContext(), mUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
@@ -200,10 +199,13 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 String result = null;
                 try {
                     OrderDB orderDB = new OrderDB(getContext(), mUser);
-                    if (mSalesOrderId > 0) {
-                        result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
-                    } else {
-                        result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                    result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
+                    if (result==null) {
+                        if (mSalesOrderId > 0) {
+                            result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
+                        } else {
+                            result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -361,7 +363,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public void reloadShoppingCart(){
         setHeader();
         if(mIsShoppingCart){
-            reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getShoppingCart());
+            reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart());
         }else{
             mShoppingCartAdapter.setData(mOrderLines);
         }
