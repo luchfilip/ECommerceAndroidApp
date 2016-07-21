@@ -1,22 +1,25 @@
 package com.jasgcorp.ids.datamanager;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import net.iharder.Base64;
 
@@ -55,234 +58,178 @@ public class TableDataReceiverFromServer extends Thread {
 	public void run() {
 		Log.d(TAG, "run()");
 		try {
+            syncPercentage = 0;
             long initTime = System.currentTimeMillis();
-            sync = Utils.appRequireInitialLoadOfGlobalData(context);
 			if(sync){
-				loadInitialGlobalDataFromWS(context);
+				getGlobalDataFromWS(context, getGlobalTablesToSync());
 			}
-			sync = Utils.appRequireInitialLoadOfUserData(context, mUser);
 			if(sync){
-				loadInitialUserDataFromWS(context, mUser);
+				getUserDataFromWS(context, mUser, getUserTablesToSync());
 			}
+            syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
+            reportSyncError(e.getMessage(), e.getClass().getName());
 			exceptionMessage = e.getMessage();
 			exceptionClass = e.getClass().getName();
 		}
 		sync = false;
 	}
 
-	public void loadInitialGlobalDataFromWS(Context context) throws Exception {
-		syncPercentage = 0;
-        if(sync){
-            execRemoteQueryAndInsert(context, null,
-                    "select APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
-                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                        " from APP_PARAMETER where IS_ACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO APP_PARAMETER (APP_PARAMETER_ID, PARAMETER_DESCRIPTION, " +
-                            " TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            syncPercentage = 5;
+    private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
+        try {
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("authToken", mUser.getAuthToken());
+            parameters.put("userGroupName", mUser.getUserGroup());
+            parameters.put("userId", mUser.getServerUserId());
+            ConsumeWebService a = new ConsumeWebService(context,
+                    mUser.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "getGlobalTablesToSync",
+                    "urn:getGlobalTablesToSync",
+                    parameters);
+            return (List<SoapPrimitive>) a.getWSResponse();
+        } catch (Exception e) {
+            throw e;
         }
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select COMPANY_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, " +
-                        " EMAIL_ADDRESS, CONTACT_CENTER_PHONE_NUMBER, PHONE_NUMBER, FAX_NUMBER, WEB_PAGE " +
-							" from COMPANY where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO COMPANY (COMPANY_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
-                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, CONTACT_CENTER_PHONE_NUMBER, PHONE_NUMBER, FAX_NUMBER, WEB_PAGE) " +
-							" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			syncPercentage = 10;
-		}
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select CURRENCY_ID, COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX " +
-							" from CURRENCY where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO CURRENCY (CURRENCY_ID, COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX) " +
-							" VALUES (?, ?, ?, ?, ?, ?)");
-			syncPercentage = 15;
-		}
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, DESCRIPTION, PURPOSE, " +
-						" OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, COMMERCIAL_PACKAGE_UNITS, " +
-						" COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID " +
-					" from PRODUCT where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT (PRODUCT_ID, SUBCATEGORY_ID, BRAND_ID, NAME, " +
-						" DESCRIPTION, PURPOSE, OBSERVATION, REFERENCE_ID, ORIGIN, INTERNAL_CODE, " +
-						" COMMERCIAL_PACKAGE_UNITS, COMMERCIAL_PACKAGE, INVENTORY_PACKAGE_UNITS, " +
-						" INVENTORY_PACKAGE, LAST_RECEIVED_DATE, PRODUCT_TAX_ID) " +
-					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            syncPercentage = 20;
-		}
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select BRAND_ID, NAME, DESCRIPTION from BRAND where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO BRAND (BRAND_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-            syncPercentage = 25;
+    }
+
+	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
+        if (tablesToSync!=null && !tablesToSync.isEmpty()) {
+            for (SoapPrimitive tableToSync : tablesToSync) {
+                if(sync) {
+                    execRemoteQueryAndInsert(context, null, tableToSync.toString());
+                    syncPercentage++;
+                }
+            }
         }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select CATEGORY_ID, NAME, DESCRIPTION from Category where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO CATEGORY (CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?)");
-            syncPercentage = 30;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select MAINPAGE_PRODUCT_ID, MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID, PRIORITY from MAINPAGE_PRODUCT where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO MAINPAGE_PRODUCT (MAINPAGE_PRODUCT_ID, MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID, PRIORITY) VALUES (?, ?, ?, ?)");
-            syncPercentage = 40;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select MAINPAGE_PRODUCT_SECTION_ID, NAME, DESCRIPTION, PRIORITY from MAINPAGE_PRODUCT_SECTION where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO MAINPAGE_PRODUCT_SECTION (MAINPAGE_PRODUCT_SECTION_ID, NAME, DESCRIPTION, PRIORITY) VALUES (?, ?, ?, ?)");
-            syncPercentage = 50;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"SELECT PRODUCT_ID, PRODUCT_PRICE_ID, PRICE, AVAILABILITY, CURRENCY_ID, PRIORITY FROM PRODUCT_PRICE_AVAILABILITY WHERE IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_PRICE_AVAILABILITY (PRODUCT_ID, PRODUCT_PRICE_ID, PRICE, AVAILABILITY, CURRENCY_ID, PRIORITY) VALUES (?, ?, ?, ?, ?, ?)");
-            syncPercentage = 60;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select PRODUCT_ID, FILE_NAME, PRIORITY from PRODUCT_IMAGE where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_IMAGE (PRODUCT_ID, FILE_NAME, PRIORITY) VALUES (?, ?, ?)");
-            syncPercentage = 70;
-        }
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select PRODUCT_ID, RATING from PRODUCT_RATING where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_RATING (PRODUCT_ID, RATING) VALUES (?, ?)");
-			syncPercentage = 75;
-		}
-        if(sync){
-            execRemoteQueryAndInsert(context, null,
-                    "select PRODUCT_TAX_ID, PERCENTAGE, NAME from PRODUCT_TAX where IS_ACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO PRODUCT_TAX (PRODUCT_TAX_ID, PERCENTAGE, NAME) VALUES (?, ?, ?)");
-            syncPercentage = 80;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION from SUBCATEGORY where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO SUBCATEGORY (SUBCATEGORY_ID, CATEGORY_ID, NAME, DESCRIPTION) VALUES (?, ?, ?, ?)");
-            syncPercentage = 85;
-        }
-        if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select PRODUCT_ID, PRODUCT_RELATED_ID, TIMES from PRODUCT_SHOPPING_RELATED where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO PRODUCT_SHOPPING_RELATED (PRODUCT_ID, PRODUCT_RELATED_ID, TIMES) VALUES (?, ?, ?)");
-            syncPercentage = 90;
-        }
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME from BANNER where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO BANNER (BANNER_ID, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID, IMAGE_FILE_NAME) VALUES (?, ?, ?, ?, ?, ?)");
-			syncPercentage = 95;
-		}
-		if(sync){
-			execRemoteQueryAndInsert(context, null,
-					"select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
-							" BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, " +
-							" PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
-						" from BRAND_PROMOTIONAL_CARD where IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO BRAND_PROMOTIONAL_CARD (BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, " +
-							" IMAGE_FILE_NAME, PROMOTIONAL_TEXT, BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, " +
-							" BACKGROUND_B_COLOR, PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, " +
-							" PROMOTIONAL_TEXT_B_COLOR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			syncPercentage = 96;
-		}
 	}
 
-	public void loadInitialUserDataFromWS(Context context, User user) throws Exception {
-		syncPercentage = 0;
-		if(sync){
-			execRemoteQueryAndInsert(context, user,
-					"select BUSINESS_PARTNER_ID, PRODUCT_ID, PRIORITY " +
-                    " from RECOMMENDED_PRODUCT " +
-                    " where BUSINESS_PARTNER_ID = "+user.getBusinessPartnerId()+" AND IS_ACTIVE = 'Y'",
-					"INSERT OR REPLACE INTO RECOMMENDED_PRODUCT (BUSINESS_PARTNER_ID, PRODUCT_ID, PRIORITY) " +
-                        " VALUES (?, ?, ?)");
-			syncPercentage = 97;
-		}
-        if(sync){
-            execRemoteQueryAndInsert(context, user,
-                    "select USER_ID, APP_PARAMETER_ID, PARAMETER_DESCRIPTION, TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, " +
-                            " BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE " +
-                            " from USER_APP_PARAMETER where USER_ID = "+user.getServerUserId()+" AND IS_ACTIVE = 'Y'",
-                    "INSERT OR REPLACE INTO USER_APP_PARAMETER (USER_ID, APP_PARAMETER_ID, PARAMETER_DESCRIPTION, " +
-                            " TEXT_VALUE, INTEGER_VALUE, DOUBLE_VALUE, BOOLEAN_VALUE, DATE_VALUE, DATETIME_VALUE) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            syncPercentage = 98;
+    private List<SoapPrimitive> getUserTablesToSync() throws Exception {
+        try {
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("authToken", mUser.getAuthToken());
+            parameters.put("userGroupName", mUser.getUserGroup());
+            parameters.put("userId", mUser.getServerUserId());
+            ConsumeWebService a = new ConsumeWebService(context,
+                    mUser.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "getUserTablesToSync",
+                    "urn:getUserTablesToSync",
+                    parameters);
+            return (List<SoapPrimitive>) a.getWSResponse();
+        } catch (Exception e) {
+            throw e;
         }
-		if(sync){
-			execRemoteQueryAndInsert(context, user,
-					"select BUSINESS_PARTNER_ID, USER_ID, INTERNAL_CODE, NAME, COMMERCIAL_NAME, TAX_ID, " +
-                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
-                    " from BUSINESS_PARTNER where USER_ID = "+user.getServerUserId()+" AND IS_ACTIVE = 'Y' ",
-					"INSERT OR REPLACE INTO BUSINESS_PARTNER (BUSINESS_PARTNER_ID, USER_ID, INTERNAL_CODE, " +
-                        " NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			syncPercentage = 100;
-		}
+    }
+
+	public void getUserDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
+        if (tablesToSync!=null && !tablesToSync.isEmpty()) {
+            for (SoapPrimitive tableToSync : tablesToSync) {
+                if(sync){
+                    execRemoteQueryAndInsert(context, user, tableToSync.toString());
+                    syncPercentage++;
+                }
+            }
+        }
 	}
 
 	/**
 	 *
 	 * @param context
 	 * @param user
-	 * @param sql
-	 * @param insertSentence
+	 * @param tableName
 	 */
-	private void execRemoteQueryAndInsert(Context context, User user, String sql,
-                                          String insertSentence) throws Exception {
-		LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-		parameters.put("authToken", mUser.getAuthToken());
-		parameters.put("userId", mUser.getServerUserId());
-		parameters.put("sql", sql);
-		ConsumeWebService a =
-                new ConsumeWebService(context,
+	private void execRemoteQueryAndInsert(Context context, User user, String tableName) throws Exception {
+        Cursor c = null;
+        try{
+            if (user!=null) {
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                        null, "select count(*) from " + tableName, null, null);
+            } else {
+                c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                        "select count(*) from " + tableName, null, null);
+            }
+            //Se verifica la cantidad de resgistros de la tabla para luego usarlo como dato del
+            //lado del servidor
+            if(c!=null && c.moveToNext()) {
+                LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+                parameters.put("authToken", mUser.getAuthToken());
+                parameters.put("userGroupName", mUser.getUserGroup());
+                parameters.put("userId", mUser.getServerUserId());
+                parameters.put("userBusinessPartnerId", mUser.getBusinessPartnerId());
+                parameters.put("tableName", tableName);
+                parameters.put("tableCount", c.getInt(0));
+                ConsumeWebService a = new ConsumeWebService(context,
                         mUser.getServerAddress(),
-                        "/IntelligentDataSynchronizer/services/ManageRemoteDBAccess?wsdl",
-                        "executeQuery",
-                        "urn:executeQuery",
+                        "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                        "getDataForTable",
+                        "urn:getDataForTable",
                         parameters);
-        Object result = a.getWSResponse();
-        if (result instanceof SoapPrimitive) {
-            insertDataFromWSResultData(result.toString(), insertSentence, context, user);
-        } else if(result instanceof Exception) {
-            throw (Exception) result;
-        } else if (result!=null) {
-            throw new Exception("Error while executing execQueryRemoteDB("+mUser.getServerAddress()+", "+sql+"), ClassCastException.");
-        } else {
-            throw new Exception("Error while executing execQueryRemoteDB("+mUser.getServerAddress()+", "+sql+"), result is null.");
+                Object result = a.getWSResponse();
+                if (result instanceof SoapPrimitive) {
+                    try {
+                        insertDataFromWSResultData(result.toString(), tableName, context, user);
+                    } catch (IOException e) {
+                        if (!result.toString().equals("NOTHING_TO_SYNC")){
+                            throw e;
+                        }
+                    }
+                } else if(result instanceof Exception) {
+                    throw (Exception) result;
+                } else if (result!=null) {
+                    throw new Exception("Error while executing execRemoteQueryAndInsert("+mUser.getServerAddress()+", "+tableName+"), ClassCastException.");
+                } else {
+                    throw new Exception("Error while executing execRemoteQueryAndInsert("+mUser.getServerAddress()+", "+tableName+"), result is null.");
+                }
+            }
+        } finally {
+            if (c!=null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
 	}
 
 	/**
 	 *
 	 * @param data
-	 * @param insertSentence
+	 * @param tableName
 	 * @param context
 	 * @throws Exception
 	 */
-	public void insertDataFromWSResultData(String data, String insertSentence, Context context, User user) throws Exception {
+	public void insertDataFromWSResultData(String data, String tableName, Context context, User user) throws Exception {
 		int counterEntireCompressedData = 0;
-		int counter = 0;
+		int counter;
 		JSONArray jsonArray = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(data, Base64.GZIP)));
 		Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
 		if(keys.hasNext()){
 			int columnCount = 0;
-			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray
+                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+			StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
 			try{
-				counter = 1;
+				counter = 0;
 				Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
 				while(keysTemp.hasNext()){
-					keysTemp.next();
+					if(columnCount==0){
+						insertSentence.append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+					} else {
+						insertSentence.append(", ").append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+					}
 					columnCount++;
 				}
+				insertSentence.append(") VALUES (");
+				for (int i = 0; i<columnCount; i++) {
+					insertSentence.append((i==0) ? "?" : ", ?");
+				}
+				insertSentence.append(")");
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -297,14 +244,16 @@ public class TableDataReceiverFromServer extends Thread {
 				    db = (new DatabaseHelper(context, user)).getWritableDatabase();
                 }
 
-				statement = db.compileStatement(insertSentence);
+				statement = db.compileStatement(insertSentence.toString());
 				db.beginTransaction();
+                counter = 1;
 				//Se itera a traves de la data
 				while (counter <= jsonArray2.length()) {
 					if (++counter >= jsonArray2.length()) {
 						if (keys.hasNext()) {
 							counter = 0;
-							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64
+                                    .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
 							if (jsonArray2.length() < 1) {
 								break;
 							}
@@ -314,7 +263,8 @@ public class TableDataReceiverFromServer extends Thread {
 							} else {
 								counter = 0;
 								keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-								jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+								jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64
+                                        .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
 								if (jsonArray2.length() < 1) {
 									break;
 								}
@@ -363,6 +313,26 @@ public class TableDataReceiverFromServer extends Thread {
 			}
 		}
 	}
+
+    private void reportSyncError(String errorMessage, String exceptionClass) {
+        try{
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("authToken", mUser.getAuthToken());
+            parameters.put("userGroupName", mUser.getUserGroup());
+            parameters.put("userId", mUser.getServerUserId());
+            parameters.put("errorMessage", errorMessage);
+            parameters.put("exceptionClass", exceptionClass);
+            ConsumeWebService a = new ConsumeWebService(context,
+                    mUser.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "reportSyncError",
+                    "urn:reportSyncError",
+                    parameters);
+            a.getWSResponse();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	public float getSyncPercentage() {
 		return syncPercentage;

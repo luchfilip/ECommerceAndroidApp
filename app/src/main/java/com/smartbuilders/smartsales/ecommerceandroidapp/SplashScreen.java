@@ -47,7 +47,6 @@ public class SplashScreen extends AppCompatActivity {
     private boolean finishActivityOnResultOperationCanceledException;
     private User mCurrentUser;
     private int mSynchronizationState;
-    private String mSyncErrorMessage;
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
         @Override
@@ -78,8 +77,7 @@ public class SplashScreen extends AppCompatActivity {
                                 mSynchronizationState = SYNC_ERROR;
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
                                 if(extras.containsKey(SyncAdapter.LOG_MESSAGE_DETAIL)) {
-                                    mSyncErrorMessage = String.valueOf(extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL));
-                                    ((TextView) findViewById(R.id.error_message)).setText(mSyncErrorMessage);
+                                    ((TextView) findViewById(R.id.error_message)).setText(String.valueOf(extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
                                 }
                                 findViewById(R.id.progressContainer).setVisibility(View.GONE);
                             }
@@ -279,30 +277,31 @@ public class SplashScreen extends AppCompatActivity {
         mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
-        if (mCurrentUser!=null && (Utils.appRequireInitialLoadOfGlobalData(this)
-                || Utils.appRequireInitialLoadOfUserData(this, mCurrentUser))) {
-                if(NetworkConnectionUtilities.isOnline(this)
-                        /*&& (NetworkConnectionUtilities.isWifiConnected(this)||NetworkConnectionUtilities.isMobileConnected(this))*/) {
-                    findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                    if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
-                        ApplicationUtilities.initSyncByAccount(this, account);
-                        mSynchronizationState = SYNC_RUNNING;
+        if(mCurrentUser!=null){
+            if (Utils.appRequireInitialLoad(this)) {
+                    if(NetworkConnectionUtilities.isOnline(this)
+                            /*&& (NetworkConnectionUtilities.isWifiConnected(this)||NetworkConnectionUtilities.isMobileConnected(this))*/) {
+                        findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                        if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                            ApplicationUtilities.initSyncByAccount(this, account);
+                            mSynchronizationState = SYNC_RUNNING;
+                        }
+                    } else {
+                        //show network connection unavailable error.
+                        Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
+                        //TODO: mostrar en pantalla error de conexion
+                        findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                        ((TextView) findViewById(R.id.error_message)).setText(R.string.network_connection_unavailable);
+                        findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                        mSynchronizationState = SYNC_ERROR;
                     }
-                } else {
-                    //show network connection unavailable error.
-                    Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
-                    //TODO: mostrar en pantalla error de conexion
-                    findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.error_message)).setText(R.string.network_connection_unavailable);
-                    findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                    mSynchronizationState = SYNC_ERROR;
+            } else {
+                mSynchronizationState = SYNC_FINISHED;
+                if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                    ApplicationUtilities.initSyncByAccount(this, account);
                 }
-        } else if (mCurrentUser!=null) {
-            mSynchronizationState = SYNC_FINISHED;
-            if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
-                ApplicationUtilities.initSyncByAccount(this, account);
+                initApp();
             }
-            initApp();
         } else {
             //TODO: mostrar error en pantalla
             //startActivity(new Intent(this, SplashScreen.class));

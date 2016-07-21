@@ -39,12 +39,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
                     " PRIMARY KEY(USER_ID, USER_GROUP))";
 
-    private static final String CREATE_USER_PROFILE_TABLE 	=
-            "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
-                    "USER_PROFILE_ID INTEGER NOT NULL, " +
-                    " NAME VARCHAR(255), " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
-                    " PRIMARY KEY(USER_PROFILE_ID))";
+    //private static final String CREATE_USER_PROFILE_TABLE 	=
+    //        "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
+    //                "USER_PROFILE_ID INTEGER NOT NULL, " +
+    //                " NAME VARCHAR(255), " +
+    //                " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
+    //                " PRIMARY KEY(USER_PROFILE_ID))";
 
 	public static final String CREATE_PRODUCT =
             "CREATE TABLE IF NOT EXISTS PRODUCT (" +
@@ -459,7 +459,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		if(this.dataBaseName.equals(DATABASE_NAME)){
 			db.execSQL(CREATE_USER_TABLE);
-            db.execSQL(CREATE_USER_PROFILE_TABLE);
+            //db.execSQL(CREATE_USER_PROFILE_TABLE);
             db.execSQL(CREATE_PRODUCT);
             db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
             db.execSQL(CREATE_PRODUCT_IMAGE);
