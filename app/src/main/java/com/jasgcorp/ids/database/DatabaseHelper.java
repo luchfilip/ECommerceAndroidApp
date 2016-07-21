@@ -315,9 +315,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID))";
 
-    public static final String CREATE_ECOMMERCE_ORDERLINE =
-            "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDERLINE (" +
-                    "ECOMMERCE_ORDERLINE_ID INTEGER NOT NULL, " +
+    public static final String CREATE_ECOMMERCE_ORDER_LINE =
+            "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER_LINE (" +
+                    "ECOMMERCE_ORDER_LINE_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_ORDER_ID INTEGER DEFAULT NULL, " +
@@ -333,7 +333,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (ECOMMERCE_ORDERLINE_ID, USER_ID))";
+                    " PRIMARY KEY (ECOMMERCE_ORDER_LINE_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_SALES_ORDER =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER (" +
@@ -355,9 +355,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " PRIMARY KEY (ECOMMERCE_SALES_ORDER_ID, USER_ID))";
 
-    public static final String CREATE_ECOMMERCE_SALES_ORDERLINE =
-            "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDERLINE (" +
-                    "ECOMMERCE_SALES_ORDERLINE_ID INTEGER NOT NULL, " +
+    public static final String CREATE_ECOMMERCE_SALES_ORDER_LINE =
+            "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER_LINE (" +
+                    "ECOMMERCE_SALES_ORDER_LINE_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
                     " ECOMMERCE_SALES_ORDER_ID INTEGER DEFAULT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
@@ -373,7 +373,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
-                    " PRIMARY KEY (ECOMMERCE_SALES_ORDERLINE_ID, USER_ID))";
+                    " PRIMARY KEY (ECOMMERCE_SALES_ORDER_LINE_ID, USER_ID))";
 
     public static final String CREATE_RECENT_SEARCH =
             "CREATE TABLE IF NOT EXISTS RECENT_SEARCH (" +
@@ -480,16 +480,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
             db.execSQL(CREATE_APP_PARAMETER);
 		}else{
-            //db.execSQL(CREATE_IDS_INCOMING_FILE_SYNC);
-            //db.execSQL(CREATE_IDS_OUTGOING_FILE_SYNC);
             db.execSQL(CREATE_LOG_TABLE);
             db.execSQL(CREATE_SCHEDULER_TABLE);
             db.execSQL(CREATE_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_APP_PARAMETER);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
-            db.execSQL(CREATE_ECOMMERCE_ORDERLINE);
+            db.execSQL(CREATE_ECOMMERCE_ORDER_LINE);
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDER);
-            db.execSQL(CREATE_ECOMMERCE_SALES_ORDERLINE);
+            db.execSQL(CREATE_ECOMMERCE_SALES_ORDER_LINE);
             db.execSQL(CREATE_RECENT_SEARCH);
             db.execSQL(CREATE_PRODUCT_RECENTLY_SEEN);
             db.execSQL(CREATE_RECOMMENDED_PRODUCT);

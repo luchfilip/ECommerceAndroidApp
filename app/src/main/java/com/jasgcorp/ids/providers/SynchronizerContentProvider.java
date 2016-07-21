@@ -9,8 +9,6 @@ import java.util.LinkedHashMap;
 import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
-import com.jasgcorp.ids.datamanager.FolderDataReceiverFromServer;
-import com.jasgcorp.ids.datamanager.FolderDataTransferToServer;
 import com.jasgcorp.ids.datamanager.TableDataReceiverFromServer;
 import com.jasgcorp.ids.datamanager.TableDataTransferToServer;
 import com.jasgcorp.ids.datamanager.ThumbImagesReceiverFromServer;
@@ -68,9 +66,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	private static final int REGISTER_GCM_ID_IN_SERVER	= 8;
 	
 	private static final UriMatcher uriMatcher;
-	
-	private FolderDataTransferToServer dataTransferToServerThread;
-	private FolderDataReceiverFromServer dataReceiveFromServerThread;
+
 	private TableDataTransferToServer tableDataTransferToServerThread;
 	private TableDataReceiverFromServer tableDataReceiveFromServerThread;
 	private ThumbImagesReceiverFromServer thumbImagesReceiverFromServer;
@@ -167,13 +163,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
-				dataTransferToServerThread = new FolderDataTransferToServer(user, getContext());
-				dataReceiveFromServerThread = new FolderDataReceiverFromServer(user, getContext());
 				tableDataTransferToServerThread = new TableDataTransferToServer(user, getContext());
 				tableDataReceiveFromServerThread = new TableDataReceiverFromServer(user, getContext());
 				thumbImagesReceiverFromServer = new ThumbImagesReceiverFromServer(user, getContext());
-				dataTransferToServerThread.start();
-				dataReceiveFromServerThread.start();
 				tableDataTransferToServerThread.start();
 				tableDataReceiveFromServerThread.start();
 				thumbImagesReceiverFromServer.start();
@@ -184,12 +176,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			} catch (Exception e) {
 				exceptionClass = e.getClass().getName();
 				e.printStackTrace();
-				if(dataTransferToServerThread!=null && dataTransferToServerThread.isAlive()){
-					dataTransferToServerThread.stopSynchronization();
-				}
-				if(dataReceiveFromServerThread!=null && dataReceiveFromServerThread.isAlive()){
-					dataReceiveFromServerThread.stopSynchronization();
-				}
 				if(tableDataTransferToServerThread!=null && tableDataTransferToServerThread.isAlive()){
 					tableDataTransferToServerThread.stopSynchronization();
 				}
@@ -219,13 +205,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			if(dataTransferToServerThread!=null && dataTransferToServerThread.isAlive()){
-				dataTransferToServerThread.stopSynchronization();
-			}
-			if(dataReceiveFromServerThread!=null && dataReceiveFromServerThread.isAlive()){
-				dataReceiveFromServerThread.stopSynchronization();
-			}
-			
 			if(tableDataTransferToServerThread!=null && tableDataTransferToServerThread.isAlive()){
 				tableDataTransferToServerThread.stopSynchronization();
 			}
@@ -237,11 +216,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			}
 			
 			//Esperar a que los hilos de sincronizacion se detengan
-			if(dataTransferToServerThread!=null){
-				while(dataTransferToServerThread.isAlive()){ }
-			}else if(dataReceiveFromServerThread!=null){
-				while(dataReceiveFromServerThread.isAlive()){ }
-			}else if(tableDataTransferToServerThread!=null){
+			if(tableDataTransferToServerThread!=null){
 				while(tableDataTransferToServerThread.isAlive()){ }
 			}else if(tableDataReceiveFromServerThread!=null){
 				while(tableDataReceiveFromServerThread.isAlive()){ }
@@ -269,21 +244,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			if(!dataReceiveFromServerThread.isAlive() 
-					&& !dataTransferToServerThread.isAlive()
-					&& !tableDataReceiveFromServerThread.isAlive() 
+			if(!tableDataReceiveFromServerThread.isAlive()
 					&& !tableDataTransferToServerThread.isAlive()
 					&& !thumbImagesReceiverFromServer.isAlive()){
-				if(dataReceiveFromServerThread.getExceptionMessage()!=null){
-					errorMessage = dataReceiveFromServerThread.getExceptionMessage();
-					exceptionClass = dataReceiveFromServerThread.getExceptionClass();
-				}
-				if(dataTransferToServerThread.getExceptionMessage()!=null){
-					errorMessage = errorMessage!=null 
-									? (errorMessage+" | "+dataTransferToServerThread.getExceptionMessage()) 
-									: dataTransferToServerThread.getExceptionMessage();
-					exceptionClass = dataTransferToServerThread.getExceptionClass();
-				}
 				if(tableDataReceiveFromServerThread.getExceptionMessage()!=null){
 					errorMessage = errorMessage!=null 
 									? (errorMessage+" | "+tableDataReceiveFromServerThread.getExceptionMessage()) 
@@ -303,20 +266,12 @@ public class SynchronizerContentProvider extends ContentProvider{
 					exceptionClass = thumbImagesReceiverFromServer.getExceptionClass();
 				}
 
-				if(dataReceiveFromServerThread.getExceptionMessage()==null 
-						&& dataTransferToServerThread.getExceptionMessage()==null
-						&& tableDataReceiveFromServerThread.getExceptionMessage()==null 
+				if(tableDataReceiveFromServerThread.getExceptionMessage()==null
 						&& tableDataTransferToServerThread.getExceptionMessage()==null
 						&& thumbImagesReceiverFromServer.getExceptionMessage()==null){
 					syncPercentage = 100F;
 				}
 			}else{
-				if(dataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
-					syncPercentage = dataReceiveFromServerThread.getSyncPercentage();
-				}
-				if(dataTransferToServerThread.getSyncPercentage()>syncPercentage){
-					syncPercentage = dataTransferToServerThread.getSyncPercentage();
-				}
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
 				}
