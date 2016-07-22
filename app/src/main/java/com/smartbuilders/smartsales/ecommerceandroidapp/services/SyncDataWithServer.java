@@ -7,7 +7,6 @@ import android.util.Log;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import org.ksoap2.serialization.SoapPrimitive;
 
@@ -57,7 +56,7 @@ public class SyncDataWithServer extends IntentService {
                         "syncDataFromClient",
                         "urn:syncDataFromClient",
                         parameters,
-                        Parameter.getConnectionTimeOutValue(getApplicationContext(), user));
+                        2000);
                 Object response =  a.getWSResponse();
                 if(response instanceof SoapPrimitive){
                     Log.w(TAG, "response: " + response.toString());

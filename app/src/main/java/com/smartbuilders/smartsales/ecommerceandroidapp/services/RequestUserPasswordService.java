@@ -9,11 +9,6 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordFragm
 
 import org.ksoap2.serialization.SoapPrimitive;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.LinkedHashMap;
 
 /**

@@ -116,7 +116,7 @@ public class LoadProductsThumbImage extends IntentService {
     private InputStream getHttpConnection(String urlString) throws Exception {
         try {
             HttpURLConnection httpConnection = (HttpURLConnection) (new URL(urlString)).openConnection();
-            httpConnection.setConnectTimeout(1000);
+            httpConnection.setConnectTimeout(2000);
             httpConnection.setRequestMethod("GET");
             httpConnection.connect();
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {

@@ -1,6 +1,5 @@
 package com.jasgcorp.ids.providers;
 
-import java.net.SocketException;
 import java.util.LinkedHashMap;
 
 import org.ksoap2.serialization.SoapPrimitive;
@@ -10,7 +9,6 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUserPasswordService;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
 
 import android.accounts.Account;
@@ -134,7 +132,9 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                         syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, uri.getQueryParameter(KEY_USER_ID));
                         syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION, selection);
                         syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION_ARGS, selectionArgs);
-                        getContext().startService(syncDataIntent);
+                        if (getContext()!=null) {
+                            getContext().startService(syncDataIntent);
+                        }
                     }
 	    		}else{
                     if(mIDSWriteableDB==null){
@@ -150,7 +150,9 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	        case DROP_USER_DB:
 	        	if(uri.getQueryParameter(KEY_USER_DB_NAME)!=null
 					&& uri.getQueryParameter(KEY_USER_SAVE_DB_EXTERNAL_CARD)!=null){
-	    			getContext().deleteDatabase(uri.getQueryParameter(KEY_USER_DB_NAME));
+                    if (getContext()!=null) {
+	    			    getContext().deleteDatabase(uri.getQueryParameter(KEY_USER_DB_NAME));
+                    }
 	    		}else{
 	    			throw new IllegalArgumentException("Incomplete URI " + uri);
 	    		}
@@ -177,7 +179,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	 * @param uri
 	 * @param sql
 	 * @return
-	 * @throws SocketException 
 	 */
 	private Cursor execQueryRemoteDB(Uri uri, String sql) {
 		Cursor cursor;
@@ -224,7 +225,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
 			parameters.put("sql", sql);
