@@ -187,7 +187,7 @@ public class CompanyFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if (mCompany!=null) {
-                                                String result = userCompanyDB.insertUpdateUserCompany(mCompany);
+                                                String result = userCompanyDB.insertUserCompany(mCompany);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();
@@ -204,7 +204,7 @@ public class CompanyFragment extends Fragment {
                                                 company.setEmailAddress(companyEmailAddress.getText().toString());
                                                 company.setPhoneNumber(companyPhoneNumber.getText().toString());
 
-                                                String result = userCompanyDB.insertUpdateUserCompany(company);
+                                                String result = userCompanyDB.updateUserCompany(company);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();

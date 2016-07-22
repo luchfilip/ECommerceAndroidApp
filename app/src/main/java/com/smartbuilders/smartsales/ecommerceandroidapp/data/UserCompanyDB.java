@@ -21,19 +21,42 @@ public class UserCompanyDB {
         this.mUser = user;
     }
 
-    public String insertUpdateUserCompany(Company company) {
+    public String insertUserCompany(Company company) {
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "insert or replace into user_company (USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
+                    "insert into user_company (USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{String.valueOf(mUser.getServerUserId()) ,company.getName(),
                             company.getCommercialName(), company.getTaxId(), company.getAddress(),
                             company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
+            if (rowsAffected <= 0){
+                return "No se insertó o actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    public String updateUserCompany(Company company) {
+        try {
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE user_company SET NAME=?, COMMERCIAL_NAME=?, TAX_ID=?, ADDRESS=?, " +
+                        " CONTACT_PERSON=?, EMAIL_ADDRESS=?, PHONE_NUMBER=?, APP_VERSION=?, " +
+                        " APP_USER_NAME=?, DEVICE_MAC_ADDRESS=? " +
+                    "WHERE USER_ID = ? ",
+                    new String[]{company.getName(), company.getCommercialName(), company.getTaxId(), company.getAddress(),
+                            company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
+                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext), String.valueOf(mUser.getServerUserId()) });
             if (rowsAffected <= 0){
                 return "No se insertó o actualizó el registro en la base de datos.";
             }

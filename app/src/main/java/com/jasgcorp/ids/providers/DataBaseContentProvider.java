@@ -2,6 +2,7 @@ package com.jasgcorp.ids.providers;
 
 import java.util.LinkedHashMap;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import com.jasgcorp.ids.database.DatabaseHelper;

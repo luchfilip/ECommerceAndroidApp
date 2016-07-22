@@ -8,9 +8,9 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 
+import org.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 /**
@@ -44,12 +44,21 @@ public class SyncDataWithServer extends IntentService {
             User user = ApplicationUtilities
                 .getUserByIdFromAccountManager(getApplicationContext(), workIntent.getStringExtra(KEY_USER_ID));
             if (user!=null) {
+                JSONObject jsonObject = new JSONObject();
+                String[] selectionArgs = workIntent.getStringArrayExtra(KEY_SQL_SELECTION_ARGS);
+                for (int i=0; i<selectionArgs.length; i++) {
+                    if (selectionArgs[i]!=null){
+                        jsonObject.put(String.valueOf(i), selectionArgs[i]);
+                    }
+                }
+
                 LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
                 parameters.put("authToken", user.getAuthToken());
                 parameters.put("userGroupName", user.getUserGroup());
                 parameters.put("userId", user.getServerUserId());
                 parameters.put("selection", workIntent.getStringExtra(KEY_SQL_SELECTION));
-                parameters.put("selectionArgs",  Arrays.asList(workIntent.getStringArrayExtra(KEY_SQL_SELECTION_ARGS)).toString());
+                parameters.put("selectionArgs",  jsonObject.toString());
+                parameters.put("columnCount",  selectionArgs.length);
                 ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
                         user.getServerAddress(),
                         "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
