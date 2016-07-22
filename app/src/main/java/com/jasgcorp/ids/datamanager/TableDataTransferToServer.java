@@ -27,7 +27,6 @@ public class TableDataTransferToServer extends Thread {
 	private boolean sync = true;
 	private String exceptionMessage;
 	private String exceptionClass;
-	private float syncPercentage;
 	private int mConnectionTimeOut;
 	
 	public TableDataTransferToServer(User user, Context context) throws Exception{
@@ -56,11 +55,9 @@ public class TableDataTransferToServer extends Thread {
 	public void run() {
 		Log.d(TAG, "run()");
 		try {
-            syncPercentage = 0;
 			if (sync) {
                 sendUserDataToServer(getUserTablesToSync());
 			}
-            syncPercentage = 100;
 		} catch (Exception e) {
 			e.printStackTrace();
             reportSyncError(e.getMessage(), e.getClass().getName());
@@ -123,10 +120,6 @@ public class TableDataTransferToServer extends Thread {
                 mConnectionTimeOut);
         a.getWSResponse();
     }
-
-	public float getSyncPercentage() {
-		return syncPercentage;
-	}
 
     private void reportSyncError(String errorMessage, String exceptionClass) {
         try{

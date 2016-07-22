@@ -275,12 +275,12 @@ public class SynchronizerContentProvider extends ContentProvider{
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
 				}
-				if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
-					syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
-				}
-				if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
-					syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
-				}
+				//if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
+				//	syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
+				//}
+				//if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
+				//	syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
+				//}
 			}
 		}
     	cursor.addRow(new Object[]{syncPercentage, errorMessage, exceptionClass});

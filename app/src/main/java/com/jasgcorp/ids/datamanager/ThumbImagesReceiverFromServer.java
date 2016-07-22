@@ -30,7 +30,6 @@ public class ThumbImagesReceiverFromServer extends Thread {
 	private boolean sync = true;
 	private String exceptionMessage;
 	private String exceptionClass;
-	private float syncPercentage;
 	private User mUser;
 
 	public ThumbImagesReceiverFromServer(User user, Context context) throws Exception{
@@ -131,8 +130,6 @@ public class ThumbImagesReceiverFromServer extends Thread {
 				while ((read = inputStream.read(bytes)) != -1) {
 					outputStream.write(bytes, 0, read);
 				}
-			} catch (IOException e) {
-				throw e;
 			} finally {
 				if (inputStream != null) {
 					try {
@@ -175,10 +172,6 @@ public class ThumbImagesReceiverFromServer extends Thread {
 			ex.printStackTrace();
 			throw ex;
 		}
-	}
-
-	public float getSyncPercentage() {
-		return syncPercentage;
 	}
 
 }
