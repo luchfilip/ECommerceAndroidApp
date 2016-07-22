@@ -33,7 +33,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.jasgcorp.ids.utils.DataBaseRemoteManagement;
+import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
@@ -234,8 +234,8 @@ public class MyGcmListenerService extends GcmListenerService {
                                         throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                     }
                                 }
-                                Object result = DataBaseRemoteManagement
-                                        .getJsonBase64CompressedQueryResult(getApplicationContext(), user, 9000, data.getString(KEY_PARAM_SQL_QUERY));
+                                Object result = DataBaseUtilities
+                                        .getJsonBase64CompressedQueryResult(getApplicationContext(), user, data.getString(KEY_PARAM_SQL_QUERY));
                                 if (result instanceof String) {
                                     sendResponseToServer(getApplicationContext(), requestMethodName, requestId, (String) result, null);
                                 } else if (result instanceof Exception) {

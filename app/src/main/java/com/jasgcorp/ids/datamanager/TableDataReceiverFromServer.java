@@ -21,6 +21,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import net.iharder.Base64;
@@ -173,11 +174,14 @@ public class TableDataReceiverFromServer extends Thread {
                 Object result = a.getWSResponse();
                 if (result instanceof SoapPrimitive) {
                     try {
-                        insertDataFromWSResultData(result.toString(), tableName, context, user);
+                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, context, user);
                     } catch (IOException e) {
                         if (!result.toString().equals("NOTHING_TO_SYNC")){
                             throw e;
                         }
+                    } catch (SQLiteException e) {
+                        e.printStackTrace();
+                        reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
                     }
                 } else if(result instanceof Exception) {
                     throw (Exception) result;
@@ -197,126 +201,6 @@ public class TableDataReceiverFromServer extends Thread {
             }
         }
 
-	}
-
-	/**
-	 *
-	 * @param data
-	 * @param tableName
-	 * @param context
-	 * @throws Exception
-	 */
-	public void insertDataFromWSResultData(String data, String tableName, Context context, User user) throws Exception {
-		int counterEntireCompressedData = 0;
-		int counter;
-		JSONArray jsonArray = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(data, Base64.GZIP)));
-		Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-		if(keys.hasNext()){
-			int columnCount = 0;
-			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray
-                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-			StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
-			try{
-				counter = 0;
-				Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-				while(keysTemp.hasNext()){
-					if(columnCount==0){
-						insertSentence.append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
-					} else {
-						insertSentence.append(", ").append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
-					}
-					columnCount++;
-				}
-				insertSentence.append(") VALUES (");
-				for (int i = 0; i<columnCount; i++) {
-					insertSentence.append((i==0) ? "?" : ", ?");
-				}
-				insertSentence.append(")");
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-
-			int columnIndex;
-			SQLiteDatabase db = null;
-			SQLiteStatement statement = null;
-			try {
-                if(user == null){
-                    db = (new DatabaseHelper(context)).getWritableDatabase();
-                }else{
-				    db = (new DatabaseHelper(context, user)).getWritableDatabase();
-                }
-
-				statement = db.compileStatement(insertSentence.toString());
-				db.beginTransaction();
-                counter = 1;
-				//Se itera a traves de la data
-				while (counter <= jsonArray2.length()) {
-					if (++counter >= jsonArray2.length()) {
-						if (keys.hasNext()) {
-							counter = 0;
-							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64
-                                    .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-							if (jsonArray2.length() < 1) {
-								break;
-							}
-						} else {
-							if (++counterEntireCompressedData >= jsonArray.length()) {
-								break;
-							} else {
-								counter = 0;
-								keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-								jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64
-                                        .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-								if (jsonArray2.length() < 1) {
-									break;
-								}
-							}
-						}
-					}
-					//Se prepara la data que se insertara
-					statement.clearBindings();
-					for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-						try {
-							//data que se insertara
-							statement.bindString(columnIndex, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
-						} catch (JSONException e) {
-                            //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
-                        } catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					statement.execute();
-					//Fin de preparacion de la data que se insertara
-				}
-				db.setTransactionSuccessful();
-			} catch (SQLiteException e) {
-                e.printStackTrace();
-                reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
-            } catch (Exception e) {
-				e.printStackTrace();
-                throw e;
-			} finally {
-				if(statement!=null) {
-					try {
-						statement.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				if (db!=null) {
-					try {
-						db.endTransaction();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					try {
-						db.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
 	}
 
     private void reportSyncError(String errorMessage, String exceptionClass) {

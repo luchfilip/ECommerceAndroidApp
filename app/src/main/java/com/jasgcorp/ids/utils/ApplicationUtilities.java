@@ -2,7 +2,6 @@ package com.jasgcorp.ids.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,25 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 
 import net.iharder.Base64;
 
@@ -57,7 +48,6 @@ import android.content.SyncInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
@@ -65,7 +55,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.SparseArray;
 
 /**
  * 
@@ -842,21 +831,7 @@ public class ApplicationUtilities {
         return bos.toByteArray();
     }
     
-    /**
-     * 
-     * @param bytes
-     * @return
-     * @throws Exception
-     */
-    public static String unGzip(byte[] bytes) throws Exception{
-        InputStreamReader isr = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8");
-        StringWriter sw = new StringWriter();
-        char[] chars = new char[1024];
-        for (int len; (len = isr.read(chars)) > 0; ) {
-            sw.write(chars, 0, len);
-        }
-        return sw.toString();
-    }
+
     
 	/**
 	 * Importante! el nombre de la tabla es sencible a mayusculas o minusculas
@@ -1425,94 +1400,5 @@ public class ApplicationUtilities {
 			logMessage = ctx.getString(R.string.general_exception);
 		}
 		return new LogSyncData(logDate, logType, logMessage, logMessageDetail);
-    }
-    
-    /**
-     * 
-     * @return
-     * @throws Exception 
-     * @throws IOException 
-     * @throws JSONException 
-     */
-    public static Cursor parseJsonCursorToCursor(String data) throws JSONException, IOException, Exception{
-    	MatrixCursor cursor = null;
-		int counterEntireCompressedData = 0;
-		int counter = 0;
-		JSONArray jsonArray = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(data, Base64.GZIP)));
-		Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-		if(keys.hasNext()){
-			int columnCount = 0;
-			Object columnValues[] = null;
-			JSONArray jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-			HashMap<String, String> colsIndex;
-			SparseArray <String> colsType;
-			
-			//MetadaData
-			try{
-				ArrayList<String> columnNames = new ArrayList<String>();
-				//Se carga la metadata de los indices de las columnas consultadas
-				Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-				colsIndex = new HashMap<String, String>();
-				while(keysTemp.hasNext()){
-					columnCount++;
-					String key = (String) keysTemp.next();
-					colsIndex.put(jsonArray2.getJSONObject(counter).getString(key), key);
-					columnNames.add(jsonArray2.getJSONObject(counter).getString(key));
-				}
-				cursor = new MatrixCursor(columnNames.toArray(new String[0]));
-				columnValues = new Object[columnCount];
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-			
-			try{
-				counter = 1;
-				//Se carga la metadata de los tipos de columnas consultadas
-				Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-				colsType = new SparseArray<String>();
-				while(keysTemp.hasNext()){
-					String key = (String) keysTemp.next();
-					colsType.put(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
-				}
-			} catch (Exception e){ 
-				e.printStackTrace();
-			}
-			
-			//Query Result
-			int columnIndex, rowIndex;
-			while(counter<=jsonArray2.length()){
-				if(++counter>=jsonArray2.length()){
-					if(keys.hasNext()){
-						counter = 0;
-						jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-						if(jsonArray2.length()<1){
-							break;
-						}
-					}else{
-						if(++counterEntireCompressedData>=jsonArray.length()){
-							break;
-						}else{
-							counter = 0;
-							keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-							jsonArray2 = new JSONArray(ApplicationUtilities.unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-							if(jsonArray2.length()<1){
-								break;
-							}
-						}
-					}
-				}
-				
-				for(columnIndex=1,rowIndex=0; columnIndex<=columnCount; columnIndex++,rowIndex++){
-					try{
-						//TODO: castear al tipo de dato correspondiente
-						columnValues[rowIndex] = jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex));
-					}catch(Exception e){
-						columnValues[rowIndex] = null;
-					}
-				}
-				cursor.addRow(columnValues);
-			}
-		}
-		return cursor;
     }
 }

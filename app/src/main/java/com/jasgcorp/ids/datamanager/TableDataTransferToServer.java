@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.jasgcorp.ids.utils.DataBaseRemoteManagement;
+import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import org.codehaus.jettison.json.JSONException;
@@ -33,7 +33,7 @@ public class TableDataTransferToServer extends Thread {
 	public TableDataTransferToServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
-        this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
+        this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, user);
 	}
 
 	/**
@@ -89,16 +89,15 @@ public class TableDataTransferToServer extends Thread {
         while(keysTemp.hasNext()){
             try {
                 String key = (String) keysTemp.next();
-                Log.d(TAG, "table: "+key+", sql: "+String.valueOf(userTablesToSync.get(key)));
-                Object result = DataBaseRemoteManagement
-                        .getJsonBase64CompressedQueryResult(context, mUser, 9000, ((String) userTablesToSync.get(key)));
+                Object result = DataBaseUtilities
+                        .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
                 if (result instanceof String) {
-                    sendDataToServer((String) result, null);
+                    sendDataToServer(key, (String) result, null);
                 } else if (result instanceof Exception) {
-                    sendDataToServer(null, String.valueOf(((Exception) result).getMessage()));
+                    sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
                     throw (Exception) result;
                 } else {
-                    sendDataToServer(null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                    sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
                     throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
                 }
             } catch (JSONException e) {
@@ -107,11 +106,12 @@ public class TableDataTransferToServer extends Thread {
         }
     }
 
-    private void sendDataToServer (String data, String errorMessage) throws Exception {
+    private void sendDataToServer (String tableName, String data, String errorMessage) throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
+        parameters.put("tableName", tableName);
         parameters.put("data", data);
         parameters.put("errorMessage", errorMessage);
         ConsumeWebService a = new ConsumeWebService(context,

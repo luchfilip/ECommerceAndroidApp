@@ -9,6 +9,7 @@ import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.jasgcorp.ids.utils.DataBaseUtilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -48,8 +49,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
     private static SQLiteDatabase mUserWriteableDB;
     private static SQLiteDatabase mIDSReadableDB;
     private static SQLiteDatabase mIDSWriteableDB;
-	private AccountManager mAccountManager;
-	
+
 	static{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(AUTHORITY, "internalDB", INTERNAL_DB);
@@ -81,7 +81,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
         if(dbHelper == null) {
 		    dbHelper = new DatabaseHelper(getContext());
         }
-		mAccountManager = AccountManager.get(getContext());
+		AccountManager mAccountManager = AccountManager.get(getContext());
 		mAccountManager.addOnAccountsUpdatedListener(this, null, false);
 		return true;
 	}
@@ -186,7 +186,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			try {
 				Object result = a.getWSResponse();
 				if(result instanceof SoapPrimitive){
-					cursor = ApplicationUtilities.parseJsonCursorToCursor(result.toString());
+					cursor = DataBaseUtilities.parseJsonCursorToCursor(result.toString());
 				}else if (result !=null){
 					throw new Exception("Error while executing execQueryRemoteDB("+user.getServerAddress()+", "+sql+"), ClassCastException.");
 				}else{

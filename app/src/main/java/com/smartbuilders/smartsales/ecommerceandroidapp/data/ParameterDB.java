@@ -27,6 +27,7 @@ public class ParameterDB {
     public static final int DEFAULT_TAX_ID_PARAM_ID = 2;
     public static final int MANAGE_PRICE_IN_ORDER = 3;
     public static final int CONNECTION_TIME_OUT_VALUE = 4;
+    public static final int BATCH_SIZE_FOR_QUERY_RESULT = 5;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
