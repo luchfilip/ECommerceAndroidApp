@@ -23,7 +23,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
  */
 public class DialogMoveToShoppingCart extends DialogFragment {
 
-    private static final String STATE_CURRENT_ORDERLINE = "STATE_CURRENT_ORDERLINE";
+    private static final String STATE_CURRENT_ORDER_LINE = "STATE_CURRENT_ORDER_LINE";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
     private OrderLine mOrderLine;
@@ -53,8 +53,8 @@ public class DialogMoveToShoppingCart extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_CURRENT_ORDERLINE)){
-                mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDERLINE);
+            if(savedInstanceState.containsKey(STATE_CURRENT_ORDER_LINE)){
+                mOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_ORDER_LINE);
             }
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
                 mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
@@ -140,7 +140,7 @@ public class DialogMoveToShoppingCart extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CURRENT_USER, mUser);
-        outState.putParcelable(STATE_CURRENT_ORDERLINE, mOrderLine);
+        outState.putParcelable(STATE_CURRENT_ORDER_LINE, mOrderLine);
         super.onSaveInstanceState(outState);
     }
 }

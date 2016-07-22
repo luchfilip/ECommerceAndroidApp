@@ -817,9 +817,10 @@ public class Utils {
     }
 
     public static boolean appRequireInitialLoad(Context context, Account account) {
-        return AccountUtilities.getLastSyncTime(account,
-                context.getString(R.string.sync_adapter_content_authority))==null;
-
+        String result = AccountUtilities.getLastSyncTimeStringFormat(account,
+                context.getString(R.string.sync_adapter_content_authority));
+        Log.d(TAG, "appRequireInitialLoad(...) - result: "+String.valueOf(result));
+        return true;
     }
 
     public static User getCurrentUser(Context context) {

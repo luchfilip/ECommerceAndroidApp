@@ -123,7 +123,7 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
-                                " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
+                                " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
                                 " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
                                 " AND BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                                 " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
@@ -135,7 +135,7 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
-                        " FROM ECOMMERCE_SALES_ORDERLINE SOL " +
+                        " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
@@ -336,7 +336,7 @@ public class SalesOrderDB {
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDERLINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
                             new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId),
                                     String.valueOf(mUser.getServerUserId())});

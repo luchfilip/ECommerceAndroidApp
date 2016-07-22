@@ -3,31 +3,29 @@ package com.jasgcorp.ids.datamanager;
 import android.content.Context;
 import android.util.Log;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
+import com.jasgcorp.ids.utils.ConsumeWebService;
+
+import org.ksoap2.serialization.SoapPrimitive;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class TableDataTransferToServer extends Thread{
 
 	private static final String TAG = TableDataTransferToServer.class.getSimpleName();
 
 	private Context context;
-	private String serverAddress;
-	private String authToken;
-	private String userName;
-	private String userGroup;
+	private User mUser;
+
 	private boolean sync = true;
 	private String exceptionMessage;
 	private String exceptionClass;
-	private DatabaseHelper dbHelper;
 	private float syncPercentage;
 	
 	public TableDataTransferToServer(User user, Context context) throws Exception{
 		this.context = context;
-		this.serverAddress = user.getServerAddress();
-		this.authToken = user.getAuthToken();
-		this.userName = user.getUserName();
-		this.userGroup = user.getUserGroup();
-		dbHelper = new DatabaseHelper(context, user);
+		this.mUser = user;
 	}
 	
 	/**
@@ -74,6 +72,21 @@ public class TableDataTransferToServer extends Thread{
 //			exceptionMessage = e.getMessage();
 //			exceptionClass = e.getClass().getName();
 //		}
+	}
+
+	private List<SoapPrimitive> getUserTablesToSync() throws Exception {
+		LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+		parameters.put("authToken", mUser.getAuthToken());
+		parameters.put("userGroupName", mUser.getUserGroup());
+		parameters.put("userId", mUser.getServerUserId());
+		ConsumeWebService a = new ConsumeWebService(context,
+				mUser.getServerAddress(),
+				"/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+				"getGlobalTablesToSync",
+				"urn:getGlobalTablesToSync",
+				parameters,
+				mConnectionTimeOut);
+		return (List<SoapPrimitive>) a.getWSResponse();
 	}
 
 	public float getSyncPercentage() {

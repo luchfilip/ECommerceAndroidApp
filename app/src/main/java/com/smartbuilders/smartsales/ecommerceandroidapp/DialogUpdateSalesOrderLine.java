@@ -28,7 +28,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class DialogUpdateSalesOrderLine extends DialogFragment {
 
-    private static final String STATE_ORDERLINE = "STATE_ORDERLINE";
+    private static final String STATE_ORDER_LINE = "STATE_ORDER_LINE";
     private static final String STATE_USER = "STATE_USER";
     private static final String STATE_FOCUS = "STATE_FOCUS";
 
@@ -61,8 +61,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         mUser = Utils.getCurrentUser(getContext());
 
         if(savedInstanceState!=null){
-            if(savedInstanceState.containsKey(STATE_ORDERLINE)){
-                mSaleOrderLine = savedInstanceState.getParcelable(STATE_ORDERLINE);
+            if(savedInstanceState.containsKey(STATE_ORDER_LINE)){
+                mSaleOrderLine = savedInstanceState.getParcelable(STATE_ORDER_LINE);
             }
             if(savedInstanceState.containsKey(STATE_USER)){
                 mUser = savedInstanceState.getParcelable(STATE_USER);
@@ -197,7 +197,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_ORDERLINE, mSaleOrderLine);
+        outState.putParcelable(STATE_ORDER_LINE, mSaleOrderLine);
         outState.putParcelable(STATE_USER, mUser);
         outState.putInt(STATE_FOCUS, mFocus);
         super.onSaveInstanceState(outState);
