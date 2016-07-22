@@ -10,12 +10,15 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.services.RequestResetUserPasswordService;
+import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -34,6 +37,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	public static final String KEY_USER_ID 						= "com.jasgcorp.ids.providers.DataBaseContentProvider.USER_ID";
 	public static final String KEY_USER_DB_NAME 				= "com.jasgcorp.ids.providers.DataBaseContentProvider.USER_DB_NAME";
 	public static final String KEY_USER_SAVE_DB_EXTERNAL_CARD 	= "com.jasgcorp.ids.providers.DataBaseContentProvider.USER_SAVE_DB_EXTERNAL_CARD";
+    public static final String KEY_SEND_DATA_TO_SERVER			= "com.jasgcorp.ids.providers.DataBaseContentProvider.SEND_DATA_TO_SERVER";
 	
 	private static final Uri CONTENT_URI 			= Uri.parse("content://" + AUTHORITY);
 	public static final Uri INTERNAL_DB_URI			= Uri.withAppendedPath(CONTENT_URI, "internalDB");
@@ -124,12 +128,20 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                                 .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
                     }
                     mUserWriteableDB.execSQL(selection, selectionArgs);
+
 	    		}else{
                     if(mIDSWriteableDB==null){
                         mIDSWriteableDB = dbHelper.getWritableDatabase();
                     }
                     mIDSWriteableDB.execSQL(selection, selectionArgs);
 	    		}
+                if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
+                        && Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
+                    Intent syncDataIntent = new Intent(getContext(), SyncDataWithServer.class);
+                    syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION, selection);
+                    syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION_ARGS, selectionArgs);
+                    getContext().startService(syncDataIntent);
+                }
 	    		response = 1;
 			break;
 	        case REMOTE_DB:

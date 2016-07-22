@@ -78,7 +78,8 @@ public class OrderLineDB {
         try {
             int rowsAffected =
                     mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
                             "DELETE FROM ECOMMERCE_ORDER_LINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
                             new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
@@ -100,17 +101,18 @@ public class OrderLineDB {
                 orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
             }
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            null,
-                            "UPDATE ECOMMERCE_ORDER_LINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
-                                " SALES_PRICE = ?, TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
-                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
-                            new String[]{SHOPPING_CART_DOC_TYPE, String.valueOf(qtyRequested),
-                                    String.valueOf(orderLine.getPrice()),
-                                    String.valueOf(orderLine.getTaxPercentage()),
-                                    String.valueOf(OrderLineBR.getTotalLine(orderLine)), "datetime('now')",
-                                    String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
-                                    WISH_LIST_DOC_TYPE});
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDER_LINE SET DOC_TYPE = ?, QTY_REQUESTED = ?, " +
+                        " SALES_PRICE = ?, TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                    " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND DOC_TYPE=?",
+                    new String[]{SHOPPING_CART_DOC_TYPE, String.valueOf(qtyRequested),
+                            String.valueOf(orderLine.getPrice()),
+                            String.valueOf(orderLine.getTaxPercentage()),
+                            String.valueOf(OrderLineBR.getTotalLine(orderLine)), "datetime('now')",
+                            String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
+                            WISH_LIST_DOC_TYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -124,7 +126,8 @@ public class OrderLineDB {
     public String updateOrderLine(OrderLine orderLine){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
                         " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
@@ -146,7 +149,8 @@ public class OrderLineDB {
     public String deleteOrderLine(OrderLine orderLine){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "DELETE FROM ECOMMERCE_ORDER_LINE WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
@@ -163,8 +167,10 @@ public class OrderLineDB {
     public String clearWishList(){
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null, "DELETE FROM ECOMMERCE_ORDER_LINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "DELETE FROM ECOMMERCE_ORDER_LINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                     new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE});
         } catch (Exception e){
@@ -179,8 +185,8 @@ public class OrderLineDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null,
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null,
                     "SELECT PRODUCT_ID, QTY_REQUESTED, " +
                         " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDER_LINE " +
@@ -239,7 +245,8 @@ public class OrderLineDB {
             ol.setTaxPercentage(productTaxPercentage);
             ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "INSERT INTO ECOMMERCE_ORDER_LINE (ECOMMERCE_ORDER_LINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
                         " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
@@ -333,7 +340,8 @@ public class OrderLineDB {
     private int moveOrderLinesToOrderByOrderId(int orderId, String newDocType, String currentDocType) {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
                     " DOC_TYPE = ? WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
