@@ -128,20 +128,20 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                                 .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
                     }
                     mUserWriteableDB.execSQL(selection, selectionArgs);
-
+                    if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
+                            && Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
+                        Intent syncDataIntent = new Intent(getContext(), SyncDataWithServer.class);
+                        syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, uri.getQueryParameter(KEY_USER_ID));
+                        syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION, selection);
+                        syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION_ARGS, selectionArgs);
+                        getContext().startService(syncDataIntent);
+                    }
 	    		}else{
                     if(mIDSWriteableDB==null){
                         mIDSWriteableDB = dbHelper.getWritableDatabase();
                     }
                     mIDSWriteableDB.execSQL(selection, selectionArgs);
 	    		}
-                if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
-                        && Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
-                    Intent syncDataIntent = new Intent(getContext(), SyncDataWithServer.class);
-                    syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION, selection);
-                    syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION_ARGS, selectionArgs);
-                    getContext().startService(syncDataIntent);
-                }
 	    		response = 1;
 			break;
 	        case REMOTE_DB:

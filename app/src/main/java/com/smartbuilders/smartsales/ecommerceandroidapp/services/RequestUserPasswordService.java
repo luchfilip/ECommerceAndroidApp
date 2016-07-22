@@ -46,7 +46,7 @@ public class RequestUserPasswordService extends IntentService {
         String serverAddress = workIntent.getStringExtra(SERVER_ADDRESS);
         String userName = workIntent.getStringExtra(USER_NAME);
         String userEmail = workIntent.getStringExtra(USER_EMAIL);
-        String resultMsg = null;
+        String resultMsg;
         try {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
             parameters.put("userGroup", "catalogo-febeca");
@@ -68,21 +68,6 @@ public class RequestUserPasswordService extends IntentService {
             }else {
                 throw new NullPointerException("response is null.");
             }
-        } catch(ConnectException e){
-            resultMsg = e.getMessage();
-            e.printStackTrace();
-        } catch(SocketTimeoutException e){
-            resultMsg = e.getMessage();
-            e.printStackTrace();
-        } catch(SocketException e){
-            resultMsg = e.getMessage();
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            resultMsg = e.getMessage();
-            e.printStackTrace();
-        } catch(IOException e){
-            resultMsg = e.getMessage();
-            e.printStackTrace();
         } catch (Exception e) {
             resultMsg = e.getMessage();
             e.printStackTrace();
