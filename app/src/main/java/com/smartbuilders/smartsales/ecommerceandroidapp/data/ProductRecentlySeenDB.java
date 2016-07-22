@@ -27,6 +27,7 @@ public class ProductRecentlySeenDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
                             .build(), null,
                     "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, " +
                         " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
