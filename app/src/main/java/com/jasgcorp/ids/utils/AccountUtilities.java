@@ -17,7 +17,7 @@ public class AccountUtilities {
      * @param contentAuthority
      * @return
      */
-    public static String getLastSyncTime(Account mAccount, String contentAuthority) {
+    public static String getLastSyncTimeStringFormat(Account mAccount, String contentAuthority) {
         try {
             Method getSyncStatus = ContentResolver.class.getMethod(
                     "getSyncStatus", Account.class, String.class);
@@ -35,6 +35,27 @@ public class AccountUtilities {
                 | IllegalArgumentException | ClassNotFoundException | NoSuchFieldException
                 | NullPointerException e) {
         	e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Date getLastSyncTime(Account mAccount, String contentAuthority) {
+        try {
+            Method getSyncStatus = ContentResolver.class.getMethod(
+                    "getSyncStatus", Account.class, String.class);
+            if (mAccount != null) {
+                Object status = getSyncStatus.invoke(null, mAccount, contentAuthority);
+                Class<?> statusClass = Class
+                        .forName("android.content.SyncStatusInfo");
+                boolean isStatusObject = statusClass.isInstance(status);
+                if (isStatusObject) {
+                    return new Date((statusClass.getField("lastSuccessTime")).getLong(status));
+                }
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException
+                | IllegalArgumentException | ClassNotFoundException | NoSuchFieldException
+                | NullPointerException e) {
+            e.printStackTrace();
         }
         return null;
     }

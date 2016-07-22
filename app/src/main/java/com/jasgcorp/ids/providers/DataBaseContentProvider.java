@@ -173,7 +173,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-			LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
 			parameters.put("authToken", user.getAuthToken());
 			parameters.put("userId", user.getServerUserId());
 			parameters.put("sql", sql);

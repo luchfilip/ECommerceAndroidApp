@@ -40,6 +40,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
+import com.jasgcorp.ids.utils.AccountUtilities;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.CompanyActivity;
@@ -815,8 +816,10 @@ public class Utils {
                 + File.separator + user.getUserName() + "/images/userCompany/";
     }
 
-    public static boolean appRequireInitialLoad(Context context) {
-        return true;
+    public static boolean appRequireInitialLoad(Context context, Account account) {
+        return AccountUtilities.getLastSyncTime(account,
+                context.getString(R.string.sync_adapter_content_authority))==null;
+
     }
 
     public static User getCurrentUser(Context context) {

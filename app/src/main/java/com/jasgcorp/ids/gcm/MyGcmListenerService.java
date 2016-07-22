@@ -36,6 +36,7 @@ import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseRemoteManagement;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
@@ -622,7 +623,8 @@ public class MyGcmListenerService extends GcmListenerService {
                     "/IntelligentDataSynchronizer/services/ManageUserResponse?wsdl",
                     "insertMessageResponse",
                     "urn:insertMessageResponse",
-                    parameters);
+                    parameters,
+                    Parameter.getConnectionTimeOutValue(context, user));
             try{
                 a.getWSResponse();
             } catch (Exception e){

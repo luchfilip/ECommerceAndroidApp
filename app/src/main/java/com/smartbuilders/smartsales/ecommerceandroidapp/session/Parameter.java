@@ -21,4 +21,8 @@ public class Parameter {
     public static boolean isManagePriceInOrder(Context context, User user){
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
     }
+
+    public static int getConnectionTimeOutValue(Context context, User user){
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.CONNECTION_TIME_OUT_VALUE, 1500);
+    }
 }

@@ -36,7 +36,7 @@ public class RequestResetUserPasswordService extends IntentService {
         String serverAddress = workIntent.getStringExtra(SERVER_ADDRESS);
         String userEmail = workIntent.getStringExtra(USER_EMAIL);
 
-        String resultMsg = null;
+        String resultMsg;
         try {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
             parameters.put("userGroup", "catalogo-febeca");

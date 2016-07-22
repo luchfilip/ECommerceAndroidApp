@@ -21,6 +21,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import net.iharder.Base64;
 
@@ -34,10 +35,12 @@ public class TableDataReceiverFromServer extends Thread {
 	private String exceptionClass;
 	private float syncPercentage;
 	private User mUser;
+    private int mConnectionTimeOut;
 	
 	public TableDataReceiverFromServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
+        this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
 	}
 	/**
 	 * detiene el hilo de sincronizacion
@@ -88,7 +91,8 @@ public class TableDataReceiverFromServer extends Thread {
                 "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
                 "getGlobalTablesToSync",
                 "urn:getGlobalTablesToSync",
-                parameters);
+                parameters,
+                mConnectionTimeOut);
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
@@ -113,7 +117,8 @@ public class TableDataReceiverFromServer extends Thread {
                 "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
                 "getUserTablesToSync",
                 "urn:getUserTablesToSync",
-                parameters);
+                parameters,
+                mConnectionTimeOut);
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
@@ -160,7 +165,8 @@ public class TableDataReceiverFromServer extends Thread {
                         "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
                         "getDataForTable",
                         "urn:getDataForTable",
-                        parameters);
+                        parameters,
+                        mConnectionTimeOut);
                 Object result = a.getWSResponse();
                 if (result instanceof SoapPrimitive) {
                     try {
@@ -323,7 +329,8 @@ public class TableDataReceiverFromServer extends Thread {
                     "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
                     "reportSyncError",
                     "urn:reportSyncError",
-                    parameters);
+                    parameters,
+                    mConnectionTimeOut);
             a.getWSResponse();
         } catch(Exception e) {
             e.printStackTrace();

@@ -38,7 +38,14 @@ public class ConsumeWebService {
 	private String soapAction;
 	private LinkedHashMap<String, Object> parameters;
 	private int retryNumber;
-	
+	private int connectionTimeOut;
+
+	public ConsumeWebService(Context context, String serverAddress, String url,
+							 String methodName, String soapAction, LinkedHashMap<String, Object> parameters, int connectionTimeOut){
+		this(context, serverAddress, url, methodName, soapAction, parameters);
+		this.connectionTimeOut = connectionTimeOut;
+	}
+
 	public ConsumeWebService(Context context, String serverAddress, String url, 
 			String methodName, String soapAction, LinkedHashMap<String, Object> parameters){
 		this.context 		= context;
@@ -54,7 +61,8 @@ public class ConsumeWebService {
 		SoapSerializationEnvelope envelope;
 		//Objeto que representa el modelo de transporte
 		//Recibe la URL del ws
-		HttpTransportSE transporte = new HttpTransportSE(serverAddress+url, HTTP_TRANSPORT_TIMEOUT);
+		HttpTransportSE transporte = new HttpTransportSE(serverAddress+url,
+				connectionTimeOut>0 ? connectionTimeOut : HTTP_TRANSPORT_TIMEOUT);
 		Object response = null;
 		try {
 			//Hace la llamada al ws
