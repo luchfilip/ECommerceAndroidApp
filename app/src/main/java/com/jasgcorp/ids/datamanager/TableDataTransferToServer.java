@@ -5,13 +5,19 @@ import android.util.Log;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.jasgcorp.ids.utils.DataBaseRemoteManagement;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
-import org.ksoap2.serialization.SoapPrimitive;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 
-public class TableDataTransferToServer extends Thread{
+/**
+ *
+ */
+public class TableDataTransferToServer extends Thread {
 
 	private static final String TAG = TableDataTransferToServer.class.getSimpleName();
 
@@ -22,12 +28,14 @@ public class TableDataTransferToServer extends Thread{
 	private String exceptionMessage;
 	private String exceptionClass;
 	private float syncPercentage;
+	private int mConnectionTimeOut;
 	
 	public TableDataTransferToServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
+        this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
 	}
-	
+
 	/**
 	 * detiene el hilo de sincronizacion
 	 */
@@ -47,49 +55,97 @@ public class TableDataTransferToServer extends Thread{
 	@Override
 	public void run() {
 		Log.d(TAG, "run()");
-//		try {
-			while (sync) {
-				sync = false;
-			} 
-//		} catch (ConnectException e) {
-//			e.printStackTrace();
-//			exceptionMessage = e.getMessage();
-//			exceptionClass = e.getClass().getName();
-//		} catch (SocketTimeoutException e) {
-//			e.printStackTrace();
-//			exceptionMessage = e.getMessage();
-//			exceptionClass = e.getClass().getName();
-//		} catch (SocketException e) {
-//			e.printStackTrace();
-//			exceptionMessage = e.getMessage();
-//			exceptionClass = e.getClass().getName();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			exceptionMessage = e.getMessage();
-//			exceptionClass = e.getClass().getName();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			exceptionMessage = e.getMessage();
-//			exceptionClass = e.getClass().getName();
-//		}
+		try {
+            syncPercentage = 0;
+			if (sync) {
+                sendUserDataToServer(getUserTablesToSync());
+			}
+            syncPercentage = 100;
+		} catch (Exception e) {
+			e.printStackTrace();
+            reportSyncError(e.getMessage(), e.getClass().getName());
+			exceptionMessage = e.getMessage();
+			exceptionClass = e.getClass().getName();
+		}
 	}
 
-	private List<SoapPrimitive> getUserTablesToSync() throws Exception {
-		LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-		parameters.put("authToken", mUser.getAuthToken());
-		parameters.put("userGroupName", mUser.getUserGroup());
-		parameters.put("userId", mUser.getServerUserId());
-		ConsumeWebService a = new ConsumeWebService(context,
-				mUser.getServerAddress(),
-				"/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-				"getGlobalTablesToSync",
-				"urn:getGlobalTablesToSync",
-				parameters,
-				mConnectionTimeOut);
-		return (List<SoapPrimitive>) a.getWSResponse();
-	}
+    private JSONObject getUserTablesToSync() throws Exception {
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "getTablesAndSQLToReceiveFromClient",
+                "urn:getTablesAndSQLToReceiveFromClient",
+                parameters,
+                mConnectionTimeOut);
+        return new JSONObject(a.getWSResponse().toString());
+    }
+
+    private void sendUserDataToServer(JSONObject userTablesToSync) throws Exception {
+        Iterator<?> keysTemp = userTablesToSync.keys();
+        while(keysTemp.hasNext()){
+            try {
+                String key = (String) keysTemp.next();
+                Log.d(TAG, "table: "+key+", sql: "+String.valueOf(userTablesToSync.get(key)));
+                Object result = DataBaseRemoteManagement
+                        .getJsonBase64CompressedQueryResult(context, mUser, 9000, ((String) userTablesToSync.get(key)));
+                if (result instanceof String) {
+                    sendDataToServer((String) result, null);
+                } else if (result instanceof Exception) {
+                    sendDataToServer(null, String.valueOf(((Exception) result).getMessage()));
+                    throw (Exception) result;
+                } else {
+                    sendDataToServer(null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                    throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendDataToServer (String data, String errorMessage) throws Exception {
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        parameters.put("data", data);
+        parameters.put("errorMessage", errorMessage);
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "receiveDataFromClient",
+                "urn:receiveDataFromClient",
+                parameters,
+                mConnectionTimeOut);
+        a.getWSResponse();
+    }
 
 	public float getSyncPercentage() {
 		return syncPercentage;
 	}
+
+    private void reportSyncError(String errorMessage, String exceptionClass) {
+        try{
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+            parameters.put("authToken", mUser.getAuthToken());
+            parameters.put("userGroupName", mUser.getUserGroup());
+            parameters.put("userId", mUser.getServerUserId());
+            parameters.put("errorMessage", errorMessage);
+            parameters.put("exceptionClass", exceptionClass);
+            ConsumeWebService a = new ConsumeWebService(context,
+                    mUser.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "reportSyncError",
+                    "urn:reportSyncError",
+                    parameters,
+                    mConnectionTimeOut);
+            a.getWSResponse();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

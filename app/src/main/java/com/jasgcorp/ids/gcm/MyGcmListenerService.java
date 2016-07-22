@@ -235,7 +235,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                     }
                                 }
                                 Object result = DataBaseRemoteManagement
-                                        .getJsonBase64CompressedQueryResult(getApplicationContext(), user, 1000, data.getString(KEY_PARAM_SQL_QUERY));
+                                        .getJsonBase64CompressedQueryResult(getApplicationContext(), user, 9000, data.getString(KEY_PARAM_SQL_QUERY));
                                 if (result instanceof String) {
                                     sendResponseToServer(getApplicationContext(), requestMethodName, requestId, (String) result, null);
                                 } else if (result instanceof Exception) {

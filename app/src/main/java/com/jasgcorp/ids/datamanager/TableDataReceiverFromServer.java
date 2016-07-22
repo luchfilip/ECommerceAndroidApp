@@ -25,6 +25,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import net.iharder.Base64;
 
+/**
+ *
+ */
 public class TableDataReceiverFromServer extends Thread {
 	
 	private static final String TAG = TableDataReceiverFromServer.class.getSimpleName();
@@ -163,8 +166,8 @@ public class TableDataReceiverFromServer extends Thread {
                 ConsumeWebService a = new ConsumeWebService(context,
                         mUser.getServerAddress(),
                         "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                        "getDataForTable",
-                        "urn:getDataForTable",
+                        "sendDataToClient",
+                        "urn:sendDataToClient",
                         parameters,
                         mConnectionTimeOut);
                 Object result = a.getWSResponse();
