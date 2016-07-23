@@ -130,35 +130,23 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_description)).setText(mProduct.getDescription());
                                 }
 
-//                                if(!TextUtils.isEmpty(mProduct.getDescription()) || !TextUtils.isEmpty(mProduct.getPurpose())) {
-                                    if (!TextUtils.isEmpty(mProduct.getDescription())) {
-                                        ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
-                                                mProduct.getDescription()));
-                                    } else {
-                                        view.findViewById(R.id.product_description).setVisibility(View.GONE);
-                                    }
-                                    if (!TextUtils.isEmpty(mProduct.getPurpose())) {
-                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
-                                                mProduct.getPurpose()));
-                                    } else {
-                                        view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
-                                    }
-//                                }else{
-//                                    view.findViewById(R.id.product_description).setVisibility(View.GONE);
-//                                    view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
-//                                }
+                                if (!TextUtils.isEmpty(mProduct.getDescription())) {
+                                    ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
+                                            mProduct.getDescription()));
+                                } else {
+                                    view.findViewById(R.id.product_description).setVisibility(View.GONE);
+                                }
+                                if (!TextUtils.isEmpty(mProduct.getPurpose())) {
+                                    ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
+                                            mProduct.getPurpose()));
+                                } else {
+                                    view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
+                                }
 
                                 if (mProduct.getProductBrand() != null && mProduct.getProductBrand().getDescription() != null) {
                                     ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
                                             mProduct.getProductBrand().getDescription()));
                                 }
-
-                                //view.findViewById(R.id.share_imageView).setOnClickListener(new View.OnClickListener() {
-                                //    @Override
-                                //    public void onClick(View v) {
-                                //        startActivity(Utils.createShareProductIntent(mProduct, getContext(), mUser));
-                                //    }
-                                //});
 
                                 final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
 

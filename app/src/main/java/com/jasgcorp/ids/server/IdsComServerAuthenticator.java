@@ -31,7 +31,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 
     @Override
     public void userSignUp(User user, String authType, Context ctx) throws Exception {
-    	Log.d(TAG, "userSignUp("+user+", "+authType+", Context ctx)");
+    	Log.d(TAG, "userSignUp");
 
 		try {
             //Nos registramos en los servidores de GCM
@@ -99,7 +99,6 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 					user.setSessionToken(ctx.getString(R.string.user_response_move_to_next_false));
 				}
 			}
-			Log.d(TAG, "userSignUp - user: "+user);
         }catch(Exception e){
         	e.printStackTrace();
         	throw e;
@@ -238,7 +237,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
     @Override
 	public void userSignOut(User user, String syncState, Context ctx)
 			throws Exception {
-    	Log.d(TAG, "userSignOut("+user+", "+syncState+", Context ctx)");
+    	Log.d(TAG, "userSignOut");
         Cursor response = null;
         try{
         	response = ctx.getContentResolver()
@@ -262,12 +261,10 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
         				}
         				throw new Exception(response.getString(response.getColumnIndex("error_message")));
 					}
-					Log.d(TAG, "response.getString(response.getColumnIndex(\"state\")): "+response.getString(response.getColumnIndex("state")));
 				}else{
-					throw new Exception("userSignOut("+user+", "+syncState+", Context ctx) - response.moveToNext() is false.");
+					throw new Exception("userSignOut - response.moveToNext() is false.");
 				}
 			}
-			Log.d(TAG, "userSignOut - end");
         }catch(Exception e){
         	e.printStackTrace();
         	throw e;
