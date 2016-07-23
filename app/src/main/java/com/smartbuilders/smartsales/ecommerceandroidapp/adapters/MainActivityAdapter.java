@@ -52,6 +52,7 @@ import java.util.ArrayList;
  */
 public class MainActivityAdapter extends BaseAdapter {
 
+    private static final int VIEW_TYPE_EMPTY_LAYOUT     = -1;
     private static final int VIEW_TYPE_VIEW_FLIPPER     = 0;
     private static final int VIEW_TYPE_RECYCLER_VIEW    = 1;
     private static final int VIEW_TYPE_VIEWPAGER        = 2;
@@ -83,7 +84,7 @@ public class MainActivityAdapter extends BaseAdapter {
         } else if (mDataset.get(position) instanceof Product) {
             return VIEW_TYPE_PRODUCT;
         }
-        return -1;
+        return VIEW_TYPE_EMPTY_LAYOUT;
     }
 
     public static class ViewHolder {
@@ -145,7 +146,7 @@ public class MainActivityAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // create a new view
-        View view = null;
+        View view;
         switch (getItemViewType(position)) {
             case VIEW_TYPE_VIEW_FLIPPER:
                 view = LayoutInflater.from(mContext)
@@ -171,11 +172,17 @@ public class MainActivityAdapter extends BaseAdapter {
                 view = LayoutInflater.from(mContext)
                         .inflate(R.layout.product_main_activity, parent, false);
                 break;
+            case VIEW_TYPE_EMPTY_LAYOUT:
+            default:
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.empty_layout, parent, false);
         }
 
         if (view != null) {
             final ViewHolder viewHolder = new ViewHolder(view);
             switch (getItemViewType(position)) {
+                case VIEW_TYPE_EMPTY_LAYOUT:
+                    return view;
                 case VIEW_TYPE_VIEW_FLIPPER:
                     if (mDataset!=null && mDataset.get(position)!=null
                             && mDataset.get(position) instanceof BannerSection

@@ -40,15 +40,16 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
  */
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ViewHolder> {
 
-    public static final int MASK_PRODUCT_MIN_INFO       = 0;
-    public static final int MASK_PRODUCT_DETAILS        = 1;
-    public static final int MASK_PRODUCT_LARGE_DETAILS  = 2;
+    public static final int EMPTY_LAYOUT                = 0;
+    public static final int MASK_PRODUCT_MIN_INFO       = 1;
+    public static final int MASK_PRODUCT_DETAILS        = 2;
+    public static final int MASK_PRODUCT_LARGE_DETAILS  = 3;
 
-    public static final int FILTER_BY_PRODUCT_NAME              = 0;
-    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE     = 1;
-    public static final int FILTER_BY_PRODUCT_BRAND_DESCRIPTION = 2;
-    public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 3;
-    public static final int FILTER_BY_PRODUCT_PURPOSE           = 4;
+    public static final int FILTER_BY_PRODUCT_NAME              = 1;
+    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE     = 2;
+    public static final int FILTER_BY_PRODUCT_BRAND_DESCRIPTION = 3;
+    public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 4;
+    public static final int FILTER_BY_PRODUCT_PURPOSE           = 5;
     // Regular expression in Java to check if String is number or not
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
@@ -133,6 +134,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.product_large_details, parent, false);
                 break;
+            case EMPTY_LAYOUT:
+            default:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.empty_layout, parent, false);
         }
         return new ViewHolder(v);
     }
@@ -140,6 +145,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if(mMask!=MASK_PRODUCT_MIN_INFO && mMask!=MASK_PRODUCT_DETAILS
+                && mMask!=MASK_PRODUCT_LARGE_DETAILS){
+            return;
+        }
+
         if(mMask==MASK_PRODUCT_LARGE_DETAILS){
             Utils.loadOriginalImageByFileName(mContext, mUser,
                     mDataset.get(position).getImageFileName(), holder.productImage);
