@@ -24,15 +24,17 @@ public class TableDataTransferToServer extends Thread {
 	private Context context;
 	private User mUser;
 
-	private boolean sync = true;
+	private boolean sync;
 	private String exceptionMessage;
 	private String exceptionClass;
+    private float syncPercentage;
 	private int mConnectionTimeOut;
 	
 	public TableDataTransferToServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
         this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, user);
+        this.sync = true;
 	}
 
 	/**
@@ -55,15 +57,18 @@ public class TableDataTransferToServer extends Thread {
 	public void run() {
 		Log.d(TAG, "run()");
 		try {
+            syncPercentage = 0;
 			if (sync) {
                 sendUserDataToServer(getUserTablesToSync());
 			}
+            syncPercentage = 100;
 		} catch (Exception e) {
 			e.printStackTrace();
             reportSyncError(e.getMessage(), e.getClass().getName());
 			exceptionMessage = e.getMessage();
 			exceptionClass = e.getClass().getName();
 		}
+        sync = false;
 	}
 
     private JSONObject getUserTablesToSync() throws Exception {
@@ -85,17 +90,26 @@ public class TableDataTransferToServer extends Thread {
         Iterator<?> keysTemp = userTablesToSync.keys();
         while(keysTemp.hasNext()){
             try {
-                String key = (String) keysTemp.next();
-                Object result = DataBaseUtilities
-                        .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
-                if (result instanceof String) {
-                    sendDataToServer(key, (String) result, null);
-                } else if (result instanceof Exception) {
-                    sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
-                    throw (Exception) result;
-                } else {
-                    sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
-                    throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                if(sync){
+                    String key = (String) keysTemp.next();
+                    Object result = DataBaseUtilities
+                            .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
+                    if(sync){
+                        if (result instanceof String) {
+                            sendDataToServer(key, (String) result, null);
+                        } else if (result instanceof Exception) {
+                            sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
+                            throw (Exception) result;
+                        } else {
+                            sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                            throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                        }
+                    }else{
+                        sendDataToServer(key, null, "Synchronization was stopped by user.");
+                    }
+                }else{
+                    //se detiene el bucle
+                    break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -140,5 +154,9 @@ public class TableDataTransferToServer extends Thread {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public float getSyncPercentage() {
+        return syncPercentage;
     }
 }

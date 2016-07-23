@@ -45,7 +45,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private AccountManager mAccountManager;
     private boolean finishActivityOnResultOperationCanceledException;
-    private User mCurrentUser;
+    private User mUser;
     private int mSynchronizationState;
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
@@ -54,8 +54,8 @@ public class SplashScreen extends AppCompatActivity {
             if(intent!=null && intent.getAction()!=null){
                 Bundle extras = intent.getExtras();
                 if(extras!=null){
-                    if(extras.containsKey(SyncAdapter.USER_ID) && mCurrentUser!=null
-                            && extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
+                    if(extras.containsKey(SyncAdapter.USER_ID) && mUser !=null
+                            && extras.getString(SyncAdapter.USER_ID).equals(mUser.getUserId())){
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
                             findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
@@ -236,7 +236,7 @@ public class SplashScreen extends AppCompatActivity {
                                     for(Account account : availableAccounts){
                                         if(mAccountManager.getUserData(account,
                                                 AccountGeneral.USERDATA_USER_ID).equals(userId)){
-                                            mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this,
+                                            mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this,
                                                     mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                             checkInitialLoad(mAccountManager, account);
                                             break;
@@ -258,7 +258,7 @@ public class SplashScreen extends AppCompatActivity {
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
-        //Utils.createImageFiles(this, mCurrentUser);
+        //Utils.createImageFiles(this, mUser);
         //se manda a descargar todas las imagenes thumbs de los productos
         //startService(new Intent(this, LoadProductsThumbImage.class));
         startActivity(new Intent(SplashScreen.this, MainActivity.class)
@@ -274,11 +274,11 @@ public class SplashScreen extends AppCompatActivity {
 
         ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
 
-        mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
+        mUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
-        if(mCurrentUser!=null){
-            if (Utils.appRequireInitialLoad(this, account)) {
+        if(mUser !=null){
+            if (Utils.appRequireInitialLoad(this, mUser)) {
                     if(NetworkConnectionUtilities.isOnline(this)
                             /*&& (NetworkConnectionUtilities.isWifiConnected(this)||NetworkConnectionUtilities.isMobileConnected(this))*/) {
                         findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
@@ -306,7 +306,7 @@ public class SplashScreen extends AppCompatActivity {
             //TODO: mostrar error en pantalla
             //startActivity(new Intent(this, SplashScreen.class));
             //finish();
-            Log.d(TAG, "mCurrentUser is null");
+            Log.d(TAG, "mUser is null");
         }
     }
 

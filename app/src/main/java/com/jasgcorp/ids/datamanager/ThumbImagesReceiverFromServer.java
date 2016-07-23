@@ -27,14 +27,16 @@ public class ThumbImagesReceiverFromServer extends Thread {
 	private static final String TAG = ThumbImagesReceiverFromServer.class.getSimpleName();
 
 	private Context context;
-	private boolean sync = true;
+	private boolean sync;
 	private String exceptionMessage;
 	private String exceptionClass;
+    private float syncPercentage;
 	private User mUser;
 
 	public ThumbImagesReceiverFromServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
+        this.sync = true;
 	}
 	/**
 	 * detiene el hilo de sincronizacion
@@ -57,9 +59,11 @@ public class ThumbImagesReceiverFromServer extends Thread {
 		Log.d(TAG, "run()");
 		try {
             long initTime = System.currentTimeMillis();
+            syncPercentage = 0;
 			if(sync){
 				getProductsThumbImageFromServer(context, mUser);
 			}
+            syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,7 +73,7 @@ public class ThumbImagesReceiverFromServer extends Thread {
 		sync = false;
 	}
 
-	private void getProductsThumbImageFromServer(Context context, User user){
+	private void getProductsThumbImageFromServer(Context context, User user) {
 		Cursor c = null;
 		try {
 			c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
@@ -78,27 +82,33 @@ public class ThumbImagesReceiverFromServer extends Thread {
 			if(c!=null){
 				List<String> filesName = new ArrayList<>();
 				while(c.moveToNext()){
-					filesName.add(c.getString(0));
-					if(Utils.getFileInThumbDirByFileName(context, c.getString(0))==null){
-						downloadImage(c.getString(0), context, user);
-					}
+                    if(sync){
+                        filesName.add(c.getString(0));
+                        if(Utils.getFileInThumbDirByFileName(context, c.getString(0))==null){
+                            try {
+                                downloadImage(c.getString(0), context, user);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else{
+                        break;
+                    }
 				}
                 //se limpia la carpeta de los archivos que ya no pertenezcan
-				List<String> filesInThumbDir = Utils.getListOfFilesInThumbDir(context);
-				if(filesInThumbDir!=null && !filesInThumbDir.isEmpty()){
-					filesInThumbDir.removeAll(filesName);
-					for (String fileNameToRemove : filesInThumbDir) {
-						try {
-							(new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
-						} catch (Exception e) {
-							Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
-									"\", ExceptionMessage: "+e.getMessage());
-						}
-					}
-				}
+                List<String> filesInThumbDir = Utils.getListOfFilesInThumbDir(context);
+                if(filesInThumbDir!=null && !filesInThumbDir.isEmpty()){
+                    filesInThumbDir.removeAll(filesName);
+                    for (String fileNameToRemove : filesInThumbDir) {
+                        try {
+                            (new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
+                                    "\", ExceptionMessage: "+e.getMessage());
+                        }
+                    }
+                }
 			}
-		} catch (Exception e){
-			e.printStackTrace();
 		} finally {
 			if(c != null) {
 				try {
@@ -112,45 +122,47 @@ public class ThumbImagesReceiverFromServer extends Thread {
 
 	// Creates Bitmap from InputStream and returns it
 	private void downloadImage(String fileName, Context context, User user) throws IOException {
-		try {
-			OutputStream outputStream = null;
-			InputStream inputStream = null;
-			try {
-				inputStream = getHttpConnection(user.getServerAddress() +
-						"/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
-				// write the inputStream to a FileOutputStream
-				try{
-					outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
-				} catch (FileNotFoundException e){
-					(new File(Utils.getImagesThumbFolderPath(context))).mkdirs();
-					outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
-				}
-				int read = 0;
-				byte[] bytes = new byte[1024];
-				while ((read = inputStream.read(bytes)) != -1) {
-					outputStream.write(bytes, 0, read);
-				}
-			} finally {
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		} catch (IOException e){
-			throw e;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+        if(sync){
+            try {
+                OutputStream outputStream = null;
+                InputStream inputStream = null;
+                try {
+                    inputStream = getHttpConnection(user.getServerAddress() +
+                            "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
+                    // write the inputStream to a FileOutputStream
+                    try{
+                        outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                    } catch (FileNotFoundException e){
+                        (new File(Utils.getImagesThumbFolderPath(context))).mkdirs();
+                        outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));
+                    }
+                    int read = 0;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                } finally {
+                    if (inputStream != null) {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (outputStream != null) {
+                        try {
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } catch (IOException e){
+                throw e;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 	}
 
 	// Makes HttpURLConnection and returns InputStream
@@ -172,6 +184,10 @@ public class ThumbImagesReceiverFromServer extends Thread {
 			ex.printStackTrace();
 			throw ex;
 		}
+	}
+
+	public float getSyncPercentage() {
+		return syncPercentage;
 	}
 
 }

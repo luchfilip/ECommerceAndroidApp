@@ -18,8 +18,6 @@ import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
-import net.iharder.Base64;
-
 /**
  *
  */
@@ -30,7 +28,7 @@ public class TableDataReceiverFromServer extends Thread {
     public static final String SYNC_SESSION_ID_SHARED_PREFS_KEY = "SYNC_SESSION_ID_SHARED_PREFS_KEY";
 
 	private Context context;
-	private boolean sync = true;
+	private boolean sync;
 	private String exceptionMessage;
 	private String exceptionClass;
 	private float syncPercentage;
@@ -41,6 +39,7 @@ public class TableDataReceiverFromServer extends Thread {
 		this.context = context;
 		this.mUser = user;
         this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
+        this.sync = true;
 	}
 	/**
 	 * detiene el hilo de sincronizacion

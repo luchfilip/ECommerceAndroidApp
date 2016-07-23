@@ -257,13 +257,11 @@ public class ApplicationUtilities {
     	Cursor c = null;
     	try{
     		if(user!=null){
-				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-								null, 
-								new StringBuilder("SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL ")
-									.append("FROM IDS_SYNC_LOG ")
-									.append("WHERE USER_ID=").append(user.getUserId()).toString(),
-								null, null);
+				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                        null,
+                        "SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL FROM IDS_SYNC_LOG WHERE USER_ID=?",
+                        new String[]{user.getUserId()}, null);
                 if(c!=null){
 				    while(c.moveToNext()){
 				    	syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)),
@@ -280,7 +278,32 @@ public class ApplicationUtilities {
 		}
 		return syncLog;
     }
-    
+
+	public static String getLastSuccessfullySyncTime(Context ctx, User user) {
+		Cursor c = null;
+		try{
+			if(user!=null){
+				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                        null,
+                        "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE = ? OR LOG_TYPE = ?)",
+                        new String[]{String.valueOf(user.getUserId()),
+                                SyncAdapter.SYNCHRONIZATION_FINISHED,
+                                SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED}, null);
+				if(c!=null && c.moveToNext()){
+					return c.getString(0);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(c!=null){
+				c.close();
+			}
+		}
+		return null;
+	}
+
     /**
      * 
      * @param user
@@ -444,18 +467,20 @@ public class ApplicationUtilities {
     			c = ctx.getContentResolver()
     					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
 								null, 
-								new StringBuilder("SELECT COUNT(*) FROM IDS_SCHEDULER_SYNC ")
-						    			.append(" WHERE USER_ID=").append(user.getUserId())
-						    			.append(" AND HOUR=").append(data.getHour())
-						    			.append(" AND MINUTE=").append(data.getMinute())
-						    			.append(" AND MONDAY='").append(data.isMonday()?"Y":"N").append("' ")
-						    			.append(" AND TUESDAY='").append(data.isTuesday()?"Y":"N").append("' ")
-						    			.append(" AND WEDNESDAY='").append(data.isWednesday()?"Y":"N").append("' ")
-						    			.append(" AND THURSDAY='").append(data.isThursday()?"Y":"N").append("' ")
-						    			.append(" AND FRIDAY='").append(data.isFriday()?"Y":"N") .append("' ")
-						    			.append(" AND SATURDAY='").append(data.isSaturday()?"Y":"N").append("' ")
-						    			.append(" AND SUNDAY='").append(data.isSunday()?"Y":"N").append("'").toString(),
-								null, null);
+								"SELECT COUNT(*) " +
+                                " FROM IDS_SCHEDULER_SYNC " +
+                                " WHERE USER_ID=? AND HOUR=? AND MINUTE=? AND MONDAY=? AND TUESDAY=? " +
+                                    " AND WEDNESDAY=? AND THURSDAY=? AND FRIDAY=? AND SATURDAY=? AND SUNDAY=?",
+								new String[] {user.getUserId(),
+                                        String.valueOf(data.getHour()),
+                                        String.valueOf(data.getMinute()),
+                                        data.isMonday()?"Y":"N",
+                                        data.isTuesday()?"Y":"N",
+                                        data.isWednesday()?"Y":"N",
+                                        data.isThursday()?"Y":"N",
+                                        data.isFriday()?"Y":"N",
+                                        data.isSaturday()?"Y":"N",
+                                        data.isSunday()?"Y":"N"}, null);
 				if(c!=null && c.moveToNext() && c.getInt(0)>0){
 					throw new Exception(ctx.getString(R.string.alarm_already_set));
 				}
@@ -466,10 +491,9 @@ public class ApplicationUtilities {
     			ctx.getContentResolver()
     				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 							new ContentValues(), 
-							new StringBuilder()
-								.append("INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
-								.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) ")
-								.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").toString(), 
+							"INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, " +
+                                    " WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 							new String[]{user.getUserId(), 
     									Integer.valueOf(data.getHour()).toString(), 
     									Integer.valueOf(data.getMinute()).toString(), 
@@ -959,7 +983,8 @@ public class ApplicationUtilities {
 	public static int cleanLog(Context ctx, String userId, int days) throws Exception{
 		try{
 			return ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
+						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userId).build(),
 								new ContentValues(), 
 								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID=?", 
 								new String[]{userId});
@@ -1284,14 +1309,14 @@ public class ApplicationUtilities {
 					
 					//delete schedulers in database
 					try{
-						c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, 
-															null, 
-															new StringBuilder("SELECT SCHEDULER_SYNC_ID FROM IDS_SCHEDULER_SYNC ")
-																.append(" WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
-															null, null);
-						while(c.moveToNext()){
-							removeSyncSchedulerData(userRemoved, new SchedulerSyncData(c.getInt(0)), ctx);
-						}
+						c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
+                                null, "SELECT SCHEDULER_SYNC_ID FROM IDS_SCHEDULER_SYNC WHERE USER_ID = ?",
+                                new String[]{userRemoved.getUserId()}, null);
+                        if(c!=null){
+                            while(c.moveToNext()){
+                                removeSyncSchedulerData(userRemoved, new SchedulerSyncData(c.getInt(0)), ctx);
+                            }
+                        }
 					}catch(Exception e){
 						e.printStackTrace();
 					}finally{
@@ -1302,17 +1327,18 @@ public class ApplicationUtilities {
 			    	
 					//delete logs in database
 			    	ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
+						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userRemoved.getUserId()).build(),
 								new ContentValues(), 
-								new StringBuilder("DELETE FROM IDS_SYNC_LOG WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
-								null);
+								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID = ?",
+								new String[]{userRemoved.getUserId()});
 			    	
 			    	//delete user in database
 			    	ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
 								new ContentValues(), 
-								new StringBuilder("DELETE FROM IDS_USER WHERE USER_ID=").append(userRemoved.getUserId()).toString(),
-								null);
+								"DELETE FROM IDS_USER WHERE USER_ID = ?",
+                                new String[]{userRemoved.getUserId()});
 			    	
 			    	//delete specific database for user
 			    	ctx.getContentResolver()

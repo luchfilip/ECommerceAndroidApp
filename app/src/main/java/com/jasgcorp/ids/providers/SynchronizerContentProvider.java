@@ -247,25 +247,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			if(!tableDataReceiveFromServerThread.isAlive()
 					&& !tableDataTransferToServerThread.isAlive()
 					&& !thumbImagesReceiverFromServer.isAlive()){
-				if(tableDataReceiveFromServerThread.getExceptionMessage()!=null){
-					errorMessage = errorMessage!=null 
-									? (errorMessage+" | "+tableDataReceiveFromServerThread.getExceptionMessage()) 
-									: tableDataReceiveFromServerThread.getExceptionMessage();
-					exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
-				}
-				if(tableDataTransferToServerThread.getExceptionMessage()!=null){
-					errorMessage = errorMessage!=null 
-									? (errorMessage+" | "+tableDataTransferToServerThread.getExceptionMessage()) 
-									: tableDataTransferToServerThread.getExceptionMessage();
-					exceptionClass = tableDataTransferToServerThread.getExceptionClass();
-				}
-				if(thumbImagesReceiverFromServer.getExceptionMessage()!=null){
-					errorMessage = errorMessage!=null
-							? (errorMessage+" | "+thumbImagesReceiverFromServer.getExceptionMessage())
-							: thumbImagesReceiverFromServer.getExceptionMessage();
-					exceptionClass = thumbImagesReceiverFromServer.getExceptionClass();
-				}
-
 				if(tableDataReceiveFromServerThread.getExceptionMessage()==null
 						&& tableDataTransferToServerThread.getExceptionMessage()==null
 						&& thumbImagesReceiverFromServer.getExceptionMessage()==null){
@@ -275,13 +256,43 @@ public class SynchronizerContentProvider extends ContentProvider{
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
 				}
-				//if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
-				//	syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
-				//}
-				//if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
-				//	syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
-				//}
+				if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
+					syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
+				}
+				if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
+					syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
+				}
+                //Si el porcentaje es mayor o igual a 100 y aún queda algún hilo de sincronización vivo
+                //entonces se coloca en 99.99 para que espere por el(los) hilo(s) que quedan por
+                //finalizar
+                if(syncPercentage>=100){
+                    //para el caso del catalogo no se toma en cuenta el hilo de imagenes
+                    if(tableDataReceiveFromServerThread.isAlive()
+                            || tableDataTransferToServerThread.isAlive()
+                            /*|| thumbImagesReceiverFromServer.isAlive()*/) {
+                        syncPercentage = 99.99F;
+                    }
+                }
 			}
+
+            if(syncPercentage>=100){
+                if(tableDataReceiveFromServerThread.getExceptionMessage()!=null){
+                    errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
+                    exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
+                }
+                if(tableDataTransferToServerThread.getExceptionMessage()!=null){
+                    errorMessage = errorMessage!=null
+                            ? (errorMessage+" | "+tableDataTransferToServerThread.getExceptionMessage())
+                            : tableDataTransferToServerThread.getExceptionMessage();
+                    exceptionClass = tableDataTransferToServerThread.getExceptionClass();
+                }
+                if(thumbImagesReceiverFromServer.getExceptionMessage()!=null){
+                    errorMessage = errorMessage!=null
+                            ? (errorMessage+" | "+thumbImagesReceiverFromServer.getExceptionMessage())
+                            : thumbImagesReceiverFromServer.getExceptionMessage();
+                    exceptionClass = thumbImagesReceiverFromServer.getExceptionClass();
+                }
+            }
 		}
     	cursor.addRow(new Object[]{syncPercentage, errorMessage, exceptionClass});
 		return cursor;
