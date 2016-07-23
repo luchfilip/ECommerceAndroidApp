@@ -1010,9 +1010,8 @@ public class Utils {
     }
 
     public static String getUrlScreenParameters(boolean mIsLandscape, Context context){
-        String urlScreenParameters = new String();
         try {
-            urlScreenParameters += mIsLandscape ? "&orientation=landscape" : "&orientation=portrait";
+            String urlScreenParameters = mIsLandscape ? "&orientation=landscape" : "&orientation=portrait";
             switch (context.getResources().getDisplayMetrics().densityDpi) {
                 case DisplayMetrics.DENSITY_LOW:    urlScreenParameters += "&screenPlayDensity=LOW";    break;
                 case DisplayMetrics.DENSITY_MEDIUM: urlScreenParameters += "&screenPlayDensity=MEDIUM"; break;
@@ -1035,10 +1034,11 @@ public class Utils {
                 default: urlScreenParameters += "&screenSize="+(context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK); break;
             }
             urlScreenParameters += "&smallestWidth="+context.getString(R.string.smallest_width);
+            return urlScreenParameters;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return urlScreenParameters;
+        return "";
     }
 
     /**

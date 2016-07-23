@@ -105,7 +105,8 @@ public class ProductDetailFragment extends Fragment {
                     }
                     mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
                     //Se agrega el producto a la lista de productos recientemente vistos
-                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                    (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId,
+                            Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
