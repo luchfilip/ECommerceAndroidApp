@@ -63,7 +63,6 @@ public class DataBaseUtilities {
                 JSONObject json = new JSONObject();
                 for(int i = 0; i < columnCount; i++){
                     try {
-
                         json.put(String.valueOf(i), cursor.getColumnName(i));
                     } catch(NullPointerException e){
                         json.remove(String.valueOf(i));
@@ -174,7 +173,7 @@ public class DataBaseUtilities {
      * @param context
      * @throws Exception
      */
-    public static void insertDataFromWSResultData(String data, String tableName, Context context, User user) throws Exception {
+    public static void insertDataFromWSResultData(String data, String tableName, int currentSyncSessionID, Context context, User user) throws Exception {
         int counterEntireCompressedData = 0;
         int counter;
         JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
@@ -183,7 +182,7 @@ public class DataBaseUtilities {
             int columnCount = 0;
             JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
                     .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
+            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (SYNC_SESSION_ID, ");
             try{
                 counter = 0;
                 Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
@@ -195,7 +194,7 @@ public class DataBaseUtilities {
                     }
                     columnCount++;
                 }
-                insertSentence.append(") VALUES (");
+                insertSentence.append(") VALUES (?, ");
                 for (int i = 0; i<columnCount; i++) {
                     insertSentence.append((i==0) ? "?" : ", ?");
                 }
@@ -243,10 +242,11 @@ public class DataBaseUtilities {
                     }
                     //Se prepara la data que se insertara
                     statement.clearBindings();
+                    statement.bindString(1, String.valueOf(currentSyncSessionID));
                     for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                         try {
                             //data que se insertara
-                            statement.bindString(columnIndex, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
+                            statement.bindString(columnIndex+1, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
                         } catch (JSONException e) {
                             //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
                         } catch (Exception e) {
@@ -257,6 +257,7 @@ public class DataBaseUtilities {
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
+                db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;

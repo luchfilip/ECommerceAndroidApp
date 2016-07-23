@@ -36,7 +36,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " CREATED_BY VARCHAR(255), " +
                     " UPDATE_TIME DATETIME, " +
                     " UPDATED_BY VARCHAR(255), " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY(USER_ID, USER_GROUP))";
 
     //private static final String CREATE_USER_PROFILE_TABLE 	=
@@ -65,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " LAST_RECEIVED_DATE DATE DEFAULT NULL, " +
                     " PRODUCT_TAX_ID INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID))";
 
 	public static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
@@ -76,6 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRIORITY INTEGER DEFAULT 1 NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, PRODUCT_PRICE_ID))";
 
 	public static final String CREATE_PRODUCT_IMAGE =
@@ -84,6 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " FILE_NAME VARCHAR(255) NOT NULL, " +
                     " PRIORITY INTEGER NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, FILE_NAME))";
 
     public static final String CREATE_PRODUCT_RATING =
@@ -91,6 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " RATING DOUBLE NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID))";
 
 	public static final String CREATE_PRODUCT_TAX =
@@ -99,6 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PERCENTAGE DOUBLE NOT NULL, " +
                     " NAME VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_TAX_ID))";
 
     public static final String CREATE_CURRENCY =
@@ -110,6 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " UNICODE_DECIMAL VARCHAR(32), " +
                     " UNICODE_HEX VARCHAR(32), " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (CURRENCY_ID))";
 
 	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
@@ -118,6 +125,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PRODUCT_RELATED_ID INTEGER NOT NULL, " +
                     " TIMES INTEGER DEFAULT 0 NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))";
 
 	public static final String CREATE_BRAND =
@@ -126,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " NAME VARCHAR(255) DEFAULT NULL, " +
                     " DESCRIPTION TEXT DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BRAND_ID))";
 
 	public static final String CREATE_CATEGORY =
@@ -134,6 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " NAME VARCHAR(255) DEFAULT NULL, " +
                     " DESCRIPTION TEXT DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (CATEGORY_ID))";
 
 	public static final String CREATE_SUBCATEGORY =
@@ -143,6 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " NAME VARCHAR(255) DEFAULT NULL, " +
                     " DESCRIPTION TEXT DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (SUBCATEGORY_ID))";
 
     public static final String CREATE_COMPANY =
@@ -159,6 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " FAX_NUMBER VARCHAR(128) DEFAULT NULL, " +
                     " WEB_PAGE VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (COMPANY_ID))";
 
 	public static final String CREATE_MAINPAGE_PRODUCT_SECTION =
@@ -168,6 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DESCRIPTION VARCHAR(255) DEFAULT NULL, " +
                     " PRIORITY INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID))";
 
 	public static final String CREATE_MAINPAGE_PRODUCT =
@@ -177,6 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PRODUCT_ID INTEGER NOT NULL, " +
                     " PRIORITY INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (MAINPAGE_PRODUCT_ID))";
 
 	public static final String CREATE_BANNER =
@@ -188,6 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " CATEGORY_ID INTEGER DEFAULT NULL, " +
                     " IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BANNER_ID))";
 
 	public static final String CREATE_BRAND_PROMOTIONAL_CARD =
@@ -203,6 +218,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PROMOTIONAL_TEXT_G_COLOR INTEGER DEFAULT NULL, " +
                     " PROMOTIONAL_TEXT_B_COLOR INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BRAND_PROMOTIONAL_CARD_ID))";
 
     public static final String CREATE_APP_PARAMETER =
@@ -216,6 +232,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DATE_VALUE DATE DEFAULT NULL, " +
                     " DATETIME_VALUE DATETIME DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (APP_PARAMETER_ID))";
 
     /*********************************************************************************************************************/
@@ -228,6 +245,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " LOG_MESSAGE TEXT, " +
                     " LOG_MESSAGE_DETAIL TEXT, " +
                     " LOG_VISIBILITY NUMERIC DEFAULT "+LogSyncData.INVISIBLE+", " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime'))) ";
 
     private static final String CREATE_SCHEDULER_TABLE 	=
@@ -244,6 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SATURDAY CHAR, " +
                     " SUNDAY CHAR, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 
     public static final String CREATE_BUSINESS_PARTNER =
@@ -259,6 +278,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
                     " PHONE_NUMBER VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BUSINESS_PARTNER_ID))";
 
     public static final String CREATE_USER_BUSINESS_PARTNER =
@@ -279,6 +299,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
 
     public static final String CREATE_USER_APP_PARAMETER =
@@ -293,6 +314,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DATE_VALUE DATE DEFAULT NULL, " +
                     " DATETIME_VALUE DATETIME DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, APP_PARAMETER_ID))";
 
     public static final String CREATE_ECOMMERCE_ORDER =
@@ -313,6 +335,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_ORDER_LINE =
@@ -333,6 +356,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_ORDER_LINE_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_SALES_ORDER =
@@ -353,6 +377,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_SALES_ORDER_ID, USER_ID))";
 
     public static final String CREATE_ECOMMERCE_SALES_ORDER_LINE =
@@ -373,6 +398,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_SALES_ORDER_LINE_ID, USER_ID))";
 
     public static final String CREATE_RECENT_SEARCH =
@@ -387,6 +413,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (RECENT_SEARCH_ID, USER_ID))";
 
 	public static final String CREATE_PRODUCT_RECENTLY_SEEN =
@@ -400,6 +427,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID, PRODUCT_ID))";
 
     public static final String CREATE_RECOMMENDED_PRODUCT =
@@ -408,6 +436,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PRODUCT_ID INTEGER NOT NULL, " +
                     " PRIORITY INTEGER NOT NULL DEFAULT 0, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BUSINESS_PARTNER_ID, PRODUCT_ID))";
 
     public static final String CREATE_USER_COMPANY =
@@ -429,6 +458,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID))";
 
 	/**

@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,10 +34,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.AuthenticatorActivity;
+import com.jasgcorp.ids.datamanager.TableDataReceiverFromServer;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.AccountUtilities;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
@@ -955,6 +953,25 @@ public class Utils {
             }
         }
         return noImageAvailable;
+    }
+
+    /**
+     *
+     * @param context
+     */
+    public static int getSyncSessionId(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getInt(TableDataReceiverFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, 0);
+    }
+
+    /**
+     *
+     * @param context
+     */
+    public static void incrementSyncSessionId(Context context){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putInt(TableDataReceiverFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, getSyncSessionId(context) + 1);
+        editor.apply();
     }
 
     /**

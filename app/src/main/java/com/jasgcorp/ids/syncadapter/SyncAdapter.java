@@ -266,17 +266,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		        			}
 		        			//notify synchronization progress percentage
 		        			recordLogAndSendBroadcast(user, SYNCHRONIZATION_PROGRESS, ApplicationUtilities.formatFloatTwoDecimals(syncProgressPercentage), syncInitTime, LogSyncData.INVISIBLE, getContext());
-		        			//se espera por unos 1000 milisegundos antes de volver a preguntar
+		        			//se espera por unos 2000 milisegundos antes de volver a preguntar
 		            		try {
-		            		    Thread.sleep(1000);
+		            		    Thread.sleep(2000);
 		            		} catch(InterruptedException ex) {
 		            		    Thread.currentThread().interrupt();
 		            		}
 	        			}
-        			} catch(Exception e){
-        				e.printStackTrace();
-        				throw e;
-        			}finally{
+        			} finally{
         				if(result!=null){
         					result.close();
         				}

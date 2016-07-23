@@ -1,28 +1,22 @@
 package com.jasgcorp.ids.datamanager;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
+import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import net.iharder.Base64;
 
@@ -32,6 +26,8 @@ import net.iharder.Base64;
 public class TableDataReceiverFromServer extends Thread {
 	
 	private static final String TAG = TableDataReceiverFromServer.class.getSimpleName();
+
+    public static final String SYNC_SESSION_ID_SHARED_PREFS_KEY = "SYNC_SESSION_ID_SHARED_PREFS_KEY";
 
 	private Context context;
 	private boolean sync = true;
@@ -67,12 +63,14 @@ public class TableDataReceiverFromServer extends Thread {
 		Log.d(TAG, "run()");
 		try {
             syncPercentage = 0;
+            Utils.incrementSyncSessionId(context);
+
             long initTime = System.currentTimeMillis();
 			if(sync){
-				getGlobalDataFromWS(context, getGlobalTablesToSync());
+				getGlobalDataFromWS(context, Utils.getSyncSessionId(context), getGlobalTablesToSync());
 			}
 			if(sync){
-				getUserDataFromWS(context, mUser, getUserTablesToSync());
+				getUserDataFromWS(context, Utils.getSyncSessionId(context), mUser, getUserTablesToSync());
 			}
             syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
@@ -100,11 +98,11 @@ public class TableDataReceiverFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
+	public void getGlobalDataFromWS(Context context, int currentSyncSessionID, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if(sync) {
-                    execRemoteQueryAndInsert(context, null, tableToSync.toString());
+                    execRemoteQueryAndInsert(context, null, currentSyncSessionID, tableToSync.toString());
                     syncPercentage++;
                 }
             }
@@ -126,11 +124,11 @@ public class TableDataReceiverFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-	public void getUserDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
+	public void getUserDataFromWS(Context context, int currentSyncSessionID, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if(sync){
-                    execRemoteQueryAndInsert(context, user, tableToSync.toString());
+                    execRemoteQueryAndInsert(context, user, currentSyncSessionID, tableToSync.toString());
                     syncPercentage++;
                 }
             }
@@ -143,7 +141,7 @@ public class TableDataReceiverFromServer extends Thread {
 	 * @param user
 	 * @param tableName
 	 */
-	private void execRemoteQueryAndInsert(Context context, User user, String tableName) throws Exception {
+	private void execRemoteQueryAndInsert(Context context, User user, int currentSyncSessionID, String tableName) throws Exception {
         Cursor c = null;
         try{
             if (user!=null) {
@@ -174,7 +172,7 @@ public class TableDataReceiverFromServer extends Thread {
                 Object result = a.getWSResponse();
                 if (result instanceof SoapPrimitive) {
                     try {
-                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, context, user);
+                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, currentSyncSessionID, context, user);
                     } catch (IOException e) {
                         if (!result.toString().equals("NOTHING_TO_SYNC")){
                             throw e;
