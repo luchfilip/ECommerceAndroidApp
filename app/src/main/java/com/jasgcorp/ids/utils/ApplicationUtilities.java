@@ -41,7 +41,6 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncInfo;
@@ -318,7 +317,7 @@ public class ApplicationUtilities {
             ctx.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            new ContentValues(),
+                            null,
                             "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
                                     " VALUES (?, ?, ?, ?, ?)",
                             new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
@@ -341,7 +340,7 @@ public class ApplicationUtilities {
 		try{
 	    	ctx.getContentResolver()
 	    		.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-						new ContentValues(), 
+						null,
 						"INSERT INTO IDS_USER (USER_ID, BUSINESS_PARTNER_ID, USER_PROFILE_ID, SERVER_USER_ID, " +
                                 " USER_NAME, SERVER_ADDRESS, USER_GROUP, AUTH_TOKEN) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -490,7 +489,7 @@ public class ApplicationUtilities {
     			
     			ctx.getContentResolver()
     				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-							new ContentValues(), 
+							null,
 							"INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, " +
                                     " WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -623,7 +622,7 @@ public class ApplicationUtilities {
     		if(user!=null && data!=null){
     			int rowsAffected = ctx.getContentResolver()
 			    						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-			    								new ContentValues(), 
+			    								null,
 			    								"DELETE FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=?",
 		    									new String[]{Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
     			if(rowsAffected>0){
@@ -673,7 +672,7 @@ public class ApplicationUtilities {
     		if(user!=null && data!=null){
     			int rowsAffected = ctx.getContentResolver()
     									.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-    											new ContentValues(), 
+    											null,
     											"UPDATE IDS_SCHEDULER_SYNC SET IS_ACTIVE=? WHERE SCHEDULER_SYNC_ID=?",
     											new String[]{data.isActive()?"Y":"N", Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
     			if(rowsAffected>0){
@@ -985,7 +984,7 @@ public class ApplicationUtilities {
 			return ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userId).build(),
-								new ContentValues(), 
+								null,
 								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID=?", 
 								new String[]{userId});
 		}catch(Exception e){
@@ -1329,14 +1328,14 @@ public class ApplicationUtilities {
 			    	ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userRemoved.getUserId()).build(),
-								new ContentValues(), 
+								null,
 								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID = ?",
 								new String[]{userRemoved.getUserId()});
 			    	
 			    	//delete user in database
 			    	ctx.getContentResolver()
 						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-								new ContentValues(), 
+								null,
 								"DELETE FROM IDS_USER WHERE USER_ID = ?",
                                 new String[]{userRemoved.getUserId()});
 			    	
@@ -1345,7 +1344,7 @@ public class ApplicationUtilities {
 						.update(DataBaseContentProvider.DROP_USER_DB_URI.buildUpon()
 								.appendQueryParameter(DataBaseContentProvider.KEY_USER_DB_NAME, ApplicationUtilities.getDatabaseNameByUser(userRemoved))
 								.appendQueryParameter(DataBaseContentProvider.KEY_USER_SAVE_DB_EXTERNAL_CARD, Boolean.valueOf(userRemoved.isSaveDBInExternalCard()).toString()).build(), 
-								new ContentValues(), 
+								null,
 								null, 
 								null);
 				}catch(Exception e){

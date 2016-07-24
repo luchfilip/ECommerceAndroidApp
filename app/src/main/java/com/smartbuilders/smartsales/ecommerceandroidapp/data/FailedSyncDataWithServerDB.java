@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerceandroidapp.data;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -25,31 +24,23 @@ public class FailedSyncDataWithServerDB {
     }
 
     public void insertFailedSyncDataWithServerRow(String selection, String selectionArgs, int columnCount) {
-        mContext.getContentResolver()
-                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                        null,
-                        "INSERT INTO FAILED_SYNC_DATA_WITH_SERVER (selection, selectionArgs, columnCount) VALUES (?, ?, ?) ",
-                        new String[]{selection, selectionArgs, String.valueOf(columnCount)});
+        mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                null,
+                "INSERT INTO FAILED_SYNC_DATA_WITH_SERVER (selection, selectionArgs, columnCount) VALUES (?, ?, ?) ",
+                new String[]{selection, selectionArgs, String.valueOf(columnCount)});
     }
 
     public void deleteFailedSyncDataWithServerById(int id){
-        mContext.getContentResolver()
-                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                        null, "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER WHERE row_id = ?",
-                        new String[]{String.valueOf(id)});
+        mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                null, "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER WHERE row_id = ?", new String[]{String.valueOf(id)});
     }
 
     public void cleanFailedSyncDataWithServer(){
-        try {
-            mContext.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            new ContentValues(), "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                null, "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER", null);
     }
 
     public List<FailedSyncDataWithServer> getAllFailedSyncDataWithServer(){
