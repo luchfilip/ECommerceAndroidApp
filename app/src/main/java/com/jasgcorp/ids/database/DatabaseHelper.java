@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 9;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -234,6 +234,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (APP_PARAMETER_ID))";
+
+    public static final String CREATE_SERVER_ADDRESS_BACKUP =
+            "CREATE TABLE IF NOT EXISTS SERVER_ADDRESS_BACKUP (" +
+                    "SERVER_ADDRESS VARCHAR(255) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (SERVER_ADDRESS))";
 
     /*********************************************************************************************************************/
 
@@ -516,6 +523,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_BANNER);
             db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
             db.execSQL(CREATE_APP_PARAMETER);
+            db.execSQL(CREATE_SERVER_ADDRESS_BACKUP);
 		}else{
             db.execSQL(CREATE_LOG_TABLE);
             db.execSQL(CREATE_SCHEDULER_TABLE);
@@ -536,9 +544,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(!this.dataBaseName.equals(DATABASE_NAME) && oldVersion<7) {
-            db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
+        if(this.dataBaseName.equals(DATABASE_NAME)){
+            if(oldVersion<8){
+                db.execSQL(CREATE_SERVER_ADDRESS_BACKUP);
+            }
+        }else{
+            if(oldVersion<7) {
+                db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
+            }
         }
+
 	}
 
 	@Override

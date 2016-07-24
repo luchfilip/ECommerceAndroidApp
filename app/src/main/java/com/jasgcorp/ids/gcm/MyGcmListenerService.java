@@ -34,7 +34,9 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
+import com.jasgcorp.ids.utils.ServerUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.ServerAddressBackupDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
@@ -135,6 +137,23 @@ public class MyGcmListenerService extends GcmListenerService {
      * en la consulta, o no.
      */
     public static final String KEY_PARAM_FOLDER_PATH = "com.jasgcorp.ids.gcm.KEY_PARAM_FOLDER_PATH";
+
+    /**
+     * solicita a la aplicacion que modifique la direccion IP del serrvidor segun el valor de
+     * KEY_PARAM_SERVER_ADDRESS
+     */
+    public static final String KEY_REQUEST_CHANGE_SERVER_ADDRESS = "com.jasgcorp.ids.gcm.KEY_REQUEST_CHANGE_SERVER_ADDRESS";
+
+    /**
+     * parametro que representa la direccion IP del servidor
+     */
+    public static final String KEY_PARAM_SERVER_ADDRESS = "com.jasgcorp.ids.gcm.KEY_PARAM_SERVER_ADDRESS";
+
+    /**
+     * le notifica a la aplicacion que el servidor esta disponible para sincronizar
+     */
+    public static final String KEY_NOTIFY_SERVER_IS_ALIVE = "com.jasgcorp.ids.gcm.KEY_NOTIFY_SERVER_IS_ALIVE";
+
     private static final String TAG = MyGcmListenerService.class.getSimpleName();
 
     /**
@@ -167,10 +186,9 @@ public class MyGcmListenerService extends GcmListenerService {
                         if(action.equals(KEY_REQUEST_SYNC)
                                 && data.containsKey(KEY_PARAM_SERVER_USER_ID)){
                             try {
-                                String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                if (serverUserId != null) {
+                                if (data.getString(KEY_PARAM_SERVER_USER_ID) != null) {
                                     Account userAccount = ApplicationUtilities
-                                            .getAccountByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                            .getAccountByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                     if(userAccount!=null){
                                         if (!ApplicationUtilities.isSyncActive(this, userAccount)) {
                                             //se manda a correr la sincronizacion de manera inmediata
@@ -195,11 +213,10 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_INVALIDATE_USER_AUTH_TOKEN)
                                 && data.containsKey(KEY_PARAM_SERVER_USER_ID)){
                             try {
-                                String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                if(serverUserId!=null){
+                                if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
                                     AccountManager accountManager = AccountManager.get(this);
                                     Account userAccount = ApplicationUtilities
-                                            .getAccountByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                            .getAccountByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                     if(userAccount!=null){
                                         accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
@@ -224,12 +241,11 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 User user = null;
                                 if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                    String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                    if (serverUserId != null) {
+                                    if (data.getString(KEY_PARAM_SERVER_USER_ID) != null) {
                                         user = ApplicationUtilities
-                                                .getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                                .getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                         if (user == null) {
-                                            throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                            throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                         }
                                     }else{
                                         throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
@@ -277,15 +293,13 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_FILE_INFO)
                                 && data.containsKey(KEY_PARAM_FILE_PATH)){
                             try {
-                                String filePath = data.getString(KEY_PARAM_FILE_PATH);
-                                if(filePath!=null){
+                                if(data.getString(KEY_PARAM_FILE_PATH)!=null){
                                     if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                        String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                        if(serverUserId!=null){
-                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                        if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
+                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                             if (user!=null) {
                                                 File file = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                                                        + File.separator + user.getUserName(), filePath);
+                                                        + File.separator + user.getUserName(), data.getString(KEY_PARAM_FILE_PATH));
                                                 if(file.exists()){
                                                     sendResponseToServer(getApplicationContext(), requestMethodName,
                                                             requestId, "file: \"" + file.getAbsolutePath() + "\", "+getFileInfo(file), null);
@@ -293,13 +307,13 @@ public class MyGcmListenerService extends GcmListenerService {
                                                     throw new Exception("file: \"" + file.getAbsolutePath() + "\" does not exists.");
                                                 }
                                             } else {
-                                                throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                                throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                             }
                                         }else{
                                             throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                         }
                                     }else{
-                                        File file = new File(getApplicationContext().getExternalFilesDir(null), filePath);
+                                        File file = new File(getApplicationContext().getExternalFilesDir(null), data.getString(KEY_PARAM_FILE_PATH));
                                         if(file.exists()){
                                             sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "file: \"" + file.getAbsolutePath() + "\", "+getFileInfo(file), null);
@@ -319,15 +333,13 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_DELETE_FILE)
                                 && data.containsKey(KEY_PARAM_FILE_PATH)){
                             try {
-                                String filePath = data.getString(KEY_PARAM_FILE_PATH);
-                                if(filePath!=null){
+                                if(data.getString(KEY_PARAM_FILE_PATH)!=null){
                                     if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                        String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                        if(serverUserId!=null){
-                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                        if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
+                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                             if (user!=null) {
                                                 File file = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                                                        + File.separator + user.getUserName(), filePath);
+                                                        + File.separator + user.getUserName(), data.getString(KEY_PARAM_FILE_PATH));
                                                 if(file.exists()){
                                                     if(file.delete()){
                                                         sendResponseToServer(getApplicationContext(), requestMethodName,
@@ -339,13 +351,13 @@ public class MyGcmListenerService extends GcmListenerService {
                                                     throw new Exception("file: \"" + file.getAbsolutePath() + "\" does not exists.");
                                                 }
                                             } else {
-                                                throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                                throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                             }
                                         }else{
                                             throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                         }
                                     }else{
-                                        File file = new File(getApplicationContext().getExternalFilesDir(null), filePath);
+                                        File file = new File(getApplicationContext().getExternalFilesDir(null), data.getString(KEY_PARAM_FILE_PATH));
                                         if(file.exists()){
                                             if(file.delete()){
                                                 sendResponseToServer(getApplicationContext(), requestMethodName,
@@ -369,16 +381,14 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_FILES_NAME_BY_FOLDER)
                                 && data.containsKey(KEY_PARAM_FOLDER_PATH)){
                             try {
-                                String folderPath = data.getString(KEY_PARAM_FOLDER_PATH);
-                                if(folderPath!=null){
+                                if(data.getString(KEY_PARAM_FOLDER_PATH)!=null){
                                     if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
                                         if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                            String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                            if(serverUserId!=null){
-                                                User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                            if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
+                                                User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                                 if (user!=null) {
                                                     File folder = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                                                            + File.separator + user.getUserName(), folderPath);
+                                                            + File.separator + user.getUserName(), data.getString(KEY_PARAM_FOLDER_PATH));
                                                     if(folder.exists()){
                                                         sendResponseToServer(getApplicationContext(), requestMethodName,
                                                                 requestId, "folder: \"" + folder.getAbsolutePath() +
@@ -387,7 +397,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                         throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" does not exists.");
                                                     }
                                                 } else {
-                                                    throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                                    throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                                 }
                                             }else{
                                                 throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
@@ -396,7 +406,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                             throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                         }
                                     }else{
-                                        File folder = new File(getApplicationContext().getExternalFilesDir(null), folderPath);
+                                        File folder = new File(getApplicationContext().getExternalFilesDir(null), data.getString(KEY_PARAM_FOLDER_PATH));
                                         if(folder.exists()){
                                             sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "folder: \"" + folder.getAbsolutePath() +
@@ -417,15 +427,13 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_REQUEST_FOLDER_INFO)
                                 && data.containsKey(KEY_PARAM_FOLDER_PATH)){
                             try {
-                                String folderPath = data.getString(KEY_PARAM_FOLDER_PATH);
-                                if(folderPath!=null){
+                                if(data.getString(KEY_PARAM_FOLDER_PATH)!=null){
                                     if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                        String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                        if(serverUserId!=null){
-                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                        if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
+                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                             if (user!=null) {
                                                 File folder = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
-                                                        + File.separator + user.getUserName(), folderPath);
+                                                        + File.separator + user.getUserName(), data.getString(KEY_PARAM_FOLDER_PATH));
                                                 if(folder.exists()){
                                                     sendResponseToServer(getApplicationContext(), requestMethodName,
                                                             requestId, "folder: \"" + folder.getAbsolutePath() + "\", "+getFolderInfo(folder), null);
@@ -433,13 +441,13 @@ public class MyGcmListenerService extends GcmListenerService {
                                                     throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" does not exists.");
                                                 }
                                             } else {
-                                                throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                                throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                             }
                                         }else{
                                             throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is null.");
                                         }
                                     }else{
-                                        File folder = new File(getApplicationContext().getExternalFilesDir(null), folderPath);
+                                        File folder = new File(getApplicationContext().getExternalFilesDir(null), data.getString(KEY_PARAM_FOLDER_PATH));
                                         if(folder.exists()){
                                             sendResponseToServer(getApplicationContext(), requestMethodName,
                                                     requestId, "folder: \"" + folder.getAbsolutePath() + "\", "+getFolderInfo(folder), null);
@@ -462,9 +470,8 @@ public class MyGcmListenerService extends GcmListenerService {
                                 String folderPath = data.getString(KEY_PARAM_FOLDER_PATH);
                                 if(folderPath!=null){
                                     if(data.containsKey(KEY_PARAM_SERVER_USER_ID)){
-                                        String serverUserId = data.getString(KEY_PARAM_SERVER_USER_ID);
-                                        if(serverUserId!=null){
-                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
+                                        if(data.getString(KEY_PARAM_SERVER_USER_ID)!=null){
+                                            User user = ApplicationUtilities.getUserByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
                                             if (user!=null) {
                                                 File folder = new File(getApplicationContext().getExternalFilesDir(null) + File.separator + user.getUserGroup()
                                                         + File.separator + user.getUserName(), folderPath);
@@ -479,7 +486,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                     throw new Exception("folder: \"" + folder.getAbsolutePath() + "\" does not exists.");
                                                 }
                                             } else {
-                                                throw new Exception("serverUserId is "+serverUserId+" but user is null.");
+                                                throw new Exception("serverUserId is "+data.getString(KEY_PARAM_SERVER_USER_ID)+" but user is null.");
                                             }
                                         }else{
                                             throw new Exception("data.containsKey(KEY_PARAM_SERVER_USER_ID) but serverUserId is not null but user is null.");
@@ -505,6 +512,49 @@ public class MyGcmListenerService extends GcmListenerService {
                                 sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                         "action.equals(KEY_REQUEST_DELETE_FOLDER) " +
                                                 "&& data.containsKey(KEY_PARAM_FOLDER_PATH)", e.getMessage());
+                            }
+                        }else if(action.equals(KEY_REQUEST_CHANGE_SERVER_ADDRESS)
+                                && data.containsKey(KEY_PARAM_SERVER_ADDRESS)
+                                && data.containsKey(KEY_PARAM_SERVER_USER_ID)) {
+                            try {
+                                if(data.get(KEY_PARAM_SERVER_ADDRESS)!=null
+                                        && data.get(KEY_PARAM_SERVER_USER_ID)!=null){
+                                    //Se almacena la direccion como una nueva direccion de backup
+                                    (new ServerAddressBackupDB(getApplicationContext()))
+                                            .addServerAddressBackup(data.get(KEY_PARAM_SERVER_ADDRESS).toString());
+
+                                    AccountManager accountManager = AccountManager.get(this);
+                                    Account userAccount = ApplicationUtilities
+                                            .getAccountByServerUserIdFromAccountManager(getApplicationContext(), data.getString(KEY_PARAM_SERVER_USER_ID));
+                                    if(userAccount!=null){
+                                        if(ServerUtilities.isServerAvailableByAddress(data.get(KEY_PARAM_SERVER_ADDRESS).toString())){
+                                            accountManager.setUserData(userAccount,
+                                                    AccountGeneral.USERDATA_SERVER_ADDRESS,
+                                                    data.get(KEY_PARAM_SERVER_ADDRESS).toString());
+                                            sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
+                                                    "Server address changed, new address: "+data.get(KEY_PARAM_SERVER_ADDRESS).toString(), null);
+                                        }else{
+                                            throw new Exception("Server is not available with address: "+data.get(KEY_PARAM_SERVER_ADDRESS).toString());
+                                        }
+                                    }else{
+                                        throw new Exception("userAccount is null.");
+                                    }
+                                }else{
+                                    throw new Exception("data.getString(KEY_PARAM_SERVER_ADDRESS) is null or data.getString(KEY_PARAM_SERVER_USER_ID) is null");
+                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
+                                        "action.equals(KEY_REQUEST_CHANGE_SERVER_ADDRESS)" +
+                                                " && data.containsKey(KEY_PARAM_SERVER_ADDRESS)", e.getMessage());
+                            }
+                        }else if(action.equals(KEY_NOTIFY_SERVER_IS_ALIVE)){
+                            try {
+
+                            } catch (Exception e){
+                                e.printStackTrace();
+                                sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
+                                        "action.equals(KEY_NOTIFY_SERVER_IS_ALIVE)", e.getMessage());
                             }
                         }else{
                             sendResponseToServer(getApplicationContext(), requestMethodName, requestId, null, "action no es compatible con ninguna de las opciones");
