@@ -51,10 +51,10 @@ public class NetworkReceiver extends BroadcastReceiver {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
                                         Log.d(TAG, "lastSuccessFullySyncTime: "+lastSuccessFullySyncTime.toString());
-                                        initSyncDataWithServerService(context, user.getUserId());
+                                        ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());
                                     }
                                 }else{
-                                    initSyncDataWithServerService(context, user.getUserId());
+                                    ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());
                                 }
                             }else{
                                 ApplicationUtilities.initSyncByAccount(context, account);
@@ -68,13 +68,6 @@ public class NetworkReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void initSyncDataWithServerService(Context context, String userId){
-        Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
-        syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
-        syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
-        context.startService(syncDataIntent);
     }
 
 }

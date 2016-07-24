@@ -43,6 +43,7 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 /**
@@ -550,7 +551,22 @@ public class MyGcmListenerService extends GcmListenerService {
                             }
                         }else if(action.equals(KEY_NOTIFY_SERVER_IS_ALIVE)){
                             try {
-
+                                AccountManager mAccountManager = AccountManager.get(getApplicationContext());
+                                for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
+                                    User user = new User();
+                                    user.setUserId(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+                                    Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(getApplicationContext(), user);
+                                    if(lastSuccessFullySyncTime!=null){
+                                        long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
+                                        if(seconds >= Parameter.getSyncPeriodicityInSeconds(getApplicationContext(), user)) {
+                                            ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
+                                        }else{
+                                            ApplicationUtilities.initSyncDataWithServerService(getApplicationContext(), user.getUserId());
+                                        }
+                                    }else{
+                                        ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
+                                    }
+                                }
                             } catch (Exception e){
                                 e.printStackTrace();
                                 sendResponseToServer(getApplicationContext(), requestMethodName, requestId,

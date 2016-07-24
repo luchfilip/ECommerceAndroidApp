@@ -33,6 +33,7 @@ import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver;
+import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -1427,4 +1428,11 @@ public class ApplicationUtilities {
 		}
 		return new LogSyncData(logDate, logType, logMessage, logMessageDetail);
     }
+
+	public static void initSyncDataWithServerService(Context context, String userId){
+		Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
+		syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
+		syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
+		context.startService(syncDataIntent);
+	}
 }
