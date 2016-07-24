@@ -125,7 +125,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                         mUserWriteableDB = new DatabaseHelper(getContext(), ApplicationUtilities
                                 .getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID))).getReadableDatabase();
                     }
-                    mUserWriteableDB.execSQL(selection, selectionArgs);
+					if (selectionArgs!=null) {
+                    	mUserWriteableDB.execSQL(selection, selectionArgs);
+					} else {
+						mUserWriteableDB.execSQL(selection);
+					}
                     if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
                             && Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
                         Intent syncDataIntent = new Intent(getContext(), SyncDataWithServer.class);
@@ -140,7 +144,11 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
                     if(mIDSWriteableDB==null){
                         mIDSWriteableDB = dbHelper.getWritableDatabase();
                     }
-                    mIDSWriteableDB.execSQL(selection, selectionArgs);
+                    if (selectionArgs!=null) {
+                        mIDSWriteableDB.execSQL(selection, selectionArgs);
+                    } else {
+                        mIDSWriteableDB.execSQL(selection);
+                    }
 	    		}
 	    		response = 1;
 			break;
