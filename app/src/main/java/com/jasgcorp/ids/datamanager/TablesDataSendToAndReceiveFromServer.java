@@ -18,6 +18,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.data.FailedSyncDataWithServerDB;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
@@ -70,6 +71,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             long initTime = System.currentTimeMillis();
             if (sync) {
                 sendUserDataToServer(getUserTablesAndSQLToSync());
+                (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
             }
 			if(sync){
 				getGlobalDataFromWS(context, Utils.getSyncSessionId(context), getGlobalTablesToSync());
@@ -106,7 +108,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private void sendUserDataToServer(JSONObject userTablesToSync) throws Exception {
         Iterator<?> keysTemp = userTablesToSync.keys();
         while(keysTemp.hasNext()){
-            try {
+            //try {
                 if(sync){
                     String key = (String) keysTemp.next();
                     Object result = DataBaseUtilities
@@ -128,9 +130,9 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     //se detiene el bucle
                     break;
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            //} catch (JSONException e) {
+            //    e.printStackTrace();
+            //}
         }
     }
 

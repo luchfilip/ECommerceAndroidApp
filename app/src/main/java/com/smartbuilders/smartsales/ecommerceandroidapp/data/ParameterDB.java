@@ -168,41 +168,35 @@ public class ParameterDB {
             }
         }
         if(paramFound){
-            try {
-                switch (tableColumn) {
-                    case INTEGER_VALUE_COLUMN_NAME:
-                        return Integer.valueOf(result);
-                    case DOUBLE_VALUE_COLUMN_NAME:
-                        return Double.valueOf(result);
-                    case BOOLEAN_VALUE_COLUMN_NAME:
-                        return Boolean.valueOf(result);
-                    case DATE_VALUE_COLUMN_NAME:
+            switch (tableColumn) {
+                case INTEGER_VALUE_COLUMN_NAME:
+                    return Integer.valueOf(result);
+                case DOUBLE_VALUE_COLUMN_NAME:
+                    return Double.valueOf(result);
+                case BOOLEAN_VALUE_COLUMN_NAME:
+                    return Boolean.valueOf(result);
+                case DATE_VALUE_COLUMN_NAME:
+                    try {
+                        return (new SimpleDateFormat("yyyy-MM-dd")).parse(result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case DATETIME_VALUE_COLUMN_NAME:
+                    try{
+                        return new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(result).getTime());
+                    }catch(ParseException ex){
                         try {
-                            return (new SimpleDateFormat("yyyy-MM-dd")).parse(result);
-                        } catch (Exception e) {
+                            return new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(result).getTime());
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        break;
-                    case DATETIME_VALUE_COLUMN_NAME:
-                        try{
-                            return new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(result).getTime());
-                        }catch(ParseException ex){
-                            try {
-                                return new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(result).getTime());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }catch(Exception e){
-                            throw e;
-                        }
-                        break;
-                    case TEXT_VALUE_COLUMN_NAME:
-                        return result;
-                }
-                return result;
-            } catch (Exception e) {
-                throw e;
+                    }
+                    break;
+                case TEXT_VALUE_COLUMN_NAME:
+                    return result;
             }
+            return result;
         } else {
             throw new Exception("The parameter with the id: " + parameterId + " was not found.");
         }

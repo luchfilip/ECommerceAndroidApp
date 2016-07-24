@@ -66,7 +66,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 	
 	private static final UriMatcher uriMatcher;
 
-	//private TableDataTransferToServer tableDataTransferToServerThread;
 	private TablesDataSendToAndReceiveFromServer tableDataReceiveFromServerThread;
 	private ThumbImagesReceiverFromServer thumbImagesReceiverFromServer;
 	
@@ -162,10 +161,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
-				//tableDataTransferToServerThread = new TableDataTransferToServer(user, getContext());
 				tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext());
 				thumbImagesReceiverFromServer = new ThumbImagesReceiverFromServer(user, getContext());
-				//tableDataTransferToServerThread.start();
 				tableDataReceiveFromServerThread.start();
 				thumbImagesReceiverFromServer.start();
 				result = true;
@@ -175,9 +172,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			} catch (Exception e) {
 				exceptionClass = e.getClass().getName();
 				e.printStackTrace();
-				//if(tableDataTransferToServerThread!=null && tableDataTransferToServerThread.isAlive()){
-				//	tableDataTransferToServerThread.stopSynchronization();
-				//}
 				if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 					tableDataReceiveFromServerThread.stopSynchronization();
 				}
@@ -204,9 +198,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			//if(tableDataTransferToServerThread!=null && tableDataTransferToServerThread.isAlive()){
-			//	tableDataTransferToServerThread.stopSynchronization();
-			//}
 			if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 				tableDataReceiveFromServerThread.stopSynchronization();
 			}
@@ -215,9 +206,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 			}
 			
 			//Esperar a que los hilos de sincronizacion se detengan
-			//if(tableDataTransferToServerThread!=null){
-			//	while(tableDataTransferToServerThread.isAlive()){ }
-			//}else
             if(tableDataReceiveFromServerThread!=null){
 				while(tableDataReceiveFromServerThread.isAlive()){ }
 			}else if(thumbImagesReceiverFromServer!=null){
@@ -245,10 +233,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
 			if(!tableDataReceiveFromServerThread.isAlive()
-					//&& !tableDataTransferToServerThread.isAlive()
 					&& !thumbImagesReceiverFromServer.isAlive()){
 				if(tableDataReceiveFromServerThread.getExceptionMessage()==null
-						//&& tableDataTransferToServerThread.getExceptionMessage()==null
 						&& thumbImagesReceiverFromServer.getExceptionMessage()==null){
 					syncPercentage = 100F;
 				}
@@ -256,9 +242,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
 				}
-				//if(tableDataTransferToServerThread.getSyncPercentage()>syncPercentage){
-				//	syncPercentage = tableDataTransferToServerThread.getSyncPercentage();
-				//}
 				if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
 					syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
 				}
@@ -267,9 +250,7 @@ public class SynchronizerContentProvider extends ContentProvider{
                 //finalizar
                 if(syncPercentage>=100){
                     //para el caso del catalogo no se toma en cuenta el hilo de imagenes
-                    if(tableDataReceiveFromServerThread.isAlive()
-                            //|| tableDataTransferToServerThread.isAlive()
-                            /*|| thumbImagesReceiverFromServer.isAlive()*/) {
+                    if(tableDataReceiveFromServerThread.isAlive()) {
                         syncPercentage = 99.99F;
                     }
                 }
@@ -280,12 +261,6 @@ public class SynchronizerContentProvider extends ContentProvider{
                     errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
                     exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
                 }
-                //if(tableDataTransferToServerThread.getExceptionMessage()!=null){
-                //    errorMessage = errorMessage!=null
-                //            ? (errorMessage+" | "+tableDataTransferToServerThread.getExceptionMessage())
-                //            : tableDataTransferToServerThread.getExceptionMessage();
-                //    exceptionClass = tableDataTransferToServerThread.getExceptionClass();
-                //}
                 if(thumbImagesReceiverFromServer.getExceptionMessage()!=null){
                     errorMessage = errorMessage!=null
                             ? (errorMessage+" | "+thumbImagesReceiverFromServer.getExceptionMessage())
@@ -304,7 +279,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 * @return
 	 */
 	private Cursor signUp(Uri uri){
-		MatrixCursor cursor = new MatrixCursor(new String[]{"businessPartnerId", "userProfileId", "serverUserId", "authToken", "error_message", "exception_class"});
+		MatrixCursor cursor = new MatrixCursor(new String[]{"businessPartnerId", "userProfileId",
+                "serverUserId", "authToken", "error_message", "exception_class"});
 		String businessPartnerId = "";
         String userProfileId = "";
 		String serverUserId = "";

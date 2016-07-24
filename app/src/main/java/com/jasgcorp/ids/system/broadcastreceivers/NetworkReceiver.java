@@ -5,6 +5,7 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
 import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import android.accounts.Account;
@@ -32,7 +33,7 @@ public class NetworkReceiver extends BroadcastReceiver {
         ConnectivityManager conn =  (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conn.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+        if(networkInfo != null){
             try {
                 AccountManager accountManager = AccountManager.get(context);
                 Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.authenticator_account_type));
@@ -45,10 +46,15 @@ public class NetworkReceiver extends BroadcastReceiver {
                             Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(context, user);
                             if(lastSuccessFullySyncTime!=null){
                                 long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
-                                if(seconds >= Parameter.getSyncPeriodicityInSeconds(context, user)) {
-                                    ApplicationUtilities.initSyncByAccount(context, account);
+                                if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+                                    if(seconds >= Parameter.getSyncPeriodicityInSeconds(context, user)) {
+                                        ApplicationUtilities.initSyncByAccount(context, account);
+                                    }else{
+                                        Log.d(TAG, "lastSuccessFullySyncTime: "+lastSuccessFullySyncTime.toString());
+                                        initSyncDataWithServerService(context, user.getUserId());
+                                    }
                                 }else{
-                                    Log.d(TAG, "lastSuccessFullySyncTime: "+lastSuccessFullySyncTime.toString());
+                                    initSyncDataWithServerService(context, user.getUserId());
                                 }
                             }else{
                                 ApplicationUtilities.initSyncByAccount(context, account);
@@ -56,17 +62,19 @@ public class NetworkReceiver extends BroadcastReceiver {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
-            if(NetworkConnectionUtilities.isOnline(context)){
-
-            }
         }
+    }
+
+    private void initSyncDataWithServerService(Context context, String userId){
+        Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
+        syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
+        syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
+        context.startService(syncDataIntent);
     }
 
 }

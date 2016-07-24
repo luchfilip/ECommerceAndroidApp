@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 8;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -461,6 +461,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SYNC_SESSION_ID INTEGER NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID))";
 
+    public static final String CREATE_FAILED_SYNC_DATA_WITH_SERVER =
+            "CREATE TABLE IF NOT EXISTS FAILED_SYNC_DATA_WITH_SERVER (" +
+                    " row_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " selection TEXT DEFAULT NULL, " +
+                    " selectionArgs TEXT DEFAULT NULL, " +
+                    " columnCount INTEGER DEFAULT NULL)";
+
 	/**
 	 * 
 	 * @param context
@@ -523,13 +530,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_RECOMMENDED_PRODUCT);
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_COMPANY);
+            db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(this.dataBaseName.equals(DATABASE_NAME) && oldVersion<6) {
-            db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
+        if(!this.dataBaseName.equals(DATABASE_NAME) && oldVersion<7) {
+            db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
         }
 	}
 

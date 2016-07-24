@@ -10,7 +10,6 @@ import android.util.SparseArray;
 import com.jasgcorp.ids.database.DatabaseHelper;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import net.iharder.Base64;
 
@@ -45,7 +44,7 @@ public class DataBaseUtilities {
         ArrayList<String> preview;
         ArrayList<String> result;
         Cursor cursor = null;
-        int batchMaxLength = 9000; //Parameter.getBatchSizeForQueryResult(context, user);
+        int batchMaxLength = 9000;
         try {
             if (user==null) {
                 cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,
@@ -259,7 +258,7 @@ public class DataBaseUtilities {
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
-                //db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
+                db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
                 db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -276,10 +275,7 @@ public class DataBaseUtilities {
                     try {
                         if(db!=DataBaseContentProvider.mIDSWriteableDB
                                 && db!= DataBaseContentProvider.mUserWriteableDB){
-                            System.out.println("insertDataFromWSResultData() - db.close();");
                             db.close();
-                        }else{
-                            System.out.println("insertDataFromWSResultData() - db no necesito ser cerrado");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -296,7 +292,7 @@ public class DataBaseUtilities {
      * @throws IOException
      * @throws JSONException
      */
-    public static Cursor parseJsonCursorToCursor(String data) throws JSONException, IOException, Exception{
+    public static Cursor parseJsonCursorToCursor(String data) throws Exception{
         MatrixCursor cursor = null;
         int counterEntireCompressedData = 0;
         int counter = 0;
