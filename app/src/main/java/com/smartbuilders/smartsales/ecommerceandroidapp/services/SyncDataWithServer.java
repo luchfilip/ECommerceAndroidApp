@@ -78,7 +78,7 @@ public class SyncDataWithServer extends IntentService {
                 throw new Exception("user is null.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, String.valueOf(e.getClass().getName()) + ": "+ String.valueOf(e.getMessage()));
         }
     }
 }

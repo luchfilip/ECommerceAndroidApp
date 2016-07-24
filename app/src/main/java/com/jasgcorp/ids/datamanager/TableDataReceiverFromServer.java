@@ -75,9 +75,9 @@ public class TableDataReceiverFromServer extends Thread {
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
-            reportSyncError(e.getMessage(), e.getClass().getName());
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
+            reportSyncError(String.valueOf(e.getMessage()), String.valueOf(e.getClass().getName()));
+			exceptionMessage = String.valueOf(e.getMessage());
+			exceptionClass = String.valueOf(e.getClass().getName());
 		}
 		sync = false;
 	}

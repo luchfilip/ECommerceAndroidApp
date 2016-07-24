@@ -208,9 +208,11 @@ public class DataBaseUtilities {
             SQLiteStatement statement = null;
             try {
                 if(user == null){
-                    db = (new DatabaseHelper(context)).getWritableDatabase();
+                    db = DataBaseContentProvider.mIDSWriteableDB!=null ? DataBaseContentProvider.mIDSWriteableDB
+                            : (new DatabaseHelper(context)).getWritableDatabase();
                 }else{
-                    db = (new DatabaseHelper(context, user)).getWritableDatabase();
+                    db = DataBaseContentProvider.mUserWriteableDB!=null ? DataBaseContentProvider.mUserWriteableDB
+                            : (new DatabaseHelper(context, user)).getWritableDatabase();
                 }
 
                 statement = db.compileStatement(insertSentence.toString());
@@ -257,7 +259,8 @@ public class DataBaseUtilities {
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
-                db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
+                //db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
+                db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
@@ -271,12 +274,13 @@ public class DataBaseUtilities {
                 }
                 if (db!=null) {
                     try {
-                        db.endTransaction();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        db.close();
+                        if(db!=DataBaseContentProvider.mIDSWriteableDB
+                                && db!= DataBaseContentProvider.mUserWriteableDB){
+                            System.out.println("insertDataFromWSResultData() - db.close();");
+                            db.close();
+                        }else{
+                            System.out.println("insertDataFromWSResultData() - db no necesito ser cerrado");
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -319,56 +323,54 @@ public class DataBaseUtilities {
                 }
                 cursor = new MatrixCursor(columnNames.toArray(new String[0]));
                 columnValues = new Object[columnCount];
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
-            try{
+                /************************************************************************/
                 counter = 1;
                 //Se carga la metadata de los tipos de columnas consultadas
-                Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
+                keysTemp = jsonArray2.getJSONObject(counter).keys();
                 colsType = new SparseArray<String>();
                 while(keysTemp.hasNext()){
                     String key = (String) keysTemp.next();
                     colsType.put(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
                 }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+                /************************************************************************/
 
-            //Query Result
-            int columnIndex, rowIndex;
-            while(counter<=jsonArray2.length()){
-                if(++counter>=jsonArray2.length()){
-                    if(keys.hasNext()){
-                        counter = 0;
-                        jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-                        if(jsonArray2.length()<1){
-                            break;
-                        }
-                    }else{
-                        if(++counterEntireCompressedData>=jsonArray.length()){
-                            break;
-                        }else{
+                //Query Result
+                int columnIndex, rowIndex;
+                while(counter<=jsonArray2.length()){
+                    if(++counter>=jsonArray2.length()){
+                        if(keys.hasNext()){
                             counter = 0;
-                            keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
                             jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
                             if(jsonArray2.length()<1){
                                 break;
                             }
+                        }else{
+                            if(++counterEntireCompressedData>=jsonArray.length()){
+                                break;
+                            }else{
+                                counter = 0;
+                                keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
+                                jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+                                if(jsonArray2.length()<1){
+                                    break;
+                                }
+                            }
                         }
                     }
-                }
 
-                for(columnIndex=1,rowIndex=0; columnIndex<=columnCount; columnIndex++,rowIndex++){
-                    try{
-                        //TODO: castear al tipo de dato correspondiente
-                        columnValues[rowIndex] = jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex));
-                    }catch(Exception e){
-                        columnValues[rowIndex] = null;
+                    for(columnIndex=1,rowIndex=0; columnIndex<=columnCount; columnIndex++,rowIndex++){
+                        try{
+                            //TODO: castear al tipo de dato correspondiente
+                            columnValues[rowIndex] = jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex));
+                        }catch(Exception e){
+                            columnValues[rowIndex] = null;
+                        }
                     }
+                    cursor.addRow(columnValues);
                 }
-                cursor.addRow(columnValues);
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
         return cursor;

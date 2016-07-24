@@ -67,8 +67,8 @@ public class ThumbImagesReceiverFromServer extends Thread {
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
+			exceptionMessage = String.valueOf(e.getMessage());
+			exceptionClass = String.valueOf(e.getClass().getName());
 		}
 		sync = false;
 	}

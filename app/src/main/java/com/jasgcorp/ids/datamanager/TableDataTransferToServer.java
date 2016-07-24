@@ -64,9 +64,9 @@ public class TableDataTransferToServer extends Thread {
             syncPercentage = 100;
 		} catch (Exception e) {
 			e.printStackTrace();
-            reportSyncError(e.getMessage(), e.getClass().getName());
-			exceptionMessage = e.getMessage();
-			exceptionClass = e.getClass().getName();
+            reportSyncError(String.valueOf(e.getMessage()), String.valueOf(e.getClass().getName()));
+			exceptionMessage = String.valueOf(e.getMessage());
+			exceptionClass = String.valueOf(e.getClass().getName());
 		}
         sync = false;
 	}
