@@ -41,6 +41,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncInfo;
@@ -224,8 +225,8 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null){
 				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-								null, 
+						.query(DataBaseContentProvider.INTERNAL_DB_URI,
+								null,
 								"SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL " +
                                     " FROM IDS_SYNC_LOG WHERE USER_ID=? AND LOG_VISIBILITY= ?",
 								new String[]{String.valueOf(user.getUserId()), String.valueOf(logVisibility)}, null);
@@ -317,7 +318,7 @@ public class ApplicationUtilities {
             ctx.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null,
+                            new ContentValues(),
                             "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
                                     " VALUES (?, ?, ?, ?, ?)",
                             new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
@@ -339,8 +340,8 @@ public class ApplicationUtilities {
                                               String serverAddress, String userGroup, String userName, String authToken, Context ctx){
 		try{
 	    	ctx.getContentResolver()
-	    		.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-						null,
+	    		.update(DataBaseContentProvider.INTERNAL_DB_URI,
+						new ContentValues(),
 						"INSERT INTO IDS_USER (USER_ID, BUSINESS_PARTNER_ID, USER_PROFILE_ID, SERVER_USER_ID, " +
                                 " USER_NAME, SERVER_ADDRESS, USER_GROUP, AUTH_TOKEN) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -488,8 +489,8 @@ public class ApplicationUtilities {
                 }
     			
     			ctx.getContentResolver()
-    				.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-							null,
+    				.update(DataBaseContentProvider.INTERNAL_DB_URI,
+							new ContentValues(),
 							"INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, " +
                                     " WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -621,8 +622,8 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null && data!=null){
     			int rowsAffected = ctx.getContentResolver()
-			    						.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-			    								null,
+			    						.update(DataBaseContentProvider.INTERNAL_DB_URI,
+												new ContentValues(),
 			    								"DELETE FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=?",
 		    									new String[]{Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
     			if(rowsAffected>0){
@@ -671,8 +672,8 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null && data!=null){
     			int rowsAffected = ctx.getContentResolver()
-    									.update(DataBaseContentProvider.INTERNAL_DB_URI, 
-    											null,
+    									.update(DataBaseContentProvider.INTERNAL_DB_URI,
+												new ContentValues(),
     											"UPDATE IDS_SCHEDULER_SYNC SET IS_ACTIVE=? WHERE SCHEDULER_SYNC_ID=?",
     											new String[]{data.isActive()?"Y":"N", Integer.valueOf(data.getSchedulerSyncDataId()).toString()});
     			if(rowsAffected>0){
