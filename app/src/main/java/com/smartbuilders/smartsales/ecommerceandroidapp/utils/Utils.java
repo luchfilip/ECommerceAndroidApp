@@ -34,9 +34,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.datamanager.TableDataReceiverFromServer;
+import com.jasgcorp.ids.datamanager.TablesDataSendToAndReceiveFromServer;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
+import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.BusinessPartnersListActivity;
@@ -957,9 +958,28 @@ public class Utils {
      *
      * @param context
      */
+    public static int getSyncPeriodicity(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getInt(SyncAdapter.SYNC_PERIODICITY_SHARED_PREFS_KEY, 0);
+    }
+
+    /**
+     *
+     * @param context
+     */
+    public static void setSyncPeriodicity(Context context, int periodicity){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putInt(SyncAdapter.SYNC_PERIODICITY_SHARED_PREFS_KEY, periodicity);
+        editor.apply();
+    }
+
+    /**
+     *
+     * @param context
+     */
     public static int getSyncSessionId(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context)
-                .getInt(TableDataReceiverFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, 0);
+                .getInt(TablesDataSendToAndReceiveFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, 0);
     }
 
     /**
@@ -968,7 +988,7 @@ public class Utils {
      */
     public static void incrementSyncSessionId(Context context){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putInt(TableDataReceiverFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, getSyncSessionId(context) + 1);
+        editor.putInt(TablesDataSendToAndReceiveFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, getSyncSessionId(context) + 1);
         editor.apply();
     }
 

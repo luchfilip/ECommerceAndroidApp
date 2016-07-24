@@ -59,4 +59,15 @@ public class Parameter {
     public static int getBatchSizeForQueryResult(Context context, User user){
         return ParameterDB.getParameterIntValue(context, user, ParameterDB.BATCH_SIZE_FOR_QUERY_RESULT, 9000);
     }
+
+    /**
+     * devuelve el tiempo en segundos que debe transcurrir entre cada sincronizacion,
+     * default 3600segundos = 60minutos
+     * @param context
+     * @param user
+     * @return
+     */
+    public static int getSyncPeriodicityInSeconds(Context context, User user){
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.SYNCHRONIZATION_PERIODICITY, 3600);
+    }
 }

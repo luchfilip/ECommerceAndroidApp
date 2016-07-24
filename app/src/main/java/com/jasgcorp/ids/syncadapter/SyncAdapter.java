@@ -13,6 +13,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -60,6 +61,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final long DELAY_TIME_TO_RETRY_SYNC 		= 5; //time in seconds
 	private static final int SYNCHRONIZATION_CANCELLED 		= 2;
 	private static final int SYNCHRONIZATION_RUNNING 		= 1;
+    public static final String SYNC_PERIODICITY_SHARED_PREFS_KEY = "SYNC_PERIODICITY_SHARED_PREFS_KEY";
 	
 	/**
 	 * El usuario inicio sesion de sincronizacion
@@ -129,7 +131,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					            String authority,
 					            ContentProviderClient provider,
 					            SyncResult syncResult) {
-//    	Log.d(TAG, "debug> onPerformSync for account[" + account.name + "]");
+    	Log.d(TAG, "debug> onPerformSync for account[" + account.name + "]");
         long syncInitTime = System.currentTimeMillis();
     	AccountManager accountManager = AccountManager.get(getContext());
         User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(),
@@ -138,6 +140,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         boolean isAPeriodicSync = false;
     	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
     		isAPeriodicSync = extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE);
+            try {
+                long seconds = (System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user).getTime())/1000;
+                if(seconds < Parameter.getSyncPeriodicityInSeconds(getContext(), user)) {
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     	}
     	try{
         	syncStatus = SYNCHRONIZATION_CANCELLED;
@@ -145,8 +155,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     		// Get the auth token for the current account
     		String authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
     		sServerAuthenticate.userSignIn(user, account.type, getContext());
-    		Log.d(TAG, "debug>  authToken: "+authToken);
-			Log.d(TAG, "debug>  sessionToken: "+user.getSessionToken());
+    		//Log.d(TAG, "debug>  authToken: "+authToken);
+			//Log.d(TAG, "debug>  sessionToken: "+user.getSessionToken());
 			
 			switch (user.getSessionToken()) {
 				case ApplicationUtilities.ST_NEW_USER_AUTHORIZED:
@@ -328,7 +338,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			recordLogAndSendBroadcast(user, GENERAL_EXCEPTION, getContext().getString(R.string.general_exception), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
 			e.printStackTrace();
     	}
-    	Log.d(TAG, "debug> SINCHRONIZATION FINISHED");
+    	Log.d(TAG, "debug> SYNCHRONIZATION FINISHED");
     }
 
     @Override

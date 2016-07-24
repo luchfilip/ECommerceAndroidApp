@@ -45,7 +45,7 @@ public class DataBaseUtilities {
         ArrayList<String> preview;
         ArrayList<String> result;
         Cursor cursor = null;
-        int batchMaxLength = Parameter.getBatchSizeForQueryResult(context, user);
+        int batchMaxLength = 9000; //Parameter.getBatchSizeForQueryResult(context, user);
         try {
             if (user==null) {
                 cursor = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI,

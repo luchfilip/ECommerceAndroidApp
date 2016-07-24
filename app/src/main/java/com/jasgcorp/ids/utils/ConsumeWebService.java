@@ -66,7 +66,7 @@ public class ConsumeWebService {
 		Object response = null;
 		try {
 			//Hace la llamada al ws
-			long timeBefore = System.currentTimeMillis();
+			//long timeBefore = System.currentTimeMillis();
 			
 			//Se crea un objeto SoapObject para poder realizar la peticion
 			//para consumir el ws SOAP. El constructor recibe
@@ -87,7 +87,7 @@ public class ConsumeWebService {
 			envelope.setOutputSoapObject(request);
 			transporte.call(soapAction, envelope);
 			response = envelope.getResponse();
-			Log.i(TAG, "transport time: "+(System.currentTimeMillis() - timeBefore)+"ms");
+			//Log.i(TAG, "transport time: "+(System.currentTimeMillis() - timeBefore)+"ms");
         } catch(ConnectException e){
 			Log.e(TAG, "ConnectException");
         	//e.printStackTrace();

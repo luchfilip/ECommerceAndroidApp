@@ -279,7 +279,7 @@ public class ApplicationUtilities {
 		return syncLog;
     }
 
-	public static String getLastSuccessfullySyncTime(Context ctx, User user) {
+	public static Date getLastSuccessfullySyncTime(Context ctx, User user) {
 		Cursor c = null;
 		try{
 			if(user!=null){
@@ -290,8 +290,8 @@ public class ApplicationUtilities {
                         new String[]{String.valueOf(user.getUserId()),
                                 SyncAdapter.SYNCHRONIZATION_FINISHED,
                                 SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED}, null);
-				if(c!=null && c.moveToNext()){
-					return c.getString(0);
+				if(c!=null && c.moveToNext() && c.getString(0)!=null){
+					return sdf.parse(c.getString(0));
 				}
 			}
 		}catch(Exception e){

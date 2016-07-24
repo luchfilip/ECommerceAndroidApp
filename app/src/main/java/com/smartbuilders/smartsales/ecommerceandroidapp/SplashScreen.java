@@ -27,6 +27,7 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.smartbuilders.smartsales.ecommerceandroidapp.services.LoadProductsThumbImage;
+import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
 import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 
 /**
@@ -278,9 +279,23 @@ public class SplashScreen extends AppCompatActivity {
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
         if(mUser !=null){
+            //se coloca define la sincronizacion automatica solo si no se ha definido antes o si
+            //cambio el periodo de sincronizacion
+            if(Utils.getSyncPeriodicity(this)!=Parameter.getSyncPeriodicityInSeconds(this, mUser)){
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                //Turn on periodic syncing
+                ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                ContentResolver.addPeriodicSync(
+                        account,
+                        getString(R.string.sync_adapter_content_authority),
+                        bundle,
+                        Parameter.getSyncPeriodicityInSeconds(this, mUser));
+                Utils.setSyncPeriodicity(this, Parameter.getSyncPeriodicityInSeconds(this, mUser));
+            }
+
             if (Utils.appRequireInitialLoad(this, mUser)) {
-                    if(NetworkConnectionUtilities.isOnline(this)
-                            /*&& (NetworkConnectionUtilities.isWifiConnected(this)||NetworkConnectionUtilities.isMobileConnected(this))*/) {
+                    if(NetworkConnectionUtilities.isOnline(this)) {
                         findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                         if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
                             ApplicationUtilities.initSyncByAccount(this, account);
@@ -297,9 +312,9 @@ public class SplashScreen extends AppCompatActivity {
                     }
             } else {
                 mSynchronizationState = SYNC_FINISHED;
-                if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
-                    ApplicationUtilities.initSyncByAccount(this, account);
-                }
+                //if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                //    ApplicationUtilities.initSyncByAccount(this, account);
+                //}
                 initApp();
             }
         } else {

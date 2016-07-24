@@ -173,6 +173,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                             .getAccountByServerUserIdFromAccountManager(getApplicationContext(), serverUserId);
                                     if(userAccount!=null){
                                         if (!ApplicationUtilities.isSyncActive(this, userAccount)) {
+                                            //se manda a correr la sincronizacion de manera inmediata
                                             ApplicationUtilities.initSyncByAccount(this, userAccount);
                                             sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                                     "user: "+userAccount.name+", synchronization initialized.", null);

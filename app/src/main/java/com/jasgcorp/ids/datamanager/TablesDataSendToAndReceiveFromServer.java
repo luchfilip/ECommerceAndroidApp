@@ -1,9 +1,12 @@
 package com.jasgcorp.ids.datamanager;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
@@ -21,9 +24,9 @@ import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
 /**
  *
  */
-public class TableDataReceiverFromServer extends Thread {
+public class TablesDataSendToAndReceiveFromServer extends Thread {
 	
-	private static final String TAG = TableDataReceiverFromServer.class.getSimpleName();
+	private static final String TAG = TablesDataSendToAndReceiveFromServer.class.getSimpleName();
 
     public static final String SYNC_SESSION_ID_SHARED_PREFS_KEY = "SYNC_SESSION_ID_SHARED_PREFS_KEY";
 
@@ -35,7 +38,7 @@ public class TableDataReceiverFromServer extends Thread {
 	private User mUser;
     private int mConnectionTimeOut;
 	
-	public TableDataReceiverFromServer(User user, Context context) throws Exception{
+	public TablesDataSendToAndReceiveFromServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
         this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
@@ -65,6 +68,9 @@ public class TableDataReceiverFromServer extends Thread {
             Utils.incrementSyncSessionId(context);
 
             long initTime = System.currentTimeMillis();
+            if (sync) {
+                sendUserDataToServer(getUserTablesAndSQLToSync());
+            }
 			if(sync){
 				getGlobalDataFromWS(context, Utils.getSyncSessionId(context), getGlobalTablesToSync());
 			}
@@ -81,6 +87,70 @@ public class TableDataReceiverFromServer extends Thread {
 		}
 		sync = false;
 	}
+
+    private JSONObject getUserTablesAndSQLToSync() throws Exception {
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "getTablesAndSQLToReceiveFromClient",
+                "urn:getTablesAndSQLToReceiveFromClient",
+                parameters,
+                mConnectionTimeOut);
+        return new JSONObject(a.getWSResponse().toString());
+    }
+
+    private void sendUserDataToServer(JSONObject userTablesToSync) throws Exception {
+        Iterator<?> keysTemp = userTablesToSync.keys();
+        while(keysTemp.hasNext()){
+            try {
+                if(sync){
+                    String key = (String) keysTemp.next();
+                    Object result = DataBaseUtilities
+                            .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
+                    if(sync){
+                        if (result instanceof String) {
+                            sendDataToServer(key, (String) result, null);
+                        } else if (result instanceof Exception) {
+                            sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
+                            throw (Exception) result;
+                        } else {
+                            sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                            throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                        }
+                    }else{
+                        sendDataToServer(key, null, "Synchronization was stopped by user.");
+                    }
+                }else{
+                    //se detiene el bucle
+                    break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendDataToServer (String tableName, String data, String errorMessage) throws Exception {
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        parameters.put("tableName", tableName);
+        parameters.put("data", data);
+        parameters.put("errorMessage", errorMessage);
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "receiveDataFromClient",
+                "urn:receiveDataFromClient",
+                parameters,
+                mConnectionTimeOut);
+        a.getWSResponse();
+    }
 
     private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();

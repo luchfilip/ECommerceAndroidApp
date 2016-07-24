@@ -44,12 +44,14 @@ public class AlarmReceiver extends BroadcastReceiver{
 								}
 
 						        if(!ApplicationUtilities.isSyncActive(context, account)){
+									//TODO: revisar si la ultima sincronizacion se realizo en un tiempo mayor al
+									//definido por el periodo de sincronizacion
 						        	ApplicationUtilities.initSyncByAccount(context, account);
-						        	Toast.makeText(context, "Automatic synchronization of Intelligent Data Synchronizer for user "+account.name+" has begun!!!",
-									        Toast.LENGTH_LONG).show();
+						        	//Toast.makeText(context, "Automatic synchronization of Intelligent Data Synchronizer for user "+account.name+" has begun!!!",
+									//        Toast.LENGTH_LONG).show();
 								    // Vibrate the mobile phone
-								    Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-								    vibrator.vibrate(2000);
+								    //Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+								    //vibrator.vibrate(2000);
 					            }
 							} catch (Exception e) {
 								e.printStackTrace();
