@@ -1,10 +1,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <EditTextPreference
+        android:key="server_address"
+        android:title="@string/server_address">
+
+    </EditTextPreference>
+
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
-        android:defaultValue="180"
+        android:defaultValue="60"
         android:entries="@array/pref_sync_frequency_titles"
         android:entryValues="@array/pref_sync_frequency_values"
         android:key="sync_frequency"
@@ -12,10 +18,20 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_sync_frequency" />
 
-    <EditTextPreference
-        android:key="server_address"
-        android:title="@string/server_address">
+    <SwitchPreference
+        android:key="save_images_in_device"
+        android:title="@string/save_images_in_device"
+        android:summaryOff="@string/save_images_in_device_summaryOff"
+        android:summaryOn="@string/save_images_in_device_summaryOn">
 
-    </EditTextPreference>
+    </SwitchPreference>
+
+    <SwitchPreference
+        android:key="sync_thumb_images"
+        android:title="@string/load_thumb_images"
+        android:summaryOff="@string/load_thumb_images_summaryOff"
+        android:summaryOn="@string/load_thumb_images_summaryOn">
+
+    </SwitchPreference>
 
 </PreferenceScreen>

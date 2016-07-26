@@ -4,22 +4,30 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 
+import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.List;
@@ -38,8 +46,8 @@ import java.util.List;
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static User mCurrentUser;
-    private static Account mAccount;
-    private static AccountManager mAccountManager;
+    //private static Account mAccount;
+    //private static AccountManager mAccountManager;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -61,7 +69,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
             } /*else if (preference instanceof RingtonePreference) {
                 // For ringtone preferences, look up the correct display value
                 // using RingtoneManager.
@@ -88,12 +95,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
-                mCurrentUser.setServerAddress(stringValue);
-                if(preference.getKey().equals("server_address")){
-                    mAccountManager.setUserData(mAccount,
-                            AccountGeneral.USERDATA_SERVER_ADDRESS,
-                            stringValue);
-                }
             }
             return true;
         }
@@ -121,31 +122,38 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        try {
+            // Trigger the listener immediately with the preference's
+            // current value.
+            if(preference instanceof SwitchPreference){
+                boolean defaultValue = false;
+                if(preference.getKey().equals("save_images_in_device")){
+                    defaultValue = true;
+                }
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getBoolean(preference.getKey(), defaultValue));
+            }else{
+                String defaultValue = "";
+                if(preference.getKey().equals("server_address")){
+                    defaultValue = mCurrentUser.getServerAddress();
+                }
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getString(preference.getKey(), defaultValue));
+            }
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-
         mCurrentUser = Utils.getCurrentUser(getApplicationContext());
-
-        if(mCurrentUser != null){
-            mAccountManager = AccountManager.get(getApplicationContext());
-            final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-            for(Account account : availableAccounts){
-                if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(mCurrentUser.getUserId())){
-                    mAccount = account;
-                    break;
-                }
-            }
-        }
     }
 
     /**
@@ -234,6 +242,103 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_frequency"));
             bindPreferenceSummaryToValue(findPreference("server_address"));
+            bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
+            bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
+
+            findPreference("sync_frequency").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
+                    if (Long.valueOf(newValue.toString()) <=0) {
+                        System.out.println("Turn off periodic syncing");
+                        //Turn off periodic syncing
+                        ContentResolver.setSyncAutomatically(account, preference.getContext()
+                                .getString(R.string.sync_adapter_content_authority), false);
+                    }else{
+                        System.out.println("Turn on periodic syncing - freq: "+newValue.toString());
+                        //se coloca define la sincronizacion automatica solo si no se ha definido antes o si
+                        //cambio el periodo de sincronizacion
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                        //Turn on periodic syncing
+                        ContentResolver.setSyncAutomatically(account, preference.getContext()
+                                .getString(R.string.sync_adapter_content_authority), true);
+                        ContentResolver.addPeriodicSync(
+                                account,
+                                preference.getContext().getString(R.string.sync_adapter_content_authority),
+                                bundle,
+                                Long.valueOf(newValue.toString()) * 60);
+                    }
+                    return true;
+                }
+            });
+
+
+            findPreference("server_address").setDefaultValue(mCurrentUser.getServerAddress());
+            findPreference("server_address").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    mCurrentUser.setServerAddress(newValue.toString());
+                    AccountManager accountManager = AccountManager.get(preference.getContext());
+                    Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
+                    accountManager.setUserData(account,
+                            AccountGeneral.USERDATA_SERVER_ADDRESS,
+                            newValue.toString());
+                    return true;
+                }
+            });
+
+            findPreference("save_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    final Context context = preference.getContext();
+                    if(((Boolean) newValue)){
+                        findPreference("sync_thumb_images").setSelectable(true);
+                    }else{
+                        findPreference("sync_thumb_images").setSelectable(false);
+                        context.stopService(new Intent(context, LoadProductsThumbImage.class));
+                        new AlertDialog.Builder(context)
+                                .setMessage(R.string.clean_thumb_dir)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Utils.clearOriginalImagesFolder(context);
+                                        Utils.clearThumbImagesFolder(context);
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .setCancelable(false)
+                                .show();
+                    }
+                    return true;
+                }
+            });
+
+            findPreference("sync_thumb_images").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    final Context context = preference.getContext();
+                    if((Boolean) newValue){
+                        if(!Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
+                            context.startService(new Intent(context, LoadProductsThumbImage.class));
+                        }
+                    }else{
+                        context.stopService(new Intent(context, LoadProductsThumbImage.class));
+                        new AlertDialog.Builder(context)
+                                .setMessage(R.string.clean_thumb_dir)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Utils.clearThumbImagesFolder(context);
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .setCancelable(false)
+                                .show();
+                    }
+                    return true;
+                }
+            });
         }
 
         @Override

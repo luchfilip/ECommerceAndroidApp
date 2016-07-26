@@ -192,16 +192,18 @@
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Datos &amp; sincronización</string>
 
-    <string name="pref_title_sync_frequency">Frequencia de sincronización</string>
+    <string name="pref_title_sync_frequency">Frecuencia de sincronización</string>
     <string-array name="pref_sync_frequency_titles">
+        <item>10 minutos</item>
         <item>15 minutos</item>
         <item>30 minutos</item>
         <item>1 hora</item>
         <item>3 horas</item>
         <item>6 horas</item>
-        <item>Never</item>
+        <item>Sincronizar manualmente</item>
     </string-array>
     <string-array name="pref_sync_frequency_values">
+        <item>10</item>
         <item>15</item>
         <item>30</item>
         <item>60</item>
@@ -329,4 +331,14 @@
     <string name="smallest_width">default</string>
     <string name="package_name_febeca">com.smartbuilders.smartsales.ecommerceandroidapp.febeca</string>
     <string name="price_detail">Precio (%1$s): %2$s</string>
+    <string name="save_images_in_device">Guardar imagenes en el dispositivo</string>
+    <string name="load_thumb_images">Mantener sincronizadas imagenes miniatura de los productos</string>
+    <string name="load_thumb_images_summaryOff">Las imagenes en miniatura de los productos se cargan cada vez que se requiere. Se necesita acceso a internet para que puedan ser mostradas las imagenes.</string>
+    <string name="load_thumb_images_summaryOn">Se descargan las imagenes miniaturas de los productos en el dispositivo para que se puedan mostrar aún sin tener acceso a intenet.</string>
+    <string name="save_images_in_device_summaryOff">Las imagenes no se guardan en el dispositivo. Ahorro de espacio en disco. Se necesita acceso a internet para que puedan ser mostradas las imagenes.</string>
+    <string name="save_images_in_device_summaryOn">las imagenes que han sido mostradas se guardan en el dispositivo para no requerir una nueva descarga. Se requiere espacio en disco. Se ahorran los megas del plan de datos.</string>
+    <string name="clean_thumb_dir">¿Desea eliminar las imagenes anteriormente almacenadas?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+
 </resources>

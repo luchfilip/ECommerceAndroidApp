@@ -25,7 +25,6 @@ import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -68,10 +67,6 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
                             if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
                                 initApp();
-                                //se manda a descargar todas las imagenes thumbs de los productos aqui
-                                //porque en la sincronizacion inicial no se descargan ya que aun la
-                                //productImage esta vacia
-                                startService(new Intent(SplashScreen.this, LoadProductsThumbImage.class));
                                 mSynchronizationState = SYNC_FINISHED;
                             }else{
                                 mSynchronizationState = SYNC_ERROR;

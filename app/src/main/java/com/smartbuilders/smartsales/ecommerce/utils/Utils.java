@@ -1102,4 +1102,28 @@ public class Utils {
     public static void unlockScreenOrientation(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
+
+    public static void clearThumbImagesFolder(Context context) {
+        try {
+            for(File file: (new File (Utils.getImagesThumbFolderPath(context))).listFiles()){
+                if (!file.isDirectory()){
+                    file.delete();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearOriginalImagesFolder(Context context) {
+        try {
+            for(File file: (new File (Utils.getImagesOriginalFolderPath(context))).listFiles()){
+                if (!file.isDirectory()){
+                    file.delete();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

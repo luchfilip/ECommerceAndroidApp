@@ -10,7 +10,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import com.jasgcorp.ids.datamanager.TablesDataSendToAndReceiveFromServer;
-import com.jasgcorp.ids.datamanager.ThumbImagesReceiverFromServer;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
@@ -67,7 +66,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 	private static final UriMatcher uriMatcher;
 
 	private TablesDataSendToAndReceiveFromServer tableDataReceiveFromServerThread;
-	private ThumbImagesReceiverFromServer thumbImagesReceiverFromServer;
 	
 	static{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -162,9 +160,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
 				tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext());
-				thumbImagesReceiverFromServer = new ThumbImagesReceiverFromServer(user, getContext());
 				tableDataReceiveFromServerThread.start();
-				thumbImagesReceiverFromServer.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {
 				exceptionClass = e.getClass().getName();
@@ -174,9 +170,6 @@ public class SynchronizerContentProvider extends ContentProvider{
 				e.printStackTrace();
 				if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 					tableDataReceiveFromServerThread.stopSynchronization();
-				}
-				if(thumbImagesReceiverFromServer!=null && thumbImagesReceiverFromServer.isAlive()){
-					thumbImagesReceiverFromServer.stopSynchronization();
 				}
 				errorMessage = e.getMessage();
 			}
@@ -201,15 +194,10 @@ public class SynchronizerContentProvider extends ContentProvider{
 			if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
 				tableDataReceiveFromServerThread.stopSynchronization();
 			}
-			if(thumbImagesReceiverFromServer!=null && thumbImagesReceiverFromServer.isAlive()){
-				thumbImagesReceiverFromServer.stopSynchronization();
-			}
 			
 			//Esperar a que los hilos de sincronizacion se detengan
             if(tableDataReceiveFromServerThread!=null){
 				while(tableDataReceiveFromServerThread.isAlive()){ }
-			}else if(thumbImagesReceiverFromServer!=null){
-				while(thumbImagesReceiverFromServer.isAlive()){ }
 			}
 			result = true;
 		}
@@ -232,40 +220,20 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			if(!tableDataReceiveFromServerThread.isAlive()
-					&& !thumbImagesReceiverFromServer.isAlive()){
-				if(tableDataReceiveFromServerThread.getExceptionMessage()==null
-						&& thumbImagesReceiverFromServer.getExceptionMessage()==null){
+			if(!tableDataReceiveFromServerThread.isAlive()){
+				if(tableDataReceiveFromServerThread.getExceptionMessage()==null){
 					syncPercentage = 100F;
 				}
 			}else{
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
 					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
 				}
-				if(thumbImagesReceiverFromServer.getSyncPercentage()>syncPercentage){
-					syncPercentage = thumbImagesReceiverFromServer.getSyncPercentage();
-				}
-                //Si el porcentaje es mayor o igual a 100 y aún queda algún hilo de sincronización vivo
-                //entonces se coloca en 99.99 para que espere por el(los) hilo(s) que quedan por
-                //finalizar
-                if(syncPercentage>=100){
-                    //para el caso del catalogo no se toma en cuenta el hilo de imagenes
-                    if(tableDataReceiveFromServerThread.isAlive()) {
-                        syncPercentage = 99.99F;
-                    }
-                }
 			}
 
             if(syncPercentage>=100){
                 if(tableDataReceiveFromServerThread.getExceptionMessage()!=null){
                     errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
                     exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
-                }
-                if(thumbImagesReceiverFromServer.getExceptionMessage()!=null){
-                    errorMessage = errorMessage!=null
-                            ? (errorMessage+" | "+thumbImagesReceiverFromServer.getExceptionMessage())
-                            : thumbImagesReceiverFromServer.getExceptionMessage();
-                    exceptionClass = thumbImagesReceiverFromServer.getExceptionClass();
                 }
             }
 		}

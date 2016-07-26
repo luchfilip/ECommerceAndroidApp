@@ -1,9 +1,11 @@
 package com.smartbuilders.smartsales.ecommerce.services;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
@@ -17,11 +19,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stein on 3/7/2016.
  */
 public class LoadProductsThumbImage extends IntentService {
+
+    private static final String TAG = LoadProductsThumbImage.class.getSimpleName();
 
     public LoadProductsThumbImage() {
         super(LoadProductsThumbImage.class.getSimpleName());
@@ -44,13 +50,33 @@ public class LoadProductsThumbImage extends IntentService {
     private void getProductsThumbImageFromServer(Context context, User user){
         Cursor c = null;
         try {
+            List<String> filesName = new ArrayList<>();
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                     "SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y' AND PRIORITY=1",
                     null, null);
             if(c!=null){
+                ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 while(c.moveToNext()){
+                    filesName.add(c.getString(0));
                     if(Utils.getFileInThumbDirByFileName(context, c.getString(0))==null){
-                        downloadImage(c.getString(0), context, user);
+                        if(isServiceRunning(activityManager)){
+                            downloadImage(c.getString(0), context, user);
+                        }else{
+                            break;
+                        }
+                    }
+                }
+            }
+            //se limpia la carpeta de los archivos que ya no pertenezcan
+            List<String> filesInThumbDir = Utils.getListOfFilesInThumbDir(context);
+            if(filesInThumbDir!=null && !filesInThumbDir.isEmpty()){
+                filesInThumbDir.removeAll(filesName);
+                for (String fileNameToRemove : filesInThumbDir) {
+                    try {
+                        (new File (Utils.getImagesThumbFolderPath(context), fileNameToRemove)).delete();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
+                                "\", ExceptionMessage: "+e.getMessage());
                     }
                 }
             }
@@ -65,6 +91,15 @@ public class LoadProductsThumbImage extends IntentService {
                 }
             }
         }
+    }
+
+    private boolean isServiceRunning(ActivityManager activityManager){
+        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (LoadProductsThumbImage.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Creates Bitmap from InputStream and returns it
