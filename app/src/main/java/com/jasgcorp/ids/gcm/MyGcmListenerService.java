@@ -35,11 +35,11 @@ import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.jasgcorp.ids.utils.ServerUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.MainActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.ServerAddressBackupDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerce.MainActivity;
+import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.data.ServerAddressBackupDB;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.io.File;
 import java.text.DecimalFormat;

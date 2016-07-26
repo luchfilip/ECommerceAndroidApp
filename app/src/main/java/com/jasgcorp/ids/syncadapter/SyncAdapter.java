@@ -7,13 +7,13 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

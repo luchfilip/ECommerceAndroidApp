@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/fragment_sales_order_list"
-        android:name="com.smartbuilders.smartsales.ecommerceandroidapp.ShoppingSalesListFragment"
+        android:name="com.smartbuilders.smartsales.ecommerce.ShoppingSalesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"

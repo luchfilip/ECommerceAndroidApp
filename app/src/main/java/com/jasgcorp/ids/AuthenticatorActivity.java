@@ -5,13 +5,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.RequestResetUserPasswordActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.RequestUserPasswordActivity;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity;
+import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -164,7 +164,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void submit() {
         //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
-        final String userGroup 		= getString(R.string.ids_sync_group);;
+        final String userGroup 		= getString(R.string.ids_user_group_name);
         final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();

@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragment_category"
-        android:name="com.smartbuilders.smartsales.ecommerceandroidapp.CategoriesListFragment"
+        android:name="com.smartbuilders.smartsales.ecommerce.CategoriesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"

@@ -29,7 +29,7 @@ import com.google.android.gms.iid.InstanceID;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
+import com.smartbuilders.smartsales.ecommerce.R;
 
 import java.io.IOException;
 

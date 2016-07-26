@@ -8,11 +8,11 @@ import java.net.SocketTimeoutException;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.jasgcorp.ids.gcm.RegistrationIntentService;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.ServerAuthenticate;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerce.R;
 
 import android.content.Context;
 import android.content.Intent;

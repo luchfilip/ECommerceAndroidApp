@@ -9,7 +9,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
+import com.smartbuilders.smartsales.ecommerce.services.SyncDataWithServer;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

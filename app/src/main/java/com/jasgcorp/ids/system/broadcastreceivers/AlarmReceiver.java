@@ -1,10 +1,10 @@
 package com.jasgcorp.ids.system.broadcastreceivers;
 
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerce.R;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -12,8 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver{
 

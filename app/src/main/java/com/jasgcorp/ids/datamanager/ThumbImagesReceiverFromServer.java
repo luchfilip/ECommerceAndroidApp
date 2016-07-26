@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

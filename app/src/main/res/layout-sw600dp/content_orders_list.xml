@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/fragment_order_list"
-        android:name="com.smartbuilders.smartsales.ecommerceandroidapp.OrdersListFragment"
+        android:name="com.smartbuilders.smartsales.ecommerce.OrdersListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"

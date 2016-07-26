@@ -17,9 +17,9 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.data.FailedSyncDataWithServerDB;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
-import com.smartbuilders.smartsales.ecommerceandroidapp.utils.Utils;
+import com.smartbuilders.smartsales.ecommerce.data.FailedSyncDataWithServerDB;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  *

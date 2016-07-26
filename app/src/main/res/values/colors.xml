@@ -18,7 +18,8 @@
     <color name="product_details_price_color">#bf2015</color>
     <color name="product_price_color">#555555</color>
     <color name="label_color">#222222</color>
-    <color name="febeca_light_blue">#64c2f4</color>
+    <color name="state_pressed_selector_color">#64c2f4</color>
+    <color name="state_activated_selector_color">#64c2f4</color>
     <color name="dark_grey">#777777</color>
     <color name="grey">#CCCCCC</color>
     <color name="grey_medium">#dddddd</color>

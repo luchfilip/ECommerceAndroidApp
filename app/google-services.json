@@ -1,20 +1,46 @@
 {
   "project_info": {
-    "project_number": "767398413220",
-    "project_id": "ecommerce-android-app-febeca"
+    "project_number": "686820312802",
+    "project_id": "ecommerce-android-app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:767398413220:android:74e861877b2b6f21",
+        "mobilesdk_app_id": "1:686820312802:android:b793fe41ba425585",
         "android_client_info": {
-          "package_name": "com.smartbuilders.smartsales.ecommerceandroidapp.febeca"
+          "package_name": "com.smartbuilders.smartsales.ecommerceandroidapp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAhAoau-qOfzUY8cjdB4AYMJ5LoFZrjd_c"
+          "current_key": "AIzaSyBmzy34I5zKuZyNmmMblU7EPrcgTN3Xfeg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686820312802:android:e576e2fd8b4d1572",
+        "android_client_info": {
+          "package_name": "com.smartbuilders.smartsales.ecommerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmzy34I5zKuZyNmmMblU7EPrcgTN3Xfeg"
         }
       ],
       "services": {

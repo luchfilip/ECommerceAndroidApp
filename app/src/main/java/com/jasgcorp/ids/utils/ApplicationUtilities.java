@@ -25,7 +25,6 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
 import com.jasgcorp.ids.logsync.LogSyncData;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
@@ -33,7 +32,8 @@ import com.jasgcorp.ids.scheduler.SchedulerSyncData;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
+import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.services.SyncDataWithServer;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -110,6 +110,9 @@ public class ApplicationUtilities {
 	
 	public static final String FEBECA_GCM_SENDER_ID = "767398413220";
 	public static final String FEBECA_GCM_SERVER_API_KEY = "AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U";
+
+	public static final String GCM_SENDER_ID = "686820312802";
+	public static final String GCM_SERVER_API_KEY = "AIzaSyCssmP6m7DSy-N0lfcR8qZiZSbxH9pQN4Y";
     
     public static final String TIME_FORMAT_1 = "%02d:%02d:%02d";
     public static final String TIME_FORMAT_2 = "%02d H, %02d m, %02d s";

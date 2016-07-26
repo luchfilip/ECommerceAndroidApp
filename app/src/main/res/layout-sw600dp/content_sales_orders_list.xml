@@ -9,7 +9,7 @@
 
     <!-- This layout is a two-pane layout for the Items master/detail flow. -->
 
-    <com.smartbuilders.smartsales.ecommerceandroidapp.view.ViewPager
+    <com.smartbuilders.smartsales.ecommerce.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="match_parent"

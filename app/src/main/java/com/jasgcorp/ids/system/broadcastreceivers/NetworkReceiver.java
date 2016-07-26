@@ -3,10 +3,8 @@ package com.jasgcorp.ids.system.broadcastreceivers;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.smartbuilders.smartsales.ecommerceandroidapp.febeca.R;
-import com.smartbuilders.smartsales.ecommerceandroidapp.services.SyncDataWithServer;
-import com.smartbuilders.smartsales.ecommerceandroidapp.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -15,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import java.util.Date;
 
@@ -25,8 +22,6 @@ import java.util.Date;
  *
  */
 public class NetworkReceiver extends BroadcastReceiver {
-
-    private static final String TAG = NetworkReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -50,7 +45,6 @@ public class NetworkReceiver extends BroadcastReceiver {
                                     if(seconds >= Parameter.getSyncPeriodicityInSeconds(context, user)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
-                                        Log.d(TAG, "lastSuccessFullySyncTime: "+lastSuccessFullySyncTime.toString());
                                         ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());
                                     }
                                 }else{
