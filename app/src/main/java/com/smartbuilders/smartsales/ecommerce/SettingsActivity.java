@@ -21,13 +21,13 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.List;
@@ -153,6 +153,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+        ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+        root.setBackgroundColor(Color.WHITE);
         mCurrentUser = Utils.getCurrentUser(getApplicationContext());
     }
 
@@ -250,12 +252,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
                     if (Long.valueOf(newValue.toString()) <=0) {
-                        System.out.println("Turn off periodic syncing");
                         //Turn off periodic syncing
                         ContentResolver.setSyncAutomatically(account, preference.getContext()
                                 .getString(R.string.sync_adapter_content_authority), false);
                     }else{
-                        System.out.println("Turn on periodic syncing - freq: "+newValue.toString());
                         //se coloca define la sincronizacion automatica solo si no se ha definido antes o si
                         //cambio el periodo de sincronizacion
                         Bundle bundle = new Bundle();
@@ -294,6 +294,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     final Context context = preference.getContext();
                     if(((Boolean) newValue)){
                         findPreference("sync_thumb_images").setSelectable(true);
+                        //TODO: setear el valor de sync_thumb_images en FALSE
                     }else{
                         findPreference("sync_thumb_images").setSelectable(false);
                         context.stopService(new Intent(context, LoadProductsThumbImage.class));
