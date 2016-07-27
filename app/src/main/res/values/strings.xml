@@ -340,5 +340,6 @@
     <string name="clean_thumb_dir">¿Desea eliminar las imagenes anteriormente almacenadas?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="no_image_available">No hay imagen disponible.</string>
 
 </resources>

@@ -95,7 +95,7 @@ public class ConsumeWebService {
         } catch(SocketTimeoutException e){
 			Log.e(TAG, "SocketTimeoutException");
 			//e.printStackTrace();
-			throw e;
+			return retry(e);
         } catch(SocketException e){
 			Log.e(TAG, "SocketException");
         	//e.printStackTrace();
@@ -124,6 +124,8 @@ public class ConsumeWebService {
     			Log.e(TAG, "Retry in "+((2*retryNumber)*1000)+" milliseconds.");
     			context.sendBroadcast((new Intent(SHOW_TOAST_MESSAGE))
     					.putExtra(MESSAGE, "Failed to communicate with server, retry in "+((2*retryNumber)*1000)+" milliseconds."));
+                //Se incrementa el tiempo de timeOut
+				connectionTimeOut += connectionTimeOut/3;
     		    Thread.sleep((2*retryNumber)*1000);
     		} catch(InterruptedException ex) {
     		    Thread.currentThread().interrupt();

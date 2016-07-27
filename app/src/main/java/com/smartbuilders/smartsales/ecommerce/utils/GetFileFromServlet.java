@@ -57,10 +57,14 @@ public class GetFileFromServlet extends AsyncTask<Void, Void, Bitmap> {
         if(TextUtils.isEmpty(mFileName)){
             return null;
         }
-        if(mIsThumb && Utils.getFileInThumbDirByFileName(mContext, mFileName)!=null){
-            return null;
-        }else if(!mIsThumb && Utils.getFileInOriginalDirByFileName(mContext, mFileName)!=null){
-            return null;
+        if(mIsThumb){
+            if(Utils.getFileInThumbDirByFileName(mContext, mFileName)!=null){
+                return null;
+            }
+        }else{
+            if(Utils.getFileInOriginalDirByFileName(mContext, mFileName)!=null){
+                return null;
+            }
         }
         return downloadImage(url);
     }

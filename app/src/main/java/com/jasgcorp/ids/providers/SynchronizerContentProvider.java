@@ -223,6 +223,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 			if(!tableDataReceiveFromServerThread.isAlive()){
 				if(tableDataReceiveFromServerThread.getExceptionMessage()==null){
 					syncPercentage = 100F;
+				}else{
+					errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
+					exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
 				}
 			}else{
 				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){

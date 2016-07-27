@@ -184,8 +184,12 @@ public class ProductDetailFragment extends Fragment {
                                  view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-                                         startActivity((new Intent(getContext(), ZoomImageActivity.class)
-                                             .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
+                                         if(TextUtils.isEmpty(mProduct.getImageFileName())){
+                                             Toast.makeText(getContext(), R.string.no_image_available, Toast.LENGTH_LONG).show();
+                                         }else{
+                                            startActivity((new Intent(getContext(), ZoomImageActivity.class)
+                                                    .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
+                                         }
                                      }
                                  });
 

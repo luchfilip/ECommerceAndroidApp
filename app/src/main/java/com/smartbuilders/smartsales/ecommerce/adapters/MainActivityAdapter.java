@@ -276,7 +276,7 @@ public class MainActivityAdapter extends BaseAdapter {
                 case VIEW_TYPE_PRODUCT:
                     if (mDataset!=null && mDataset.get(position) instanceof Product){
                         final Product product = (Product) mDataset.get(position);
-                        Utils.loadOriginalImageByFileName(mContext, mUser,
+                        Utils.loadThumbImageByFileName(mContext, mUser,
                                 product.getImageFileName(), viewHolder.productImage);
 
                         viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
