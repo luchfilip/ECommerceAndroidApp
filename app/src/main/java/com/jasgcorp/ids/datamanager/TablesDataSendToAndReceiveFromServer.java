@@ -63,12 +63,12 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		try {
             syncPercentage = 0;
             long initTime = System.currentTimeMillis();
-            if(sync){
-                getUserDataFromWS(context, mUser, getUserTablesToSync());
-            }
             if (sync) {
                 sendUserDataToServer(getUserTablesAndSQLToSync());
                 (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
+            }
+            if(sync){
+                getUserDataFromWS(context, mUser, getUserTablesToSync());
             }
 			if(sync){
 				getGlobalDataFromWS(context, getGlobalTablesToSync());
