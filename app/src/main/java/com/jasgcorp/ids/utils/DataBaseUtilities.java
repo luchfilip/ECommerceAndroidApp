@@ -175,7 +175,7 @@ public class DataBaseUtilities {
      * @param context
      * @throws Exception
      */
-    public static void insertDataFromWSResultData(String data, String tableName, int currentSyncSessionID, Context context, User user) throws Exception {
+    public static void insertDataFromWSResultData(String data, String tableName, Context context, User user) throws Exception {
         int counterEntireCompressedData = 0;
         int counter;
         JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
@@ -184,7 +184,7 @@ public class DataBaseUtilities {
             int columnCount = 0;
             JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
                     .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");//.append(" (SYNC_SESSION_ID, ");
+            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
             try{
                 counter = 0;
                 Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
@@ -196,7 +196,7 @@ public class DataBaseUtilities {
                     }
                     columnCount++;
                 }
-                insertSentence.append(") VALUES (");//.append(") VALUES (?, ");
+                insertSentence.append(") VALUES (");
                 for (int i = 0; i<columnCount; i++) {
                     insertSentence.append((i==0) ? "?" : ", ?");
                 }
@@ -256,7 +256,6 @@ public class DataBaseUtilities {
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
-                //db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
                 //db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -28,8 +28,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	
 	private static final String TAG = TablesDataSendToAndReceiveFromServer.class.getSimpleName();
 
-    public static final String SYNC_SESSION_ID_SHARED_PREFS_KEY = "SYNC_SESSION_ID_SHARED_PREFS_KEY";
-
 	private Context context;
 	private boolean sync;
 	private String exceptionMessage;
@@ -65,18 +63,16 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		Log.d(TAG, "run()");
 		try {
             syncPercentage = 0;
-            Utils.incrementSyncSessionId(context);
-
             long initTime = System.currentTimeMillis();
             if(sync){
-                getUserDataFromWS(context, Utils.getSyncSessionId(context), mUser, getUserTablesToSync());
+                getUserDataFromWS(context, mUser, getUserTablesToSync());
             }
             if (sync) {
                 sendUserDataToServer(getUserTablesAndSQLToSync());
                 (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
             }
 			if(sync){
-				getGlobalDataFromWS(context, Utils.getSyncSessionId(context), getGlobalTablesToSync());
+				getGlobalDataFromWS(context, getGlobalTablesToSync());
 			}
             syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
@@ -168,11 +164,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-	public void getGlobalDataFromWS(Context context, int currentSyncSessionID, List<SoapPrimitive> tablesToSync) throws Exception {
+	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if(sync) {
-                    execRemoteQueryAndInsert(context, null, currentSyncSessionID, tableToSync.toString());
+                    execRemoteQueryAndInsert(context, null, tableToSync.toString());
                     syncPercentage++;
                 }
             }
@@ -194,11 +190,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-	public void getUserDataFromWS(Context context, int currentSyncSessionID, User user, List<SoapPrimitive> tablesToSync) throws Exception {
+	public void getUserDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if(sync){
-                    execRemoteQueryAndInsert(context, user, currentSyncSessionID, tableToSync.toString());
+                    execRemoteQueryAndInsert(context, user, tableToSync.toString());
                     syncPercentage++;
                 }
             }
@@ -211,7 +207,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	 * @param user
 	 * @param tableName
 	 */
-	private void execRemoteQueryAndInsert(Context context, User user, int currentSyncSessionID, String tableName) throws Exception {
+	private void execRemoteQueryAndInsert(Context context, User user, String tableName) throws Exception {
         Cursor c = null;
         try{
             if (user!=null) {
@@ -243,7 +239,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 Object result = a.getWSResponse();
                 if (result instanceof SoapPrimitive) {
                     try {
-                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, currentSyncSessionID, context, user);
+                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, context, user);
                     } catch (IOException e) {
                         if (result.toString().equals("NOTHING_TO_SYNC")){
                             Log.d(TAG, "table: "+tableName+", nothing to sync.");

@@ -976,25 +976,6 @@ public class Utils {
     /**
      *
      * @param context
-     */
-    public static int getSyncSessionId(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getInt(TablesDataSendToAndReceiveFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, 0);
-    }
-
-    /**
-     *
-     * @param context
-     */
-    public static void incrementSyncSessionId(Context context){
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putInt(TablesDataSendToAndReceiveFromServer.SYNC_SESSION_ID_SHARED_PREFS_KEY, getSyncSessionId(context) + 1);
-        editor.apply();
-    }
-
-    /**
-     *
-     * @param context
      * @param businessPartnerId
      */
     public static void setAppCurrentBusinessPartnerId(Context context, int businessPartnerId){
