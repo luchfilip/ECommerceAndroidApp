@@ -77,14 +77,17 @@ public class DataBaseUtilities {
                 //    } catch (JSONException e) {	}
                 //}
                 //preview.add(json.toString());
-
                 while (cursor.moveToNext()){
                     for(int i = 0; i < columnCount; i++){
-                        try{
-                            json.put(String.valueOf(i), cursor.getString(i).trim());
-                        } catch(NullPointerException e){
-                            json.remove(String.valueOf(i));
-                        } catch (JSONException e) {	}
+                        try {
+                            if(cursor.getString(i)==null){
+                                json.remove(String.valueOf(i));
+                            }else{
+                                json.put(String.valueOf(i), cursor.getString(i));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                     preview.add(json.toString());
                     //Si el tamano del archivo es mayor a batchMaxLength Bytes

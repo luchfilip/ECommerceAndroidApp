@@ -124,7 +124,8 @@ public class OrderDB {
                                         " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL) " +
                                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
-                                        String.valueOf(salesOrderId), String.valueOf(businessPartnerId), "CO",
+                                        salesOrderId==null ? null : String.valueOf(salesOrderId),
+                                        String.valueOf(businessPartnerId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOC_TYPE, Utils.getAppVersionName(mContext),
                                         mUser.getUserName(), Utils.getMacAddress(mContext),
                                         String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
