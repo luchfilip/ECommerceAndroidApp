@@ -28,7 +28,7 @@ public class ConsumeWebService {
 	public static final String MESSAGE 				= "com.jasgcorp.ids.utlis.ConsumeWebService.MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
 	private final int MAX_RETRY_NUMBER 				= 3;
-	private final int HTTP_TRANSPORT_TIMEOUT 		= 180*1000;//in milliseconds
+	private final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds
 	
 	//Constantes para la invocacion del web service
 	private Context context;
