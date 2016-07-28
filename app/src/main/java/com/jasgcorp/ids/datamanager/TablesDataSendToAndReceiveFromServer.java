@@ -217,10 +217,10 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             if (user!=null) {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                        null, "select count(*) from " + tableName, null, null);
+                        null, "select COUNT(SEQUENCE_ID), MAX(SEQUENCE_ID) from " + tableName, null, null);
             } else {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                        "select count(*) from " + tableName, null, null);
+                        "select COUNT(SEQUENCE_ID), MAX(SEQUENCE_ID) from " + tableName, null, null);
             }
             //Se verifica la cantidad de resgistros de la tabla para luego usarlo como dato del
             //lado del servidor
@@ -229,10 +229,10 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 parameters.put("authToken", mUser.getAuthToken());
                 parameters.put("userGroupName", mUser.getUserGroup());
                 parameters.put("userId", mUser.getServerUserId());
-                parameters.put("userBusinessPartnerId", mUser.getBusinessPartnerId());
                 parameters.put("tableName", tableName);
                 parameters.put("tableCount", c.getInt(0));
-                parameters.put("maxSeqId", 0);
+                parameters.put("maxSeqId", c.getString(1)==null ? -1 : c.getInt(1));
+                Log.d(TAG, "tableName: "+tableName+", tableCount: "+c.getInt(0)+", maxSeqId: "+String.valueOf(c.getString(1)==null ? -1 : c.getInt(1)));
                 ConsumeWebService a = new ConsumeWebService(context,
                         mUser.getServerAddress(),
                         "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
@@ -245,7 +245,9 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     try {
                         DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, currentSyncSessionID, context, user);
                     } catch (IOException e) {
-                        if (!result.toString().equals("NOTHING_TO_SYNC")){
+                        if (result.toString().equals("NOTHING_TO_SYNC")){
+                            Log.d(TAG, "table: "+tableName+", nothing to sync.");
+                        }else{
                             throw e;
                         }
                     } catch (SQLiteException e) {

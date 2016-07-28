@@ -184,7 +184,7 @@ public class DataBaseUtilities {
             int columnCount = 0;
             JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
                     .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (SYNC_SESSION_ID, ");
+            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");//.append(" (SYNC_SESSION_ID, ");
             try{
                 counter = 0;
                 Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
@@ -196,7 +196,7 @@ public class DataBaseUtilities {
                     }
                     columnCount++;
                 }
-                insertSentence.append(") VALUES (?, ");
+                insertSentence.append(") VALUES (");//.append(") VALUES (?, ");
                 for (int i = 0; i<columnCount; i++) {
                     insertSentence.append((i==0) ? "?" : ", ?");
                 }
@@ -246,27 +246,17 @@ public class DataBaseUtilities {
                     }
                     //Se prepara la data que se insertara
                     statement.clearBindings();
-                    statement.bindString(1, String.valueOf(currentSyncSessionID));
-                    //for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                    //    try {
-                    //        //data que se insertara
-                    //        statement.bindString(columnIndex+1, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
-                    //    } catch (JSONException e) {
-                    //        //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
-                    //    } catch (Exception e) {
-                    //        e.printStackTrace();
-                    //    }
-                    //}
+                    //statement.bindString(1, String.valueOf(currentSyncSessionID));
                     keysTemp = jsonArray2.getJSONObject(counter).keys();
                     while(keysTemp.hasNext()){
                         key = (String) keysTemp.next();
-                        statement.bindString(Integer.valueOf(key)+1, jsonArray2.getJSONObject(counter).getString(key));
+                        statement.bindString(Integer.valueOf(key)/*+1*/, jsonArray2.getJSONObject(counter).getString(key));
                     }
                     statement.execute();
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
-                db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
+                //db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
                 //db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
