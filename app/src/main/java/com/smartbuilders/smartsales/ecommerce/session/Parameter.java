@@ -48,7 +48,7 @@ public class Parameter {
      * @return
      */
     public static int getConnectionTimeOutValue(Context context, User user){
-        return ParameterDB.getParameterIntValue(context, user, ParameterDB.CONNECTION_TIME_OUT_VALUE, 1200);
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.CONNECTION_TIME_OUT_VALUE, 1800);
     }
 
     /**

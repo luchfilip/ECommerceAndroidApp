@@ -202,7 +202,7 @@ public class DataBaseUtilities {
                 e.printStackTrace();
             }
 
-            int columnIndex;
+            //int columnIndex;
             SQLiteDatabase db = null;
             SQLiteStatement statement = null;
             try {
@@ -217,6 +217,8 @@ public class DataBaseUtilities {
                 statement = db.compileStatement(insertSentence.toString());
                 db.beginTransaction();
                 counter = 1;
+                Iterator<?> keysTemp;
+                String key;
                 //Se itera a traves de la data
                 while (counter <= jsonArray2.length()) {
                     if (++counter >= jsonArray2.length()) {
@@ -244,15 +246,20 @@ public class DataBaseUtilities {
                     //Se prepara la data que se insertara
                     statement.clearBindings();
                     statement.bindString(1, String.valueOf(currentSyncSessionID));
-                    for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                        try {
-                            //data que se insertara
-                            statement.bindString(columnIndex+1, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
-                        } catch (JSONException e) {
-                            //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    //for (columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    //    try {
+                    //        //data que se insertara
+                    //        statement.bindString(columnIndex+1, jsonArray2.getJSONObject(counter).getString(String.valueOf(columnIndex)));
+                    //    } catch (JSONException e) {
+                    //        //Log.w(TAG, e.getMessage()!=null ? e.getMessage() : "insertDataFromWSResultData - JSONException");
+                    //    } catch (Exception e) {
+                    //        e.printStackTrace();
+                    //    }
+                    //}
+                    keysTemp = jsonArray2.getJSONObject(counter).keys();
+                    while(keysTemp.hasNext()){
+                        key = (String) keysTemp.next();
+                        statement.bindString(Integer.valueOf(key)+1, jsonArray2.getJSONObject(counter).getString(key));
                     }
                     statement.execute();
                     //Fin de preparacion de la data que se insertara

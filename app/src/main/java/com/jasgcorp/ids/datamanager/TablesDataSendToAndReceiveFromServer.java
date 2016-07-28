@@ -232,6 +232,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 parameters.put("userBusinessPartnerId", mUser.getBusinessPartnerId());
                 parameters.put("tableName", tableName);
                 parameters.put("tableCount", c.getInt(0));
+                parameters.put("maxSeqId", 0);
                 ConsumeWebService a = new ConsumeWebService(context,
                         mUser.getServerAddress(),
                         "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
