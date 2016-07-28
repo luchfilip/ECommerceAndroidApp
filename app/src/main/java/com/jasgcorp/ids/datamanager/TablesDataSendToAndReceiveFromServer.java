@@ -19,7 +19,6 @@ import com.jasgcorp.ids.utils.ConsumeWebService;
 import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerce.data.FailedSyncDataWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
-import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  *
@@ -237,18 +236,26 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                         parameters,
                         mConnectionTimeOut);
                 Object result = a.getWSResponse();
-                if (result instanceof SoapPrimitive) {
+                if (result instanceof List<?>) {
                     try {
-                        DataBaseUtilities.insertDataFromWSResultData(result.toString(), tableName, context, user);
-                    } catch (IOException e) {
-                        if (result.toString().equals("NOTHING_TO_SYNC")){
-                            Log.d(TAG, "table: "+tableName+", nothing to sync.");
-                        }else{
-                            throw e;
+                        SoapPrimitive dataToInsert = ((List<SoapPrimitive>) result).get(0);
+                        try {
+                            Object validSequenceIds = ((List<SoapPrimitive>) result).get(1);
+                            DataBaseUtilities.insertDataFromWSResultData(dataToInsert.toString(),
+                                    validSequenceIds!=null?validSequenceIds.toString():null,
+                                    tableName, context, user);
+                        } catch (IOException e) {
+                            if (dataToInsert.toString().equals("NOTHING_TO_SYNC")){
+                                Log.d(TAG, "table: "+tableName+", nothing to sync.");
+                            }else{
+                                throw e;
+                            }
+                        } catch (SQLiteException e) {
+                            e.printStackTrace();
+                            reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
                         }
-                    } catch (SQLiteException e) {
+                    }catch (Exception e){
                         e.printStackTrace();
-                        reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
                     }
                 } else if(result instanceof Exception) {
                     throw (Exception) result;

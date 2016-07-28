@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.jasgcorp.ids.database.DatabaseHelper;
@@ -175,7 +176,7 @@ public class DataBaseUtilities {
      * @param context
      * @throws Exception
      */
-    public static void insertDataFromWSResultData(String data, String tableName, Context context, User user) throws Exception {
+    public static void insertDataFromWSResultData(String data, String validSequenceIds, String tableName, Context context, User user) throws Exception {
         int counterEntireCompressedData = 0;
         int counter;
         JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
@@ -256,6 +257,9 @@ public class DataBaseUtilities {
                     //Fin de preparacion de la data que se insertara
                 }
                 db.setTransactionSuccessful();
+                db.delete(tableName,
+                        TextUtils.isEmpty(validSequenceIds)?null : "SEQUENCE_ID NOT IN ("+validSequenceIds+")",
+                        null);
                 //db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
