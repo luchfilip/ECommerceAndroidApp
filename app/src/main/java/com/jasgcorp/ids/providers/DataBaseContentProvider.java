@@ -48,9 +48,9 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	private static final UriMatcher uriMatcher;
 	private static DatabaseHelper dbHelper;
     private static SQLiteDatabase mUserReadableDB;
-    public static SQLiteDatabase mUserWriteableDB;
+    private static SQLiteDatabase mUserWriteableDB;
     private static SQLiteDatabase mIDSReadableDB;
-    public static SQLiteDatabase mIDSWriteableDB;
+    private static SQLiteDatabase mIDSWriteableDB;
 
 	static{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

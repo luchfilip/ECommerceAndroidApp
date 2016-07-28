@@ -553,18 +553,20 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager mAccountManager = AccountManager.get(getApplicationContext());
                                 for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
-                                    User user = new User();
-                                    user.setUserId(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                                    Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(getApplicationContext(), user);
-                                    if(lastSuccessFullySyncTime!=null){
-                                        long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
-                                        if(seconds >= Parameter.getSyncPeriodicityInSeconds(getApplicationContext(), user)) {
-                                            ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
+                                    if (!ApplicationUtilities.isSyncActive(this, account)) {
+                                        User user = new User();
+                                        user.setUserId(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+                                        Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(getApplicationContext(), user);
+                                        if(lastSuccessFullySyncTime!=null){
+                                            long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
+                                            if(seconds >= Parameter.getSyncPeriodicityInSeconds(getApplicationContext(), user)) {
+                                                ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
+                                            }else{
+                                                ApplicationUtilities.initSyncDataWithServerService(getApplicationContext(), user.getUserId());
+                                            }
                                         }else{
-                                            ApplicationUtilities.initSyncDataWithServerService(getApplicationContext(), user.getUserId());
+                                            ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
                                         }
-                                    }else{
-                                        ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
                                     }
                                 }
                             } catch (Exception e){

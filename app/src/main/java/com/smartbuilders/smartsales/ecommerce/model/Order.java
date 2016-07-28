@@ -85,7 +85,7 @@ public class Order extends Model implements Parcelable {
     }
 
     public String getSalesOrderNumber() {
-        return String.format("%06d", getSalesOrderId());
+        return String.format(new Locale("es","VE"), "%06d", getSalesOrderId());
     }
 
     public void setSalesOrderId(int salesOrderId) {

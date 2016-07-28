@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -29,10 +30,10 @@ public class ProductRecentlySeenDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
                     "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, " +
-                        " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(getMaxProductRecentlySeenId() + 1), String.valueOf(businessPartnerId),
-                            String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
+                            String.valueOf(mUser.getServerUserId()), String.valueOf(productId), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();

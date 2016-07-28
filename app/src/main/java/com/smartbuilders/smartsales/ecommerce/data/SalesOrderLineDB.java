@@ -7,6 +7,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class SalesOrderLineDB {
                     " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(orderLine.getQuantityOrdered()),
                             String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
-                            String.valueOf(orderLine.getTotalLineAmount()), "datetime('now')",
+                            String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(),
                             String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -140,13 +141,13 @@ public class SalesOrderLineDB {
                     null,
                     "INSERT INTO ECOMMERCE_SALES_ORDER_LINE (ECOMMERCE_SALES_ORDER_LINE_ID, USER_ID, " +
                         " PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, " +
-                        " TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        " TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(salesOrderLine.getId()), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(salesOrderLine.getProductId()), String.valueOf(businessPartnerId),
                             String.valueOf(salesOrderLine.getQuantityOrdered()), String.valueOf(salesOrderLine.getPrice()),
                             String.valueOf(salesOrderLine.getTaxPercentage()), String.valueOf(salesOrderLine.getTotalLineAmount()),
-                            docType, (orderId==null ? null : String.valueOf(orderId)),
+                            docType, (orderId==null ? null : String.valueOf(orderId)), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();
@@ -335,7 +336,7 @@ public class SalesOrderLineDB {
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE " +
                     " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ? " +
                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(salesOrderId), "datetime('now')", newDocType,
+                    new String[]{String.valueOf(salesOrderId), DateFormat.getCurrentDateTimeSQLFormat(), newDocType,
                             String.valueOf(userBusinessPartnerId), String.valueOf(mUser.getServerUserId()),
                             currentDocType, "Y"});
         } catch (Exception e) {

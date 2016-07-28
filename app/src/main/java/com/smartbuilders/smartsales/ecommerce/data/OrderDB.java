@@ -9,6 +9,7 @@ import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.sql.Timestamp;
@@ -121,13 +122,13 @@ public class OrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_ORDER_ID, USER_ID, ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
-                                        " DOC_STATUS, DOC_TYPE, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL) " +
-                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                        " DOC_STATUS, DOC_TYPE, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL) " +
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
                                         salesOrderId==null ? null : String.valueOf(salesOrderId),
                                         String.valueOf(businessPartnerId), "CO",
-                                        OrderLineDB.FINALIZED_ORDER_DOC_TYPE, Utils.getAppVersionName(mContext),
-                                        mUser.getUserName(), Utils.getMacAddress(mContext),
+                                        OrderLineDB.FINALIZED_ORDER_DOC_TYPE, DateFormat.getCurrentDateTimeSQLFormat(),
+                                        Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),
                                         String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total)});
                 if(rowsAffected <= 0){

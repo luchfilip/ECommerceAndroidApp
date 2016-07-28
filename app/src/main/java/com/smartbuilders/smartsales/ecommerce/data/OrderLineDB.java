@@ -9,9 +9,13 @@ import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by stein on 4/30/2016.
@@ -29,7 +33,7 @@ public class OrderLineDB {
     public OrderLineDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
-        this.mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, mUser);
+        this.mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, user);
     }
 
     public String addOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
@@ -81,8 +85,8 @@ public class OrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
-                            "DELETE FROM ECOMMERCE_ORDER_LINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
-                            new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ? WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND PRODUCT_ID = ? AND DOC_TYPE = ?",
+                            new String[]{"N", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                     String.valueOf(mUser.getServerUserId()), String.valueOf(productId), WISH_LIST_DOC_TYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -110,7 +114,7 @@ public class OrderLineDB {
                     new String[]{SHOPPING_CART_DOC_TYPE, String.valueOf(qtyRequested),
                             String.valueOf(orderLine.getPrice()),
                             String.valueOf(orderLine.getTaxPercentage()),
-                            String.valueOf(OrderLineBR.getTotalLine(orderLine)), "datetime('now')",
+                            String.valueOf(OrderLineBR.getTotalLine(orderLine)), DateFormat.getCurrentDateTimeSQLFormat(),
                             String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
                             WISH_LIST_DOC_TYPE});
             if (rowsAffected < 1) {
@@ -134,7 +138,7 @@ public class OrderLineDB {
                     " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(orderLine.getQuantityOrdered()),
                     String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
-                    String.valueOf(orderLine.getTotalLineAmount()), "datetime('now')",
+                    String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(),
                     String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -152,8 +156,8 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "DELETE FROM ECOMMERCE_ORDER_LINE WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ?",
-                    new String[]{String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
+                    "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ? WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ?",
+                    new String[]{"N", String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -170,8 +174,8 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "DELETE FROM ECOMMERCE_ORDER_LINE WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
-                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ? WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
+                    new String[]{"N", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE});
         } catch (Exception e){
             e.printStackTrace();
@@ -250,14 +254,14 @@ public class OrderLineDB {
                     null,
                     "INSERT INTO ECOMMERCE_ORDER_LINE (ECOMMERCE_ORDER_LINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
                         " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
-                        " ECOMMERCE_ORDER_ID, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        " ECOMMERCE_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(ol.getId()), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(ol.getProductId()), String.valueOf(ol.getQuantityOrdered()),
                             String.valueOf(ol.getPrice()), String.valueOf(ol.getTaxPercentage()),
                             String.valueOf(ol.getTotalLineAmount()), docType,
-                            (orderId==null ? null : String.valueOf(orderId)),
+                            (orderId==null ? null : String.valueOf(orderId)), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
             e.printStackTrace();
@@ -345,8 +349,8 @@ public class OrderLineDB {
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
                     " DOC_TYPE = ? WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
-                    new String[]{String.valueOf(orderId), "datetime('now')", newDocType,
-                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    new String[]{String.valueOf(orderId), DateFormat.getCurrentDateTimeSQLFormat(),
+                            newDocType, String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), currentDocType, "Y"});
         } catch (Exception e) {
             e.printStackTrace();

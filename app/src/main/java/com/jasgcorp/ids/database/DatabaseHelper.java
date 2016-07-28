@@ -300,7 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " EMAIL_ADDRESS VARCHAR(255) DEFAULT NULL, " +
                     " PHONE_NUMBER VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -336,7 +336,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -357,7 +357,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -378,7 +378,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -399,7 +399,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(2) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -414,7 +414,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TEXT_TO_SEARCH TEXT NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " SUBCATEGORY_ID INTEGER DEFAULT NULL, " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -428,7 +429,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " USER_ID INTEGER NOT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
@@ -459,7 +461,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " FAX_NUMBER VARCHAR(128) DEFAULT NULL, " +
                     " WEB_PAGE VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')), " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " APP_VERSION VARCHAR(128) NOT NULL, " +
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +

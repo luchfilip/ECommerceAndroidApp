@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
@@ -28,11 +29,12 @@ public class UserCompanyDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "insert into user_company (USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
-                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{String.valueOf(mUser.getServerUserId()) ,company.getName(),
                             company.getCommercialName(), company.getTaxId(), company.getAddress(),
                             company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
+                            DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó o actualizó el registro en la base de datos.";

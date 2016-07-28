@@ -9,6 +9,7 @@ import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.sql.Timestamp;
@@ -287,10 +288,11 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (ECOMMERCE_SALES_ORDER_ID, USER_ID, BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
-                                        " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
-                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                        " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
                                         String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
+                                        DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(),
                                         Utils.getMacAddress(mContext), String.valueOf(orderLines!=null ? orderLines.size() : activeShoppingSalesLineNumber),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total),

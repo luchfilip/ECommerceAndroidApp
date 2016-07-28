@@ -83,11 +83,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         mContext = context;
         mFragment = shoppingCartFragment;
         mDataset = data;
-        OrderBR.validateQuantityOrderedInOrderLines(mContext, mUser, mDataset);
         mIsShoppingCart = isShoppingCart;
         mUser = user;
+        OrderBR.validateQuantityOrderedInOrderLines(context, user, data);
         orderLineDB = new OrderLineDB(context, user);
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
     }
 
     // Create new views (invoked by the layout manager)

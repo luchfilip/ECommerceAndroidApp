@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -72,13 +73,13 @@ public class UserBusinessPartnerDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "INSERT INTO USER_BUSINESS_PARTNER (USER_BUSINESS_PARTNER_ID, USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
-                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                        " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                     new String[]{String.valueOf(userBusinessPartnerId), String.valueOf(mUser.getServerUserId()),
                             businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
-                            businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mUser.getUserName(), Utils.getMacAddress(mContext)});
+                            businessPartner.getPhoneNumber(), DateFormat.getCurrentDateTimeSQLFormat(),
+                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             if (rowsAffected <= 0){
                 return "No se insertó el registro en la base de datos.";
             }
@@ -101,7 +102,8 @@ public class UserBusinessPartnerDB {
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), Utils.getAppVersionName(mContext),
-                            mUser.getUserName(), "datetime('now')", String.valueOf(businessPartner.getId()),
+                            mUser.getUserName(), DateFormat.getCurrentDateTimeSQLFormat(),
+                            String.valueOf(businessPartner.getId()),
                             String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se actualizó el registro en la base de datos.";

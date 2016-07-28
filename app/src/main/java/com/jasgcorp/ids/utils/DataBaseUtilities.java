@@ -210,11 +210,9 @@ public class DataBaseUtilities {
             SQLiteStatement statement = null;
             try {
                 if(user == null){
-                    db = DataBaseContentProvider.mIDSWriteableDB!=null ? DataBaseContentProvider.mIDSWriteableDB
-                            : (new DatabaseHelper(context)).getWritableDatabase();
+                    db = (new DatabaseHelper(context)).getWritableDatabase();
                 }else{
-                    db = DataBaseContentProvider.mUserWriteableDB!=null ? DataBaseContentProvider.mUserWriteableDB
-                            : (new DatabaseHelper(context, user)).getWritableDatabase();
+                    db = (new DatabaseHelper(context, user)).getWritableDatabase();
                 }
 
                 statement = db.compileStatement(insertSentence.toString());
@@ -269,7 +267,7 @@ public class DataBaseUtilities {
                 }
                 db.setTransactionSuccessful();
                 db.delete(tableName, "SYNC_SESSION_ID<?", new String[]{String.valueOf(currentSyncSessionID)});
-                db.endTransaction();
+                //db.endTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
@@ -283,10 +281,8 @@ public class DataBaseUtilities {
                 }
                 if (db!=null) {
                     try {
-                        if(db!=DataBaseContentProvider.mIDSWriteableDB
-                                && db!= DataBaseContentProvider.mUserWriteableDB){
-                            db.close();
-                        }
+                        db.endTransaction();
+                        db.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

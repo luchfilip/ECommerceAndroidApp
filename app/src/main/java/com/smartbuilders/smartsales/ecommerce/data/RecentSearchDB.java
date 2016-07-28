@@ -41,7 +41,7 @@ public class RecentSearchDB {
                         .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
                         .build(), null,
                         "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
-                                " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                                " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
                                 String.valueOf(productId), String.valueOf(subCategoryId), text,
                                 Utils.getAppVersionName(mContext), mUser.getUserName(),
@@ -61,8 +61,8 @@ public class RecentSearchDB {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
-                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE RECENT_SEARCH_ID = ? AND USER_ID = ?",
-                    new String[]{String.valueOf(recentSearchId), String.valueOf(mUser.getServerUserId())});
+                    .build(), null, "UPDATE RECENT_SEARCH SET IS_ACTIVE = ? WHERE RECENT_SEARCH_ID = ? AND USER_ID = ?",
+                    new String[]{"N", String.valueOf(recentSearchId), String.valueOf(mUser.getServerUserId())});
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -114,8 +114,8 @@ public class RecentSearchDB {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
-                    .build(), null, "DELETE FROM RECENT_SEARCH WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())});
+                    .build(), null, "UPDATE RECENT_SEARCH SET IS_ACTIVE = ? WHERE USER_ID = ?",
+                    new String[]{"N", String.valueOf(mUser.getServerUserId())});
         } catch (Exception e){
             e.printStackTrace();
         }

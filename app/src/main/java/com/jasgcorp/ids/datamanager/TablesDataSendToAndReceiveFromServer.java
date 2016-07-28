@@ -68,15 +68,15 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             Utils.incrementSyncSessionId(context);
 
             long initTime = System.currentTimeMillis();
+            if(sync){
+                getUserDataFromWS(context, Utils.getSyncSessionId(context), mUser, getUserTablesToSync());
+            }
             if (sync) {
                 sendUserDataToServer(getUserTablesAndSQLToSync());
                 (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
             }
 			if(sync){
 				getGlobalDataFromWS(context, Utils.getSyncSessionId(context), getGlobalTablesToSync());
-			}
-			if(sync){
-				getUserDataFromWS(context, Utils.getSyncSessionId(context), mUser, getUserTablesToSync());
 			}
             syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
