@@ -21,6 +21,8 @@
                 android:id="@+id/title_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 style="@style/title_text_style"
                 android:layout_weight="1" />
         </LinearLayout>

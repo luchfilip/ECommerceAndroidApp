@@ -26,13 +26,13 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brands_list);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_FILTER_TEXT)){
                 mCurrentFilterText = savedInstanceState.getString(STATE_CURRENT_FILTER_TEXT);
             }
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

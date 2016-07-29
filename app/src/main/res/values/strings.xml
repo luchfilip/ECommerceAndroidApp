@@ -108,14 +108,14 @@
 
     <string name="title_activity_product_list">Productos</string>
     <string name="title_activity_shopping_cart">Pedido</string>
-    <string name="title_activity_categories">Busqueda Por Categoría</string>
-    <string name="title_activity_sub_categories">Busqueda Por SubCategoría</string>
+    <string name="title_activity_categories">Categorías</string>
+    <string name="title_activity_sub_categories">Sub Categorías</string>
     <string name="title_activity_checkout">Finalizar Pedido</string>
     <string name="title_activity_order_list">Pedidos</string>
     <string name="title_activity_order_detail">Detalle del Pedido</string>
     <string name="title_activity_wish_list">Lista de Favoritos</string>
     <string name="title_activity_filter_options">Busqueda Por</string>
-    <string name="title_activity_brands_list">Busqueda Por Marca</string>
+    <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">Empaque comercial: %1$s %2$s.</string>
     <string name="availability">Disponibilidad: %1$s</string>
     <string name="quantity_label">Cantidad:</string>
@@ -341,5 +341,6 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="no_image_available">No hay imagen disponible.</string>
+    <string name="category_name_description_detail">%1$s: %2$s</string>
 
 </resources>

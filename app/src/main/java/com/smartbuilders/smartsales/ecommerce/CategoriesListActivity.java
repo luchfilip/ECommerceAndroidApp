@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-
 /**
  * Jesus Sarco, before 10.06.2016
  */
@@ -22,10 +20,9 @@ public class CategoriesListActivity extends AppCompatActivity implements Categor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories_list);
 
-        //Utils.setCustomActionbarTitle(this, getSupportActionBar(), true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mTwoPane = findViewById(R.id.subcategory_list_container) != null;
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
