@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
@@ -161,25 +162,62 @@ public class RegisterBusinessPartnerFragment extends Fragment {
 
                                         saveButton.setText(getString(R.string.update));
                                     }else{
+                                        /**************/
                                         if(rootView.findViewById(R.id.business_partner_internal_code_tableRow)!=null){
                                             rootView.findViewById(R.id.business_partner_internal_code_tableRow).setVisibility(View.VISIBLE);
-                                        }
-                                        if(rootView.findViewById(R.id.business_partner_internal_code_textView)!=null){
+                                        }else{
+                                            rootView.findViewById(R.id.business_partner_internal_code_label).setVisibility(View.VISIBLE);
                                             rootView.findViewById(R.id.business_partner_internal_code_textView).setVisibility(View.VISIBLE);
                                         }
-                                        if(rootView.findViewById(R.id.business_partner_internal_code_editText)!=null){
-                                            rootView.findViewById(R.id.business_partner_internal_code_editText).setVisibility(View.VISIBLE);
-                                            ((EditText) rootView.findViewById(R.id.business_partner_internal_code_editText))
-                                                    .setText(mBusinessPartner.getInternalCode());
+                                        ((TextView) rootView.findViewById(R.id.business_partner_internal_code_textView))
+                                                .setText(mBusinessPartner.getInternalCode());
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerName.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_name_textView)).setText(mBusinessPartner.getName());
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerCommercialName.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_commercial_name_textView)).setText(mBusinessPartner.getCommercialName());
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerTaxId.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_tax_id_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_tax_id_textView)).setText(mBusinessPartner.getTaxId());
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerAddress.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_address_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_address_textView)).setText(mBusinessPartner.getAddress());
+                                        /**************/
+
+                                        /**************/
+                                        if(rootView.findViewById(R.id.business_partner_contact_person_tableRow)!=null){
+                                            rootView.findViewById(R.id.business_partner_contact_person_tableRow).setVisibility(View.GONE);
+                                        }else{
+                                            rootView.findViewById(R.id.business_partner_contact_person_label).setVisibility(View.GONE);
+                                            businessPartnerContactPerson.setVisibility(View.GONE);
                                         }
-                                        businessPartnerName.setFocusable(false);
-                                        businessPartnerCommercialName.setFocusable(false);
-                                        businessPartnerTaxId.setFocusable(false);
-                                        businessPartnerAddress.setFocusable(false);
-                                        rootView.findViewById(R.id.business_partner_contact_person_name_textView).setVisibility(View.GONE);
-                                        businessPartnerContactPerson.setVisibility(View.GONE);
-                                        businessPartnerEmailAddress.setFocusable(false);
-                                        businessPartnerPhoneNumber.setFocusable(false);
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerEmailAddress.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_email_address_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_email_address_textView)).setText(mBusinessPartner.getEmailAddress());
+                                        /**************/
+
+                                        /**************/
+                                        businessPartnerPhoneNumber.setVisibility(View.GONE);
+                                        rootView.findViewById(R.id.business_partner_phone_number_textView).setVisibility(View.VISIBLE);
+                                        ((TextView) rootView.findViewById(R.id.business_partner_phone_number_textView)).setText(mBusinessPartner.getPhoneNumber());
+                                        /**************/
+
                                         saveButton.setVisibility(View.GONE);
                                     }
                                 }

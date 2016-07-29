@@ -325,6 +325,7 @@
     <string name="business_partner_name_detail">Cliente: %1$s</string>
     <string name="business_partner_internal_code_detail">Código Cliente: %1$s</string>
     <string name="business_partner">Cliente</string>
+    <string name="business_partner_info">Información del Cliente</string>
     <string name="session_loaded_detail">Se ha iniciado sesión con el cliente \"%1$s\".</string>
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>

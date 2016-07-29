@@ -21,6 +21,10 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
 
     public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
 
+    private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
+
+    private int mBusinessPartnerId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,22 +32,29 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
 
         User user = Utils.getCurrentUser(this);
 
-        if(getIntent()!=null && getIntent().getExtras()!=null){
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
+                mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+            }
+        }else if(getIntent()!=null && getIntent().getExtras()!=null){
             if(getIntent().getExtras().containsKey(KEY_BUSINESS_PARTNER_ID)) {
-                if (findViewById(R.id.title_textView)!=null) {
-                    if(user!=null && user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                        ((TextView) findViewById(R.id.title_textView))
-                                .setText(getString(R.string.update_business_partner));
-                    }else if(user!=null && user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                        ((TextView) findViewById(R.id.title_textView))
-                                .setText(getString(R.string.business_partner));
-                    }
-                    ((ImageView) findViewById(R.id.toolbar_imageView))
-                            .setImageResource(R.drawable.ic_person_white_24dp);
-                }
+                mBusinessPartnerId = getIntent().getExtras().getInt(KEY_BUSINESS_PARTNER_ID);
             }
         }
 
+        if (mBusinessPartnerId!=0 && findViewById(R.id.title_textView)!=null) {
+            if(user!=null){
+                if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                    ((TextView) findViewById(R.id.title_textView))
+                            .setText(getString(R.string.update_business_partner));
+                }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                    ((TextView) findViewById(R.id.title_textView))
+                            .setText(getString(R.string.business_partner_info));
+                }
+            }
+            ((ImageView) findViewById(R.id.toolbar_imageView))
+                    .setImageResource(R.drawable.ic_person_white_24dp);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
@@ -83,5 +94,11 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
     @Override
     public void onBusinessPartnerRegistered() {
         onBackPressed();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
+        super.onSaveInstanceState(outState);
     }
 }

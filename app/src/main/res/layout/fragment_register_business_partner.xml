@@ -53,26 +53,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/business_partner_internal_code_label"
-                    android:id="@+id/business_partner_internal_code_textView"
+                    android:id="@+id/business_partner_internal_code_label"
                     android:textColor="@color/black"
                     android:visibility="gone"
                     android:textStyle="bold" />
 
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/business_partner_internal_code_editText"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
+                    android:id="@+id/business_partner_internal_code_textView"
+                    android:textColor="@color/black"
                     android:visibility="gone"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/business_partner_commercial_name_label"
-                    android:id="@+id/business_partner_commercial_name_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -85,10 +85,20 @@
                     android:paddingEnd="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_commercial_name_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/business_partner_name_label"
-                    android:id="@+id/business_partner_name_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -101,10 +111,20 @@
                     android:paddingStart="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_name_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!-- -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/business_partner_tax_id_label"
-                    android:id="@+id/business_partner_tax_id_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -117,10 +137,20 @@
                     android:paddingStart="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_tax_id_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/address_label"
-                    android:id="@+id/business_partner_address_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -133,10 +163,21 @@
                     android:paddingStart="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_address_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/contact_person_label"
-                    android:id="@+id/business_partner_contact_person_name_textView"
+                    android:id="@+id/business_partner_contact_person_label"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -149,10 +190,20 @@
                     android:paddingEnd="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_contact_person_name_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email_address_label"
-                    android:id="@+id/business_partner_email_address_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -160,18 +211,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:autoLink="email"
-                    android:textColorLink="@color/emailLinkColor"
                     android:ems="10"
                     android:id="@+id/business_partner_email_address_editText"
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="email"
+                    android:textColorLink="@color/emailLinkColor"
+                    android:id="@+id/business_partner_email_address_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                <!--  -->
+
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/phone_number_label"
-                    android:id="@+id/business_partner_phone_number_textView"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -179,12 +240,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
-                    android:autoLink="phone"
-                    android:textColorLink="@color/phoneNumberLinkColor"
                     android:ems="10"
                     android:id="@+id/business_partner_phone_number_editText"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/phoneNumberLinkColor"
+                    android:autoLink="phone"
+                    android:id="@+id/business_partner_phone_number_textView"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
+
             </LinearLayout>
         </ScrollView>
 
