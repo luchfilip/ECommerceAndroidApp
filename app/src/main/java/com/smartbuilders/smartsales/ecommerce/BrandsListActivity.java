@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.BrandsListAdapter;
-import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * Jesus Sarco
@@ -28,9 +26,6 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brands_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, true);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(savedInstanceState!=null){

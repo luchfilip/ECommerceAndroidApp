@@ -8,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.SubCategoryAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
-import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 
 import java.util.ArrayList;
@@ -24,8 +21,8 @@ import java.util.ArrayList;
 public class SubCategoriesListFragment extends Fragment {
 
     private static final String STATE_CATEGORY_ID = "STATE_CATEGORY_ID";
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     // save index and top position
     private int mListViewIndex;
@@ -51,11 +48,11 @@ public class SubCategoriesListFragment extends Fragment {
                         if (savedInstanceState.containsKey(STATE_CATEGORY_ID)) {
                             mCategoryId = savedInstanceState.getInt(STATE_CATEGORY_ID);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
 
@@ -81,13 +78,6 @@ public class SubCategoriesListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                ProductCategory productCategory = (new ProductCategoryDB(getContext()))
-                                        .getActiveProductCategoryById(mCategoryId);
-                                if(productCategory!=null){
-                                    ((TextView) rootView.findViewById(R.id.category_name_textView))
-                                        .setText(productCategory.getDescription());
-                                }
-
                                 mListView = (ListView) rootView.findViewById(R.id.sub_categories_list);
                                 mListView.setAdapter(new SubCategoryAdapter(getContext(), productSubCategories));
 
@@ -126,15 +116,15 @@ public class SubCategoriesListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CATEGORY_ID, mCategoryId);
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         super.onSaveInstanceState(outState);
     }

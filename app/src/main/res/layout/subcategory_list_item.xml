@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/touch_selector"
-    android:id="@+id/linearLayout_container"
     android:orientation="horizontal"
     android:padding="4dp">
 
     <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/category_imageView"
+        android:id="@+id/subcategory_imageView"
         android:layout_weight="1" />
 
     <LinearLayout
@@ -25,14 +24,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/category_name_textView"
+            android:id="@+id/subcategory_name_textView"
             android:textColor="@color/label_color"
             android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/category_description_textView"
+            android:id="@+id/subcategory_description_textView"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView

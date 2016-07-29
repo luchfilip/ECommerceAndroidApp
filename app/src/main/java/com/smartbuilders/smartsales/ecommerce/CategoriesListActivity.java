@@ -22,7 +22,7 @@ public class CategoriesListActivity extends AppCompatActivity implements Categor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories_list);
 
-        Utils.setCustomActionbarTitle(this, getSupportActionBar(), true);
+        //Utils.setCustomActionbarTitle(this, getSupportActionBar(), true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mTwoPane = findViewById(R.id.subcategory_list_container) != null;

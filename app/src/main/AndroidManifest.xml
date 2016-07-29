@@ -207,10 +207,10 @@
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.CategoriesListActivity"
-            android:label="@string/app_name" />
+            android:label="@string/title_activity_categories" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.SubCategoriesListActivity"
-            android:label="@string/app_name" />
+            android:label="@string/title_activity_sub_categories" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.ShoppingCartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -228,7 +228,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.BrandsListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_brands_list" />
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.ShoppingSaleActivity"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -90,14 +90,12 @@ public class CategoryAdapter extends BaseAdapter {
         public TextView categoryName;
         public TextView categoryDescription;
         public ImageView categoryImage;
-        public ImageView goToSubCategoryImage;
         public TextView productsActiveQty;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name_textView);
             categoryDescription = (TextView) v.findViewById(R.id.category_description_textView);
             categoryImage = (ImageView) v.findViewById(R.id.category_imageView);
-            goToSubCategoryImage = (ImageView) v.findViewById(R.id.go_to_subcategory_img);
             productsActiveQty = (TextView) v.findViewById(R.id.products_active_qty);
         }
     }
