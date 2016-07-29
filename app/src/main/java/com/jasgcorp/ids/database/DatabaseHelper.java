@@ -334,7 +334,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TAX DOUBLE DEFAULT 0, " +
                     " TOTAL DOUBLE DEFAULT 0, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
-                    " DOC_TYPE CHAR(2) DEFAULT NULL, " +
+                    " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
@@ -355,7 +355,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SALES_PRICE DOUBLE DEFAULT NULL, " +
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
-                    " DOC_TYPE CHAR(2) DEFAULT NULL, " +
+                    " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
@@ -376,7 +376,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TOTAL DOUBLE DEFAULT 0, " +
                     " VALID_TO DATE DEFAULT NULL, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
-                    " DOC_TYPE CHAR(2) DEFAULT NULL, " +
+                    " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
@@ -397,7 +397,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SALES_PRICE DOUBLE DEFAULT NULL, " +
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
-                    " DOC_TYPE CHAR(2) DEFAULT NULL, " +
+                    " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +

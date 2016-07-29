@@ -266,7 +266,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	        						&& (result.getString(result.getColumnIndex("exception_class")).equals(ConnectException.class.getName())
         								|| result.getString(result.getColumnIndex("exception_class")).equals(SocketTimeoutException.class.getName())
         								|| result.getString(result.getColumnIndex("exception_class")).equals(SocketException.class.getName())
-        								|| result.getString(result.getColumnIndex("exception_class")).equals(IOException.class.getName()))){
+        								|| result.getString(result.getColumnIndex("exception_class")).equals(IOException.class.getName())
+                                        || result.getString(result.getColumnIndex("exception_class")).equals(org.ksoap2.SoapFault.class.getName()))){
 		        					throw new IOException(result.getString(result.getColumnIndex("error_message")));
 		        				} 
 		        				
