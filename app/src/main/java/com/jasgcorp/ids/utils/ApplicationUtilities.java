@@ -1292,15 +1292,15 @@ public class ApplicationUtilities {
 													null, 
 													"SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
 													null, null);
-			while(c.moveToNext()){
-				User user = new User(c.getString(0));
-                user.setBusinessPartnerId(c.getInt(1));
-				user.setUserName(c.getString(2));
-				user.setServerAddress( c.getString(3));
-				user.setUserGroup(c.getString(4));
-				registeredUsers.add(user);
-			}
 			if(c!=null){
+				while(c.moveToNext()){
+					User user = new User(c.getString(0));
+					user.setBusinessPartnerId(c.getInt(1));
+					user.setUserName(c.getString(2));
+					user.setServerAddress( c.getString(3));
+					user.setUserGroup(c.getString(4));
+					registeredUsers.add(user);
+				}
 				c.close();
 				c=null;
 			}

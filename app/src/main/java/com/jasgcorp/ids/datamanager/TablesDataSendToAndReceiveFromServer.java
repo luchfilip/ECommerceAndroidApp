@@ -208,6 +208,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	 */
 	private void execRemoteQueryAndInsert(Context context, User user, String tableName) throws Exception {
         Cursor c = null;
+        LinkedHashMap<String, Object> parameters = null;
         try{
             if (user!=null) {
                 c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -220,7 +221,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             //Se verifica la cantidad de resgistros de la tabla para luego usarlo como dato del
             //lado del servidor
             if(c!=null && c.moveToNext()) {
-                LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+                parameters = new LinkedHashMap<>();
                 parameters.put("authToken", mUser.getAuthToken());
                 parameters.put("userGroupName", mUser.getUserGroup());
                 parameters.put("userId", mUser.getServerUserId());
@@ -228,42 +229,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 parameters.put("tableCount", c.getInt(0));
                 parameters.put("maxSeqId", c.getString(1)==null ? -1 : c.getInt(1));
                 Log.d(TAG, "tableName: "+tableName+", tableCount: "+c.getInt(0)+", maxSeqId: "+String.valueOf(c.getString(1)==null ? -1 : c.getInt(1)));
-                ConsumeWebService a = new ConsumeWebService(context,
-                        mUser.getServerAddress(),
-                        "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                        "sendDataToClient",
-                        "urn:sendDataToClient",
-                        parameters,
-                        mConnectionTimeOut);
-                Object result = a.getWSResponse();
-                if (result instanceof List<?>) {
-                    try {
-                        SoapPrimitive dataToInsert = ((List<SoapPrimitive>) result).get(0);
-                        try {
-                            Object validSequenceIds = ((List<SoapPrimitive>) result).get(1);
-                            DataBaseUtilities.insertDataFromWSResultData(dataToInsert.toString(),
-                                    validSequenceIds!=null?validSequenceIds.toString():null,
-                                    tableName, context, user);
-                        } catch (IOException e) {
-                            if (dataToInsert.toString().equals("NOTHING_TO_SYNC")){
-                                Log.d(TAG, "table: "+tableName+", nothing to sync.");
-                            }else{
-                                throw e;
-                            }
-                        } catch (SQLiteException e) {
-                            e.printStackTrace();
-                            reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                } else if(result instanceof Exception) {
-                    throw (Exception) result;
-                } else if (result!=null) {
-                    throw new Exception("Error while executing execRemoteQueryAndInsert("+mUser.getServerAddress()+", "+tableName+"), ClassCastException.");
-                } else {
-                    throw new Exception("Error while executing execRemoteQueryAndInsert("+mUser.getServerAddress()+", "+tableName+"), result is null.");
-                }
             }
         } finally {
             if (c!=null) {
@@ -275,6 +240,43 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             }
         }
 
+        if(parameters!=null && parameters.size()==6) {
+            ConsumeWebService a = new ConsumeWebService(context,
+                    mUser.getServerAddress(),
+                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "sendDataToClient",
+                    "urn:sendDataToClient",
+                    parameters,
+                    mConnectionTimeOut);
+            Object result = a.getWSResponse();
+            if (result instanceof List<?>) {
+                try {
+                    try {
+                        DataBaseUtilities.insertDataFromWSResultData(((List<SoapPrimitive>) result).get(0) != null ? ((List<SoapPrimitive>) result).get(0).toString() : null,
+                                ((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null,
+                                tableName, context, user);
+                    } catch (IOException e) {
+                        if (((List<SoapPrimitive>) result).get(0) != null
+                                && ((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
+                            Log.d(TAG, "table: " + tableName + ", nothing to sync.");
+                        } else {
+                            throw e;
+                        }
+                    } catch (SQLiteException e) {
+                        e.printStackTrace();
+                        reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (result instanceof Exception) {
+                throw (Exception) result;
+            } else if (result != null) {
+                throw new Exception("Error while executing execRemoteQueryAndInsert(" + mUser.getServerAddress() + ", " + tableName + "), ClassCastException.");
+            } else {
+                throw new Exception("Error while executing execRemoteQueryAndInsert(" + mUser.getServerAddress() + ", " + tableName + "), result is null.");
+            }
+        }
 	}
 
     private void reportSyncError(String errorMessage, String exceptionClass) {

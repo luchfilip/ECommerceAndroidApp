@@ -120,7 +120,6 @@ public class DataBaseUtilities {
                 if(cursor != null){
                     cursor.close();
                 }
-
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -176,7 +175,8 @@ public class DataBaseUtilities {
      * @param context
      * @throws Exception
      */
-    public static void insertDataFromWSResultData(String data, String validSequenceIds, String tableName, Context context, User user) throws Exception {
+    public static void insertDataFromWSResultData(String data, String validSequenceIds, String tableName,
+                                                  Context context, User user) throws Exception {
         int counterEntireCompressedData = 0;
         int counter;
         JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
@@ -226,8 +226,8 @@ public class DataBaseUtilities {
                     if (++counter >= jsonArray2.length()) {
                         if (keys.hasNext()) {
                             counter = 0;
-                            jsonArray2 = new JSONArray(unGzip(Base64
-                                    .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+                            jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+                                    .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
                             if (jsonArray2.length() < 1) {
                                 break;
                             }
@@ -237,8 +237,8 @@ public class DataBaseUtilities {
                             } else {
                                 counter = 0;
                                 keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-                                jsonArray2 = new JSONArray(unGzip(Base64
-                                        .decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+                                jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+                                        .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
                                 if (jsonArray2.length() < 1) {
                                     break;
                                 }
@@ -247,20 +247,18 @@ public class DataBaseUtilities {
                     }
                     //Se prepara la data que se insertara
                     statement.clearBindings();
-                    //statement.bindString(1, String.valueOf(currentSyncSessionID));
                     keysTemp = jsonArray2.getJSONObject(counter).keys();
                     while(keysTemp.hasNext()){
                         key = (String) keysTemp.next();
-                        statement.bindString(Integer.valueOf(key)/*+1*/, jsonArray2.getJSONObject(counter).getString(key));
+                        statement.bindString(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
                     }
-                    statement.execute();
+                    statement.executeInsert();
                     //Fin de preparacion de la data que se insertara
                 }
-                db.setTransactionSuccessful();
-                db.delete(tableName,
-                        TextUtils.isEmpty(validSequenceIds)?null : "SEQUENCE_ID NOT IN ("+validSequenceIds+")",
+                db.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
+                        : "SEQUENCE_ID NOT IN ("+unGzip(Base64.decode(validSequenceIds, Base64.GZIP))+")",
                         null);
-                //db.endTransaction();
+                db.setTransactionSuccessful();
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
@@ -300,7 +298,8 @@ public class DataBaseUtilities {
         if(keys.hasNext()){
             int columnCount = 0;
             Object columnValues[] = null;
-            JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+            JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
             HashMap<String, String> colsIndex;
             SparseArray<String> colsType;
 
@@ -336,7 +335,8 @@ public class DataBaseUtilities {
                     if(++counter>=jsonArray2.length()){
                         if(keys.hasNext()){
                             counter = 0;
-                            jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+                            jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+                                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
                             if(jsonArray2.length()<1){
                                 break;
                             }
@@ -346,7 +346,8 @@ public class DataBaseUtilities {
                             }else{
                                 counter = 0;
                                 keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-                                jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray.getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+                                jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+                                        .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
                                 if(jsonArray2.length()<1){
                                     break;
                                 }
