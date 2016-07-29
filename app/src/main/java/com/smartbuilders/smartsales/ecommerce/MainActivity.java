@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        ApplicationUtilities.checkAppVersion(this);
         if(!ApplicationUtilities.checkPlayServices(this)){
             findViewById(R.id.drawer_layout).setVisibility(View.GONE);
         }else if(findViewById(R.id.drawer_layout).getVisibility()==View.GONE){

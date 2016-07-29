@@ -146,6 +146,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ApplicationUtilities.checkAppVersion(this);
         if(!ApplicationUtilities.checkPlayServices(this)){
             findViewById(R.id.parent_layout).setVisibility(View.GONE);
         }else if(findViewById(R.id.parent_layout).getVisibility()==View.GONE){

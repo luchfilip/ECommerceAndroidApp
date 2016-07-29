@@ -34,16 +34,20 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.services.SyncDataWithServer;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SyncInfo;
 import android.content.pm.PackageInfo;
@@ -51,6 +55,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -200,23 +205,65 @@ public class ApplicationUtilities {
 		return true;
 	}
 
-	///**
-	// *
-	// * @param activity
-	// * @return
-	// */
-	//public static boolean checkPlayServices(Activity activity) {
-	//	int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-	//	if (resultCode != ConnectionResult.SUCCESS) {
-	//		if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-	//			GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
-	//					PLAY_SERVICES_RESOLUTION_REQUEST).show();
-	//		}
-	//		return false;
-	//	}
-	//	return true;
-	//}
-    
+    /**
+     * Revisa si hay una nueva version de la aplicacion disponible en el market. tambien maneja si
+     * la actualizacion es obligatoria u obligatoria
+     */
+    public static void checkAppVersion(final Activity activity) {
+        DialogInterface.OnClickListener goToMarket = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try{
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id="+activity.getPackageName()));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    intent.setPackage("com.android.vending");
+                    dialog.dismiss();
+                    activity.startActivity(intent);
+                    activity.finish();
+                }catch (ActivityNotFoundException e){
+                    // Ok that didn't work, try the market method.
+                    try{
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+activity.getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        intent.setPackage("com.android.vending");
+                        dialog.dismiss();
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }catch (ActivityNotFoundException f){
+                        // Ok, weird. Maybe they don't have any market app. Just show the website.
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+activity.getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        dialog.dismiss();
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }
+                }
+            }
+        };
+        try {
+            if(Parameter.getLastMandatoryAppVersion(activity) > getAppVersion(activity)){
+                //actualizacion obligatoria
+                new AlertDialog.Builder(activity)
+                        .setCancelable(false)
+                        .setTitle(R.string.new_version_available_title)
+                        .setMessage(R.string.new_mandatory_version_available_message)
+                        .setPositiveButton(R.string.update, goToMarket)
+                        .show();
+            }else if (Parameter.getMarketAppVersion(activity) > getAppVersion(activity)){
+                //actualizacion opcional
+                new AlertDialog.Builder(activity)
+                        .setCancelable(true)
+                        .setTitle(R.string.new_version_available_title)
+                        .setMessage(R.string.new_version_available_message)
+                        .setPositiveButton(R.string.update, goToMarket)
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 
      * @param user

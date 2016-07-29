@@ -34,7 +34,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.datamanager.TablesDataSendToAndReceiveFromServer;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.syncadapter.SyncAdapter;

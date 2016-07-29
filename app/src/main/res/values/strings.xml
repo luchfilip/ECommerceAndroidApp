@@ -343,5 +343,8 @@
     <string name="no">No</string>
     <string name="no_image_available">No hay imagen disponible.</string>
     <string name="category_name_description_detail">%1$s: %2$s</string>
+    <string name="new_version_available_title">Actualización disponible</string>
+    <string name="new_version_available_message">Existe una nueva versión de la aplicación disponible en el Market.</string>
+    <string name="new_mandatory_version_available_message">Existe una nueva versión de la aplicación disponible en el Market. Para continuar con la aplicación debe actualizar.</string>
 
 </resources>
