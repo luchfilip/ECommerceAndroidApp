@@ -37,7 +37,7 @@
             android:padding="5dp"
             android:layout_marginLeft="2dp"
             app:cardUseCompatPadding="true"
-            app:cardElevation="2dp"
+            app:cardElevation="1dp"
             app:cardCornerRadius="3dp"
             android:layout_marginBottom="3dp"
             android:layout_gravity="center_vertical">

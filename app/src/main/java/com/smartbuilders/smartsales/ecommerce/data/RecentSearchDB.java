@@ -8,6 +8,7 @@ import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 
 import com.smartbuilders.smartsales.ecommerce.model.RecentSearch;
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class RecentSearchDB {
                                 " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
                                 String.valueOf(productId), String.valueOf(subCategoryId), text,
-                                Utils.getAppVersionName(mContext), mUser.getUserName(),
-                                Utils.getMacAddress(mContext)});
+                                DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(mContext),
+                                mUser.getUserName(), Utils.getMacAddress(mContext)});
             }
         } catch (Exception e){
             e.printStackTrace();
