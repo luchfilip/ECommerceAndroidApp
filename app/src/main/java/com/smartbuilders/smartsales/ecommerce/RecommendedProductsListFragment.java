@@ -298,7 +298,12 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
         public void run() {
             mShareIntent = createSharedIntent(mProducts);
-            mShareActionProvider.setShareIntent(mShareIntent);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mShareActionProvider.setShareIntent(mShareIntent);
+                }
+            });
         }
     }
 

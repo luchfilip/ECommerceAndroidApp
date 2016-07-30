@@ -289,7 +289,12 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         public void run() {
             mShareIntent = createSharedIntent(mWishListLines);
-            mShareActionProvider.setShareIntent(mShareIntent);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mShareActionProvider.setShareIntent(mShareIntent);
+                }
+            });
         }
     }
 

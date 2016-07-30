@@ -7,6 +7,16 @@
     style="@style/shape_style"
     android:background="@drawable/shape">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/product_name"
+        android:textColor="@color/black"
+        android:layout_gravity="center_vertical"
+        android:textStyle="bold"
+        android:lines="1"
+        android:layout_margin="2dp" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -24,17 +34,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_name"
-                android:textColor="@color/black"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold"
-                android:layout_marginRight="10dp"
-                android:lines="2" />
+            android:padding="4dp"
+            android:minHeight="@dimen/wish_list_item_image_height">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,68 +89,75 @@
                     android:id="@+id/product_ratingbar" />
             </LinearLayout>
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <View style="@style/Divider" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/share_imageView"
+                        android:src="@drawable/ic_share_black_24dp"
+                        style="@style/image_button_style"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:padding="3dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/favorite_imageView"
+                        style="@style/image_button_style"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:padding="3dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addToShoppingCart_imageView"
+                        android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                        style="@style/image_button_style"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:padding="3dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                    <ImageView
+                        style="@style/image_button_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addToShoppingSale_imageView"
+                        android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:padding="3dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
-
-    <View style="@style/Divider" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|right">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/share_imageView"
-            android:src="@drawable/ic_share_black_24dp"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="3dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/favorite_imageView"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="3dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/addToShoppingCart_imageView"
-            android:src="@drawable/ic_add_shopping_cart_black_24dp"
-            style="@style/image_button_style"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:padding="3dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp" />
-
-        <ImageView
-            style="@style/image_button_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/addToShoppingSale_imageView"
-            android:src="@drawable/ic_add_shopping_cart_black_24dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:padding="3dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp" />
 
     </LinearLayout>
 
