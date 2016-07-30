@@ -75,15 +75,27 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/productDetailCardView_availability_text_size" />
 
-            <RatingBar
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:progressTint="@color/rating_bar_progress"
-                android:numStars="5"
-                android:rating="2.5"
-                android:id="@+id/product_ratingbar" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_rating_label"
+                    android:textColor="@color/black"/>
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="@color/rating_bar_progress"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:id="@+id/product_ratingbar" />
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -106,7 +118,7 @@
             style="@style/image_button_style"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:padding="5dp"
+            android:padding="3dp"
             android:layout_gravity="center"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp" />
@@ -118,7 +130,7 @@
             style="@style/image_button_style"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:padding="5dp"
+            android:padding="3dp"
             android:layout_gravity="center"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp" />

@@ -12,9 +12,9 @@
         android:id="@+id/product_image"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:minHeight="@dimen/productLargeDetail_max_image_Height"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginTop="5dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -107,16 +106,28 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
-            <RatingBar
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:progressTint="@color/rating_bar_progress"
-                android:numStars="5"
-                android:rating="2.5"
-                android:id="@+id/product_ratingbar"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_rating_label"
+                    android:textColor="@color/black"/>
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="@color/rating_bar_progress"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:id="@+id/product_ratingbar"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -144,7 +155,7 @@
                     style="@style/image_button_style"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp" />
@@ -156,7 +167,7 @@
                     style="@style/image_button_style"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp" />
@@ -169,8 +180,8 @@
                     style="@style/image_button_style"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:layout_gravity="center"
                     android:padding="3dp"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp" />
 
@@ -182,8 +193,8 @@
                     android:src="@drawable/ic_add_shopping_cart_black_24dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
-                    android:layout_gravity="center"
                     android:padding="3dp"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp" />
 

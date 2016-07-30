@@ -152,21 +152,38 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp">
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/product_rating_label"
+                            android:textColor="@color/black"/>
+
+                        <!--<RatingBar-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--style="?android:attr/ratingBarStyleIndicator"-->
+                            <!--android:progressTint="@color/rating_bar_progress"-->
+                            <!--android:numStars="5"-->
+                            <!--android:rating="2.5"-->
+                            <!--android:id="@+id/product_ratingbar"-->
+                            <!--android:focusable="false" />-->
 
                         <RatingBar
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="?android:attr/ratingBarStyleIndicator"
+                            style="?android:attr/ratingBarStyleSmall"
                             android:progressTint="@color/rating_bar_progress"
                             android:numStars="5"
                             android:rating="2.5"
                             android:id="@+id/product_ratingbar"
                             android:focusable="false" />
-                    </FrameLayout>
+                    </LinearLayout>
 
                     <!--<ImageView-->
                         <!--android:layout_width="wrap_content"-->
