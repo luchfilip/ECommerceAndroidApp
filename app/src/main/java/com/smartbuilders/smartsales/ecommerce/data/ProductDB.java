@@ -480,6 +480,9 @@ public class ProductDB {
     }
 
     public Product getProductById(int id){
+        if (id<0) {
+            return null;
+        }
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
@@ -624,5 +627,37 @@ public class ProductDB {
         product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(13));
         product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(14));
         product.setFavorite(mOrderLineDB.isProductInWishList(product.getId()));
+    }
+
+    public Product getProductByInternalCode(String productCode) {
+        return getProductById(getProductIdByInternalCode(productCode));
+    }
+
+    /**
+     * Devuelve -1 si no se consigue el articulo
+     * @param productCode
+     * @return
+     */
+    public int getProductIdByInternalCode(String productCode) {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT PRODUCT_ID FROM PRODUCT WHERE INTERNAL_CODE = ? AND IS_ACTIVE = ?",
+                    new String[]{productCode, "Y",}, null);
+            if (c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return -1;
     }
 }

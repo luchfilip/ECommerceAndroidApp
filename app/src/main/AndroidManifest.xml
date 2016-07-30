@@ -64,6 +64,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- Usado para capturar el enlace por la aplicaion -->
                 <data android:host="@string/company_host_name" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />

@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
@@ -58,17 +60,16 @@ public class MainActivity extends AppCompatActivity
 
         if(getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
-            String scheme = data.getScheme();//get the scheme (http,https)
-            String fullPath = data.getEncodedSchemeSpecificPart();//get the full path -scheme - fragments
-
-            String combine = scheme+":"+fullPath; //combine to get a full URI
-            String url = null;//declare variable to hold final URL
-            if(combine!=null){//if combine variable is not empty then navigate to that full path
-                //Log.d(TAG, "combine: "+combine);
-                //url = combine;
-            } else{//else open main page
-                //Log.e(TAG, "combine is null");
-                //url = "http://www.example.com";
+            //String scheme = data.getScheme();//get the scheme (http,https)
+            //String fullPath = data.getEncodedSchemeSpecificPart();//get the full path -scheme - fragments
+            //String combine = scheme+":"+fullPath; //combine to get a full URI
+            //String url = null;//declare variable to hold final URL
+            if(data.getQueryParameter("product")!=null){
+                Product product = (new ProductDB(this, user)).getProductByInternalCode(data.getQueryParameter("product").trim());
+                if(product!=null){
+                    startActivity((new Intent(this, ProductDetailActivity.class))
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId()));
+                }
             }
         }
 

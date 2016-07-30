@@ -151,7 +151,7 @@ public class Utils {
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");
         shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - "
-                + "http://www.febeca.com:8080/products/compra/");
+                + "http://www.febeca.com:8080/products/compra?product="+product.getInternalCode());
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + File.separator + fileName));
         return shareIntent;
