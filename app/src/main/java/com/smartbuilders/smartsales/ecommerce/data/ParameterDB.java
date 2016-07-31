@@ -31,6 +31,8 @@ public class ParameterDB {
     public static final int SYNCHRONIZATION_PERIODICITY = 6;
     public static final int APP_CURRENT_VERSION = 7;
     public static final int LAST_MANDATORY_APP_VERSION = 8;
+    public static final int SHOW_RATING_BAR = 9;
+    public static final int RATING_BAR_LABEL_TEXT = 10;
 
     /**
      * Devuelve el valor del parametro segun la tabla APP_PARAMETER
@@ -268,7 +270,7 @@ public class ParameterDB {
                 case DOUBLE_VALUE_COLUMN_NAME:
                     return Double.valueOf(result);
                 case BOOLEAN_VALUE_COLUMN_NAME:
-                    return Boolean.valueOf(result);
+                    return String.valueOf(result).equalsIgnoreCase("Y");
                 case DATE_VALUE_COLUMN_NAME:
                     try {
                         return (new SimpleDateFormat("yyyy-MM-dd")).parse(result);

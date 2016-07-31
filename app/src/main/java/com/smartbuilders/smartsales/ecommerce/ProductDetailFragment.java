@@ -121,8 +121,14 @@ public class ProductDetailFragment extends Fragment {
                                             .setText(getContext().getString(R.string.product_internalCode, mProduct.getInternalCode()));
                                 }
 
-                                if(mProduct.getRating()>=0){
-                                    ((RatingBar) view.findViewById(R.id.product_ratingbar)).setRating(mProduct.getRating());
+                                if(Parameter.showProductRatingBar(getContext(), mUser)){
+                                    ((TextView) view.findViewById(R.id.product_ratingBar_label_textView))
+                                            .setText(getString(R.string.product_ratingBar_label_text_detail, Parameter.getProductRatingBarLabelText(getContext(), mUser)));
+                                    if(mProduct.getRating()>=0){
+                                        ((RatingBar) view.findViewById(R.id.product_ratingBar)).setRating(mProduct.getRating());
+                                    }
+                                }else{
+                                    view.findViewById(R.id.product_ratingBar_container).setVisibility(View.GONE);
                                 }
 
                                 if (mProduct.getDescription() != null) {

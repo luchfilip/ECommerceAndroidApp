@@ -94,24 +94,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:id="@+id/product_ratingBar_container">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/product_rating_label"
-                        android:textColor="@color/black"/>
+                        android:id="@+id/product_ratingBar_label_textView"
+                        android:layout_marginRight="2dp"
+                        android:textColor="@color/background_material_dark" />
 
                     <RatingBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/ratingBarStyleSmall"
-                        android:progressTint="@color/rating_bar_progress"
+                        android:progressTint="@color/ratingBar_progress_color"
                         android:numStars="5"
                         android:rating="2.5"
-                        android:id="@+id/product_ratingbar" />
+                        android:id="@+id/product_ratingBar"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="2dp" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <LinearLayout

@@ -99,4 +99,22 @@ public class Parameter {
     public static int getLastMandatoryAppVersion(Context context){
         return ParameterDB.getParameterIntValue(context, ParameterDB.LAST_MANDATORY_APP_VERSION, 0);
     }
+
+    /**
+     * indica si se mostrara o no el ratingBar de los productos
+     * @param context
+     * @return
+     */
+    public static boolean showProductRatingBar(Context context, User user){
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_RATING_BAR, true);
+    }
+
+    /**
+     * devuelve el texto que se colocara en el ratingBar
+     * @param context
+     * @return
+     */
+    public static String getProductRatingBarLabelText(Context context, User user){
+        return ParameterDB.getParameterStringValue(context, user, ParameterDB.RATING_BAR_LABEL_TEXT, "");
+    }
 }

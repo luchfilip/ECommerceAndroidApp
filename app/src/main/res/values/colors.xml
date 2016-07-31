@@ -8,9 +8,9 @@
     <color name="colorAccent">#cccccc</color>
     <color name="link">#0000EE</color>
     <color name="lateral_menu_bg_color">#FEFEFE</color>
-    <color name="rating_bar_progress">#FFD700</color>
-    <color name="rating_bar_background">#FF00FF</color>
-    <color name="rating_bar_secondary_progress">#CCCCCC</color>
+    <color name="ratingBar_progress_color">#FFD700</color>
+    <color name="ratingBar_background_color">#FF00FF</color>
+    <color name="ratingBar_secondary_progress_color">#CCCCCC</color>
     <color name="heart_color">#c82c14</color>
     <color name="product_category_color">#333333</color>
     <color name="product_subcategory_color">#467ed8</color>

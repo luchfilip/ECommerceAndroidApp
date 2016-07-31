@@ -54,6 +54,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView shareImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
+        public View productRatingBarContainer;
+        public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
         public View goToProductDetails;
 
@@ -70,7 +72,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
-            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
+            productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
+            productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
+            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
@@ -139,9 +143,14 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             }
         });
 
-        if(mDataset.get(holder.getAdapterPosition()).getProduct().getRating()>=0){
-            ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
-                    .setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
+        if(Parameter.showProductRatingBar(mContext, mUser)){
+            holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
+                    Parameter.getProductRatingBarLabelText(mContext, mUser)));
+            if(mDataset.get(holder.getAdapterPosition()).getProduct().getRating()>=0){
+                holder.productRatingBar.setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
+            }
+        }else{
+            holder.productRatingBarContainer.setVisibility(View.GONE);
         }
 
         if (mIsManagePriceInOrder) {

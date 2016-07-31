@@ -80,6 +80,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
+        public View productRatingBarContainer;
+        public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
 
         public ViewHolder(View v) {
@@ -98,7 +100,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
-            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingbar);
+            productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
+            productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
+            productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
         }
     }
 
@@ -120,7 +124,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     @Override
     public ProductsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = null;
+        View v;
         switch (mMask){
             case MASK_PRODUCT_MIN_INFO:
                 v = LayoutInflater.from(parent.getContext())
@@ -261,9 +265,14 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.productBrand.setVisibility(TextView.GONE);
             }
 
-            if(mDataset.get(position).getRating()>=0){
-                ((RatingBar) holder.productRatingBar.findViewById(R.id.product_ratingbar))
-                        .setRating(mDataset.get(position).getRating());
+            if(Parameter.showProductRatingBar(mContext, mUser)){
+                holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
+                        Parameter.getProductRatingBarLabelText(mContext, mUser)));
+                if(mDataset.get(position).getRating()>=0){
+                    holder.productRatingBar.setRating(mDataset.get(position).getRating());
+                }
+            }else{
+                holder.productRatingBarContainer.setVisibility(View.GONE);
             }
 
             if(mDataset.get(position).getProductCommercialPackage()!=null

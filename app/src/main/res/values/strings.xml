@@ -346,5 +346,6 @@
     <string name="new_version_available_title">Actualización disponible</string>
     <string name="new_version_available_message">Existe una nueva versión de la aplicación disponible en el Market.</string>
     <string name="new_mandatory_version_available_message">Existe una nueva versión de la aplicación disponible en el Market. Para continuar con la aplicación debe actualizar.</string>
+    <string name="product_ratingBar_label_text_detail">%1$s:</string>
 
 </resources>
