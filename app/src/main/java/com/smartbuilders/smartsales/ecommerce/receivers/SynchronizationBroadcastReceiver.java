@@ -14,6 +14,7 @@ import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.WishListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class SynchronizationBroadcastReceiver extends BroadcastReceiver {
                     orderLineDB.updateOrderLine(orderLine);
                 }
             }
+
+            BadgeUtils.setBadge(context, 12);
 
             if(showNotification){
                 NotificationCompat.Builder mBuilder =
