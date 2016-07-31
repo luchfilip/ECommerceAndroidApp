@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +33,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
@@ -53,6 +55,7 @@ import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerce.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerce.WishListActivity;
+import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
@@ -675,6 +678,30 @@ public class Utils {
 
     /**
      *
+     * @param navigationView
+     */
+    public static void loadNavigationViewBadge(Context context, User user, NavigationView navigationView){
+        if(navigationView!=null &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            TextView wishListNavView = (TextView) navigationView.getMenu()
+                    .findItem(R.id.nav_wish_list).getActionView();
+            if (wishListNavView!=null) {
+                int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
+                if(count>0){
+                    wishListNavView.setText(count<100 ? String.valueOf(count) : "+99");
+                }
+            }
+
+            TextView recommendedProductsNavView = (TextView) navigationView.getMenu()
+                    .findItem(R.id.nav_recommended_products_list).getActionView();
+            if (recommendedProductsNavView!=null) {
+                recommendedProductsNavView.setText("+99");
+            }
+        }
+    }
+
+    /**
+     *
      * @param itemId
      * @param context
      */
@@ -708,7 +735,7 @@ public class Utils {
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
                 break;
-            case R.id.nav_products_recommended_list:
+            case R.id.nav_recommended_products_list:
                 context.startActivity(new Intent(context, RecommendedProductsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 break;

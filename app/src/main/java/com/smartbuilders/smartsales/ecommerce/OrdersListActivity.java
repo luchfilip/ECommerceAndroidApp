@@ -28,6 +28,7 @@ public class OrdersListActivity extends AppCompatActivity
 
     public static final String ORDER_DETAIL_FRAGMENT_TAG = "ORDER_DETAIL_FRAGMENT_TAG";
 
+    private User mUser;
     private boolean mTwoPane;
     private ListView mListView;
 
@@ -36,33 +37,46 @@ public class OrdersListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
-        User user = Utils.getCurrentUser(this);
+        mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
+                        (NavigationView) findViewById(R.id.nav_view));
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        if(mNavigationView!=null && mUser!=null){
+            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                mNavigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                mNavigationView.inflateMenu(R.menu.sales_man_drawer_menu);
             }
-            navigationView.setNavigationItemSelectedListener(this);
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, user.getUserName()));
+            mNavigationView.setNavigationItemSelectedListener(this);
+            ((TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
         }
 
         mTwoPane = findViewById(R.id.order_detail_container) != null;
         mListView = (ListView) findViewById(R.id.orders_list);
     }
+
+//    @Override
+//    protected void onStart() {
+//        Utils.loadNavigationViewBadge(this, mUser, (NavigationView) findViewById(R.id.nav_view));
+//        super.onStart();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -80,6 +80,10 @@ public class OrderLineDB {
         return getActiveOrderLinesNumber(SHOPPING_CART_DOC_TYPE);
     }
 
+    public int getActiveWishListLinesNumber(){
+        return getActiveOrderLinesNumber(WISH_LIST_DOC_TYPE);
+    }
+
     public String removeProductFromWishList(int productId){
         try {
             int rowsAffected =

@@ -33,6 +33,7 @@ import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
+import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.utils.WishListPDFCreator;
 
@@ -168,6 +169,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         }else{
             reloadWishList();
         }
+        BadgeUtils.clearBadge(getContext());
         super.onStart();
     }
 

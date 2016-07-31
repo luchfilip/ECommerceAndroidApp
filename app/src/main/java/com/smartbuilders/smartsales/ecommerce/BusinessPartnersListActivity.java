@@ -53,8 +53,15 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
+                        (NavigationView) findViewById(R.id.nav_view));
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -102,6 +109,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
         mListView = (ListView) findViewById(R.id.business_partners_list);
     }
+
+//    @Override
+//    protected void onStart() {
+//        Utils.loadNavigationViewBadge(this, mUser, (NavigationView) findViewById(R.id.nav_view));
+//        super.onStart();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

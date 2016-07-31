@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/menu_home">
         <item
@@ -19,14 +20,16 @@
         <item
             android:id="@+id/nav_wish_list"
             android:icon="@drawable/ic_favorite_black_24dp"
-            android:title="@string/wish_list" />
+            android:title="@string/wish_list"
+            app:actionLayout="@layout/unread_items"/>
     </group>
     <group
-        android:id="@+id/menu_products_recommended_list">
+        android:id="@+id/menu_recommended_products_list">
         <item
-            android:id="@+id/nav_products_recommended_list"
+            android:id="@+id/nav_recommended_products_list"
             android:icon="@drawable/ic_thumb_up_black_24dp"
-            android:title="@string/recommended_products" />
+            android:title="@string/recommended_products"
+            app:actionLayout="@layout/unread_items"/>
     </group>
     <item android:title="@string/my_purchases">
         <menu>

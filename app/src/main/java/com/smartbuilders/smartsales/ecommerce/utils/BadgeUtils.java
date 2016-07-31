@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce.utils;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,19 +15,20 @@ import java.util.List;
 public class BadgeUtils {
 
     public static void setBadge(Context context, int count) {
-        setBadgeSamsung(context, count);
-        setBadgeSony(context, count);
-
+        String launcherClassName = getLauncherClassName(context);
+        setBadgeSamsung(context, launcherClassName, count);
+        setBadgeSony(context, launcherClassName, count);
+        setBadgeHTC(context, launcherClassName, count);
     }
 
     public static void clearBadge(Context context) {
-        setBadgeSamsung(context, 0);
-        clearBadgeSony(context);
+        String launcherClassName = getLauncherClassName(context);
+        setBadgeSamsung(context, launcherClassName, 0);
+        clearBadgeSony(context, launcherClassName);
+        setBadgeHTC(context, launcherClassName, 0);
     }
 
-
-    private static void setBadgeSamsung(Context context, int count) {
-        String launcherClassName = getLauncherClassName(context);
+    private static void setBadgeSamsung(Context context, String launcherClassName, int count) {
         if (launcherClassName == null) {
             return;
         }
@@ -38,8 +40,7 @@ public class BadgeUtils {
         context.sendBroadcast(intent);
     }
 
-    private static void setBadgeSony(Context context, int count) {
-        String launcherClassName = getLauncherClassName(context);
+    private static void setBadgeSony(Context context, String launcherClassName, int count) {
         if (launcherClassName == null) {
             return;
         }
@@ -54,9 +55,29 @@ public class BadgeUtils {
         context.sendBroadcast(intent);
     }
 
+    private static void setBadgeHTC(Context context, String launcherClassName, int count) {
+        try {
+            if (launcherClassName == null) {
+                return;
+            }
 
-    private static void clearBadgeSony(Context context) {
-        String launcherClassName = getLauncherClassName(context);
+            Intent updateIntent = new Intent("com.htc.launcher.action.UPDATE_SHORTCUT");
+            updateIntent.putExtra("packagename", launcherClassName);
+            updateIntent.putExtra("count", count);
+            context.sendBroadcast(updateIntent);
+
+            Intent setNotificationIntent = new Intent("com.htc.launcher.action.SET_NOTIFICATION");
+            ComponentName localComponentName = new ComponentName(context, launcherClassName);
+            setNotificationIntent.putExtra("com.htc.launcher.extra.COMPONENT", localComponentName.flattenToShortString());
+            setNotificationIntent.putExtra("com.htc.launcher.extra.COUNT", count);
+            context.sendBroadcast(setNotificationIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void clearBadgeSony(Context context, String launcherClassName) {
         if (launcherClassName == null) {
             return;
         }
