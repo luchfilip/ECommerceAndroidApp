@@ -908,7 +908,7 @@ public class Utils {
             // Creates an explicit intent for an Activity in your app
             final Intent resultIntent = new Intent(Intent.ACTION_VIEW);
             resultIntent.setDataAndType(Uri.fromFile(destinationFile), "application/pdf");
-            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            //resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
             // The stack builder object will contain an artificial back stack for the
             // started Activity.
