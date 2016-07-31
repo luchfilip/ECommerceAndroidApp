@@ -110,31 +110,33 @@ public class RequestResetUserPasswordFragment extends Fragment {
     }
 
     private void unlockScreen(final String message){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(message!=null){
-                    new AlertDialog.Builder(getContext())
-                            .setMessage(message)
-                            .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Utils.unlockScreenOrientation(getActivity());
-                                }
-                            })
-                            .setCancelable(false)
-                            .show();
-                } else {
-                    Utils.unlockScreenOrientation(getActivity());
+        if(getActivity()!=null){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(message!=null){
+                        new AlertDialog.Builder(getContext())
+                                .setMessage(message)
+                                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Utils.unlockScreenOrientation(getActivity());
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                    } else {
+                        Utils.unlockScreenOrientation(getActivity());
+                    }
+                    submit.setEnabled(true);
+                    if (waitPlease!=null && waitPlease.isShowing()) {
+                        waitPlease.cancel();
+                        waitPlease = null;
+                    }
+                    mServiceRunning = false;
                 }
-                submit.setEnabled(true);
-                if (waitPlease!=null && waitPlease.isShowing()) {
-                    waitPlease.cancel();
-                    waitPlease = null;
-                }
-                mServiceRunning = false;
-            }
-        });
+            });
+        }
     }
 
     @Override

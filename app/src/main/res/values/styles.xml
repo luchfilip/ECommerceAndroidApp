@@ -136,4 +136,11 @@
     <style name="shape_style">
         <item name="android:layout_margin">4dp</item>
     </style>
+
+    <style name="product_ratingBar_text_label_style">
+        <item name="android:textStyle"></item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/ratingBar_label_color</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
 </resources>
