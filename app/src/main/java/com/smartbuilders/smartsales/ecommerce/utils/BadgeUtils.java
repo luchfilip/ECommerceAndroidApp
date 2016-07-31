@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by stein on 31/7/2016.
+ * Samsung, Sony and HTC
  */
 public class BadgeUtils {
 
