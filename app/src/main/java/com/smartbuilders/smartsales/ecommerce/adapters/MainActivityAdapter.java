@@ -327,7 +327,7 @@ public class MainActivityAdapter extends BaseAdapter {
                             viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    String result = addToWishList(product.getId());
+                                    String result = addToWishList(product);
                                     if (result == null) {
                                         ((Product) mDataset.get(position)).setFavorite(true);
                                         notifyDataSetChanged();
@@ -443,8 +443,8 @@ public class MainActivityAdapter extends BaseAdapter {
                 DialogAddToShoppingSale.class.getSimpleName());
     }
 
-    private String addToWishList(int productId) {
-        return (new OrderLineDB(mContext, mUser)).addProductToWishList(productId);
+    private String addToWishList(Product product) {
+        return (new OrderLineDB(mContext, mUser)).addProductToWishList(product);
     }
 
     private String removeFromWishList(int productId) {

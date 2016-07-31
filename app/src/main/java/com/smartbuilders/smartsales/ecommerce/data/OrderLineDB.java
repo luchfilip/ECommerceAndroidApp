@@ -50,8 +50,10 @@ public class OrderLineDB {
         }
     }
 
-    public String addProductToWishList(int productId){
-        return addOrderLine(productId, 0, 0, 0, WISH_LIST_DOC_TYPE, null);
+    public String addProductToWishList(Product product){
+        return addOrderLine(product.getId(), product.getDefaultProductPriceAvailability().getAvailability(),
+                product.getDefaultProductPriceAvailability().getPrice(), product.getProductTax().getPercentage(),
+                WISH_LIST_DOC_TYPE, null);
     }
 
     public ArrayList<OrderLine> getActiveOrderLinesFromShoppingCart(){

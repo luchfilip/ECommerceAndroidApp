@@ -173,7 +173,7 @@ public class ProductDetailFragment extends Fragment {
                                                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
                                             }
                                         } else {
-                                            String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct.getId());
+                                            String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct);
                                             if (result == null) {
                                                 mProduct.setFavorite(true);
                                                 favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
