@@ -56,6 +56,7 @@ import com.smartbuilders.smartsales.ecommerce.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerce.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerce.WishListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.data.RecommendedProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
@@ -695,7 +696,16 @@ public class Utils {
             TextView recommendedProductsNavView = (TextView) navigationView.getMenu()
                     .findItem(R.id.nav_recommended_products_list).getActionView();
             if (recommendedProductsNavView!=null) {
-                recommendedProductsNavView.setText("+99");
+                try {
+                    int count = (new RecommendedProductDB(context, user))
+                            .getRecommendedProductsCountByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(context, user));
+                    if(count>0){
+                        recommendedProductsNavView.setText(count<100 ? String.valueOf(count) : "+99");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     }

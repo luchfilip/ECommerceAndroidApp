@@ -58,4 +58,30 @@ public class RecommendedProductDB {
         return products;
     }
 
+    public int getRecommendedProductsCountByBusinessPartnerId(int businessPartnerId){
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .build(), null,
+                    "SELECT COUNT(PRODUCT_ID) FROM RECOMMENDED_PRODUCT " +
+                            " WHERE BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ? ",
+                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+            if (c!=null && c.moveToNext()) {
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
 }
