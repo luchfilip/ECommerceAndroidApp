@@ -10,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.PeriodicSync;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +26,9 @@ import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+
+import java.util.List;
 
 /**
  * Created by stein on 2/6/2016.
@@ -273,19 +275,16 @@ public class SplashScreen extends AppCompatActivity {
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
         if(mUser !=null){
-            //se coloca define la sincronizacion automatica solo si no se ha definido antes o si
-            //cambio el periodo de sincronizacion
-            if(Utils.getSyncPeriodicity(this)!=Parameter.getSyncPeriodicityInSeconds(this, mUser)){
+            //se define la sincronizacion automatica solo si no se ha definido antes
+            List<PeriodicSync> periodicSyncList = ContentResolver.getPeriodicSyncs(account, getString(R.string.sync_adapter_content_authority));
+            if(periodicSyncList==null || periodicSyncList.isEmpty()){
+                ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
                 //Turn on periodic syncing
                 ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
-                ContentResolver.addPeriodicSync(
-                        account,
-                        getString(R.string.sync_adapter_content_authority),
-                        bundle,
-                        Parameter.getSyncPeriodicityInSeconds(this, mUser));
-                Utils.setSyncPeriodicity(this, Parameter.getSyncPeriodicityInSeconds(this, mUser));
+                ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
+                        bundle, Utils.getSyncPeriodicityFromPreferences(this));
             }
 
             if (Utils.appRequireInitialLoad(this, mUser)) {

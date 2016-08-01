@@ -5,7 +5,6 @@ import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import android.accounts.Account;
@@ -45,7 +44,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                             if(lastSuccessFullySyncTime!=null){
                                 long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
                                 if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                                    if(seconds >= Parameter.getSyncPeriodicityInSeconds(context, user)) {
+                                    if(seconds >= Utils.getSyncPeriodicityFromPreferences(context)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
                                         ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());

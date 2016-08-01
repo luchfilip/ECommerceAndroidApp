@@ -559,7 +559,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(getApplicationContext(), user);
                                         if(lastSuccessFullySyncTime!=null){
                                             long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
-                                            if(seconds >= Parameter.getSyncPeriodicityInSeconds(getApplicationContext(), user)) {
+                                            if(seconds >= Utils.getSyncPeriodicityFromPreferences(getApplicationContext())) {
                                                 ApplicationUtilities.initSyncByAccount(getApplicationContext(), account);
                                             }else{
                                                 ApplicationUtilities.initSyncDataWithServerService(getApplicationContext(), user.getUserId());

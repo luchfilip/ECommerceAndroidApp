@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.ParameterDB;
 
 /**
@@ -62,14 +63,15 @@ public class Parameter {
     }
 
     /**
-     * devuelve el tiempo en segundos que debe transcurrir entre cada sincronizacion,
-     * default 3600segundos = 60minutos
+     * devuelve el tiempo por defecto, en segundos, que debe transcurrir entre cada sincronizacion,
+     * default 3600 segundos = 60 minutos
      * @param context
      * @param user
      * @return
      */
-    public static int getSyncPeriodicityInSeconds(Context context, User user){
-        return ParameterDB.getParameterIntValue(context, user, ParameterDB.SYNCHRONIZATION_PERIODICITY, 3600);
+    public static int getDefaultSyncPeriodicity(Context context, User user){
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.DEFAULT_SYNCHRONIZATION_PERIODICITY,
+                Integer.valueOf(context.getString(R.string.sync_periodicity_default_value)));
     }
 
     /**

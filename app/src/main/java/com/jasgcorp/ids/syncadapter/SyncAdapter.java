@@ -13,7 +13,7 @@ import com.jasgcorp.ids.providers.SynchronizerContentProvider;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -61,7 +61,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final long DELAY_TIME_TO_RETRY_SYNC 		= 5; //time in seconds
 	private static final int SYNCHRONIZATION_CANCELLED 		= 2;
 	private static final int SYNCHRONIZATION_RUNNING 		= 1;
-    public static final String SYNC_PERIODICITY_SHARED_PREFS_KEY = "SYNC_PERIODICITY_SHARED_PREFS_KEY";
 	
 	/**
 	 * El usuario inicio sesion de sincronizacion
@@ -131,7 +130,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					            String authority,
 					            ContentProviderClient provider,
 					            SyncResult syncResult) {
-    	Log.d(TAG, "debug> onPerformSync for account[" + account.name + "]");
+    	//Log.d(TAG, "debug> onPerformSync for account[" + account.name + "]");
         long syncInitTime = System.currentTimeMillis();
     	AccountManager accountManager = AccountManager.get(getContext());
         User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(),
@@ -142,7 +141,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     		isAPeriodicSync = extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE);
             try {
                 long seconds = (System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user).getTime())/1000;
-                if(seconds < Parameter.getSyncPeriodicityInSeconds(getContext(), user)) {
+                if(seconds < Utils.getSyncPeriodicityFromPreferences(getContext())) {
                     return;
                 }
             } catch (Exception e) {

@@ -994,19 +994,9 @@ public class Utils {
      *
      * @param context
      */
-    public static int getSyncPeriodicity(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getInt(SyncAdapter.SYNC_PERIODICITY_SHARED_PREFS_KEY, 0);
-    }
-
-    /**
-     *
-     * @param context
-     */
-    public static void setSyncPeriodicity(Context context, int periodicity){
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putInt(SyncAdapter.SYNC_PERIODICITY_SHARED_PREFS_KEY, periodicity);
-        editor.apply();
+    public static int getSyncPeriodicityFromPreferences(Context context){
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_periodicity",
+                context.getString(R.string.sync_periodicity_default_value)));
     }
 
     /**

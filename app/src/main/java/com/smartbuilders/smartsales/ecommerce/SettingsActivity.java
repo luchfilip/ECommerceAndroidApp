@@ -252,33 +252,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+            bindPreferenceSummaryToValue(findPreference("sync_periodicity"));
             bindPreferenceSummaryToValue(findPreference("server_address"));
             bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
             bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
 
-            findPreference("sync_frequency").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            findPreference("sync_periodicity").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
+                    ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
                     if (Long.valueOf(newValue.toString()) <=0) {
                         //Turn off periodic syncing
-                        ContentResolver.setSyncAutomatically(account, preference.getContext()
-                                .getString(R.string.sync_adapter_content_authority), false);
+                        ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), false);
                     }else{
-                        //se coloca define la sincronizacion automatica solo si no se ha definido antes o si
-                        //cambio el periodo de sincronizacion
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
                         //Turn on periodic syncing
-                        ContentResolver.setSyncAutomatically(account, preference.getContext()
-                                .getString(R.string.sync_adapter_content_authority), true);
-                        ContentResolver.addPeriodicSync(
-                                account,
-                                preference.getContext().getString(R.string.sync_adapter_content_authority),
-                                bundle,
-                                Long.valueOf(newValue.toString()) * 60);
+                        ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                        ContentResolver.addPeriodicSync(account,
+                                getString(R.string.sync_adapter_content_authority), bundle,
+                                Long.valueOf(newValue.toString()));
                     }
+
+                    int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
+                    // Set the summary to reflect the new value.
+                    preference.setSummary(index >= 0 ? ((ListPreference) preference).getEntries()[index] : null);
                     return true;
                 }
             });
@@ -294,6 +293,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     accountManager.setUserData(account,
                             AccountGeneral.USERDATA_SERVER_ADDRESS,
                             newValue.toString());
+
+                    // Set the summary to reflect the new value.
+                    preference.setSummary(newValue.toString());
                     return true;
                 }
             });
@@ -302,7 +304,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     final Context context = preference.getContext();
-                    if(((Boolean) newValue)){
+                    if((Boolean) newValue){
                         findPreference("sync_thumb_images").setSelectable(true);
                         //TODO: setear el valor de sync_thumb_images en FALSE
                     }else{

@@ -28,7 +28,7 @@ public class ParameterDB {
     public static final int MANAGE_PRICE_IN_ORDER = 3;
     public static final int CONNECTION_TIME_OUT_VALUE = 4;
     public static final int BATCH_SIZE_FOR_QUERY_RESULT = 5;
-    public static final int SYNCHRONIZATION_PERIODICITY = 6;
+    public static final int DEFAULT_SYNCHRONIZATION_PERIODICITY = 6;
     public static final int APP_CURRENT_VERSION = 7;
     public static final int LAST_MANDATORY_APP_VERSION = 8;
     public static final int SHOW_RATING_BAR = 9;
