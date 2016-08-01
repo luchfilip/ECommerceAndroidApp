@@ -644,9 +644,8 @@ public class Utils {
         toolbar.setTitle("");
         if (goHome) {
             for(int i = 0; i < toolbar.getChildCount(); i++){
-                View view = toolbar.getChildAt(i);
-                if(view instanceof ImageView){
-                    view.setOnClickListener(new View.OnClickListener() {
+                if(toolbar.getChildAt(i) instanceof ImageView){
+                    (toolbar.getChildAt(i)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             context.startActivity(new Intent(context, MainActivity.class));
@@ -663,9 +662,8 @@ public class Utils {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
             View customView = activity.getLayoutInflater().inflate(R.layout.actionbar_title, null);
-            ImageView customLogo = (ImageView) customView.findViewById(R.id.actionbarLogo);
-            if(goToHome) {
-                customLogo.setOnClickListener(new View.OnClickListener() {
+            if(goToHome){
+                customView.findViewById(R.id.actionbarLogo).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
