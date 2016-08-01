@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -25,13 +26,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -699,6 +703,13 @@ public class Utils {
                 if(count>0){
                     wishListNavView.setText(count<100 ? String.valueOf(count) : "+99");
                 }
+            }
+
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_badge", false)) {
+                navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon()
+                        .setColorFilter(Utils.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon().setColorFilter(null);
             }
 
             TextView recommendedProductsNavView = (TextView) navigationView.getMenu()

@@ -35,10 +35,10 @@ public class RecommendedProductsListActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view); //must call super
                 Utils.loadNavigationViewBadge(getApplicationContext(), user,
                         (NavigationView) findViewById(R.id.nav_view));
-                super.onDrawerSlide(drawerView, slideOffset);
             }
         };
         drawer.addDrawerListener(toggle);
@@ -58,9 +58,14 @@ public class RecommendedProductsListActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
+    protected void onPostResume() {
         Utils.manageNotificationOnDrawerLayout(this);
-        super.onStart();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            Utils.loadNavigationViewBadge(getApplicationContext(), Utils.getCurrentUser(this),
+                    (NavigationView) findViewById(R.id.nav_view));
+        }
+        super.onPostResume();
     }
 
     @Override

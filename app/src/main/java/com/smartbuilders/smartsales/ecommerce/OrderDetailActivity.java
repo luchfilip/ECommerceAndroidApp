@@ -25,14 +25,12 @@ public class OrderDetailActivity extends AppCompatActivity
 
     public static final String KEY_ORDER_ID = "key_order_id";
 
-    private User mUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
-        mUser = Utils.getCurrentUser(this);
+        final User user = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -42,32 +40,37 @@ public class OrderDetailActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view); //must call super
+                Utils.loadNavigationViewBadge(getApplicationContext(), user,
                         (NavigationView) findViewById(R.id.nav_view));
-                super.onDrawerSlide(drawerView, slideOffset);
             }
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && mUser!=null){
-            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+        if(navigationView!=null && user!=null){
+            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
             }
             navigationView.setNavigationItemSelectedListener(this);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
+                    .setText(getString(R.string.welcome_user, user.getUserName()));
         }
     }
 
     @Override
-    protected void onStart() {
+    protected void onPostResume() {
         Utils.manageNotificationOnDrawerLayout(this);
-        super.onStart();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            Utils.loadNavigationViewBadge(getApplicationContext(), Utils.getCurrentUser(this),
+                    (NavigationView) findViewById(R.id.nav_view));
+        }
+        super.onPostResume();
     }
 
     @Override

@@ -1,21 +1,21 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,6 +32,8 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,18 +41,18 @@ public class MainActivity extends AppCompatActivity
 
         final User user = Utils.getCurrentUser(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view); //must call super
                 Utils.loadNavigationViewBadge(getApplicationContext(), user,
                         (NavigationView) findViewById(R.id.nav_view));
-                super.onDrawerSlide(drawerView, slideOffset);
             }
         };
         drawer.addDrawerListener(toggle);
@@ -126,9 +128,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
+    protected void onPostResume() {
         Utils.manageNotificationOnDrawerLayout(this);
-        super.onStart();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            Utils.loadNavigationViewBadge(getApplicationContext(), Utils.getCurrentUser(this),
+                    (NavigationView) findViewById(R.id.nav_view));
+        }
+        super.onPostResume();
     }
 
     @Override

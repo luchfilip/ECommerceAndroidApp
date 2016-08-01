@@ -57,10 +57,10 @@ public class SalesOrdersListActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view); //must call super
                 Utils.loadNavigationViewBadge(getApplicationContext(), user,
                         (NavigationView) findViewById(R.id.nav_view));
-                super.onDrawerSlide(drawerView, slideOffset);
             }
         };
         drawer.addDrawerListener(toggle);
@@ -140,8 +140,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if(mTabLayout!=null && mTabLayout.getTabAt(mCurrentTabSelected)!=null){
             mTabLayout.getTabAt(mCurrentTabSelected).select();
         }
-        Utils.manageNotificationOnDrawerLayout(this);
         super.onStart();
+    }
+
+    @Override
+    protected void onPostResume() {
+        Utils.manageNotificationOnDrawerLayout(this);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            Utils.loadNavigationViewBadge(getApplicationContext(), Utils.getCurrentUser(this),
+                    (NavigationView) findViewById(R.id.nav_view));
+        }
+        super.onPostResume();
     }
 
     @Override
