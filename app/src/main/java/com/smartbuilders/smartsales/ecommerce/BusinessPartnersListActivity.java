@@ -110,11 +110,11 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         mListView = (ListView) findViewById(R.id.business_partners_list);
     }
 
-//    @Override
-//    protected void onStart() {
-//        Utils.loadNavigationViewBadge(this, mUser, (NavigationView) findViewById(R.id.nav_view));
-//        super.onStart();
-//    }
+    @Override
+    protected void onStart() {
+        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

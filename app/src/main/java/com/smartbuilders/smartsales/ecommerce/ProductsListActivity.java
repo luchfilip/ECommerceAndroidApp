@@ -366,6 +366,12 @@ public class ProductsListActivity extends AppCompatActivity
         }.start();
     }
 
+    @Override
+    protected void onStart() {
+        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
+
     private boolean useGridView(){
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             return true;

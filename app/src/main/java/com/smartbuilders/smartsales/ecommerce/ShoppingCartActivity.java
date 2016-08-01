@@ -64,6 +64,12 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shopping_cart, menu);

@@ -161,6 +161,12 @@ public class SearchResultsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
