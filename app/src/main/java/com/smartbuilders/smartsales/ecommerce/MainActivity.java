@@ -123,6 +123,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         ApplicationUtilities.checkAppVersion(this);
