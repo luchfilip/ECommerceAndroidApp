@@ -140,7 +140,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if(mTabLayout!=null && mTabLayout.getTabAt(mCurrentTabSelected)!=null){
             mTabLayout.getTabAt(mCurrentTabSelected).select();
         }
-        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        Utils.manageNotificationOnDrawerLayout(this);
         super.onStart();
     }
 

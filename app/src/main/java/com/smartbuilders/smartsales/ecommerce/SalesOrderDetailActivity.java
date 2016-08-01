@@ -64,7 +64,7 @@ public class SalesOrderDetailActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        Utils.manageNotificationOnDrawerLayout(this);
         super.onStart();
     }
 

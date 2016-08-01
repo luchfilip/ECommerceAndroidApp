@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
@@ -62,7 +63,8 @@ public class WishListActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        BadgeUtils.clearBadge(this);
+        Utils.manageNotificationOnDrawerLayout(this);
         super.onStart();
     }
 

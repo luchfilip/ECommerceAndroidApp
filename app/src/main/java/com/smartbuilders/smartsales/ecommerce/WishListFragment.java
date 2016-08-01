@@ -33,7 +33,6 @@ import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
-import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.utils.WishListPDFCreator;
 
@@ -45,7 +44,7 @@ import java.util.ArrayList;
  */
 public class WishListFragment extends Fragment implements WishListAdapter.Callback {
 
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "ListaDeDeseos";
 
     private boolean mIsInitialLoad;
@@ -77,8 +76,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)){
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     }
                     mUser = Utils.getCurrentUser(getContext());
@@ -169,7 +168,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         }else{
             reloadWishList();
         }
-        BadgeUtils.clearBadge(getContext());
         super.onStart();
     }
 
@@ -392,14 +390,14 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public void onSaveInstanceState(Bundle outState) {
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

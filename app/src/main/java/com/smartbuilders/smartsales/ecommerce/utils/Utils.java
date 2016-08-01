@@ -675,35 +675,12 @@ public class Utils {
         }
     }
 
-    /**
-     *
-     * @param navigationView
-     */
-    public static void loadNavigationView(Context context, User user, NavigationView navigationView){
-        if(navigationView!=null &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            TextView wishListNavView = (TextView) navigationView.getMenu()
-                    .findItem(R.id.nav_wish_list).getActionView();
-            if (wishListNavView!=null) {
-                int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
-                if(count>0){
-                    wishListNavView.setText(count<100 ? String.valueOf(count) : "+99");
-                }
-            }
-
-            TextView recommendedProductsNavView = (TextView) navigationView.getMenu()
-                    .findItem(R.id.nav_recommended_products_list).getActionView();
-            if (recommendedProductsNavView!=null) {
-                try {
-                    int count = (new RecommendedProductDB(context, user))
-                            .getRecommendedProductsCountByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(context, user));
-                    if(count>0){
-                        recommendedProductsNavView.setText(count<100 ? String.valueOf(count) : "+99");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+    public static void manageNotificationOnDrawerLayout(Activity activity) {
+        if(activity!=null && activity.findViewById(R.id.badge_ham)!=null){
+            if (PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext()).getBoolean("show_badge", false)) {
+                activity.findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+            } else {
+                activity.findViewById(R.id.badge_ham).setVisibility(View.GONE);
             }
         }
     }

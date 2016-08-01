@@ -1,6 +1,8 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+        Utils.manageNotificationOnDrawerLayout(this);
         super.onStart();
     }
 

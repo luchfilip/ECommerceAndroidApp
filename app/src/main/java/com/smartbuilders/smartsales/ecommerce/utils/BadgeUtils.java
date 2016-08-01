@@ -3,8 +3,12 @@ package com.smartbuilders.smartsales.ecommerce.utils;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.preference.PreferenceManager;
+
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 
 import java.util.List;
 
@@ -19,6 +23,9 @@ public class BadgeUtils {
         setBadgeSamsung(context, launcherClassName, count);
         setBadgeSony(context, launcherClassName, count);
         setBadgeHTC(context, launcherClassName, count);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean("show_badge", true);
+        editor.apply();
     }
 
     public static void clearBadge(Context context) {
@@ -26,6 +33,9 @@ public class BadgeUtils {
         setBadgeSamsung(context, launcherClassName, 0);
         clearBadgeSony(context, launcherClassName);
         setBadgeHTC(context, launcherClassName, 0);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean("show_badge", false);
+        editor.apply();
     }
 
     private static void setBadgeSamsung(Context context, String launcherClassName, int count) {

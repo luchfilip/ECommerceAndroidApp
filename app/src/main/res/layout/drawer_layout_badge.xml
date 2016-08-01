@@ -6,9 +6,9 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/ic_notifications_active_white_18dp"
+        android:layout_marginLeft="32sp"
+        android:layout_marginTop="10sp"
+        android:src="@drawable/ic_priority_high_white_18dp"
         android:visibility="gone"
         android:id="@+id/badge_ham"/>
 </RelativeLayout>
