@@ -43,11 +43,6 @@ public class SynchronizationBroadcastReceiver extends BroadcastReceiver {
                 if (orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()>orderLine.getQuantityOrdered()) {
                     showNotification = true;
                 }
-
-                if(orderLine.getQuantityOrdered() != orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
-                    orderLine.setQuantityOrdered(orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability());
-                    orderLineDB.updateOrderLine(orderLine);
-                }
             }
 
             if(showNotification){

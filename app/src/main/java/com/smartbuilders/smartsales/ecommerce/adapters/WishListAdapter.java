@@ -49,6 +49,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productName;
         public TextView productPrice;
         public TextView productAvailability;
+        public TextView productAvailabilityVariation;
         public TextView productBrand;
         public TextView commercialPackage;
         public ImageView shareImageView;
@@ -59,13 +60,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public RatingBar productRatingBar;
         public View goToProductDetails;
 
-
         public ViewHolder(View v) {
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
+            productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
@@ -165,6 +166,20 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
 
+        int productCurrentAvailability = mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability();
+        if(mDataset.get(position).getQuantityOrdered() != productCurrentAvailability) {
+            if(productCurrentAvailability > mDataset.get(position).getQuantityOrdered()){
+                holder.productAvailabilityVariation.setTextColor(Utils.getColor(mContext, R.color.green_dark));
+                holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_positive_variation,
+                        String.valueOf(productCurrentAvailability - mDataset.get(position).getQuantityOrdered())));
+            } else {
+                holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_variation,
+                        String.valueOf(productCurrentAvailability - mDataset.get(position).getQuantityOrdered())));
+            }
+        }else{
+            holder.productAvailabilityVariation.setText(null);
+        }
+
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,7 +243,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         if(mDataset.get(position).getProduct().getProductCommercialPackage()!=null
                 && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription())){
             holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits(), mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits(),
+                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
         }else{
             holder.commercialPackage.setVisibility(TextView.GONE);
         }

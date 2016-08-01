@@ -48,7 +48,6 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_internal_code"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailCardView_internalCode_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -56,15 +55,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_brand"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailCardView_brand_text_size"
                     android:maxLines="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/product_commercial_package"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailCardView_commercialPackage_text_size" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/product_price"
@@ -103,7 +100,7 @@
                         android:rating="2.5"
                         android:id="@+id/product_ratingBar"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="2dp" />
+                        android:layout_marginBottom="1dp" />
                 </LinearLayout>
             </LinearLayout>
 

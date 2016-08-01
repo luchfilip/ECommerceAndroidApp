@@ -5,8 +5,8 @@
     <string name="authenticator_account_type">com.smartbuilders.smartsales.auth.febeca</string>
     <string name="ids_user_group_name">catalogo-febeca</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Abrir panel de navegación</string>
+    <string name="navigation_drawer_close">Cerrar panel de navegación</string>
     <string name="action_setting">Configuración</string>
     <string name="search">Buscar</string>
     <string name="categories">Categorías</string>
@@ -40,8 +40,6 @@
     <string name="value_us">Valoranos</string>
     <string name="google_play">Google Play</string>
     <string name="tools">Herramientas</string>
-    <!--<string name="add_to_shopping_cart">Agregar al Pedido</string>-->
-    <!--<string name="add_to_shopping_sales">Agregar a Cotización</string>-->
     <string name="add_to_wishlist">Enviar a la lista de favoritos</string>
     <string name="move_to_shopping_cart">Mover al pedido</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
@@ -118,6 +116,8 @@
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">Empaque comercial: %1$s %2$s.</string>
     <string name="availability">Disponibilidad: %1$s</string>
+    <string name="availability_variation">Variación Disp.: %1$s</string>
+    <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
     <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>

@@ -18,6 +18,7 @@
             android:id="@+id/product_name"
             android:textColor="@color/black"
             android:layout_gravity="center_vertical"
+            android:textSize="@dimen/productDetailCardView_name_text_size"
             android:textStyle="bold"
             android:layout_marginRight="10dp"
             android:lines="1"
@@ -65,15 +66,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_brand"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailCardView_brand_text_size"
                     android:maxLines="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/product_commercial_package"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailCardView_commercialPackage_text_size" />
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/product_price"
@@ -90,6 +89,14 @@
                     android:textColor="@color/product_availability_color"
                     android:textStyle="bold"
                     android:textSize="@dimen/productDetailCardView_availability_text_size" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_availability_variation"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/productDetailCardView_availability_text_size"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -112,7 +119,7 @@
                         android:rating="2.5"
                         android:id="@+id/product_ratingBar"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="2dp" />
+                        android:layout_marginBottom="1dp" />
                 </LinearLayout>
             </LinearLayout>
 
