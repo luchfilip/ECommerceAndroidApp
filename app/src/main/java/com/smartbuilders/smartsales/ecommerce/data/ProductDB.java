@@ -433,9 +433,7 @@ public class ProductDB {
                             " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? "+
                         " WHERE P.INTERNAL_CODE LIKE ? AND P.IS_ACTIVE = ? "  +
                         " ORDER BY P.INTERNAL_CODE ASC LIMIT 20",
-                        new String[]{"Y", "Y", "Y", "Y",
-                                String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                                searchPattern+"%", "Y"}, null);
+                        new String[]{"Y", "Y", "Y", "Y", searchPattern+"%", "Y"}, null);
             } else {
                 String sql = "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.NAME), P.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
                         " FROM PRODUCT P " +
@@ -462,9 +460,7 @@ public class ProductDB {
                 }
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                        sql, new String[]{"Y", "Y", "Y", "Y",
-                                String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                                firstWord, aux, "Y"}, null);
+                        sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "Y"}, null);
             }
 
             if (c!=null) {
