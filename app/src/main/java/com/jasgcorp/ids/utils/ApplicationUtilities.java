@@ -160,6 +160,20 @@ public class ApplicationUtilities {
 	 *
 	 * @param context
 	 * @param account
+	 * @param tablesToSyncJSONObject
+     */
+	public static void initSyncByAccount(Context context, Account account, String tablesToSyncJSONObject) {
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		settingsBundle.putString("tables_to_sync", tablesToSyncJSONObject);
+		ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
+	}
+
+	/**
+	 *
+	 * @param context
+	 * @param account
      */
 	public static void initSyncByAccount(Context context, Account account) {
 		Bundle settingsBundle = new Bundle();

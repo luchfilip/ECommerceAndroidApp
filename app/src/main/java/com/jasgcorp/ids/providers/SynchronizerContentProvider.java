@@ -159,7 +159,11 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
-				tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext());
+				if (uri.getQueryParameter("tables_to_sync")!=null) {
+					tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), uri.getQueryParameter("tables_to_sync"));
+				} else {
+					tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext());
+				}
 				tableDataReceiveFromServerThread.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {

@@ -12,10 +12,7 @@ import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by stein on 4/30/2016.
@@ -461,4 +458,21 @@ public class OrderLineDB {
         }
         return 0;
     }
+
+    //public int updateProductAvailabilitiesInWishList(){
+    //    try {
+    //        return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+    //                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+    //                null,
+    //                "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = (SELECT PPA.AVAILABILITY FROM PRODUCT_PRICE_AVAILABILITY PPA WHERE PPA.PRODUCT_ID = PRODUCT_ID AND PPA.PRIORITY=1 AND PPA.IS_ACTIVE='Y'), UPDATE_TIME = ? " +
+    //                        " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+    //                new String[]{DateFormat.getCurrentDateTimeSQLFormat(),
+    //                        String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+    //                        String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //    return 0;
+    //}
 }

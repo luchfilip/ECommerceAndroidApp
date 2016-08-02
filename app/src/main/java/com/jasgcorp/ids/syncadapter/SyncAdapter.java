@@ -148,6 +148,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 e.printStackTrace();
             }
     	}
+		String tablesToSyncJSONObject = null;
+		if(extras!=null && extras.containsKey("tables_to_sync")){
+			tablesToSyncJSONObject = extras.getString("tables_to_sync");
+		}
     	try{
         	syncStatus = SYNCHRONIZATION_CANCELLED;
         	
@@ -187,7 +191,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				//start synchronization
 				result = getContext().getContentResolver()
 						        	.query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
-						        			.appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId()).build(), 
+						        			.appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
+											.appendQueryParameter("tables_to_sync", tablesToSyncJSONObject).build(),
 						        			null, null, null, null);
 				if(result.moveToNext()){
 //    					Log.d(TAG, "debug> result.getString(result.getColumnIndex(\"state\")): "+result.getString(result.getColumnIndex("state")));

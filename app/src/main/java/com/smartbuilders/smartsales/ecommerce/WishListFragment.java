@@ -59,7 +59,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private View mainLayout;
     private TextView mBusinessPartnerCommercialName;
     private View mBusinessPartnerInfoSeparator;
-    private ArrayList<OrderLine> mWishListLines;
 
     public WishListFragment() {
     }
@@ -69,6 +68,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
         mIsInitialLoad = true;
+
+        final ArrayList<OrderLine> wishListLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -82,10 +83,10 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     mUser = Utils.getCurrentUser(getContext());
                     mOrderLineDB = new OrderLineDB(getContext(), mUser);
 
-                    mWishListLines = mOrderLineDB.getWishList();
+                    wishListLines.addAll(mOrderLineDB.getWishList());
 
-                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, mWishListLines, mUser);
-                    mShareIntent = createSharedIntent(mWishListLines);
+                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
+                    mShareIntent = createSharedIntent(wishListLines);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -127,7 +128,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mWishListLines.isEmpty()) {
+                                if (wishListLines.isEmpty()) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
@@ -200,8 +201,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public void reloadWishList(){
         setHeader();
         if (mOrderLineDB!=null) {
-            mWishListLines = mOrderLineDB.getWishList();
-            reloadWishList(mWishListLines);
+            reloadWishList(mOrderLineDB.getWishList());
         }
     }
 
@@ -403,14 +403,15 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public void onDestroy() {
-        if(mWishListLines!=null){
-            for(OrderLine orderLine : mWishListLines){
-                if(orderLine.getQuantityOrdered()!=orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()){
-                    orderLine.setQuantityOrdered(orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability());
-                    mOrderLineDB.updateOrderLine(orderLine);
-                }
-            }
-        }
+        //mOrderLineDB.updateProductAvailabilitiesInWishList();
+        //if(mWishListLines!=null){
+        //    for(OrderLine orderLine : mWishListLines){
+        //        if(orderLine.getQuantityOrdered()!=orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()){
+        //            orderLine.setQuantityOrdered(orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability());
+        //            mOrderLineDB.updateOrderLine(orderLine);
+        //        }
+        //    }
+        //}
         super.onDestroy();
     }
 }

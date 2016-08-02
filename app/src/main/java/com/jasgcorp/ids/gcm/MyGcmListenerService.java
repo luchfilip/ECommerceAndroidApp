@@ -193,7 +193,11 @@ public class MyGcmListenerService extends GcmListenerService {
                                     if(userAccount!=null){
                                         if (!ApplicationUtilities.isSyncActive(this, userAccount)) {
                                             //se manda a correr la sincronizacion de manera inmediata
-                                            ApplicationUtilities.initSyncByAccount(this, userAccount);
+                                            if (data.containsKey("tables_to_sync") && data.getString("tables_to_sync")!=null) {
+                                                ApplicationUtilities.initSyncByAccount(this, userAccount, data.getString("tables_to_sync"));
+                                            } else {
+                                                ApplicationUtilities.initSyncByAccount(this, userAccount);
+                                            }
                                             sendResponseToServer(getApplicationContext(), requestMethodName, requestId,
                                                     "user: "+userAccount.name+", synchronization initialized.", null);
                                         }else{

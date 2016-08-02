@@ -34,7 +34,13 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	private float syncPercentage;
 	private User mUser;
     private int mConnectionTimeOut;
-	
+    private String mTablesToSyncJSONObject;
+
+    public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject) throws Exception{
+        this(user, context);
+        this.mTablesToSyncJSONObject = tablesToSyncJSONObject;
+    }
+
 	public TablesDataSendToAndReceiveFromServer(User user, Context context) throws Exception{
 		this.context = context;
 		this.mUser = user;
@@ -63,16 +69,22 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		try {
             syncPercentage = 0;
             long initTime = System.currentTimeMillis();
-            if (sync) {
-                sendUserDataToServer(getUserTablesAndSQLToSync());
-                (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
+            if(mTablesToSyncJSONObject!=null) {
+                if(sync){
+                    getGlobalDataFromWS(context, new JSONObject(mTablesToSyncJSONObject));
+                }
+            }else{
+                if (sync) {
+                    sendUserDataToServer(getUserTablesAndSQLToSync());
+                    (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
+                }
+                if(sync){
+                    getUserDataFromWS(context, mUser, getUserTablesToSync());
+                }
+                if(sync){
+                    getGlobalDataFromWS(context, getGlobalTablesToSync());
+                }
             }
-            if(sync){
-                getUserDataFromWS(context, mUser, getUserTablesToSync());
-            }
-			if(sync){
-				getGlobalDataFromWS(context, getGlobalTablesToSync());
-			}
             syncPercentage = 100;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
@@ -163,12 +175,28 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
+    public void getGlobalDataFromWS(Context context, JSONObject tablesToSync) throws Exception {
+        if (tablesToSync!=null && tablesToSync.keys()!=null) {
+            Iterator keys = tablesToSync.keys();
+            while(keys.hasNext()){
+                if (sync) {
+                    execRemoteQueryAndInsert(context, null, (String) tablesToSync.get(keys.next().toString()));
+                    syncPercentage++;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
 	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
-                if(sync) {
+                if (sync) {
                     execRemoteQueryAndInsert(context, null, tableToSync.toString());
                     syncPercentage++;
+                } else {
+                    break;
                 }
             }
         }
