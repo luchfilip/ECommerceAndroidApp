@@ -90,12 +90,12 @@ public class DialogAddToShoppingSale extends DialogFragment {
         buttonsContainer = view.findViewById(R.id.buttons_container);
         registerBusinessPartnerButton = view.findViewById(R.id.register_business_partner_button);
 
-        Currency currency = (new CurrencyDB(getContext())).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+        Currency currency = (new CurrencyDB(getContext(), mUser)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
         ((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
                 ? getString(R.string.price_currency_label_detail, currency.getName())
                 : getString(R.string.price_label));
 
-        ProductTax productTax = (new ProductTaxDB(getContext())).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
+        ProductTax productTax = (new ProductTaxDB(getContext(), mUser)).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
         ((EditText) view.findViewById(R.id.product_tax_editText))
                 .setText(productTax !=null ? String.valueOf(productTax.getPercentage()) : "0.0");
 
