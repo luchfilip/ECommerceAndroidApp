@@ -143,7 +143,7 @@ public class OrderDetailFragment extends Fragment {
                                             .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
 
                                     if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-                                        Currency currency = (new CurrencyDB(getContext()))
+                                        Currency currency = (new CurrencyDB(getContext(), mUser))
                                                 .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
 
                                         ((TextView) view.findViewById(R.id.order_sub_total_tv))
@@ -240,7 +240,7 @@ public class OrderDetailFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
         try{
-            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext());
+            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mUser);
         }catch(Exception e){
             e.printStackTrace();
         }
