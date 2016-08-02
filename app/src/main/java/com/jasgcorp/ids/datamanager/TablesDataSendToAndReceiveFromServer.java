@@ -71,7 +71,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             long initTime = System.currentTimeMillis();
             if(mTablesToSyncJSONObject!=null) {
                 if(sync){
-                    getGlobalDataFromWS(context, new JSONObject(mTablesToSyncJSONObject));
+                    getGlobalDataFromWS(context, mUser, new JSONObject(mTablesToSyncJSONObject));
                 }
             }else{
                 if (sync) {
@@ -82,7 +82,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     getUserDataFromWS(context, mUser, getUserTablesToSync());
                 }
                 if(sync){
-                    getGlobalDataFromWS(context, getGlobalTablesToSync());
+                    getGlobalDataFromWS(context, mUser, getGlobalTablesToSync());
                 }
             }
             syncPercentage = 100;
@@ -175,12 +175,12 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-    public void getGlobalDataFromWS(Context context, JSONObject tablesToSync) throws Exception {
+    public void getGlobalDataFromWS(Context context, User user, JSONObject tablesToSync) throws Exception {
         if (tablesToSync!=null && tablesToSync.keys()!=null) {
             Iterator keys = tablesToSync.keys();
             while(keys.hasNext()){
                 if (sync) {
-                    execRemoteQueryAndInsert(context, null, (String) tablesToSync.get(keys.next().toString()));
+                    execRemoteQueryAndInsert(context, user, (String) tablesToSync.get(keys.next().toString()));
                     syncPercentage++;
                 } else {
                     break;
@@ -189,11 +189,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         }
     }
 
-	public void getGlobalDataFromWS(Context context, List<SoapPrimitive> tablesToSync) throws Exception {
+	public void getGlobalDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if (sync) {
-                    execRemoteQueryAndInsert(context, null, tableToSync.toString());
+                    execRemoteQueryAndInsert(context, user, tableToSync.toString());
                     syncPercentage++;
                 } else {
                     break;
