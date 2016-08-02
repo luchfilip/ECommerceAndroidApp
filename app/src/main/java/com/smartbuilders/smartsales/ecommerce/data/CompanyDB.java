@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
 
@@ -12,15 +13,18 @@ import com.smartbuilders.smartsales.ecommerce.model.Company;
 public class CompanyDB {
 
     private Context mContext;
+    private User mUser;
 
-    public CompanyDB(Context context){
+    public CompanyDB(Context context, User user){
         this.mContext = context;
+        this.mUser = user;
     }
 
     public Company getCompany(){
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "select COMPANY_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, " +
                         " PHONE_NUMBER, CONTACT_CENTER_PHONE_NUMBER, FAX_NUMBER, WEB_PAGE " +
                     " from COMPANY where IS_ACTIVE = ?",
