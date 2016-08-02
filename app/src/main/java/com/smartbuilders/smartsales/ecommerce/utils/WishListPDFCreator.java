@@ -55,7 +55,7 @@ public class WishListPDFCreator {
         //create a new document
         Document document = new Document(PageSize.LETTER, 50, 50, 70, 40);
 
-        if(pdfFile != null){
+        if(pdfFile.exists()){
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

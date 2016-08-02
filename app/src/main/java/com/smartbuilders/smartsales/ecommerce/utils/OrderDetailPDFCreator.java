@@ -61,47 +61,48 @@ public class OrderDetailPDFCreator {
         //create a new document
         Document document = new Document(PageSize.LETTER, 40, 40, 130, 40);
 
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        if(pdfFile.exists()) {
+            try {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-            PdfWriter.getInstance(document, byteArrayOutputStream);
-            document.open();
+                PdfWriter.getInstance(document, byteArrayOutputStream);
+                document.open();
 
-            Company company = (new CompanyDB(ctx, user)).getCompany();
-            if(company==null){
-                company = new Company();
+                Company company = (new CompanyDB(ctx, user)).getCompany();
+                if (company == null) {
+                    company = new Company();
+                }
+
+                //se agrega la informacion del cliente, numero de pedido, fecha de emision, etc.
+                addOrderHeader(document, ctx, company, order);
+
+                //agrega el titulo del documento.
+                addOrderTitle(document, ctx);
+
+                //se cargan las lineas del pedido
+                addOrderDetails(document, orderLines, ctx);
+
+                //se le agrega la informacion de subtotal, impuestos y total del pedido
+                //addOrderFooter(document, ctx, order);
+
+                document.close();
+
+                // Create a reader
+                PdfReader reader = new PdfReader(byteArrayOutputStream.toByteArray());
+                // Create a stamper
+                PdfStamper stamper = new PdfStamper(reader,
+                        new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
+
+                //Se le agrega la cabecera a cada pagina
+                addPageHeader(reader, stamper, company, ctx);
+
+                // Close the stamper
+                stamper.close();
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            //se agrega la informacion del cliente, numero de pedido, fecha de emision, etc.
-            addOrderHeader(document, ctx, company, order);
-
-            //agrega el titulo del documento.
-            addOrderTitle(document, ctx);
-
-            //se cargan las lineas del pedido
-            addOrderDetails(document, orderLines, ctx);
-
-            //se le agrega la informacion de subtotal, impuestos y total del pedido
-            //addOrderFooter(document, ctx, order);
-
-            document.close();
-
-            // Create a reader
-            PdfReader reader = new PdfReader(byteArrayOutputStream.toByteArray());
-            // Create a stamper
-            PdfStamper stamper = new PdfStamper(reader,
-                    new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
-
-            //Se le agrega la cabecera a cada pagina
-            addPageHeader(reader, stamper, company, ctx);
-
-            // Close the stamper
-            stamper.close();
-            reader.close();
-        }catch(Exception e){
-            e.printStackTrace();
         }
-
         return pdfFile;
     }
 
