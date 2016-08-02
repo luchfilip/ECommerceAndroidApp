@@ -41,7 +41,7 @@ public class MainPageSectionsDB {
         }
 
         try {
-            BannerSection bannerSection = (new BannerSectionDB(mContext)).getBannerSection();
+            BannerSection bannerSection = (new BannerSectionDB(mContext, mUser)).getBannerSection();
             if (bannerSection!=null && bannerSection.getBanners()!=null
                     && !bannerSection.getBanners().isEmpty()) {
                 mainPageList.add(bannerSection);
@@ -52,7 +52,7 @@ public class MainPageSectionsDB {
 
         try {
             ProductBrandPromotionalSection productBrandPromotionalSection =
-                    (new ProductBrandPromotionSectionDB(mContext)).getProductBrandPromotionSection();
+                    (new ProductBrandPromotionSectionDB(mContext, mUser)).getProductBrandPromotionSection();
             if (productBrandPromotionalSection !=null
                     && productBrandPromotionalSection.getProductBrandPromotionalCards()!=null
                     && !productBrandPromotionalSection.getProductBrandPromotionalCards().isEmpty()) {
