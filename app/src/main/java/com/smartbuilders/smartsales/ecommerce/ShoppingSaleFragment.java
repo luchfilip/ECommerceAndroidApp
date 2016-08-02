@@ -307,7 +307,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         if (mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));
-            Currency currency = (new CurrencyDB(getContext()))
+            Currency currency = (new CurrencyDB(getContext(), mUser))
                     .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
             mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
                     currency!=null ? currency.getName() : "",
