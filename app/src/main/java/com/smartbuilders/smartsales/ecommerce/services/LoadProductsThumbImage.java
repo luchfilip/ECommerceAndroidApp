@@ -51,7 +51,8 @@ public class LoadProductsThumbImage extends IntentService {
         Cursor c = null;
         try {
             List<String> filesName = new ArrayList<>();
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(), null,
                     "SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y' AND PRIORITY=1",
                     null, null);
             if(c!=null){

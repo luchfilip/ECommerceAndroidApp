@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="logo">@drawable/actionbar_logo</item>
         <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:label">@string/app_name</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

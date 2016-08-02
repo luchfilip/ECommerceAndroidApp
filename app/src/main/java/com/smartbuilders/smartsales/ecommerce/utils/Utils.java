@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -26,23 +25,19 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.model.UserProfile;
-import com.jasgcorp.ids.syncadapter.SyncAdapter;
 import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
 import com.jasgcorp.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.BusinessPartnersListActivity;
@@ -231,6 +226,9 @@ public class Utils {
      * @param context
      */
     public static void createFileInThumbDir(String fileName, Bitmap image, Context context){
+        if (!saveImagesInDevice(context)) {
+            return;
+        }
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
@@ -264,6 +262,9 @@ public class Utils {
      * @param context
      */
     public static void createFileInOriginalDir(String fileName, Bitmap image, Context context){
+        if (!saveImagesInDevice(context)) {
+            return;
+        }
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
@@ -463,7 +464,6 @@ public class Utils {
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
                             .error(getNoImageAvailableDrawable(context))
-                            //.placeholder(R.drawable.no_image_available)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -705,12 +705,12 @@ public class Utils {
                 }
             }
 
-            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_badge", false)) {
-                navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon()
-                        .setColorFilter(Utils.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-            } else {
-                navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon().setColorFilter(null);
-            }
+            //if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_badge", false)) {
+            //    navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon()
+            //            .setColorFilter(Utils.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            //} else {
+            //    navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon().setColorFilter(null);
+            //}
 
             TextView recommendedProductsNavView = (TextView) navigationView.getMenu()
                     .findItem(R.id.nav_recommended_products_list).getActionView();
@@ -724,7 +724,6 @@ public class Utils {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -1151,5 +1150,9 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean saveImagesInDevice(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", true);
     }
 }
