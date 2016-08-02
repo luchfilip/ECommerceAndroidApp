@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * Jesus Sarco, before 30.05.2016
@@ -34,8 +35,8 @@ public class SubCategoriesListActivity extends AppCompatActivity {
             }
         }
 
-
-        ProductCategory productCategory = (new ProductCategoryDB(this)).getActiveProductCategoryById(mCategoryId);
+        ProductCategory productCategory = (new ProductCategoryDB(this, Utils.getCurrentUser(this)))
+                .getActiveProductCategoryById(mCategoryId);
          if (productCategory!=null) {
             ((TextView) findViewById(R.id.title_textView))
                     .setText(getString(R.string.category_name_description_detail,
