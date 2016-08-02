@@ -188,12 +188,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			    		
     		Cursor result = null;
 			try{
-				//start synchronization
-				result = getContext().getContentResolver()
-						        	.query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
-						        			.appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
-											.appendQueryParameter("tables_to_sync", tablesToSyncJSONObject).build(),
-						        			null, null, null, null);
+                //start synchronization
+                if (tablesToSyncJSONObject!=null) {
+                    result = getContext().getContentResolver()
+                            .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
+                                            .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
+                                            .appendQueryParameter("tables_to_sync", tablesToSyncJSONObject).build(),
+                                    null, null, null, null);
+                } else {
+                    result = getContext().getContentResolver()
+                            .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
+                                            .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId()).build(),
+                                    null, null, null, null);
+                }
+
 				if(result.moveToNext()){
 //    					Log.d(TAG, "debug> result.getString(result.getColumnIndex(\"state\")): "+result.getString(result.getColumnIndex("state")));
 					if(Boolean.valueOf(result.getString(result.getColumnIndex("state")))){
