@@ -479,8 +479,10 @@ public class OrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = (SELECT SUM(PPA.AVAILABILITY) FROM PRODUCT_PRICE_AVAILABILITY PPA WHERE PPA.PRODUCT_ID = PRODUCT_ID AND PPA.IS_ACTIVE='Y'), UPDATE_TIME = ? " +
-                            " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                    "UPDATE ECOMMERCE_ORDER_LINE SET UPDATE_TIME = ?, " +
+                        " QTY_REQUESTED = (SELECT CASE WHEN SUM(AVAILABILITY) IS NULL THEN 0 ELSE SUM(AVAILABILITY) END AS AVAILABILITY " +
+                                            " FROM PRODUCT_PRICE_AVAILABILITY WHERE PRODUCT_ID = ECOMMERCE_ORDER_LINE.PRODUCT_ID AND IS_ACTIVE='Y') " +
+                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
                     new String[]{DateFormat.getCurrentDateTimeSQLFormat(),
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});
