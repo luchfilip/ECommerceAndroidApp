@@ -16,18 +16,19 @@ import java.util.ArrayList;
 public class MainPageProductSectionDB {
 
     private Context context;
-    private User user;
+    private User mUser;
 
     public MainPageProductSectionDB(Context context, User user){
         this.context = context;
-        this.user = user;
+        this.mUser = user;
     }
 
     public ArrayList<MainPageProductSection> getActiveMainPageProductSections(){
         ArrayList<MainPageProductSection> mainPageProductSections = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT MS.MAINPAGE_PRODUCT_SECTION_ID, MS.NAME, MS.DESCRIPTION " +
                     " FROM MAINPAGE_PRODUCT_SECTION MS " +
                         " INNER JOIN MAINPAGE_PRODUCT MP ON MP.MAINPAGE_PRODUCT_SECTION_ID = MS.MAINPAGE_PRODUCT_SECTION_ID " +
@@ -68,7 +69,8 @@ public class MainPageProductSectionDB {
         ArrayList<Product> productsByProductSectionId = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = M.PRODUCT_ID AND P.IS_ACTIVE = ? " +
@@ -95,7 +97,7 @@ public class MainPageProductSectionDB {
         }
 
         if(!productsByProductSectionId.isEmpty()){
-            ProductDB productDB = new ProductDB(context, user);
+            ProductDB productDB = new ProductDB(context, mUser);
             for (int i = 0; i < productsByProductSectionId.size(); i++){
                 productsByProductSectionId.set(i, productDB.getProductById(productsByProductSectionId.get(i).getId()));
             }
