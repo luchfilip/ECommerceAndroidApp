@@ -24,6 +24,7 @@ public class RecommendedProductDB {
 
     public ArrayList<Product> getRecommendedProductsByBusinessPartnerId(int businessPartnerId){
         ArrayList<Product> products = new ArrayList<>();
+        ArrayList<Integer> productsIds = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -35,13 +36,8 @@ public class RecommendedProductDB {
                     " ORDER BY PRIORITY desc",
                     new String[]{String.valueOf(businessPartnerId), "Y"}, null);
             if (c!=null) {
-                ProductDB productDB = new ProductDB(mContext, mUser);
-                Product product;
                 while(c.moveToNext()){
-                    product = productDB.getProductById(c.getInt(0));
-                    if(product!=null){
-                        products.add(product);
-                    }
+                    productsIds.add(c.getInt(0));
                 }
             }
         } catch (Exception e) {
@@ -53,6 +49,13 @@ public class RecommendedProductDB {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+        }
+        ProductDB productDB = new ProductDB(mContext, mUser);
+        for (Integer productId : productsIds) {
+            Product product = productDB.getProductById(productId);
+            if(product!=null){
+                products.add(product);
             }
         }
         return products;

@@ -188,7 +188,7 @@ public class SalesOrderLineDB {
      * @return
      */
     private ArrayList<SalesOrderLine> getActiveSalesOrderLinesByBusinessPartnerId(String docType, int businessPartnerId) {
-        ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
+        ArrayList<SalesOrderLine> salesOrderLines = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -202,7 +202,6 @@ public class SalesOrderLineDB {
                     new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
                             docType, "Y"}, null);
             if (c!=null) {
-                ProductDB productDB = new ProductDB(mContext, mUser);
                 while(c.moveToNext()){
                     SalesOrderLine salesOrderLine = new SalesOrderLine();
                     salesOrderLine.setId(c.getInt(0));
@@ -212,10 +211,7 @@ public class SalesOrderLineDB {
                     salesOrderLine.setPrice(c.getDouble(4));
                     salesOrderLine.setTaxPercentage(c.getDouble(5));
                     salesOrderLine.setTotalLineAmount(c.getDouble(6));
-                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
-                    if(salesOrderLine.getProduct()!=null){
-                        orderLines.add(salesOrderLine);
-                    }
+                    salesOrderLines.add(salesOrderLine);
                 }
             }
         } catch (Exception e) {
@@ -229,8 +225,18 @@ public class SalesOrderLineDB {
                 }
             }
         }
-
-        return orderLines;
+        ArrayList<SalesOrderLine> salesOrderLinesToRemove = new ArrayList<>();
+        ProductDB productDB = new ProductDB(mContext, mUser);
+        for (SalesOrderLine salesOrderLine : salesOrderLines) {
+            salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
+            if(salesOrderLine.getProduct()==null){
+                salesOrderLinesToRemove.add(salesOrderLine);
+            }
+        }
+        if (!salesOrderLinesToRemove.isEmpty()) {
+            salesOrderLines.removeAll(salesOrderLinesToRemove);
+        }
+        return salesOrderLines;
     }
 
     /**
@@ -240,7 +246,7 @@ public class SalesOrderLineDB {
      * @return
      */
     private ArrayList<SalesOrderLine> getSalesOrderLinesByOrderId(String docType, int salesOrderId) {
-        ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
+        ArrayList<SalesOrderLine> salesOrderLines = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -254,7 +260,6 @@ public class SalesOrderLineDB {
                     new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
                             docType, "Y"}, null);
             if(c!=null){
-                ProductDB productDB = new ProductDB(mContext, mUser);
                 while(c.moveToNext()){
                     SalesOrderLine salesOrderLine = new SalesOrderLine();
                     salesOrderLine.setId(c.getInt(0));
@@ -264,10 +269,7 @@ public class SalesOrderLineDB {
                     salesOrderLine.setPrice(c.getDouble(4));
                     salesOrderLine.setTaxPercentage(c.getDouble(5));
                     salesOrderLine.setTotalLineAmount(c.getDouble(6));
-                    salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
-                    if(salesOrderLine.getProduct()!=null){
-                        orderLines.add(salesOrderLine);
-                    }
+                    salesOrderLines.add(salesOrderLine);
                 }
             }
         } catch (Exception e) {
@@ -281,8 +283,18 @@ public class SalesOrderLineDB {
                 }
             }
         }
-
-        return orderLines;
+        ArrayList<SalesOrderLine> salesOrderLinesToRemove = new ArrayList<>();
+        ProductDB productDB = new ProductDB(mContext, mUser);
+        for (SalesOrderLine salesOrderLine : salesOrderLines) {
+            salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
+            if(salesOrderLine.getProduct()==null){
+                salesOrderLinesToRemove.add(salesOrderLine);
+            }
+        }
+        if (!salesOrderLinesToRemove.isEmpty()) {
+            salesOrderLines.removeAll(salesOrderLinesToRemove);
+        }
+        return salesOrderLines;
     }
 
     /**

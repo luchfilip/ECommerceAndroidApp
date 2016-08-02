@@ -525,6 +525,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_APP_PARAMETER);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDER_LINE);
+            db.execSQL("create index ecommerce_order_line_idx on ecommerce_order_line (product_id)");
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDER);
             db.execSQL(CREATE_ECOMMERCE_SALES_ORDER_LINE);
             db.execSQL(CREATE_RECENT_SEARCH);

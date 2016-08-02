@@ -203,7 +203,6 @@ public class OrderLineDB {
                             SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"},
                     null);
             if(c!=null){
-                ProductDB productDB = new ProductDB(mContext, mUser);
                 cursor:
                 while(c.moveToNext()){
                     //se revisa si ya se encuentra ese articulo en el pedido y se suman las cantidades
@@ -216,15 +215,7 @@ public class OrderLineDB {
                     OrderLine orderLine = new OrderLine();
                     orderLine.setProductId(c.getInt(0));
                     orderLine.setQuantityOrdered(c.getInt(1));
-                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
-                    if(orderLine.getProduct()!=null){
-                        if (mIsManagePriceInOrder) {
-                            orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
-                            orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
-                        }
-                        orderLine.setTotalLineAmount(OrderLineBR.getTotalLine(orderLine));
-                        orderLines.add(orderLine);
-                    }
+                    orderLines.add(orderLine);
                 }
             }
         } catch (Exception e) {
@@ -237,6 +228,23 @@ public class OrderLineDB {
                     e.printStackTrace();
                 }
             }
+        }
+        ProductDB productDB = new ProductDB(mContext, mUser);
+        ArrayList<OrderLine> orderLinesToRemove = new ArrayList<>();
+        for (OrderLine orderLine : orderLines) {
+            orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
+            if(orderLine.getProduct()!=null){
+                if (mIsManagePriceInOrder) {
+                    orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
+                    orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
+                }
+                orderLine.setTotalLineAmount(OrderLineBR.getTotalLine(orderLine));
+            }else{
+                orderLinesToRemove.add(orderLine);
+            }
+        }
+        if (!orderLinesToRemove.isEmpty()) {
+            orderLines.removeAll(orderLinesToRemove);
         }
         return orderLines;
     }
@@ -288,7 +296,6 @@ public class OrderLineDB {
                     new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null){
-                ProductDB productDB = new ProductDB(mContext, mUser);
                 while(c.moveToNext()){
                     OrderLine orderLine = new OrderLine();
                     orderLine.setId(c.getInt(0));
@@ -297,10 +304,7 @@ public class OrderLineDB {
                     orderLine.setPrice(c.getDouble(3));
                     orderLine.setTaxPercentage(c.getDouble(4));
                     orderLine.setTotalLineAmount(c.getDouble(5));
-                    orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
-                    if(orderLine.getProduct()!=null){
-                        orderLines.add(orderLine);
-                    }
+                    orderLines.add(orderLine);
                 }
             }
         } catch (Exception e) {
@@ -312,6 +316,13 @@ public class OrderLineDB {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+        }
+        ProductDB productDB = new ProductDB(mContext, mUser);
+        for (OrderLine orderLine : orderLines) {
+            orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
+            if(orderLine.getProduct()==null){
+                orderLine.setProduct(new Product());
             }
         }
         return orderLines;
@@ -361,32 +372,32 @@ public class OrderLineDB {
         return 0;
     }
 
-    public boolean isProductInWishList(int productId) {
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                            .build(), null,
-                    "SELECT COUNT(*) FROM ECOMMERCE_ORDER_LINE " +
-                    " WHERE PRODUCT_ID=? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                            String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0)>0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(c!=null){
-                try {
-                    c.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return false;
-    }
+    //public boolean isProductInWishList(int productId) {
+    //    Cursor c = null;
+    //    try {
+    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+    //                        .build(), null,
+    //                "SELECT COUNT(*) FROM ECOMMERCE_ORDER_LINE " +
+    //                " WHERE PRODUCT_ID=? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
+    //                new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+    //                        String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"}, null);
+    //        if(c!=null && c.moveToNext()){
+    //            return c.getInt(0)>0;
+    //        }
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    } finally {
+    //        if(c!=null){
+    //            try {
+    //                c.close();
+    //            } catch (Exception e){
+    //                e.printStackTrace();
+    //            }
+    //        }
+    //    }
+    //    return false;
+    //}
 
     public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
         return getOrderLineByProductIdAndDocType(productId, SHOPPING_CART_DOC_TYPE);
@@ -415,6 +426,7 @@ public class OrderLineDB {
                 orderLine.setPrice(c.getDouble(3));
                 orderLine.setTaxPercentage(c.getDouble(4));
                 orderLine.setTotalLineAmount(c.getDouble(5));
+                c.close();
                 orderLine.setProduct((new ProductDB(mContext, mUser)).getProductById(orderLine.getProductId()));
                 if(orderLine.getProduct()!=null){
                     return orderLine;
@@ -423,7 +435,7 @@ public class OrderLineDB {
         } catch (Exception e){
             e.printStackTrace();
         } finally {
-            if(c != null) {
+            if(c != null && !c.isClosed()) {
                 try {
                     c.close();
                 } catch (Exception e) {
@@ -459,20 +471,20 @@ public class OrderLineDB {
         return 0;
     }
 
-    //public int updateProductAvailabilitiesInWishList(){
-    //    try {
-    //        return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-    //                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-    //                null,
-    //                "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = (SELECT PPA.AVAILABILITY FROM PRODUCT_PRICE_AVAILABILITY PPA WHERE PPA.PRODUCT_ID = PRODUCT_ID AND PPA.PRIORITY=1 AND PPA.IS_ACTIVE='Y'), UPDATE_TIME = ? " +
-    //                        " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
-    //                new String[]{DateFormat.getCurrentDateTimeSQLFormat(),
-    //                        String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-    //                        String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    }
-    //    return 0;
-    //}
+    public int updateProductAvailabilitiesInWishList(){
+        try {
+            return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = (SELECT SUM(PPA.AVAILABILITY) FROM PRODUCT_PRICE_AVAILABILITY PPA WHERE PPA.PRODUCT_ID = PRODUCT_ID AND PPA.IS_ACTIVE='Y'), UPDATE_TIME = ? " +
+                            " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                    new String[]{DateFormat.getCurrentDateTimeSQLFormat(),
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

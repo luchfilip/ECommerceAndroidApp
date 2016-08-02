@@ -28,7 +28,6 @@ import com.jasgcorp.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.WishListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
@@ -171,9 +170,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     @Override
-    public void addToShoppingCart(int productId, User user) {
-        Product product = (new ProductDB(getContext(), user))
-                .getProductById(productId);
+    public void addToShoppingCart(Product product, User user) {
         DialogAddToShoppingCart dialogAddToShoppingCart =
                 DialogAddToShoppingCart.newInstance(product, user);
         dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
@@ -189,9 +186,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     @Override
-    public void addToShoppingSale(int productId, User user) {
-        Product product = (new ProductDB(getContext(), user))
-                .getProductById(productId);
+    public void addToShoppingSale(Product product, User user) {
         DialogAddToShoppingSale dialogAddToShoppingSale =
                 DialogAddToShoppingSale.newInstance(product, user);
         dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
@@ -403,15 +398,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public void onDestroy() {
-        //mOrderLineDB.updateProductAvailabilitiesInWishList();
-        //if(mWishListLines!=null){
-        //    for(OrderLine orderLine : mWishListLines){
-        //        if(orderLine.getQuantityOrdered()!=orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()){
-        //            orderLine.setQuantityOrdered(orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability());
-        //            mOrderLineDB.updateOrderLine(orderLine);
-        //        }
-        //    }
-        //}
+        mOrderLineDB.updateProductAvailabilitiesInWishList();
         super.onDestroy();
     }
 }

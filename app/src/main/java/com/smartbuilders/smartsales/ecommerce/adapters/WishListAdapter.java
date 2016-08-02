@@ -82,8 +82,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     public interface Callback{
         void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user);
-        void addToShoppingCart(int productId, User user);
-        void addToShoppingSale(int productId, User user);
+        void addToShoppingCart(Product product, User user);
+        void addToShoppingSale(Product product, User user);
         void reloadWishList(ArrayList<OrderLine> wishListLines);
     }
 
@@ -219,7 +219,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 if(orderLine!=null){
                     ((Callback) mFragment).updateQtyOrderedInShoppingCart(orderLine, mUser);
                 }else{
-                    ((Callback) mFragment).addToShoppingCart(mDataset.get(holder.getAdapterPosition()).getProductId(), mUser);
+                    ((Callback) mFragment).addToShoppingCart(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
                 }
             }
         });
@@ -228,7 +228,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProductId(), mUser);
+                ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
             }
         });
 
