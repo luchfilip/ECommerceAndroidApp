@@ -20,12 +20,10 @@ public class RecentSearchDB {
 
     private Context mContext;
     private User mUser;
-    private ProductSubCategoryDB mProductSubCategoryDB;
 
     public RecentSearchDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
-        this.mProductSubCategoryDB = new ProductSubCategoryDB(context);
     }
 
     /**
@@ -92,7 +90,6 @@ public class RecentSearchDB {
                     recentSearch.setTextToSearch(c.getString(1));
                     recentSearch.setProductId(c.getInt(2));
                     recentSearch.setSubcategoryId(c.getInt(3));
-                    recentSearch.setProductSubCategory(mProductSubCategoryDB.getActiveProductSubCategoryById(recentSearch.getSubcategoryId()));
                     recentSearches.add(recentSearch);
                 }
             }
@@ -106,6 +103,10 @@ public class RecentSearchDB {
                     e.printStackTrace();
                 }
             }
+        }
+        ProductSubCategoryDB mProductSubCategoryDB = new ProductSubCategoryDB(mContext, mUser);
+        for (RecentSearch recentSearch : recentSearches) {
+            recentSearch.setProductSubCategory(mProductSubCategoryDB.getActiveProductSubCategoryById(recentSearch.getSubcategoryId()));
         }
         return recentSearches;
     }
