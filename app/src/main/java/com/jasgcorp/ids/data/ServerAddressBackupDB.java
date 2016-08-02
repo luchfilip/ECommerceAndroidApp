@@ -1,4 +1,4 @@
-package com.smartbuilders.smartsales.ecommerce.data;
+package com.jasgcorp.ids.data;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -21,7 +21,7 @@ public class ServerAddressBackupDB {
     public void addServerAddressBackup(String serverAddress){
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "INSERT OR REPLACE INTO SERVER_ADDRESS_BACKUP (SERVER_ADDRESS, IS_ACTIVE) VALUES (?, ?)",
+                    "INSERT OR REPLACE INTO IDS_SERVER_ADDRESS_BACKUP (SERVER_ADDRESS, IS_ACTIVE) VALUES (?, ?)",
                     new String[]{serverAddress, "Y"});
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +33,7 @@ public class ServerAddressBackupDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "select SERVER_ADDRESS from SERVER_ADDRESS_BACKUP where IS_ACTIVE=?",
+                    "select SERVER_ADDRESS from IDS_SERVER_ADDRESS_BACKUP where IS_ACTIVE=?",
                     new String[]{"Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
