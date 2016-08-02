@@ -48,7 +48,7 @@ public class FailedSyncDataWithServerDB {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "SELECT row_id, selection, selectionArgs, columnCount " +
                             " FROM FAILED_SYNC_DATA_WITH_SERVER " +
