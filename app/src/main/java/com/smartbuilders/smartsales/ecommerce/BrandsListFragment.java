@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.smartbuilders.smartsales.ecommerce.adapters.BrandsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ProductBrandDB;
 import com.smartbuilders.smartsales.ecommerce.model.ProductBrand;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,8 +53,8 @@ public class BrandsListFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
-                    mBrandsListAdapter = new BrandsListAdapter(getContext(), new ProductBrandDB(getContext())
-                            .getActiveProductBrands());
+                    mBrandsListAdapter = new BrandsListAdapter(getContext(), new ProductBrandDB(getContext(),
+                            Utils.getCurrentUser(getContext())).getActiveProductBrands());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
