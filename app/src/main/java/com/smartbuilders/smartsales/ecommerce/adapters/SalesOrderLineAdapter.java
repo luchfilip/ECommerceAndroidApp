@@ -66,8 +66,8 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         mDataset = myDataset;
         mUser = user;
         mContext = context;
-        Currency currency = (new CurrencyDB(mContext))
-                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        Currency currency = (new CurrencyDB(context, user))
+                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(context, user));
         mCurrencyName = currency!=null ? currency.getName() : "";
     }
 

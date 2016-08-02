@@ -66,10 +66,10 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         mContext = context;
         mDataset = myDataset;
         mUser = user;
-        Currency currency = (new CurrencyDB(mContext))
-                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        Currency currency = (new CurrencyDB(context, user))
+                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(context, user));
         mCurrencyName = currency!=null ? currency.getName() : "";
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

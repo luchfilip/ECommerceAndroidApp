@@ -86,7 +86,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         mDataset = data;
         mUser = user;
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
-        Currency currency = (new CurrencyDB(mContext)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(mContext, mUser));
+        Currency currency = (new CurrencyDB(context, user)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(context, user));
         productPriceLabelText = currency!=null
                 ? mContext.getString(R.string.price_currency_label_detail, currency.getName())
                 : mContext.getString(R.string.price_label);
