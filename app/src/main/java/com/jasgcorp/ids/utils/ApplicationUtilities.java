@@ -223,7 +223,7 @@ public class ApplicationUtilities {
      * Revisa si hay una nueva version de la aplicacion disponible en el market. tambien maneja si
      * la actualizacion es obligatoria u obligatoria
      */
-    public static void checkAppVersion(final Activity activity) {
+    public static void checkAppVersion(final Activity activity, final User user) {
         DialogInterface.OnClickListener goToMarket = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -255,7 +255,7 @@ public class ApplicationUtilities {
             }
         };
         try {
-            if(Parameter.getLastMandatoryAppVersion(activity) > getAppVersion(activity)){
+            if(Parameter.getLastMandatoryAppVersion(activity, user) > getAppVersion(activity)){
                 //actualizacion obligatoria
                 new AlertDialog.Builder(activity)
                         .setCancelable(false)
@@ -263,7 +263,7 @@ public class ApplicationUtilities {
                         .setMessage(R.string.new_mandatory_version_available_message)
                         .setPositiveButton(R.string.update, goToMarket)
                         .show();
-            }else if (Parameter.getMarketAppVersion(activity) > getAppVersion(activity)){
+            }else if (Parameter.getMarketAppVersion(activity, user) > getAppVersion(activity)){
                 //actualizacion opcional
                 new AlertDialog.Builder(activity)
                         .setCancelable(true)
@@ -290,9 +290,8 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null){
 				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI,
-								null,
-								"SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL " +
+						.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                                "SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL " +
                                     " FROM IDS_SYNC_LOG WHERE USER_ID=? AND LOG_VISIBILITY= ?",
 								new String[]{String.valueOf(user.getUserId()), String.valueOf(logVisibility)}, null);
 				if(c!=null){
@@ -322,9 +321,7 @@ public class ApplicationUtilities {
     	Cursor c = null;
     	try{
     		if(user!=null){
-				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                        null,
+				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL FROM IDS_SYNC_LOG WHERE USER_ID=?",
                         new String[]{user.getUserId()}, null);
                 if(c!=null){
@@ -348,9 +345,7 @@ public class ApplicationUtilities {
 		Cursor c = null;
 		try{
 			if(user!=null){
-				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                        null,
+				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
                         "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE = ? OR LOG_TYPE = ?)",
                         new String[]{String.valueOf(user.getUserId()),
                                 SyncAdapter.SYNCHRONIZATION_FINISHED,
@@ -381,9 +376,7 @@ public class ApplicationUtilities {
 											 String logMessageDetail, int logVisibility, Context ctx){
 		try{
             ctx.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            new ContentValues(),
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI, new ContentValues(),
                             "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
                                     " VALUES (?, ?, ?, ?, ?)",
                             new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
@@ -405,8 +398,7 @@ public class ApplicationUtilities {
                                               String serverAddress, String userGroup, String userName, String authToken, Context ctx){
 		try{
 	    	ctx.getContentResolver()
-	    		.update(DataBaseContentProvider.INTERNAL_DB_URI,
-						new ContentValues(),
+	    		.update(DataBaseContentProvider.INTERNAL_DB_URI, new ContentValues(),
 						"INSERT INTO IDS_USER (USER_ID, BUSINESS_PARTNER_ID, USER_PROFILE_ID, SERVER_USER_ID, " +
                                 " USER_NAME, SERVER_ADDRESS, USER_GROUP, AUTH_TOKEN) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -453,8 +445,7 @@ public class ApplicationUtilities {
 		Cursor cursor = null;
 		try{
 			cursor = ctx.getContentResolver()
-							.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-									null, 
+							.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
 									"SELECT MAX(USER_ID)+1 FROM IDS_USER",
 									null, null);
 			if(cursor!=null && cursor.moveToNext()){
@@ -530,8 +521,7 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null){
     			c = ctx.getContentResolver()
-    					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-								null, 
+    					.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
 								"SELECT COUNT(*) " +
                                 " FROM IDS_SCHEDULER_SYNC " +
                                 " WHERE USER_ID=? AND HOUR=? AND MINUTE=? AND MONDAY=? AND TUESDAY=? " +
@@ -554,8 +544,7 @@ public class ApplicationUtilities {
                 }
     			
     			ctx.getContentResolver()
-    				.update(DataBaseContentProvider.INTERNAL_DB_URI,
-							new ContentValues(),
+    				.update(DataBaseContentProvider.INTERNAL_DB_URI, null,
 							"INSERT INTO IDS_SCHEDULER_SYNC (USER_ID, HOUR, MINUTE, MONDAY, TUESDAY, " +
                                     " WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -571,8 +560,7 @@ public class ApplicationUtilities {
 										data.isSunday()?"Y":"N"});
     			
 				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-								null, 
+						.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
 								"SELECT MAX(SCHEDULER_SYNC_ID) FROM IDS_SCHEDULER_SYNC",
 								null, null);
 				if(c!=null && c.moveToNext()){
@@ -768,8 +756,7 @@ public class ApplicationUtilities {
     	try{
     		if(user!=null){
 				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-								null, 
+						.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
 								new StringBuilder("SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
 										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 										.append(" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=").append(user.getUserId()).toString(),
@@ -810,8 +797,7 @@ public class ApplicationUtilities {
     	Cursor c = null;
     	try{
 			c = ctx.getContentResolver()
-					.query(DataBaseContentProvider.INTERNAL_DB_URI, 
-							null, 
+					.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
 							new StringBuilder("SELECT HOUR, MINUTE, MONDAY, TUESDAY, ")
 									.append("WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
 									.append("FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=").append(schedulerSyncDataId).toString(),
@@ -1048,9 +1034,7 @@ public class ApplicationUtilities {
 	public static int cleanLog(Context ctx, String userId, int days) throws Exception{
 		try{
 			return ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userId).build(),
-								null,
+						.update(DataBaseContentProvider.INTERNAL_DB_URI, null,
 								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID=?", 
 								new String[]{userId});
 		}catch(Exception e){
@@ -1349,10 +1333,9 @@ public class ApplicationUtilities {
 			}
     		//registered users
     		ArrayList<User> registeredUsers = new ArrayList<User>();
-			c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, 
-													null, 
-													"SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
-													null, null);
+			c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
+                    null, null);
 			if(c!=null){
 				while(c.moveToNext()){
 					User user = new User(c.getString(0));
@@ -1392,9 +1375,7 @@ public class ApplicationUtilities {
 			    	
 					//delete logs in database
 			    	ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, userRemoved.getUserId()).build(),
-								null,
+						.update(DataBaseContentProvider.INTERNAL_DB_URI, null,
 								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID = ?",
 								new String[]{userRemoved.getUserId()});
 			    	
