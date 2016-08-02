@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 
@@ -14,15 +15,18 @@ import java.util.ArrayList;
 public class ProductSubCategoryDB {
 
     private Context context;
+    private User mUser;
 
-    public ProductSubCategoryDB(Context context){
+    public ProductSubCategoryDB(Context context, User user){
         this.context = context;
+        this.mUser = user;
     }
 
     public ProductSubCategory getActiveProductSubCategoryById(int subCategoryId){
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT S.CATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
@@ -54,7 +58,8 @@ public class ProductSubCategoryDB {
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
