@@ -25,6 +25,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.jasgcorp.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
  */
 public class OrderDetailPDFCreator {
 
-    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx) throws Exception {
+    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
         File pdfFile = null;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -60,47 +61,45 @@ public class OrderDetailPDFCreator {
         //create a new document
         Document document = new Document(PageSize.LETTER, 40, 40, 130, 40);
 
-        if(pdfFile != null){
-            try {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-                PdfWriter.getInstance(document, byteArrayOutputStream);
-                document.open();
+            PdfWriter.getInstance(document, byteArrayOutputStream);
+            document.open();
 
-                Company company = (new CompanyDB(ctx)).getCompany();
-                if(company==null){
-                    company = new Company();
-                }
-
-                //se agrega la informacion del cliente, numero de pedido, fecha de emision, etc.
-                addOrderHeader(document, ctx, company, order);
-
-                //agrega el titulo del documento.
-                addOrderTitle(document, ctx);
-
-                //se cargan las lineas del pedido
-                addOrderDetails(document, orderLines, ctx);
-
-                //se le agrega la informacion de subtotal, impuestos y total del pedido
-                //addOrderFooter(document, ctx, order);
-
-                document.close();
-
-                // Create a reader
-                PdfReader reader = new PdfReader(byteArrayOutputStream.toByteArray());
-                // Create a stamper
-                PdfStamper stamper = new PdfStamper(reader,
-                        new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
-
-                //Se le agrega la cabecera a cada pagina
-                addPageHeader(reader, stamper, company, ctx);
-
-                // Close the stamper
-                stamper.close();
-                reader.close();
-            }catch(Exception e){
-                e.printStackTrace();
+            Company company = (new CompanyDB(ctx, user)).getCompany();
+            if(company==null){
+                company = new Company();
             }
+
+            //se agrega la informacion del cliente, numero de pedido, fecha de emision, etc.
+            addOrderHeader(document, ctx, company, order);
+
+            //agrega el titulo del documento.
+            addOrderTitle(document, ctx);
+
+            //se cargan las lineas del pedido
+            addOrderDetails(document, orderLines, ctx);
+
+            //se le agrega la informacion de subtotal, impuestos y total del pedido
+            //addOrderFooter(document, ctx, order);
+
+            document.close();
+
+            // Create a reader
+            PdfReader reader = new PdfReader(byteArrayOutputStream.toByteArray());
+            // Create a stamper
+            PdfStamper stamper = new PdfStamper(reader,
+                    new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
+
+            //Se le agrega la cabecera a cada pagina
+            addPageHeader(reader, stamper, company, ctx);
+
+            // Close the stamper
+            stamper.close();
+            reader.close();
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
         return pdfFile;
