@@ -87,19 +87,21 @@ public class Parameter {
     /**
      * devuelve el numero de version actual de la aplicacion que se encuentra en produccion
      * @param context
+     * @param user
      * @return
      */
-    public static int getMarketAppVersion(Context context){
-        return ParameterDB.getParameterIntValue(context, ParameterDB.APP_CURRENT_VERSION, 0);
+    public static int getMarketAppVersion(Context context, User user){
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.APP_CURRENT_VERSION, 0);
     }
 
     /**
      * devuelve el numero de la ultima version de la aplicacion que se tiene como obligatoria
      * @param context
+     * @param user
      * @return
      */
-    public static int getLastMandatoryAppVersion(Context context){
-        return ParameterDB.getParameterIntValue(context, ParameterDB.LAST_MANDATORY_APP_VERSION, 0);
+    public static int getLastMandatoryAppVersion(Context context, User user){
+        return ParameterDB.getParameterIntValue(context, user, ParameterDB.LAST_MANDATORY_APP_VERSION, 0);
     }
 
     /**
