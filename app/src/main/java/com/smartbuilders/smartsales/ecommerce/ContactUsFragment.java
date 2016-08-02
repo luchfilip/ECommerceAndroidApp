@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -25,7 +26,7 @@ public class ContactUsFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
 
-        Company company = (new CompanyDB(getContext())).getCompany();
+        Company company = (new CompanyDB(getContext(), Utils.getCurrentUser(getContext()))).getCompany();
 
         TextView companyNameTextView = (TextView) view.findViewById(R.id.company_name);
         TextView companyTaxIdTextView = (TextView) view.findViewById(R.id.company_tax_id);
