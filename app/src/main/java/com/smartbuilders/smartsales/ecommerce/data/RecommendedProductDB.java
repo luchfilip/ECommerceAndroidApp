@@ -30,11 +30,12 @@ public class RecommendedProductDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT PRODUCT_ID " +
-                    " FROM  RECOMMENDED_PRODUCT " +
-                    " WHERE BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ? " +
-                    " ORDER BY PRIORITY desc",
-                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+                    "SELECT RP.PRODUCT_ID " +
+                    " FROM  RECOMMENDED_PRODUCT RP " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = RP.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE RP.BUSINESS_PARTNER_ID = ? AND RP.IS_ACTIVE = ? " +
+                    " ORDER BY RP.PRIORITY desc",
+                    new String[]{"Y", String.valueOf(businessPartnerId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     productsIds.add(c.getInt(0));

@@ -560,7 +560,6 @@ public class ProductDB {
         return null;
     }
 
-
     /**
      * Carga el objeto Product que se pasa por parametro a partir de un cursor que posea las siguientes columnas:
      *     0) PRODUCT.PRODUCT_ID,

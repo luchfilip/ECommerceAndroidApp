@@ -194,12 +194,12 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
-                    "SELECT PRODUCT_ID, QTY_REQUESTED, " +
-                        " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDER_LINE " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                    " ORDER BY ECOMMERCE_SALES_ORDER_LINE_ID DESC",
-                    new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
+                    "SELECT SOL.PRODUCT_ID, SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                    " ORDER BY SOL.ECOMMERCE_SALES_ORDER_LINE_ID DESC",
+                    new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
                             SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"},
                     null);
             if(c!=null){
@@ -288,12 +288,13 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT ECOMMERCE_ORDER_LINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_ORDER_LINE " +
-                    " WHERE " + (orderId!=null ? " ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
-                        " BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                    " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    "SELECT OL.ECOMMERCE_ORDER_LINE_ID, OL.PRODUCT_ID, OL.QTY_REQUESTED, OL.SALES_PRICE, OL.TAX_PERCENTAGE, OL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDER_LINE OL " +
+                            " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE " + (orderId!=null ? " OL.ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
+                        " OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? " +
+                    " ORDER BY OL.CREATE_TIME DESC",
+                    new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
@@ -412,11 +413,12 @@ public class OrderLineDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT ECOMMERCE_ORDER_LINE_ID, PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_ORDER_LINE " +
-                    " WHERE PRODUCT_ID = ? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                    " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    "SELECT OL.ECOMMERCE_ORDER_LINE_ID, OL.PRODUCT_ID, OL.QTY_REQUESTED, OL.SALES_PRICE, OL.TAX_PERCENTAGE, OL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDER_LINE OL " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE OL.PRODUCT_ID = ? AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? " +
+                    " ORDER BY OL.CREATE_TIME DESC",
+                    new String[]{"Y", String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 OrderLine orderLine = new OrderLine();

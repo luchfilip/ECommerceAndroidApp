@@ -194,12 +194,13 @@ public class SalesOrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT ECOMMERCE_SALES_ORDER_LINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, QTY_REQUESTED, " +
-                        " SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDER_LINE " +
-                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?" +
-                    " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
+                    "SELECT SOL.ECOMMERCE_SALES_ORDER_LINE_ID, SOL.PRODUCT_ID, SOL.BUSINESS_PARTNER_ID, " +
+                        " SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                    " ORDER BY SOL.CREATE_TIME DESC",
+                    new String[]{"Y", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
                             docType, "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
@@ -252,12 +253,13 @@ public class SalesOrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT ECOMMERCE_SALES_ORDER_LINE_ID, PRODUCT_ID, BUSINESS_PARTNER_ID, " +
-                        " QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDER_LINE " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?" +
-                    " ORDER BY CREATE_TIME DESC",
-                    new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
+                    "SELECT SOL.ECOMMERCE_SALES_ORDER_LINE_ID, SOL.PRODUCT_ID, SOL.BUSINESS_PARTNER_ID, " +
+                        " SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                    " ORDER BY SOL.CREATE_TIME DESC",
+                    new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
                             docType, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){

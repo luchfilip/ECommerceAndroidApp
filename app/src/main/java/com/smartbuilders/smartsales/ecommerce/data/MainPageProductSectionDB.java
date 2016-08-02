@@ -67,11 +67,12 @@ public class MainPageProductSectionDB {
 
     private ArrayList<Product> getActiveProductsByMainPageProductSectionId(int productSectionId){
         ArrayList<Product> productsByProductSectionId = new ArrayList<>();
+        ArrayList<Integer> productsIds = new ArrayList<>();
         Cursor c = null;
         try {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT DISTINCT M.MAINPAGE_PRODUCT_ID, M.MAINPAGE_PRODUCT_SECTION_ID, M.PRODUCT_ID " +
+                    "SELECT DISTINCT M.PRODUCT_ID " +
                     " FROM MAINPAGE_PRODUCT M " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = M.PRODUCT_ID AND P.IS_ACTIVE = ? " +
                     " WHERE M.MAINPAGE_PRODUCT_SECTION_ID = ? AND M.IS_ACTIVE = ? " +
@@ -79,9 +80,7 @@ public class MainPageProductSectionDB {
                     new String[]{"Y", String.valueOf(productSectionId), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
-                    Product p = new Product();
-                    p.setId(c.getInt(2));
-                    productsByProductSectionId.add(p);
+                    productsIds.add(c.getInt(0));
                 }
             }
         } catch (Exception e) {
@@ -96,10 +95,13 @@ public class MainPageProductSectionDB {
             }
         }
 
-        if(!productsByProductSectionId.isEmpty()){
+        if(!productsIds.isEmpty()){
             ProductDB productDB = new ProductDB(context, mUser);
-            for (int i = 0; i < productsByProductSectionId.size(); i++){
-                productsByProductSectionId.set(i, productDB.getProductById(productsByProductSectionId.get(i).getId()));
+            for (Integer productId : productsIds) {
+                Product product = productDB.getProductById(productId);
+                if (product!=null){
+                    productsByProductSectionId.add(product);
+                }
             }
         }
         return productsByProductSectionId;

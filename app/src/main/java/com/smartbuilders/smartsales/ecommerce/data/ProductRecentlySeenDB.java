@@ -48,12 +48,13 @@ public class ProductRecentlySeenDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT PRODUCT_ID " +
-                    " FROM PRODUCT_RECENTLY_SEEN " +
-                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? " +
-                    " ORDER BY PRODUCT_RECENTLY_SEEN_ID desc " +
+                    "SELECT PRS.PRODUCT_ID " +
+                    " FROM PRODUCT_RECENTLY_SEEN PRS " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = PRS.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE PRS.BUSINESS_PARTNER_ID = ? AND PRS.USER_ID = ? " +
+                    " ORDER BY PRS.PRODUCT_RECENTLY_SEEN_ID desc " +
                     " LIMIT 30",
-                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())}, null);
+                    new String[]{"Y", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     productsIds.add(c.getInt(0));
