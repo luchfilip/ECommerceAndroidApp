@@ -19,10 +19,12 @@ public class ProductDB {
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
     private Context mContext;
+    private User mUser;
     private OrderLineDB mOrderLineDB;
 
     public ProductDB(Context context, User user){
         this.mContext = context;
+        this.mUser = user;
         this.mOrderLineDB = new OrderLineDB(mContext, user);
     }
 
@@ -45,7 +47,8 @@ public class ProductDB {
                     " WHERE P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? "  +
                     " ORDER BY R.TIMES DESC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql, new String[]{"Y", "Y", "Y", "Y", String.valueOf(productId), "Y",
                     String.valueOf(1), "Y", "Y", String.valueOf(productId), "Y"}, null);
             if (c!=null) {
@@ -87,7 +90,8 @@ public class ProductDB {
                     " WHERE P.SUBCATEGORY_ID = ? AND P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql, new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
                             String.valueOf(subCategoryId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
@@ -129,7 +133,8 @@ public class ProductDB {
                     " WHERE P.BRAND_ID = ? AND P.PRODUCT_ID <> ?  AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC " +
                     ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql, new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
                     String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
@@ -157,7 +162,8 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -219,7 +225,8 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -262,7 +269,8 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -315,7 +323,8 @@ public class ProductDB {
         try {
             //si es un numero
             if(name.length()<8 && !patternIsNotNumeric.matcher(name).matches()) {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -334,7 +343,8 @@ public class ProductDB {
                         " ORDER BY P.NAME ASC",
                         new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y", name+"%", "Y"}, null);
             }else{
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                         "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -394,7 +404,8 @@ public class ProductDB {
         Cursor c = null;
         try {
             if (isNumeric) {
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                         "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.NAME), P.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
@@ -428,7 +439,8 @@ public class ProductDB {
                         aux += " "+word+"%";
                     }
                 }
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                         sql, new String[]{"Y", "Y", "Y", "Y", firstWord, aux, "Y"}, null);
             }
 
@@ -485,7 +497,8 @@ public class ProductDB {
         }
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, " +
                         " B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
@@ -641,7 +654,8 @@ public class ProductDB {
     public int getProductIdByInternalCode(String productCode) {
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT PRODUCT_ID FROM PRODUCT WHERE INTERNAL_CODE = ? AND IS_ACTIVE = ?",
                     new String[]{productCode, "Y",}, null);
             if (c!=null && c.moveToNext()){
