@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.ProductBrandPromotionalCard;
 import com.smartbuilders.smartsales.ecommerce.model.ProductBrandPromotionalSection;
@@ -13,16 +14,19 @@ import com.smartbuilders.smartsales.ecommerce.model.ProductBrandPromotionalSecti
 public class ProductBrandPromotionSectionDB {
 
     private Context mContext;
+    private User mUser;
 
-    public ProductBrandPromotionSectionDB(Context context){
+    public ProductBrandPromotionSectionDB(Context context, User user){
         this.mContext = context;
+        this.mUser = user;
     }
 
     public ProductBrandPromotionalSection getProductBrandPromotionSection () {
         ProductBrandPromotionalSection productBrandPromotionalSection = new ProductBrandPromotionalSection();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "select BRAND_PROMOTIONAL_CARD_ID, BRAND_ID, IMAGE_FILE_NAME, PROMOTIONAL_TEXT, " +
                     " BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
                     " PROMOTIONAL_TEXT_R_COLOR, PROMOTIONAL_TEXT_G_COLOR, PROMOTIONAL_TEXT_B_COLOR " +
