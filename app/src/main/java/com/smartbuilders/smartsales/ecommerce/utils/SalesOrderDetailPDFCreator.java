@@ -78,7 +78,7 @@ public class SalesOrderDetailPDFCreator {
                     userCompany = new Company();
                 }
 
-                currency = (new CurrencyDB(ctx)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(ctx, user));
+                currency = (new CurrencyDB(ctx, user)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(ctx, user));
 
                 //se agrega la informacion del cliente, numero de cotizacion, fecha de emision, etc.
                 addSalesOrderHeader(document, ctx, userCompany, salesOrder);
