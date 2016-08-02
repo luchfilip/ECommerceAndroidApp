@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Banner;
 
@@ -14,16 +15,19 @@ import java.util.ArrayList;
 public class BannerDB {
 
     private Context mContext;
+    private User mUser;
 
-    public BannerDB(Context context){
+    public BannerDB(Context context, User user){
         this.mContext = context;
+        this.mUser = user;
     }
 
     public ArrayList<Banner> getActiveBanners () {
         ArrayList<Banner> activeBanners = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT BANNER_ID, IMAGE_FILE_NAME, PRODUCT_ID, BRAND_ID, SUBCATEGORY_ID, CATEGORY_ID " +
                     " from BANNER where IS_ACTIVE = ?", new String[]{"Y"}, null);
             if(c!=null){
