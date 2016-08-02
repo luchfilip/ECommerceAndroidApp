@@ -86,7 +86,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             }
         });
 
-        Currency currency = (new CurrencyDB(getContext())).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+        Currency currency = (new CurrencyDB(getContext(), mUser))
+                .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
         ((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
                 ? getString(R.string.price_currency_label_detail, currency.getName())
                 : getString(R.string.price_label));
@@ -168,8 +169,10 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
         if(view.findViewById(R.id.product_commercial_package) != null){
             if(mSaleOrderLine.getProduct()!=null && mSaleOrderLine.getProduct().getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                        mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits(), mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
+                ((TextView) view.findViewById(R.id.product_commercial_package))
+                        .setText(getContext().getString(R.string.commercial_package,
+                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits(),
+                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }
