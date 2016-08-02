@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //    private static final int USING_EXTERNAL_STORAGE = 2;
     private String dataBaseName;
 
-    private static final String CREATE_USER_TABLE 	=
+    private static final String CREATE_IDS_USER_TABLE =
             "CREATE TABLE IF NOT EXISTS IDS_USER (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " SERVER_USER_ID INTEGER, " +
@@ -39,12 +39,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY(USER_ID, USER_GROUP))";
 
-    //private static final String CREATE_USER_PROFILE_TABLE 	=
-    //        "CREATE TABLE IF NOT EXISTS USER_PROFILE (" +
-    //                "USER_PROFILE_ID INTEGER NOT NULL, " +
-    //                " NAME VARCHAR(255), " +
-    //                " IS_ACTIVE CHAR(1) DEFAULT 'Y', "+
-    //                " PRIMARY KEY(USER_PROFILE_ID))";
+    private static final String CREATE_IDS_SYNC_LOG_TABLE =
+            "CREATE TABLE IF NOT EXISTS IDS_SYNC_LOG (" +
+                    "SYNC_LOG_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " LOG_TYPE TEXT NOT NULL, " +
+                    " LOG_MESSAGE TEXT, " +
+                    " LOG_MESSAGE_DETAIL TEXT, " +
+                    " LOG_VISIBILITY NUMERIC DEFAULT "+LogSyncData.INVISIBLE+", " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime'))) ";
+
+    private static final String CREATE_IDS_SCHEDULER_SYNC_TABLE =
+            "CREATE TABLE IF NOT EXISTS IDS_SCHEDULER_SYNC (" +
+                    "SCHEDULER_SYNC_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
+                    " USER_ID INTEGER NOT NULL, " +
+                    " HOUR INTEGER NOT NULL, " +
+                    " MINUTE INTEGER NOT NULL, " +
+                    " MONDAY CHAR, " +
+                    " TUESDAY CHAR, " +
+                    " WEDNESDAY CHAR, " +
+                    " THURSDAY CHAR, " +
+                    " FRIDAY CHAR, " +
+                    " SATURDAY CHAR, " +
+                    " SUNDAY CHAR, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
+
+    public static final String CREATE_IDS_SERVER_ADDRESS_BACKUP =
+            "CREATE TABLE IF NOT EXISTS IDS_SERVER_ADDRESS_BACKUP (" +
+                    "SERVER_ADDRESS VARCHAR(255) DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (SERVER_ADDRESS))";
+
+    /**********************************************************************************************/
 
 	public static final String CREATE_PRODUCT =
             "CREATE TABLE IF NOT EXISTS PRODUCT (" +
@@ -233,43 +263,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (APP_PARAMETER_ID))";
-
-    public static final String CREATE_SERVER_ADDRESS_BACKUP =
-            "CREATE TABLE IF NOT EXISTS SERVER_ADDRESS_BACKUP (" +
-                    "SERVER_ADDRESS VARCHAR(255) DEFAULT NULL, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " PRIMARY KEY (SERVER_ADDRESS))";
-
-    /*********************************************************************************************************************/
-
-    private static final String CREATE_LOG_TABLE 	=
-            "CREATE TABLE IF NOT EXISTS IDS_SYNC_LOG (" +
-                    "SYNC_LOG_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " USER_ID INTEGER NOT NULL, " +
-                    " LOG_TYPE TEXT NOT NULL, " +
-                    " LOG_MESSAGE TEXT, " +
-                    " LOG_MESSAGE_DETAIL TEXT, " +
-                    " LOG_VISIBILITY NUMERIC DEFAULT "+LogSyncData.INVISIBLE+", " +
-                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime'))) ";
-
-    private static final String CREATE_SCHEDULER_TABLE 	=
-            "CREATE TABLE IF NOT EXISTS IDS_SCHEDULER_SYNC (" +
-                    "SCHEDULER_SYNC_ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
-                    " USER_ID INTEGER NOT NULL, " +
-                    " HOUR INTEGER NOT NULL, " +
-                    " MINUTE INTEGER NOT NULL, " +
-                    " MONDAY CHAR, " +
-                    " TUESDAY CHAR, " +
-                    " WEDNESDAY CHAR, " +
-                    " THURSDAY CHAR, " +
-                    " FRIDAY CHAR, " +
-                    " SATURDAY CHAR, " +
-                    " SUNDAY CHAR, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
-                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 
     public static final String CREATE_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER (" +
@@ -487,16 +480,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	/**
-	 * 
+	 *
 	 * @param context
 	 * @param user
 	 */
 	public DatabaseHelper(Context context, User user){
-		super(context, 
+		super(context,
 				user.isSaveDBInExternalCard()
 					? context.getExternalFilesDir(null).getAbsolutePath()+ File.separator + ApplicationUtilities.getDatabaseNameByUser(user)
-					: ApplicationUtilities.getDatabaseNameByUser(user), 
-				null, 
+					: ApplicationUtilities.getDatabaseNameByUser(user),
+				null,
 				DATABASE_VERSION);
 		this.dataBaseName = ApplicationUtilities.getDatabaseNameByUser(user);
 	}
@@ -504,8 +497,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		if(this.dataBaseName.equals(DATABASE_NAME)){
-			db.execSQL(CREATE_USER_TABLE);
-            //db.execSQL(CREATE_USER_PROFILE_TABLE);
+			db.execSQL(CREATE_IDS_USER_TABLE);
+            db.execSQL(CREATE_IDS_SYNC_LOG_TABLE);
+            db.execSQL(CREATE_IDS_SCHEDULER_SYNC_TABLE);
+            db.execSQL(CREATE_IDS_SERVER_ADDRESS_BACKUP);
+		}else{
             db.execSQL(CREATE_PRODUCT);
             db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
             db.execSQL(CREATE_PRODUCT_IMAGE);
@@ -525,10 +521,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_BANNER);
             db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
             db.execSQL(CREATE_APP_PARAMETER);
-            db.execSQL(CREATE_SERVER_ADDRESS_BACKUP);
-		}else{
-            db.execSQL(CREATE_LOG_TABLE);
-            db.execSQL(CREATE_SCHEDULER_TABLE);
             db.execSQL(CREATE_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_APP_PARAMETER);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
@@ -547,15 +539,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(this.dataBaseName.equals(DATABASE_NAME)){
-            if(oldVersion<8){
-                db.execSQL(CREATE_SERVER_ADDRESS_BACKUP);
+            if(oldVersion<1){
+
             }
         }else{
-            if(oldVersion<7) {
-                db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
+            if(oldVersion<1) {
+
             }
         }
-
 	}
 
 	@Override
