@@ -334,7 +334,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mOrderLines.size())));
             if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-                Currency currency = (new CurrencyDB(getContext()))
+                Currency currency = (new CurrencyDB(getContext(), mUser))
                         .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
                 mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
                         currency!=null ? currency.getName() : "",
