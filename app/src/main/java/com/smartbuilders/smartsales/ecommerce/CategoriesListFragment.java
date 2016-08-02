@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.smartbuilders.smartsales.ecommerce.adapters.CategoryAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class CategoriesListFragment extends Fragment {
                             mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
-                    productCategories.addAll(new ProductCategoryDB(getContext())
+                    productCategories.addAll(new ProductCategoryDB(getContext(), Utils.getCurrentUser(getContext()))
                             .getActiveProductCategories()) ;
                 } catch (Exception e) {
                     e.printStackTrace();
