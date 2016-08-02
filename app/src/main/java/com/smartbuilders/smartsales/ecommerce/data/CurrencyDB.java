@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.jasgcorp.ids.model.User;
 import com.jasgcorp.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 
@@ -14,15 +15,18 @@ import java.util.ArrayList;
 public class CurrencyDB {
 
     private Context mContext;
+    private User mUser;
 
-    public CurrencyDB(Context context){
+    public CurrencyDB(Context context, User user){
         this.mContext = context;
+        this.mUser = user;
     }
 
     public Currency getActiveCurrencyById(int taxId) {
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX " +
                             " FROM CURRENCY WHERE CURRENCY_ID=? AND IS_ACTIVE=?",
                     new String[]{String.valueOf(taxId), "Y"}, null);
@@ -54,7 +58,8 @@ public class CurrencyDB {
         ArrayList<Currency> activeCurrencies = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT CURRENCY_ID, COUNTRY_NAME, CURRENCY_NAME, CODE, UNICODE_DECIMAL, UNICODE_HEX " +
                             " FROM CURRENCY WHERE IS_ACTIVE=?",
                     new String[]{}, null);
