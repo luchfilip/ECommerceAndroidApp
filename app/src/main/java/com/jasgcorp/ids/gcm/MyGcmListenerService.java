@@ -37,7 +37,7 @@ import com.jasgcorp.ids.utils.DataBaseUtilities;
 import com.jasgcorp.ids.utils.ServerUtilities;
 import com.smartbuilders.smartsales.ecommerce.MainActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.data.ServerAddressBackupDB;
+import com.jasgcorp.ids.data.ServerAddressBackupDB;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
