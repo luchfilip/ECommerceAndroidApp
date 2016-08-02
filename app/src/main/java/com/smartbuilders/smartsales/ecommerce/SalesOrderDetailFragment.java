@@ -109,14 +109,14 @@ public class SalesOrderDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 if (mSalesOrder != null) {
-                                    Currency currency = (new CurrencyDB(getContext()))
+                                    Currency currency = (new CurrencyDB(getContext(), mUser))
                                             .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
 
                                     RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sales_order_lines);
                                     // use this setting to improve performance if you know that changes
                                     // in content do not change the layout size of the RecyclerView
                                     recyclerView.setHasFixedSize(true);
-                                    mLinearLayoutManager = new LinearLayoutManager(getActivity());
+                                    mLinearLayoutManager = new LinearLayoutManager(getContext());
                                     recyclerView.setLayoutManager(mLinearLayoutManager);
                                     recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), orderLines, mUser));
 
