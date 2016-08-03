@@ -6,32 +6,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:686820312802:android:b793fe41ba425585",
-        "android_client_info": {
-          "package_name": "com.smartbuilders.smartsales.ecommerceandroidapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBmzy34I5zKuZyNmmMblU7EPrcgTN3Xfeg"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:686820312802:android:e576e2fd8b4d1572",
         "android_client_info": {
           "package_name": "com.smartbuilders.smartsales.ecommerce"

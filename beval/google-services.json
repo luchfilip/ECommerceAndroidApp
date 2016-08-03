@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "767398413220",
-    "project_id": "ecommerce-android-app-febeca"
+    "project_number": "529456526909",
+    "project_id": "ecommerce-android-app-beval"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:767398413220:android:3891293550309927",
+        "mobilesdk_app_id": "1:529456526909:android:0587064c3928067f",
         "android_client_info": {
-          "package_name": "com.smartbuilders.smartsales.ecommerce.febeca"
+          "package_name": "com.smartbuilders.smartsales.ecommerce.beval"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAhAoau-qOfzUY8cjdB4AYMJ5LoFZrjd_c"
+          "current_key": "AIzaSyBipjybdgbWfIrKvV6lPqatSwvI8CffBzE"
         }
       ],
       "services": {

@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "767398413220",
-    "project_id": "ecommerce-android-app-febeca"
+    "project_number": "921772913385",
+    "project_id": "ecommerce-android-app-sillaca"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:767398413220:android:3891293550309927",
+        "mobilesdk_app_id": "1:921772913385:android:944567034a4d964c",
         "android_client_info": {
-          "package_name": "com.smartbuilders.smartsales.ecommerce.febeca"
+          "package_name": "com.smartbuilders.smartsales.ecommerce.sillaca"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAhAoau-qOfzUY8cjdB4AYMJ5LoFZrjd_c"
+          "current_key": "AIzaSyD2g8nrjyZ388RlPoM7eq7Kt2WOADMO8GY"
         }
       ],
       "services": {
