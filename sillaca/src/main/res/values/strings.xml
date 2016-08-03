@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sillaca C.A.</string>
+    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider.sillaca</string>
+    <string name="authenticator_account_type">com.smartbuilders.smartsales.auth.sillaca</string>
+    <string name="ids_user_group_name">catalogo-febeca</string>
+    <string name="company_name">Sillaca C.A.</string>
+    <string name="company_host_name">www.sillaca.com</string>
+    <string name="welcome_message_login_activity">Ahora Sillaca está en tus manos</string>
+</resources>

@@ -331,7 +331,6 @@
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
     <string name="smallest_width">default</string>
-    <string name="package_name_febeca">com.smartbuilders.smartsales.ecommerceandroidapp.febeca</string>
     <string name="price_detail">Precio (%1$s): %2$s</string>
     <string name="save_images_in_device">Guardar imagenes en el dispositivo</string>
     <string name="load_thumb_images">Mantener sincronizadas imagenes miniatura de los productos</string>

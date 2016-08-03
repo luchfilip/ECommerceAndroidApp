@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ECommerceAndroidApp.iml" filepath="$PROJECT_DIR$/ECommerceAndroidApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beval/beval.iml" filepath="$PROJECT_DIR$/beval/beval.iml" />
       <module fileurl="file://$PROJECT_DIR$/febeca/febeca.iml" filepath="$PROJECT_DIR$/febeca/febeca.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sillaca/sillaca.iml" filepath="$PROJECT_DIR$/sillaca/sillaca.iml" />
     </modules>
   </component>
 </project>
