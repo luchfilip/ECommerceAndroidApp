@@ -70,14 +70,16 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class));
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.search) {
+            startActivity(new Intent(this, SearchResultsActivity.class));
+            return true;
+        } else if (i == android.R.id.home) {
+            onBackPressed();
+
+            return super.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

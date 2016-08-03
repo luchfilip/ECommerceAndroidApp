@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimaryFebeca</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkFebeca</item>
+        <item name="colorAccent">@color/colorAccentFebeca</item>
+        <item name="logo">@drawable/actionbar_logo_febeca</item>
+        <item name="displayOptions">showHome|useLogo</item>
+        <item name="android:label">@string/app_name</item>
+    </style>
+</resources>

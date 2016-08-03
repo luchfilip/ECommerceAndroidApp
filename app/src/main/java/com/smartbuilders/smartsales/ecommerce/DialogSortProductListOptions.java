@@ -83,25 +83,24 @@ public class DialogSortProductListOptions extends DialogFragment {
                 .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId){
-                            case R.id.sort_by_product_name_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC, mUser);
-                                break;
-                            case R.id.sort_by_product_name_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC, mUser);
-                                break;
-                            case R.id.sort_by_product_internal_code_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC, mUser);
-                                break;
-                            case R.id.sort_by_product_internal_code_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC, mUser);
-                                break;
-                            case R.id.sort_by_product_availability_asc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_ASC, mUser);
-                                break;
-                            case R.id.sort_by_product_availability_desc:
-                                ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_DESC, mUser);
-                                break;
+                        if (checkedId == R.id.sort_by_product_name_asc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_ASC, mUser);
+
+                        } else if (checkedId == R.id.sort_by_product_name_desc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_NAME_DESC, mUser);
+
+                        } else if (checkedId == R.id.sort_by_product_internal_code_asc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_ASC, mUser);
+
+                        } else if (checkedId == R.id.sort_by_product_internal_code_desc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_INTERNAL_CODE_DESC, mUser);
+
+                        } else if (checkedId == R.id.sort_by_product_availability_asc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_ASC, mUser);
+
+                        } else if (checkedId == R.id.sort_by_product_availability_desc) {
+                            ((Callback) getActivity()).sortProductsList(SORT_BY_PRODUCT_AVAILABILITY_DESC, mUser);
+
                         }
                         dismiss();
                     }

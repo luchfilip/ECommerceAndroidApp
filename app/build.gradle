@@ -1,12 +1,13 @@
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.android.application'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.smartbuilders.smartsales.ecommerce"
+        //applicationId "com.smartbuilders.smartsales.ecommerce"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 10

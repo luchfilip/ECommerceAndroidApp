@@ -315,13 +315,13 @@ public class ProductDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_share:
-                mShareActionProvider.setShareIntent(mShareIntent);
-                break;
-            case R.id.search:
-                startActivity(new Intent(getContext(), SearchResultsActivity.class));
-                return true;
+        int i = item.getItemId();
+        if (i == R.id.action_share) {
+            mShareActionProvider.setShareIntent(mShareIntent);
+
+        } else if (i == R.id.search) {
+            startActivity(new Intent(getContext(), SearchResultsActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

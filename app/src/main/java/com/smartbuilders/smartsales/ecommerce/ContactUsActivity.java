@@ -46,12 +46,12 @@ public class ContactUsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.search:
-                startActivity(new Intent(this, SearchResultsActivity.class));
-                return true;
-            case android.R.id.home:
-                finish();
+        int i = menuItem.getItemId();
+        if (i == R.id.search) {
+            startActivity(new Intent(this, SearchResultsActivity.class));
+            return true;
+        } else if (i == android.R.id.home) {
+            finish();
         }
         return (super.onOptionsItemSelected(menuItem));
     }

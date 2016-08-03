@@ -233,20 +233,20 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_share:
-                mShareActionProvider.setShareIntent(mShareIntent);
-                break;
-            case R.id.action_download:
-                if(mShareIntent!=null){
-                    Utils.createPdfFileInDownloadFolder(getContext(),
-                            getContext().getCacheDir() + File.separator + (fileName+".pdf"),
-                            fileName+".pdf");
-                }
-                break;
-            case R.id.clear_wish_list:
-                clearWishList();
-                break;
+        int i = item.getItemId();
+        if (i == R.id.action_share) {
+            mShareActionProvider.setShareIntent(mShareIntent);
+
+        } else if (i == R.id.action_download) {
+            if (mShareIntent != null) {
+                Utils.createPdfFileInDownloadFolder(getContext(),
+                        getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                        fileName + ".pdf");
+            }
+
+        } else if (i == R.id.clear_wish_list) {
+            clearWishList();
+
         }
         return super.onOptionsItemSelected(item);
     }

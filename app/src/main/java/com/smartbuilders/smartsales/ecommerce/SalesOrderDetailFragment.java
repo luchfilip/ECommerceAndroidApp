@@ -219,17 +219,17 @@ public class SalesOrderDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_share:
-                mShareActionProvider.setShareIntent(mShareIntent);
-                break;
-            case R.id.action_download:
-                if(mShareIntent!=null){
-                    Utils.createPdfFileInDownloadFolder(getContext(),
-                            getContext().getCacheDir() + File.separator + (fileName+".pdf"),
-                            fileName+".pdf");
-                }
-                break;
+        int i = item.getItemId();
+        if (i == R.id.action_share) {
+            mShareActionProvider.setShareIntent(mShareIntent);
+
+        } else if (i == R.id.action_download) {
+            if (mShareIntent != null) {
+                Utils.createPdfFileInDownloadFolder(getContext(),
+                        getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                        fileName + ".pdf");
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

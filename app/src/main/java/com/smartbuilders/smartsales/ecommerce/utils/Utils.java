@@ -734,82 +734,81 @@ public class Utils {
      * @param context
      */
     public static void navigationItemSelectedBehave(int itemId, Context context) {
-        switch (itemId){
-            case R.id.nav_home:
-                context.startActivity(new Intent(context, MainActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_shopping_cart:
-                context.startActivity(new Intent(context, ShoppingCartActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_shopping_sale:
-                User user = getCurrentUser(context);
-                if(user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                    try {
-                        context.startActivity(new Intent(context, ShoppingSaleActivity.class)
-                                .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID,
-                                        Utils.getAppCurrentBusinessPartnerId(context, user))
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        new AlertDialog.Builder(context)
-                                .setMessage(e.getMessage())
-                                .setPositiveButton(R.string.accept, null)
-                                .show();
-                    }
-                }else{
-                    context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
-                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                }
-                break;
-            case R.id.nav_recommended_products_list:
-                context.startActivity(new Intent(context, RecommendedProductsListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_wish_list:
-                context.startActivity(new Intent(context, WishListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_orders:
-                context.startActivity(new Intent(context, OrdersListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_sales_orders:
-                context.startActivity(new Intent(context, SalesOrdersListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_settings:
-                context.startActivity(new Intent(context, SettingsActivity.class));
-                break;
-            case R.id.nav_business_partners:
-                context.startActivity(new Intent(context, BusinessPartnersListActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_share:
-                try{
-                    showPromptShareApp(context);
-                }catch(Throwable e){
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.nav_my_company:
-                context.startActivity(new Intent(context, CompanyActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_conctac_us:
-                context.startActivity(new Intent(context, ContactUsActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                break;
-            case R.id.nav_report_error:
-                Intent contactUsEmailIntent = new Intent(Intent.ACTION_SEND);
-                contactUsEmailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                // need this to prompts email client only
-                contactUsEmailIntent.setType("message/rfc822");
-                contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"smartBuilders.ve@gmail.com"});
+        if (itemId == R.id.nav_home) {
+            context.startActivity(new Intent(context, MainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
-                context.startActivity(Intent.createChooser(contactUsEmailIntent, context.getString(R.string.send_error_report)));
-                break;
+        } else if (itemId == R.id.nav_shopping_cart) {
+            context.startActivity(new Intent(context, ShoppingCartActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_shopping_sale) {
+            User user = getCurrentUser(context);
+            if (user != null && user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                try {
+                    context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                            .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID,
+                                    Utils.getAppCurrentBusinessPartnerId(context, user))
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    new AlertDialog.Builder(context)
+                            .setMessage(e.getMessage())
+                            .setPositiveButton(R.string.accept, null)
+                            .show();
+                }
+            } else {
+                context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            }
+
+        } else if (itemId == R.id.nav_recommended_products_list) {
+            context.startActivity(new Intent(context, RecommendedProductsListActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_wish_list) {
+            context.startActivity(new Intent(context, WishListActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_orders) {
+            context.startActivity(new Intent(context, OrdersListActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_sales_orders) {
+            context.startActivity(new Intent(context, SalesOrdersListActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_settings) {
+            context.startActivity(new Intent(context, SettingsActivity.class));
+
+        } else if (itemId == R.id.nav_business_partners) {
+            context.startActivity(new Intent(context, BusinessPartnersListActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_share) {
+            try {
+                showPromptShareApp(context);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+        } else if (itemId == R.id.nav_my_company) {
+            context.startActivity(new Intent(context, CompanyActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_conctac_us) {
+            context.startActivity(new Intent(context, ContactUsActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
+        } else if (itemId == R.id.nav_report_error) {
+            Intent contactUsEmailIntent = new Intent(Intent.ACTION_SEND);
+            contactUsEmailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            // need this to prompts email client only
+            contactUsEmailIntent.setType("message/rfc822");
+            contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"smartBuilders.ve@gmail.com"});
+
+            context.startActivity(Intent.createChooser(contactUsEmailIntent, context.getString(R.string.send_error_report)));
+
         }
     }
 
