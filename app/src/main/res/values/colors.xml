@@ -5,6 +5,37 @@
     <color name="colorPrimaryLight">#640692d6</color>
     <color name="colorPrimaryDark">@color/black</color>
     <color name="colorAccent">#cccccc</color>
+
+    <color name="colorPrimaryFebeca">#009bef</color>
+    <color name="colorPrimaryMediumFebeca">#4db5e7</color>
+    <color name="colorPrimaryLightFebeca">#640692d6</color>
+    <color name="colorPrimaryDarkFebeca">@color/black</color>
+    <color name="colorAccentFebeca">#cccccc</color>
+
+    <color name="colorPrimarySillaca">#E3006E</color>
+    <color name="colorPrimaryMediumSillaca">#ff409c</color>
+    <color name="colorPrimaryLightSillaca">#ff79ba</color>
+    <color name="colorPrimaryDarkSillaca">@color/black</color>
+    <color name="colorAccentSillaca">#cccccc</color>
+
+    <color name="colorPrimaryBeval">#009bef</color>
+    <color name="colorPrimaryMediumBeval">#4db5e7</color>
+    <color name="colorPrimaryLightBeval">#640692d6</color>
+    <color name="colorPrimaryDarkBeval">@color/black</color>
+    <color name="colorAccentBeval">#cccccc</color>
+
+    <color name="colorPrimaryCofersa">#009bef</color>
+    <color name="colorPrimaryMediumCofersa">#4db5e7</color>
+    <color name="colorPrimaryLightCofersa">#640692d6</color>
+    <color name="colorPrimaryDarkCofersa">@color/black</color>
+    <color name="colorAccentCofersa">#cccccc</color>
+
+    <color name="colorPrimaryGrupoRivera">#009bef</color>
+    <color name="colorPrimaryMediumGrupoRivera">#4db5e7</color>
+    <color name="colorPrimaryLightGrupoRivera">#640692d6</color>
+    <color name="colorPrimaryDarkGrupoRivera">@color/black</color>
+    <color name="colorAccentGrupoRivera">#cccccc</color>
+
     <color name="link">#0000EE</color>
     <color name="lateral_menu_bg_color">#FEFEFE</color>
     <color name="ratingBar_label_color">#222222</color>
