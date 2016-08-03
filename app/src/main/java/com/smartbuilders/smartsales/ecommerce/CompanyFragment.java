@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;

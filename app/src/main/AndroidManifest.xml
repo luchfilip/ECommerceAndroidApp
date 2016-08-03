@@ -102,7 +102,7 @@
             android:name=".ProductDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.jasgcorp.ids.AuthenticatorActivity" />
+            android:name="com.smartbuilders.ids.AuthenticatorActivity" />
 
         <provider
             android:name=".providers.CachedFileProvider"
@@ -110,19 +110,19 @@
             android:exported="true"
             android:multiprocess="true" />
         <provider
-            android:name="com.jasgcorp.ids.providers.DataBaseContentProvider"
+            android:name="com.smartbuilders.ids.providers.DataBaseContentProvider"
             android:authorities="com.smartbuilders.smartsales.providers.Syncadapter"
             android:exported="false"
             android:syncable="true"
             tools:ignore="ExportedContentProvider" />
-        <!--<provider-->
-            <!--android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"-->
-            <!--android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca"-->
-            <!--android:exported="true"-->
-            <!--android:syncable="true"-->
-            <!--tools:ignore="ExportedContentProvider" />-->
+        <provider
+            android:name="com.smartbuilders.ids.providers.SynchronizerContentProvider"
+            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider"
+            android:exported="true"
+            android:syncable="true"
+            tools:ignore="ExportedContentProvider" />
 
-        <service android:name="com.jasgcorp.ids.syncadapter.authenticator.AuthenticatorService">
+        <service android:name="com.smartbuilders.ids.syncadapter.authenticator.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -132,7 +132,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name="com.jasgcorp.ids.syncadapter.SyncService"
+            android:name="com.smartbuilders.ids.syncadapter.SyncService"
             android:exported="true"
             android:process=":sync">
             <intent-filter>
@@ -189,26 +189,26 @@
         </receiver>
 
         <service
-            android:name="com.jasgcorp.ids.gcm.MyGcmListenerService"
+            android:name="com.smartbuilders.ids.gcm.MyGcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.jasgcorp.ids.gcm.MyInstanceIDListenerService"
+            android:name="com.smartbuilders.ids.gcm.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="com.jasgcorp.ids.gcm.RegistrationIntentService"
+            android:name="com.smartbuilders.ids.gcm.RegistrationIntentService"
             android:exported="false"></service>
         <!-- GCM -->
 
         <receiver
-            android:name="com.jasgcorp.ids.system.broadcastreceivers.AlarmReceiver"
+            android:name="com.smartbuilders.ids.broadcastreceivers.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.jasgcorp.ids.scheduler.AlarmReceiver.Action" />
@@ -221,7 +221,7 @@
         a una red de wi-fi, etc.
         -->
         <receiver
-            android:name="com.jasgcorp.ids.system.broadcastreceivers.NetworkReceiver"
+            android:name="com.smartbuilders.ids.broadcastreceivers.NetworkReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

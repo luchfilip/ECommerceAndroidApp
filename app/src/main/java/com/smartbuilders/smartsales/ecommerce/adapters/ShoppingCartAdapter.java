@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;

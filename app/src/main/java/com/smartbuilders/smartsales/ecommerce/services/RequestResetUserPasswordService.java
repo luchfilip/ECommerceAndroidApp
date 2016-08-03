@@ -3,7 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.services;
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.jasgcorp.ids.utils.ConsumeWebService;
+import com.smartbuilders.ids.utils.ConsumeWebService;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordFragment;
 

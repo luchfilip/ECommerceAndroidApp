@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;

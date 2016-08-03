@@ -16,9 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;

@@ -2,7 +2,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 
 import android.content.Context;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.BannerSection;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;

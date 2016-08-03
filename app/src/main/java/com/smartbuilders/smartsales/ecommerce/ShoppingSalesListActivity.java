@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSalesListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;

@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;

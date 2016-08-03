@@ -3,9 +3,9 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
+import com.smartbuilders.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;

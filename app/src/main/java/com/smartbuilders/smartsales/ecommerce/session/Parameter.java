@@ -2,8 +2,8 @@ package com.smartbuilders.smartsales.ecommerce.session;
 
 import android.content.Context;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.ParameterDB;
 

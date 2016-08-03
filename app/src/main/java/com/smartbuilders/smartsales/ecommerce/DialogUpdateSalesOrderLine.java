@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSalesListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;

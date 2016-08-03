@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.io.File;

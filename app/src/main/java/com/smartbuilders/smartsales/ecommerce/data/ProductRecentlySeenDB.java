@@ -3,8 +3,8 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;

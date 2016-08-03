@@ -19,7 +19,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;

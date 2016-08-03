@@ -9,8 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;

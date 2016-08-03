@@ -23,10 +23,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
 
-import com.jasgcorp.ids.utils.ApplicationUtilities;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 

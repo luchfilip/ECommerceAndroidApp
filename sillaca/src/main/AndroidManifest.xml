@@ -19,13 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <provider
-            android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"
-            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.sillaca"
-            android:exported="true"
-            android:syncable="true"
-            tools:ignore="ExportedContentProvider" />
     </application>
 
 </manifest>

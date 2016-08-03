@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.model.UserProfile;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.businessRules.UserBusinessPartnerBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;

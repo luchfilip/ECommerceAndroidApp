@@ -2,7 +2,7 @@ package com.smartbuilders.smartsales.ecommerce.businessRules;
 
 import android.content.Context;
 
-import com.jasgcorp.ids.model.User;
+import com.smartbuilders.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 
