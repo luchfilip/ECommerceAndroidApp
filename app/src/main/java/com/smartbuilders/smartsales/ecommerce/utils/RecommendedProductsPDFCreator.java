@@ -61,7 +61,7 @@ public class RecommendedProductsPDFCreator {
                 try{
                     //the company logo is stored in the assets which is read only
                     //get the logo and print on the document
-                    InputStream inputStream = ctx.getAssets().open("logoFebeca.jpeg");
+                    InputStream inputStream = ctx.getAssets().open("companyLogo.jpg");
                     Bitmap bmp =  BitmapFactory.decodeStream(inputStream);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);

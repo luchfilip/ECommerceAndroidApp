@@ -111,7 +111,7 @@ public class OrderDetailPDFCreator {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx).writeSelectedRows(0, -1, 60, 760,
+            getHeaderTable(i, n, userCompany, ctx).writeSelectedRows(0, -1, 60, 780,
                     stamper.getOverContent(i));
         }
     }
@@ -147,17 +147,26 @@ public class OrderDetailPDFCreator {
 
         PdfPCell companyLogoCell = new PdfPCell();
 
-        try{
-            Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("logoFebeca.jpeg"));
-            if(bmp!=null) {
-                bmp = getResizedBitmap(bmp, 230, 80);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Image companyLogoImage = Image.getInstance(stream.toByteArray());
-                companyLogoCell = new PdfPCell(companyLogoImage, true);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
+//        try{
+//            Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
+//            if(bmp!=null) {
+//                bmp = getResizedBitmap(bmp, 230, 80);
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                Image companyLogoImage = Image.getInstance(stream.toByteArray());
+//                companyLogoCell = new PdfPCell(companyLogoImage, true);
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+        Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            Image companyLogo = Image.getInstance(stream.toByteArray());
+            companyLogo.setAbsolutePosition(50,680);
+            //companyLogo.scalePercent(11);
+            companyLogoCell = new PdfPCell(companyLogo, true);
         }
         companyLogoCell.setPadding(3);
         companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);

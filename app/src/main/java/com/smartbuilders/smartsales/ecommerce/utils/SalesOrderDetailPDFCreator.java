@@ -26,7 +26,9 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
@@ -72,16 +74,23 @@ public class SalesOrderDetailPDFCreator {
 
                 PdfWriter.getInstance(document, byteArrayOutputStream);
                 document.open();
-
-                Company userCompany = (new UserCompanyDB(ctx, user)).getUserCompany();
-                if(userCompany==null){
-                    userCompany = new Company();
+                Company company;
+                if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                    company = (new UserCompanyDB(ctx, user)).getUserCompany();
+                    if(company==null){
+                        company = new Company();
+                    }
+                }else{
+                    company = (new CompanyDB(ctx, user)).getCompany();
+                    if(company==null){
+                        company = new Company();
+                    }
                 }
 
                 currency = (new CurrencyDB(ctx, user)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(ctx, user));
 
                 //se agrega la informacion del cliente, numero de cotizacion, fecha de emision, etc.
-                addSalesOrderHeader(document, ctx, userCompany, salesOrder);
+                addSalesOrderHeader(document, ctx, company, salesOrder);
 
                 //agrega el titulo del documento.
                 addSalesOrderTitle(document, ctx);
@@ -101,7 +110,7 @@ public class SalesOrderDetailPDFCreator {
                         new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
 
                 //Se le agrega la cabecera a cada pagina
-                addPageHeader(reader, stamper, userCompany, ctx, user);
+                addPageHeader(reader, stamper, company, ctx, user);
 
                 // Close the stamper
                 stamper.close();
@@ -118,7 +127,7 @@ public class SalesOrderDetailPDFCreator {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx, user).writeSelectedRows(0, -1, 60, 760,
+            getHeaderTable(i, n, userCompany, ctx, user).writeSelectedRows(0, -1, 60, 780,
                     stamper.getOverContent(i));
         }
     }
@@ -154,18 +163,44 @@ public class SalesOrderDetailPDFCreator {
 
         PdfPCell companyLogoCell = new PdfPCell();
 
-        try{
-            Bitmap bmp = Utils.getImageFromUserCompanyDir(ctx, user);
-            if(bmp!=null) {
-                bmp = getResizedBitmap(bmp, 230, 80);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Image companyLogoImage = Image.getInstance(stream.toByteArray());
-                companyLogoCell = new PdfPCell(companyLogoImage, true);
+        if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+            try{
+                Bitmap bmp = Utils.getImageFromUserCompanyDir(ctx, user);
+                if(bmp!=null) {
+                    bmp = getResizedBitmap(bmp, 230, 80);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    Image companyLogoImage = Image.getInstance(stream.toByteArray());
+                    companyLogoCell = new PdfPCell(companyLogoImage, true);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
-        }catch(Exception e){
-            e.printStackTrace();
+        } else {
+            try{
+//                Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
+//                if(bmp!=null) {
+//                    bmp = getResizedBitmap(bmp, 230, 80);
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                    Image companyLogoImage = Image.getInstance(stream.toByteArray());
+//                    companyLogoCell = new PdfPCell(companyLogoImage, true);
+//                }
+                Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
+                if(bmp!=null){
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    Image companyLogo = Image.getInstance(stream.toByteArray());
+                    companyLogo.setAbsolutePosition(50,680);
+                    //companyLogo.scalePercent(11);
+                    companyLogoCell = new PdfPCell(companyLogo, true);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
+
+
         companyLogoCell.setPadding(3);
         companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         companyLogoCell.disableBorderSide(Rectangle.UNDEFINED);

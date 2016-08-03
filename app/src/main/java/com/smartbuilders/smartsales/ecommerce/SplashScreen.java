@@ -56,6 +56,7 @@ public class SplashScreen extends AppCompatActivity {
                 Bundle extras = intent.getExtras();
                 if(extras!=null){
                     if(extras.containsKey(SyncAdapter.USER_ID) && mUser !=null
+                            && extras.getString(SyncAdapter.USER_ID)!=null
                             && extras.getString(SyncAdapter.USER_ID).equals(mUser.getUserId())){
                         if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
@@ -131,7 +132,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-                if (availableAccounts != null && availableAccounts.length > 0) {
+                if (availableAccounts.length > 0) {
                     checkInitialLoad(mAccountManager, availableAccounts[0]);
                 }
             }
