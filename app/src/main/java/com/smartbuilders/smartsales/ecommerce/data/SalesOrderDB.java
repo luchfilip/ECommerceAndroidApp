@@ -276,7 +276,7 @@ public class SalesOrderDB {
         if((orderLines != null && insertOrderLinesInDB) || activeShoppingSalesLineNumber>0){
             int salesOrderId;
             try {
-                salesOrderId = getMaxSalesOrderId() + 1;
+                salesOrderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER");
 
                 double subTotal = SalesOrderBR.getSubTotalAmount(orderLines),
                         tax = SalesOrderBR.getTaxAmount(orderLines),
@@ -362,30 +362,5 @@ public class SalesOrderDB {
             return e.getMessage();
         }
         return null;
-    }
-
-    private int getMaxSalesOrderId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(ECOMMERCE_SALES_ORDER_ID) FROM ECOMMERCE_SALES_ORDER WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
     }
 }

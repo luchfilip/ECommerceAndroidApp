@@ -253,7 +253,7 @@ public class OrderLineDB {
                                 double productTaxPercentage, String docType, Integer orderId) {
         try {
             OrderLine ol = new OrderLine();
-            ol.setId(getMaxOrderLineId() + 1);
+            ol.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER_LINE"));
             ol.setProductId(productId);
             ol.setPrice(productPrice);
             ol.setQuantityOrdered(qtyRequested);
@@ -373,33 +373,6 @@ public class OrderLineDB {
         return 0;
     }
 
-    //public boolean isProductInWishList(int productId) {
-    //    Cursor c = null;
-    //    try {
-    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-    //                        .build(), null,
-    //                "SELECT COUNT(*) FROM ECOMMERCE_ORDER_LINE " +
-    //                " WHERE PRODUCT_ID=? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE=? AND IS_ACTIVE = ?",
-    //                new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-    //                        String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"}, null);
-    //        if(c!=null && c.moveToNext()){
-    //            return c.getInt(0)>0;
-    //        }
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    } finally {
-    //        if(c!=null){
-    //            try {
-    //                c.close();
-    //            } catch (Exception e){
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //    return false;
-    //}
-
     public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
         return getOrderLineByProductIdAndDocType(productId, SHOPPING_CART_DOC_TYPE);
     }
@@ -446,31 +419,6 @@ public class OrderLineDB {
             }
         }
         return null;
-    }
-
-    private int getMaxOrderLineId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(ECOMMERCE_ORDER_LINE_ID) FROM ECOMMERCE_ORDER_LINE WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-               return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
     }
 
     public int updateProductAvailabilitiesInWishList(){

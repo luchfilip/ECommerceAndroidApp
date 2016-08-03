@@ -128,7 +128,7 @@ public class SalesOrderLineDB {
                                 double productTaxPercentage, String docType, Integer orderId, int businessPartnerId) {
         try {
             SalesOrderLine salesOrderLine = new SalesOrderLine();
-            salesOrderLine.setId(getMaxSalesOrderLineId() + 1);
+            salesOrderLine.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER_LINE"));
             salesOrderLine.setProductId(productId);
             salesOrderLine.setPrice(productPrice);
             salesOrderLine.setQuantityOrdered(qtyRequested);
@@ -381,30 +381,4 @@ public class SalesOrderLineDB {
         }
         return null;
     }
-
-    private int getMaxSalesOrderLineId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(ECOMMERCE_SALES_ORDER_LINE_ID) FROM ECOMMERCE_SALES_ORDER_LINE WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
-    }
-
 }

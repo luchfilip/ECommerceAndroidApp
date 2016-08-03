@@ -67,7 +67,7 @@ public class UserBusinessPartnerDB {
 
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
         try {
-            int userBusinessPartnerId = getMaxUserBusinessPartnerId() + 1;
+            int userBusinessPartnerId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "USER_BUSINESS_PARTNER");
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
@@ -193,30 +193,4 @@ public class UserBusinessPartnerDB {
         }
         return null;
     }
-
-    private int getMaxUserBusinessPartnerId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null,
-                    "select MAX(USER_BUSINESS_PARTNER_ID) from USER_BUSINESS_PARTNER where USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(c!=null){
-                try {
-                    c.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
-    }
-
 }

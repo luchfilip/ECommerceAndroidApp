@@ -41,10 +41,10 @@ public class RecentSearchDB {
                         .build(), null,
                         "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
                                 " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        new String[]{String.valueOf(getMaxRecentSearchId() + 1), String.valueOf(mUser.getServerUserId()),
-                                String.valueOf(productId), String.valueOf(subCategoryId), text,
-                                DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(mContext),
-                                mUser.getUserName(), Utils.getMacAddress(mContext)});
+                        new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "RECENT_SEARCH")),
+                                String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
+                                String.valueOf(subCategoryId), text, DateFormat.getCurrentDateTimeSQLFormat(),
+                                Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -121,30 +121,5 @@ public class RecentSearchDB {
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    private int getMaxRecentSearchId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(RECENT_SEARCH_ID) FROM RECENT_SEARCH WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
     }
 }

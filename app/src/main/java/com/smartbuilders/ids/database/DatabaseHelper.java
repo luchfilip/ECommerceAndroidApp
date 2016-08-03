@@ -470,6 +470,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " columnCount INTEGER DEFAULT NULL)";
 
+    public static final String CREATE_USER_TABLE_MAX_ID =
+            "CREATE TABLE IF NOT EXISTS USER_TABLE_MAX_ID (" +
+                    "USER_ID INTEGER NOT NULL, " +
+                    " TABLE_NAME VARCHAR(255) NOT NULL, " +
+                    " ID INTEGER NOT NULL, " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
+                    " APP_VERSION VARCHAR(128) NOT NULL, " +
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (USER_ID, TABLE_NAME, ID))";
+
 	/**
 	 * 
 	 * @param context
@@ -534,6 +546,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_COMPANY);
             db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
+            db.execSQL(CREATE_USER_TABLE_MAX_ID);
 		}
 	}
 
@@ -544,8 +557,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             }
         }else{
-            if(oldVersion<1) {
-
+            if(oldVersion<10) {
+                db.execSQL(CREATE_USER_TABLE_MAX_ID);
             }
         }
 	}

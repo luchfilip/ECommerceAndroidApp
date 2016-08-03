@@ -32,7 +32,7 @@ public class ProductRecentlySeenDB {
                     "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, " +
                         " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(getMaxProductRecentlySeenId() + 1), String.valueOf(businessPartnerId),
+                    new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "RECENT_SEARCH")), String.valueOf(businessPartnerId),
                             String.valueOf(mUser.getServerUserId()), String.valueOf(productId), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
@@ -79,30 +79,5 @@ public class ProductRecentlySeenDB {
             }
         }
         return products;
-    }
-
-    private int getMaxProductRecentlySeenId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(PRODUCT_RECENTLY_SEEN_ID) FROM PRODUCT_RECENTLY_SEEN WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
     }
 }
