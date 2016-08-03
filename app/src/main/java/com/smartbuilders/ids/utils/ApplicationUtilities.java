@@ -112,12 +112,6 @@ public class ApplicationUtilities {
 	public static final String ST_USER_NOT_EXIST_IN_SERVER = "USER_NOT_EXIST_IN_SERVER";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
-	
-	public static final String FEBECA_GCM_SENDER_ID = "767398413220";
-	public static final String FEBECA_GCM_SERVER_API_KEY = "AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U";
-
-	public static final String GCM_SENDER_ID = "686820312802";
-	public static final String GCM_SERVER_API_KEY = "AIzaSyCssmP6m7DSy-N0lfcR8qZiZSbxH9pQN4Y";
     
     public static final String TIME_FORMAT_1 = "%02d:%02d:%02d";
     public static final String TIME_FORMAT_2 = "%02d H, %02d m, %02d s";
