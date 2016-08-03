@@ -115,12 +115,12 @@
             android:exported="false"
             android:syncable="true"
             tools:ignore="ExportedContentProvider" />
-        <provider
-            android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"
-            android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca"
-            android:exported="true"
-            android:syncable="true"
-            tools:ignore="ExportedContentProvider" />
+        <!--<provider-->
+            <!--android:name="com.jasgcorp.ids.providers.SynchronizerContentProvider"-->
+            <!--android:authorities="com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca"-->
+            <!--android:exported="true"-->
+            <!--android:syncable="true"-->
+            <!--tools:ignore="ExportedContentProvider" />-->
 
         <service android:name="com.jasgcorp.ids.syncadapter.authenticator.AuthenticatorService">
             <intent-filter>

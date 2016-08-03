@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Febeca C.A.</string>
 
-    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca</string>
-    <string name="authenticator_account_type">com.smartbuilders.smartsales.auth.febeca</string>
+    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider</string>
+    <string name="authenticator_account_type">com.smartbuilders.smartsales.auth</string>
     <string name="ids_user_group_name">catalogo-febeca</string>
 
     <string name="navigation_drawer_open">Abrir panel de navegación</string>

@@ -30,8 +30,8 @@ import android.support.annotation.NonNull;
  */
 public class SynchronizerContentProvider extends ContentProvider{
 	
-	public static final String AUTHORITY =
-            "com.smartbuilders.smartsales.providers.SynchronizerContentProvider.febeca";
+	private static final String AUTHORITY =
+            "com.smartbuilders.smartsales.providers.SynchronizerContentProvider.sillaca";
 	
 	private static final Uri CONTENT_URI 					= Uri.parse("content://"+AUTHORITY);
 	
