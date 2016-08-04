@@ -185,6 +185,10 @@ public class ProductDetailFragment extends Fragment {
                                             }
                                         }
                                     });
+                                    if (TextUtils.isEmpty(mProduct.getImageFileName())) {
+                                        view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
+                                    }
+
 
                                     if (!relatedProductsByShopping.isEmpty()) {
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);

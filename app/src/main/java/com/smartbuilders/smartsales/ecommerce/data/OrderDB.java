@@ -110,7 +110,7 @@ public class OrderDB {
         if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
             int orderId;
             try {
-                orderId = getMaxOrderId() + 1;
+                orderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER");
 
                 double subTotal = OrderBR.getSubTotalAmount(orderLines),
                         tax = OrderBR.getTaxAmount(orderLines),
@@ -264,30 +264,5 @@ public class OrderDB {
         //se eliminan los pedidos que no tienen businessPartner asociado.
         activeOrders.removeAll(ordersToRemove);
         return activeOrders;
-    }
-
-    private int getMaxOrderId(){
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                    null,
-                    "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE USER_ID = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if(c != null) {
-                try {
-                    c.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
     }
 }

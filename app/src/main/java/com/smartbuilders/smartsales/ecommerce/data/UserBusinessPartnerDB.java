@@ -67,7 +67,6 @@ public class UserBusinessPartnerDB {
 
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
         try {
-            int userBusinessPartnerId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "USER_BUSINESS_PARTNER");
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
@@ -75,8 +74,9 @@ public class UserBusinessPartnerDB {
                     "INSERT INTO USER_BUSINESS_PARTNER (USER_BUSINESS_PARTNER_ID, USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                    new String[]{String.valueOf(userBusinessPartnerId), String.valueOf(mUser.getServerUserId()),
-                            businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
+                    new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "USER_BUSINESS_PARTNER")),
+                            String.valueOf(mUser.getServerUserId()), businessPartner.getName(),
+                            businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
                             businessPartner.getPhoneNumber(), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});

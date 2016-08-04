@@ -155,7 +155,7 @@ public class Utils {
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");
         shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - http://"
-                + context.getString(R.string.company_host_name) + "?product="+product.getInternalCode());
+                + context.getString(R.string.company_host_name) + "/?product="+product.getInternalCode());
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + File.separator + fileName));
         return shareIntent;

@@ -71,7 +71,7 @@ public class WishListPDFCreator {
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     Image companyLogo = Image.getInstance(stream.toByteArray());
                     companyLogo.setAbsolutePosition(50,680);
-                    companyLogo.scalePercent(60);
+                    companyLogo.scalePercent(12);
                     document.add(companyLogo);
                 }catch(Exception e){
                     e.printStackTrace();
