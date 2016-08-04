@@ -121,4 +121,13 @@ public class Parameter {
     public static String getProductRatingBarLabelText(Context context, User user){
         return ParameterDB.getParameterStringValue(context, user, ParameterDB.RATING_BAR_LABEL_TEXT, "");
     }
+
+    /**
+     * devuelve el correo electronico que se usa cuando se reportan errores de la aplicacion
+     * @param context
+     * @return
+     */
+    public static String getReportErrorEmail(Context context, User user){
+        return ParameterDB.getParameterStringValue(context, user, ParameterDB.REPORT_ERROR_EMAIL, "");
+    }
 }
