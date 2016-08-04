@@ -1469,9 +1469,9 @@ public class ApplicationUtilities {
     }
 
 	public static void initSyncDataWithServerService(Context context, String userId){
-		Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
-		syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
-		syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
-		context.startService(syncDataIntent);
+		//Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
+		//syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
+		//syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
+		//context.startService(syncDataIntent);
 	}
 }
