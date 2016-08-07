@@ -44,13 +44,10 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:id="@+id/search_product_editText"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            android:enabled="true"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingRight="2dp"
-            android:paddingLeft="2dp" />
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="2dp" />
 
         <ImageView
             android:layout_width="wrap_content"
