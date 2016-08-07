@@ -135,9 +135,9 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
                                     }
 
-                                    if (mProduct.getProductBrand() != null && mProduct.getProductBrand().getDescription() != null) {
+                                    if (mProduct.getProductBrand() != null && !TextUtils.isEmpty(mProduct.getProductBrand().getName())) {
                                         ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
-                                                mProduct.getProductBrand().getDescription()));
+                                                mProduct.getProductBrand().getName()));
                                     }
 
                                     final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
