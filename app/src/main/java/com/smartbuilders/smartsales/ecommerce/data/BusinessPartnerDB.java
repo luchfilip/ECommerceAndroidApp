@@ -75,7 +75,7 @@ public class BusinessPartnerDB {
                         " bp.CONTACT_PERSON, bp.EMAIL_ADDRESS, bp.PHONE_NUMBER, bp.INTERNAL_CODE " +
                     " from BUSINESS_PARTNER bp " +
                             " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = ? and ubp.is_active = ? " +
-                    " where bp.BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ?",
+                    " where bp.BUSINESS_PARTNER_ID = ? AND bp.IS_ACTIVE = ?",
                     new String[]{String.valueOf(mUser.getServerUserId()), "Y", String.valueOf(businessPartnerId), "Y"},
                     null);
             if(c!=null && c.moveToNext()){
