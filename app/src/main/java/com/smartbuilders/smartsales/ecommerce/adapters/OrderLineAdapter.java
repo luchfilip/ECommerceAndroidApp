@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,9 +117,9 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                 mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
         if (mDataset.get(position).getProduct().getProductBrand() != null
-                && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+                    mDataset.get(position).getProduct().getProductBrand().getName()));
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.GONE);

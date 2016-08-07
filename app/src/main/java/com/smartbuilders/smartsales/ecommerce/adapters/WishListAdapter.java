@@ -233,9 +233,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         });
 
         if (mDataset.get(position).getProduct().getProductBrand() != null
-                && mDataset.get(position).getProduct().getProductBrand().getDescription() != null) {
+                && mDataset.get(position).getProduct().getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+                    mDataset.get(position).getProduct().getProductBrand().getName()));
         } else {
             holder.productBrand.setVisibility(View.INVISIBLE);
         }

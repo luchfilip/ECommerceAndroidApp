@@ -47,7 +47,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     public static final int FILTER_BY_PRODUCT_NAME              = 1;
     public static final int FILTER_BY_PRODUCT_INTERNAL_CODE     = 2;
-    public static final int FILTER_BY_PRODUCT_BRAND_DESCRIPTION = 3;
+    public static final int FILTER_BY_PRODUCT_BRAND_NAME        = 3;
     public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 4;
     public static final int FILTER_BY_PRODUCT_PURPOSE           = 5;
     // Regular expression in Java to check if String is number or not
@@ -257,9 +257,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
 
             if(mDataset.get(position).getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getDescription())){
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())){
                 holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProductBrand().getDescription()));
+                        mDataset.get(position).getProductBrand().getName()));
                 holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
@@ -447,11 +447,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         mDataset.clear();
                     }
                     break;
-                case FILTER_BY_PRODUCT_BRAND_DESCRIPTION:
+                case FILTER_BY_PRODUCT_BRAND_NAME:
                     for (Product product : filterAux) {
                         if (product.getProductBrand()!=null &&
-                                !TextUtils.isEmpty(product.getProductBrand().getDescription()) &&
-                                product.getProductBrand().getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                                !TextUtils.isEmpty(product.getProductBrand().getName()) &&
+                                product.getProductBrand().getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                             mDataset.add(product);
                         }
                     }

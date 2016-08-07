@@ -143,9 +143,9 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         });
 
         if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+                    mDataset.get(position).getProduct().getProductBrand().getName()));
             holder.productBrand.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

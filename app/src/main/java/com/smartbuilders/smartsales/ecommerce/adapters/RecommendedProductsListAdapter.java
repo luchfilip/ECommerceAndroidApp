@@ -209,9 +209,9 @@ public class RecommendedProductsListAdapter extends
         });
 
         if (mDataset.get(position).getProductBrand() != null
-                && mDataset.get(position).getProductBrand().getDescription() != null) {
+                && mDataset.get(position).getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProductBrand().getDescription()));
+                    mDataset.get(position).getProductBrand().getName()));
         } else {
             holder.productBrand.setVisibility(View.INVISIBLE);
         }

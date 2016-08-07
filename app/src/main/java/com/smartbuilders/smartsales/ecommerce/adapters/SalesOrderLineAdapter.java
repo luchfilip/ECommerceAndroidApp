@@ -96,9 +96,9 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         }
 
         if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getDescription())){
+                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getDescription()));
+                    mDataset.get(position).getProduct().getProductBrand().getName()));
             holder.productBrand.setVisibility(View.VISIBLE);
         }else{
             holder.productBrand.setVisibility(TextView.GONE);
