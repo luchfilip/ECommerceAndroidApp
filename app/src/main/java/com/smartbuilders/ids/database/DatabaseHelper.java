@@ -267,7 +267,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER (" +
                     "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
-                    " USER_ID INTEGER NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
                     " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
@@ -482,6 +481,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, TABLE_NAME, ID))";
 
+    public static final String CREATE_USER_BUSINESS_PARTNERS =
+            "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNERS (" +
+                    "USER_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID))";
+
 	/**
 	 * 
 	 * @param context
@@ -547,6 +554,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_COMPANY);
             db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
             db.execSQL(CREATE_USER_TABLE_MAX_ID);
+            db.execSQL(CREATE_USER_BUSINESS_PARTNERS);
 		}
 	}
 
