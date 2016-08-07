@@ -244,9 +244,10 @@ public class ProductsListActivity extends AppCompatActivity
                                                     products.get(0).getProductSubCategory().getDescription()));
                                         }
                                     } else if (productBrandId != 0) {
-                                        if(products.get(0).getProductBrand()!=null){
+                                        if(products.get(0).getProductBrand()!=null
+                                                && !TextUtils.isEmpty(products.get(0).getProductBrand().getName())){
                                             categorySubcategoryResultsTextView.setText(getString(R.string.brand_detail,
-                                                    products.get(0).getProductBrand().getDescription()));
+                                                    products.get(0).getProductBrand().getName()));
                                         }
                                     } else if (productName != null) {
                                         categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
@@ -295,7 +296,7 @@ public class ProductsListActivity extends AppCompatActivity
                                                 }else if(selectedOption.equals(getString(R.string.filter_by_product_internal_code))){
                                                     mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_INTERNAL_CODE;
                                                 }else if(selectedOption.equals(getString(R.string.filter_by_product_brand_description))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_BRAND_DESCRIPTION;
+                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_BRAND_NAME;
                                                 }else if(selectedOption.equals(getString(R.string.filter_by_product_description))){
                                                     mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_DESCRIPTION;
                                                 }else if(selectedOption.equals(getString(R.string.filter_by_product_purpose))){
