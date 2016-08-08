@@ -220,7 +220,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 if(businessPartner.getId() == appCurrentBusinessPartnerId){
                     selectedIndex = index;
                 }
-                spinnerArray.add(businessPartner.getCommercialName() + " - " +
+                spinnerArray.add(businessPartner.getName() + " - " +
                         getString(R.string.tax_id, businessPartner.getTaxId()));
                 index++;
             }

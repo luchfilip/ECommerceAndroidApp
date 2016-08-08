@@ -37,7 +37,7 @@ public class OrdersListFragment extends Fragment {
     private int mListViewTop;
     private int mCurrentSelectedIndex;
     private User mUser;
-    private TextView mBusinessPartnerCommercialName;
+    private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
@@ -85,7 +85,7 @@ public class OrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
                                 setHeader();
 
@@ -155,8 +155,8 @@ public class OrdersListFragment extends Fragment {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                         .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if(businessPartner!=null){
-                    mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                    mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                    mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                    mBusinessPartnerName.setVisibility(View.VISIBLE);
                     mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){

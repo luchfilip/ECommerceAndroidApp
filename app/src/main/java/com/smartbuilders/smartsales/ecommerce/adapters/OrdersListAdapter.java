@@ -69,13 +69,13 @@ public class OrdersListAdapter extends BaseAdapter {
                 && mDataset.get(position).getBusinessPartner()!=null){
             viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number,
                     mDataset.get(position).getSalesOrderNumber()));
-            viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
+            viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getName());
             viewHolder.salesOrderNumber.setVisibility(View.VISIBLE);
-            viewHolder.businessPartnerCommercialName.setVisibility(View.VISIBLE);
+            viewHolder.businessPartnerName.setVisibility(View.VISIBLE);
             viewHolder.dividerView.setVisibility(View.VISIBLE);
         }else{
             viewHolder.salesOrderNumber.setVisibility(View.GONE);
-            viewHolder.businessPartnerCommercialName.setVisibility(View.GONE);
+            viewHolder.businessPartnerName.setVisibility(View.GONE);
             viewHolder.dividerView.setVisibility(View.GONE);
         }
 
@@ -93,7 +93,7 @@ public class OrdersListAdapter extends BaseAdapter {
     public static class ViewHolder {
         // each data item is just a string in this case
         public TextView salesOrderNumber;
-        public TextView businessPartnerCommercialName;
+        public TextView businessPartnerName;
         public View dividerView;
         public TextView orderNumber;
         public TextView orderDate;
@@ -101,7 +101,7 @@ public class OrdersListAdapter extends BaseAdapter {
 
         public ViewHolder(View v) {
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
-            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_tv);
+            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_tv);
             dividerView = v.findViewById(R.id.divider_view);
             orderNumber = (TextView) v.findViewById(R.id.order_number_tv);
             orderDate = (TextView) v.findViewById(R.id.order_date_tv);

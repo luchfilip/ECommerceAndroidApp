@@ -42,8 +42,8 @@ public class ContactUsFragment extends Fragment {
         TextView addressLabelTextView = (TextView) view.findViewById(R.id.address_label);
         TextView addressTextView = (TextView) view.findViewById(R.id.address);
 
-        if(!TextUtils.isEmpty(company.getCommercialName())){
-            companyNameTextView.setText(company.getCommercialName());
+        if(!TextUtils.isEmpty(company.getName())){
+            companyNameTextView.setText(company.getName());
         }else{
             companyNameTextView.setVisibility(View.GONE);
         }

@@ -64,11 +64,11 @@ public class SalesOrdersListAdapter extends BaseAdapter {
         viewHolder.salesOrderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getLinesNumber())));
         if(mUser!=null && mUser.getUserProfileId()== UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            viewHolder.businessPartnerCommercialName.setText(mContext.getString(R.string.business_partner_detail,
-                    mDataset.get(position).getBusinessPartner().getCommercialName()));
-            viewHolder.businessPartnerCommercialName.setVisibility(View.VISIBLE);
+            viewHolder.businessPartnerName.setText(mContext.getString(R.string.business_partner_detail,
+                    mDataset.get(position).getBusinessPartner().getName()));
+            viewHolder.businessPartnerName.setVisibility(View.VISIBLE);
         }else{
-            viewHolder.businessPartnerCommercialName.setVisibility(View.GONE);
+            viewHolder.businessPartnerName.setVisibility(View.GONE);
         }
 
         return view;
@@ -79,13 +79,13 @@ public class SalesOrdersListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView businessPartnerCommercialName;
+        public TextView businessPartnerName;
         public TextView salesOrderNumber;
         public TextView salesOrderDate;
         public TextView salesOrderLinesNumber;
 
         public ViewHolder(View v) {
-            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
+            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
             salesOrderDate = (TextView) v.findViewById(R.id.sales_order_date_tv);
             salesOrderLinesNumber = (TextView) v.findViewById(R.id.sales_order_lines_number_tv);

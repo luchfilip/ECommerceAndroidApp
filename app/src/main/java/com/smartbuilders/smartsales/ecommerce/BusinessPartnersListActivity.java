@@ -236,11 +236,11 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(final int businessPartnerId, final String businessPartnerCommercialName, User user) {
+    public void onItemLongSelected(final int businessPartnerId, final String businessPartnerName, User user) {
         if(user!=null){
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.delete_business_partner, businessPartnerCommercialName))
+                        .setMessage(getString(R.string.delete_business_partner, businessPartnerName))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
@@ -273,7 +273,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                         .show();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.init_session_business_partner, businessPartnerCommercialName))
+                        .setMessage(getString(R.string.init_session_business_partner, businessPartnerName))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Utils.setAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, businessPartnerId);
@@ -282,7 +282,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                     ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
                                 }
                                 Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
-                                        businessPartnerCommercialName), Toast.LENGTH_LONG).show();
+                                        businessPartnerName), Toast.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)

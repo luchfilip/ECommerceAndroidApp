@@ -61,7 +61,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private View mainLayout;
     private View mBlankScreenView;
     private boolean mIsShoppingCart = true;
-    private TextView mBusinessPartnerCommercialName;
+    private TextView mBusinessPartnerName;
     private TextView mSalesOrderNumber;
     private View mSalesOrderInfoSeparator;
 
@@ -122,7 +122,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
-                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mSalesOrderNumber = (TextView) view.findViewById(R.id.sales_order_number_textView);
                                 mSalesOrderInfoSeparator = view.findViewById(R.id.sales_order_info_separator);
 
@@ -285,8 +285,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
                             .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
                     if(businessPartner!=null){
-                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                        mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);
@@ -302,8 +302,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                             .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                     if (businessPartner != null) {
-                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                        mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
                     }
@@ -316,8 +316,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
                             .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
                     if(businessPartner!=null){
-                        mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                        mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                        mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);

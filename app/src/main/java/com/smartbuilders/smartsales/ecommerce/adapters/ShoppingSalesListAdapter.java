@@ -65,7 +65,7 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getBusinessPartner().getCommercialName());
+        viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getName());
         viewHolder.shoppingSaleLinesNumber.setText(mContext.getString(R.string.order_lines_number, mDataset.get(position).getLinesNumber()));
 
         return view;
@@ -76,11 +76,11 @@ public class ShoppingSalesListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView businessPartnerCommercialName;
+        public TextView businessPartnerName;
         public TextView shoppingSaleLinesNumber;
 
         public ViewHolder(View v) {
-            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
+            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             shoppingSaleLinesNumber = (TextView) v.findViewById(R.id.shopping_sale_lines_number_textView);
         }
     }

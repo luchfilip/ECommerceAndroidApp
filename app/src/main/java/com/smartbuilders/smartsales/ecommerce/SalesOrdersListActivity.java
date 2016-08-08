@@ -216,7 +216,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     public void onItemLongSelected(final SalesOrder salesOrder, final ListView listView, final User user) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
-                        salesOrder.getBusinessPartner().getCommercialName()))
+                        salesOrder.getBusinessPartner().getName()))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = (new SalesOrderDB(SalesOrdersListActivity.this, user))

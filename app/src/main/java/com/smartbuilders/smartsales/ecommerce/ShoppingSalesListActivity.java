@@ -150,7 +150,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     public void onItemLongSelected(final SalesOrder salesOrder, final User user) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_shopping_sales_question,
-                        salesOrder.getBusinessPartner().getCommercialName()))
+                        salesOrder.getBusinessPartner().getName()))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = (new SalesOrderLineDB(ShoppingSalesListActivity.this, user))

@@ -36,7 +36,7 @@ public class BusinessPartnersListFragment extends Fragment {
 
     public interface Callback {
         void onItemSelected(int businessPartnerId);
-        void onItemLongSelected(int businessPartnerId, String businessPartnerCommercialName, User user);
+        void onItemLongSelected(int businessPartnerId, String businessPartnerName, User user);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -108,7 +108,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                         if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getCommercialName(), user);
+                                            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getName(), user);
                                         }
                                         return true;
                                     }

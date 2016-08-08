@@ -64,7 +64,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
     private String mValidToText;
-    private TextView mBusinessPartnerCommercialName;
+    private TextView mBusinessPartnerName;
     private View mDivider;
 
     public ShoppingSaleFragment() {
@@ -125,7 +125,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
+                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
                                 mDivider = view.findViewById(R.id.divider);
 
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
@@ -299,8 +299,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                     .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
             if(businessPartner!=null){
-                mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_name_detail, businessPartner.getCommercialName()));
-                mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
+                mBusinessPartnerName.setVisibility(View.VISIBLE);
                 mDivider.setVisibility(View.VISIBLE);
             }
         }

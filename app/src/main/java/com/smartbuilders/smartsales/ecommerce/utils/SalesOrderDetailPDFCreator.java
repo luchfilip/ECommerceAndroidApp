@@ -210,7 +210,7 @@ public class SalesOrderDetailPDFCreator {
         companyDataCell.setPadding(3);
         companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
         companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        companyDataCell.addElement(new Paragraph(userCompany.getCommercialName(), companyNameFont));
+        companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
@@ -246,7 +246,7 @@ public class SalesOrderDetailPDFCreator {
         clientDataCell.setPadding(3);
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getCommercialName()), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, salesOrder.getBusinessPartner().getAddress()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, salesOrder.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);

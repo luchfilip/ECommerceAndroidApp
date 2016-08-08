@@ -177,7 +177,7 @@ public class OrderDetailPDFCreator {
         companyDataCell.setPadding(3);
         companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
         companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        companyDataCell.addElement(new Paragraph(userCompany.getCommercialName(), companyNameFont));
+        companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
         //Se comento porque a veces la direccion es muy larga y descuadra el formato de la cabecera
         //companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
@@ -216,7 +216,7 @@ public class OrderDetailPDFCreator {
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
 
         order.setBusinessPartner(order.getBusinessPartner()==null ? new BusinessPartner() : order.getBusinessPartner());
-        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, order.getBusinessPartner().getCommercialName()), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, order.getBusinessPartner().getName()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, order.getBusinessPartner().getAddress()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, order.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);

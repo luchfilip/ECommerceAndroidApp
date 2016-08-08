@@ -56,7 +56,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
     private View mainLayout;
-    private TextView mBusinessPartnerCommercialName;
+    private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
 
     public WishListFragment() {
@@ -97,7 +97,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
-                                mBusinessPartnerCommercialName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
+                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
                                 setHeader();
 
@@ -149,8 +149,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                         .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if(businessPartner!=null){
-                    mBusinessPartnerCommercialName.setText(getString(R.string.business_partner_detail, businessPartner.getCommercialName()));
-                    mBusinessPartnerCommercialName.setVisibility(View.VISIBLE);
+                    mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                    mBusinessPartnerName.setVisibility(View.VISIBLE);
                     mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){

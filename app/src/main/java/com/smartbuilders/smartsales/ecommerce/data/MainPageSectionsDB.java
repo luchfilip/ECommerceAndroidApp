@@ -33,8 +33,8 @@ public class MainPageSectionsDB {
         try {
             BusinessPartner businessPartner = (new BusinessPartnerDB(mContext, mUser))
                     .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
-            if (businessPartner!=null && businessPartner.getCommercialName()!=null) {
-                mainPageList.add(businessPartner.getCommercialName());
+            if (businessPartner!=null && businessPartner.getName()!=null) {
+                mainPageList.add(businessPartner.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();

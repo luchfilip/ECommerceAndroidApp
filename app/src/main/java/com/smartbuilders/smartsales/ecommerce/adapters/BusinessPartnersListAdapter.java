@@ -82,7 +82,7 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
             viewHolder.businessPartnerInternalCode.setVisibility(View.GONE);
         }
 
-        viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getCommercialName());
+        viewHolder.businessPartnerName.setText(mDataset.get(position).getName());
         viewHolder.businessPartnerTaxId.setText(mContext.getString(R.string.tax_id, mDataset.get(position).getTaxId()));
 
         if(mDataset.get(position).getId() == mAppCurrentBusinessPartnerId){
@@ -100,13 +100,13 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView businessPartnerCommercialName;
+        public TextView businessPartnerName;
         public TextView businessPartnerTaxId;
         public TextView businessPartnerInternalCode;
         public ImageView appCurrentBusinessPartnerIndicator;
 
         public ViewHolder(View v) {
-            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
+            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             businessPartnerTaxId = (TextView) v.findViewById(R.id.business_partner_tax_id_textView);
             businessPartnerInternalCode = (TextView) v.findViewById(R.id.business_partner_internal_code_textView);
             appCurrentBusinessPartnerIndicator = (ImageView) v.findViewById(R.id.app_current_business_partner_indicator_imageView);
