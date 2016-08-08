@@ -219,8 +219,8 @@ public class RecommendedProductsListAdapter extends
         if(mDataset.get(position).getProductCommercialPackage()!=null
                 && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
             holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                    mDataset.get(position).getProductCommercialPackage().getUnits(),
-                    mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
+                    mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+                    mDataset.get(position).getProductCommercialPackage().getUnits()));
         }else{
             holder.commercialPackage.setVisibility(TextView.GONE);
         }

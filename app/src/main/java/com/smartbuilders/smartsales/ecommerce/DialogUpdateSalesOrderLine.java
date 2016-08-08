@@ -171,8 +171,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                     && !TextUtils.isEmpty(mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package))
                         .setText(getContext().getString(R.string.commercial_package,
-                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits(),
-                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription()));
+                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(),
+                                mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }

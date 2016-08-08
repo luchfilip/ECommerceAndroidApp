@@ -243,8 +243,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         if(mDataset.get(position).getProduct().getProductCommercialPackage()!=null
                 && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription())){
             holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits(),
-                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription()));
+                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription(),
+                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits()));
         }else{
             holder.commercialPackage.setVisibility(TextView.GONE);
         }

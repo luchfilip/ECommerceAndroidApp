@@ -109,7 +109,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         holder.productName.setText(mDataset.get(position).getProduct().getName());
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
                     mDataset.get(position).getProduct().getInternalCode()));
         }
 

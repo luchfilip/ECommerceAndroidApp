@@ -237,7 +237,7 @@ public class ProductDetailFragment extends Fragment {
 
                                     if (mProduct.getProductCommercialPackage() != null) {
                                         ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
-                                                mProduct.getProductCommercialPackage().getUnits(), mProduct.getProductCommercialPackage().getUnitDescription()));
+                                                mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
                                     } else {
                                         view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);
                                     }

@@ -252,7 +252,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
             if(mDataset.get(position).getInternalCode()!=null){
-                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
                         mDataset.get(position).getInternalCode()));
             }
 
@@ -278,8 +278,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             if(mDataset.get(position).getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
                 holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                                mDataset.get(position).getProductCommercialPackage().getUnits(),
-                        mDataset.get(position).getProductCommercialPackage().getUnitDescription()));
+                        mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+                        mDataset.get(position).getProductCommercialPackage().getUnits()));
                 holder.commercialPackage.setVisibility(TextView.VISIBLE);
             }else{
                 holder.commercialPackage.setVisibility(TextView.GONE);

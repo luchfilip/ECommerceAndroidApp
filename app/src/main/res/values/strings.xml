@@ -116,7 +116,7 @@
     <string name="title_activity_wish_list">Lista de Favoritos</string>
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Marcas</string>
-    <string name="commercial_package">Empaque comercial: %1$s %2$s.</string>
+    <string name="commercial_package">%1$s %2$s</string>
     <string name="availability">Disponibilidad: %1$s</string>
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
@@ -310,6 +310,7 @@
     </string-array>
     <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>
+    <string name="product_internalCode_no_label">%1$s</string>
     <string name="invalid_qty_requested">Cantidad solicitada inválida.</string>
     <string name="invalid_commercial_package_qty_requested">La cantidad pedida debe ser multiplo del empaque comercial.</string>
     <string name="invalid_availability_qty_requested">La cantidad pedida no puede ser mayor a la disponibilidad.</string>
