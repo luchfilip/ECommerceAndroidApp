@@ -88,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " OBSERVATION CLOB DEFAULT NULL, " +
                     " REFERENCE_ID VARCHAR(36) DEFAULT NULL, " +
                     " ORIGIN VARCHAR(55) DEFAULT NULL, " +
+                    " BAR_CODE VARCHAR(255) DEFAULT NULL, " +
                     " COMMERCIAL_PACKAGE_UNITS INTEGER DEFAULT NULL," +
                     " COMMERCIAL_PACKAGE VARCHAR(20) DEFAULT NULL," +
                     " INVENTORY_PACKAGE_UNITS INTEGER DEFAULT NULL," +
