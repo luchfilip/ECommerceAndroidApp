@@ -119,8 +119,8 @@ public class SearchResultAdapter extends BaseAdapter {
                 viewHolder.title.setVisibility(TextView.GONE);
             }
             if(((Product) mDataset.get(position)).getProductSubCategory()!=null &&
-                    !TextUtils.isEmpty(((Product) mDataset.get(position)).getProductSubCategory().getDescription())){
-                viewHolder.subTitle.setText(((Product) mDataset.get(position)).getProductSubCategory().getDescription());
+                    !TextUtils.isEmpty(((Product) mDataset.get(position)).getProductSubCategory().getName())){
+                viewHolder.subTitle.setText(((Product) mDataset.get(position)).getProductSubCategory().getName());
             }else{
                 viewHolder.subTitle.setVisibility(TextView.GONE);
             }
@@ -166,8 +166,8 @@ public class SearchResultAdapter extends BaseAdapter {
             viewHolder.title.setText(((RecentSearch) mDataset.get(position)).getTextToSearch());
 
             if(((RecentSearch) mDataset.get(position)).getProductSubCategory()!=null &&
-                    !TextUtils.isEmpty(((RecentSearch) mDataset.get(position)).getProductSubCategory().getDescription())){
-                viewHolder.subTitle.setText(((RecentSearch) mDataset.get(position)).getProductSubCategory().getDescription());
+                    !TextUtils.isEmpty(((RecentSearch) mDataset.get(position)).getProductSubCategory().getName())){
+                viewHolder.subTitle.setText(((RecentSearch) mDataset.get(position)).getProductSubCategory().getName());
             }else{
                 viewHolder.subTitle.setVisibility(TextView.GONE);
             }

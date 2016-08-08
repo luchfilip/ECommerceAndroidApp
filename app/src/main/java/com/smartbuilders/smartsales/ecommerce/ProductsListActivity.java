@@ -236,12 +236,12 @@ public class ProductsListActivity extends AppCompatActivity
                                     if (productCategoryId != 0) {
                                         if(products.get(0).getProductCategory()!=null){
                                             categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
-                                                    products.get(0).getProductCategory().getDescription()));
+                                                    products.get(0).getProductCategory().getName()));
                                         }
                                     } else if (productSubCategoryId != 0) {
                                         if(products.get(0).getProductSubCategory()!=null){
                                             categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
-                                                    products.get(0).getProductSubCategory().getDescription()));
+                                                    products.get(0).getProductSubCategory().getName()));
                                         }
                                     } else if (productBrandId != 0) {
                                         if(products.get(0).getProductBrand()!=null

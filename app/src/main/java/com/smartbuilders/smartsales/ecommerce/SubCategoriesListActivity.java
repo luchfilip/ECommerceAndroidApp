@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -37,10 +38,15 @@ public class SubCategoriesListActivity extends AppCompatActivity {
 
         ProductCategory productCategory = (new ProductCategoryDB(this, Utils.getCurrentUser(this)))
                 .getActiveProductCategoryById(mCategoryId);
-         if (productCategory!=null) {
-            ((TextView) findViewById(R.id.title_textView))
-                    .setText(getString(R.string.category_name_description_detail,
-                            productCategory.getName(), productCategory.getDescription()));
+        if (productCategory!=null) {
+            if (!TextUtils.isEmpty(productCategory.getDescription())) {
+                ((TextView) findViewById(R.id.title_textView))
+                        .setText(getString(R.string.category_name_description_detail,
+                                productCategory.getName(), productCategory.getDescription()));
+            }else{
+                 ((TextView) findViewById(R.id.title_textView))
+                         .setText(getString(R.string.category_name_detail, productCategory.getName()));
+            }
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
