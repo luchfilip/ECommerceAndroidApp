@@ -53,6 +53,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/product_commercial_package"
+                android:textColor="@color/black"
+                android:textSize="@dimen/productDetailCardView_commercialPackage_text_size"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_brand_text_size"
@@ -76,15 +85,6 @@
                 android:layout_marginBottom="1dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_purpose_text_size" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_commercial_package"
-                android:textColor="@color/black"
-                android:textSize="@dimen/productDetailCardView_commercialPackage_text_size"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
 
             <TextView
                 android:id="@+id/product_price"

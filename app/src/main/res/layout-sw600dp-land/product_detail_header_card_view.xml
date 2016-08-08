@@ -93,6 +93,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/product_commercial_package"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:focusable="false"
                 android:textColor="@color/black"
@@ -122,14 +130,6 @@
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
                 android:gravity="bottom">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_commercial_package"
-                    android:focusable="false"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
 
                 <TextView
                     android:id="@+id/product_price"
