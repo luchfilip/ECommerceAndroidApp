@@ -12,10 +12,9 @@ public class User implements Parcelable {
     private String serverAddress;
     private String gcmRegistrationId;
     private String userGroup;
-    private Long serverUserId;
+    private Integer serverUserId;
     private String userId;
     private boolean saveDBInExternalCard;
-    private int businessPartnerId;
     private int userProfileId;
 
     public User(){
@@ -31,9 +30,8 @@ public class User implements Parcelable {
         dest.writeString(serverAddress);
         dest.writeString(gcmRegistrationId);
         dest.writeString(userGroup);
-        dest.writeLong(serverUserId);
+        dest.writeInt(serverUserId);
         dest.writeString(userId);
-        dest.writeInt(businessPartnerId);
         dest.writeInt(userProfileId);
         //dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
     }
@@ -46,9 +44,8 @@ public class User implements Parcelable {
         serverAddress = in.readString();
         gcmRegistrationId = in.readString();
         userGroup = in.readString();
-        serverUserId = in.readLong();
+        serverUserId = in.readInt();
         userId = in.readString();
-        businessPartnerId = in.readInt();
         userProfileId = in.readInt();
         //saveDBInExternalCard = in.readByte() != 0;
     }
@@ -171,11 +168,11 @@ public class User implements Parcelable {
 		this.userGroup = userGroup;
 	}
 
-	public Long getServerUserId() {
+	public Integer getServerUserId() {
 		return serverUserId;
 	}
 
-	public void setServerUserId(Long serverUserId) {
+	public void setServerUserId(Integer serverUserId) {
 		this.serverUserId = serverUserId;
 	}
 
@@ -206,14 +203,6 @@ public class User implements Parcelable {
 	public void setSaveDBInExternalCard(boolean saveDBInExternalCard) {
 		this.saveDBInExternalCard = saveDBInExternalCard;
 	}
-
-    public int getBusinessPartnerId() {
-        return businessPartnerId;
-    }
-
-    public void setBusinessPartnerId(int businessPartnerId) {
-        this.businessPartnerId = businessPartnerId;
-    }
 
     public int getUserProfileId() {
         return userProfileId;

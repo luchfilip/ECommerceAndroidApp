@@ -388,16 +388,16 @@ public class ApplicationUtilities {
      * @param userName
      * @param ctx
      */
-    public static void registerUserInDataBase(String userId, int businessPartnerId, int userProfileId, Long serverUserId,
+    public static void registerUserInDataBase(String userId, int userProfileId, Long serverUserId,
                                               String serverAddress, String userGroup, String userName, String authToken, Context ctx){
 		try{
 	    	ctx.getContentResolver()
 	    		.update(DataBaseContentProvider.INTERNAL_DB_URI, new ContentValues(),
-						"INSERT INTO IDS_USER (USER_ID, BUSINESS_PARTNER_ID, USER_PROFILE_ID, SERVER_USER_ID, " +
+						"INSERT INTO IDS_USER (USER_ID, USER_PROFILE_ID, SERVER_USER_ID, " +
                                 " USER_NAME, SERVER_ADDRESS, USER_GROUP, AUTH_TOKEN) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-						new String[]{userId, String.valueOf(businessPartnerId), String.valueOf(userProfileId),
-                                serverUserId.toString(), userName, serverAddress, userGroup, authToken});
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+						new String[]{userId, String.valueOf(userProfileId), serverUserId.toString(),
+								userName, serverAddress, userGroup, authToken});
 	    }catch(Exception e){
 			e.printStackTrace();
 		}
@@ -1093,9 +1093,8 @@ public class ApplicationUtilities {
 			Account userAccount = getAccountFromAccountManager(ctx, userId, serverUserId);
 			if (userAccount!=null) {
 				User user = new User(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_ID));
-				user.setBusinessPartnerId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)));
 				user.setUserProfileId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_PROFILE_ID)));
-				user.setServerUserId(Long.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SERVER_USER_ID)));
+				user.setServerUserId(Integer.valueOf(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SERVER_USER_ID)));
 				user.setUserName(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_USER_NAME));
 				user.setUserPass(mAccountManager.getPassword(userAccount));
 				user.setServerAddress(mAccountManager.getUserData(userAccount, AccountGeneral.USERDATA_SERVER_ADDRESS));
@@ -1328,15 +1327,14 @@ public class ApplicationUtilities {
     		//registered users
     		ArrayList<User> registeredUsers = new ArrayList<User>();
 			c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "SELECT USER_ID, BUSINESS_PARTNER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
+                    "SELECT USER_ID, USER_NAME, SERVER_ADDRESS, USER_GROUP FROM IDS_USER",
                     null, null);
 			if(c!=null){
 				while(c.moveToNext()){
 					User user = new User(c.getString(0));
-					user.setBusinessPartnerId(c.getInt(1));
-					user.setUserName(c.getString(2));
-					user.setServerAddress( c.getString(3));
-					user.setUserGroup(c.getString(4));
+					user.setUserName(c.getString(1));
+					user.setServerAddress(c.getString(2));
+					user.setUserGroup(c.getString(3));
 					registeredUsers.add(user);
 				}
 				c.close();

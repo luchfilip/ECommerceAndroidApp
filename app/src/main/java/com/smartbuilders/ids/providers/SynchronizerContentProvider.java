@@ -294,8 +294,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 											    			parameters);
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
-					JSONObject json = new JSONObject(((SoapPrimitive) response).toString());
-					businessPartnerId = json.getString("BUSINESS_PARTNER_ID");
+					JSONObject json = new JSONObject(response.toString());
                     userProfileId = json.getString("USER_PROFILE_ID");
 					serverUserId = json.getString("SERVER_USER_ID");
 					authToken = json.getString("AUTH_TOKEN");

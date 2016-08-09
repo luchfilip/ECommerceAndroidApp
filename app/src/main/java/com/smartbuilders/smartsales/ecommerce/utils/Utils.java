@@ -1042,7 +1042,7 @@ public class Utils {
     public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
         if(user!=null){
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                return user.getBusinessPartnerId();
+                return user.getServerUserId();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 if(!PreferenceManager.getDefaultSharedPreferences(context)
                         .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)){

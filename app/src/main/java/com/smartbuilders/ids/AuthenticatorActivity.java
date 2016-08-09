@@ -227,7 +227,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                                     userData.putString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, user.getGcmRegistrationId());
                                     userData.putString(AccountGeneral.USERDATA_USER_GROUP, user.getUserGroup());
                                     userData.putString(AccountGeneral.USERDATA_USER_ID, user.getUserId());
-                                    userData.putString(AccountGeneral.USERDATA_BUSINESS_PARTNER_ID, String.valueOf(user.getBusinessPartnerId()));
                                     userData.putString(AccountGeneral.USERDATA_USER_PROFILE_ID, String.valueOf(user.getUserProfileId()));
                                     userData.putString(AccountGeneral.USERDATA_SERVER_USER_ID, user.getServerUserId()!=null ? user.getServerUserId().toString() : null);
                                     userData.putString(AccountGeneral.USERDATA_USER_NAME, user.getUserName());
@@ -289,7 +288,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 mAccountManager.setAuthToken(mAccount, mAuthTokenType, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
                 //Register the mUser in the local data base.
                 ApplicationUtilities.registerUserInDataBase(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_ID),
-                        Integer.valueOf(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_BUSINESS_PARTNER_ID)),
                         Integer.valueOf(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_PROFILE_ID)),
                         Long.valueOf(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_SERVER_USER_ID)),
                         intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_SERVER_ADDRESS),
