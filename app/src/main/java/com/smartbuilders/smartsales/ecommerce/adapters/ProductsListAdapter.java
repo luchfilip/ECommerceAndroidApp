@@ -45,11 +45,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public static final int MASK_PRODUCT_DETAILS        = 2;
     public static final int MASK_PRODUCT_LARGE_DETAILS  = 3;
 
-    public static final int FILTER_BY_PRODUCT_NAME              = 1;
-    public static final int FILTER_BY_PRODUCT_INTERNAL_CODE     = 2;
-    public static final int FILTER_BY_PRODUCT_BRAND_NAME        = 3;
-    public static final int FILTER_BY_PRODUCT_DESCRIPTION       = 4;
-    public static final int FILTER_BY_PRODUCT_PURPOSE           = 5;
     // Regular expression in Java to check if String is number or not
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
@@ -416,9 +411,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         });
     }
 
-    public void filter(String charText, int filterBy) {
-        if(charText == null){
-            System.out.println("public void filter(String charText, int filterBy), charText == null");
+    public void filter(String charText, String filterBy) {
+        if(charText == null || filterBy == null){
             return;
         }
         charText = charText.toLowerCase(Locale.getDefault());
@@ -426,52 +420,46 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         if (charText.length() == 0) {
             mDataset.addAll(filterAux);
         } else {
-            switch (filterBy){
-                case FILTER_BY_PRODUCT_NAME:
+            if(filterBy.equals(mContext.getString(R.string.filter_by_product_name))){
+                for (Product product : filterAux) {
+                    if (!TextUtils.isEmpty(product.getName()) &&
+                            product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
+                    }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_internal_code))){
+                if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
                     for (Product product : filterAux) {
-                        if (!TextUtils.isEmpty(product.getName()) &&
-                                product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        if (!TextUtils.isEmpty(product.getInternalCode()) &&
+                                product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
                             mDataset.add(product);
                         }
                     }
-                    break;
-                case FILTER_BY_PRODUCT_INTERNAL_CODE:
-                    if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
-                        for (Product product : filterAux) {
-                            if (!TextUtils.isEmpty(product.getInternalCode()) &&
-                                    product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
-                                mDataset.add(product);
-                            }
-                        }
-                    }else{
-                        mDataset.clear();
+                }else{
+                    mDataset.clear();
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_brand_description))){
+                for (Product product : filterAux) {
+                    if (product.getProductBrand()!=null &&
+                            !TextUtils.isEmpty(product.getProductBrand().getName()) &&
+                            product.getProductBrand().getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
                     }
-                    break;
-                case FILTER_BY_PRODUCT_BRAND_NAME:
-                    for (Product product : filterAux) {
-                        if (product.getProductBrand()!=null &&
-                                !TextUtils.isEmpty(product.getProductBrand().getName()) &&
-                                product.getProductBrand().getName().toLowerCase(Locale.getDefault()).contains(charText)) {
-                            mDataset.add(product);
-                        }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_description))){
+                for (Product product : filterAux) {
+                    if (!TextUtils.isEmpty(product.getDescription()) &&
+                            product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
                     }
-                    break;
-                case FILTER_BY_PRODUCT_DESCRIPTION:
-                    for (Product product : filterAux) {
-                        if (!TextUtils.isEmpty(product.getDescription()) &&
-                                product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
-                            mDataset.add(product);
-                        }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_purpose))){
+                for (Product product : filterAux) {
+                    if (!TextUtils.isEmpty(product.getPurpose()) &&
+                            product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
                     }
-                    break;
-                case FILTER_BY_PRODUCT_PURPOSE:
-                    for (Product product : filterAux) {
-                        if (!TextUtils.isEmpty(product.getPurpose()) &&
-                                product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
-                            mDataset.add(product);
-                        }
-                    }
-                    break;
+                }
             }
         }
         notifyDataSetChanged();
