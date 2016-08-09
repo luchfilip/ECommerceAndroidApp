@@ -254,9 +254,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 * @return
 	 */
 	private Cursor signUp(Uri uri){
-		MatrixCursor cursor = new MatrixCursor(new String[]{"businessPartnerId", "userProfileId",
+		MatrixCursor cursor = new MatrixCursor(new String[]{"userProfileId",
                 "serverUserId", "authToken", "error_message", "exception_class"});
-		String businessPartnerId = "";
         String userProfileId = "";
 		String serverUserId = "";
 		String authToken = "";
@@ -325,7 +324,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 				exceptionClass = e.getClass().getName();
 			}
 		}
-		cursor.addRow(new Object[]{businessPartnerId, userProfileId, serverUserId, authToken, errorMessage, exceptionClass});
+		cursor.addRow(new Object[]{userProfileId, serverUserId, authToken, errorMessage, exceptionClass});
 		return cursor;
 	}
 	
