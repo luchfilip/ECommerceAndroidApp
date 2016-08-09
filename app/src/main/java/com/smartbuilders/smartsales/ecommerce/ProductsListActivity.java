@@ -287,23 +287,11 @@ public class ProductsListActivity extends AppCompatActivity
                                 if(filterByOptionsSpinner!=null && adapter!=null){
                                     filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
-                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
                                             mSpinnerSelectedItemPosition = position;
-                                            final String selectedOption = (String) parent.getItemAtPosition(position);
-                                            if(selectedOption!=null){
-                                                if(selectedOption.equals(getString(R.string.filter_by_product_name))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_NAME;
-                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_internal_code))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_INTERNAL_CODE;
-                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_brand_description))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_BRAND_NAME;
-                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_description))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_DESCRIPTION;
-                                                }else if(selectedOption.equals(getString(R.string.filter_by_product_purpose))){
-                                                    mCurrentFilterOption = ProductsListAdapter.FILTER_BY_PRODUCT_PURPOSE;
-                                                }
+                                            if(parent.getItemAtPosition(position)!=null){
                                                 if(!TextUtils.isEmpty(mCurrentFilterText)){
-                                                    ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, mCurrentFilterOption);
+                                                    ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, (String) parent.getItemAtPosition(position));
                                                     if(productsListSize!=null){
                                                         productsListSize.setText(getString(R.string.products_list_size_details,
                                                                 String.valueOf(mRecyclerView.getAdapter().getItemCount())));
@@ -343,9 +331,12 @@ public class ProductsListActivity extends AppCompatActivity
                                                 filterImageView.setOnClickListener(null);
                                             }
                                             mCurrentFilterText = s.toString();
-                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, mCurrentFilterOption);
-                                            productsListSize.setText(getString(R.string.products_list_size_details,
-                                                        String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                            if (filterByOptionsSpinner!=null) {
+                                                ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText,
+                                                        (String) filterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                                                productsListSize.setText(getString(R.string.products_list_size_details,
+                                                            String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                            }
                                         }
 
                                         @Override
