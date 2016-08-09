@@ -1052,9 +1052,9 @@ public class Utils {
                 return PreferenceManager.getDefaultSharedPreferences(context)
                         .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
             }
-            throw new Exception("UserProfileId no identificado en getCurrentBusinessPartnerId(...)");
+            throw new Exception("UserProfileId no identificado en getAppCurrentBusinessPartnerId(...)");
         }else{
-            throw new Exception("Usuario es null en getCurrentBusinessPartnerId(...)");
+            throw new Exception("Usuario es null en getAppCurrentBusinessPartnerId(...)");
         }
     }
 
