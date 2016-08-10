@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 10;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -214,13 +214,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public static final String CREATE_MAINPAGE_PRODUCT =
             "CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT (" +
-                    "MAINPAGE_PRODUCT_ID INTEGER NOT NULL, " +
-                    " MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, " +
+                    "MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
                     " PRIORITY INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " PRIMARY KEY (MAINPAGE_PRODUCT_ID))";
+                    " PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID))";
 
 	public static final String CREATE_BANNER =
             "CREATE TABLE IF NOT EXISTS BANNER (" +
@@ -566,7 +565,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }else{
             if(oldVersion<10) {
-                db.execSQL(CREATE_USER_TABLE_MAX_ID);
+                try {
+                    db.execSQL("DROP TABLE IF EXISTS MAINPAGE_PRODUCT");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_MAINPAGE_PRODUCT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 	}
