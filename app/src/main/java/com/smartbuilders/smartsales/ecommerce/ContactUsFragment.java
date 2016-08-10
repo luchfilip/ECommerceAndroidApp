@@ -27,6 +27,9 @@ public class ContactUsFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
 
         Company company = (new CompanyDB(getContext(), Utils.getCurrentUser(getContext()))).getCompany();
+        if (company==null) {
+            company = new Company();
+        }
 
         TextView companyNameTextView = (TextView) view.findViewById(R.id.company_name);
         TextView companyTaxIdTextView = (TextView) view.findViewById(R.id.company_tax_id);
