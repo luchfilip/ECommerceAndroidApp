@@ -24,8 +24,8 @@ import android.util.Log;
 public class ConsumeWebService {
 	
 	private static final String TAG 				= ConsumeWebService.class.getSimpleName();
-	public static final String SHOW_TOAST_MESSAGE 	= "com.jasgcorp.ids.utlis.ConsumeWebService.SHOW_TOAST_MESSAGE";
-	public static final String MESSAGE 				= "com.jasgcorp.ids.utlis.ConsumeWebService.MESSAGE";
+	public static final String SHOW_TOAST_MESSAGE 	= "com.smartbuilders.ids.utlis.ConsumeWebService.SHOW_TOAST_MESSAGE";
+	public static final String MESSAGE 				= "com.smartbuilders.ids.utlis.ConsumeWebService.MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
 	private final int MAX_RETRY_NUMBER 				= 3;
 	private final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds
