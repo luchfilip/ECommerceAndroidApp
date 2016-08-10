@@ -23,13 +23,11 @@ import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
-import com.smartbuilders.smartsales.ecommerce.data.ProductTaxDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
-import com.smartbuilders.smartsales.ecommerce.model.ProductTax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,9 +93,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 ? getString(R.string.price_currency_label_detail, currency.getName())
                 : getString(R.string.price_label));
 
-        ProductTax productTax = (new ProductTaxDB(getContext(), mUser)).getActiveTaxById(Parameter.getDefaultTaxId(getContext(), mUser));
         ((EditText) view.findViewById(R.id.product_tax_editText))
-                .setText(productTax !=null ? String.valueOf(productTax.getPercentage()) : "0.0");
+                .setText(mProduct.getProductTax() !=null ? String.valueOf(mProduct.getProductTax().getPercentage()) : "0.00");
 
         if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
