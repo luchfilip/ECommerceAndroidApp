@@ -71,7 +71,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".SplashScreen"
+            android:name="com.smartbuilders.smartsales.ecommerce.SplashScreen"
             android:theme="@style/SplashTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -80,7 +80,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -97,10 +97,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProductsListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProductDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ProductDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.smartbuilders.ids.AuthenticatorActivity" />
@@ -149,7 +149,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.RequestResetUserPasswordService"
+            android:name="com.smartbuilders.smartsales.ecommerce.services.RequestResetUserPasswordService"
             android:exported="false" />
 
         <!--
@@ -157,7 +157,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.RequestUserPasswordService"
+            android:name="com.smartbuilders.smartsales.ecommerce.services.RequestUserPasswordService"
             android:exported="false" />
 
         <!--
@@ -165,7 +165,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.SyncDataWithServer"
+            android:name="com.smartbuilders.smartsales.ecommerce.services.SyncDataWithServer"
             android:exported="false" />
 
         <!--
@@ -212,7 +212,7 @@
             android:name="com.smartbuilders.ids.broadcastreceivers.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.jasgcorp.ids.scheduler.AlarmReceiver.Action" />
+                <action android:name="com.smartbuilders.ids.scheduler.AlarmReceiver.Action" />
             </intent-filter>
         </receiver>
 
@@ -230,80 +230,80 @@
         </receiver>
 
         <activity
-            android:name=".CategoriesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.CategoriesListActivity"
             android:label="@string/title_activity_categories" />
         <activity
-            android:name=".SubCategoriesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.SubCategoriesListActivity"
             android:label="@string/title_activity_sub_categories" />
         <activity
-            android:name=".ShoppingCartActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ShoppingCartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OrdersListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.OrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OrderDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.OrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".WishListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.WishListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SearchResultsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BrandsListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.BrandsListActivity"
             android:label="@string/title_activity_brands_list" />
         <activity
-            android:name=".ShoppingSaleActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ShoppingSaleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SalesOrderDetailActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.SalesOrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SalesOrdersListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ZoomImageActivity" />
+            android:name="com.smartbuilders.smartsales.ecommerce.ZoomImageActivity" />
         <activity
-            android:name=".BusinessPartnersListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.BusinessPartnersListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegisterBusinessPartnerActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.RegisterBusinessPartnerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CompanyActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.CompanyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ShoppingSalesListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ShoppingSalesListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RequestUserPasswordActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RequestResetUserPasswordActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ContactUsActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.ContactUsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RecommendedProductsListActivity"
+            android:name="com.smartbuilders.smartsales.ecommerce.RecommendedProductsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name=".receivers.SynchronizationBroadcastReceiver"
+            android:name="com.smartbuilders.smartsales.ecommerce.receivers.SynchronizationBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_STARTED" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_CANCELED" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_STARTED" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_PROGRESS" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_FINISHED" />
-                <action android:name="com.jasgcorp.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_CANCELED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_STARTED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_CANCELED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_STARTED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_PROGRESS" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_FINISHED" />
+                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_CANCELED" />
             </intent-filter>
         </receiver>
     </application>
