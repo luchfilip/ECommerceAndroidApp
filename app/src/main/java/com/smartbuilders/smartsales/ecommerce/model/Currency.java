@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerce.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * Created by Alberto on 5/4/2016.
@@ -90,7 +91,7 @@ public class Currency extends Model implements Parcelable {
     }
 
     public String getName() {
-        if(unicodeDecimal!=null){
+        if(!TextUtils.isEmpty(unicodeDecimal)){
             String[] unicodeDecimalValues = unicodeDecimal.replaceAll("\\s+", "").trim().split(",");
             StringBuilder name = new StringBuilder();
             try {
@@ -101,6 +102,8 @@ public class Currency extends Model implements Parcelable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else if(!TextUtils.isEmpty(currencyName)){
+            return currencyName.trim();
         }
         return "N/A";
     }
