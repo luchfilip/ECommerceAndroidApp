@@ -212,7 +212,7 @@ public class SalesOrderDetailPDFCreator {
         companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
+        //companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
         headerTable.addCell(companyDataCell);
@@ -247,18 +247,22 @@ public class SalesOrderDetailPDFCreator {
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()), font));
-        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, salesOrder.getBusinessPartner().getAddress()), font));
+        //clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, salesOrder.getBusinessPartner().getAddress()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, salesOrder.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);
 
-        PdfPCell SalesOrderDataCell = new PdfPCell();
-        SalesOrderDataCell.setPadding(3);
-        SalesOrderDataCell.disableBorderSide(Rectangle.UNDEFINED);
-        SalesOrderDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_date, salesOrder.getCreatedStringFormat()), font));
-        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, salesOrder.getValidToStringFormat()), font));
-        SalesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, userCompany.getContactPerson()), font));
-        headerTable.addCell(SalesOrderDataCell);
+        PdfPCell salesOrderDataCell = new PdfPCell();
+        salesOrderDataCell.setPadding(3);
+        salesOrderDataCell.disableBorderSide(Rectangle.UNDEFINED);
+        salesOrderDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_date, salesOrder.getCreatedStringFormat()), font));
+        salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, salesOrder.getValidToStringFormat()), font));
+        if(!TextUtils.isEmpty(userCompany.getContactPerson())) {
+            salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, userCompany.getContactPerson()), font));
+        }else{
+            salesOrderDataCell.addElement(new Paragraph("", font));
+        }
+        headerTable.addCell(salesOrderDataCell);
         document.add(headerTable);
 
         PdfPTable salesOrderNumberTable = new PdfPTable(1);

@@ -214,10 +214,14 @@ public class OrderDetailPDFCreator {
         clientDataCell.setPadding(3);
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-
+        if(order.getBusinessPartner()==null){
+            System.out.println("order.getBusinessPartner()==null");
+        }else{
+            System.out.println("order.getBusinessPartner() is not null");
+        }
         order.setBusinessPartner(order.getBusinessPartner()==null ? new BusinessPartner() : order.getBusinessPartner());
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, order.getBusinessPartner().getName()), font));
-        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, order.getBusinessPartner().getAddress()), font));
+        //clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, order.getBusinessPartner().getAddress()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, order.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);
 
@@ -227,7 +231,11 @@ public class OrderDetailPDFCreator {
         orderDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         orderDataCell.addElement(new Paragraph(ctx.getString(R.string.order_date, order.getCreatedStringFormat()), font));
         //orderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, order.getValidToStringFormat()), font));
-        orderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, company.getContactPerson()), font));
+        if(!TextUtils.isEmpty(company.getContactPerson())) {
+            orderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, company.getContactPerson()), font));
+        }else{
+            orderDataCell.addElement(new Paragraph("", font));
+        }
         headerTable.addCell(orderDataCell);
         document.add(headerTable);
 

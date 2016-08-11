@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 
@@ -18,10 +20,12 @@ import java.util.ArrayList;
 public class OrdersListAdapter extends BaseAdapter {
 
     private Context mContext;
+    private User mUser;
     private ArrayList<Order> mDataset;
 
-    public OrdersListAdapter(Context context, ArrayList<Order> data) {
+    public OrdersListAdapter(Context context, User user, ArrayList<Order> data) {
         mContext = context;
+        mUser = user;
         mDataset = data;
     }
 
@@ -69,10 +73,12 @@ public class OrdersListAdapter extends BaseAdapter {
                 && mDataset.get(position).getBusinessPartner()!=null){
             viewHolder.salesOrderNumber.setText(mContext.getString(R.string.sales_order_number,
                     mDataset.get(position).getSalesOrderNumber()));
-            viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getName());
             viewHolder.salesOrderNumber.setVisibility(View.VISIBLE);
-            viewHolder.businessPartnerName.setVisibility(View.VISIBLE);
             viewHolder.dividerView.setVisibility(View.VISIBLE);
+            if (mUser!=null && mUser.getUserProfileId()== UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                viewHolder.businessPartnerName.setText(mDataset.get(position).getBusinessPartner().getName());
+                viewHolder.businessPartnerName.setVisibility(View.VISIBLE);
+            }
         }else{
             viewHolder.salesOrderNumber.setVisibility(View.GONE);
             viewHolder.businessPartnerName.setVisibility(View.GONE);

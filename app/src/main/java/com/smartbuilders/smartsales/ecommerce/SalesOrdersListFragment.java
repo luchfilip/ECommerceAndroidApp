@@ -111,7 +111,7 @@ public class SalesOrdersListFragment extends Fragment {
 
                                 mListView = (ListView) view.findViewById(R.id.sales_orders_list);
                                 if (mLoadOrdersFromSalesOrders) {
-                                    mListView.setAdapter(new OrdersListAdapter(getActivity(), activeOrdersFromSalesOrders));
+                                    mListView.setAdapter(new OrdersListAdapter(getActivity(), mUser, activeOrdersFromSalesOrders));
 
                                     mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

@@ -89,7 +89,7 @@ public class OrdersListFragment extends Fragment {
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
                                 setHeader();
 
-                                mOrdersListAdapter = new OrdersListAdapter(getActivity(), activeOrders);
+                                mOrdersListAdapter = new OrdersListAdapter(getActivity(), mUser, activeOrders);
 
                                 mListView = (ListView) view.findViewById(R.id.orders_list);
                                 mListView.setAdapter(mOrdersListAdapter);

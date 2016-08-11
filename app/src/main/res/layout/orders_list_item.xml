@@ -13,8 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/business_partner_commercial_name_tv"
-        android:textColor="@color/black"
+        android:id="@+id/sales_order_number_tv"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textStyle="bold"
         android:visibility="gone" />
@@ -22,12 +21,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sales_order_number_tv"
+        android:id="@+id/business_partner_commercial_name_tv"
         android:textColor="@color/black"
         android:visibility="gone" />
 
     <View style="@style/Divider"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:id="@+id/divider_view"
         android:visibility="gone" />
@@ -38,7 +37,7 @@
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:id="@+id/order_number_tv"
         android:textStyle="bold"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:textColor="@color/black" />
 
     <TextView
