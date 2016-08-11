@@ -249,13 +249,13 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mViewPager.setClipToPadding(false);
                         int height;
                         if(metrics.widthPixels < metrics.heightPixels){
-                            height = (metrics.heightPixels / 5);
+                            height = (metrics.heightPixels / 4);
                         } else {
-                            height = (metrics.widthPixels / 6);
+                            height = (metrics.widthPixels / 5);
                         }
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                         viewHolder.mViewPager.setLayoutParams(lp);
-                        viewHolder.mViewPager.setPageMargin(12);
+                        viewHolder.mViewPager.setPageMargin(10);
                         ProductBrandPromotionalAdapter productBrandPromotionalAdapter =
                                 new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager(), metrics);
                         productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ProductBrandPromotionalAdapter extends FragmentStatePagerAdapter {
 
-    private List<ProductBrandPromotionalCard> mProductBrandPromotinalCards;
+    private List<ProductBrandPromotionalCard> mProductBrandPromotionalCards;
     private DisplayMetrics mDisplayMetrics;
 
     public ProductBrandPromotionalAdapter(FragmentManager fm, DisplayMetrics displayMetrics){
@@ -25,13 +25,13 @@ public class ProductBrandPromotionalAdapter extends FragmentStatePagerAdapter {
     }
 
     public void setData(ArrayList<ProductBrandPromotionalCard> productBrandPromotionalCards){
-        this.mProductBrandPromotinalCards = productBrandPromotionalCards;
+        this.mProductBrandPromotionalCards = productBrandPromotionalCards;
     }
 
     @Override
     public Fragment getItem(int position) {
         try {
-            return ProductBrandPromotionFragment.getInstance(mProductBrandPromotinalCards.get(position));
+            return ProductBrandPromotionFragment.getInstance(mProductBrandPromotionalCards.get(position));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class ProductBrandPromotionalAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         try {
-            return mProductBrandPromotinalCards.size();
+            return mProductBrandPromotionalCards.size();
         } catch (Exception e) {
             e.printStackTrace();
         }
