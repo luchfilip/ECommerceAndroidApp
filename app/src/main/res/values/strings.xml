@@ -354,5 +354,6 @@
     <string name="new_availabilities_in_wishList">Existen productos con nuevas existencias en la lista de favoritos.</string>
     <string name="category_name_detail">Categoría: %1$s</string>
     <string name="wish_list_doc_name">Lista de Favoritos</string>
+    <string name="recommended_products_doc_name">Productos Recomendados</string>
 
 </resources>
