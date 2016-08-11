@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp">
+    android:paddingBottom="8dp">
 
     <ViewFlipper
         android:id="@+id/banner_flipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:flipInterval="4500"
+        android:flipInterval="5000"
         android:inAnimation="@anim/slide_in_right"
         android:outAnimation="@anim/slide_in_left">
 
