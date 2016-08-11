@@ -58,10 +58,11 @@ public class SalesOrderDB {
                         "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
                                 " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
                         " FROM ECOMMERCE_SALES_ORDER SO " +
-                            " INNER JOIN BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
+                            " INNER JOIN USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SO.USER_ID AND UBP.IS_ACTIVE = ? " +
+                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.USER_ID = ? AND SO.IS_ACTIVE = ?",
-                        new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
+                        new String[]{"Y", "Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             }
 
             if(c!=null && c.moveToNext()){
@@ -137,11 +138,12 @@ public class SalesOrderDB {
                                 .build(), null,
                         "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
                         " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
-                            " INNER JOIN BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
+                            " INNER USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SOL.USER_ID AND UBP.IS_ACTIVE = ? " +
+                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                         " GROUP BY SOL.BUSINESS_PARTNER_ID",
-                        new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                        new String[]{"Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                 String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             }
 
@@ -204,11 +206,12 @@ public class SalesOrderDB {
                             " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
                             " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
                         " FROM ECOMMERCE_SALES_ORDER SO " +
-                            " INNER JOIN BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
+                            " INNER JOIN USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SO.USER_ID AND UBP.IS_ACTIVE = ? "+
+                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " WHERE SO.BUSINESS_PARTNER_ID = ? AND SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
                         " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
-                        new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                        new String[]{"Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                 String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
             }
 
