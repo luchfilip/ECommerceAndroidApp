@@ -214,11 +214,6 @@ public class OrderDetailPDFCreator {
         clientDataCell.setPadding(3);
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        if(order.getBusinessPartner()==null){
-            System.out.println("order.getBusinessPartner()==null");
-        }else{
-            System.out.println("order.getBusinessPartner() is not null");
-        }
         order.setBusinessPartner(order.getBusinessPartner()==null ? new BusinessPartner() : order.getBusinessPartner());
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, order.getBusinessPartner().getName()), font));
         //clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, order.getBusinessPartner().getAddress()), font));

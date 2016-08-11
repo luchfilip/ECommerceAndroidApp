@@ -44,7 +44,7 @@ import java.util.ArrayList;
 public class WishListFragment extends Fragment implements WishListAdapter.Callback {
 
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
-    private static final String fileName = "ListaDeDeseos";
+    private static final String fileName = "ListaDeFavoritos";
 
     private boolean mIsInitialLoad;
     private User mUser;
