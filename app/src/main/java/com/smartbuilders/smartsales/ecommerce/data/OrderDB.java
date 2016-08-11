@@ -92,7 +92,7 @@ public class OrderDB {
         }
 
         if(order!=null && order.getBusinessPartnerId()>0){
-            if(order.getSalesOrderId()>0){
+            if(mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID && order.getSalesOrderId()>0){
                 order.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
                         .getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
             }else{

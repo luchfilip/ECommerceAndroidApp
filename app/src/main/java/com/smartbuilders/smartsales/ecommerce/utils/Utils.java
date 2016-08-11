@@ -1040,7 +1040,7 @@ public class Utils {
      * @throws Exception
      */
     public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
-        if(user!=null){
+        if(context!=null && user!=null){
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 return user.getServerUserId();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
@@ -1054,7 +1054,13 @@ public class Utils {
             }
             throw new Exception("UserProfileId no identificado en getAppCurrentBusinessPartnerId(...)");
         }else{
-            throw new Exception("Usuario es null en getAppCurrentBusinessPartnerId(...)");
+            if (context==null && user==null) {
+                throw new Exception("Context y User es null en getAppCurrentBusinessPartnerId(...)");
+            }else if(context==null){
+                throw new Exception("Context es null en getAppCurrentBusinessPartnerId(...)");
+            }else{
+                throw new Exception("User es null en getAppCurrentBusinessPartnerId(...)");
+            }
         }
     }
 
