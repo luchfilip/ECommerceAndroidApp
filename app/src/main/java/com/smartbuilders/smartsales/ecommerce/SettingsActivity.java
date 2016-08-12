@@ -266,13 +266,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         //Turn off periodic syncing
                         ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), false);
                     }else{
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                        //Bundle bundle = new Bundle();
+                        //bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                        ////Turn on periodic syncing
+                        //ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                        //ContentResolver.addPeriodicSync(account,
+                        //        getString(R.string.sync_adapter_content_authority), bundle,
+                        //        Long.valueOf(newValue.toString()));
+
                         //Turn on periodic syncing
+                        ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
                         ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
-                        ContentResolver.addPeriodicSync(account,
-                                getString(R.string.sync_adapter_content_authority), bundle,
-                                Long.valueOf(newValue.toString()));
+
+                        ContentResolver.addPeriodicSync(
+                                account,
+                                getString(R.string.sync_adapter_content_authority),
+                                Bundle.EMPTY,
+                                Utils.getSyncPeriodicityFromPreferences(getActivity()));
                     }
 
                     int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());

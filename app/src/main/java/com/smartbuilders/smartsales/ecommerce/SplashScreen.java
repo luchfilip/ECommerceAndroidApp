@@ -270,40 +270,51 @@ public class SplashScreen extends AppCompatActivity {
     private void checkInitialLoad(AccountManager accountManager, Account account) {
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
 
-        ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
+        //ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
 
         mUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
         if(mUser !=null){
+            ContentResolver.setMasterSyncAutomatically(true);
             //se define la sincronizacion automatica solo si no se ha definido antes
             List<PeriodicSync> periodicSyncList = ContentResolver.getPeriodicSyncs(account, getString(R.string.sync_adapter_content_authority));
             if(periodicSyncList==null || periodicSyncList.isEmpty()){
-                ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                //ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
+                //Bundle bundle = new Bundle();
+                //bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
+                ////Turn on periodic syncing
+                //ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                //ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
+                //        bundle, Utils.getSyncPeriodicityFromPreferences(this));
+
                 //Turn on periodic syncing
+                ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
                 ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
-                ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
-                        bundle, Utils.getSyncPeriodicityFromPreferences(this));
+
+                ContentResolver.addPeriodicSync(
+                        account,
+                        getString(R.string.sync_adapter_content_authority),
+                        Bundle.EMPTY,
+                        Utils.getSyncPeriodicityFromPreferences(this));
             }
 
             if (Utils.appRequireInitialLoad(this, mUser)) {
-                    if(NetworkConnectionUtilities.isOnline(this)) {
-                        findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                        if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
-                            ApplicationUtilities.initSyncByAccount(this, account);
-                            mSynchronizationState = SYNC_RUNNING;
-                        }
-                    } else {
-                        //show network connection unavailable error.
-                        Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
-                        //TODO: mostrar en pantalla error de conexion
-                        findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
-                        ((TextView) findViewById(R.id.error_message)).setText(R.string.network_connection_unavailable);
-                        findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                        mSynchronizationState = SYNC_ERROR;
+                if(NetworkConnectionUtilities.isOnline(this)) {
+                    findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                    if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                        ApplicationUtilities.initSyncByAccount(this, account);
+                        mSynchronizationState = SYNC_RUNNING;
                     }
+                } else {
+                    //show network connection unavailable error.
+                    Toast.makeText(this, R.string.network_connection_unavailable, Toast.LENGTH_SHORT).show();
+                    //TODO: mostrar en pantalla error de conexion
+                    findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
+                    ((TextView) findViewById(R.id.error_message)).setText(R.string.network_connection_unavailable);
+                    findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                    mSynchronizationState = SYNC_ERROR;
+                }
             } else {
                 mSynchronizationState = SYNC_FINISHED;
                 //if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){

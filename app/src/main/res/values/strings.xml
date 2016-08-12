@@ -213,7 +213,7 @@
         <item>21600</item>
         <!--<item>-1</item>-->
     </string-array>
-    <string name="sync_periodicity_default_value">3600</string>
+    <string name="sync_periodicity_default_value">1800</string>
 
     <!-- Example settings for Notifications -->
     <!--<string name="pref_header_notifications">Notifications</string>-->
