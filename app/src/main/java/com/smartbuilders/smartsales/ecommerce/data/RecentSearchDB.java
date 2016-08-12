@@ -80,9 +80,9 @@ public class RecentSearchDB {
                     .build(), null,
                     "SELECT RECENT_SEARCH_ID, TEXT_TO_SEARCH, PRODUCT_ID, SUBCATEGORY_ID " +
                     " FROM RECENT_SEARCH " +
-                    " WHERE USER_ID = ? " +
+                    " WHERE USER_ID = ? AND IS_ACTIVE = ? " +
                     " ORDER BY CREATE_TIME desc",
-                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     RecentSearch recentSearch = new RecentSearch();

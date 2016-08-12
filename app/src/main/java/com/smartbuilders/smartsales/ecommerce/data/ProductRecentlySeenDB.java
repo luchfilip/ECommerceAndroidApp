@@ -29,8 +29,8 @@ public class ProductRecentlySeenDB {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
-                    "INSERT OR REPLACE INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, " +
-                        " BUSINESS_PARTNER_ID, USER_ID, PRODUCT_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    "INSERT INTO PRODUCT_RECENTLY_SEEN (PRODUCT_RECENTLY_SEEN_ID, BUSINESS_PARTNER_ID, " +
+                            " USER_ID, PRODUCT_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "PRODUCT_RECENTLY_SEEN")), String.valueOf(businessPartnerId),
                             String.valueOf(mUser.getServerUserId()), String.valueOf(productId), DateFormat.getCurrentDateTimeSQLFormat(),
