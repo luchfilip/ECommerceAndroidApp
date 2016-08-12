@@ -55,6 +55,7 @@
             android:background="@android:color/white"
             android:textColor="@color/black"
             android:textStyle="bold"
+            android:lines="1"
             android:visibility="gone" />
 
         <View style="@style/Divider"

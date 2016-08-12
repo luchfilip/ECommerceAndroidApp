@@ -45,8 +45,8 @@
             android:inputType="text"
             android:id="@+id/search_product_editText"
             android:descendantFocusability="beforeDescendants"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:padding="2dp" />
 
         <ImageView

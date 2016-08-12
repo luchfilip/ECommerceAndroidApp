@@ -76,31 +76,8 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/business_partner_commercial_name_editText"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/business_partner_commercial_name_textView"
-                    android:textColor="@color/black"
-                    android:visibility="gone"
-                    android:padding="5dp"
-                    android:textAppearance="@android:style/TextAppearance.Medium" />
                 <!--  -->
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/business_partner_name_label"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -120,6 +97,30 @@
                     android:textAppearance="@android:style/TextAppearance.Medium" />
                 <!-- -->
 
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/business_partner_name_label"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_commercial_name_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_commercial_name_textView"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
