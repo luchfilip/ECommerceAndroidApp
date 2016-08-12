@@ -16,6 +16,7 @@ public class User implements Parcelable {
     private String userId;
     private boolean saveDBInExternalCard;
     private int userProfileId;
+    private int serverSyncSessionId;
 
     public User(){
 
@@ -33,6 +34,7 @@ public class User implements Parcelable {
         dest.writeInt(serverUserId);
         dest.writeString(userId);
         dest.writeInt(userProfileId);
+        dest.writeInt(serverSyncSessionId);
         //dest.writeByte((byte) (saveDBInExternalCard ? 1 : 0));
     }
 
@@ -47,6 +49,7 @@ public class User implements Parcelable {
         serverUserId = in.readInt();
         userId = in.readString();
         userProfileId = in.readInt();
+        serverSyncSessionId = in.readInt();
         //saveDBInExternalCard = in.readByte() != 0;
     }
 
@@ -210,5 +213,13 @@ public class User implements Parcelable {
 
     public void setUserProfileId(int userProfileId) {
         this.userProfileId = userProfileId;
+    }
+
+    public int getServerSyncSessionId() {
+        return serverSyncSessionId;
+    }
+
+    public void setServerSyncSessionId(int serverSyncSessionId) {
+        this.serverSyncSessionId = serverSyncSessionId;
     }
 }

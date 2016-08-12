@@ -136,7 +136,9 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
         				}
         				throw new Exception(response.getString(response.getColumnIndex("error_message")));
 					}
-					
+
+					user.setServerSyncSessionId(response.getInt(response.getColumnIndex("sync_session_id")));
+
 					switch (response.getInt(response.getColumnIndex("state"))) {
 						case ApplicationUtilities.NEW_USER_AUTHORIZED:
 							getGcmRegId = true;
@@ -242,7 +244,8 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
         	response = ctx.getContentResolver()
 							.query(SynchronizerContentProvider.USER_SIGN_OUT_URI.buildUpon()
 									.appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
-									.appendQueryParameter(SynchronizerContentProvider.KEY_USER_SYNC_STATE, syncState).build(), 
+									.appendQueryParameter(SynchronizerContentProvider.KEY_USER_SYNC_STATE, syncState)
+                                    .appendQueryParameter(SynchronizerContentProvider.KEY_USER_SYNC_SESSION_ID, String.valueOf(user.getServerSyncSessionId())).build(),
 					        		null, null, null, null);
 			if(response == null){
 				user.setSessionToken(ctx.getString(R.string.error_validating_user_return_null));

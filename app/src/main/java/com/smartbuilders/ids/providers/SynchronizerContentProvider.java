@@ -53,6 +53,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final String KEY_USER_SAVE_DB_EXTERNAL_CARD 	= "USER_SAVE_DB_EXTERNAL_CARD";
 	public static final String KEY_USER_GCM_ID 					= "USER_GCM_ID";
 	public static final String KEY_USER_SYNC_STATE 				= "USER_SYNC_STATE";
+    public static final String KEY_USER_SYNC_SESSION_ID         = "USER_SYNC_SESSION_ID";
 	
 	private static final int START 						= 1;
 	private static final int STOP 						= 2;
@@ -334,8 +335,9 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 * @return
 	 */
 	private Cursor signIn(Uri uri){
-		MatrixCursor cursor = new MatrixCursor(new String[]{"state", "error_message", "exception_class"});
+		MatrixCursor cursor = new MatrixCursor(new String[]{"state", "sync_session_id", "error_message", "exception_class"});
 		Integer codeResult = ApplicationUtilities.ERROR;
+        Integer syncSessionId = null;
 		String errorMessage = null;
 		String exceptionClass = null;
 		if(uri.getQueryParameter(KEY_USER_ID)==null 
@@ -355,12 +357,14 @@ public class SynchronizerContentProvider extends ContentProvider{
 				ConsumeWebService a = new ConsumeWebService(getContext(),
 															user.getServerAddress(), 
 															"/IntelligentDataSynchronizer/services/ManageUser?wsdl", 
-											    			"signIn", 
-											    			"urn:signIn", 
+											    			"signInAndGetSyncSessionId",
+											    			"urn:signInAndGetSyncSessionId",
 											    			parameters);
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){
-					codeResult = Integer.valueOf(response.toString());
+					JSONObject responseJson = new JSONObject(response.toString());
+					codeResult = Integer.valueOf(responseJson.getString("STATE"));
+                    syncSessionId = Integer.valueOf(responseJson.getString("SYNC_SESSION_ID"));
 				}else if (response != null){
 					throw new ClassCastException("response classCastException, "+user+".");
 				}else {
@@ -388,7 +392,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 				exceptionClass = e.getClass().getName();
 			}
 		}
-		cursor.addRow(new Object[]{codeResult, errorMessage, exceptionClass});
+		cursor.addRow(new Object[]{codeResult, syncSessionId, errorMessage, exceptionClass});
 		return cursor;
 	}
 
@@ -462,11 +466,13 @@ public class SynchronizerContentProvider extends ContentProvider{
 		String errorMessage = null;
 		String exceptionClass = null;
 		if(uri.getQueryParameter(KEY_USER_ID)==null 
-				|| uri.getQueryParameter(KEY_USER_SYNC_STATE)==null){
-			throw new IllegalArgumentException("No userId or syncState paremeter found in the Uri passed.");
+				|| uri.getQueryParameter(KEY_USER_SYNC_STATE)==null
+                || uri.getQueryParameter(KEY_USER_SYNC_SESSION_ID)==null){
+			throw new IllegalArgumentException("No userId, syncState or syncSessionId parameter found in the Uri passed.");
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			String syncState = uri.getQueryParameter(KEY_USER_SYNC_STATE);
+            int syncSessionId = Integer.valueOf(uri.getQueryParameter(KEY_USER_SYNC_SESSION_ID));
 			//TODO: validar el authenticationToken
 			
 			try {
@@ -474,12 +480,13 @@ public class SynchronizerContentProvider extends ContentProvider{
 				parameters.put("authToken", user.getAuthToken());
 				parameters.put("userId", user.getServerUserId());
 				parameters.put("syncState", syncState);
+                parameters.put("syncSessionId", syncSessionId);
 				
 				ConsumeWebService a = new ConsumeWebService(getContext(),
 															user.getServerAddress(), 
 															"/IntelligentDataSynchronizer/services/ManageUser?wsdl", 
-											    			"signOut", 
-											    			"urn:signOut", 
+											    			"signOutWithSyncSessionId",
+											    			"urn:signOutWithSyncSessionId",
 											    			parameters);
 				Object response =  a.getWSResponse();
 				if(response instanceof SoapPrimitive){

@@ -218,7 +218,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         		e.printStackTrace();
         		syncStatus = SYNCHRONIZATION_CANCELLED;
         		//notify synchronization canceled
-        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_canceled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
         		throw new OperationCanceledException(e.getMessage());
             }catch(Exception e){
             	e.printStackTrace();
@@ -255,7 +255,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     	        		syncProgressPercentage = 1000F;
     	        		syncStatus = SYNCHRONIZATION_CANCELLED;
     	        		//notify synchronization canceled
-    	        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_canceled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+    	        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
         				throw new OperationCanceledException(e.getMessage());
     	        	}finally{
         				if(result!=null){

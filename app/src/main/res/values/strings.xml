@@ -70,10 +70,10 @@
     <string name="sync_started">Synchronization started</string>
     <string name="sync_finished">Synchronization finished.</string>
     <string name="sync_finished_duration">Synchronization finished, duration: %s.</string>
-    <string name="sync_canceled">Synchronization canceled</string>
+    <string name="sync_cancelled">Synchronization cancelled</string>
     <string name="general_exception">GENERAL_EXCEPTION</string>
     <string name="io_exception">IO_EXCEPTION</string>
-    <string name="operation_canceled_execption">OPERATION_CANCELED_EXCEPTION</string>
+    <string name="operation_cancelled_exception">OPERATION_CANCELLED_EXCEPTION</string>
     <string name="xml_pull_parse_exception">XML_PULL_PARSE_EXCEPTION</string>
     <string name="no_log_message_registered">No log message registered.</string>
     <string name="authenticator_exception">AUTHENTICATOR_EXCEPTION</string>
