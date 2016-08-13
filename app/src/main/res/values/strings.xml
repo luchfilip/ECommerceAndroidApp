@@ -77,9 +77,9 @@
     <string name="xml_pull_parse_exception">XML_PULL_PARSE_EXCEPTION</string>
     <string name="no_log_message_registered">No log message registered.</string>
     <string name="authenticator_exception">AUTHENTICATOR_EXCEPTION</string>
-    <string name="network_connection_unavailable">Network Connection Unavailable.</string>
+    <string name="network_connection_unavailable">Conexión de red no disponible.</string>
     <string name="sync_complete">Synchronization complete</string>
-    <string name="authentication_failed">Authentication Failed.</string>
+    <string name="authentication_failed">Error de autenticación.</string>
     <string name="sync_cancelled_by_user">Synchronization cancelled by user.</string>
     <string name="sync_duration">Synchronization Duration</string>
     <string name="log_clean_succesfully">The Log was clean successfully.</string>

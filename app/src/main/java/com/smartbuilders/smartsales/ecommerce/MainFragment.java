@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ public class MainFragment extends Fragment {
 
     private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
     private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
-    private static final String TAG = MainFragment.class.getSimpleName();
 
     // save index and top position
     private int mListViewIndex;
@@ -39,7 +37,6 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView(...)");
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         mIsInitialLoad = true;
 

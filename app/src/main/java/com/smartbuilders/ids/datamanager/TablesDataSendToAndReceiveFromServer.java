@@ -32,8 +32,8 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	private String exceptionMessage;
 	private String exceptionClass;
 	private float syncPercentage;
-    int numberOfTablesToSync;
-    int numberOfTableSynced;
+    private float numberOfTablesToSync;
+    private float numberOfTableSynced;
 	private User mUser;
     private int mConnectionTimeOut;
     private String mTablesToSyncJSONObject;
@@ -71,7 +71,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	public void run() {
 		Log.d(TAG, "run()");
 		try {
-            syncPercentage = 0;
+            syncPercentage = 0f;
             long initTime = System.currentTimeMillis();
             if (mTablesToSyncJSONObject!=null) {
                 if (sync) {
@@ -106,7 +106,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     getDataFromWS(context, mUser, tablesToSync);
                 }
             }
-            syncPercentage = 100;
+            syncPercentage = 100f;
             Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -295,9 +295,9 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             } else if (result instanceof Exception) {
                 throw (Exception) result;
             } else if (result != null) {
-                throw new Exception("Error while executing execRemoteQueryAndInsert(" + mUser.getServerAddress() + ", " + tableName + "), ClassCastException.");
+                throw new Exception("Error while executing execRemoteQueryAndInsert(...), result: \""+String.valueOf(result)+"\" , ClassCastException.");
             } else {
-                throw new Exception("Error while executing execRemoteQueryAndInsert(" + mUser.getServerAddress() + ", " + tableName + "), result is null.");
+                throw new Exception("Error while executing execRemoteQueryAndInsert(...), result is null.");
             }
         }
 	}

@@ -51,6 +51,7 @@ public class SplashScreen extends AppCompatActivity {
     private int mSynchronizationState;
     private TextView mProgressPercentageTextView;
     private String mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(0);
+    private TextView mSyncDurationTextView;
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
         @Override
@@ -65,6 +66,10 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
                             findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                             findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                            if (extras.containsKey(SyncAdapter.SYNC_INIT_TIME)) {
+                                mSyncDurationTextView.setText(ApplicationUtilities.parseMillisecondsToHMS((System.currentTimeMillis() - extras.getLong(SyncAdapter.SYNC_INIT_TIME)),
+                                        ApplicationUtilities.TIME_FORMAT_1));
+                            }
                             if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)) {
                                 mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(0);
                                 mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
@@ -76,11 +81,11 @@ public class SplashScreen extends AppCompatActivity {
                             }
                             mSynchronizationState = SYNC_RUNNING;
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
-                                || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+                                || intent.getAction().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
                                 || intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
-                            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
+                            if(intent.getAction().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)){
                                 mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(100);
                                 mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
                                 initApp();
@@ -106,7 +111,7 @@ public class SplashScreen extends AppCompatActivity {
             IntentFilter intentFilter = new IntentFilter(SyncAdapter.SYNCHRONIZATION_STARTED);
             intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_CANCELED);
             intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_PROGRESS);
-            intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_FINISHED);
+            intentFilter.addAction(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED);
             intentFilter.addAction(SyncAdapter.AUTHENTICATOR_EXCEPTION);
             intentFilter.addAction(SyncAdapter.GENERAL_EXCEPTION);
             intentFilter.addAction(SyncAdapter.IO_EXCEPTION);
@@ -135,6 +140,8 @@ public class SplashScreen extends AppCompatActivity {
 
         mProgressPercentageTextView = (TextView) findViewById(R.id.progress_percentage);
         mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+
+        mSyncDurationTextView = (TextView) findViewById(R.id.sync_duration);
 
         mAccountManager = AccountManager.get(this);
 
@@ -319,7 +326,7 @@ public class SplashScreen extends AppCompatActivity {
                         Utils.getSyncPeriodicityFromPreferences(this));
             }
 
-            if (Utils.appRequireInitialLoad(this, mUser)) {
+            if (Utils.appRequireInitialLoad(this, mUser.getUserId())) {
                 if(NetworkConnectionUtilities.isOnline(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){

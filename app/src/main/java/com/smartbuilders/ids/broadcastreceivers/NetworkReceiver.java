@@ -39,18 +39,20 @@ public class NetworkReceiver extends BroadcastReceiver {
                         try {
                             //Se verifica que la ultima sincronizacion se haya realizado en un tiempo
                             // mayor o igual al periodo de sincronizacion definido.
-                            User user = new User(accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                            Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(context, user);
+                            Date lastSuccessFullySyncTime = ApplicationUtilities.
+                                    getLastSuccessfullySyncTime(context, accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                             if(lastSuccessFullySyncTime!=null){
                                 long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
                                 if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
                                     if(seconds >= Utils.getSyncPeriodicityFromPreferences(context)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
-                                        ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());
+                                        ApplicationUtilities.initSyncDataWithServerService(context,
+                                                accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                     }
                                 }else{
-                                    ApplicationUtilities.initSyncDataWithServerService(context, user.getUserId());
+                                    ApplicationUtilities.initSyncDataWithServerService(context,
+                                            accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                 }
                             }else{
                                 ApplicationUtilities.initSyncByAccount(context, account);

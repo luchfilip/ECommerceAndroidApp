@@ -335,19 +335,21 @@ public class ApplicationUtilities {
 		return syncLog;
     }
 
-	public static Date getLastSuccessfullySyncTime(Context ctx, User user) {
+	public static Date getLastSuccessfullySyncTime(Context ctx, Account account) {
+		return getLastSuccessfullySyncTime(ctx, AccountManager.get(ctx).getUserData(account,
+                AccountGeneral.USERDATA_USER_ID));
+	}
+
+	public static Date getLastSuccessfullySyncTime(Context ctx, String userId) {
 		Cursor c = null;
 		try{
-			if(user!=null){
-				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                        "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE = ? OR LOG_TYPE = ?)",
-                        new String[]{String.valueOf(user.getUserId()),
-                                SyncAdapter.SYNCHRONIZATION_FINISHED,
-                                SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED}, null);
-				if(c!=null && c.moveToNext() && c.getString(0)!=null){
-					return sdf.parse(c.getString(0));
-				}
-			}
+            c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
+                    "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE = ? OR LOG_TYPE = ?)",
+                    new String[]{userId, SyncAdapter.FULL_SYNCHRONIZATION_FINISHED,
+                            SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED}, null);
+            if(c!=null && c.moveToNext() && c.getString(0)!=null){
+                return sdf.parse(c.getString(0));
+            }
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -1454,7 +1456,8 @@ public class ApplicationUtilities {
 				|| logType.equals(SyncAdapter.SYNCHRONIZATION_STARTED)){
 			logMessage = ctx.getString(R.string.sync_started);
 		}else if(logType.equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED)
-				|| logType.equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
+				|| logType.equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+                || logType.equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)){
 			logMessage = ctx.getString(R.string.sync_finished);
 		}else if(logType.equals(SyncAdapter.IO_EXCEPTION)){
 			logMessage = ctx.getString(R.string.io_exception);

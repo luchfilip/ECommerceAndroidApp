@@ -19,18 +19,13 @@ import java.util.ArrayList;
 /**
  * Jesus Sarco, 31.07.2016
  */
-public class SynchronizationBroadcastReceiver extends BroadcastReceiver {
-    public SynchronizationBroadcastReceiver() {
+public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver {
+    public SynchronizationFinishedBroadcastReceiver() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent!=null && intent.getAction()!=null){
-            if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED) ||
-                    intent.getAction().equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED)){
-                checkNewAvailabilitiesInWishList(context);
-            }
-        }
+        checkNewAvailabilitiesInWishList(context);
     }
 
     private void checkNewAvailabilitiesInWishList(Context context){

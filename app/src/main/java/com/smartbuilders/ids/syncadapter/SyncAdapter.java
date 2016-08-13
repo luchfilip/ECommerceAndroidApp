@@ -42,11 +42,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public static final String PERIODIC_SYNCHRONIZATION_STARTED 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_STARTED";
 	public static final String PERIODIC_SYNCHRONIZATION_FINISHED 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED";
 	public static final String PERIODIC_SYNCHRONIZATION_CANCELED 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_CANCELED";
-	public static final String SYNCHRONIZATION_STARTED 		= "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_STARTED";
-	public static final String SYNCHRONIZATION_PROGRESS 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_PROGRESS";
-	public static final String SYNCHRONIZATION_FINISHED 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_FINISHED";
-	public static final String SYNCHRONIZATION_CANCELED 	= "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_CANCELED";
-	public static final String IO_EXCEPTION 				= "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_IO_EXCEPTION";
+	public static final String SYNCHRONIZATION_STARTED 		        = "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_STARTED";
+	public static final String SYNCHRONIZATION_PROGRESS 	        = "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_PROGRESS";
+	public static final String SYNCHRONIZATION_FINISHED 	        = "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_FINISHED";
+    public static final String FULL_SYNCHRONIZATION_FINISHED 	    = "com.smartbuilders.ids.syncadapter.SyncAdapter.FULL_SYNCHRONIZATION_FINISHED";
+	public static final String SYNCHRONIZATION_CANCELED 	        = "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_CANCELED";
+	public static final String IO_EXCEPTION 				        = "com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_IO_EXCEPTION";
 	public static final String GENERAL_EXCEPTION 			= "com.smartbuilders.ids.syncadapter.SyncAdapter.GENERAL_EXCEPTION";
 	public static final String CONNECT_EXCEPTION 			= "com.smartbuilders.ids.syncadapter.SyncAdapter.CONNECT_EXCEPTION";
 	public static final String SOCKET_EXCEPTION 			= "com.smartbuilders.ids.syncadapter.SyncAdapter.SOCKET_EXCEPTION";
@@ -140,16 +141,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
     		isAPeriodicSync = extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE);
             try {
-                long seconds = (System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user).getTime())/1000;
-                if(seconds < Utils.getSyncPeriodicityFromPreferences(getContext())) {
+                if(((System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user.getUserId()).getTime())/1000)
+						< Utils.getSyncPeriodicityFromPreferences(getContext())) {
                     return;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
     	}
+
+        boolean isAFullSync = true;
 		String tablesToSyncJSONObject = null;
 		if(extras!=null && extras.containsKey("tables_to_sync")){
+            isAFullSync = false;
 			tablesToSyncJSONObject = extras.getString("tables_to_sync");
 		}
     	try{
@@ -282,8 +286,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                                         || result.getString(result.getColumnIndex("exception_class")).equals(org.ksoap2.SoapFault.class.getName()))){
 		        					throw new IOException(result.getString(result.getColumnIndex("error_message")));
 		        				} 
-		        				
-		        				throw new Exception(result.getString(result.getColumnIndex("error_message")));
+								throw new Exception(result.getString(result.getColumnIndex("error_message")));
 		        			}else{
 		        				syncProgressPercentage = Float.valueOf(result.getString(result.getColumnIndex("state")));
 		        			}
@@ -306,7 +309,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         	if(syncProgressPercentage>=100){
 	        	//notify synchronization finished successful
 		        recordLogAndSendBroadcast(user, 
-											isAPeriodicSync ? PERIODIC_SYNCHRONIZATION_FINISHED : SYNCHRONIZATION_FINISHED, 
+											isAPeriodicSync ? PERIODIC_SYNCHRONIZATION_FINISHED :
+                                                    (isAFullSync ? FULL_SYNCHRONIZATION_FINISHED : SYNCHRONIZATION_FINISHED),
 											R.string.sync_finished, 
 											getContext().getString(R.string.sync_finished_duration, ApplicationUtilities.parseMillisecondsToHMS(System.currentTimeMillis() - syncInitTime, ApplicationUtilities.TIME_FORMAT_2)), 
 											syncInitTime,

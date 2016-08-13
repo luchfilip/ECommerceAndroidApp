@@ -872,8 +872,12 @@ public class Utils {
                 + File.separator + user.getUserName() + "/images/userCompany/";
     }
 
-    public static boolean appRequireInitialLoad(Context context, User user) {
-        return ApplicationUtilities.getLastSuccessfullySyncTime(context, user)==null;
+    public static boolean appRequireInitialLoad(Context context, Account account) {
+        return ApplicationUtilities.getLastSuccessfullySyncTime(context, account)==null;
+    }
+
+    public static boolean appRequireInitialLoad(Context context, String userId) {
+        return ApplicationUtilities.getLastSuccessfullySyncTime(context, userId)==null;
     }
 
     public static User getCurrentUser(Context context) {

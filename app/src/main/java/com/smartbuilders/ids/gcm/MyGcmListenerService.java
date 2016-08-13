@@ -194,14 +194,18 @@ public class MyGcmListenerService extends GcmListenerService {
                                 AccountManager mAccountManager = AccountManager.get(this);
                                 for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
                                     if (!ApplicationUtilities.isSyncActive(this, account)) {
-                                        //se manda a correr la sincronizacion de manera inmediata
-                                        if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
-                                            ApplicationUtilities.initSyncByAccount(this, account, data.getString(KEY_PARAM_TABLES_TO_SYNC));
-                                        } else {
-                                            ApplicationUtilities.initSyncByAccount(this, account);
+                                        if(!Utils.appRequireInitialLoad(this, account)){
+                                            //se manda a correr la sincronizacion de manera inmediata
+                                            if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
+                                                ApplicationUtilities.initSyncByAccount(this, account, data.getString(KEY_PARAM_TABLES_TO_SYNC));
+                                            } else {
+                                                ApplicationUtilities.initSyncByAccount(this, account);
+                                            }
+                                            sendResponseToServer(this, requestMethodName, requestId,
+                                                    "user: "+account.name+", synchronization initialized.", null);
+                                        }else{
+                                            throw new Exception("App require initial load.");
                                         }
-                                        sendResponseToServer(this, requestMethodName, requestId,
-                                                "user: "+account.name+", synchronization initialized.", null);
                                     }else{
                                         throw new Exception("the synchronization is active.");
                                     }
@@ -546,15 +550,14 @@ public class MyGcmListenerService extends GcmListenerService {
                                 AccountManager accountManager = AccountManager.get(this);
                                 for(Account account : accountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
                                     if (!ApplicationUtilities.isSyncActive(this, account)) {
-                                        User user = new User();
-                                        user.setUserId(accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                                        Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(this, user);
+                                        Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){
-                                            long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
-                                            if(seconds >= Utils.getSyncPeriodicityFromPreferences(this)) {
+                                            if(((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000) >= Utils.getSyncPeriodicityFromPreferences(this)) {
                                                 ApplicationUtilities.initSyncByAccount(this, account);
                                             }else{
-                                                ApplicationUtilities.initSyncDataWithServerService(this, user.getUserId());
+                                                ApplicationUtilities.initSyncDataWithServerService(this,
+                                                        accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+                                                throw new Exception("El tiempo de la ultima sincronizacion es menor al periodo de sincronizacion.");
                                             }
                                         }else{
                                             ApplicationUtilities.initSyncByAccount(this, account);
