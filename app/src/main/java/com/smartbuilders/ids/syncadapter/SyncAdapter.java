@@ -71,6 +71,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	 * El usuario sincronizo completamente
 	 */
 	public final static String STATE_SESSION_SUCCESS = "SS";
+    /**
+     * El usuario realizó una sincronizacion periodica
+     */
+    public final static String STATE_PERIODIC_SESSION_SUCCESS = "PS";
+    /**
+     * El usuario realizó una sincronizacion completa
+     */
+    public final static String STATE_FULL_SESSION_SUCCESS = "FS";
 	/**
 	 * Hay algun registro con error
 	 */
@@ -138,8 +146,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
         
         boolean isAPeriodicSync = false;
-    	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
-    		isAPeriodicSync = extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE);
+    	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)
+                && extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
+    		isAPeriodicSync = true;
             try {
                 if(((System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user.getUserId()).getTime())/1000)
 						< Utils.getSyncPeriodicityFromPreferences(getContext())) {
@@ -160,7 +169,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         	syncStatus = SYNCHRONIZATION_CANCELLED;
         	
     		// Get the auth token for the current account
-    		String authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
+    		//String authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
     		sServerAuthenticate.userSignIn(user, account.type, getContext());
     		//Log.d(TAG, "debug>  authToken: "+authToken);
 			//Log.d(TAG, "debug>  sessionToken: "+user.getSessionToken());
@@ -317,7 +326,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 											LogSyncData.VISIBLE, 
 											getContext());
 		        try {
-					sServerAuthenticate.userSignOut(user, STATE_SESSION_SUCCESS, getContext());
+					sServerAuthenticate.userSignOut(user, isAPeriodicSync ? STATE_PERIODIC_SESSION_SUCCESS
+                            : (isAFullSync ? STATE_FULL_SESSION_SUCCESS : STATE_SESSION_SUCCESS), getContext());
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
