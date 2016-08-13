@@ -33,7 +33,6 @@ import com.smartbuilders.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.ids.broadcastreceivers.AlarmReceiver;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.services.SyncDataWithServer;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 
 import android.accounts.Account;

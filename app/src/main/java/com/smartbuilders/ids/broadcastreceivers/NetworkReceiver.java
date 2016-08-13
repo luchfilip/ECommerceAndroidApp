@@ -1,6 +1,5 @@
 package com.smartbuilders.ids.broadcastreceivers;
 
-import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.R;
