@@ -1,6 +1,7 @@
 package com.smartbuilders.ids.datamanager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.ids.utils.ConsumeWebService;
 import com.smartbuilders.ids.utils.DataBaseUtilities;
-import com.smartbuilders.smartsales.ecommerce.data.FailedSyncDataWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 
 /**
@@ -32,9 +32,13 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	private String exceptionMessage;
 	private String exceptionClass;
 	private float syncPercentage;
+    int numberOfTablesToSync;
+    int numberOfTableSynced;
 	private User mUser;
     private int mConnectionTimeOut;
     private String mTablesToSyncJSONObject;
+    private JSONObject userTablesAndSqlToSync;
+    private List<SoapPrimitive> tablesToSync;
 
     public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject) throws Exception{
         this(user, context);
@@ -69,20 +73,37 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		try {
             syncPercentage = 0;
             long initTime = System.currentTimeMillis();
-            if(mTablesToSyncJSONObject!=null) {
-                if(sync){
-                    getGlobalDataFromWS(context, mUser, new JSONObject(mTablesToSyncJSONObject));
-                }
-            }else{
+            if (mTablesToSyncJSONObject!=null) {
                 if (sync) {
-                    sendUserDataToServer(getUserTablesAndSQLToSync());
-                    (new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
+                    Iterator keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
+                    tablesToSync = new ArrayList<>();
+                    while(keys.hasNext()){
+                        tablesToSync.add(new SoapPrimitive(null, null,
+                                (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
+                    }
+                }
+                if (sync) {
+                    numberOfTablesToSync = tablesToSync.size();
+                    getDataFromWS(context, mUser, tablesToSync);
+                }
+            } else {
+                if (sync) {
+                    userTablesAndSqlToSync = getUserTablesAndSQLToSync();
+                }
+                if (sync) {
+                    tablesToSync = new ArrayList<>();
+                    tablesToSync.addAll(getUserTablesToSync());
+                }
+                if (sync) {
+                    tablesToSync.addAll(getGlobalTablesToSync());
+                }
+                if (sync) {
+                    numberOfTablesToSync = userTablesAndSqlToSync.length() + tablesToSync.size();
+                    sendUserDataToServer(userTablesAndSqlToSync);
+                    //(new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
                 }
                 if(sync){
-                    getUserDataFromWS(context, mUser, getUserTablesToSync());
-                }
-                if(sync){
-                    getGlobalDataFromWS(context, mUser, getGlobalTablesToSync());
+                    getDataFromWS(context, mUser, tablesToSync);
                 }
             }
             syncPercentage = 100;
@@ -114,31 +135,29 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private void sendUserDataToServer(JSONObject userTablesToSync) throws Exception {
         Iterator<?> keysTemp = userTablesToSync.keys();
         while(keysTemp.hasNext()){
-            //try {
+            if(sync){
+                String key = (String) keysTemp.next();
+                Object result = DataBaseUtilities
+                        .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
                 if(sync){
-                    String key = (String) keysTemp.next();
-                    Object result = DataBaseUtilities
-                            .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
-                    if(sync){
-                        if (result instanceof String) {
-                            sendDataToServer(key, (String) result, null);
-                        } else if (result instanceof Exception) {
-                            sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
-                            throw (Exception) result;
-                        } else {
-                            sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
-                            throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
-                        }
-                    }else{
-                        sendDataToServer(key, null, "Synchronization was stopped by user.");
+                    numberOfTableSynced++;
+                    syncPercentage = ((numberOfTableSynced * 100) / numberOfTablesToSync);
+                    if (result instanceof String) {
+                        sendDataToServer(key, (String) result, null);
+                    } else if (result instanceof Exception) {
+                        sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
+                        throw (Exception) result;
+                    } else {
+                        sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                        throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
                     }
                 }else{
-                    //se detiene el bucle
-                    break;
+                    sendDataToServer(key, null, "Synchronization was stopped by user.");
                 }
-            //} catch (JSONException e) {
-            //    e.printStackTrace();
-            //}
+            }else{
+                //se detiene el bucle
+                break;
+            }
         }
     }
 
@@ -175,33 +194,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-    public void getGlobalDataFromWS(Context context, User user, JSONObject tablesToSync) throws Exception {
-        if (tablesToSync!=null && tablesToSync.keys()!=null) {
-            Iterator keys = tablesToSync.keys();
-            while(keys.hasNext()){
-                if (sync) {
-                    execRemoteQueryAndInsert(context, user, (String) tablesToSync.get(keys.next().toString()));
-                    syncPercentage++;
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-
-	public void getGlobalDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
-        if (tablesToSync!=null && !tablesToSync.isEmpty()) {
-            for (SoapPrimitive tableToSync : tablesToSync) {
-                if (sync) {
-                    execRemoteQueryAndInsert(context, user, tableToSync.toString());
-                    syncPercentage++;
-                } else {
-                    break;
-                }
-            }
-        }
-	}
-
     private List<SoapPrimitive> getUserTablesToSync() throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", mUser.getAuthToken());
@@ -217,16 +209,19 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-	public void getUserDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
+    public void getDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
-                if(sync){
+                if (sync) {
                     execRemoteQueryAndInsert(context, user, tableToSync.toString());
-                    syncPercentage++;
+                    numberOfTableSynced++;
+                    syncPercentage = ((numberOfTableSynced * 100) / numberOfTablesToSync);
+                } else {
+                    break;
                 }
             }
         }
-	}
+    }
 
 	/**
 	 *

@@ -38,6 +38,7 @@ public class SplashScreen extends AppCompatActivity {
     private static final String TAG = SplashScreen.class.getSimpleName();
 
     private static final String STATE_SYNCHRONIZATION_STATE = "STATE_SYNCHRONIZATION_STATE";
+    private static final String STATE_SYNC_PROGRESS_PERCENTAGE = "STATE_SYNC_PROGRESS_PERCENTAGE";
 
     private static final int SYNC_RUNNING = 1;
     private static final int SYNC_ERROR = 2;
@@ -48,6 +49,8 @@ public class SplashScreen extends AppCompatActivity {
     private boolean finishActivityOnResultOperationCanceledException;
     private User mUser;
     private int mSynchronizationState;
+    private TextView mProgressPercentageTextView;
+    private String mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(0);
 
     private BroadcastReceiver syncAdapterReceiver =  new BroadcastReceiver() {
         @Override
@@ -62,6 +65,15 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
                             findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                             findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                            if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_STARTED)) {
+                                mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(0);
+                                mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+                            } else if (intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
+                                if (extras.containsKey(SyncAdapter.LOG_MESSAGE)) {
+                                    mProgressPercentage = extras.getString(SyncAdapter.LOG_MESSAGE);
+                                    mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+                                }
+                            }
                             mSynchronizationState = SYNC_RUNNING;
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
@@ -69,6 +81,8 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
                             if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
+                                mProgressPercentage = ApplicationUtilities.formatFloatTwoDecimals(100);
+                                mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
                                 initApp();
                                 mSynchronizationState = SYNC_FINISHED;
                             }else{
@@ -114,7 +128,13 @@ public class SplashScreen extends AppCompatActivity {
             if(savedInstanceState.containsKey(STATE_SYNCHRONIZATION_STATE)){
                 mSynchronizationState = savedInstanceState.getInt(STATE_SYNCHRONIZATION_STATE);
             }
+            if(savedInstanceState.containsKey(STATE_SYNC_PROGRESS_PERCENTAGE)){
+                mProgressPercentage = savedInstanceState.getString(STATE_SYNC_PROGRESS_PERCENTAGE);
+            }
         }
+
+        mProgressPercentageTextView = (TextView) findViewById(R.id.progress_percentage);
+        mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
 
         mAccountManager = AccountManager.get(this);
 
@@ -286,7 +306,7 @@ public class SplashScreen extends AppCompatActivity {
                 ////Turn on periodic syncing
                 //ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
                 //ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
-                //        bundle, Utils.getSyncPeriodicityFromPreferences(this));
+                //|        bundle, Utils.getSyncPeriodicityFromPreferences(this));
 
                 //Turn on periodic syncing
                 ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
@@ -343,6 +363,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_SYNCHRONIZATION_STATE, mSynchronizationState);
+        outState.putString(STATE_SYNC_PROGRESS_PERCENTAGE, mProgressPercentage);
         super.onSaveInstanceState(outState);
     }
 }
