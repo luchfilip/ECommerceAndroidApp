@@ -197,12 +197,15 @@ public class MyGcmListenerService extends GcmListenerService {
                                         if(!Utils.appRequireInitialLoad(this, account)){
                                             //se manda a correr la sincronizacion de manera inmediata
                                             if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
+                                                sendResponseToServer(this, requestMethodName, requestId,
+                                                        "user: "+account.name+", tablesToSync: "+data.getString(KEY_PARAM_TABLES_TO_SYNC)+
+                                                                ", synchronization initialized.", null);
                                                 ApplicationUtilities.initSyncByAccount(this, account, data.getString(KEY_PARAM_TABLES_TO_SYNC));
                                             } else {
+                                                sendResponseToServer(this, requestMethodName, requestId,
+                                                        "user: "+account.name+", Full Synchronization initialized.", null);
                                                 ApplicationUtilities.initSyncByAccount(this, account);
                                             }
-                                            sendResponseToServer(this, requestMethodName, requestId,
-                                                    "user: "+account.name+", synchronization initialized.", null);
                                         }else{
                                             throw new Exception("App require initial load.");
                                         }
@@ -606,32 +609,6 @@ public class MyGcmListenerService extends GcmListenerService {
     }
     // [END receive_message]
 
-    /**
-     * Create and show a simple notification containing the received GCM message.
-     *
-     * @param message GCM message received.
-     */
-    private void sendNotification(String message) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("GCM Message")
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-    }
-
     private String getFileInfo(File file){
         return "fileSize: "+getReadableSize(getFolderSize(file));
     }
@@ -640,7 +617,7 @@ public class MyGcmListenerService extends GcmListenerService {
         return "numberOfFiles: "+folder.list().length+", folderSize: "+getReadableSize(getFolderSize(folder));
     }
 
-    public static long getFolderSize(File file) {
+    private static long getFolderSize(File file) {
         long size;
         if (file.isDirectory()) {
             size = 0;
@@ -653,7 +630,7 @@ public class MyGcmListenerService extends GcmListenerService {
         return size;
     }
 
-    public static String getReadableSize(long size) {
+    private static String getReadableSize(long size) {
         if(size <= 0) return "0";
         final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
@@ -669,7 +646,8 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param response
      * @param errorMessage
      */
-    private void sendResponseToServer(Context context, String requestMethodName, int requestId, String response, String errorMessage){
+    private void sendResponseToServer(Context context, String requestMethodName, int requestId,
+                                      String response, String errorMessage){
         User user = Utils.getCurrentUser(context);
         if (user!=null) {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();

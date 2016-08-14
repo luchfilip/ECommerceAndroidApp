@@ -295,7 +295,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             } else if (result instanceof Exception) {
                 throw (Exception) result;
             } else if (result != null) {
-                throw new Exception("Error while executing execRemoteQueryAndInsert(...), result: \""+String.valueOf(result)+"\" , ClassCastException.");
+                throw new Exception("Error while executing execRemoteQueryAndInsert(...), result is not null, ClassCastException.");
             } else {
                 throw new Exception("Error while executing execRemoteQueryAndInsert(...), result is null.");
             }

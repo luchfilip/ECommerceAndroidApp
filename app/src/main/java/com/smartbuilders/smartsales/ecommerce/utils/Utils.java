@@ -177,9 +177,9 @@ public class Utils {
             try {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
-                Bitmap icon = BitmapFactory.decodeResource(context.getResources(), resId);
+                Bitmap image = BitmapFactory.decodeResource(context.getResources(), resId);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException e1) {
@@ -208,7 +208,7 @@ public class Utils {
                 imageFile.createNewFile();
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException e1) {
@@ -247,7 +247,7 @@ public class Utils {
                 }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException | NullPointerException e1) {
@@ -283,7 +283,7 @@ public class Utils {
                 }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException | NullPointerException e1) {
@@ -320,7 +320,7 @@ public class Utils {
                 }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException | NullPointerException e1) {
@@ -356,7 +356,7 @@ public class Utils {
                 }
                 FileOutputStream fo = new FileOutputStream(imageFile);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                image.compress(fileName.contains(".png") ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 100, bytes);
                 fo.write(bytes.toByteArray());
                 fo.close();
             } catch (IOException | NullPointerException e1) {

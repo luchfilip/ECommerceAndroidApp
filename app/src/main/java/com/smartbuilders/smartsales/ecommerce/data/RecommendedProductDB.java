@@ -68,9 +68,13 @@ public class RecommendedProductDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT COUNT(PRODUCT_ID) FROM RECOMMENDED_PRODUCT " +
-                            " WHERE BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ? ",
-                    new String[]{String.valueOf(businessPartnerId), "Y"}, null);
+                    "SELECT COUNT(R.PRODUCT_ID) FROM RECOMMENDED_PRODUCT R " +
+                            " INNER JOIN PRODUCT P ON P.PRODUCT_ID = R.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        " WHERE R.BUSINESS_PARTNER_ID = ? AND R.IS_ACTIVE = ? ",
+                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(businessPartnerId), "Y"}, null);
             if (c!=null && c.moveToNext()) {
                 return c.getInt(0);
             }
