@@ -284,9 +284,6 @@ public class SplashScreen extends AppCompatActivity {
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
-
-        (new SyncLogDB(this)).cleanLog(mUser.getUserId(), 1);
-
         startActivity(new Intent(SplashScreen.this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
