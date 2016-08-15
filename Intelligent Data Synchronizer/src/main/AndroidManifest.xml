@@ -19,6 +19,28 @@
             </intent-filter>
         </activity>
 
+        <!-- *** Not really needed here, but convenient for copying to other apps that will use this module *** -->
+        <activity
+            android:name=".AuthenticatorActivity"
+            android:label="@string/login_label" />
+        <activity
+            android:name=".SchedulerManagerActivity"
+            android:label="@string/title_activity_scheduler_manager" >
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name=".SQLConsoleActivity"
+            android:label="@string/title_activity_sqlconsole"
+            android:windowSoftInputMode="adjustNothing" >
+        </activity>
+        <activity
+            android:name=".NotificationsManagerActivity"
+            android:label="@string/title_activity_notifications_manager" >
+        </activity>
+
     </application>
 
 </manifest>
