@@ -53,7 +53,12 @@ public class LoadProductsThumbImage extends IntentService {
             List<String> filesName = new ArrayList<>();
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(), null,
-                    "SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y' AND PRIORITY=1",
+                    "SELECT PI.FILE_NAME FROM PRODUCT_IMAGE PI " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = PI.PRODUCT_ID AND P.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
+                    " WHERE PI.IS_ACTIVE='Y' AND PI.PRIORITY=1",
                     null, null);
             if(c!=null){
                 ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

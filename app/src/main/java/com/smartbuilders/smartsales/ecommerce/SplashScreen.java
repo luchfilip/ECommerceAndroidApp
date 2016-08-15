@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.ids.AuthenticatorActivity;
+import com.smartbuilders.ids.data.SyncLogDB;
 import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
@@ -283,9 +284,9 @@ public class SplashScreen extends AppCompatActivity {
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
-        //Utils.createImageFiles(this, mUser);
-        //se manda a descargar todas las imagenes thumbs de los productos
-        //startService(new Intent(this, LoadProductsThumbImage.class));
+
+        (new SyncLogDB(this)).cleanLog(mUser.getUserId(), 1);
+
         startActivity(new Intent(SplashScreen.this, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();

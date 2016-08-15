@@ -25,7 +25,7 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.smartbuilders.ids.logsync.LogSyncData;
+import com.smartbuilders.ids.data.SyncLogDB;
 import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.ids.scheduler.SchedulerSyncData;
@@ -271,69 +271,6 @@ public class ApplicationUtilities {
         }
     }
 
-    /**
-     * 
-     * @param user
-     * @param ctx
-     * @return
-     */
-    public static ArrayList<LogSyncData> getSyncLogByUser(User user, int logVisibility, Context ctx){
-    	ArrayList<LogSyncData> syncLog = new ArrayList<>();
-    	Cursor c = null;
-    	try{
-    		if(user!=null){
-				c = ctx.getContentResolver()
-						.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                                "SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL " +
-                                    " FROM IDS_SYNC_LOG WHERE USER_ID=? AND LOG_VISIBILITY= ?",
-								new String[]{String.valueOf(user.getUserId()), String.valueOf(logVisibility)}, null);
-				if(c!=null){
-					while(c.moveToNext()){
-						syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)), c.getString(1), c.getString(2), c.getString(3), ctx));
-					}
-				}
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			if(c!=null){
-				c.close();
-			}
-		}
-		return syncLog;
-    }
-    
-    /**
-     * 
-     * @param user
-     * @param ctx
-     * @return
-     */
-    public static ArrayList<LogSyncData> getSyncLogByUser(User user, Context ctx){
-    	ArrayList<LogSyncData> syncLog = new ArrayList<>();
-    	Cursor c = null;
-    	try{
-    		if(user!=null){
-				c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                        "SELECT CREATE_TIME, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL FROM IDS_SYNC_LOG WHERE USER_ID=?",
-                        new String[]{user.getUserId()}, null);
-                if(c!=null){
-				    while(c.moveToNext()){
-				    	syncLog.add(getLogSyncDataParseMessageByType(sdf.parse(c.getString(0)),
-                                c.getString(1), c.getString(2), c.getString(3), ctx));
-				    }
-                }
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			if(c!=null){
-				c.close();
-			}
-		}
-		return syncLog;
-    }
-
 	public static Date getLastSuccessfullySyncTime(Context ctx, Account account) {
 		return getLastSuccessfullySyncTime(ctx, AccountManager.get(ctx).getUserData(account,
                 AccountGeneral.USERDATA_USER_ID));
@@ -358,28 +295,6 @@ public class ApplicationUtilities {
 		}
 		return null;
 	}
-
-    /**
-     * 
-     * @param user
-     * @param logType
-     * @param logMessage
-     * @param logVisibility
-     * @param ctx
-     */
-    public static void registerLogInDataBase(User user, String logType, String logMessage,
-											 String logMessageDetail, int logVisibility, Context ctx){
-		try{
-            ctx.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI, new ContentValues(),
-                            "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
-                                    " VALUES (?, ?, ?, ?, ?)",
-                            new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
-                                    Integer.valueOf(logVisibility).toString()});
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-    }
     
     /**
      * Register the user in the local data base
@@ -1021,25 +936,6 @@ public class ApplicationUtilities {
 	
 	/**
 	 * 
-	 * @param ctx
-	 * @param days
-	 * @return
-	 * @throws Exception
-	 */
-	public static int cleanLog(Context ctx, String userId, int days) throws Exception{
-		try{
-			return ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI, null,
-								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID=?", 
-								new String[]{userId});
-		}catch(Exception e){
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	/**
-	 * 
 	 * @param millis
 	 * @return
 	 */
@@ -1365,12 +1261,9 @@ public class ApplicationUtilities {
 							c.close();
 						}
 					}
-			    	
+
 					//delete logs in database
-			    	ctx.getContentResolver()
-						.update(DataBaseContentProvider.INTERNAL_DB_URI, null,
-								"DELETE FROM IDS_SYNC_LOG WHERE USER_ID = ?",
-								new String[]{userRemoved.getUserId()});
+					(new SyncLogDB(ctx)).cleanLog(userRemoved.getUserId());
 			    	
 			    	//delete user in database
 			    	ctx.getContentResolver()
@@ -1442,31 +1335,7 @@ public class ApplicationUtilities {
     	return null;
     }
     
-    /**
-     * Devuelve un objeto de tipo LogSyncData 
-     * @param logDate
-     * @param logType
-     * @param logMessage
-     * @param ctx
-     * @return
-     */
-    public static LogSyncData getLogSyncDataParseMessageByType(Date logDate, String logType, String logMessage, String logMessageDetail, Context ctx){
-		if(logType.equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_STARTED)
-				|| logType.equals(SyncAdapter.SYNCHRONIZATION_STARTED)){
-			logMessage = ctx.getString(R.string.sync_started);
-		}else if(logType.equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED)
-				|| logType.equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
-                || logType.equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)){
-			logMessage = ctx.getString(R.string.sync_finished);
-		}else if(logType.equals(SyncAdapter.IO_EXCEPTION)){
-			logMessage = ctx.getString(R.string.io_exception);
-		}else if(logType.equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)){
-			logMessage = ctx.getString(R.string.authenticator_exception);
-		}else if(logType.equals(SyncAdapter.GENERAL_EXCEPTION)){
-			logMessage = ctx.getString(R.string.general_exception);
-		}
-		return new LogSyncData(logDate, logType, logMessage, logMessageDetail);
-    }
+
 
 	public static void initSyncDataWithServerService(Context context, String userId){
 		//Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);

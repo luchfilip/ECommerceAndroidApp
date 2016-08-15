@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.smartbuilders.ids.logsync.LogSyncData;
+import com.smartbuilders.ids.model.SyncLog;
 
 public class SchedulerSyncData implements Parcelable {
     
@@ -165,7 +165,7 @@ public class SchedulerSyncData implements Parcelable {
 	/**
 	 * @return the creator
 	 */
-	public static Creator<LogSyncData> getCreator() {
+	public static Creator<SyncLog> getCreator() {
 		return CREATOR;
 	}
 
@@ -283,13 +283,13 @@ public class SchedulerSyncData implements Parcelable {
 		this.isActive = isActive;
 	}
 
-	public static final Creator<LogSyncData> CREATOR = new Creator<LogSyncData>() {
-    	public LogSyncData createFromParcel(Parcel in) {
-    		return new LogSyncData(in);
+	public static final Creator<SyncLog> CREATOR = new Creator<SyncLog>() {
+    	public SyncLog createFromParcel(Parcel in) {
+    		return new SyncLog(in);
     	}
 
-    	public LogSyncData[] newArray(int size) {
-    		return new LogSyncData[size];
+    	public SyncLog[] newArray(int size) {
+    		return new SyncLog[size];
     	}
     };
 }

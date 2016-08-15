@@ -7,7 +7,8 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import com.smartbuilders.ids.logsync.LogSyncData;
+import com.smartbuilders.ids.data.SyncLogDB;
+import com.smartbuilders.ids.model.SyncLog;
 import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.providers.SynchronizerContentProvider;
 import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
@@ -221,7 +222,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						syncStatus = SYNCHRONIZATION_RUNNING;
 						//notify synchronization start
 						recordLogAndSendBroadcast(user, isAPeriodicSync ? PERIODIC_SYNCHRONIZATION_STARTED : SYNCHRONIZATION_STARTED, 
-													R.string.sync_started, R.string.sync_started, syncInitTime, LogSyncData.VISIBLE, getContext());
+													R.string.sync_started, R.string.sync_started, syncInitTime, SyncLog.VISIBLE, getContext());
 						
 					}else{
 						throw new OperationCanceledException(result.getString(result.getColumnIndex("error_message")));
@@ -231,11 +232,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         		e.printStackTrace();
         		syncStatus = SYNCHRONIZATION_CANCELLED;
         		//notify synchronization canceled
-        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, SyncLog.VISIBLE, getContext());
         		throw new OperationCanceledException(e.getMessage());
             }catch(Exception e){
             	e.printStackTrace();
-        		ApplicationUtilities.registerLogInDataBase(user, GENERAL_EXCEPTION, getContext().getString(R.string.general_exception), e.getMessage(), LogSyncData.INVISIBLE, getContext());
+				(new SyncLogDB(getContext())).registerLogInDataBase(user, GENERAL_EXCEPTION,
+						getContext().getString(R.string.general_exception), e.getMessage(), SyncLog.INVISIBLE);
 				throw e;
 			}finally{
 				if(result!=null){
@@ -245,7 +247,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Float syncProgressPercentage = 0f;
 
 			//notify synchronization progress percentage
-			recordLogAndSendBroadcast(user, SYNCHRONIZATION_PROGRESS, ApplicationUtilities.formatFloatTwoDecimals(syncProgressPercentage), syncInitTime, LogSyncData.INVISIBLE, getContext());
+			recordLogAndSendBroadcast(user, SYNCHRONIZATION_PROGRESS, ApplicationUtilities.formatFloatTwoDecimals(syncProgressPercentage), syncInitTime, SyncLog.INVISIBLE, getContext());
         	while(syncProgressPercentage<100){
 //	        		Log.d(TAG, "debug> syncProgressPercentage: "+syncProgressPercentage+", syncStatus: "+syncStatus);	        		
         		if(syncStatus==SYNCHRONIZATION_CANCELLED){
@@ -268,7 +270,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     	        		syncProgressPercentage = 1000F;
     	        		syncStatus = SYNCHRONIZATION_CANCELLED;
     	        		//notify synchronization canceled
-    	        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+    	        		recordLogAndSendBroadcast(user, SYNCHRONIZATION_CANCELED, getContext().getString(R.string.sync_cancelled), e.getMessage(), syncInitTime, SyncLog.VISIBLE, getContext());
         				throw new OperationCanceledException(e.getMessage());
     	        	}finally{
         				if(result!=null){
@@ -300,7 +302,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		        				syncProgressPercentage = Float.valueOf(result.getString(result.getColumnIndex("state")));
 		        			}
 		        			//notify synchronization progress percentage
-		        			recordLogAndSendBroadcast(user, SYNCHRONIZATION_PROGRESS, ApplicationUtilities.formatFloatTwoDecimals(syncProgressPercentage), syncInitTime, LogSyncData.INVISIBLE, getContext());
+		        			recordLogAndSendBroadcast(user, SYNCHRONIZATION_PROGRESS, ApplicationUtilities.formatFloatTwoDecimals(syncProgressPercentage), syncInitTime, SyncLog.INVISIBLE, getContext());
 		        			//se espera por unos 2000 milisegundos antes de volver a preguntar
 		            		try {
 		            		    Thread.sleep(2000);
@@ -323,7 +325,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 											R.string.sync_finished, 
 											getContext().getString(R.string.sync_finished_duration, ApplicationUtilities.parseMillisecondsToHMS(System.currentTimeMillis() - syncInitTime, ApplicationUtilities.TIME_FORMAT_2)), 
 											syncInitTime,
-											LogSyncData.VISIBLE, 
+											SyncLog.VISIBLE,
 											getContext());
 		        try {
 					sServerAuthenticate.userSignOut(user, isAPeriodicSync ? STATE_PERIODIC_SESSION_SUCCESS
@@ -347,8 +349,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         	if(syncResult.stats.numIoExceptions > MAX_RETRY_NUMBER){
         		syncResult.tooManyRetries = true;
         	}
-        	ApplicationUtilities.registerLogInDataBase(user, IO_EXCEPTION, getContext().getString(R.string.io_exception), e.getMessage(), LogSyncData.INVISIBLE, getContext());
-        	recordLogAndSendBroadcast(user, IO_EXCEPTION, R.string.io_exception, e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+            (new SyncLogDB(getContext())).registerLogInDataBase(user, IO_EXCEPTION, getContext().getString(R.string.io_exception), e.getMessage(), SyncLog.INVISIBLE);
+        	recordLogAndSendBroadcast(user, IO_EXCEPTION, R.string.io_exception, e.getMessage(), syncInitTime, SyncLog.VISIBLE, getContext());
             e.printStackTrace();
         } catch (AuthenticatorException e) {
         	syncStatus = SYNCHRONIZATION_CANCELLED;
@@ -357,12 +359,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         	if(syncResult.stats.numAuthExceptions > MAX_RETRY_NUMBER){
         		syncResult.tooManyRetries = true;
         	}
-        	ApplicationUtilities.registerLogInDataBase(user, AUTHENTICATOR_EXCEPTION, getContext().getString(R.string.authenticator_exception), e.getMessage(), LogSyncData.INVISIBLE, getContext());
-        	recordLogAndSendBroadcast(user, AUTHENTICATOR_EXCEPTION, R.string.authenticator_exception, e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+            (new SyncLogDB(getContext())).registerLogInDataBase(user, AUTHENTICATOR_EXCEPTION, getContext().getString(R.string.authenticator_exception), e.getMessage(), SyncLog.INVISIBLE);
+        	recordLogAndSendBroadcast(user, AUTHENTICATOR_EXCEPTION, R.string.authenticator_exception, e.getMessage(), syncInitTime, SyncLog.VISIBLE, getContext());
             e.printStackTrace();
         } catch(Exception e){
         	syncStatus = SYNCHRONIZATION_CANCELLED;
-			recordLogAndSendBroadcast(user, GENERAL_EXCEPTION, getContext().getString(R.string.general_exception), e.getMessage(), syncInitTime, LogSyncData.VISIBLE, getContext());
+			recordLogAndSendBroadcast(user, GENERAL_EXCEPTION, getContext().getString(R.string.general_exception), e.getMessage(), syncInitTime, SyncLog.VISIBLE, getContext());
 			e.printStackTrace();
     	}
     	Log.d(TAG, "debug> SYNCHRONIZATION FINISHED");
@@ -404,7 +406,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     		if(logMessage==null){
 	    		logMessage = "No log message registered.";
 	    	}
-	    	ApplicationUtilities.registerLogInDataBase(user, logType, logMessage, logMessageDetail, visibility, ctx);
+            (new SyncLogDB(ctx)).registerLogInDataBase(user, logType, logMessage, logMessageDetail, visibility);
 //	    	Log.d(TAG, "debug> ctx.sendBroadcast((new Intent("+logType+")).putExtra(LOG_MESSAGE, "+logMessage+"))");
 	    	ctx.sendBroadcast((new Intent(logType))
 	    			.putExtra(USER_ID, user.getUserId())

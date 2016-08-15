@@ -1,6 +1,6 @@
 package com.smartbuilders.ids.database;
 
-import com.smartbuilders.ids.logsync.LogSyncData;
+import com.smartbuilders.ids.model.SyncLog;
 import com.smartbuilders.ids.model.User;
 import com.smartbuilders.ids.utils.ApplicationUtilities;
 
@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " LOG_TYPE TEXT NOT NULL, " +
                     " LOG_MESSAGE TEXT, " +
                     " LOG_MESSAGE_DETAIL TEXT, " +
-                    " LOG_VISIBILITY NUMERIC DEFAULT "+LogSyncData.INVISIBLE+", " +
+                    " LOG_VISIBILITY NUMERIC DEFAULT "+ SyncLog.INVISIBLE+", " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime'))) ";
 

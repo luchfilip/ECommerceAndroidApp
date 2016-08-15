@@ -1,4 +1,4 @@
-package com.smartbuilders.ids.logsync;
+package com.smartbuilders.ids.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +7,7 @@ import java.util.Locale;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class LogSyncData implements Parcelable {
+public class SyncLog implements Parcelable {
 
 	private Date logDate;
     private String logType;
@@ -16,14 +16,14 @@ public class LogSyncData implements Parcelable {
     public static final int VISIBLE 	= 1;
     public static final int INVISIBLE 	= 0;
 
-    public LogSyncData(Date logDate, String logType, String logMessage, String logMessageDetail) {
+    public SyncLog(Date logDate, String logType, String logMessage, String logMessageDetail) {
     	this.logDate = logDate;
     	this.logType = logType;
     	this.logMessage = logMessage;
     	this.logMessageDetail = logMessageDetail;
     }
    
-    public LogSyncData(String logType, String logMessage, String logMessageDetail) {
+    public SyncLog(String logType, String logMessage, String logMessageDetail) {
     	this.logDate = new Date();
     	this.logType = logType;
     	this.logMessage = logMessage;
@@ -125,20 +125,20 @@ public class LogSyncData implements Parcelable {
     	dest.writeLong(getLogDate().getTime());
     }
 
-    public LogSyncData(Parcel in){
+    public SyncLog(Parcel in){
     	this.logType = in.readString();
     	this.logMessage = in.readString();
     	this.logMessageDetail = in.readString();
     	this.logDate = new Date(in.readLong());
     }
     
-    public static final Creator<LogSyncData> CREATOR = new Creator<LogSyncData>() {
-    	public LogSyncData createFromParcel(Parcel in) {
-    		return new LogSyncData(in);
+    public static final Creator<SyncLog> CREATOR = new Creator<SyncLog>() {
+    	public SyncLog createFromParcel(Parcel in) {
+    		return new SyncLog(in);
     	}
 
-    	public LogSyncData[] newArray(int size) {
-    		return new LogSyncData[size];
+    	public SyncLog[] newArray(int size) {
+    		return new SyncLog[size];
     	}
     };
 }
