@@ -330,7 +330,7 @@ public class SplashScreen extends AppCompatActivity {
             if (Utils.appRequireInitialLoad(this, mUser.getUserId())) {
                 if(NetworkConnectionUtilities.isOnline(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                    if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
+                    if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
                         ApplicationUtilities.initSyncByAccount(this, account);
                         mSynchronizationState = SYNC_RUNNING;
                     }

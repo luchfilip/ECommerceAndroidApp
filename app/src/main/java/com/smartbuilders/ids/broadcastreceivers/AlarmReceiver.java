@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 									ApplicationUtilities.setActiveSyncSchedulerData(user, data, context);
 								}
 
-						        if(!ApplicationUtilities.isSyncActive(context, account)){
+						        if(!ApplicationUtilities.isSyncActive(account, context.getString(R.string.sync_adapter_content_authority))){
 									//TODO: revisar si la ultima sincronizacion se realizo en un tiempo mayor al
 									//definido por el periodo de sincronizacion
 						        	ApplicationUtilities.initSyncByAccount(context, account);

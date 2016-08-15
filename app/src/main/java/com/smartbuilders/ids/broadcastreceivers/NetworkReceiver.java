@@ -34,7 +34,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 AccountManager accountManager = AccountManager.get(context);
                 Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.authenticator_account_type));
                 for(Account account : accounts){
-                    if(!ApplicationUtilities.isSyncActive(context, account)){
+                    if(!ApplicationUtilities.isSyncActive(account,context.getString(R.string.sync_adapter_content_authority))){
                         try {
                             //Se verifica que la ultima sincronizacion se haya realizado en un tiempo
                             // mayor o igual al periodo de sincronizacion definido.

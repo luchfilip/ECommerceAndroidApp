@@ -193,7 +193,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager mAccountManager = AccountManager.get(this);
                                 for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
-                                    if (!ApplicationUtilities.isSyncActive(this, account)) {
+                                    if (!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))) {
                                         if(!Utils.appRequireInitialLoad(this, account)){
                                             //se manda a correr la sincronizacion de manera inmediata
                                             if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
@@ -552,7 +552,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager accountManager = AccountManager.get(this);
                                 for(Account account : accountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
-                                    if (!ApplicationUtilities.isSyncActive(this, account)) {
+                                    if (!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))) {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastSuccessfullySyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){
                                             if(((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000) >= Utils.getSyncPeriodicityFromPreferences(this)) {

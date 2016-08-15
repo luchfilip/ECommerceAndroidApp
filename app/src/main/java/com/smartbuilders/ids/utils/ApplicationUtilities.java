@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -134,18 +137,18 @@ public class ApplicationUtilities {
 
     /**
      *
-     * @param context
      * @param account
+     * @param authority
      * @return
      */
-	public static boolean isSyncActive(Context context, Account account) {
+	public static boolean isSyncActive(Account account, String authority) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return isSyncActiveHoneycomb(account, context.getString(R.string.sync_adapter_content_authority));
+            return isSyncActiveHoneycomb(account, authority);
         } else {
             @SuppressWarnings("deprecation")
 			SyncInfo currentSync = ContentResolver.getCurrentSync();
             return currentSync != null && currentSync.account.equals(account) 
-                    && currentSync.authority.equals(context.getString(R.string.sync_adapter_content_authority));
+                    && currentSync.authority.equals(authority);
         }
     }
 
@@ -295,6 +298,35 @@ public class ApplicationUtilities {
 		}
 		return null;
 	}
+
+    /**
+     * Devuelve la ultima fecha de sincronizacion de un Account en un Sync Adapter
+     * @param mAccount
+     * @param contentAuthority
+     * @return
+     */
+    public static String getLastSyncTime(Account mAccount, String contentAuthority) {
+        long result = 0;
+        try {
+            Method getSyncStatus = ContentResolver.class.getMethod(
+                    "getSyncStatus", Account.class, String.class);
+            if (mAccount != null) {
+                Object status = getSyncStatus.invoke(null, mAccount, contentAuthority);
+                Class<?> statusClass = Class
+                        .forName("android.content.SyncStatusInfo");
+                boolean isStatusObject = statusClass.isInstance(status);
+                if (isStatusObject) {
+                    Field successTime = statusClass.getField("lastSuccessTime");
+                    result = successTime.getLong(status);
+                }
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException |
+                ClassNotFoundException | NoSuchFieldException | NullPointerException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
+        return format.format(new Date(result));
+    }
     
     /**
      * Register the user in the local data base

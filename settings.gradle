@@ -1,1 +1,1 @@
-include ':app', ':febeca', ':sillaca', ':beval'
+include ':app', ':febeca', ':sillaca', ':beval', ':Intelligent Data Synchronizer'
