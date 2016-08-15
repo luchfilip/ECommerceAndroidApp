@@ -18,23 +18,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LogSyncAdapter extends BaseAdapter{
-	
-	private static class ViewHolder {
-		TextView logDate;
-		TextView logTime;
-		TextView logMessage;
-		ImageView logImage;
-		View convertView;
-    }
 
   	private ArrayList<SyncLog> data;
-  	private LayoutInflater inflater;
-  	private Typeface consoleFont;
+  	private static Typeface mConsoleFont;
+    private Context mContext;
   	
   	public LogSyncAdapter(Context c, ArrayList<SyncLog> d) {
+        this.mContext = c;
   		this.data = d;
-  		inflater = LayoutInflater.from(c);
-  		consoleFont = Typeface.createFromAsset(c.getAssets(), "fonts/console.ttf");
+  		mConsoleFont = Typeface.createFromAsset(c.getAssets(), "fonts/console.ttf");
   	}
 
   	@Override
@@ -69,44 +61,39 @@ public class LogSyncAdapter extends BaseAdapter{
 
    	@Override
    	public View getView(final int position, View convertView, ViewGroup parent) {
-   		ViewHolder holder;
-   		if (convertView == null){
-   			convertView = inflater.inflate(R.layout.logs_list_item, (ViewGroup) null);
-	        holder = new ViewHolder();
-	        holder.logImage = (ImageView) convertView.findViewById(R.id.log_image);
-	        holder.logDate = (TextView) convertView.findViewById(R.id.log_date);
-	        holder.logDate.setTypeface(consoleFont);
-	        holder.logTime = (TextView) convertView.findViewById(R.id.log_time);
-	        holder.logTime.setTypeface(consoleFont);
-	        holder.logMessage = (TextView) convertView.findViewById(R.id.log_message);
-	        holder.logMessage.setTypeface(consoleFont);
-	        holder.convertView = convertView;
-
-	        convertView.setTag(holder);
+        View view = convertView;
+   		ViewHolder viewHolder;
+   		if (view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.logs_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
    		} else{
-   			holder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) view.getTag();
    		}
+
+        // Setting all values in listview
    		if(data.get(position).getLogType().equals(SyncAdapter.SYNCHRONIZATION_STARTED)){
-   			holder.logImage.setImageResource(R.drawable.sync_started);
+            viewHolder.logImage.setImageResource(R.drawable.sync_started);
    		}else if (data.get(position).getLogType().equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_STARTED)){
-   			holder.logImage.setImageResource(R.drawable.ic_alarm_on_black_18dp);
-   		}else if(data.get(position).getLogType().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)){
-   			holder.logImage.setImageResource(R.drawable.green_checkmark);
+            viewHolder.logImage.setImageResource(R.drawable.ic_alarm_on_black_18dp);
+   		}else if(data.get(position).getLogType().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+				|| data.get(position).getLogType().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)){
+            viewHolder.logImage.setImageResource(R.drawable.green_checkmark);
    		}else if (data.get(position).getLogType().equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED)){
-   			holder.logImage.setImageResource(R.drawable.green_checkmark);
+            viewHolder.logImage.setImageResource(R.drawable.green_checkmark);
    		}else if(data.get(position).getLogType().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)){
-   			holder.logImage.setImageResource(R.drawable.cancel);
+            viewHolder.logImage.setImageResource(R.drawable.cancel);
    		}else if (data.get(position).getLogType().equals(SyncAdapter.PERIODIC_SYNCHRONIZATION_CANCELED)){
-   			holder.logImage.setImageResource(R.drawable.cancel);
+            viewHolder.logImage.setImageResource(R.drawable.cancel);
    		}else{
-   			holder.logImage.setImageResource(R.drawable.error);
+            viewHolder.logImage.setImageResource(R.drawable.error);
    		}
-   		// Setting all values in listview
-   		holder.logDate.setText(data.get(position).getLogDateStringFormat());
-   		holder.logTime.setText(data.get(position).getLogTimeStringFormat());
-   		holder.logMessage.setText(data.get(position).getLogMessage());
-   		
-   		holder.convertView.setOnLongClickListener(new OnLongClickListener() {
+
+        viewHolder.logDate.setText(data.get(position).getLogDateStringFormat());
+        viewHolder.logTime.setText(data.get(position).getLogTimeStringFormat());
+        viewHolder.logMessage.setText(data.get(position).getLogMessage());
+
+        view.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 	            new AlertDialog.Builder(v.getContext())
@@ -116,9 +103,26 @@ public class LogSyncAdapter extends BaseAdapter{
 				return true;
 			}
 		});
-   		return convertView;
+   		return view;
    	}
-   	
+
+    public static class ViewHolder {
+        TextView logDate;
+        TextView logTime;
+        TextView logMessage;
+        ImageView logImage;
+
+        public ViewHolder(View v) {
+            logImage = (ImageView) v.findViewById(R.id.log_image);
+            logDate = (TextView) v.findViewById(R.id.log_date);
+            logDate.setTypeface(mConsoleFont);
+            logTime = (TextView) v.findViewById(R.id.log_time);
+            logTime.setTypeface(mConsoleFont);
+            logMessage = (TextView) v.findViewById(R.id.log_message);
+            logMessage.setTypeface(mConsoleFont);
+        }
+    }
+
    	public void addItem (SyncLog item){
    		this.data.add(item);
    		notifyDataSetChanged();

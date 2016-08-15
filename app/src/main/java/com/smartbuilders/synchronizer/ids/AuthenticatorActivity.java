@@ -27,6 +27,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
@@ -163,8 +164,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void submit() {
-        //final String userGroup 		= ((TextView) findViewById(R.id.user_group)).getText().toString();
-        final String userGroup 		= getString(R.string.ids_user_group_name);
+        final String userGroup 		= (findViewById(R.id.user_group)!=null && findViewById(R.id.user_group).getVisibility()!=View.VISIBLE)
+                ? getString(R.string.ids_user_group_name) : ((TextView) findViewById(R.id.user_group)).getText().toString();
         final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();

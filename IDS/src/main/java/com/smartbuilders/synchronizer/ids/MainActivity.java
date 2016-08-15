@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements OnClickListener {
         			
 	        			if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS) 
 		        				&& extras.containsKey(SyncAdapter.LOG_MESSAGE)){
-		        			syncProgress.setText(extras.getString(SyncAdapter.LOG_MESSAGE)+"%");
+		        			syncProgress.setText(getString(R.string.progress_percentage, extras.getString(SyncAdapter.LOG_MESSAGE)));
 		        			lastSuccessfulSync.setText(ApplicationUtilities.parseMillisecondsToHMS(System.currentTimeMillis() - syncInitTime, ApplicationUtilities.TIME_FORMAT_1));
 		        		}else if(extras.containsKey(SyncAdapter.LOG_MESSAGE)){
 	        				logSyncAdapter.addItem(new SyncLog(intent.getAction(), extras.getString(SyncAdapter.LOG_MESSAGE), extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
@@ -109,11 +109,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	        			
 		        		if(intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION) 
 		        				|| intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+								|| intent.getAction().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)
 		        				|| intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
 		        				|| intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
 		        				|| intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
 		        			//Vibrar
 		        			if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_FINISHED)
+									|| intent.getAction().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)
 		            				|| intent.getAction().equals(SyncAdapter.IO_EXCEPTION)
 		            				|| intent.getAction().equals(SyncAdapter.GENERAL_EXCEPTION)){
 		        				ApplicationUtilities.vibrate(context);
@@ -149,6 +151,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			intentFilter.addAction(SyncAdapter.PERIODIC_SYNCHRONIZATION_CANCELED);
 	        intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_PROGRESS);
 			intentFilter.addAction(SyncAdapter.SYNCHRONIZATION_FINISHED);
+			intentFilter.addAction(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED);
 			intentFilter.addAction(SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED);
 			intentFilter.addAction(SyncAdapter.AUTHENTICATOR_EXCEPTION);
 			intentFilter.addAction(SyncAdapter.GENERAL_EXCEPTION);
@@ -198,7 +201,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	        }
 		}
 		
-        ArrayList<SyncLog> synchronizationLog = new ArrayList<SyncLog>();
+        ArrayList<SyncLog> synchronizationLog = new ArrayList<>();
         mSyncLogsList = (ListView) findViewById(R.id.sync_logs);
         logSyncAdapter = new LogSyncAdapter(MainActivity.this, synchronizationLog);
         
@@ -299,7 +302,6 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Log.i(TAG, "onPostCreate");
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
@@ -307,7 +309,6 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.i(TAG, "onConfigurationChanged");
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
@@ -315,19 +316,12 @@ public class MainActivity extends Activity implements OnClickListener {
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-    	Log.i(TAG, "onSaveInstanceState");
    		outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
     	outState.putString(STATE_SYNC_PROGRESS, syncProgress.getText().toString());
     	outState.putLong(STATE_SYNC_INIT_TIME, syncInitTime);
     	outState.putBoolean(STATE_SHOW_WAIT_PLEASE_SYNC_STARTING, showWaitPleaseSyncStarting);
     	outState.putBoolean(STATE_SHOW_WAIT_PLEASE_SYNC_STOPING, showWaitPleaseSyncStoping);
     	super.onSaveInstanceState(outState);
-    }
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Always call the superclass so it can restore the view hierarchy
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState");
     }
     
     /*
@@ -475,7 +469,8 @@ public class MainActivity extends Activity implements OnClickListener {
     }
     
     private void loadUserData(Account account){
-    	mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(), mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+    	mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(),
+                mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
     	
     	mAccount = account;
     	ContentResolver.setIsSyncable(mAccount, getString(R.string.sync_adapter_content_authority), 1);
@@ -502,16 +497,15 @@ public class MainActivity extends Activity implements OnClickListener {
                     	String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
                     						.getString(AccountGeneral.USERDATA_USER_ID);
                     	final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-                		if (availableAccounts!=null && availableAccounts.length>0) {
-            				for(Account account : availableAccounts){
-            					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
-            						mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(), userId);
-                        			//TODO: decidir si se quedara este mensaje al crear el usuario
-                        			showMessage("Account was created. "+mCurrentUser);
-            						break;
-            					}
-            				}
-                		}
+
+                        for(Account account : availableAccounts){
+                            if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
+                                mCurrentUser = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(), userId);
+                                //TODO: decidir si se quedara este mensaje al crear el usuario
+                                showMessage("Account was created. "+mCurrentUser);
+                                break;
+                            }
+                        }
                     }
                 } catch(OperationCanceledException e){
                 	if(finishActivityOnResultOperationCanceledException){
@@ -552,7 +546,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onResume();
 		Log.i(TAG, "onResume");
 		final Account availableAccounts[] = mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type));
-		if(availableAccounts!=null && availableAccounts.length>0){
+		if(availableAccounts.length>0){
 			//Se carga la lista de los usuarios del panel izquierdo
 			String[] accountsNames = new String[availableAccounts.length];
 			for(int i = 0; i<availableAccounts.length ; i++){
@@ -583,11 +577,11 @@ public class MainActivity extends Activity implements OnClickListener {
         	updateUserInterface(ApplicationUtilities.isSyncActive(mAccount, getString(R.string.sync_adapter_content_authority)));
 
 			if(!ApplicationUtilities.checkPlayServices(this)){
-				((DrawerLayout)findViewById(R.id.parent_layout)).setVisibility(View.GONE);
+				findViewById(R.id.parent_layout).setVisibility(View.GONE);
 				ActionBar actionBar = getActionBar();
 			    actionBar.hide();
-			}else if(((DrawerLayout)findViewById(R.id.parent_layout)).getVisibility()==View.GONE){
-				((DrawerLayout)findViewById(R.id.parent_layout)).setVisibility(View.VISIBLE);
+			}else if(findViewById(R.id.parent_layout).getVisibility()==View.GONE){
+				findViewById(R.id.parent_layout).setVisibility(View.VISIBLE);
 				ActionBar actionBar = getActionBar();
 			    actionBar.show();
 			}
