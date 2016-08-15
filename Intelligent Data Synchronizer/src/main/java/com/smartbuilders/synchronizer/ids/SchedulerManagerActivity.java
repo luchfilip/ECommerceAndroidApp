@@ -1,13 +1,5 @@
 package com.smartbuilders.synchronizer.ids;
 
-import java.util.ArrayList;
-
-import com.jasgcorp.ids.R;
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.scheduler.SchedulerManagerAdapter;
-import com.jasgcorp.ids.scheduler.SchedulerSyncData;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +13,13 @@ import android.view.View.OnLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.scheduler.SchedulerSyncData;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
+import com.smartbuilders.synchronizer.ids.adapters.SchedulerManagerAdapter;
+
+import java.util.ArrayList;
 
 public class SchedulerManagerActivity extends Activity implements OnClickListener {
 	public static final String STATE_CURRENT_USER = "state_current_user";

@@ -7,13 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import com.jasgcorp.ids.R;
-import com.jasgcorp.ids.logsync.LogSyncData;
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.CachedFileProvider;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
@@ -37,6 +30,13 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import com.smartbuilders.ids.data.SyncLogDB;
+import com.smartbuilders.ids.model.SyncLog;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
+import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 
 public class SettingsActivity extends PreferenceActivity 
 							implements OnSharedPreferenceChangeListener {
@@ -177,9 +177,10 @@ public class SettingsActivity extends PreferenceActivity
 								            return moveDataBase(Boolean.valueOf(newValue.toString()));
 								        }
 								    }); 
-			
-			periodicSyncBundleParam = new Bundle();
-			periodicSyncBundleParam.putBoolean(KEY_PERIODIC_SYNC_ACTIVE, true);
+
+            //TODO: ver que hace esto
+			//periodicSyncBundleParam = new Bundle();
+			//periodicSyncBundleParam.putBoolean(KEY_PERIODIC_SYNC_ACTIVE, true);
 		}
 	}
 
@@ -294,7 +295,7 @@ public class SettingsActivity extends PreferenceActivity
         			emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getString(R.string.bug_report));
         			emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.bug_report_email_message));
         			
-       				generateBugReportFile(ApplicationUtilities.getSyncLogByUser((User) params[1], ctx),
+       				generateBugReportFile((new SyncLogDB(ctx)).getSyncLogByUser((User) params[1]),
 				       						getCacheDir() + File.separator + getString(R.string.bug_report_file_name),
 				       						ctx); 
 
@@ -303,7 +304,7 @@ public class SettingsActivity extends PreferenceActivity
         	
         			//Add the attachment by specifying a reference to our custom ContentProvider 
         		    //and the specific file of interest 
-        		    emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + getString(R.string.bug_report_file_name) + ".txt")); 
+        		    emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://" + CachedFileProvider.AUTHORITY + "/" + getString(R.string.bug_report_file_name) + ".txt"));
         		    return emailIntent;
         	    } catch(android.content.ActivityNotFoundException ex){
         	    	ex.printStackTrace();
@@ -336,7 +337,7 @@ public class SettingsActivity extends PreferenceActivity
         	 * @param ctx
         	 * @throws Throwable 
         	 */
-        	private void generateBugReportFile(ArrayList<LogSyncData> arrayList, String fileName, Context ctx) throws Throwable{
+        	private void generateBugReportFile(ArrayList<SyncLog> arrayList, String fileName, Context ctx) throws Throwable{
         		//check if external storage is available
         		if (!ApplicationUtilities.isExternalStorageAvailable() 
         				|| ApplicationUtilities.isExternalStorageReadOnly()) {  
@@ -350,7 +351,7 @@ public class SettingsActivity extends PreferenceActivity
         		    		file.createNewFile();
         		    	}
         				bufferedWriter = new BufferedWriter(new FileWriter(file));
-        		    	for(LogSyncData line : arrayList){
+        		    	for(SyncLog line : arrayList){
         		    		bufferedWriter.append(line.getLogDateStringFormat()).append(": ").append(line.getLogMessage()).append("\n");
         				}
         		    	//ApplicationUtilities.zip(new String[]{(fileName+".txt")}, fileName+".rar");
@@ -379,7 +380,7 @@ public class SettingsActivity extends PreferenceActivity
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								try {
-									ApplicationUtilities.cleanLog(context, mCurrentUser.getUserId(), 0);
+									(new SyncLogDB(context)).cleanLog(mCurrentUser.getUserId(), 0);
 									Toast.makeText(context, context.getString(R.string.log_clean_succesfully), Toast.LENGTH_LONG).show();
 								} catch (Exception e) {
 									e.printStackTrace();

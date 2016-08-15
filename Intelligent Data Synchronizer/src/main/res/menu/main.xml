@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_sync_scheduler"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/action_sync_scheduler"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="110"
+        android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_log_settings"
+        android:orderInCategory="120"
+        android:title="@string/action_log_settings"/>
+
+</menu>

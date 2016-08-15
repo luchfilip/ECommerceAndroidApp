@@ -1,13 +1,13 @@
 package com.smartbuilders.synchronizer.ids;
 
-import com.jasgcorp.ids.model.User;
-
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.smartbuilders.ids.model.User;
+
 public class NotificationsManagerActivity extends Activity {
 
-	public static final String KEY_CURRENT_USER = "com.jasgcorp.ids.NotificationsManagerActivity.KEY_CURRENT_USER";
+	public static final String KEY_CURRENT_USER = "KEY_CURRENT_USER";
 	public static final String STATE_CURRENT_USER = "state_current_user";
 	
 	private User mCurrentUser;

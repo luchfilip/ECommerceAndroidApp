@@ -3,11 +3,6 @@ package com.smartbuilders.synchronizer.ids;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.providers.DataBaseContentProvider;
-import com.jasgcorp.ids.sqlresult.SQLResultAdapter;
-import com.jasgcorp.ids.sqlresult.SQLResultDataRow;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -26,6 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.providers.DataBaseContentProvider;
+import com.smartbuilders.synchronizer.ids.adapters.SQLResultAdapter;
+import com.smartbuilders.synchronizer.ids.sqlresult.SQLResultDataRow;
 
 public class SQLConsoleActivity extends Activity implements OnClickListener{
 

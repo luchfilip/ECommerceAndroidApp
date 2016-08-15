@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+     android:background="@color/LightGrey">
+    <PreferenceCategory android:title="@string/user">
+		<EditTextPreference
+		    android:icon="@drawable/ic_launcher"
+		    android:key="user_name"
+		    android:enabled="true"
+		    android:selectable="false"
+            android:title="@string/user_name" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/server">
+		<EditTextPreference
+		    android:key="server_address"
+		    android:defaultValue=""
+            android:title="@string/server_address"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/storage">
+        <CheckBoxPreference
+            android:key="use_external_storage"
+            android:title="@string/use_external_storage"
+            android:summary="@string/external_storage_summary" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/connection">
+        <ListPreference
+            android:key="auto_sync_network_mode"
+            android:title="@string/auto_sync_network_mode"
+            android:summary="@string/auto_sync_network_mode_summary"
+            android:dialogTitle="@string/auto_sync_network_options"
+            android:entries="@array/network_options"
+            android:entryValues="@array/network_options_value" />
+         <ListPreference
+            android:key="auto_sync_schedule"
+            android:title="@string/auto_sync_schedule"
+            android:summary="@string/auto_sync_schedule_summary"
+            android:dialogTitle="@string/auto_sync_periodicity"
+            android:entries="@array/periodicity"
+            android:entryValues="@array/periodicity_value" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/log_options">
+        <ListPreference
+            android:key="days_in_log"
+            android:title="@string/days_in_log"
+            android:summary="@string/days_in_log_summary"
+            android:dialogTitle="@string/days_in_log_summary"
+            android:entries="@array/days_in_log_entries"
+            android:entryValues="@array/days_in_log_values" />
+		<Preference 
+		    android:icon="@drawable/ic_bug_report_black_36dp" 
+		    android:title="@string/send_bug_report"
+	        android:key="send_bug_report"/>
+		<Preference 
+		    android:icon="@drawable/ic_delete_black_36dp" 
+		    android:title="@string/clean_log"
+	        android:key="clean_log"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/help">
+		<Preference 
+		    android:icon="@drawable/ic_info_outline_black_36dp" 
+		    android:title="@string/about"
+	        android:key="about"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/advanced_options">
+	    <Preference 
+		    android:icon="@drawable/ic_notifications_black_36dp" 
+		    android:key="notifications" 
+		    android:title="@string/notifications"/>
+		<Preference 
+		    android:icon="@drawable/ic_list_black_36dp" 
+		    android:key="sql_console_for_user" 
+		    android:title="@string/sql_console_for_user"/>
+		<Preference 
+		    android:icon="@drawable/ic_list_black_36dp" 
+		    android:key="sql_console_for_ids" 
+		    android:title="@string/sql_console_for_ids"/>
+	</PreferenceCategory>
+</PreferenceScreen>

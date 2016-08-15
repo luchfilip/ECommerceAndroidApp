@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:divider="?android:dividerHorizontal"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:showDividers="middle" >
+
+    <TextView
+        android:id="@+id/row_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/holo_blue_dark" />
+</LinearLayout>

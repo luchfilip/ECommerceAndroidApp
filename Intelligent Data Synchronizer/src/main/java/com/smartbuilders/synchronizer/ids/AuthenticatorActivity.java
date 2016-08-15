@@ -5,11 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.jasgcorp.ids.R;
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
@@ -24,8 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.jasgcorp.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
 
+import static com.smartbuilders.ids.syncadapter.model.AccountGeneral.sServerAuthenticate;
 
 /**
  * The Authenticator activity.
@@ -76,7 +74,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 				if(account.name.equals(accountName)){
 					mAccount = account;
 					user = new User(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-					user.setServerUserId(Long.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
+					user.setServerUserId(Integer.valueOf(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID)));
 					user.setUserName(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
 					user.setUserPass(mAccountManager.getPassword(account));
 					user.setServerAddress(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS));
@@ -259,6 +257,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             	mAccountManager.setAuthToken(mAccount, mAuthTokenType, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
 	            //Register the user in the local data base.
 	            ApplicationUtilities.registerUserInDataBase(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_ID),
+                                                            Integer.valueOf(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_PROFILE_ID)),
 	            											Long.valueOf(intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_SERVER_USER_ID)),
 										            		intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_SERVER_ADDRESS),
 										            		intent.getBundleExtra(AccountManager.KEY_USERDATA).getString(AccountGeneral.USERDATA_USER_GROUP),

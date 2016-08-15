@@ -1,9 +1,5 @@
 package com.smartbuilders.synchronizer.ids;
 
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.scheduler.SchedulerSyncData;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -15,6 +11,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.scheduler.SchedulerSyncData;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
 
 public class TimeDaysOfWeekPicker extends DialogFragment implements OnClickListener {
 

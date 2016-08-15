@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources> 
+   <string-array name="periodicity">
+      <item>@string/every_hour</item>
+      <item>@string/every_3_hours</item>
+      <item>@string/every_6_hours</item>
+      <item>@string/every_12_hours</item>
+      <item>@string/every_24_hours</item>
+   </string-array>
+   <string-array name="periodicity_value">
+      <item>3600</item>
+      <item>10800</item>
+      <item>21600</item>
+      <item>43200</item>
+      <item>86400</item>
+   </string-array>
+   
+   <string-array name="network_options">
+      <item>@string/auto_sync_disabled</item>
+      <item>@string/only_when_on_wifi</item>
+      <item>@string/on_any_network</item>
+   </string-array>
+   <string-array name="network_options_value">
+       <item>auto_sync_disabled</item>
+      <item>wifi</item>
+      <item>any_network</item>
+   </string-array>
+   
+   <string-array name="days_in_log_entries">
+      <item>@string/zero_days</item>
+      <item>@string/one_day</item>
+      <item>@string/two_days</item>
+      <item>@string/three_days</item>
+      <item>@string/four_days</item>
+      <item>@string/five_days</item>
+      <item>@string/ten_days</item>
+      <item>@string/fifteen_days</item>
+      <item>@string/thirty_days</item>
+      <item>@string/forever</item>
+   </string-array>
+   <string-array name="days_in_log_values">
+      <item>0</item>
+      <item>1</item>
+      <item>2</item>
+      <item>3</item>
+      <item>4</item>
+      <item>5</item>
+      <item>10</item>
+      <item>15</item>
+      <item>30</item>
+      <item>100000</item>
+   </string-array>
+</resources>

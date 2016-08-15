@@ -1,19 +1,5 @@
 package com.smartbuilders.synchronizer.ids;
 
-import java.util.ArrayList;
-
-import com.jasgcorp.ids.R;
-import com.jasgcorp.ids.logsync.LogSyncAdapter;
-import com.jasgcorp.ids.logsync.LogSyncData;
-import com.jasgcorp.ids.model.User;
-import com.jasgcorp.ids.syncadapter.SyncAdapter;
-import com.jasgcorp.ids.syncadapter.model.AccountGeneral;
-import com.jasgcorp.ids.utils.AccountUtilities;
-import com.jasgcorp.ids.utils.ApplicationUtilities;
-import com.jasgcorp.ids.utils.ConsumeWebService;
-import com.jasgcorp.ids.utils.NetworkConnectionUtilities;
-import com.jasgcorp.ids.utils.anim.FadeInFadeOutTextView;
-
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.accounts.Account;
@@ -50,6 +36,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.smartbuilders.ids.data.SyncLogDB;
+import com.smartbuilders.ids.model.SyncLog;
+import com.smartbuilders.ids.model.User;
+import com.smartbuilders.ids.syncadapter.SyncAdapter;
+import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.ids.utils.ApplicationUtilities;
+import com.smartbuilders.ids.utils.ConsumeWebService;
+import com.smartbuilders.ids.utils.NetworkConnectionUtilities;
+import com.smartbuilders.synchronizer.ids.adapters.LogSyncAdapter;
+import com.smartbuilders.synchronizer.ids.utils.anim.FadeInFadeOutTextView;
+
+import java.util.ArrayList;
 
 /**
  * 
@@ -94,7 +93,7 @@ public class MainActivity extends Activity implements OnClickListener {
         	if(intent!=null && intent.getAction()!=null){
         		Bundle extras = intent.getExtras();
         		if(extras!=null){
-        			if(extras.containsKey(SyncAdapter.USER_ID) 
+        			if(extras.containsKey(SyncAdapter.USER_ID)
         					&& extras.getString(SyncAdapter.USER_ID).equals(mCurrentUser.getUserId())){
         			
 	        			if(intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS) 
@@ -102,7 +101,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		        			syncProgress.setText(extras.getString(SyncAdapter.LOG_MESSAGE)+"%");
 		        			lastSuccessfulSync.setText(ApplicationUtilities.parseMillisecondsToHMS(System.currentTimeMillis() - syncInitTime, ApplicationUtilities.TIME_FORMAT_1));
 		        		}else if(extras.containsKey(SyncAdapter.LOG_MESSAGE)){
-	        				logSyncAdapter.addItem(new LogSyncData(intent.getAction(), extras.getString(SyncAdapter.LOG_MESSAGE), extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
+	        				logSyncAdapter.addItem(new SyncLog(intent.getAction(), extras.getString(SyncAdapter.LOG_MESSAGE), extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
 		        		}
 	        			if(extras.containsKey(SyncAdapter.SYNC_INIT_TIME)){
 	        				syncInitTime = extras.getLong(SyncAdapter.SYNC_INIT_TIME);
@@ -128,7 +127,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		        			closeSyncStopingWaitPleaseDialog();
 		        			updateUserInterface(true);
 		        		}
-	        		}else if(intent.getAction().equals(ConsumeWebService.SHOW_TOAST_MESSAGE) 
+	        		}else if(intent.getAction().equals(ConsumeWebService.SHOW_TOAST_MESSAGE)
 	        				&& extras.containsKey(ConsumeWebService.MESSAGE)){
         				Toast.makeText(context, extras.getString(ConsumeWebService.MESSAGE), Toast.LENGTH_LONG).show();
 	        		}else{
@@ -199,7 +198,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	        }
 		}
 		
-        ArrayList<LogSyncData> synchronizationLog = new ArrayList<LogSyncData>();
+        ArrayList<SyncLog> synchronizationLog = new ArrayList<SyncLog>();
         mSyncLogsList = (ListView) findViewById(R.id.sync_logs);
         logSyncAdapter = new LogSyncAdapter(MainActivity.this, synchronizationLog);
         
@@ -338,7 +337,7 @@ public class MainActivity extends Activity implements OnClickListener {
     	if(isSyncRunning){
     		stopSync();
     	}else{
-    		if(NetworkConnectionUtilities.isOnline(this) 
+    		if(NetworkConnectionUtilities.isOnline(this)
     				&& (NetworkConnectionUtilities.isWifiConnected(this))||NetworkConnectionUtilities.isMobileConnected(this)) {
     			try {
 					startSync();
@@ -407,11 +406,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
     }
-    
-    /**
-     * 
-     * @param message
-     */
+
     private void showSyncStartingWaitPleaseDialog(){
     	Log.d(TAG, "showSyncStartingWaitPleaseDialog("+getString(R.string.starting_sync)+")");
     	syncStartingWaitPlease = ProgressDialog.show(this, getString(R.string.starting_sync), getString(R.string.wait_please), true, false);
@@ -436,11 +431,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
     }
-    
-    /**
-     * 
-     * @param message
-     */
+
     private void showSyncStopingWaitPleaseDialog(){
     	Log.d(TAG, "showSyncStopingWaitPleaseDialog("+getString(R.string.starting_sync)+")");
     	syncStopingWaitPlease = ProgressDialog.show(this, getString(R.string.starting_sync), getString(R.string.wait_please), true, false);
@@ -469,7 +460,7 @@ public class MainActivity extends Activity implements OnClickListener {
             startStopButton.setText(R.string.stop_sync);
     	}else{
     		lastSuccessfulSyncLabel.setText(getString(R.string.last_succesful_sync_label));
-    		lastSuccessfulSync.setText(AccountUtilities.getLastSyncTime(mAccount, getString(R.string.sync_adapter_content_authority)));
+    		lastSuccessfulSync.setText(ApplicationUtilities.getLastSyncTime(mAccount, getString(R.string.sync_adapter_content_authority)));
 //    		stopRepeatingTask();
     		syncProgress.setText(R.string.dash_line);
     		syncProgressAnimation.stopAnimations();
@@ -489,9 +480,9 @@ public class MainActivity extends Activity implements OnClickListener {
     	mAccount = account;
     	ContentResolver.setIsSyncable(mAccount, getString(R.string.sync_adapter_content_authority), 1);
     	setTitle(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_NAME));
-        lastSuccessfulSync.setText(AccountUtilities.getLastSyncTime(account, getString(R.string.sync_adapter_content_authority)));
+        lastSuccessfulSync.setText(ApplicationUtilities.getLastSyncTime(account, getString(R.string.sync_adapter_content_authority)));
 		//TODO: colocar un aviso de Wait Please
-		logSyncAdapter.refreshResultList(ApplicationUtilities.getSyncLogByUser(mCurrentUser, LogSyncData.VISIBLE, this));
+		logSyncAdapter.refreshResultList((new SyncLogDB(this)).getSyncLogByUser(mCurrentUser, SyncLog.VISIBLE));
 
 		updateUserInterface(ApplicationUtilities.isSyncActive(mAccount, getString(R.string.sync_adapter_content_authority)));
     }
