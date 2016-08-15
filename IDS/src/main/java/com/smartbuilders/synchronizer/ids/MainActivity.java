@@ -1,7 +1,6 @@
 package com.smartbuilders.synchronizer.ids;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;

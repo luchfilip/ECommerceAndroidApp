@@ -7,7 +7,6 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import com.smartbuilders.smartsales.ecommerce.SettingsActivity;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.SyncLog;
 import com.smartbuilders.synchronizer.ids.model.User;

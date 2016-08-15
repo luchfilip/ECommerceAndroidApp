@@ -117,25 +117,25 @@ public class SettingsActivity extends PreferenceActivity
 				}
 			}
 			
-			(getPreferenceScreen().findPreference("send_bug_report"))
-									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-										@Override
-										public boolean onPreferenceClick(Preference preference) {
-											sendEmailBugReport(mCurrentUser);
-											return true;
-										}
-									});
+			getPreferenceScreen().findPreference("send_bug_report")
+                    .setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            sendEmailBugReport(mCurrentUser);
+                            return true;
+                        }
+                    });
 			
-			(getPreferenceScreen().findPreference("clean_log"))
-									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-										@Override
-										public boolean onPreferenceClick(Preference preference) {
-											cleanLog();
-											return true;
-										}
-									});
+			getPreferenceScreen().findPreference("clean_log")
+                    .setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            cleanLog();
+                            return true;
+                        }
+                    });
 			
-			(getPreferenceScreen().findPreference("about"))
+			getPreferenceScreen().findPreference("about")
 									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 										@Override
 										public boolean onPreferenceClick(Preference preference) {
@@ -144,7 +144,7 @@ public class SettingsActivity extends PreferenceActivity
 										}
 									});
 			
-			(getPreferenceScreen().findPreference("sql_console_for_user"))
+			getPreferenceScreen().findPreference("sql_console_for_user")
 									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 										@Override
 										public boolean onPreferenceClick(Preference preference) {
@@ -153,7 +153,7 @@ public class SettingsActivity extends PreferenceActivity
 										}
 									});
 			
-			(getPreferenceScreen().findPreference("sql_console_for_ids"))
+			getPreferenceScreen().findPreference("sql_console_for_ids")
 									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 										@Override
 										public boolean onPreferenceClick(Preference preference) {
@@ -162,7 +162,7 @@ public class SettingsActivity extends PreferenceActivity
 										}
 									});
 			
-			(getPreferenceScreen().findPreference("notifications"))
+			getPreferenceScreen().findPreference("notifications")
 									.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 										@Override
 										public boolean onPreferenceClick(Preference preference) {
@@ -171,14 +171,13 @@ public class SettingsActivity extends PreferenceActivity
 										}
 									});
 
-			((CheckBoxPreference) getPreferenceScreen().findPreference("use_external_storage"))
+			getPreferenceScreen().findPreference("use_external_storage")
 									.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {            
 								        public boolean onPreferenceChange(Preference preference, Object newValue) {
 								            return moveDataBase(Boolean.valueOf(newValue.toString()));
 								        }
 								    }); 
 
-            //TODO: ver que hace esto
 			periodicSyncBundleParam = new Bundle();
 			periodicSyncBundleParam.putBoolean(SyncAdapter.KEY_PERIODIC_SYNC_ACTIVE, true);
 		}
@@ -230,7 +229,7 @@ public class SettingsActivity extends PreferenceActivity
                     ContentResolver.addPeriodicSync(mAccount,
                             getString(R.string.sync_adapter_content_authority),
                             periodicSyncBundleParam,
-                            Long.valueOf(listPreference.getValue().toString()));
+                            Long.valueOf(listPreference.getValue()));
 	            /*
 		         * http://developer.android.com/training/sync-adapters/running-sync-adapter.html
 		         * Run the Sync Adapter After a Network Message
@@ -240,7 +239,7 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 mAccountManager.setUserData(mAccount,
                         AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY,
-                        listPreference.getValue().toString());
+                        listPreference.getValue());
                 listPreference.setSummary(listPreference.getEntry());
                 break;
             }
@@ -254,7 +253,7 @@ public class SettingsActivity extends PreferenceActivity
                 }
                 mAccountManager.setUserData(mAccount,
                         AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE,
-                        listPreference.getValue().toString());
+                        listPreference.getValue());
                 listPreference.setSummary(listPreference.getEntry());
                 break;
             }
