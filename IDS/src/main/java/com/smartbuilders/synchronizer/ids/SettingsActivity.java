@@ -34,14 +34,14 @@ import android.widget.Toast;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.SyncLog;
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 
 public class SettingsActivity extends PreferenceActivity 
 							implements OnSharedPreferenceChangeListener {
-	
-	private static final String TAG = SettingsActivity.class.getSimpleName();
+
 	public static final String STATE_CURRENT_USER = "state_current_user";
 	
 	private AccountManager mAccountManager;
@@ -61,8 +61,8 @@ public class SettingsActivity extends PreferenceActivity
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		
 		Bundle extras = getIntent().getExtras();
-		if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_CURRENT_USER)){
-			mCurrentUser = extras.getParcelable(ApplicationUtilities.KEY_CURRENT_USER);
+		if(extras!=null && extras.containsKey(SyncAdapter.KEY_CURRENT_USER)){
+			mCurrentUser = extras.getParcelable(SyncAdapter.KEY_CURRENT_USER);
 		}else if(savedInstanceState != null && savedInstanceState.containsKey(STATE_CURRENT_USER)){
 			mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
 		}
@@ -88,23 +88,23 @@ public class SettingsActivity extends PreferenceActivity
 					getPreferenceScreen().findPreference("user_name").setSummary(getString(R.string.sync_user_group)+": "+mCurrentUser.getUserGroup()+".");
 
 					if(mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE)!=null){
-						((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule"))
+                        getPreferenceScreen().findPreference("auto_sync_schedule")
 							.setEnabled(!mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE).equals("auto_sync_disabled"));
 
 						((ListPreference) getPreferenceScreen().findPreference("auto_sync_network_mode"))
 							.setValue(mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE));
-						((ListPreference) getPreferenceScreen().findPreference("auto_sync_network_mode"))
+						getPreferenceScreen().findPreference("auto_sync_network_mode")
 							.setSummary(((ListPreference) getPreferenceScreen().findPreference("auto_sync_network_mode")).getEntry());
 					}else{
 						((ListPreference) getPreferenceScreen().findPreference("auto_sync_network_mode")).setValue(null);
-						((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setEnabled(false);
+						getPreferenceScreen().findPreference("auto_sync_schedule").setEnabled(false);
 					}
 
 					if(mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY)!=null 
 							&& !mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY).equals("0")){
 						((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule"))
 							.setValue(mAccountManager.getUserData(mAccount, AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY));
-						((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule"))
+						getPreferenceScreen().findPreference("auto_sync_schedule")
 							.setSummary(((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).getEntry());
 					}else{
 						((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setValue(null);
@@ -179,8 +179,8 @@ public class SettingsActivity extends PreferenceActivity
 								    }); 
 
             //TODO: ver que hace esto
-			//periodicSyncBundleParam = new Bundle();
-			//periodicSyncBundleParam.putBoolean(KEY_PERIODIC_SYNC_ACTIVE, true);
+			periodicSyncBundleParam = new Bundle();
+			periodicSyncBundleParam.putBoolean(SyncAdapter.KEY_PERIODIC_SYNC_ACTIVE, true);
 		}
 	}
 
@@ -210,49 +210,55 @@ public class SettingsActivity extends PreferenceActivity
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		updatePreferences(getPreferenceScreen().findPreference(key));
-		if(key.equals("server_address")){
-			mAccountManager.setUserData(mAccount, 
-					AccountGeneral.USERDATA_SERVER_ADDRESS, 
-					getPreferenceScreen().findPreference(key).getSummary().toString());
-			//TODO: renombrar el serverAddress para este usuario en la tabla de log de sincronizacion
-		}else if(key.equals("auto_sync_schedule")){
-			ListPreference listPreference = (ListPreference) findPreference(key);
-			if(listPreference.getValue().equals("0")){
-				ContentResolver.setSyncAutomatically(mAccount, getString(R.string.sync_adapter_content_authority), false);
-            }else{
+        switch (key) {
+            case "server_address":
+                mAccountManager.setUserData(mAccount,
+                        AccountGeneral.USERDATA_SERVER_ADDRESS,
+                        getPreferenceScreen().findPreference(key).getSummary().toString());
+                //TODO: renombrar el serverAddress para este usuario en la tabla de log de sincronizacion
+                break;
+            case "auto_sync_schedule": {
+                ListPreference listPreference = (ListPreference) findPreference(key);
+                if (listPreference.getValue().equals("0")) {
+                    ContentResolver.setSyncAutomatically(mAccount, getString(R.string.sync_adapter_content_authority), false);
+                } else {
             	/*
 	        	 * http://developer.android.com/training/sync-adapters/running-sync-adapter.html
 	        	 * Run the Sync Adapter Periodically
 	             * Turn on periodic syncing
 	             */
-	            ContentResolver.addPeriodicSync(mAccount,
-	            								getString(R.string.sync_adapter_content_authority),
-	            								periodicSyncBundleParam,
-							                    Long.valueOf(listPreference.getValue().toString()));
+                    ContentResolver.addPeriodicSync(mAccount,
+                            getString(R.string.sync_adapter_content_authority),
+                            periodicSyncBundleParam,
+                            Long.valueOf(listPreference.getValue().toString()));
 	            /*
 		         * http://developer.android.com/training/sync-adapters/running-sync-adapter.html
 		         * Run the Sync Adapter After a Network Message
 		         * Turn on automatic syncing for the default account and authority
 		         */
-	        	ContentResolver.setSyncAutomatically(mAccount, getString(R.string.sync_adapter_content_authority), true);
+                    ContentResolver.setSyncAutomatically(mAccount, getString(R.string.sync_adapter_content_authority), true);
+                }
+                mAccountManager.setUserData(mAccount,
+                        AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY,
+                        listPreference.getValue().toString());
+                listPreference.setSummary(listPreference.getEntry());
+                break;
             }
-			mAccountManager.setUserData(mAccount, 
-										AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY, 
-										listPreference.getValue().toString());
-            listPreference.setSummary(listPreference.getEntry());
-		}else if(key.equals("auto_sync_network_mode")){
-			ListPreference listPreference = (ListPreference) findPreference(key);
-			if(listPreference.getValue().equals("auto_sync_disabled")){
-				((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setValue("0");
-				((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setEnabled(false);
-            }else{
-            	((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setEnabled(true);
+            case "auto_sync_network_mode": {
+                ListPreference listPreference = (ListPreference) findPreference(key);
+                if (listPreference.getValue().equals("auto_sync_disabled")) {
+                    ((ListPreference) getPreferenceScreen().findPreference("auto_sync_schedule")).setValue("0");
+                    getPreferenceScreen().findPreference("auto_sync_schedule").setEnabled(false);
+                } else {
+                    getPreferenceScreen().findPreference("auto_sync_schedule").setEnabled(true);
+                }
+                mAccountManager.setUserData(mAccount,
+                        AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE,
+                        listPreference.getValue().toString());
+                listPreference.setSummary(listPreference.getEntry());
+                break;
             }
-			mAccountManager.setUserData(mAccount, 
-										AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE, 
-										listPreference.getValue().toString());
-            listPreference.setSummary(listPreference.getEntry());
-		}
+        }
 	}
 
 	private void initSummary(Preference p) {
@@ -453,10 +459,7 @@ public class SettingsActivity extends PreferenceActivity
         		Toast.makeText(this, getString(R.string.database_moved_successfully), Toast.LENGTH_LONG).show();
         		return true;
         	}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			mCurrentUser.setSaveDBInExternalCard(!mCurrentUser.isSaveDBInExternalCard());
-		} catch (ExecutionException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 			mCurrentUser.setSaveDBInExternalCard(!mCurrentUser.isSaveDBInExternalCard());
 		}

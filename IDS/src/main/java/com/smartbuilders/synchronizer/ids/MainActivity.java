@@ -649,13 +649,13 @@ public class MainActivity extends Activity implements OnClickListener {
         case R.id.action_settings:
         	// Launch settings activity
         	i = new Intent(this, SettingsActivity.class);
-        	i.putExtra(ApplicationUtilities.KEY_CURRENT_USER, (Parcelable) mCurrentUser);
+        	i.putExtra(SyncAdapter.KEY_CURRENT_USER, mCurrentUser);
         	startActivity(i);
         	break;
         case R.id.action_sync_scheduler:
         	// Launch scheduler manager activity
         	i = new Intent(this, SchedulerManagerActivity.class);
-        	i.putExtra(SchedulerManagerActivity.KEY_CURRENT_USER, (Parcelable) mCurrentUser);
+        	i.putExtra(SchedulerManagerActivity.KEY_CURRENT_USER, mCurrentUser);
         	startActivity(i);
         	break;
         case R.id.action_log_settings:

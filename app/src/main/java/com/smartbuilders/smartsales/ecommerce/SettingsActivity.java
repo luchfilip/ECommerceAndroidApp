@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -157,6 +158,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         root.setBackgroundColor(Color.WHITE);
         mCurrentUser = Utils.getCurrentUser(getApplicationContext());
+
+        getPreferenceScreen().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());
+        ((EditTextPreference)getPreferenceScreen().findPreference("server_address")).setText(mCurrentUser.getServerAddress());
     }
 
     /**

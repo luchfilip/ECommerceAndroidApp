@@ -7,6 +7,7 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import com.smartbuilders.smartsales.ecommerce.SettingsActivity;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.SyncLog;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -63,6 +64,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final long DELAY_TIME_TO_RETRY_SYNC 		= 5; //time in seconds
 	private static final int SYNCHRONIZATION_CANCELLED 		= 2;
 	private static final int SYNCHRONIZATION_RUNNING 		= 1;
+
+	public static final String KEY_CURRENT_USER = "com.smartbuilders.ids.SettingsActivity.KEY_CURRENT_USER";
+	public static final String KEY_PERIODIC_SYNC_ACTIVE = "com.smartbuilders.ids.SettingsActivity.KEY_PERIODIC_SYNC_ACTIVE";
 	
 	/**
 	 * El usuario inicio sesion de sincronizacion
@@ -147,8 +151,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
         
         boolean isAPeriodicSync = false;
-    	if(extras!=null && extras.containsKey(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)
-                && extras.getBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE)){
+    	if(extras!=null && extras.containsKey(KEY_PERIODIC_SYNC_ACTIVE)
+                && extras.getBoolean(KEY_PERIODIC_SYNC_ACTIVE)){
     		isAPeriodicSync = true;
             try {
                 if(((System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user.getUserId()).getTime())/1000)

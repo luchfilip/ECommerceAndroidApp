@@ -102,9 +102,6 @@ public class ApplicationUtilities {
 	public static final int USER_WRONG_PASSWORD				= 32;
 	public static final int USER_RETURN_NULL				= 27;
 	public static final int USER_RESPONSE_MOVE_TO_NEXT_FALSE = 28;
-
-	public static final String KEY_CURRENT_USER = "com.smartbuilders.ids.SettingsActivity.KEY_CURRENT_USER";
-	public static final String KEY_PERIODIC_SYNC_ACTIVE = "com.smartbuilders.ids.SettingsActivity.KEY_PERIODIC_SYNC_ACTIVE";
 	
 	//Constantes para Session Token
 	public static final String ST_NEW_USER_AUTHORIZED = "NEW_USER_AUTHORIZED";

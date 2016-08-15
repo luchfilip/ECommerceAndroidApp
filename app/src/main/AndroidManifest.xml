@@ -72,13 +72,8 @@
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.SplashScreen"
-            android:theme="@style/SplashTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/SplashTheme.NoActionBar" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
