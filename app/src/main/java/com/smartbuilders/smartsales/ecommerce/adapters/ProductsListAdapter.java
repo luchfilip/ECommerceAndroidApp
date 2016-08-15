@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import com.smartbuilders.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingSale;
 import com.smartbuilders.smartsales.ecommerce.DialogSortProductListOptions;

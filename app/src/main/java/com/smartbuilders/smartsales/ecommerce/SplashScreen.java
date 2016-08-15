@@ -20,13 +20,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smartbuilders.ids.AuthenticatorActivity;
-import com.smartbuilders.ids.data.SyncLogDB;
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.syncadapter.SyncAdapter;
-import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
-import com.smartbuilders.ids.utils.ApplicationUtilities;
-import com.smartbuilders.ids.utils.NetworkConnectionUtilities;
+import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
+import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
+import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
+import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
+import com.smartbuilders.synchronizer.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.List;

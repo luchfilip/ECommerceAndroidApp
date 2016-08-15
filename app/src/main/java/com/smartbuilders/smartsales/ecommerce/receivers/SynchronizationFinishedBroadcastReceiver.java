@@ -4,8 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.syncadapter.SyncAdapter;
+import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.WishListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;

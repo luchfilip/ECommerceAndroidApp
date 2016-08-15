@@ -16,9 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.model.UserProfile;
-import com.smartbuilders.ids.utils.ApplicationUtilities;
+import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
+import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;

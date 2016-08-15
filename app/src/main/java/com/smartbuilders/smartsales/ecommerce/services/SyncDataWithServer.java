@@ -2,18 +2,6 @@ package com.smartbuilders.smartsales.ecommerce.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
-
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.utils.ApplicationUtilities;
-import com.smartbuilders.ids.utils.ConsumeWebService;
-import com.smartbuilders.smartsales.ecommerce.data.FailedSyncDataWithServerDB;
-import com.smartbuilders.smartsales.ecommerce.model.FailedSyncDataWithServer;
-
-import org.json.JSONObject;
-import org.ksoap2.serialization.SoapPrimitive;
-
-import java.util.LinkedHashMap;
 
 /**
  * Created by stein on 22/7/2016.

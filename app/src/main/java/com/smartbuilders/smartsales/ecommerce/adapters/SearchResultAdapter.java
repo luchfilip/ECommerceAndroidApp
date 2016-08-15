@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.smartbuilders.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.BrandsListActivity;
 import com.smartbuilders.smartsales.ecommerce.CategoriesListActivity;
 import com.smartbuilders.smartsales.ecommerce.ProductsListActivity;

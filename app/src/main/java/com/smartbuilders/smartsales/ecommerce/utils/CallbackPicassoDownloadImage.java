@@ -3,7 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.utils;
 import android.content.Context;
 import android.util.Log;
 
-import com.smartbuilders.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.io.File;
 import java.io.FileOutputStream;

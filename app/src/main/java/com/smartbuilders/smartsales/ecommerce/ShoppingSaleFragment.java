@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.smartbuilders.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;

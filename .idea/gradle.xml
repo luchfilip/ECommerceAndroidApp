@@ -10,7 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Intelligent Data Synchronizer" />
+            <option value="$PROJECT_DIR$/IDS" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beval" />
             <option value="$PROJECT_DIR$/febeca" />
@@ -20,7 +20,7 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Intelligent Data Synchronizer" />
+            <option value="$PROJECT_DIR$/IDS" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beval" />
             <option value="$PROJECT_DIR$/febeca" />

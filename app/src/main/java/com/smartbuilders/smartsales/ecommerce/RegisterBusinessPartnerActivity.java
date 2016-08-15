@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.model.UserProfile;
+import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**

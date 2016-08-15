@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.smartbuilders.ids.utils.ConsumeWebService;
+import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordFragment;
 

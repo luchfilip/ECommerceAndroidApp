@@ -23,8 +23,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.model.UserProfile;
+import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.WishListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;

@@ -36,10 +36,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smartbuilders.ids.model.User;
-import com.smartbuilders.ids.model.UserProfile;
-import com.smartbuilders.ids.syncadapter.model.AccountGeneral;
-import com.smartbuilders.ids.utils.ApplicationUtilities;
+import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
+import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
+import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.BusinessPartnersListActivity;
 import com.smartbuilders.smartsales.ecommerce.CompanyActivity;
 import com.smartbuilders.smartsales.ecommerce.ContactUsActivity;
