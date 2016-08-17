@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ECommerceAndroidApp.iml" filepath="$PROJECT_DIR$/ECommerceAndroidApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/IDS/Intelligent Data Synchronizer.iml" filepath="$PROJECT_DIR$/IDS/Intelligent Data Synchronizer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IDS/IDS.iml" filepath="$PROJECT_DIR$/IDS/IDS.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/beval/beval.iml" filepath="$PROJECT_DIR$/beval/beval.iml" />
       <module fileurl="file://$PROJECT_DIR$/febeca/febeca.iml" filepath="$PROJECT_DIR$/febeca/febeca.iml" />

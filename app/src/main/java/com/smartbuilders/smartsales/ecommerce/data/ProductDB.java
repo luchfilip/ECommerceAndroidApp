@@ -588,7 +588,7 @@ public class ProductDB {
      * @param product
      * @param cursor
      */
-    private void fillFullProductInfoFromCursor(Product product, Cursor cursor) {
+    public static void fillFullProductInfoFromCursor(Product product, Cursor cursor) {
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(3));
         product.setDescription(cursor.getString(4));
@@ -645,7 +645,7 @@ public class ProductDB {
      * @param product
      * @param cursor
      */
-    private void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
+    public static void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(1));
         product.setImageFileName(cursor.getString(2));
