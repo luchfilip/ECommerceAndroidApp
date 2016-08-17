@@ -117,6 +117,7 @@
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">%1$s %2$s</string>
+    <string name="commercial_package_label_detail">Empaque: %1$s %2$s</string>
     <string name="availability">Disponibilidad: %1$s</string>
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>

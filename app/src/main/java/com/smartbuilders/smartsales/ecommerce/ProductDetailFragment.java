@@ -189,7 +189,6 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
                                     }
 
-
                                     if (!relatedProductsByShopping.isEmpty()) {
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);
                                         // use this setting to improve performance if you know that changes
@@ -236,7 +235,7 @@ public class ProductDetailFragment extends Fragment {
                                     }
 
                                     if (mProduct.getProductCommercialPackage() != null) {
-                                        ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
+                                        ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
                                                 mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
                                     } else {
                                         view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);

@@ -100,22 +100,6 @@
             android:focusable="false"
             android:textColor="@color/black" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/product_purpose"
-            android:textSize="@dimen/productDetailActivity_description_text_size"
-            android:focusable="false"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/product_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@color/product_details_price_color"
-            android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -126,6 +110,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/product_details_price_color"
+                    android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_purpose"
+                    android:textSize="@dimen/productDetailActivity_description_text_size"
+                    android:focusable="false"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/product_availability"
