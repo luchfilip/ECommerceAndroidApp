@@ -83,8 +83,9 @@ public class RecommendedProductDB {
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                             " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
                         " WHERE R.BUSINESS_PARTNER_ID = ? AND R.IS_ACTIVE = ? ",
-                    new String[]{"Y", "Y", "Y", "Y", String.valueOf(businessPartnerId), "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(businessPartnerId), "Y"}, null);
             if (c!=null && c.moveToNext()) {
                 return c.getInt(0);
             }
