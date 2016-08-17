@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
+import com.smartbuilders.smartsales.ecommerce.model.Company;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 public class ContactUsActivity extends AppCompatActivity {
@@ -22,19 +25,24 @@ public class ContactUsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        final Company company = (new CompanyDB(this, Utils.getCurrentUser(this))).getCompany();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent contactUsEmailIntent = new Intent(Intent.ACTION_SEND);
-                contactUsEmailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                // need this to prompts email client only
-                contactUsEmailIntent.setType("message/rfc822");
-                contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"smartBuilders.ve@gmail.com"});
 
-                startActivity(Intent.createChooser(contactUsEmailIntent, getString(R.string.send_email)));
-            }
-        });
+        if(company!=null && !TextUtils.isEmpty(company.getEmailAddress())){
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent contactUsEmailIntent = new Intent(Intent.ACTION_SEND);
+                    contactUsEmailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    // need this to prompts email client only
+                    contactUsEmailIntent.setType("message/rfc822");
+                    contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{company.getEmailAddress()});
+                    startActivity(Intent.createChooser(contactUsEmailIntent, getString(R.string.send_email)));
+                }
+            });
+        }else{
+            fab.setVisibility(View.GONE);
+        }
     }
 
     @Override
