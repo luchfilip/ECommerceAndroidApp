@@ -158,9 +158,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         root.setBackgroundColor(Color.WHITE);
         mCurrentUser = Utils.getCurrentUser(getApplicationContext());
-
-        getPreferenceScreen().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());
-        ((EditTextPreference)getPreferenceScreen().findPreference("server_address")).setText(mCurrentUser.getServerAddress());
     }
 
     /**
@@ -253,9 +250,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_data_sync);
             setHasOptionsMenu(true);
 
-            SharedPreferences.Editor prefs = getPreferenceManager().getSharedPreferences().edit();
-            prefs.putString("server_address", mCurrentUser.getServerAddress());
-            prefs.apply();
+            //SharedPreferences.Editor prefs = getPreferenceManager().getSharedPreferences().edit();
+            //prefs.putString("server_address", mCurrentUser.getServerAddress());
+            //prefs.apply();
+
+            getPreferenceManager().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());
+            ((EditTextPreference)getPreferenceManager().findPreference("server_address")).setText(mCurrentUser.getServerAddress());
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
