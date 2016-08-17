@@ -320,8 +320,9 @@ public class ProductDetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-
+            if (mShareActionProvider!=null) {
+                mShareActionProvider.setShareIntent(mShareIntent);
+            }
         } else if (i == R.id.search) {
             startActivity(new Intent(getContext(), SearchResultsActivity.class));
             return true;

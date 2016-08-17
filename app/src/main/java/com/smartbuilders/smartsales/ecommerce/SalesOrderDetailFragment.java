@@ -45,6 +45,7 @@ public class SalesOrderDetailFragment extends Fragment {
     private User mUser;
     private int mSalesOrderId;
     private SalesOrder mSalesOrder;
+    private ArrayList<SalesOrderLine> mSalesOrderLines;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
@@ -63,8 +64,6 @@ public class SalesOrderDetailFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
         setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
-
-        final ArrayList<SalesOrderLine> orderLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -96,10 +95,8 @@ public class SalesOrderDetailFragment extends Fragment {
                     }
 
                     if (mSalesOrder != null) {
-                        orderLines.addAll((new SalesOrderLineDB(getContext(), mUser))
-                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId()));
-
-                        new CreateShareIntentThread(mSalesOrder, orderLines).start();
+                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
+                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -119,7 +116,7 @@ public class SalesOrderDetailFragment extends Fragment {
                                     recyclerView.setHasFixedSize(true);
                                     mLinearLayoutManager = new LinearLayoutManager(getContext());
                                     recyclerView.setLayoutManager(mLinearLayoutManager);
-                                    recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), orderLines, mUser));
+                                    recyclerView.setAdapter(new SalesOrderLineAdapter(getContext(), mSalesOrderLines, mUser));
 
                                     if (mRecyclerViewCurrentFirstPosition!=0) {
                                         recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -215,15 +212,16 @@ public class SalesOrderDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
+        new CreateShareIntentThread(mSalesOrder, mSalesOrderLines).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-
+            if (mShareActionProvider!=null) {
+                mShareActionProvider.setShareIntent(mShareIntent);
+            }
         } else if (i == R.id.action_download) {
             if (mShareIntent != null) {
                 Utils.createPdfFileInDownloadFolder(getContext(),
@@ -251,7 +249,9 @@ public class SalesOrderDetailFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mShareActionProvider.setShareIntent(mShareIntent);
+                        if (mShareActionProvider!=null) {
+                            mShareActionProvider.setShareIntent(mShareIntent);
+                        }
                     }
                 });
             }

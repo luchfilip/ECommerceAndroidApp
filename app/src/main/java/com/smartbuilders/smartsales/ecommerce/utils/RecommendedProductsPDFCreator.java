@@ -199,8 +199,12 @@ public class RecommendedProductsPDFCreator {
             cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, product.getInternalCode()), font));
             cell2.addElement(new Paragraph(product.getName(), font));
             cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, product.getProductBrand().getName()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, product.getDescription()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, product.getPurpose()), font));
+            if (!TextUtils.isEmpty(product.getDescription())) {
+                cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, product.getDescription()), font));
+            }
+            if (!TextUtils.isEmpty(product.getPurpose())) {
+                cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, product.getPurpose()), font));
+            }
             table.addCell(cell2);
             /*****************************************/
 

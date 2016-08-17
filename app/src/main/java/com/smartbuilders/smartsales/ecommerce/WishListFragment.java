@@ -58,6 +58,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private View mainLayout;
     private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
+    private ArrayList<OrderLine> mWishListLines;
 
     public WishListFragment() {
     }
@@ -67,8 +68,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_wish_list, container, false);
         mIsInitialLoad = true;
-
-        final ArrayList<OrderLine> wishListLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -82,11 +81,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     mUser = Utils.getCurrentUser(getContext());
                     mOrderLineDB = new OrderLineDB(getContext(), mUser);
 
-                    wishListLines.addAll(mOrderLineDB.getWishList());
+                    mWishListLines = mOrderLineDB.getWishList();
 
-                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
-
-                    new ReloadShareIntentThread(wishListLines).start();
+                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, mWishListLines, mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,7 +127,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (wishListLines.isEmpty()) {
+                                if (mWishListLines.isEmpty()) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
@@ -231,14 +228,14 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
+        new ReloadShareIntentThread(mWishListLines).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            if (mShareIntent!=null) {
+            if (mShareActionProvider!=null) {
                 mShareActionProvider.setShareIntent(mShareIntent);
             }
         } else if (i == R.id.action_download) {
@@ -290,7 +287,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mShareActionProvider.setShareIntent(mShareIntent);
+                        if (mShareActionProvider!=null) {
+                            mShareActionProvider.setShareIntent(mShareIntent);
+                        }
                     }
                 });
             }

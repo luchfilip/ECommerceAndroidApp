@@ -52,6 +52,7 @@ public class OrderDetailFragment extends Fragment {
     private int mRecyclerViewCurrentFirstPosition;
     private ShareActionProvider mShareActionProvider;
     private Order mOrder;
+    private ArrayList<OrderLine> mOrderLines;
     private Intent mShareIntent;
 
     public OrderDetailFragment() {
@@ -67,8 +68,6 @@ public class OrderDetailFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
         setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
-
-        final ArrayList<OrderLine> mOrderLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -95,13 +94,8 @@ public class OrderDetailFragment extends Fragment {
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
-
-                    mOrderLines.addAll(new OrderLineDB(getContext(), mUser)
-                            .getActiveFinalizedOrderLinesByOrderId(mOrderId));
-
+                    mOrderLines = new OrderLineDB(getContext(), mUser).getActiveFinalizedOrderLinesByOrderId(mOrderId);
                     mOrder = (new OrderDB(getContext(), mUser)).getActiveOrderById(mOrderId);
-
-                    new CreateShareIntentThread(mOrder, mOrderLines).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -210,14 +204,14 @@ public class OrderDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
+        new CreateShareIntentThread(mOrder, mOrderLines).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            if (mShareIntent!=null) {
+            if (mShareActionProvider!=null) {
                 mShareActionProvider.setShareIntent(mShareIntent);
             }
         } else if (i == R.id.action_download) {
@@ -247,7 +241,9 @@ public class OrderDetailFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mShareActionProvider.setShareIntent(mShareIntent);
+                        if (mShareActionProvider!=null) {
+                            mShareActionProvider.setShareIntent(mShareIntent);
+                        }
                     }
                 });
             }

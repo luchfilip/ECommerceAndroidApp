@@ -55,6 +55,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private User mUser;
     private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
+    private ArrayList<Product> mRecommendedProducts;
 
     public RecommendedProductsListFragment() {
     }
@@ -64,8 +65,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recommended_products_list, container, false);
         mIsInitialLoad = true;
-
-        final ArrayList<Product> recommendedProducts = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -78,15 +77,15 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     }
                     mUser = Utils.getCurrentUser(getContext());
                     if (getContext() != null && mUser != null) {
-                        recommendedProducts.addAll((new RecommendedProductDB(getContext(), mUser))
-                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser)));
+                        mRecommendedProducts = (new RecommendedProductDB(getContext(), mUser))
+                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                    } else {
+                        mRecommendedProducts = new ArrayList<>();
                     }
                     if (getContext() != null) {
                         mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
-                                RecommendedProductsListFragment.this, recommendedProducts, mUser);
+                                RecommendedProductsListFragment.this, mRecommendedProducts, mUser);
                     }
-
-                    new ReloadShareIntentThread(recommendedProducts).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,7 +129,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (recommendedProducts.isEmpty()) {
+                                if (mRecommendedProducts.isEmpty()) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
@@ -235,17 +234,16 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
+        new ReloadShareIntentThread(mRecommendedProducts).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            if (mShareIntent!=null) {
+            if (mShareActionProvider!=null) {
                 mShareActionProvider.setShareIntent(mShareIntent);
             }
-
         } else if (i == R.id.action_download) {
             if (mShareIntent != null) {
                 Utils.createPdfFileInDownloadFolder(getContext(),
@@ -271,7 +269,9 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mShareActionProvider.setShareIntent(mShareIntent);
+                        if (mShareActionProvider!=null) {
+                            mShareActionProvider.setShareIntent(mShareIntent);
+                        }
                     }
                 });
             }

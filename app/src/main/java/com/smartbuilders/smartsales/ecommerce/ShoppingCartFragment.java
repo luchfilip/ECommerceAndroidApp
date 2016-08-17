@@ -256,14 +256,16 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
                                     .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
                         }
-                        Utils.unlockScreenOrientation(getActivity());
+                        //Utils.unlockScreenOrientation(getActivity());
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        if(!mIsShoppingCart){
+                        //if(!mIsShoppingCart){
+                        if (getActivity()!=null) {
                             getActivity().finish();
                         }
+                        //}
                     }
                 }
             });

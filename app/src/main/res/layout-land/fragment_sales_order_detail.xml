@@ -142,8 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/create_order"
-                    android:id="@+id/create_order_button"
-                    android:layout_gravity="right" />
+                    android:id="@+id/create_order_button" />
             </LinearLayout>
 
         </LinearLayout>
