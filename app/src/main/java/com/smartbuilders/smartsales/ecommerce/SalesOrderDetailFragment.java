@@ -98,7 +98,8 @@ public class SalesOrderDetailFragment extends Fragment {
                     if (mSalesOrder != null) {
                         orderLines.addAll((new SalesOrderLineDB(getContext(), mUser))
                                 .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId()));
-                        mShareIntent = createShareSalesOrderIntent(mSalesOrder, orderLines);
+
+                        new CreateShareIntentThread(mSalesOrder, orderLines).start();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -234,29 +235,52 @@ public class SalesOrderDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareSalesOrderIntent(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines){
-        String subject = "";
-        String message = "";
+    class CreateShareIntentThread extends Thread {
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        // need this to prompts email client only
-        shareIntent.setType("message/rfc822");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+        private SalesOrder mSalesOrder;
+        private ArrayList<SalesOrderLine> mSalesOrderLines;
 
-        try{
-            new SalesOrderDetailPDFCreator().generatePDF(salesOrder, salesOrderLines, fileName+".pdf",
-                    getContext(), mUser);
-        }catch(Exception e){
-            e.printStackTrace();
+        public CreateShareIntentThread(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines) {
+            this.mSalesOrder = salesOrder;
+            this.mSalesOrderLines = salesOrderLines;
         }
 
-        //Add the attachment by specifying a reference to our custom ContentProvider
-        //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-        return shareIntent;
+        public void run() {
+            mShareIntent = createShareIntent(mSalesOrder, mSalesOrderLines);
+            if(getActivity()!=null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mShareActionProvider.setShareIntent(mShareIntent);
+                    }
+                });
+            }
+        }
+
+        private Intent createShareIntent(SalesOrder salesOrder, ArrayList<SalesOrderLine> salesOrderLines){
+            String subject = "";
+            String message = "";
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            // need this to prompts email client only
+            shareIntent.setType("message/rfc822");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+            try{
+                new SalesOrderDetailPDFCreator().generatePDF(salesOrder, salesOrderLines, fileName+".pdf",
+                        getContext(), mUser);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            //Add the attachment by specifying a reference to our custom ContentProvider
+            //and the specific file of interest
+            shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                    + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
+            return shareIntent;
+        }
     }
 
     @Override

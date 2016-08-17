@@ -250,7 +250,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         } else if (i == R.id.clear_wish_list) {
             clearWishList();
-
         }
         return super.onOptionsItemSelected(item);
     }

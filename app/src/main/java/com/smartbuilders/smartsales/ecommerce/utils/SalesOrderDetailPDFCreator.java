@@ -351,6 +351,7 @@ public class SalesOrderDetailPDFCreator {
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
             cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price,
                     currency!=null ? currency.getName() : "",
                     line.getPriceStringFormat()), font));

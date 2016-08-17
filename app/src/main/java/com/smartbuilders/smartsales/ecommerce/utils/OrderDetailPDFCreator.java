@@ -308,25 +308,27 @@ public class OrderDetailPDFCreator {
             Image productImage = Image.getInstance(stream.toByteArray());
             PdfPCell cell = new PdfPCell(productImage, true);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setPadding(3);
+            //cell.setPadding(3);
             cell.setBorder(PdfPCell.NO_BORDER);
             table.addCell(cell);
 
             PdfPCell cell2 = new PdfPCell();
             cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell2.setPadding(3);
+            //cell2.setPadding(3);
             cell2.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
             cell2.setUseVariableBorders(true);
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
+            cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-            //cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price, line.getPriceStringFormat()), font));
-            //cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount, line.getTaxPercentageStringFormat()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
             cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell3.setPadding(3);
+            //cell3.setPadding(3);
             cell3.setBorder(PdfPCell.NO_BORDER);
             cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered, String.valueOf(line.getQuantityOrdered())), font));
             //cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount, line.getTotalLineAmountStringFormat()), font));
