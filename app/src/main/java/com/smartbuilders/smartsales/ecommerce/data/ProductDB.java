@@ -189,7 +189,7 @@ public class ProductDB {
                         " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE P.SUBCATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC ",
-                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                             String.valueOf(subCategoryId), "Y"}, null);
             if (c!=null) {
@@ -254,7 +254,7 @@ public class ProductDB {
                         " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE S.CATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC ",
-                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                             String.valueOf(categoryId), "Y"}, null);
             if (c!=null) {
@@ -301,7 +301,7 @@ public class ProductDB {
                         " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE P.BRAND_ID = ? AND P.IS_ACTIVE = ? " +
                     " ORDER BY P.NAME ASC",
-                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                             String.valueOf(brandId), "Y"}, null);
             if (c!=null) {
@@ -357,7 +357,7 @@ public class ProductDB {
                             " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                         " WHERE P.INTERNAL_CODE LIKE ? AND P.IS_ACTIVE = ? " +
                         " ORDER BY P.NAME ASC",
-                        new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                        new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                                 String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                                 name+"%", "Y"}, null);
             }else{
@@ -382,7 +382,7 @@ public class ProductDB {
                                     " OR replace(replace(replace(replace(replace(lower(P.NAME),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
                                 " AND P.IS_ACTIVE = ? " +
                         " ORDER BY P.NAME ASC",
-                        new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                        new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                                 String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                                 name+"%", "% "+name+"%", "Y"}, null);
             }
@@ -536,7 +536,7 @@ public class ProductDB {
                         " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
                         " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
-                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", String.valueOf(1), "Y", "Y",
+                    new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                             String.valueOf(id), "Y"}, null);
             if (c!=null && c.moveToNext()){
