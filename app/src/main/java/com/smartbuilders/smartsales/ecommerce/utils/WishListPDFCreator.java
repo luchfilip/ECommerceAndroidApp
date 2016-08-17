@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -38,11 +37,9 @@ import java.util.ArrayList;
  * Created by Alberto on 6/4/2016.
  */
 public class WishListPDFCreator {
-    private static final String TAG = WishListPDFCreator.class.getSimpleName();
 
     public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Context ctx) throws Exception {
-        Log.d(TAG, "generatePDF(ArrayList<OrderLine> orderLines, String fileName, Context ctx)");
-        File pdfFile = null;
+        File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             throw new Exception(ctx.getString(R.string.external_storage_unavailable));

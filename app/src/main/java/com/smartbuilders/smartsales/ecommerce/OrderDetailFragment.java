@@ -101,7 +101,7 @@ public class OrderDetailFragment extends Fragment {
 
                     mOrder = (new OrderDB(getContext(), mUser)).getActiveOrderById(mOrderId);
 
-                    mShareIntent = createShareOrderIntent(mOrder, mOrderLines);
+                    new CreateShareIntentThread(mOrder, mOrderLines).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -172,7 +172,9 @@ public class OrderDetailFragment extends Fragment {
                                 view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        startActivity(mShareIntent);
+                                        if (mShareIntent!=null) {
+                                            startActivity(mShareIntent);
+                                        }
                                     }
                                 });
                             } catch (Exception e) {
@@ -215,10 +217,11 @@ public class OrderDetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-
+            if (mShareIntent!=null) {
+                mShareActionProvider.setShareIntent(mShareIntent);
+            }
         } else if (i == R.id.action_download) {
-            if (mShareIntent != null) {
+            if (mShareIntent!=null) {
                 Utils.createPdfFileInDownloadFolder(getContext(),
                         getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
                         fileName + ".pdf");
@@ -228,28 +231,51 @@ public class OrderDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareOrderIntent(Order order, ArrayList<OrderLine> orderLines){
-        String subject = "";
-        String message = "";
+    class CreateShareIntentThread extends Thread {
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        // need this to prompts email client only
-        shareIntent.setType("message/rfc822");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+        private Order mOrder;
+        private ArrayList<OrderLine> mOrderLines;
 
-        try{
-            new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mUser);
-        }catch(Exception e){
-            e.printStackTrace();
+        public CreateShareIntentThread(Order order, ArrayList<OrderLine> orderLines) {
+            this.mOrder = order;
+            this.mOrderLines = orderLines;
         }
 
-        //Add the attachment by specifying a reference to our custom ContentProvider
-        //and the specific file of interest
-        shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-        return shareIntent;
+        public void run() {
+            mShareIntent = createShareIntent(mOrder, mOrderLines);
+            if(getActivity()!=null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mShareActionProvider.setShareIntent(mShareIntent);
+                    }
+                });
+            }
+        }
+
+        private Intent createShareIntent(Order order, ArrayList<OrderLine> orderLines){
+            String subject = "";
+            String message = "";
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            // need this to prompts email client only
+            shareIntent.setType("message/rfc822");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+            try{
+                new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mUser);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            //Add the attachment by specifying a reference to our custom ContentProvider
+            //and the specific file of interest
+            shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                    + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
+            return shareIntent;
+        }
     }
 
     @Override

@@ -85,7 +85,8 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                         mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
                                 RecommendedProductsListFragment.this, recommendedProducts, mUser);
                     }
-                    mShareIntent = createSharedIntent(recommendedProducts);
+
+                    new ReloadShareIntentThread(recommendedProducts).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -120,7 +121,9 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        startActivity(mShareIntent);
+                                        if (mShareIntent!=null) {
+                                            startActivity(mShareIntent);
+                                        }
                                     }
                                 });
                             } catch (Exception e) {
@@ -239,7 +242,9 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
+            if (mShareIntent!=null) {
+                mShareActionProvider.setShareIntent(mShareIntent);
+            }
 
         } else if (i == R.id.action_download) {
             if (mShareIntent != null) {
@@ -252,42 +257,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createSharedIntent(ArrayList<Product> products) {
-        try {
-            if (products != null && !products.isEmpty()) {
-                String subject = "";
-                String message = "";
-
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                if (Build.VERSION.SDK_INT >= 21) {
-                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                } else {
-                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                }
-                // need this to prompts email client only
-                shareIntent.setType("message/rfc822");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-                try {
-                    new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                //Add the attachment by specifying a reference to our custom ContentProvider
-                //and the specific file of interest
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
-                        + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-                return shareIntent;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
     class ReloadShareIntentThread extends Thread {
 
         private ArrayList<Product> mProducts;
@@ -297,7 +266,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
         }
 
         public void run() {
-            mShareIntent = createSharedIntent(mProducts);
+            mShareIntent = createShareIntent(mProducts);
             if(getActivity()!=null){
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -306,6 +275,41 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     }
                 });
             }
+        }
+
+        private Intent createShareIntent(ArrayList<Product> products) {
+            try {
+                if (products != null && !products.isEmpty()) {
+                    String subject = "";
+                    String message = "";
+
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    if (Build.VERSION.SDK_INT >= 21) {
+                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    } else {
+                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    }
+                    // need this to prompts email client only
+                    shareIntent.setType("message/rfc822");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+                    try {
+                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //Add the attachment by specifying a reference to our custom ContentProvider
+                    //and the specific file of interest
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
+                            + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
+                    return shareIntent;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

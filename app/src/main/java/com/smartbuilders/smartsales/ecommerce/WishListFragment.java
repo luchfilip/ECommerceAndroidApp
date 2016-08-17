@@ -286,7 +286,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         }
 
         public void run() {
-            mShareIntent = createSharedIntent(mWishListLines);
+            mShareIntent = createShareIntent(mWishListLines);
             if(getActivity()!=null){
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -296,43 +296,41 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 });
             }
         }
-    }
 
-    private Intent createSharedIntent(ArrayList<OrderLine> wishListLines) {
-        try {
-            if (wishListLines!=null && !wishListLines.isEmpty()) {
-                String subject = "";
-                String message = "";
+        private Intent createShareIntent(ArrayList<OrderLine> wishListLines) {
+            try {
+                if (wishListLines!=null && !wishListLines.isEmpty()) {
+                    String subject = "";
+                    String message = "";
 
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                if (Build.VERSION.SDK_INT >= 21) {
-                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                } else {
-                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    if (Build.VERSION.SDK_INT >= 21) {
+                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    } else {
+                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    }
+                    // need this to prompts email client only
+                    shareIntent.setType("message/rfc822");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+                    try{
+                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //Add the attachment by specifying a reference to our custom ContentProvider
+                    //and the specific file of interest
+                    shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
+                            + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
+                    return shareIntent;
                 }
-                // need this to prompts email client only
-                shareIntent.setType("message/rfc822");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-                try{
-                    long initTime = System.currentTimeMillis();
-                    new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
-                    System.out.println("generatePDF time: "+(System.currentTimeMillis() - initTime)+"ms");
-                }catch(Exception e) {
-                    e.printStackTrace();
-                }
-
-                //Add the attachment by specifying a reference to our custom ContentProvider
-                //and the specific file of interest
-                shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                        + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-                return shareIntent;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private boolean useGridView(){
