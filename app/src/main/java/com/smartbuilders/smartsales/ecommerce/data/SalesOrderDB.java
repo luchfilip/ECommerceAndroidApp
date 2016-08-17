@@ -346,7 +346,7 @@ public class SalesOrderDB {
                             null,
                             "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
-                            new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId),
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(salesOrderId),
                                     String.valueOf(mUser.getServerUserId())});
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -355,7 +355,7 @@ public class SalesOrderDB {
                             null,
                             "UPDATE ECOMMERCE_SALES_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
-                            new String[]{"N", "datetime('now','localtime')", String.valueOf(salesOrderId),
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(salesOrderId),
                                     String.valueOf(mUser.getServerUserId())});
             if(rowsAffected <= 0){
                 return "No se actualizó ningún registro en la base de datos";

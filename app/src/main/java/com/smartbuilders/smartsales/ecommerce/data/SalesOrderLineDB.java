@@ -169,7 +169,7 @@ public class SalesOrderLineDB {
                     null,
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                         " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ?",
-                    new String[]{"N", "datetime('now','localtime')", String.valueOf(orderLine.getId()),
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderLine.getId()),
                             String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -373,7 +373,7 @@ public class SalesOrderLineDB {
                             null,
                             "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
-                            new String[]{"N", "datetime('now','localtime')",
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(),
                                     String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), SHOPPING_SALE_DOC_TYPE});
         } catch (Exception e) {
             e.printStackTrace();
