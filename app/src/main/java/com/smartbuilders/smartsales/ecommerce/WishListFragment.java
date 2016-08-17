@@ -85,7 +85,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     wishListLines.addAll(mOrderLineDB.getWishList());
 
                     mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, wishListLines, mUser);
-                    mShareIntent = createSharedIntent(wishListLines);
+
+                    new ReloadShareIntentThread(wishListLines).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -120,7 +121,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        startActivity(mShareIntent);
+                                        if (mShareIntent!=null) {
+                                            startActivity(mShareIntent);
+                                        }
                                     }
                                 });
                             } catch (Exception e) {
@@ -235,8 +238,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_share) {
-            mShareActionProvider.setShareIntent(mShareIntent);
-
+            if (mShareIntent!=null) {
+                mShareActionProvider.setShareIntent(mShareIntent);
+            }
         } else if (i == R.id.action_download) {
             if (mShareIntent != null) {
                 Utils.createPdfFileInDownloadFolder(getContext(),
@@ -312,7 +316,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                 try{
+                    long initTime = System.currentTimeMillis();
                     new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
+                    System.out.println("generatePDF time: "+(System.currentTimeMillis() - initTime)+"ms");
                 }catch(Exception e) {
                     e.printStackTrace();
                 }
