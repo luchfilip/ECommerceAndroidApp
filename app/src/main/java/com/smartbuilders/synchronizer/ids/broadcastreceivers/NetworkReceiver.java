@@ -15,8 +15,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
-import java.util.Date;
-
 /**
  * Recibe una señal del sistema cuando cambia la conectividad del equipo
  * @author Jesus Sarco
@@ -36,14 +34,9 @@ public class NetworkReceiver extends BroadcastReceiver {
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(account,context.getString(R.string.sync_adapter_content_authority))){
                         try {
-                            //Se verifica que la ultima sincronizacion se haya realizado en un tiempo
-                            // mayor o igual al periodo de sincronizacion definido.
-                            Date lastSuccessFullySyncTime = ApplicationUtilities.
-                                    getLastSuccessfullySyncTime(context, accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                            if(lastSuccessFullySyncTime!=null){
-                                long seconds = (System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000;
+                            if(!ApplicationUtilities.appRequireInitialLoad(context, account)){
                                 if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                                    if(seconds >= Utils.getSyncPeriodicityFromPreferences(context)) {
+                                    if(ApplicationUtilities.appRequireFullSync(context, account)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
                                         ApplicationUtilities.initSyncDataWithServerService(context,
@@ -65,12 +58,12 @@ public class NetworkReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
 
-            if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+            //if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
                 if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_thumb_images", false)
                         && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
                     context.startService(new Intent(context, LoadProductsThumbImage.class));
                 }
-            }
+            //}
         }
     }
 

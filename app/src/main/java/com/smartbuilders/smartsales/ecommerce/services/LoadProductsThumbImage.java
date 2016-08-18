@@ -58,6 +58,7 @@ public class LoadProductsThumbImage extends IntentService {
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PPA ON PPA.PRODUCT_ID = P.PRODUCT_ID AND PPA.IS_ACTIVE = 'Y' " +
                     " WHERE PI.IS_ACTIVE='Y' AND PI.PRIORITY=1",
                     null, null);
             if(c!=null){

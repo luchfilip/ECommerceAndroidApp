@@ -28,6 +28,7 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -271,12 +272,12 @@ public class ApplicationUtilities {
         }
     }
 
-	public static Date getLastSuccessfullySyncTime(Context ctx, Account account) {
-		return getLastSuccessfullySyncTime(ctx, AccountManager.get(ctx).getUserData(account,
+	public static Date getLastFullSyncTime(Context ctx, Account account) {
+		return getLastFullSyncTime(ctx, AccountManager.get(ctx).getUserData(account,
                 AccountGeneral.USERDATA_USER_ID));
 	}
 
-	public static Date getLastSuccessfullySyncTime(Context ctx, String userId) {
+	public static Date getLastFullSyncTime(Context ctx, String userId) {
 		Cursor c = null;
 		try{
             c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
@@ -295,6 +296,51 @@ public class ApplicationUtilities {
 		}
 		return null;
 	}
+
+    /**
+     * Se verifica que la ultima sincronizacion se haya realizado en un tiempo
+     * mayor o igual al periodo de sincronizacion definido.
+     * @param ctx
+     * @param account
+     * @return
+     */
+    public static boolean appRequireFullSync(Context ctx, Account account) {
+        return appRequireFullSync(ctx, AccountManager.get(ctx).getUserData(account,
+                AccountGeneral.USERDATA_USER_ID));
+    }
+
+	/**
+	 * Se verifica que la ultima sincronizacion se haya realizado en un tiempo
+	 * mayor o igual al periodo de sincronizacion definido.
+	 * @param ctx
+	 * @param userId
+     * @return
+     */
+	public static boolean appRequireFullSync(Context ctx, String userId) {
+        Date lastSuccessFullySyncTime = ApplicationUtilities.getLastFullSyncTime(ctx, userId);
+        return lastSuccessFullySyncTime == null
+                || (((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime()) / 1000) >= Utils.getSyncPeriodicityFromPreferences(ctx));
+    }
+
+    /**
+     * Verifica si el usuario aun no tiene una sincronizacion completa realizada
+     * @param context
+     * @param account
+     * @return
+     */
+    public static boolean appRequireInitialLoad(Context context, Account account) {
+        return getLastFullSyncTime(context, account)==null;
+    }
+
+    /**
+     * Verifica si el usuario aun no tiene una sincronizacion completa realizada
+     * @param context
+     * @param userId
+     * @return
+     */
+    public static boolean appRequireInitialLoad(Context context, String userId) {
+        return getLastFullSyncTime(context, userId)==null;
+    }
 
     /**
      * Devuelve la ultima fecha de sincronizacion de un Account en un Sync Adapter

@@ -154,7 +154,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 && extras.getBoolean(KEY_PERIODIC_SYNC_ACTIVE)){
     		isAPeriodicSync = true;
             try {
-                if(((System.currentTimeMillis() - ApplicationUtilities.getLastSuccessfullySyncTime(getContext(), user.getUserId()).getTime())/1000)
+                if(((System.currentTimeMillis() - ApplicationUtilities.getLastFullSyncTime(getContext(), user.getUserId()).getTime())/1000)
 						< Utils.getSyncPeriodicityFromPreferences(getContext())) {
                     return;
                 }
@@ -217,7 +217,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                             .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
                                     .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
 									.appendQueryParameter(SynchronizerContentProvider.KEY_IS_INITIAL_LOAD,
-                                            String.valueOf(Utils.appRequireInitialLoad(getContext(), account))).build(),
+                                            String.valueOf(ApplicationUtilities.appRequireInitialLoad(getContext(), account))).build(),
                                     null, null, null, null);
                 }
 

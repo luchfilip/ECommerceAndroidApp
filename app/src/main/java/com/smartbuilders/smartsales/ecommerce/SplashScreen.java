@@ -328,7 +328,7 @@ public class SplashScreen extends AppCompatActivity {
             }
             /***************************************************************************************/
 
-            if (Utils.appRequireInitialLoad(this, mUser.getUserId())) {
+            if (ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {
                 if(NetworkConnectionUtilities.isOnline(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
