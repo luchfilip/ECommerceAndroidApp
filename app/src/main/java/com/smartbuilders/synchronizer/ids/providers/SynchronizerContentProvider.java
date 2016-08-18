@@ -54,6 +54,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final String KEY_USER_GCM_ID 					= "USER_GCM_ID";
 	public static final String KEY_USER_SYNC_STATE 				= "USER_SYNC_STATE";
     public static final String KEY_USER_SYNC_SESSION_ID         = "USER_SYNC_SESSION_ID";
+	public static final String KEY_IS_INITIAL_LOAD				= "IS_INITIAL_LOAD";
 	
 	private static final int START 						= 1;
 	private static final int STOP 						= 2;
@@ -163,7 +164,12 @@ public class SynchronizerContentProvider extends ContentProvider{
 				if (uri.getQueryParameter("tables_to_sync")!=null) {
 					tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), uri.getQueryParameter("tables_to_sync"));
 				} else {
-					tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext());
+                    if (uri.getQueryParameter(KEY_IS_INITIAL_LOAD)!=null
+                            && uri.getQueryParameter(KEY_IS_INITIAL_LOAD).equals("true")) {
+                        tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), true);
+                    }else {
+					    tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), false);
+                    }
 				}
 				tableDataReceiveFromServerThread.start();
 				result = true;
@@ -190,7 +196,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	 */
 	private Cursor stopSynchronization(Uri uri) {
 		MatrixCursor cursor = new MatrixCursor(new String[]{"state", "error_message", "exception_class"});
-		Boolean result = false;
+		Boolean result;
 		String errorMessage = null;
 		String exceptionClass = null;
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
