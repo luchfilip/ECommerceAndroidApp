@@ -39,17 +39,19 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private String mTablesToSyncJSONObject;
     private JSONObject userTablesAndSqlToSync;
     private List<SoapPrimitive> tablesToSync;
+    private boolean mIsInitialLoad;
 
     public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject) throws Exception{
-        this(user, context);
+        this(user, context, false);
         this.mTablesToSyncJSONObject = tablesToSyncJSONObject;
     }
 
-	public TablesDataSendToAndReceiveFromServer(User user, Context context) throws Exception{
+	public TablesDataSendToAndReceiveFromServer(User user, Context context, boolean isInitialLoad) throws Exception{
 		this.context = context;
 		this.mUser = user;
         this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
         this.sync = true;
+        this.mIsInitialLoad = isInitialLoad;
 	}
 	/**
 	 * detiene el hilo de sincronizacion
@@ -92,11 +94,16 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 }
                 if (sync) {
                     tablesToSync = new ArrayList<>();
-                    tablesToSync.addAll(getUserTablesToSync());
+                    if (mIsInitialLoad) {
+                        tablesToSync.addAll(getTablesToSyncInitialLoad());
+                    } else {
+                        tablesToSync.addAll(getTablesToSync());
+                    }
+                    //tablesToSync.addAll(getUserTablesToSync());
                 }
-                if (sync) {
-                    tablesToSync.addAll(getGlobalTablesToSync());
-                }
+                //if (sync) {
+                //    tablesToSync.addAll(getGlobalTablesToSync());
+                //}
                 if (sync) {
                     numberOfTablesToSync = userTablesAndSqlToSync.length() + tablesToSync.size();
                     sendUserDataToServer(userTablesAndSqlToSync);
@@ -179,7 +186,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         a.getWSResponse();
     }
 
-    private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
+    private List<SoapPrimitive> getTablesToSync() throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
@@ -187,14 +194,14 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         ConsumeWebService a = new ConsumeWebService(context,
                 mUser.getServerAddress(),
                 "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                "getGlobalTablesToSync",
-                "urn:getGlobalTablesToSync",
+                "getTablesToSync",
+                "urn:getTablesToSync",
                 parameters,
                 mConnectionTimeOut);
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-    private List<SoapPrimitive> getUserTablesToSync() throws Exception {
+    private List<SoapPrimitive> getTablesToSyncInitialLoad() throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
@@ -202,12 +209,42 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         ConsumeWebService a = new ConsumeWebService(context,
                 mUser.getServerAddress(),
                 "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                "getUserTablesToSync",
-                "urn:getUserTablesToSync",
+                "getTablesToSyncInitialLoad",
+                "urn:getTablesToSyncInitialLoad",
                 parameters,
                 mConnectionTimeOut);
         return (List<SoapPrimitive>) a.getWSResponse();
     }
+
+//    private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
+//        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+//        parameters.put("authToken", mUser.getAuthToken());
+//        parameters.put("userGroupName", mUser.getUserGroup());
+//        parameters.put("userId", mUser.getServerUserId());
+//        ConsumeWebService a = new ConsumeWebService(context,
+//                mUser.getServerAddress(),
+//                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+//                "getGlobalTablesToSync",
+//                "urn:getGlobalTablesToSync",
+//                parameters,
+//                mConnectionTimeOut);
+//        return (List<SoapPrimitive>) a.getWSResponse();
+//    }
+
+    //private List<SoapPrimitive> getUserTablesToSync() throws Exception {
+    //    LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+    //    parameters.put("authToken", mUser.getAuthToken());
+    //    parameters.put("userGroupName", mUser.getUserGroup());
+    //    parameters.put("userId", mUser.getServerUserId());
+    //    ConsumeWebService a = new ConsumeWebService(context,
+    //            mUser.getServerAddress(),
+    //            "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+    //            "getUserTablesToSync",
+    //            "urn:getUserTablesToSync",
+    //            parameters,
+    //            mConnectionTimeOut);
+    //    return (List<SoapPrimitive>) a.getWSResponse();
+    //}
 
     public void getDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
