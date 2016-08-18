@@ -15,13 +15,11 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
-import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -35,8 +33,6 @@ import java.util.List;
  * Created by stein on 2/6/2016.
  */
 public class SplashScreen extends AppCompatActivity {
-
-    private static final String TAG = SplashScreen.class.getSimpleName();
 
     private static final String STATE_SYNCHRONIZATION_STATE = "STATE_SYNCHRONIZATION_STATE";
     private static final String STATE_SYNC_PROGRESS_PERCENTAGE = "STATE_SYNC_PROGRESS_PERCENTAGE";
@@ -295,34 +291,42 @@ public class SplashScreen extends AppCompatActivity {
     private void checkInitialLoad(AccountManager accountManager, Account account) {
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
 
-        //ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
-
         mUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
         if(mUser !=null){
+            /***************************************************************************************/
+            boolean setPeriodicSync = false;
             ContentResolver.setMasterSyncAutomatically(true);
             //se define la sincronizacion automatica solo si no se ha definido antes
             List<PeriodicSync> periodicSyncList = ContentResolver.getPeriodicSyncs(account, getString(R.string.sync_adapter_content_authority));
             if(periodicSyncList==null || periodicSyncList.isEmpty()){
-                //ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
-                //Bundle bundle = new Bundle();
-                //bundle.putBoolean(ApplicationUtilities.KEY_PERIODIC_SYNC_ACTIVE, true);
-                ////Turn on periodic syncing
-                //ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
-                //ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
-                //|        bundle, Utils.getSyncPeriodicityFromPreferences(this));
+                setPeriodicSync = true;
+            } else {
+                for (PeriodicSync periodicSync : periodicSyncList){
+                    if (periodicSync.account.name.equals(account.name)
+                            && periodicSync.period!=Utils.getSyncPeriodicityFromPreferences(this)){
+                        setPeriodicSync = true;
+                        break;
+                    }
+                }
+            }
+
+            if (setPeriodicSync) {
+                ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
 
                 //Turn on periodic syncing
                 ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
                 ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
 
-                ContentResolver.addPeriodicSync(
-                        account,
-                        getString(R.string.sync_adapter_content_authority),
-                        Bundle.EMPTY,
-                        Utils.getSyncPeriodicityFromPreferences(this));
+                ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
+                        Bundle.EMPTY, Utils.getSyncPeriodicityFromPreferences(this));
+            } else if (!ContentResolver.getSyncAutomatically(account, getString(R.string.sync_adapter_content_authority))) {
+                //Turn on periodic syncing
+                ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
+                ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
             }
+            /***************************************************************************************/
 
             if (Utils.appRequireInitialLoad(this, mUser.getUserId())) {
                 if(NetworkConnectionUtilities.isOnline(this)) {
@@ -342,16 +346,8 @@ public class SplashScreen extends AppCompatActivity {
                 }
             } else {
                 mSynchronizationState = SYNC_FINISHED;
-                //if(account!=null && !ApplicationUtilities.isSyncActive(this, account)){
-                //    ApplicationUtilities.initSyncByAccount(this, account);
-                //}
                 initApp();
             }
-        } else {
-            //TODO: mostrar error en pantalla
-            //startActivity(new Intent(this, SplashScreen.class));
-            //finish();
-            Log.d(TAG, "mUser is null");
         }
     }
 
