@@ -111,19 +111,19 @@ public class SyncLogDB {
 
     /**
      *
-     * @param user
+     * @param userId
      * @param logType
      * @param logMessage
      * @param logVisibility
      */
-    public void registerLogInDataBase(User user, String logType, String logMessage,
+    public void registerLogInDataBase(String userId, String logType, String logMessage,
                                              String logMessageDetail, int logVisibility){
         try{
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI, new ContentValues(),
                             "INSERT INTO IDS_SYNC_LOG (USER_ID, LOG_TYPE, LOG_MESSAGE, LOG_MESSAGE_DETAIL, LOG_VISIBILITY) " +
                                     " VALUES (?, ?, ?, ?, ?)",
-                            new String[]{user.getUserId(), logType, logMessage, logMessageDetail,
+                            new String[]{userId, logType, logMessage, logMessageDetail,
                                     Integer.valueOf(logVisibility).toString()});
         }catch(Exception e){
             e.printStackTrace();
