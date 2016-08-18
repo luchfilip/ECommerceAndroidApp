@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,12 +112,12 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     manageMenu();
                     switch (tab.getPosition()) {
                         case 0:
-                                findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
-                                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                            findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
+                            findViewById(R.id.order_detail_container).setVisibility(View.GONE);
                             break;
                         case 1:
-                                findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
-                                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+                            findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+                            findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                             break;
                     }
                 }
@@ -256,6 +257,31 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if (mThreePane) {
             if (listView != null && listView.getAdapter()!=null && listView.getAdapter().getCount()>0) {
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
+            }else{
+                switch (mCurrentTabSelected) {
+                    case 0://SalesOrder
+                        System.out.println("Tab SalesOrder");
+                        try {
+                            ((FrameLayout) findViewById(R.id.sales_order_detail_container)).removeAllViews();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //getSupportFragmentManager().beginTransaction()
+                        //        .replace(R.id.sales_order_detail_container, fragment, SALES_ORDER_DETAIL_FRAGMENT_TAG)
+                        //        .commit();
+                        break;
+                    case 1://Order
+                        System.out.println("Tab Order");
+                        try {
+                            ((FrameLayout) findViewById(R.id.order_detail_container)).removeAllViews();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //getSupportFragmentManager().beginTransaction()
+                        //        .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
+                        //        .commit();
+                        break;
+                }
             }
         }
     }

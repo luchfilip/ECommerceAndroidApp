@@ -143,6 +143,8 @@ public class OrdersListFragment extends Fragment {
                     }else{
                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                     }
+                }else{
+                    ((Callback) getActivity()).onListIsLoaded();
                 }
             }
         }

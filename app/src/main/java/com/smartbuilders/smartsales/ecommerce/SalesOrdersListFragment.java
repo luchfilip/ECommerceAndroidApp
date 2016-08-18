@@ -215,6 +215,8 @@ public class SalesOrdersListFragment extends Fragment {
                 }else{
                     ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
                 }
+            }else{
+                ((Callback) getActivity()).onListIsLoaded(mListView);
             }
         }
         super.onStart();
