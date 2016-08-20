@@ -163,12 +163,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
     	}
 
-        boolean isAFullSync = true;
-		String tablesToSyncJSONObject = null;
-		if(extras!=null && extras.containsKey("tables_to_sync")){
-            isAFullSync = false;
-			tablesToSyncJSONObject = extras.getString("tables_to_sync");
-		}
+        //boolean isAFullSync = true;
+		//String tablesToSyncJSONObject = null;
+		//if(extras!=null && extras.containsKey("tables_to_sync")){
+        //    isAFullSync = false;
+		//	tablesToSyncJSONObject = extras.getString("tables_to_sync");
+		//}
     	try{
         	syncStatus = SYNCHRONIZATION_CANCELLED;
         	
@@ -206,20 +206,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     		Cursor result = null;
 			try{
                 //start synchronization
-                if (tablesToSyncJSONObject!=null) {
-                    result = getContext().getContentResolver()
-                            .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
-                                    .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
-                                    .appendQueryParameter("tables_to_sync", tablesToSyncJSONObject).build(),
-                                    null, null, null, null);
-                } else {
+                //if (tablesToSyncJSONObject!=null) {
+                //    result = getContext().getContentResolver()
+                //            .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
+                //                    .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
+                //                    .appendQueryParameter("tables_to_sync", tablesToSyncJSONObject).build(),
+                //                    null, null, null, null);
+                //} else {
                     result = getContext().getContentResolver()
                             .query(SynchronizerContentProvider.START_SYNC_URI.buildUpon()
                                     .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, user.getUserId())
 									.appendQueryParameter(SynchronizerContentProvider.KEY_IS_INITIAL_LOAD,
                                             String.valueOf(ApplicationUtilities.appRequireInitialLoad(getContext(), account))).build(),
                                     null, null, null, null);
-                }
+                //}
 
 				if(result.moveToNext()){
 //    					Log.d(TAG, "debug> result.getString(result.getColumnIndex(\"state\")): "+result.getString(result.getColumnIndex("state")));
@@ -326,7 +326,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	        	//notify synchronization finished successful
 		        recordLogAndSendBroadcast(user.getUserId(),
 											isAPeriodicSync ? PERIODIC_SYNCHRONIZATION_FINISHED :
-                                                    (isAFullSync ? FULL_SYNCHRONIZATION_FINISHED : SYNCHRONIZATION_FINISHED),
+                                                    (/*isAFullSync ?*/ FULL_SYNCHRONIZATION_FINISHED /*: SYNCHRONIZATION_FINISHED*/),
 											R.string.sync_finished, 
 											getContext().getString(R.string.sync_finished_duration, ApplicationUtilities.parseMillisecondsToHMS(System.currentTimeMillis() - syncInitTime, ApplicationUtilities.TIME_FORMAT_2)), 
 											syncInitTime,
@@ -334,7 +334,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 											getContext());
 		        try {
 					sServerAuthenticate.userSignOut(user, isAPeriodicSync ? STATE_PERIODIC_SESSION_SUCCESS
-                            : (isAFullSync ? STATE_FULL_SESSION_SUCCESS : STATE_SESSION_SUCCESS), getContext());
+                            : (/*isAFullSync ?*/ STATE_FULL_SESSION_SUCCESS /*: STATE_SESSION_SUCCESS*/), getContext());
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
