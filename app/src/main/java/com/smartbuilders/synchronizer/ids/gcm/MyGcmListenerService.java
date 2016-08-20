@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.smartbuilders.synchronizer.ids.datamanager.TablesDataSendToAndReceiveFromServer;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -188,20 +189,21 @@ public class MyGcmListenerService extends GcmListenerService {
                                 for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
                                     if (!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))) {
                                         if(ApplicationUtilities.appRequireFullSync(this, account)){
+                                            ApplicationUtilities.initSyncByAccount(this, account);
                                             sendResponseToServer(this, requestMethodName, requestId,
                                                     "user: "+account.name+", App require full sync, Full Synchronization initialized.", null);
-                                            ApplicationUtilities.initSyncByAccount(this, account);
                                         }else if(!ApplicationUtilities.appRequireInitialLoad(this, account)){
                                             //se manda a correr la sincronizacion de manera inmediata
                                             if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
+                                                (new TablesDataSendToAndReceiveFromServer(ApplicationUtilities.getUserByAccount(this, account),
+                                                        this, data.getString(KEY_PARAM_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT)).start();
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "user: "+account.name+", tablesToSync: "+data.getString(KEY_PARAM_TABLES_TO_SYNC)+
                                                                 ", synchronization initialized.", null);
-                                                ApplicationUtilities.initSyncByAccount(this, account, data.getString(KEY_PARAM_TABLES_TO_SYNC));
                                             } else {
+                                                ApplicationUtilities.initSyncByAccount(this, account);
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "user: "+account.name+", Full Synchronization initialized.", null);
-                                                ApplicationUtilities.initSyncByAccount(this, account);
                                             }
                                         }else{
                                             throw new Exception("App require initial load.");
