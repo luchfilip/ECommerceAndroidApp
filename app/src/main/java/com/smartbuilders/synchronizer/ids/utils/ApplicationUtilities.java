@@ -150,19 +150,19 @@ public class ApplicationUtilities {
         }
     }
 
-	/**
-	 *
-	 * @param context
-	 * @param account
-	 * @param tablesToSyncJSONObject
-     */
-	public static void initSyncByAccount(Context context, Account account, String tablesToSyncJSONObject) {
-		Bundle settingsBundle = new Bundle();
-		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		settingsBundle.putString("tables_to_sync", tablesToSyncJSONObject);
-		ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
-	}
+	///**
+	// *
+	// * @param context
+	// * @param account
+	// * @param tablesToSyncJSONObject
+    // */
+	//public static void initSyncByAccount(Context context, Account account, String tablesToSyncJSONObject) {
+	//	Bundle settingsBundle = new Bundle();
+	//	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+	//	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+	//	settingsBundle.putString("tables_to_sync", tablesToSyncJSONObject);
+	//	ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
+	//}
 
 	/**
 	 *
@@ -1031,7 +1031,18 @@ public class ApplicationUtilities {
 	public static String formatFloatTwoDecimals(float floatValue){
 		return String.format("%.2f", floatValue);
 	}
-	
+
+	/**
+	 *
+	 * @param ctx
+	 * @param account
+	 * @return
+	 */
+	public static User getUserByAccount(Context ctx, Account account) {
+		return getUserFromAccountManager(ctx, AccountManager.get(ctx).getUserData(account,
+                AccountGeneral.USERDATA_USER_ID), null);
+	}
+
 	/**
 	 * 
 	 * @param ctx
