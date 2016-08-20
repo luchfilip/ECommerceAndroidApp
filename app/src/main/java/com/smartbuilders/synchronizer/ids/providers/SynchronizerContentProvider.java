@@ -161,16 +161,16 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
-				if (uri.getQueryParameter("tables_to_sync")!=null) {
-					tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), uri.getQueryParameter("tables_to_sync"));
-				} else {
+				//if (uri.getQueryParameter("tables_to_sync")!=null) {
+				//	tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), uri.getQueryParameter("tables_to_sync"));
+				//} else {
                     if (uri.getQueryParameter(KEY_IS_INITIAL_LOAD)!=null
                             && uri.getQueryParameter(KEY_IS_INITIAL_LOAD).equals("true")) {
                         tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), true);
                     }else {
 					    tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), false);
                     }
-				}
+				//}
 				tableDataReceiveFromServerThread.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {
