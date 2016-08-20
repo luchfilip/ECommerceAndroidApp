@@ -24,7 +24,10 @@ import com.smartbuilders.smartsales.ecommerce.session.Parameter;
  *
  */
 public class TablesDataSendToAndReceiveFromServer extends Thread {
-	
+
+    public static final int TRANSMISSION_SERVER_TO_CLIENT = 1;
+    public static final int TRANSMISSION_CLIENT_TO_SERVER = 2;
+
 	private static final String TAG = TablesDataSendToAndReceiveFromServer.class.getSimpleName();
 
 	private Context context;
@@ -37,13 +40,14 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	private User mUser;
     private int mConnectionTimeOut;
     private String mTablesToSyncJSONObject;
-    private JSONObject userTablesAndSqlToSync;
-    private List<SoapPrimitive> tablesToSync;
     private boolean mIsInitialLoad;
+    private int mTransmissionWay;
 
-    public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject) throws Exception{
+    public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject,
+                                                int transmissionWay) throws Exception{
         this(user, context, false);
         this.mTablesToSyncJSONObject = tablesToSyncJSONObject;
+        this.mTransmissionWay = transmissionWay;
     }
 
 	public TablesDataSendToAndReceiveFromServer(User user, Context context, boolean isInitialLoad) throws Exception{
@@ -75,20 +79,34 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		try {
             syncPercentage = 0f;
             long initTime = System.currentTimeMillis();
+            List<SoapPrimitive> tablesToSync = new ArrayList<>();
             if (mTablesToSyncJSONObject!=null) {
                 if (sync) {
-                    Iterator keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
-                    tablesToSync = new ArrayList<>();
-                    while(keys.hasNext()){
-                        tablesToSync.add(new SoapPrimitive(null, null,
-                                (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
+                    Iterator keys;
+                    switch (mTransmissionWay) {
+                        case TRANSMISSION_SERVER_TO_CLIENT:
+                            keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
+                            while(keys.hasNext()){
+                                tablesToSync.add(new SoapPrimitive(null, null,
+                                        (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
+                            }
+                            numberOfTablesToSync = tablesToSync.size();
+                            getDataFromWS(context, mUser, tablesToSync);
+                            break;
+                        case TRANSMISSION_CLIENT_TO_SERVER:
+                            keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
+                            ArrayList<String> tablesNames = new ArrayList<>();
+                            while (keys.hasNext()) {
+                                tablesNames.add((String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString()));
+                            }
+                            numberOfTablesToSync = tablesNames.size();
+                            sendUserDataToServer(getSQLToSync(tablesNames));
+                            break;
                     }
                 }
-                if (sync) {
-                    numberOfTablesToSync = tablesToSync.size();
-                    getDataFromWS(context, mUser, tablesToSync);
-                }
+
             } else {
+                JSONObject userTablesAndSqlToSync = null;
                 if (sync) {
                     userTablesAndSqlToSync = getUserTablesAndSQLToSync();
                 }
@@ -105,7 +123,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 //    tablesToSync.addAll(getGlobalTablesToSync());
                 //}
                 if (sync) {
-                    numberOfTablesToSync = userTablesAndSqlToSync.length() + tablesToSync.size();
+                    numberOfTablesToSync = (userTablesAndSqlToSync!=null ? userTablesAndSqlToSync.length() : 0) + tablesToSync.size();
                     sendUserDataToServer(userTablesAndSqlToSync);
                     //(new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
                 }
@@ -139,27 +157,45 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return new JSONObject(a.getWSResponse().toString());
     }
 
+    private JSONObject getSQLToSync(ArrayList<String> tablesName) throws Exception {
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("authToken", mUser.getAuthToken());
+        parameters.put("userGroupName", mUser.getUserGroup());
+        parameters.put("userId", mUser.getServerUserId());
+        parameters.put("tablesNames", tablesName);
+        ConsumeWebService a = new ConsumeWebService(context,
+                mUser.getServerAddress(),
+                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "getSQLToReceiveFromClient",
+                "urn:getSQLToReceiveFromClient",
+                parameters,
+                mConnectionTimeOut);
+        return new JSONObject(a.getWSResponse().toString());
+    }
+
     private void sendUserDataToServer(JSONObject userTablesToSync) throws Exception {
         Iterator<?> keysTemp = userTablesToSync.keys();
         while(keysTemp.hasNext()){
             if(sync){
                 String key = (String) keysTemp.next();
-                Object result = DataBaseUtilities
-                        .getJsonBase64CompressedQueryResult(context, mUser, ((String) userTablesToSync.get(key)));
-                if(sync){
-                    numberOfTableSynced++;
-                    syncPercentage = ((numberOfTableSynced * 100) / numberOfTablesToSync);
-                    if (result instanceof String) {
-                        sendDataToServer(key, (String) result, null);
-                    } else if (result instanceof Exception) {
-                        sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
-                        throw (Exception) result;
-                    } else {
-                        sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
-                        throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                if (userTablesToSync.get(key)!=null) {
+                    Object result = DataBaseUtilities
+                            .getJsonBase64CompressedQueryResult(context, mUser, (String) userTablesToSync.get(key));
+                    if(sync){
+                        numberOfTableSynced++;
+                        syncPercentage = ((numberOfTableSynced * 100) / numberOfTablesToSync);
+                        if (result instanceof String) {
+                            sendDataToServer(key, (String) result, null);
+                        } else if (result instanceof Exception) {
+                            sendDataToServer(key, null, String.valueOf(((Exception) result).getMessage()));
+                            throw (Exception) result;
+                        } else {
+                            sendDataToServer(key, null, "result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                            throw new Exception("result is null for sql: "+String.valueOf(userTablesToSync.get(key)));
+                        }
+                    }else{
+                        sendDataToServer(key, null, "Synchronization was stopped by user.");
                     }
-                }else{
-                    sendDataToServer(key, null, "Synchronization was stopped by user.");
                 }
             }else{
                 //se detiene el bucle
