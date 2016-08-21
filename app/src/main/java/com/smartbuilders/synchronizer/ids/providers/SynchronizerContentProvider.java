@@ -43,6 +43,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final Uri USER_GET_AUTH_TOKEN_URI 		= Uri.withAppendedPath(CONTENT_URI, "getAuthToken");
 	public static final Uri USER_SIGN_OUT_URI 				= Uri.withAppendedPath(CONTENT_URI, "signOut");
 	public static final Uri REGISTER_GCM_ID_IN_SERVER_URI	= Uri.withAppendedPath(CONTENT_URI, "registerGcmIdInServer");
+    public static final Uri SYNC_DATA_FROM_SERVER_URI		= Uri.withAppendedPath(CONTENT_URI, "syncDataFromServer");
+    public static final Uri SYNC_DATA_TO_SERVER_URI			= Uri.withAppendedPath(CONTENT_URI, "syncDataToServer");
 	
 	public static final String KEY_USER_ID 						= "USER_ID";
 	public static final String KEY_USER_NAME 					= "USER_NAME";
@@ -64,6 +66,8 @@ public class SynchronizerContentProvider extends ContentProvider{
     private static final int GET_AUTH_TOKEN				= 6;
 	private static final int SIGN_OUT 					= 7;
 	private static final int REGISTER_GCM_ID_IN_SERVER	= 8;
+    private static final int SYNC_DATA_FROM_SERVER  	= 9;
+    private static final int SYNC_DATA_TO_SERVER	    = 10;
 	
 	private static final UriMatcher uriMatcher;
 
@@ -79,6 +83,8 @@ public class SynchronizerContentProvider extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, "getAuthToken", GET_AUTH_TOKEN);
 		uriMatcher.addURI(AUTHORITY, "signOut", SIGN_OUT);
 		uriMatcher.addURI(AUTHORITY, "registerGcmIdInServer", REGISTER_GCM_ID_IN_SERVER);
+        uriMatcher.addURI(AUTHORITY, "syncDataFromServer", SYNC_DATA_FROM_SERVER);
+        uriMatcher.addURI(AUTHORITY, "syncDataToServer", SYNC_DATA_TO_SERVER);
 	}
 	
 	@Override
@@ -134,6 +140,12 @@ public class SynchronizerContentProvider extends ContentProvider{
 	        case REGISTER_GCM_ID_IN_SERVER:
 	        	response = registerGcmIdInServer(uri);
 	        break;
+            case SYNC_DATA_FROM_SERVER:
+                response = syncDataFromServer(uri);
+                break;
+            case SYNC_DATA_TO_SERVER:
+                response = syncDataToServer(uri);
+                break;
 	        default:
 	        	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -573,5 +585,77 @@ public class SynchronizerContentProvider extends ContentProvider{
 		cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
 		return cursor;
 	}
+
+    /**
+     * Inicia un hilo de recepcion de datos
+     * @param uri
+     * @return
+     */
+    private Cursor syncDataFromServer(Uri uri){
+        MatrixCursor cursor = new MatrixCursor(new String[]{"state", "error_message", "exception_class"});
+        String errorMessage = null;
+        String exceptionClass = null;
+        Boolean result = false;
+        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter("tables_to_sync")==null){
+            throw new IllegalArgumentException("No userId or tables_to_sync parameter found in the Uri passed.");
+        }else{
+            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
+            TablesDataSendToAndReceiveFromServer tablesDataSendToAndReceiveFromServer = null;
+            try {
+                tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user,
+                        getContext(), uri.getQueryParameter("tables_to_sync"), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT);
+                tablesDataSendToAndReceiveFromServer.start();
+                result = true;
+            } catch(IllegalThreadStateException e) {
+                exceptionClass = e.getClass().getName();
+                e.printStackTrace();
+            } catch (Exception e) {
+                exceptionClass = e.getClass().getName();
+                e.printStackTrace();
+                if(tablesDataSendToAndReceiveFromServer!=null && tablesDataSendToAndReceiveFromServer.isAlive()){
+                    tablesDataSendToAndReceiveFromServer.stopSynchronization();
+                }
+                errorMessage = e.getMessage();
+            }
+        }
+        cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
+        return cursor;
+    }
+
+    /**
+     * Inicia un hilo de transmision de datos
+     * @param uri
+     * @return
+     */
+    private Cursor syncDataToServer(Uri uri){
+        MatrixCursor cursor = new MatrixCursor(new String[]{"state", "error_message", "exception_class"});
+        String errorMessage = null;
+        String exceptionClass = null;
+        Boolean result = false;
+        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter("tables_to_sync")==null){
+            throw new IllegalArgumentException("No userId or tables_to_sync parameter found in the Uri passed.");
+        }else{
+            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
+            TablesDataSendToAndReceiveFromServer tablesDataSendToAndReceiveFromServer = null;
+            try {
+                tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user,
+                        getContext(), uri.getQueryParameter("tables_to_sync"), TablesDataSendToAndReceiveFromServer.TRANSMISSION_CLIENT_TO_SERVER);
+                tablesDataSendToAndReceiveFromServer.start();
+                result = true;
+            } catch(IllegalThreadStateException e) {
+                exceptionClass = e.getClass().getName();
+                e.printStackTrace();
+            } catch (Exception e) {
+                exceptionClass = e.getClass().getName();
+                e.printStackTrace();
+                if(tablesDataSendToAndReceiveFromServer!=null && tablesDataSendToAndReceiveFromServer.isAlive()){
+                    tablesDataSendToAndReceiveFromServer.stopSynchronization();
+                }
+                errorMessage = e.getMessage();
+            }
+        }
+        cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
+        return cursor;
+    }
 
 }
