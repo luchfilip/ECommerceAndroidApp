@@ -2,10 +2,14 @@ package com.smartbuilders.smartsales.ecommerce.businessRules;
 
 import android.content.Context;
 
+import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
+import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
+
+import org.codehaus.jettison.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -78,5 +82,48 @@ public class OrderBR {
             }
         }
         return null;
+    }
+
+    public static String createOrderFromShoppingCart(Context context, User user, int businessPartnerId) {
+        String result;
+        try {
+            result = (new OrderDB(context, user)).createOrderFromShoppingCart(businessPartnerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = e.getMessage();
+        }
+        if (result==null) {
+            syncDataWithServer(context, user.getUserId());
+        }
+        return result;
+    }
+
+    public static String createOrderFromOrderLines(Context context, User user, int salesOrderId,
+                                                   int businessPartnerId, ArrayList<OrderLine> orderLines){
+        String result;
+        try {
+            result = (new OrderDB(context, user)).createOrderFromOrderLines(salesOrderId, businessPartnerId, orderLines);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = e.getMessage();
+        }
+        if (result==null) {
+            syncDataWithServer(context, user.getUserId());
+        }
+        return result;
+    }
+
+    private static void syncDataWithServer(Context context, String userId) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("1", "ECOMMERCE_ORDER_LINE");
+            jsonObject.put("2", "ECOMMERCE_ORDER");
+            context.getContentResolver().query(SynchronizerContentProvider.SYNC_DATA_TO_SERVER_URI.buildUpon()
+                            .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, userId)
+                            .appendQueryParameter(SynchronizerContentProvider.KEY_TABLES_TO_SYNC, jsonObject.toString()).build(),
+                    null, null, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
