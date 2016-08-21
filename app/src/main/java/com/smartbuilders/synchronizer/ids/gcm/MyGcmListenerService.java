@@ -23,8 +23,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.smartbuilders.synchronizer.ids.datamanager.TablesDataSendToAndReceiveFromServer;
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
@@ -195,8 +195,13 @@ public class MyGcmListenerService extends GcmListenerService {
                                         }else if(!ApplicationUtilities.appRequireInitialLoad(this, account)){
                                             //se manda a correr la sincronizacion de manera inmediata
                                             if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
-                                                (new TablesDataSendToAndReceiveFromServer(ApplicationUtilities.getUserByAccount(this, account),
-                                                        this, data.getString(KEY_PARAM_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT)).start();
+                                                getContentResolver()
+                                                        .query(SynchronizerContentProvider.SYNC_DATA_FROM_SERVER_URI.buildUpon()
+                                                                .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID,
+                                                                        AccountManager.get(this).getUserData(account, AccountGeneral.USERDATA_USER_ID))
+                                                                .appendQueryParameter(SynchronizerContentProvider.KEY_TABLES_TO_SYNC,
+                                                                        data.getString(KEY_PARAM_TABLES_TO_SYNC)).build(),
+                                                                null, null, null, null);
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "user: "+account.name+", tablesToSync: "+data.getString(KEY_PARAM_TABLES_TO_SYNC)+
                                                                 ", synchronization initialized.", null);
