@@ -272,9 +272,15 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
             if(mDataset.get(position).getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
-                holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                        mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-                        mDataset.get(position).getProductCommercialPackage().getUnits()));
+                if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
+                    holder.commercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
+                            mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+                            mDataset.get(position).getProductCommercialPackage().getUnits()));
+                } else {
+                    holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
+                            mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+                            mDataset.get(position).getProductCommercialPackage().getUnits()));
+                }
                 holder.commercialPackage.setVisibility(TextView.VISIBLE);
             }else{
                 holder.commercialPackage.setVisibility(TextView.GONE);
