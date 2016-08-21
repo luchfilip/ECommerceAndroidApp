@@ -94,13 +94,8 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                             getDataFromWS(context, mUser, tablesToSync);
                             break;
                         case TRANSMISSION_CLIENT_TO_SERVER:
-                            keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
-                            ArrayList<String> tablesNames = new ArrayList<>();
-                            while (keys.hasNext()) {
-                                tablesNames.add((String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString()));
-                            }
-                            numberOfTablesToSync = tablesNames.size();
-                            sendUserDataToServer(getSQLToSync(tablesNames));
+                            numberOfTablesToSync = (new JSONObject(mTablesToSyncJSONObject)).length();
+                            sendUserDataToServer(getSQLToSync(mTablesToSyncJSONObject));
                             break;
                     }
                 }
@@ -157,12 +152,12 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return new JSONObject(a.getWSResponse().toString());
     }
 
-    private JSONObject getSQLToSync(ArrayList<String> tablesName) throws Exception {
+    private JSONObject getSQLToSync(String tablesNamesJSONObject) throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
-        parameters.put("tablesNames", tablesName);
+        parameters.put("tablesNamesJSONObject", tablesNamesJSONObject);
         ConsumeWebService a = new ConsumeWebService(context,
                 mUser.getServerAddress(),
                 "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
