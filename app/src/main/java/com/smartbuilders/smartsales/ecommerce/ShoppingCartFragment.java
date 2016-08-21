@@ -20,7 +20,6 @@ import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingCartAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
-import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
@@ -197,13 +196,14 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             public void run() {
                 String result = null;
                 try {
-                    OrderDB orderDB = new OrderDB(getContext(), mUser);
                     result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
                     if (result==null) {
                         if (mSalesOrderId > 0) {
-                            result = orderDB.createOrderFromOrderLines(mSalesOrderId, mBusinessPartnerId, mOrderLines);
+                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser,
+                                    mSalesOrderId, mBusinessPartnerId, mOrderLines);
                         } else {
-                            result = orderDB.createOrderFromShoppingCart(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                            result = OrderBR.createOrderFromShoppingCart(getContext(), mUser,
+                                    Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                         }
                     }
                 } catch (Exception e) {
