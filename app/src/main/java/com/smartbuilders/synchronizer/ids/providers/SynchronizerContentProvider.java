@@ -57,6 +57,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	public static final String KEY_USER_SYNC_STATE 				= "USER_SYNC_STATE";
     public static final String KEY_USER_SYNC_SESSION_ID         = "USER_SYNC_SESSION_ID";
 	public static final String KEY_IS_INITIAL_LOAD				= "IS_INITIAL_LOAD";
+    public static final String KEY_TABLES_TO_SYNC               = "tables_to_sync";
 	
 	private static final int START 						= 1;
 	private static final int STOP 						= 2;
@@ -71,7 +72,7 @@ public class SynchronizerContentProvider extends ContentProvider{
 	
 	private static final UriMatcher uriMatcher;
 
-	private TablesDataSendToAndReceiveFromServer tableDataReceiveFromServerThread;
+	private TablesDataSendToAndReceiveFromServer tablesDataSendToAndReceiveFromServer;
 	
 	static{
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -173,17 +174,13 @@ public class SynchronizerContentProvider extends ContentProvider{
 		}else{
 			User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
 			try {
-				//if (uri.getQueryParameter("tables_to_sync")!=null) {
-				//	tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), uri.getQueryParameter("tables_to_sync"));
-				//} else {
-                    if (uri.getQueryParameter(KEY_IS_INITIAL_LOAD)!=null
-                            && uri.getQueryParameter(KEY_IS_INITIAL_LOAD).equals("true")) {
-                        tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), true);
-                    }else {
-					    tableDataReceiveFromServerThread = new TablesDataSendToAndReceiveFromServer(user, getContext(), false);
-                    }
-				//}
-				tableDataReceiveFromServerThread.start();
+                if (uri.getQueryParameter(KEY_IS_INITIAL_LOAD)!=null
+                        && uri.getQueryParameter(KEY_IS_INITIAL_LOAD).equals("true")) {
+                    tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user, getContext(), true);
+                }else {
+                    tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user, getContext(), false);
+                }
+				tablesDataSendToAndReceiveFromServer.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {
 				exceptionClass = e.getClass().getName();
@@ -191,8 +188,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 			} catch (Exception e) {
 				exceptionClass = e.getClass().getName();
 				e.printStackTrace();
-				if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
-					tableDataReceiveFromServerThread.stopSynchronization();
+				if(tablesDataSendToAndReceiveFromServer !=null && tablesDataSendToAndReceiveFromServer.isAlive()){
+					tablesDataSendToAndReceiveFromServer.stopSynchronization();
 				}
 				errorMessage = e.getMessage();
 			}
@@ -214,13 +211,13 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			if(tableDataReceiveFromServerThread!=null && tableDataReceiveFromServerThread.isAlive()){
-				tableDataReceiveFromServerThread.stopSynchronization();
+			if(tablesDataSendToAndReceiveFromServer !=null && tablesDataSendToAndReceiveFromServer.isAlive()){
+				tablesDataSendToAndReceiveFromServer.stopSynchronization();
 			}
 			
 			//Esperar a que los hilos de sincronizacion se detengan
-            if(tableDataReceiveFromServerThread!=null){
-				while(tableDataReceiveFromServerThread.isAlive()){ }
+            if(tablesDataSendToAndReceiveFromServer !=null){
+				while(tablesDataSendToAndReceiveFromServer.isAlive()){ }
 			}
 			result = true;
 		}
@@ -243,23 +240,23 @@ public class SynchronizerContentProvider extends ContentProvider{
 		if(uri.getQueryParameter(KEY_USER_ID)==null){
 			throw new IllegalArgumentException("No userId parameter found in the Uri passed.");
 		}else{
-			if(!tableDataReceiveFromServerThread.isAlive()){
-				if(tableDataReceiveFromServerThread.getExceptionMessage()==null){
+			if(!tablesDataSendToAndReceiveFromServer.isAlive()){
+				if(tablesDataSendToAndReceiveFromServer.getExceptionMessage()==null){
 					syncPercentage = 100F;
 				}else{
-					errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
-					exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
+					errorMessage = tablesDataSendToAndReceiveFromServer.getExceptionMessage();
+					exceptionClass = tablesDataSendToAndReceiveFromServer.getExceptionClass();
 				}
 			}else{
-				if(tableDataReceiveFromServerThread.getSyncPercentage()>syncPercentage){
-					syncPercentage = tableDataReceiveFromServerThread.getSyncPercentage();
+				if(tablesDataSendToAndReceiveFromServer.getSyncPercentage()>syncPercentage){
+					syncPercentage = tablesDataSendToAndReceiveFromServer.getSyncPercentage();
 				}
 			}
 
             if(syncPercentage>=100){
-                if(tableDataReceiveFromServerThread.getExceptionMessage()!=null){
-                    errorMessage = tableDataReceiveFromServerThread.getExceptionMessage();
-                    exceptionClass = tableDataReceiveFromServerThread.getExceptionClass();
+                if(tablesDataSendToAndReceiveFromServer.getExceptionMessage()!=null){
+                    errorMessage = tablesDataSendToAndReceiveFromServer.getExceptionMessage();
+                    exceptionClass = tablesDataSendToAndReceiveFromServer.getExceptionClass();
                 }
             }
 		}
@@ -596,26 +593,17 @@ public class SynchronizerContentProvider extends ContentProvider{
         String errorMessage = null;
         String exceptionClass = null;
         Boolean result = false;
-        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter("tables_to_sync")==null){
+        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter(KEY_TABLES_TO_SYNC)==null){
             throw new IllegalArgumentException("No userId or tables_to_sync parameter found in the Uri passed.");
         }else{
-            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-            TablesDataSendToAndReceiveFromServer tablesDataSendToAndReceiveFromServer = null;
             try {
-                tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user,
-                        getContext(), uri.getQueryParameter("tables_to_sync"), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT);
-                tablesDataSendToAndReceiveFromServer.start();
+                (new TablesDataSendToAndReceiveFromServer(ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID)),
+                        getContext(), uri.getQueryParameter(KEY_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT)).start();
                 result = true;
-            } catch(IllegalThreadStateException e) {
-                exceptionClass = e.getClass().getName();
-                e.printStackTrace();
             } catch (Exception e) {
                 exceptionClass = e.getClass().getName();
-                e.printStackTrace();
-                if(tablesDataSendToAndReceiveFromServer!=null && tablesDataSendToAndReceiveFromServer.isAlive()){
-                    tablesDataSendToAndReceiveFromServer.stopSynchronization();
-                }
                 errorMessage = e.getMessage();
+                e.printStackTrace();
             }
         }
         cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
@@ -632,26 +620,17 @@ public class SynchronizerContentProvider extends ContentProvider{
         String errorMessage = null;
         String exceptionClass = null;
         Boolean result = false;
-        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter("tables_to_sync")==null){
+        if(uri.getQueryParameter(KEY_USER_ID)==null || uri.getQueryParameter(KEY_TABLES_TO_SYNC)==null){
             throw new IllegalArgumentException("No userId or tables_to_sync parameter found in the Uri passed.");
         }else{
-            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-            TablesDataSendToAndReceiveFromServer tablesDataSendToAndReceiveFromServer = null;
             try {
-                tablesDataSendToAndReceiveFromServer = new TablesDataSendToAndReceiveFromServer(user,
-                        getContext(), uri.getQueryParameter("tables_to_sync"), TablesDataSendToAndReceiveFromServer.TRANSMISSION_CLIENT_TO_SERVER);
-                tablesDataSendToAndReceiveFromServer.start();
+                (new TablesDataSendToAndReceiveFromServer(ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID)),
+                        getContext(), uri.getQueryParameter(KEY_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_CLIENT_TO_SERVER)).start();
                 result = true;
-            } catch(IllegalThreadStateException e) {
-                exceptionClass = e.getClass().getName();
-                e.printStackTrace();
             } catch (Exception e) {
                 exceptionClass = e.getClass().getName();
-                e.printStackTrace();
-                if(tablesDataSendToAndReceiveFromServer!=null && tablesDataSendToAndReceiveFromServer.isAlive()){
-                    tablesDataSendToAndReceiveFromServer.stopSynchronization();
-                }
                 errorMessage = e.getMessage();
+                e.printStackTrace();
             }
         }
         cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
