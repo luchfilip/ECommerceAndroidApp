@@ -21,7 +21,6 @@ import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
-import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
@@ -237,8 +236,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = new SalesOrderDB(getContext(), mUser)
-                            .createSalesOrderFromShoppingSale(mCurrentBusinessPartnerId, validTo);
+                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                            mCurrentBusinessPartnerId, validTo);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

@@ -273,7 +273,7 @@ public class SalesOrderDB {
         return activeSalesOrders;
     }
 
-    public String createSalesOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
+    private String createSalesOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
         int activeShoppingSalesLineNumber = salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId);
         if((orderLines != null && insertOrderLinesInDB) || activeShoppingSalesLineNumber>0){
