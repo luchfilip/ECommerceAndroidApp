@@ -61,7 +61,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	 * detiene el hilo de sincronizacion
 	 */
 	public void stopSynchronization(){
-		Log.d(TAG, "stopSynchronization()");
+		//Log.d(TAG, "stopSynchronization()");
 		sync = false;
 	}
 	
@@ -247,36 +247,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-//    private List<SoapPrimitive> getGlobalTablesToSync() throws Exception {
-//        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-//        parameters.put("authToken", mUser.getAuthToken());
-//        parameters.put("userGroupName", mUser.getUserGroup());
-//        parameters.put("userId", mUser.getServerUserId());
-//        ConsumeWebService a = new ConsumeWebService(context,
-//                mUser.getServerAddress(),
-//                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-//                "getGlobalTablesToSync",
-//                "urn:getGlobalTablesToSync",
-//                parameters,
-//                mConnectionTimeOut);
-//        return (List<SoapPrimitive>) a.getWSResponse();
-//    }
-
-    //private List<SoapPrimitive> getUserTablesToSync() throws Exception {
-    //    LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-    //    parameters.put("authToken", mUser.getAuthToken());
-    //    parameters.put("userGroupName", mUser.getUserGroup());
-    //    parameters.put("userId", mUser.getServerUserId());
-    //    ConsumeWebService a = new ConsumeWebService(context,
-    //            mUser.getServerAddress(),
-    //            "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-    //            "getUserTablesToSync",
-    //            "urn:getUserTablesToSync",
-    //            parameters,
-    //            mConnectionTimeOut);
-    //    return (List<SoapPrimitive>) a.getWSResponse();
-    //}
-
     public void getDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
@@ -319,7 +289,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 parameters.put("tableName", tableName);
                 parameters.put("tableCount", c.getInt(0));
                 parameters.put("maxSeqId", c.getString(1)==null ? -1 : c.getInt(1));
-                Log.d(TAG, "tableName: "+tableName+", tableCount: "+c.getInt(0)+", maxSeqId: "+String.valueOf(c.getString(1)==null ? -1 : c.getInt(1)));
+                //Log.d(TAG, "tableName: "+tableName+", tableCount: "+c.getInt(0)+", maxSeqId: "+String.valueOf(c.getString(1)==null ? -1 : c.getInt(1)));
             }
         } finally {
             if (c!=null) {
@@ -349,7 +319,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     } catch (IOException e) {
                         if (((List<SoapPrimitive>) result).get(0) != null
                                 && ((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
-                            Log.d(TAG, "table: " + tableName + ", nothing to sync.");
+                            //Log.d(TAG, "table: " + tableName + ", nothing to sync.");
                         } else {
                             throw e;
                         }
