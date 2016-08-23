@@ -130,4 +130,14 @@ public class Parameter {
     public static String getReportErrorEmail(Context context, User user){
         return ParameterDB.getParameterStringValue(context, user, ParameterDB.REPORT_ERROR_EMAIL, "");
     }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductImages(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRODUCT_IMAGES, true);
+    }
 }
