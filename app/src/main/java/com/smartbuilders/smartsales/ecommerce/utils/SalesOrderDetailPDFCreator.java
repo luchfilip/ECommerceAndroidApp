@@ -96,7 +96,7 @@ public class SalesOrderDetailPDFCreator {
                 addSalesOrderTitle(document, ctx);
 
                 //se cargan las lineas de la cotizacion
-                addSalesOrderDetails(document, lines, ctx);
+                addSalesOrderDetails(document, lines, ctx, user);
 
                 //se le agrega la informacion de subtotal, impuestos y total de la cotizacion
                 addSalesOrderFooter(document, ctx, salesOrder);
@@ -298,7 +298,7 @@ public class SalesOrderDetailPDFCreator {
     }
 
     private void addSalesOrderDetails(Document document, ArrayList<SalesOrderLine> lines,
-                                      Context ctx) throws DocumentException, IOException {
+                                      Context ctx, User user) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -327,10 +327,7 @@ public class SalesOrderDetailPDFCreator {
             float[] columnWidths = new float[] {30f, 150f, 100f};
             table.setWidths(columnWidths);
             table.setWidthPercentage(100);
-            Bitmap bmp = null;
-            if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                bmp = Utils.getImageFromThumbDirByFileName(ctx, line.getProduct().getImageFileName());
-            }
+            Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
             if(bmp==null){
                 bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
             }
