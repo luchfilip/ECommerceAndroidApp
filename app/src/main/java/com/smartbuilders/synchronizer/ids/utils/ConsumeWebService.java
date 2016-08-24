@@ -55,6 +55,10 @@ public class ConsumeWebService {
 		this.soapAction 	= soapAction;
 		this.parameters 	= parameters;
 	}
+
+	public void setRetryNumber (int retryNumber) {
+		this.retryNumber = retryNumber;
+	}
 	
 	public Object getWSResponse() throws Exception {
 		SoapObject request;
