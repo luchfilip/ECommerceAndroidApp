@@ -313,7 +313,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                     try{
-                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext());
+                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext(), mUser);
                     }catch(Exception e) {
                         e.printStackTrace();
                     }
