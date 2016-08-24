@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -613,6 +614,25 @@ public class Utils {
         return inSampleSize;
     }
 
+    public static Bitmap getThumbImage(Context context, User user, String fileName){
+        if(!TextUtils.isEmpty(fileName)){
+            File imgFile = new File(getImagesThumbFolderPath(context), fileName);
+            if(imgFile.exists()){
+                return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+            } else {
+                //Si el archivo no existe entonces se descarga
+                GetFileFromServlet getFileFromServlet =
+                        new GetFileFromServlet(fileName, true, user, context);
+                try {
+                    return getFileFromServlet.execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
     public static Bitmap decodeSampledBitmap(String pathName, int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -625,6 +645,21 @@ public class Utils {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(pathName, options);
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         int reqWidth, int reqHeight) {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
     }
 
     public static String getAppVersionName(Context context) {
