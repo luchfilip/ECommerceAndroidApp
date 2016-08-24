@@ -96,7 +96,7 @@ public class SalesOrderDetailFragment extends Fragment {
 
                     if (mSalesOrder != null) {
                         mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
-                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId());
+                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId(), mSalesOrder.getBusinessPartnerId());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
