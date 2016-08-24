@@ -80,7 +80,7 @@ public class OrderDetailPDFCreator {
                 addOrderTitle(document, ctx);
 
                 //se cargan las lineas del pedido
-                addOrderDetails(document, orderLines, ctx);
+                addOrderDetails(document, orderLines, ctx, user);
 
                 //se le agrega la informacion de subtotal, impuestos y total del pedido
                 //addOrderFooter(document, ctx, order);
@@ -108,10 +108,18 @@ public class OrderDetailPDFCreator {
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper, Company userCompany,
                                Context ctx) throws DocumentException, IOException {
+        Image companyLogo = null;
+        Bitmap bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.company_logo_pdf_docs, 1024/4, 389/4);
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            companyLogo = Image.getInstance(stream.toByteArray());
+            companyLogo.setAbsolutePosition(50,680);
+        }
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx).writeSelectedRows(0, -1, 60, 780,
+            getHeaderTable(i, n, userCompany, ctx, companyLogo).writeSelectedRows(0, -1, 60, 780,
                     stamper.getOverContent(i));
         }
     }
@@ -122,7 +130,7 @@ public class OrderDetailPDFCreator {
      * @param y the total number of pages
      * @return a table that can be used as header
      */
-    public static PdfPTable getHeaderTable(int x, int y, Company userCompany, Context ctx)
+    public static PdfPTable getHeaderTable(int x, int y, Company userCompany, Context ctx, Image companyLogo)
             throws DocumentException, IOException {
         Font companyNameFont;
         Font font;
@@ -145,28 +153,11 @@ public class OrderDetailPDFCreator {
         headerTable.setWidths(new float[] {230f, 250f});
         headerTable.setTotalWidth(480);
 
-        PdfPCell companyLogoCell = new PdfPCell();
-
-//        try{
-//            Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
-//            if(bmp!=null) {
-//                bmp = getResizedBitmap(bmp, 230, 80);
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                Image companyLogoImage = Image.getInstance(stream.toByteArray());
-//                companyLogoCell = new PdfPCell(companyLogoImage, true);
-//            }
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
-        Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
-        if(bmp!=null){
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image companyLogo = Image.getInstance(stream.toByteArray());
-            companyLogo.setAbsolutePosition(50,680);
-            //companyLogo.scalePercent(11);
+        PdfPCell companyLogoCell;
+        if(companyLogo!=null){
             companyLogoCell = new PdfPCell(companyLogo, true);
+        }else{
+            companyLogoCell = new PdfPCell();
         }
         companyLogoCell.setPadding(3);
         companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -267,7 +258,7 @@ public class OrderDetailPDFCreator {
     }
 
     private void addOrderDetails(Document document, ArrayList<OrderLine> orderLines,
-                                 Context ctx) throws DocumentException, IOException {
+                                 Context ctx, User user) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -296,10 +287,7 @@ public class OrderDetailPDFCreator {
             float[] columnWidths = new float[] {30f, 150f, 100f};
             table.setWidths(columnWidths);
             table.setWidthPercentage(100);
-            Bitmap bmp = null;
-            if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                bmp = Utils.getImageFromThumbDirByFileName(ctx, line.getProduct().getImageFileName());
-            }
+            Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
             if(bmp==null){
                 bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
             }
