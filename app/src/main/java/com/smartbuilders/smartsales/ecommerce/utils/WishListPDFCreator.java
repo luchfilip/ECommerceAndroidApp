@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerce.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.TextUtils;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -26,6 +25,7 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  */
 public class WishListPDFCreator {
 
-    public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Context ctx) throws Exception {
+    public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
         File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -63,7 +63,7 @@ public class WishListPDFCreator {
                 document.open();
 
                 //se cargan las lineas del pedido
-                addDetails(document, orderLines, ctx);
+                addDetails(document, orderLines, ctx, user);
 
                 document.close();
 
@@ -88,10 +88,18 @@ public class WishListPDFCreator {
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper,
                                Context ctx) throws DocumentException, IOException {
+        Image companyLogo = null;
+        Bitmap bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.company_logo_pdf_docs, 1024/4, 389/4);
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            companyLogo = Image.getInstance(stream.toByteArray());
+            companyLogo.setAbsolutePosition(50, 680);
+        }
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, ctx).writeSelectedRows(0, -1, 60, 780, stamper.getOverContent(i));
+            getHeaderTable(i, n, ctx, companyLogo).writeSelectedRows(0, -1, 60, 780, stamper.getOverContent(i));
         }
     }
 
@@ -101,7 +109,7 @@ public class WishListPDFCreator {
      * @param y the total number of pages
      * @return a table that can be used as header
      */
-    public static PdfPTable getHeaderTable(int x, int y, Context ctx)
+    public static PdfPTable getHeaderTable(int x, int y, Context ctx, Image companyLogo)
             throws DocumentException, IOException {
         Font docNameFont;
         try{
@@ -120,14 +128,11 @@ public class WishListPDFCreator {
         headerTable.setWidths(new float[] {230f, 250f});
         headerTable.setTotalWidth(480);
 
-        PdfPCell companyLogoCell = new PdfPCell();
-        Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
-        if(bmp!=null){
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image companyLogo = Image.getInstance(stream.toByteArray());
-            companyLogo.setAbsolutePosition(50, 680);
+        PdfPCell companyLogoCell;
+        if(companyLogo!=null){
             companyLogoCell = new PdfPCell(companyLogo, true);
+        }else{
+            companyLogoCell = new PdfPCell();
         }
         companyLogoCell.setPadding(3);
         companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -145,7 +150,7 @@ public class WishListPDFCreator {
     }
 
     private void addDetails(Document document, ArrayList<OrderLine> orderLines,
-                            Context ctx) throws DocumentException, IOException {
+                            Context ctx, User user) throws DocumentException, IOException {
         BaseFont bf;
         Font font;
         try{
@@ -174,10 +179,7 @@ public class WishListPDFCreator {
             float[] columnWidths = new float[] {30f, 120f};
             table.setWidths(columnWidths);
             table.setWidthPercentage(100);
-            Bitmap bmp = null;
-            if(!TextUtils.isEmpty(line.getProduct().getImageFileName())){
-                bmp = Utils.getImageFromThumbDirByFileName(ctx, line.getProduct().getImageFileName());
-            }
+            Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
             if(bmp==null){
                 bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
             }
