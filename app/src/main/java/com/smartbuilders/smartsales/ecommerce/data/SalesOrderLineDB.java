@@ -40,8 +40,8 @@ public class SalesOrderLineDB {
         return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOC_TYPE, businessPartnerId);
     }
 
-    public ArrayList<SalesOrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId){
-        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOC_TYPE, orderId);
+    public ArrayList<SalesOrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId, int businessPartnerId){
+        return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOC_TYPE, orderId, businessPartnerId);
     }
 
     public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int businessPartnerId, int orderId) {
@@ -54,8 +54,8 @@ public class SalesOrderLineDB {
      * @param orderId
      * @return
      */
-    private ArrayList<SalesOrderLine> getActiveOrderLinesByOrderId (String docType, int orderId) {
-        return getSalesOrderLinesByOrderId(docType, orderId);
+    private ArrayList<SalesOrderLine> getActiveOrderLinesByOrderId (String docType, int orderId, int businessPartnerId) {
+        return getSalesOrderLinesByOrderId(docType, orderId, businessPartnerId);
     }
 
     /**
@@ -246,7 +246,7 @@ public class SalesOrderLineDB {
      * @param salesOrderId
      * @return
      */
-    private ArrayList<SalesOrderLine> getSalesOrderLinesByOrderId(String docType, int salesOrderId) {
+    private ArrayList<SalesOrderLine> getSalesOrderLinesByOrderId(String docType, int salesOrderId, int businessPartnerId) {
         ArrayList<SalesOrderLine> salesOrderLines = new ArrayList<>();
         Cursor c = null;
         try {
@@ -257,10 +257,11 @@ public class SalesOrderLineDB {
                         " SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                    " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.BUSINESS_PARTNER_ID = ? " +
+                            " AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                     " ORDER BY SOL.CREATE_TIME DESC",
                     new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
-                            docType, "Y"}, null);
+                            String.valueOf(businessPartnerId), docType, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     SalesOrderLine salesOrderLine = new SalesOrderLine();
@@ -304,7 +305,7 @@ public class SalesOrderLineDB {
      * @param salesOrderId
      * @return
      */
-    public int getOrderLineNumbersBySalesOrderId(int salesOrderId){
+    public int getOrderLineNumbersBySalesOrderId(int salesOrderId, int businessPartnerId){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -312,9 +313,9 @@ public class SalesOrderLineDB {
                     .build(), null,
                     "SELECT COUNT(ECOMMERCE_SALES_ORDER_LINE_ID) " +
                     " FROM ECOMMERCE_SALES_ORDER_LINE " +
-                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND BUSINESS_PARTNER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
-                            "Y"}, null);
+                            String.valueOf(businessPartnerId), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
