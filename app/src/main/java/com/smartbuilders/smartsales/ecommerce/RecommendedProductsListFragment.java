@@ -295,7 +295,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                     try {
-                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext());
+                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext(), mUser);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
