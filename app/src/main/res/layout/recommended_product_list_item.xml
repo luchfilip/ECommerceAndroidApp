@@ -23,7 +23,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/go_to_product_details">
+        android:id="@+id/go_to_product_details"
+        android:paddingBottom="4dp">
 
         <ImageView
             android:layout_width="@dimen/wish_list_item_image_width"
@@ -38,7 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/wish_list_item_image_height"
-            android:paddingBottom="2dp"
             android:paddingRight="4dp"
             android:paddingTop="4dp"
             android:paddingLeft="4dp">
