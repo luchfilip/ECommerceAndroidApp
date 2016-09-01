@@ -166,15 +166,17 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
 
-        int productCurrentAvailability = mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability();
-        if(mDataset.get(position).getQuantityOrdered() != productCurrentAvailability) {
-            if(productCurrentAvailability > mDataset.get(position).getQuantityOrdered()){
+        int productAvailabilityVariation = mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()
+                - mDataset.get(position).getQuantityOrdered();
+        if(productAvailabilityVariation!=0) {
+            if(productAvailabilityVariation > 0){
                 holder.productAvailabilityVariation.setTextColor(Utils.getColor(mContext, R.color.green_dark));
                 holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_positive_variation,
-                        String.valueOf(productCurrentAvailability - mDataset.get(position).getQuantityOrdered())));
+                        String.valueOf(productAvailabilityVariation)));
             } else {
+                holder.productAvailabilityVariation.setTextColor(Utils.getColor(mContext, R.color.black));
                 holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_variation,
-                        String.valueOf(productCurrentAvailability - mDataset.get(position).getQuantityOrdered())));
+                        String.valueOf(productAvailabilityVariation)));
             }
         }else{
             holder.productAvailabilityVariation.setText(null);

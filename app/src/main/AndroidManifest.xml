@@ -291,9 +291,9 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED" />
-                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.SYNCHRONIZATION_FINISHED" />
-                <action android:name="com.smartbuilders.ids.syncadapter.SyncAdapter.FULL_SYNCHRONIZATION_FINISHED" />
+                <action android:name="SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED" />
+                <action android:name="SyncAdapter.SYNCHRONIZATION_FINISHED" />
+                <action android:name="SyncAdapter.FULL_SYNCHRONIZATION_FINISHED" />
             </intent-filter>
         </receiver>
     </application>

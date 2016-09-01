@@ -352,8 +352,7 @@ public class SalesOrderDetailPDFCreator {
             cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price,
                     currency!=null ? currency.getName() : "",
                     line.getPriceStringFormat()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
-                    currency!=null ? currency.getName() : "",
+            cell2.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_percentage,
                     line.getTaxPercentageStringFormat()), font));
             table.addCell(cell2);
 

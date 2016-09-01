@@ -9,8 +9,8 @@ android {
         applicationId "com.smartbuilders.smartsales.ecommerce.febeca"
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 20
-        versionName "1.7.9"
+        versionCode 21
+        versionName "1.7.10"
         // Enabling multidex support.
         multiDexEnabled true
     }

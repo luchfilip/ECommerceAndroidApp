@@ -36,6 +36,7 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
             for (OrderLine orderLine : orderLines) {
                 if (orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()>orderLine.getQuantityOrdered()) {
                     showNotification = true;
+                    break;
                 }
             }
 

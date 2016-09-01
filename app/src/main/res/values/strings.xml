@@ -172,6 +172,7 @@
     <string name="sales_order_valid_to">Válida hasta: %1$s</string>
     <string name="sales_order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
     <string name="sales_order_tax_amount">Impuestos (%1$s): %2$s</string>
+    <string name="sales_order_tax_percentage">Impuestos (%%): %1$s</string>
     <string name="sales_order_total_amount">Total (%1$s): %2$s</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
 
