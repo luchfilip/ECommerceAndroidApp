@@ -47,7 +47,7 @@ public class RecommendedProductsListAdapter extends
         public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
-        public TextView commercialPackage;
+        public TextView productInternalCode;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
@@ -64,7 +64,7 @@ public class RecommendedProductsListAdapter extends
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
-            commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
@@ -216,13 +216,12 @@ public class RecommendedProductsListAdapter extends
             holder.productBrand.setVisibility(View.INVISIBLE);
         }
 
-        if(mDataset.get(position).getProductCommercialPackage()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
-            holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                    mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-                    mDataset.get(position).getProductCommercialPackage().getUnits()));
+        if(mDataset.get(position).getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+                    mDataset.get(position).getInternalCode()));
+            holder.productInternalCode.setVisibility(View.VISIBLE);
         }else{
-            holder.commercialPackage.setVisibility(TextView.GONE);
+            holder.productInternalCode.setVisibility(View.GONE);
         }
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
