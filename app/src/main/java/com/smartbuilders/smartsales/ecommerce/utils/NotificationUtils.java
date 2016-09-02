@@ -45,4 +45,12 @@ public class NotificationUtils {
         // mId allows you to update the notification later on.
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
+
+    public static void cancelNotification(Context context){
+        try {
+            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

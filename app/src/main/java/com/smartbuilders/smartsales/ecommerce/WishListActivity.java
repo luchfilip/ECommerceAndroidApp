@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.utils.NotificationUtils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
@@ -59,6 +60,7 @@ public class WishListActivity extends AppCompatActivity
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                     .setText(getString(R.string.welcome_user, user.getUserName()));
         }
+        NotificationUtils.cancelNotification(this);
     }
 
     @Override

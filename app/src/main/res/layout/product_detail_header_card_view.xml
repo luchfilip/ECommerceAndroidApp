@@ -197,7 +197,7 @@
             android:id="@+id/product_addtoshoppingcart_button"
             android:layout_weight="1"
             android:layout_marginRight="1dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
         <Button
             style="@style/GoldenButtonAppTheme"

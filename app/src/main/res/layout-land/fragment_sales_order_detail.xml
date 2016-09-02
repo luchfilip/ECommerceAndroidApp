@@ -133,7 +133,7 @@
                 <Button
                     style="@style/GreyButtonAppTheme"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/share"
                     android:id="@+id/share_button" />
 
