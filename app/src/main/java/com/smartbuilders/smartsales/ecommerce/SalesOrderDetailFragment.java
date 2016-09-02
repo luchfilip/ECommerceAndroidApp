@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
@@ -29,6 +31,7 @@ import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.SalesOrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -107,6 +110,12 @@ public class SalesOrderDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 if (mSalesOrder != null) {
+                                    if(mSalesOrder.getBusinessPartner()!=null){
+                                        ((TextView) view.findViewById(R.id.business_partner_name_textView))
+                                                .setText(getString(R.string.business_partner_detail, mSalesOrder.getBusinessPartner().getName()));
+                                        view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
+                                    }
+
                                     Currency currency = (new CurrencyDB(getContext(), mUser))
                                             .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
 

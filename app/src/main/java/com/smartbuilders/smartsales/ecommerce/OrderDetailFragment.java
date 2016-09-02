@@ -105,11 +105,9 @@ public class OrderDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                                    if(businessPartner!=null){
+                                    if(mOrder.getBusinessPartner()!=null){
                                         ((TextView) view.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                                                .setText(getString(R.string.business_partner_detail, mOrder.getBusinessPartner().getName()));
                                         view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
                                     }
                                 }
