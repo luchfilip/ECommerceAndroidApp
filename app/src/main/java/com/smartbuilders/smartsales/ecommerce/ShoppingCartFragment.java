@@ -367,7 +367,16 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public void reloadShoppingCart(){
         setHeader();
         if(mIsShoppingCart){
-            reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart());
+            try {
+                reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart());
+            } catch (Exception e) {
+                e.printStackTrace();
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.error)
+                        .setMessage(e.getMessage())
+                        .setNeutralButton(R.string.accept, null)
+                        .show();
+            }
         }else{
             mShoppingCartAdapter.setData(mOrderLines);
         }
