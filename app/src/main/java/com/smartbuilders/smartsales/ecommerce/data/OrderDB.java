@@ -31,11 +31,11 @@ public class OrderDB {
     }
 
     public String createOrderFromOrderLines(Integer salesOrderId, int businessPartnerId,
-                                            ArrayList<OrderLine> orderLines){
+                                            ArrayList<OrderLine> orderLines) throws Exception {
         return createOrder(salesOrderId, businessPartnerId, orderLines, true);
     }
 
-    public String createOrderFromShoppingCart(int businessPartnerId){
+    public String createOrderFromShoppingCart(int businessPartnerId) throws Exception {
         return createOrder(null, businessPartnerId, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
     }
 
@@ -104,7 +104,7 @@ public class OrderDB {
     }
 
     private String createOrder(Integer salesOrderId, int businessPartnerId,
-                               ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
+                               ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB) throws Exception {
         OrderLineDB orderLineDB = new OrderLineDB(mContext, mUser);
         int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
         if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
