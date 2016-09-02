@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productAvailability;
         public TextView productAvailabilityVariation;
         public TextView productBrand;
-        public TextView commercialPackage;
+        public TextView productInternalCode;
         public ImageView shareImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
@@ -68,7 +67,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
-            commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
@@ -242,13 +241,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productBrand.setVisibility(View.INVISIBLE);
         }
 
-        if(mDataset.get(position).getProduct().getProductCommercialPackage()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription())){
-            holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnitDescription(),
-                    mDataset.get(position).getProduct().getProductCommercialPackage().getUnits()));
+        if(mDataset.get(position).getProduct().getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+                    mDataset.get(position).getProduct().getInternalCode()));
+            holder.productInternalCode.setVisibility(View.VISIBLE);
         }else{
-            holder.commercialPackage.setVisibility(TextView.GONE);
+            holder.productInternalCode.setVisibility(View.GONE);
         }
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {

@@ -138,7 +138,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         if(view.findViewById(R.id.product_commercial_package) != null){
             if(mOrderLine.getProduct()!=null && mOrderLine.getProduct().getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package,
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
                         mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(), mOrderLine.getProduct().getProductCommercialPackage().getUnits()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);

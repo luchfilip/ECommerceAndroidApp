@@ -170,7 +170,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             if(mSaleOrderLine.getProduct()!=null && mSaleOrderLine.getProduct().getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package))
-                        .setText(getContext().getString(R.string.commercial_package,
+                        .setText(getContext().getString(R.string.commercial_package_label_detail,
                                 mSaleOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(),
                                 mSaleOrderLine.getProduct().getProductCommercialPackage().getUnits()));
             }else{
