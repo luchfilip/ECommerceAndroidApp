@@ -358,5 +358,6 @@
     <string name="wish_list_doc_name">Lista de Favoritos</string>
     <string name="recommended_products_doc_name">Productos Recomendados</string>
     <string name="progress_percentage">%1$s %%</string>
+    <string name="error">Error</string>
 
 </resources>
