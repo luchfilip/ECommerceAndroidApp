@@ -183,10 +183,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				case ApplicationUtilities.ST_USER_AUTHORIZED:
 				break;
 				case ApplicationUtilities.ST_USER_NOT_AUTHORIZED:
+					//invalidate authentication token
+					accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+							accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
+
 					//notify authenticator error
 		        	syncStatus = SYNCHRONIZATION_CANCELLED;
 		        	throw new AuthenticatorException(getContext().getString(R.string.user_not_authorized));
 				case ApplicationUtilities.ST_USER_NOT_EXIST_IN_SERVER:
+					//invalidate authentication token
+					accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+							accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
+
 					//notify authenticator error
 		        	syncStatus = SYNCHRONIZATION_CANCELLED;
 		        	throw new AuthenticatorException(getContext().getString(R.string.user_not_exist_in_server));
