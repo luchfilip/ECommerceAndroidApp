@@ -59,14 +59,6 @@
                     android:textSize="@dimen/productDetailCardView_brand_text_size" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_description"
-                    android:textColor="@color/black"
-                    android:maxLines="3"
-                    android:textSize="@dimen/productDetailCardView_description_text_size" />
-
-                <TextView
                     android:id="@+id/product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,7 +127,6 @@
                         android:clickable="true"
                         android:padding="3dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="4dp"
                         android:layout_marginRight="4dp" />
 
                     <ImageView
