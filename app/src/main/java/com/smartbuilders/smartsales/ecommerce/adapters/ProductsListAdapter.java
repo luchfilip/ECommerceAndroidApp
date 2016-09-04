@@ -67,7 +67,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productBrand;
         public TextView productDescription;
         public TextView productPurpose;
-        public TextView commercialPackage;
+        //public TextView commercialPackage;
         public TextView productPrice;
         public TextView productAvailability;
         public View goToProductDetails;
@@ -88,7 +88,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
-            commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
+            //commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
@@ -247,13 +247,17 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
             if(mDataset.get(position).getInternalCode()!=null){
-                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+                holder.productInternalCode.setText(mMask==MASK_PRODUCT_DETAILS
+                        ? mDataset.get(position).getInternalCode()
+                        : mContext.getString(R.string.product_internalCode,
                         mDataset.get(position).getInternalCode()));
             }
 
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                holder.productBrand.setText(mMask==MASK_PRODUCT_DETAILS
+                        ? mDataset.get(position).getProductBrand().getName()
+                        : mContext.getString(R.string.brand_detail,
                         mDataset.get(position).getProductBrand().getName()));
                 holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
@@ -270,25 +274,27 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.productRatingBarContainer.setVisibility(View.GONE);
             }
 
-            if(mDataset.get(position).getProductCommercialPackage()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
-                if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
-                    holder.commercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
-                            mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-                            mDataset.get(position).getProductCommercialPackage().getUnits()));
-                } else {
-                    holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-                            mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-                            mDataset.get(position).getProductCommercialPackage().getUnits()));
-                }
-                holder.commercialPackage.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.commercialPackage.setVisibility(TextView.GONE);
-            }
+            //if(mDataset.get(position).getProductCommercialPackage()!=null
+            //        && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
+            //    if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
+            //        holder.commercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
+            //                mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+            //                mDataset.get(position).getProductCommercialPackage().getUnits()));
+            //    } else {
+            //        holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
+            //                mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+            //                mDataset.get(position).getProductCommercialPackage().getUnits()));
+            //    }
+            //    holder.commercialPackage.setVisibility(TextView.VISIBLE);
+            //}else{
+            //    holder.commercialPackage.setVisibility(TextView.GONE);
+            //}
 
             if(holder.productDescription!=null){
                 if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
-                    holder.productDescription.setText(mContext.getString(R.string.product_description_detail,
+                    holder.productDescription.setText(mMask==MASK_PRODUCT_DETAILS
+                            ? mDataset.get(position).getDescription()
+                            : mContext.getString(R.string.product_description_detail,
                             mDataset.get(position).getDescription()));
                 }else{
                     holder.productDescription.setVisibility(View.GONE);
@@ -297,7 +303,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
             if(holder.productPurpose!=null){
                 if(!TextUtils.isEmpty(mDataset.get(position).getPurpose())){
-                    holder.productPurpose.setText(mContext.getString(R.string.product_purpose_detail,
+                    holder.productPurpose.setText(mMask==MASK_PRODUCT_DETAILS
+                            ? mDataset.get(position).getPurpose()
+                            : mContext.getString(R.string.product_purpose_detail,
                             mDataset.get(position).getPurpose()));
                 }else{
                     holder.productPurpose.setVisibility(View.GONE);

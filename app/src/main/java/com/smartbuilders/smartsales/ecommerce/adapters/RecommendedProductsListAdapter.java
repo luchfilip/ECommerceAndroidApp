@@ -217,7 +217,7 @@ public class RecommendedProductsListAdapter extends
         }
 
         if(mDataset.get(position).getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getInternalCode()));
             holder.productInternalCode.setVisibility(View.VISIBLE);
         }else{

@@ -143,8 +143,7 @@ public class User implements Parcelable {
     @Override
     public String toString() {
     	return "[userId: "+userId+", authToken: \""+authToken+"\", userName: \""+userName+
-                "\", userPass:\""+userPass+"\", serverAddress: \""+serverAddress+"\", " +
-    			"userGroup: \""+userGroup+"\", saveDBInExternalCard: \""+saveDBInExternalCard+"\"]";
+                "\", userGroup: \""+userGroup+"\", saveDBInExternalCard: \""+saveDBInExternalCard+"\"]";
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -184,18 +185,37 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 if(mUser !=null){//entra aqui cuando hay problemas con la clave del usuario
                     try {
                         mUser.setUserPass(userPass);
-                        sServerAuthenticate.userGetAuthToken(mUser, getString(R.string.authenticator_account_type), getBaseContext());
+                        sServerAuthenticate.userGetAuthToken(mUser, mAuthTokenType, getBaseContext());
+
+                        if(mUser.getAuthToken()!=null){
+                            mAccountManager.setAuthToken(mAccount, mAuthTokenType, mUser.getAuthToken());
+
+                            // Get the session token for the current account
+                            sServerAuthenticate.userSignIn(mUser, mAuthTokenType, getBaseContext());
+
+                            switch (mUser.getSessionToken()) {
+                                case ApplicationUtilities.ST_NEW_USER_AUTHORIZED:
+                                case ApplicationUtilities.ST_USER_AUTHORIZED:
+                                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
+                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
+                                    data.putString(AccountManager.KEY_AUTHTOKEN, mUser.getAuthToken());
+                                    data.putString(PARAM_USER_PASS, userPass);
+                                    break;
+                                case ApplicationUtilities.ST_USER_NOT_AUTHORIZED:
+                                    throw new AuthenticatorException(getString(R.string.user_not_authorized));
+                                case ApplicationUtilities.ST_USER_NOT_EXIST_IN_SERVER:
+                                    throw new AuthenticatorException(getString(R.string.user_not_exist_in_server));
+                                case ApplicationUtilities.ST_USER_WRONG_PASSWORD:
+                                    throw new AuthenticatorException(getString(R.string.user_wrong_password));
+                                default:
+                                    throw new AuthenticatorException(mUser.getSessionToken());
+                            }
+                        }else{
+                            throw new AuthenticatorException(getString(R.string.user_session_token_null));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-                    if(mUser.getSessionToken().equals(ApplicationUtilities.ST_NEW_USER_AUTHORIZED)
-                            || mUser.getSessionToken().equals(ApplicationUtilities.ST_USER_AUTHORIZED)){
-                        data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
-                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
-                        data.putString(AccountManager.KEY_AUTHTOKEN, mUser.getAuthToken());
-                        data.putString(PARAM_USER_PASS, userPass);
-                    }else{
-                        data.putString(KEY_ERROR_MESSAGE, mUser.getSessionToken());
+                        data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                     }
                 }else{
                     try {

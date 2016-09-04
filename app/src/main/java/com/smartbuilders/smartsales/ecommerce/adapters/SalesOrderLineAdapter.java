@@ -104,7 +104,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             holder.productBrand.setVisibility(TextView.GONE);
         }
 
-        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered_label_detail,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         holder.productPrice.setText(mContext.getString(R.string.sales_order_product_price,
                 mCurrencyName, mDataset.get(position).getPriceStringFormat()));

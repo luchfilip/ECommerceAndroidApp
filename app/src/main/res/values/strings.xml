@@ -143,6 +143,7 @@
     <string name="title_activity_shopping_sale">Cotización</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cant.: %1$s</string>
+    <string name="qty_ordered_label_detail">Cant. pedida: %1$s</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
     <string name="brand_detail">Marca: %1$s</string>
@@ -359,5 +360,6 @@
     <string name="recommended_products_doc_name">Productos Recomendados</string>
     <string name="progress_percentage">%1$s %%</string>
     <string name="error">Error</string>
+    <string name="user_disabled">Usuario deshabilitado</string>
 
 </resources>

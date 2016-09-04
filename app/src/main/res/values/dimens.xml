@@ -23,8 +23,8 @@
     <dimen name="productMinInfo_product_name_text_size">12sp</dimen>
 
     <dimen name="productDetailCardView_name_text_size">14sp</dimen>
-    <dimen name="productDetailCardView_internalCode_text_size">12sp</dimen>
-    <dimen name="productDetailCardView_brand_text_size">12sp</dimen>
+    <dimen name="productDetailCardView_internalCode_text_size">13sp</dimen>
+    <dimen name="productDetailCardView_brand_text_size">13sp</dimen>
     <dimen name="productDetailCardView_commercialPackage_text_size">13sp</dimen>
     <dimen name="productDetailCardView_description_text_size">13sp</dimen>
     <dimen name="productDetailCardView_purpose_text_size">13sp</dimen>
@@ -32,7 +32,7 @@
     <dimen name="productDetailCardView_price_text_size">14sp</dimen>
     <dimen name="productDetailCardView_availability_text_size">14sp</dimen>
     <dimen name="productDetailCardView_availability_variation_text_size">14sp</dimen>
-    <dimen name="productDetailCardView_promo_text_size">12sp</dimen>
+    <dimen name="productDetailCardView_promo_text_size">13sp</dimen>
     <dimen name="productDetailCardView_details_label_text_size">16sp</dimen>
     <dimen name="productDetailCardView_details_text_size">14sp</dimen>
 

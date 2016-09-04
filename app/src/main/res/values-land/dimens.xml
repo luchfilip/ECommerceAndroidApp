@@ -5,4 +5,10 @@
     <integer name="two_pane_left_side_weight">3</integer>
     <integer name="two_pane_right_side_weight">6</integer>
 
+    <dimen name="productDetail_max_image_Width">120dp</dimen>
+    <dimen name="productDetail_max_image_Height">120dp</dimen>
+
+    <dimen name="productLargeDetail_max_image_Width">200dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">200dp</dimen>
+
 </resources>

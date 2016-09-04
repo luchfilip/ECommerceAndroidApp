@@ -109,7 +109,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         holder.productName.setText(mDataset.get(position).getProduct().getName());
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getProduct().getInternalCode()));
         }
 
@@ -125,7 +125,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered,
+        holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered_label_detail,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.order_product_price,

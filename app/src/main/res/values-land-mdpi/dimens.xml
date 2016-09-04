@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="productDetail_max_image_Width">120dp</dimen>
+    <dimen name="productDetail_max_image_Height">120dp</dimen>
+
+    <dimen name="productLargeDetail_max_image_Width">210dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">210dp</dimen>
+</resources>

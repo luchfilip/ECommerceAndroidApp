@@ -50,14 +50,14 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
-            <TextView
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_commercial_package"
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_commercialPackage_text_size"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
+                android:layout_marginBottom="1dp" />-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,16 +96,6 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp" />
 
-            <TextView
-                android:id="@+id/product_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/product_availability_color"
-                android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_availability_text_size"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,6 +127,16 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/product_availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/product_availability_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_availability_text_size"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp" />
 
             <View style="@style/Divider"
                 android:layout_marginTop="2dp" />

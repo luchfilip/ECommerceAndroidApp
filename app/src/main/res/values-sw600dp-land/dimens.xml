@@ -2,4 +2,10 @@
 
     <dimen name="productMainActivity_marginLeftAndRight">60dp</dimen>
 
+    <dimen name="productDetail_max_image_Width">140dp</dimen>
+    <dimen name="productDetail_max_image_Height">140dp</dimen>
+
+    <dimen name="productLargeDetail_max_image_Width">250dp</dimen>
+    <dimen name="productLargeDetail_max_image_Height">250dp</dimen>
+
 </resources>
