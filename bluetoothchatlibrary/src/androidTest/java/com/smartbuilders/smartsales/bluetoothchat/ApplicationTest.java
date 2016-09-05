@@ -1,4 +1,4 @@
-package com.smartbuilders.smartsales.bluetoothchat.bluetoothchat;
+package com.smartbuilders.smartsales.bluetoothchat;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

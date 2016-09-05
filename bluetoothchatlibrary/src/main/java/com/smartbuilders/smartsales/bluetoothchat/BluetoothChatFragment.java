@@ -16,7 +16,6 @@
 
 package com.smartbuilders.smartsales.bluetoothchat;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -41,8 +40,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.smartbuilders.smartsales.common.logger.Log;
 
 /**
  * This fragment controls Bluetooth to communicate with other devices.
@@ -85,6 +82,11 @@ public class BluetoothChatFragment extends Fragment {
      * Member object for the chat services
      */
     private BluetoothChatService mChatService = null;
+
+    public interface Callback{
+        void setStatus(int resId);
+        void setStatus(CharSequence subTitle);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,8 +159,6 @@ public class BluetoothChatFragment extends Fragment {
      * Set up the UI and background operations for chat.
      */
     private void setupChat() {
-        Log.d(TAG, "setupChat()");
-
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.message);
 
@@ -244,16 +244,7 @@ public class BluetoothChatFragment extends Fragment {
      * @param resId a string resource ID
      */
     private void setStatus(int resId) {
-        FragmentActivity activity = getActivity();
-        if (null == activity) {
-            return;
-        }
-        //TODO: usar supportActionBar
-        //final ActionBar actionBar = activity.getActionBar();
-        //if (null == actionBar) {
-        //    return;
-        //}
-        //actionBar.setSubtitle(resId);
+        ((Callback) getActivity()).setStatus(resId);
     }
 
     /**
@@ -262,16 +253,7 @@ public class BluetoothChatFragment extends Fragment {
      * @param subTitle status
      */
     private void setStatus(CharSequence subTitle) {
-        FragmentActivity activity = getActivity();
-        if (null == activity) {
-            return;
-        }
-        //TODO: usar supportActionBar
-        //final ActionBar actionBar = activity.getActionBar();
-        //if (null == actionBar) {
-        //    return;
-        //}
-        //actionBar.setSubtitle(subTitle);
+        ((Callback) getActivity()).setStatus(subTitle);
     }
 
     /**
@@ -348,7 +330,6 @@ public class BluetoothChatFragment extends Fragment {
                     setupChat();
                 } else {
                     // User did not enable Bluetooth or an error occurred
-                    Log.d(TAG, "BT not enabled");
                     Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
                     getActivity().finish();
