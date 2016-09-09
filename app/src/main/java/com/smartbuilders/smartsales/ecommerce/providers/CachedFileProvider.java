@@ -24,7 +24,7 @@ public class CachedFileProvider extends ContentProvider {
 
     // The authority is the symbolic name for the provider class 
     public static final String AUTHORITY =
-			"com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider";
+			"${applicationId}.providers.CachedFileProvider";
 
     static final Uri CONTENT_URI = Uri.parse(AUTHORITY);
     

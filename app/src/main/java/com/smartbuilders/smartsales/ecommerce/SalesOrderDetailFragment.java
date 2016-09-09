@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
@@ -31,7 +29,6 @@ import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.SalesOrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ import java.util.ArrayList;
 public class SalesOrderDetailFragment extends Fragment {
 
     private static final String STATE_SALES_ORDER_ID = "STATE_SALES_ORDER_ID";
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "Cotizacion";
 
     private User mUser;
@@ -76,8 +73,8 @@ public class SalesOrderDetailFragment extends Fragment {
                         if (savedInstanceState.containsKey(STATE_SALES_ORDER_ID)) {
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
                         }
-                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if (savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     }
 
@@ -297,14 +294,14 @@ public class SalesOrderDetailFragment extends Fragment {
         outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

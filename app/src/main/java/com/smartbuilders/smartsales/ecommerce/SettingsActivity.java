@@ -8,7 +8,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.smartbuilders.smartsales.bluetoothchat.ChatActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 
@@ -383,4 +383,42 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    /**
+     * This fragment shows data and sync preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class BluetoothConnectionPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_bluetooth_connection);
+            setHasOptionsMenu(true);
+
+            Preference button = (Preference)getPreferenceManager().findPreference("bluetooth_chat");
+            if (button != null) {
+                button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference arg0) {
+                        startActivity(new Intent(getActivity(),
+                                ChatActivity.class));
+                        return true;
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

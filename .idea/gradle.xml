@@ -6,13 +6,13 @@
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="C:\Program Files\Android\Android Studio\gradle\gradle-2.10" />
-        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/IDS" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beval" />
+            <option value="$PROJECT_DIR$/bluetoothchatlibrary" />
             <option value="$PROJECT_DIR$/febeca" />
             <option value="$PROJECT_DIR$/sillaca" />
           </set>
@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/IDS" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beval" />
+            <option value="$PROJECT_DIR$/bluetoothchatlibrary" />
             <option value="$PROJECT_DIR$/febeca" />
             <option value="$PROJECT_DIR$/sillaca" />
           </set>

@@ -31,7 +31,7 @@ import android.support.annotation.NonNull;
 public class SynchronizerContentProvider extends ContentProvider{
 	
 	private static final String AUTHORITY =
-            "com.smartbuilders.smartsales.providers.SynchronizerContentProvider";
+            "${applicationId}.providers.SynchronizerContentProvider";
 	
 	private static final Uri CONTENT_URI 					= Uri.parse("content://"+AUTHORITY);
 	

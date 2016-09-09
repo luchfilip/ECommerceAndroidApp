@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Catálogo Sillaca</string>
     <string name="authenticator_account_type">com.smartbuilders.smartsales.auth.sillaca</string>
-    <string name="ids_user_group_name">catalogo-febeca</string>
+    <string name="ids_user_group_name">catalogo-sillaca</string>
     <string name="company_name">Sillaca C.A.</string>
     <string name="company_host_name">www.sillaca.com</string>
     <string name="welcome_message_login_activity">Ahora Sillaca está en tus manos</string>

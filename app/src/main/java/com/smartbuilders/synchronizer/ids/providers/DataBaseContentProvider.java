@@ -28,7 +28,7 @@ import android.net.Uri;
  */
 public class DataBaseContentProvider extends ContentProvider implements OnAccountsUpdateListener {
 
-	public static final String AUTHORITY = "com.smartbuilders.smartsales.providers.Syncadapter";
+	public static final String AUTHORITY = "${applicationId}.providers.Syncadapter";
 	
 	public static final String KEY_USER_ID 						= "DataBaseContentProvider.USER_ID";
 	public static final String KEY_USER_DB_NAME 				= "DataBaseContentProvider.USER_DB_NAME";

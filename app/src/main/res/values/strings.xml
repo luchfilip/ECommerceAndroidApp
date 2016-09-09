@@ -361,5 +361,7 @@
     <string name="progress_percentage">%1$s %%</string>
     <string name="error">Error</string>
     <string name="user_disabled">Usuario deshabilitado</string>
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_bluetooth_connection">Conexión Bluetooth</string>
 
 </resources>
