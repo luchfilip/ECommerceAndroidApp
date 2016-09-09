@@ -187,7 +187,7 @@ public class MyGcmListenerService extends GcmListenerService {
                         if(action.equals(KEY_REQUEST_SYNC)){
                             try {
                                 AccountManager mAccountManager = AccountManager.get(this);
-                                for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
+                                for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
                                     if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                                         if(ApplicationUtilities.appRequireFullSync(this, account)){
                                             ApplicationUtilities.initSyncByAccount(this, account);
@@ -231,9 +231,9 @@ public class MyGcmListenerService extends GcmListenerService {
                                     Account userAccount = ApplicationUtilities
                                             .getAccountByServerUserIdFromAccountManager(this, data.getString(KEY_PARAM_SERVER_USER_ID));
                                     if(userAccount!=null){
-                                        accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
+                                        accountManager.invalidateAuthToken(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
-                                        accountManager.invalidateAuthToken(getString(R.string.authenticator_account_type),
+                                        accountManager.invalidateAuthToken(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
                                                 accountManager.peekAuthToken(userAccount, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
                                         sendResponseToServer(this, requestMethodName, requestId,
                                                 "user: "+userAccount.name+", authentication token invalidated.", null);
@@ -533,7 +533,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
                                     AccountManager accountManager = AccountManager.get(this);
 
-                                    for(Account account : accountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
+                                    for(Account account : accountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
                                         if(ServerUtilities.isServerAvailableByAddress(data.get(KEY_PARAM_SERVER_ADDRESS).toString())){
                                             accountManager.setUserData(account,
                                                     AccountGeneral.USERDATA_SERVER_ADDRESS,
@@ -556,7 +556,7 @@ public class MyGcmListenerService extends GcmListenerService {
                         }else if(action.equals(KEY_NOTIFY_SERVER_IS_ALIVE)){
                             try {
                                 AccountManager accountManager = AccountManager.get(this);
-                                for(Account account : accountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
+                                for(Account account : accountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
                                     if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastFullSyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){

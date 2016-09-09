@@ -270,18 +270,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
-                    ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
+                    ContentResolver.removePeriodicSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, new Bundle());
                     if (Long.valueOf(newValue.toString()) <=0) {
                         //Turn off periodic syncing
-                        ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), false);
+                        ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, false);
                     }else{
                         //Turn on periodic syncing
-                        ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
-                        ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                        ContentResolver.setIsSyncable(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, 1);
+                        ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, true);
 
                         ContentResolver.addPeriodicSync(
                                 account,
-                                getString(R.string.sync_adapter_content_authority),
+                                BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY,
                                 Bundle.EMPTY,
                                 Utils.getSyncPeriodicityFromPreferences(getActivity()));
                     }

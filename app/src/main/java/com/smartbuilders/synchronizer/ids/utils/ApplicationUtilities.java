@@ -391,7 +391,7 @@ public class ApplicationUtilities {
      */
 	public static String getUserId(String serverAddress, String userName, String userGroup, Context ctx){
 		AccountManager mAccountManager = AccountManager.get(ctx);
-		for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_account_type))){
+		for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
 			if((serverAddress!=null 
 					&& mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS)!=null 
 					&& serverAddress.equals(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS)))
@@ -1111,13 +1111,13 @@ public class ApplicationUtilities {
 		try{
 			AccountManager mAccountManager = AccountManager.get(ctx);
 			if(userId!=null) {
-				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_account_type))){
+				for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
 					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID).equals(userId)){
 						return account;
 					}
 				}
 			} else if (serverUserId!=null) {
-				for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_account_type))){
+				for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
 					if(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID).equals(serverUserId)){
 						return account;
 					}
@@ -1290,7 +1290,7 @@ public class ApplicationUtilities {
     		//currents users
     		ArrayList<User> currentsUsers = new ArrayList<User>();
     		AccountManager mAccountManager = AccountManager.get(ctx);
-			for(Account account : mAccountManager.getAccountsByType(ctx.getString(R.string.authenticator_account_type))){
+			for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
 				currentsUsers.add(getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)));
 				//Log.v(TAG+" - Current Users", getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)).toString());
 			}

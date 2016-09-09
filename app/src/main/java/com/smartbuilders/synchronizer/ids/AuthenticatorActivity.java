@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity;
 import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity;
@@ -197,7 +198,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                                 case ApplicationUtilities.ST_NEW_USER_AUTHORIZED:
                                 case ApplicationUtilities.ST_USER_AUTHORIZED:
                                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
-                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
+                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                                     data.putString(AccountManager.KEY_AUTHTOKEN, mUser.getAuthToken());
                                     data.putString(PARAM_USER_PASS, userPass);
                                     break;
@@ -239,7 +240,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                                 if(user.getSessionToken().equals(ApplicationUtilities.ST_NEW_USER_AUTHORIZED)
                                         || user.getSessionToken().equals(ApplicationUtilities.ST_USER_AUTHORIZED)){
                                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userGroup+"-"+userName);
-                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authenticator_account_type));
+                                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                                     data.putString(AccountManager.KEY_AUTHTOKEN, user.getAuthToken());
 
                                     // We keep the server address and GCM_REG_ID as an extra data on the account.
@@ -300,7 +301,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            mAccount = new Account(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), getString(R.string.authenticator_account_type));
+            mAccount = new Account(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME), BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the mUser)

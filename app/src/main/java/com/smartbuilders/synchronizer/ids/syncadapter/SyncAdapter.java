@@ -7,6 +7,7 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.SyncLog;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -174,7 +175,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				break;
 				case ApplicationUtilities.ST_USER_NOT_AUTHORIZED:
 					//invalidate authentication token
-					accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+					accountManager.invalidateAuthToken(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
 							accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 
 					//notify authenticator error
@@ -182,7 +183,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		        	throw new AuthenticatorException(getContext().getString(R.string.user_not_authorized));
 				case ApplicationUtilities.ST_USER_NOT_EXIST_IN_SERVER:
 					//invalidate authentication token
-					accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+					accountManager.invalidateAuthToken(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
 							accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 
 					//notify authenticator error
@@ -190,7 +191,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		        	throw new AuthenticatorException(getContext().getString(R.string.user_not_exist_in_server));
 				case ApplicationUtilities.ST_USER_WRONG_PASSWORD:
 					//invalidate authentication token
-	        		accountManager.invalidateAuthToken(getContext().getString(R.string.authenticator_account_type),
+	        		accountManager.invalidateAuthToken(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
 	        											accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 					//notify authenticator error
 		        	syncStatus = SYNCHRONIZATION_CANCELLED;

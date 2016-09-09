@@ -29,9 +29,7 @@
           "status": 1
         }
       }
-    }
-  ],
-  "client": [
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:529456526909:android:0587064c3928067f",
@@ -57,9 +55,7 @@
           "status": 1
         }
       }
-    }
-  ],
-  "client": [
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:921772913385:android:944567034a4d964c",
@@ -85,9 +81,33 @@
           "status": 1
         }
       }
-    }
-  ],
-  "client": [
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767398413220:android:3891293550309927",
+        "android_client_info": {
+          "package_name": "com.smartbuilders.smartsales.ecommerce.febeca"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhAoau-qOfzUY8cjdB4AYMJ5LoFZrjd_c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
     {
       "client_info": {
         "android_client_info": {
@@ -124,34 +144,6 @@
       "api_key": [
         {
           "current_key": "AIzaSyCLwfROOjJPAQrW6JgblXeGNTzDbmL4io4"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    }
-  ],
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:767398413220:android:3891293550309927",
-        "android_client_info": {
-          "package_name": "com.smartbuilders.smartsales.ecommerce.febeca"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAhAoau-qOfzUY8cjdB4AYMJ5LoFZrjd_c"
         }
       ],
       "services": {

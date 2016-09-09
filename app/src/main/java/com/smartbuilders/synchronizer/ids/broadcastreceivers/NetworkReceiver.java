@@ -31,7 +31,7 @@ public class NetworkReceiver extends BroadcastReceiver {
         if(networkInfo != null){
             try {
                 AccountManager accountManager = AccountManager.get(context);
-                Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.authenticator_account_type));
+                Account[] accounts = accountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                 for(Account account : accounts){
                     if(!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
                         try {

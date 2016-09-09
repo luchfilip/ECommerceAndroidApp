@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -911,7 +912,7 @@ public class Utils {
         try {
             AccountManager accountManager = AccountManager.get(context);
             final Account availableAccounts[] = accountManager
-                    .getAccountsByType(context.getString(R.string.authenticator_account_type));
+                    .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
             if (availableAccounts.length>0) {
                 return ApplicationUtilities.getUserByIdFromAccountManager(context,
                         accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));

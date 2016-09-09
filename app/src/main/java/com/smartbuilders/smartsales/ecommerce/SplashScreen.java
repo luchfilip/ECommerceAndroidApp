@@ -143,7 +143,7 @@ public class SplashScreen extends AppCompatActivity {
         mAccountManager = AccountManager.get(this);
 
         final Account availableAccounts[] = mAccountManager
-                .getAccountsByType(getString(R.string.authenticator_account_type));
+                .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
 
         findViewById(R.id.exit_app_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +211,7 @@ public class SplashScreen extends AppCompatActivity {
                 }.start();
             }
         } else {
-            addNewAccount(getString(R.string.authenticator_account_type),
+            addNewAccount(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
             finishActivityOnResultOperationCanceledException = true;
         }
@@ -253,7 +253,7 @@ public class SplashScreen extends AppCompatActivity {
                                 String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
                                         .getString(AccountGeneral.USERDATA_USER_ID);
                                 final Account availableAccounts[] = mAccountManager
-                                        .getAccountsByType(getString(R.string.authenticator_account_type));
+                                        .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                                 if (availableAccounts.length>0) {
                                     for(Account account : availableAccounts){
                                         if(mAccountManager.getUserData(account,
@@ -299,7 +299,7 @@ public class SplashScreen extends AppCompatActivity {
             boolean setPeriodicSync = false;
             ContentResolver.setMasterSyncAutomatically(true);
             //se define la sincronizacion automatica solo si no se ha definido antes
-            List<PeriodicSync> periodicSyncList = ContentResolver.getPeriodicSyncs(account, getString(R.string.sync_adapter_content_authority));
+            List<PeriodicSync> periodicSyncList = ContentResolver.getPeriodicSyncs(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY);
             if(periodicSyncList==null || periodicSyncList.isEmpty()){
                 setPeriodicSync = true;
             } else {
@@ -313,25 +313,25 @@ public class SplashScreen extends AppCompatActivity {
             }
 
             if (setPeriodicSync) {
-                ContentResolver.removePeriodicSync(account, getString(R.string.sync_adapter_content_authority), new Bundle());
+                ContentResolver.removePeriodicSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, new Bundle());
 
                 //Turn on periodic syncing
-                ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
-                ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                ContentResolver.setIsSyncable(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, 1);
+                ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, true);
 
-                ContentResolver.addPeriodicSync(account, getString(R.string.sync_adapter_content_authority),
+                ContentResolver.addPeriodicSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY,
                         Bundle.EMPTY, Utils.getSyncPeriodicityFromPreferences(this));
-            } else if (!ContentResolver.getSyncAutomatically(account, getString(R.string.sync_adapter_content_authority))) {
+            } else if (!ContentResolver.getSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                 //Turn on periodic syncing
-                ContentResolver.setIsSyncable(account, getString(R.string.sync_adapter_content_authority), 1);
-                ContentResolver.setSyncAutomatically(account, getString(R.string.sync_adapter_content_authority), true);
+                ContentResolver.setIsSyncable(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, 1);
+                ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, true);
             }
             /***************************************************************************************/
 
             if (ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {
                 if(NetworkConnectionUtilities.isOnline(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
-                    if(account!=null && !ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))){
+                    if(account!=null && !ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
                         ApplicationUtilities.initSyncByAccount(this, account);
                         mSynchronizationState = SYNC_RUNNING;
                     }

@@ -108,7 +108,7 @@
         <provider
             android:name="com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider"
             android:authorities="${applicationId}.providers.CachedFileProvider"
-            android:exported="false"
+            android:exported="true"
             android:multiprocess="true" />
         <provider
             android:name="com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider"
