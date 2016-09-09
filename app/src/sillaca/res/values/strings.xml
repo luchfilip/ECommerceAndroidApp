@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Catálogo Sillaca</string>
+    <!--<string name="authenticator_account_type">com.smartbuilders.smartsales.auth.sillaca</string>-->
+    <string name="ids_user_group_name">catalogo-sillaca</string>
+    <string name="company_name">Sillaca C.A.</string>
+    <string name="company_host_name">www.sillaca.com</string>
+    <string name="welcome_message_login_activity">Ahora Sillaca está en tus manos</string>
+    <string name="gcm_sender_id">921772913385</string>
+    <string name="gcm_server_api_key">AIzaSyB0vHAHx5PmVuG5U9a1TvEfi7kC14fBpZg</string>
+</resources>

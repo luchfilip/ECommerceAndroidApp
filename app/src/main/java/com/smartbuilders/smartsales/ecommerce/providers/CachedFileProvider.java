@@ -15,6 +15,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+
 /**
  * 
  * Created by Alberto on 6/4/2016.
@@ -23,8 +25,7 @@ import android.os.ParcelFileDescriptor;
 public class CachedFileProvider extends ContentProvider {
 
     // The authority is the symbolic name for the provider class 
-    public static final String AUTHORITY =
-			"${applicationId}.providers.CachedFileProvider";
+    public static final String AUTHORITY = BuildConfig.CachedFileProvider_AUTHORITY;
 
     static final Uri CONTENT_URI = Uri.parse(AUTHORITY);
     

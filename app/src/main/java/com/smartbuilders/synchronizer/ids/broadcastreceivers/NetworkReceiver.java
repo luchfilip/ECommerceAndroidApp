@@ -1,5 +1,6 @@
 package com.smartbuilders.synchronizer.ids.broadcastreceivers;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -32,7 +33,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                 AccountManager accountManager = AccountManager.get(context);
                 Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.authenticator_account_type));
                 for(Account account : accounts){
-                    if(!ApplicationUtilities.isSyncActive(account,context.getString(R.string.sync_adapter_content_authority))){
+                    if(!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
                         try {
                             if(!ApplicationUtilities.appRequireInitialLoad(context, account)){
                                 if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){

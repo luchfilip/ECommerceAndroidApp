@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.datamanager.TablesDataSendToAndReceiveFromServer;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -30,8 +31,7 @@ import android.support.annotation.NonNull;
  */
 public class SynchronizerContentProvider extends ContentProvider{
 	
-	private static final String AUTHORITY =
-            "${applicationId}.providers.SynchronizerContentProvider";
+	private static final String AUTHORITY = BuildConfig.SynchronizerContentProvider_AUTHORITY;
 	
 	private static final Uri CONTENT_URI 					= Uri.parse("content://"+AUTHORITY);
 	

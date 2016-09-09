@@ -1,1 +1,1 @@
-include ':app', ':febeca', ':sillaca', ':beval', ':IDS', ':bluetoothchatlibrary'
+include ':app', ':bluetoothchatlibrary'

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -187,7 +188,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager mAccountManager = AccountManager.get(this);
                                 for(Account account : mAccountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
-                                    if (!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))) {
+                                    if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                                         if(ApplicationUtilities.appRequireFullSync(this, account)){
                                             ApplicationUtilities.initSyncByAccount(this, account);
                                             sendResponseToServer(this, requestMethodName, requestId,
@@ -556,7 +557,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager accountManager = AccountManager.get(this);
                                 for(Account account : accountManager.getAccountsByType(getString(R.string.authenticator_account_type))){
-                                    if (!ApplicationUtilities.isSyncActive(account, getString(R.string.sync_adapter_content_authority))) {
+                                    if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastFullSyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){
                                             if(((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000) >= Utils.getSyncPeriodicityFromPreferences(this)) {

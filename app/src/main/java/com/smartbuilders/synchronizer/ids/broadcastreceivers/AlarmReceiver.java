@@ -1,5 +1,6 @@
 package com.smartbuilders.synchronizer.ids.broadcastreceivers;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.scheduler.SchedulerSyncData;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -41,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 									ApplicationUtilities.setActiveSyncSchedulerData(user, data, context);
 								}
 
-						        if(!ApplicationUtilities.isSyncActive(account, context.getString(R.string.sync_adapter_content_authority))){
+						        if(!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
 									//TODO: revisar si la ultima sincronizacion se realizo en un tiempo mayor al
 									//definido por el periodo de sincronizacion
 						        	ApplicationUtilities.initSyncByAccount(context, account);

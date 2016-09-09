@@ -1,18 +1,33 @@
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        //applicationId "com.smartbuilders.smartsales.ecommerce"
+        applicationId "com.smartbuilders.smartsales.ecommerce"
         minSdkVersion 10
         targetSdkVersion 24
         versionCode 10
-        versionName "1.6.1"
+        versionName "1.7.12"
         // Enabling multidex support.
         multiDexEnabled true
+
+        //These are the values for the authorities and account types.
+        //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+        buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth\""
+        buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+        buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+        buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+        buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+
+        //Reference them in .xml files.
+        resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth"
+        resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+        resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+        resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+        resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
     }
     buildTypes {
         release {
@@ -22,6 +37,99 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
+    }
+
+    /**
+     * The productFlavors {} block is where you can configure multiple product
+     * flavors. This allows you to create different versions of your app that can
+     * override defaultConfig {} with their own settings. Product flavors are
+     * optional, and the build system does not create them by default.
+     */
+    productFlavors {
+        febeca {
+            applicationId "com.smartbuilders.smartsales.ecommerce.febeca"
+            minSdkVersion 10
+            targetSdkVersion 24
+            versionCode 22
+
+            //These are the values for the authorities and account types.
+            //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+            buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.febeca\""
+            buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+            buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+
+            //Reference them in .xml files.
+            resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.febeca"
+            resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+            resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+        }
+        sillaca {
+            applicationId "com.smartbuilders.smartsales.ecommerce.sillaca"
+            minSdkVersion 10
+            targetSdkVersion 24
+            versionCode 1
+
+            //These are the values for the authorities and account types.
+            //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+            buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.sillaca\""
+            buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+            buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+
+            //Reference them in .xml files.
+            resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.sillaca"
+            resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+            resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+        }
+        beval {
+            applicationId "com.smartbuilders.smartsales.ecommerce.beval"
+            minSdkVersion 10
+            targetSdkVersion 24
+            versionCode 1
+
+            //These are the values for the authorities and account types.
+            //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+            buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.beval\""
+            buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+            buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+
+            //Reference them in .xml files.
+            resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.beval"
+            resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+            resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+        }
+        ids {
+            applicationId "com.smartbuilders.synchronizer.ids"
+            minSdkVersion 10
+            targetSdkVersion 24
+            versionCode 1
+
+            //These are the values for the authorities and account types.
+            //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+            buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.ids\""
+            buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+            buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+
+            //Reference them in .xml files.
+            resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.ids"
+            resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+            resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+        }
     }
 }
 

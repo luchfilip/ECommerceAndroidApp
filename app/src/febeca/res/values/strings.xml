@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Catálogo Febeca</string>
+    <!--<string name="authenticator_account_type">com.smartbuilders.smartsales.auth.febeca</string>-->
+    <string name="ids_user_group_name">catalogo-febeca</string>
+    <string name="company_name">Febeca C.A.</string>
+    <string name="company_host_name">www.febeca.com</string>
+    <string name="welcome_message_login_activity">Ahora Febeca está en tus manos</string>
+    <string name="gcm_sender_id">767398413220</string>
+    <string name="gcm_server_api_key">AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U</string>
+</resources>

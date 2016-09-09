@@ -18,17 +18,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />-->
-    <!--<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />-->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <!-- used by GCM -->
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!--<permission-->
-        <!--android:name="com.smartbuilders.smartsales.ecommerce.permission.C2D_MESSAGE"-->
-        <!--android:protectionLevel="signature" />-->
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
-    <!--<uses-permission android:name="com.smartbuilders.smartsales.ecommerce.permission.C2D_MESSAGE" />-->
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <!-- used by GCM -->
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -72,7 +72,13 @@
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.SplashScreen"
-            android:theme="@style/SplashTheme.NoActionBar" />
+            android:theme="@style/SplashTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="com.smartbuilders.smartsales.ecommerce.MainActivity"
@@ -169,17 +175,17 @@
             android:exported="false" />
 
         <!-- GCM -->
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
-            <!--android:exported="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION" />-->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--<category android:name="com.smartbuilders.smartsales.ecommerce" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="com.smartbuilders.synchronizer.ids.gcm.MyGcmListenerService"

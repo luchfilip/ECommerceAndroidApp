@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Febeca C.A.</string>
 
-    <string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider</string>
-    <string name="authenticator_account_type">com.smartbuilders.smartsales.auth</string>
+    <!--<string name="sync_adapter_content_authority">com.smartbuilders.smartsales.providers.SynchronizerContentProvider</string>-->
+    <!--<string name="authenticator_account_type">com.smartbuilders.smartsales.auth</string>-->
     <string name="ids_user_group_name">catalogo-febeca</string>
     <string name="gcm_sender_id">686820312802</string>
     <string name="gcm_server_api_key">AIzaSyCssmP6m7DSy-N0lfcR8qZiZSbxH9pQN4Y</string>

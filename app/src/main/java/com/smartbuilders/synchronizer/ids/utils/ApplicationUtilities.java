@@ -28,6 +28,7 @@ import net.iharder.Base64;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -150,20 +151,6 @@ public class ApplicationUtilities {
         }
     }
 
-	///**
-	// *
-	// * @param context
-	// * @param account
-	// * @param tablesToSyncJSONObject
-    // */
-	//public static void initSyncByAccount(Context context, Account account, String tablesToSyncJSONObject) {
-	//	Bundle settingsBundle = new Bundle();
-	//	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-	//	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-	//	settingsBundle.putString("tables_to_sync", tablesToSyncJSONObject);
-	//	ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
-	//}
-
 	/**
 	 *
 	 * @param context
@@ -173,7 +160,7 @@ public class ApplicationUtilities {
 		Bundle settingsBundle = new Bundle();
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		ContentResolver.requestSync(account, context.getString(R.string.sync_adapter_content_authority), settingsBundle);
+		ContentResolver.requestSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, settingsBundle);
 	}
 
 	/**
