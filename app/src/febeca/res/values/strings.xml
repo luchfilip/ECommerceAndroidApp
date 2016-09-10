@@ -5,6 +5,6 @@
     <string name="company_name">Febeca C.A.</string>
     <string name="company_host_name">www.febeca.com</string>
     <string name="welcome_message_login_activity">Ahora Febeca está en tus manos</string>
-    <string name="gcm_sender_id">767398413220</string>
-    <string name="gcm_server_api_key">AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U</string>
+    <!--<string name="gcm_sender_id">767398413220</string>-->
+    <!--<string name="gcm_server_api_key">AIzaSyADomSwA3WiiRHz8iEZgdU5RC4JwKvEr6U</string>-->
 </resources>

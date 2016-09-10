@@ -186,16 +186,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!--<ImageView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:padding="5dp"-->
-                        <!--android:layout_marginRight="4dp"-->
-                        <!--android:id="@+id/share_imageView"-->
-                        <!--android:background="@drawable/image_dark_shape"-->
-                        <!--android:src="@drawable/ic_share_black_24dp"-->
-                        <!--style='style="@style/image_button_style"' />-->
-
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

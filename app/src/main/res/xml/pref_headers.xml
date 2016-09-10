@@ -11,9 +11,9 @@
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_data_sync" />
 
-    <header
-        android:fragment="com.smartbuilders.smartsales.ecommerce.SettingsActivity$BluetoothConnectionPreferenceFragment"
-        android:icon="@drawable/ic_settings_bluetooth_black_24dp"
-        android:title="@string/pref_header_bluetooth_connection" />
+    <!--<header-->
+        <!--android:fragment="com.smartbuilders.smartsales.ecommerce.SettingsActivity$BluetoothConnectionPreferenceFragment"-->
+        <!--android:icon="@drawable/ic_settings_bluetooth_black_24dp"-->
+        <!--android:title="@string/pref_header_bluetooth_connection" />-->
 
 </preference-headers>

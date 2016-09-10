@@ -176,6 +176,12 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+            }
+        });
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

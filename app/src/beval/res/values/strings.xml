@@ -5,6 +5,6 @@
     <string name="company_name">Mayor Beval C.A.</string>
     <string name="company_host_name">www.beval.com</string>
     <string name="welcome_message_login_activity">Ahora Mayor Beval está en tus manos</string>
-    <string name="gcm_sender_id">529456526909</string>
-    <string name="gcm_server_api_key">AIzaSyDDtcYe8nQpw-cjbhsqCIgshwe5awQrQVY</string>
+    <!--<string name="gcm_sender_id">529456526909</string>-->
+    <!--<string name="gcm_server_api_key">AIzaSyDDtcYe8nQpw-cjbhsqCIgshwe5awQrQVY</string>-->
 </resources>
