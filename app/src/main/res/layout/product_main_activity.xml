@@ -44,6 +44,15 @@
                     android:textSize="@dimen/productMainActivity_productName_text_size"
                     android:maxLines="2" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:layout_marginTop="2dp">
+
                 <TextView
                     android:id="@+id/product_price"
                     android:layout_width="wrap_content"
@@ -60,16 +69,8 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/productMainActivity_productAvailability_text_size" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:layout_marginTop="2dp">
-
-                <View style="@style/Divider"/>
+                <View style="@style/Divider"
+                    android:layout_marginTop="2dp" />
 
                 <LinearLayout
                     android:orientation="horizontal"

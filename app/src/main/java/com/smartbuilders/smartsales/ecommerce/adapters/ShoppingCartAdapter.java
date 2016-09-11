@@ -159,10 +159,22 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+            holder.productPrice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                }
+            });
             holder.productPrice.setVisibility(View.VISIBLE);
 
             holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
                     mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
+            holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                }
+            });
             holder.productTaxPercentage.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
@@ -171,6 +183,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+            }
+        });
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

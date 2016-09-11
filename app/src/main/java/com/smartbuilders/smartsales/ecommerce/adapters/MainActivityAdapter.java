@@ -292,6 +292,12 @@ public class MainActivityAdapter extends BaseAdapter {
                             viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
                                     product.getDefaultProductPriceAvailability().getCurrency().getName(),
                                     product.getDefaultProductPriceAvailability().getPrice()));
+                            viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    goToProductDetails(product.getId());
+                                }
+                            });
                             viewHolder.productPrice.setVisibility(View.VISIBLE);
                         } else {
                             viewHolder.productPrice.setVisibility(View.GONE);
@@ -299,6 +305,12 @@ public class MainActivityAdapter extends BaseAdapter {
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
                                 product.getDefaultProductPriceAvailability().getAvailability()));
+                        viewHolder.productAvailability.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                goToProductDetails(product.getId());
+                            }
+                        });
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override

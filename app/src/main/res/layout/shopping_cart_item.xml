@@ -76,6 +76,13 @@
                     android:textColor="@color/black"
                     android:maxLines="1" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/product_tax_percentage"
                     android:layout_width="wrap_content"
@@ -101,12 +108,6 @@
                     android:textColor="@color/product_availability_color"
                     android:textStyle="bold"
                     android:textSize="@dimen/productDetailCardView_availability_text_size" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <View style="@style/Divider"
                     android:layout_marginTop="2dp" />
