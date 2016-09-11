@@ -56,8 +56,7 @@
 
     </LinearLayout>
 
-    <View style="@style/Divider"
-        android:layout_marginTop="2dp" />
+    <View style="@style/Divider" />
 
     <LinearLayout
         android:orientation="horizontal"
