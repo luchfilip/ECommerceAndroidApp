@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.smartbuilders.smartsales.bluetoothchat;
+package com.smartbuilders.smartsales.ecommerce;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -40,12 +40,7 @@ import java.util.Set;
  * by the user, the MAC address of the device is sent back to the parent
  * Activity in the result Intent.
  */
-public class DeviceListActivity extends Activity {
-
-    /**
-     * Tag for Log
-     */
-    private static final String TAG = "DeviceListActivity";
+public class BluetoothDeviceListActivity extends Activity {
 
     /**
      * Return Intent extra

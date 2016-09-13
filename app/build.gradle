@@ -21,6 +21,7 @@ android {
         buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
         buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
         buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+        buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
 
         //Reference them in .xml files.
         resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth"
@@ -28,6 +29,7 @@ android {
         resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
         resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
         resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+        resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
     }
     buildTypes {
         release {
@@ -59,6 +61,7 @@ android {
             buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
             buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
             buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+            buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.febeca"
@@ -66,6 +69,7 @@ android {
             resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
             resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+            resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
         }
         sillaca {
             applicationId "com.smartbuilders.smartsales.ecommerce.sillaca"
@@ -80,6 +84,7 @@ android {
             buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
             buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
             buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+            buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.sillaca"
@@ -87,6 +92,7 @@ android {
             resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
             resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+            resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
         }
         beval {
             applicationId "com.smartbuilders.smartsales.ecommerce.beval"
@@ -101,6 +107,7 @@ android {
             buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
             buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
             buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+            buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.beval"
@@ -108,6 +115,7 @@ android {
             resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
             resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+            resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
         }
         ids {
             applicationId "com.smartbuilders.synchronizer.ids"
@@ -122,6 +130,7 @@ android {
             buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
             buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
             buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+            buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.ids"
@@ -129,6 +138,7 @@ android {
             resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
             resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+            resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
         }
     }
 }
@@ -136,16 +146,15 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:design:24.1.1'
-    compile 'com.android.support:cardview-v7:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android.gms:play-services:9.4.0'
     compile 'com.itextpdf:itextg:5.5.9'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.2.3'
-    compile project(':bluetoothchatlibrary')
 }

@@ -115,8 +115,8 @@ public class LoadProductsThumbImage extends IntentService {
             OutputStream outputStream = null;
             InputStream inputStream = null;
             try {
-                inputStream = getHttpConnection(user.getServerAddress() +
-                        "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
+                inputStream = getHttpConnection((new StringBuilder(user.getServerAddress()))
+                        .append("/IntelligentDataSynchronizer/GetThumbImage?fileName=").append(fileName).toString());
                 // write the inputStream to a FileOutputStream
                 try{
                     outputStream = new FileOutputStream(new File(Utils.getImagesThumbFolderPath(context), fileName));

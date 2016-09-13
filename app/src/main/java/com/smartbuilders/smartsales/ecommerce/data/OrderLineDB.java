@@ -289,11 +289,19 @@ public class OrderLineDB {
             }
         }
         ProductDB productDB = new ProductDB(mContext, mUser);
+        ArrayList<OrderLine> orderLinesToRemove = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
             orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
             if(orderLine.getProduct()==null){
-                orderLine.setProduct(new Product());
+                if(docType.equals(WISH_LIST_DOC_TYPE)){
+                    orderLinesToRemove.add(orderLine);
+                }else{
+                    orderLine.setProduct(new Product());
+                }
             }
+        }
+        if(!orderLinesToRemove.isEmpty()){
+            orderLines.removeAll(orderLinesToRemove);
         }
         return orderLines;
     }
