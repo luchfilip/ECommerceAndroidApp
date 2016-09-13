@@ -1,5 +1,7 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.database.Cursor;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -7,10 +9,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
+import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -57,6 +62,36 @@ public class ProductDetailActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                     .setText(getString(R.string.welcome_user, user.getUserName()));
+        }
+
+        // Se envia el id del producto por bluetooth
+        if(getIntent()!=null && getIntent().getExtras()!=null) {
+            if(getIntent().getExtras().containsKey(KEY_PRODUCT_ID)){
+                String message = String.valueOf(getIntent().getExtras().getInt(KEY_PRODUCT_ID));
+                // Check that there's actually something to send
+                if (!TextUtils.isEmpty(message)){
+                    Cursor cursor = null;
+                    try {
+                        cursor = getContentResolver().query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
+                        // Check that we're actually connected before trying anything
+                        if(cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_CONNECTED){
+                            // Get the message and tell the BluetoothChatService to write
+                            getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
+                                    .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, message).build(), null, null, null, null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (cursor!=null) {
+                            try {
+                                cursor.close();
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
