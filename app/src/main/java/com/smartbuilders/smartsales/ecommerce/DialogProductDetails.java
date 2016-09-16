@@ -73,11 +73,30 @@ public class DialogProductDetails extends DialogFragment {
 
         Utils.loadOriginalImageByFileName(getContext(), mUser,
                 mProduct.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
+        view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mProduct.getId());
+            }
+        });
+
+        view.findViewById(R.id.go_to_product_details).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mProduct.getId());
+            }
+        });
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_price)).setText(getString(R.string.price_detail,
                     mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
                     mProduct.getDefaultProductPriceAvailability().getPrice()));
+            view.findViewById(R.id.product_price).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mProduct.getId());
+                }
+            });
             view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.product_price).setVisibility(View.GONE);
@@ -85,6 +104,12 @@ public class DialogProductDetails extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_availability)).setText(getString(R.string.availability,
                 mProduct.getDefaultProductPriceAvailability().getAvailability()));
+        view.findViewById(R.id.product_availability).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mProduct.getId());
+            }
+        });
 
         view.findViewById(R.id.share_imageView).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +213,11 @@ public class DialogProductDetails extends DialogFragment {
         }
 
         return view;
+    }
+
+    private void goToProductDetails(int productId){
+        startActivity(new Intent(getContext(), ProductDetailActivity.class)
+                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
     }
 
     private String addToWishList(Product product) {
