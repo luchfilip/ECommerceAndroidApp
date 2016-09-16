@@ -132,6 +132,7 @@ public class RecommendedProductsListAdapter extends
             if(mDataset.get(position).getRating()>=0){
                 holder.productRatingBar.setRating(mDataset.get(position).getRating());
             }
+            holder.productRatingBarContainer.setVisibility(View.VISIBLE);
         }else{
             holder.productRatingBarContainer.setVisibility(View.GONE);
         }
@@ -237,8 +238,9 @@ public class RecommendedProductsListAdapter extends
                 && mDataset.get(position).getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProductBrand().getName()));
+            holder.productBrand.setVisibility(View.VISIBLE);
         } else {
-            holder.productBrand.setVisibility(View.INVISIBLE);
+            holder.productBrand.setVisibility(View.GONE);
         }
 
         if(mDataset.get(position).getInternalCode()!=null){

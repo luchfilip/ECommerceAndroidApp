@@ -149,6 +149,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             if(mDataset.get(holder.getAdapterPosition()).getProduct().getRating()>=0){
                 holder.productRatingBar.setRating(mDataset.get(holder.getAdapterPosition()).getProduct().getRating());
             }
+            holder.productRatingBarContainer.setVisibility(View.VISIBLE);
         }else{
             holder.productRatingBarContainer.setVisibility(View.GONE);
         }
@@ -237,8 +238,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 && mDataset.get(position).getProduct().getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProduct().getProductBrand().getName()));
+            holder.productBrand.setVisibility(View.VISIBLE);
         } else {
-            holder.productBrand.setVisibility(View.INVISIBLE);
+            holder.productBrand.setVisibility(View.GONE);
         }
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){

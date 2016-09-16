@@ -114,6 +114,7 @@ public class ProductDetailFragment extends Fragment {
                                         if (mProduct.getRating() >= 0) {
                                             ((RatingBar) view.findViewById(R.id.product_ratingBar)).setRating(mProduct.getRating());
                                         }
+                                        view.findViewById(R.id.product_ratingBar_container).setVisibility(View.VISIBLE);
                                     } else {
                                         view.findViewById(R.id.product_ratingBar_container).setVisibility(View.GONE);
                                     }
