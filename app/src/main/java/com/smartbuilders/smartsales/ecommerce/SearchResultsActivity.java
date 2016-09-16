@@ -24,7 +24,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.SearchResultAdapter;
@@ -39,13 +43,16 @@ public class SearchResultsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private SearchResultAdapter mSearchResultAdapter;
+    private ProductDB mProductDB;
+    private User mUser;
+    private int productId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        final User user = Utils.getCurrentUser(this);
+        mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
@@ -57,7 +64,7 @@ public class SearchResultsActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View view) {
                 super.onDrawerOpened(view); //must call super
-                Utils.loadNavigationViewBadge(getApplicationContext(), user,
+                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
                         (NavigationView) findViewById(R.id.nav_view));
             }
         };
@@ -65,18 +72,18 @@ public class SearchResultsActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+        if(navigationView!=null && mUser !=null){
+            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
             }
             navigationView.setNavigationItemSelectedListener(this);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, user.getUserName()));
+                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
         }
 
-        mSearchResultAdapter = new SearchResultAdapter(this, null, null, user);
+        mSearchResultAdapter = new SearchResultAdapter(this, null, null, mUser);
         ((ListView) findViewById(R.id.search_result_list)).setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
@@ -95,6 +102,10 @@ public class SearchResultsActivity extends AppCompatActivity
                                 startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
                             }else if(selectedOption.equals(getString(R.string.brands))){
                                 startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
+                            }else if(selectedOption.equals(getString(R.string.barcode))){
+                                Utils.lockScreenOrientation(SearchResultsActivity.this);
+                                IntentIntegrator integrator = new IntentIntegrator(SearchResultsActivity.this);
+                                integrator.initiateScan();
                             }
                         }
                         searchByOptionsSpinner.setSelection(0);
@@ -107,7 +118,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
             final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
-                final ProductDB productDB = new ProductDB(this, user);
+                final ProductDB productDB = new ProductDB(this, mUser);
                 searchEditText.setFocusable(true);
                 searchEditText.setFocusableInTouchMode(true);
                 searchEditText.addTextChangedListener(new TextWatcher() {
@@ -131,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if(actionId==EditorInfo.IME_ACTION_SEARCH && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, user)
+                            new RecentSearchDB(SearchResultsActivity.this, mUser)
                                     .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                             startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
                                     .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
@@ -148,7 +159,7 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if(searchEditText!=null && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, user)
+                            new RecentSearchDB(SearchResultsActivity.this, mUser)
                                     .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
                             Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
                             intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
@@ -157,6 +168,62 @@ public class SearchResultsActivity extends AppCompatActivity
                     }
                 });
             }
+        }
+
+        mProductDB = new ProductDB(this, mUser);
+    }
+
+    /**
+     * Called when an activity you launched exits, giving you the requestCode
+     * you started it with, the resultCode it returned, and any additional
+     * data from it.  The <var>resultCode</var> will be
+     * {@link #RESULT_CANCELED} if the activity explicitly returned that,
+     * didn't return any result, or crashed during its operation.
+     * <p/>
+     * <p>You will receive this call immediately before onResume() when your
+     * activity is re-starting.
+     * <p/>
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode  The integer result code returned by the child activity
+     *                    through its setResult().
+     * @param data        An Intent, which can return result data to the caller
+     *                    (various data can be attached to Intent "extras").
+     * @see #startActivityForResult
+     * @see #createPendingResult
+     * @see #setResult(int)
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IntentIntegrator.REQUEST_CODE){
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (scanResult != null) {
+                productId = mProductDB.getProductIdByBarCode(scanResult.getContents());
+            }else{
+                productId = 0;
+                Toast.makeText(this, getString(R.string.no_barcode_captured), Toast.LENGTH_LONG).show();
+            }
+            Utils.unlockScreenOrientation(this);
+            // else continue with any other code you need in the method
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(productId>0){
+            Product product = mProductDB.getProductById(productId);
+            if(product!=null){
+                DialogProductDetails dialogProductDetails =
+                        DialogProductDetails.newInstance(product, mUser);
+                dialogProductDetails.show(getSupportFragmentManager(),
+                        DialogProductDetails.class.getSimpleName());
+            }
+            productId = 0;
         }
     }
 

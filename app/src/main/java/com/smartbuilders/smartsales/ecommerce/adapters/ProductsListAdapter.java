@@ -192,35 +192,60 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         });
 
-        if(mDataset.get(position).isFavorite()){
-            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        //if(mDataset.get(position).isFavorite()){
+        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+        //            if (result == null) {
+        //                mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+        //                notifyItemChanged(holder.getAdapterPosition());
+        //            } else {
+        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        //            }
+        //        }
+        //    });
+        //}else{
+        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
+        //            if (result == null) {
+        //                mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+        //                notifyItemChanged(holder.getAdapterPosition());
+        //            } else {
+        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        //            }
+        //        }
+        //    });
+        //}
+
+        holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
+                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+        holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDataset.get(holder.getAdapterPosition()).isFavorite()){
                     String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
                     if (result == null) {
                         mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-                        notifyItemChanged(holder.getAdapterPosition());
+                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     } else {
                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                     }
-                }
-            });
-        }else{
-            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                }else{
                     String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
                     if (result == null) {
                         mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-                        notifyItemChanged(holder.getAdapterPosition());
+                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                     } else {
                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                     }
                 }
-            });
-        }
+            }
+        });
 
         holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
@@ -272,6 +297,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 if(mDataset.get(position).getRating()>=0){
                     holder.productRatingBar.setRating(mDataset.get(position).getRating());
                 }
+                holder.productRatingBarContainer.setVisibility(View.VISIBLE);
             }else{
                 holder.productRatingBarContainer.setVisibility(View.GONE);
             }
@@ -296,6 +322,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
                     holder.productDescription.setText(mContext.getString(R.string.product_description_detail,
                             mDataset.get(position).getDescription()));
+                    holder.productDescription.setVisibility(View.VISIBLE);
                 }else{
                     holder.productDescription.setVisibility(View.GONE);
                 }
@@ -305,6 +332,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 if(!TextUtils.isEmpty(mDataset.get(position).getPurpose())){
                     holder.productPurpose.setText(mContext.getString(R.string.product_purpose_detail,
                             mDataset.get(position).getPurpose()));
+                    holder.productPurpose.setVisibility(View.VISIBLE);
                 }else{
                     holder.productPurpose.setVisibility(View.GONE);
                 }

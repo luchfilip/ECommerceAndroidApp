@@ -701,4 +701,33 @@ public class ProductDB {
         }
         return -1;
     }
+
+    /**
+     * Devuelve -1 si no se consigue el articulo
+     * @param barCode
+     * @return
+     */
+    public int getProductIdByBarCode(String barCode) {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT PRODUCT_ID FROM PRODUCT WHERE BAR_CODE = ? AND IS_ACTIVE = ?",
+                    new String[]{barCode, "Y",}, null);
+            if (c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return -1;
+    }
 }

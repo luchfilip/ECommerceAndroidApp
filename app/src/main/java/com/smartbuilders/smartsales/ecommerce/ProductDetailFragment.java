@@ -142,12 +142,8 @@ public class ProductDetailFragment extends Fragment {
 
                                     final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
 
-                                    if (mProduct.isFavorite()) {
-                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                    } else {
-                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                                    }
-
+                                    favoriteImageView.setImageResource(mProduct.isFavorite()
+                                            ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
                                     favoriteImageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

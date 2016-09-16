@@ -156,35 +156,60 @@ public class RecommendedProductsListAdapter extends
             }
         });
 
-        if(mDataset.get(position).isFavorite()){
-            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        //if(mDataset.get(position).isFavorite()){
+        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+        //            if (result == null) {
+        //                mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+        //                notifyItemChanged(holder.getAdapterPosition());
+        //            } else {
+        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        //            }
+        //        }
+        //    });
+        //}else{
+        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
+        //            if (result == null) {
+        //                mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+        //                notifyItemChanged(holder.getAdapterPosition());
+        //            } else {
+        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        //            }
+        //        }
+        //    });
+        //}
+
+        holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
+                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+        holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDataset.get(holder.getAdapterPosition()).isFavorite()){
                     String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
                     if (result == null) {
                         mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-                        notifyItemChanged(holder.getAdapterPosition());
+                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     } else {
                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                     }
-                }
-            });
-        }else{
-            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                }else{
                     String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
                     if (result == null) {
                         mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-                        notifyItemChanged(holder.getAdapterPosition());
+                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                     } else {
                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                     }
                 }
-            });
-        }
+            }
+        });
 
         holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
         holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {

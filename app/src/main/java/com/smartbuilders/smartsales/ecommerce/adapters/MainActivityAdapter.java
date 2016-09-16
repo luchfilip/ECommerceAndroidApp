@@ -275,27 +275,27 @@ public class MainActivityAdapter extends BaseAdapter {
                     break;
                 case VIEW_TYPE_PRODUCT:
                     if (mDataset!=null && mDataset.get(position) instanceof Product){
-                        final Product product = (Product) mDataset.get(position);
+                        //final Product product = (Product) mDataset.get(position);
                         Utils.loadThumbImageByFileName(mContext, mUser,
-                                product.getImageFileName(), viewHolder.productImage);
+                                ((Product) mDataset.get(position)).getImageFileName(), viewHolder.productImage);
 
                         viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                goToProductDetails(product.getId());
+                                goToProductDetails(((Product) mDataset.get(position)).getId());
                             }
                         });
 
-                        viewHolder.productName.setText(product.getName());
+                        viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
 
                         if (mIsManagePriceInOrder) {
                             viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
-                                    product.getDefaultProductPriceAvailability().getCurrency().getName(),
-                                    product.getDefaultProductPriceAvailability().getPrice()));
+                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
+                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPrice()));
                             viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    goToProductDetails(product.getId());
+                                    goToProductDetails(((Product) mDataset.get(position)).getId());
                                 }
                             });
                             viewHolder.productPrice.setVisibility(View.VISIBLE);
@@ -304,11 +304,11 @@ public class MainActivityAdapter extends BaseAdapter {
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
-                                product.getDefaultProductPriceAvailability().getAvailability()));
+                                ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getAvailability()));
                         viewHolder.productAvailability.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                goToProductDetails(product.getId());
+                                goToProductDetails(((Product) mDataset.get(position)).getId());
                             }
                         });
 
@@ -316,50 +316,75 @@ public class MainActivityAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 viewHolder.shareImageView.setEnabled(false);
-                                new CreateShareIntentThread(mFragmentActivity, product, viewHolder.shareImageView).start();
+                                new CreateShareIntentThread(mFragmentActivity, ((Product) mDataset.get(position)), viewHolder.shareImageView).start();
                             }
                         });
 
-                        if(product.isFavorite()){
-                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                            viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String result = removeFromWishList(product.getId());
+                        //if(((Product) mDataset.get(position)).isFavorite()){
+                        //    viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                        //    viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                        //        @Override
+                        //        public void onClick(View v) {
+                        //            String result = removeFromWishList(((Product) mDataset.get(position)).getId());
+                        //            if (result == null) {
+                        //                ((Product) mDataset.get(position)).setFavorite(false);
+                        //                notifyDataSetChanged();
+                        //            } else {
+                        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        //            }
+                        //        }
+                        //    });
+                        //}else{
+                        //    viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        //    viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                        //        @Override
+                        //        public void onClick(View v) {
+                        //            String result = addToWishList(((Product) mDataset.get(position)));
+                        //            if (result == null) {
+                        //                ((Product) mDataset.get(position)).setFavorite(true);
+                        //                notifyDataSetChanged();
+                        //            } else {
+                        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        //            }
+                        //        }
+                        //    });
+                        //}
+
+                        viewHolder.favoriteImageView.setImageResource(((Product) mDataset.get(position)).isFavorite()
+                                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+                        viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(((Product) mDataset.get(position)).isFavorite()){
+                                    String result = removeFromWishList(((Product) mDataset.get(position)).getId());
                                     if (result == null) {
                                         ((Product) mDataset.get(position)).setFavorite(false);
-                                        notifyDataSetChanged();
+                                        viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                     } else {
                                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                     }
-                                }
-                            });
-                        }else{
-                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String result = addToWishList(product);
+                                }else{
+                                    String result = addToWishList(((Product) mDataset.get(position)));
                                     if (result == null) {
                                         ((Product) mDataset.get(position)).setFavorite(true);
-                                        notifyDataSetChanged();
+                                        viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                                     } else {
                                         Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
                                     }
                                 }
-                            });
-                        }
+                            }
+                        });
 
                         viewHolder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                         viewHolder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 OrderLine orderLine = (new OrderLineDB(mContext, mUser))
-                                        .getOrderLineFromShoppingCartByProductId(product.getId());
+                                        .getOrderLineFromShoppingCartByProductId(((Product) mDataset.get(position)).getId());
                                 if(orderLine!=null){
                                     updateQtyOrderedInShoppingCart(orderLine);
                                 }else{
-                                    addToShoppingCart(product);
+                                    addToShoppingCart(((Product) mDataset.get(position)));
                                 }
                             }
                         });
@@ -368,14 +393,14 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                addToShoppingSale(product);
+                                addToShoppingSale(((Product) mDataset.get(position)));
                             }
                         });
 
                         viewHolder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                goToProductDetails(product.getId());
+                                goToProductDetails(((Product) mDataset.get(position)).getId());
                             }
                         });
                     }

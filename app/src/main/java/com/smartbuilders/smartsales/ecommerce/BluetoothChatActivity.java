@@ -149,15 +149,15 @@ public class BluetoothChatActivity extends AppCompatActivity {
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
                 // Otherwise, setup the chat session
             }else{
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    //do nothing
-                }
-                cursor = getContentResolver().query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
-                if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
+                //try {
+                //    cursor.close();
+                //} catch (SQLException e) {
+                //    //do nothing
+                //}
+                //cursor = getContentResolver().query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
+                //if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
                     getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-                }
+                //}
                 setupChat();
             }
         } finally {
@@ -189,23 +189,23 @@ public class BluetoothChatActivity extends AppCompatActivity {
             // Performing this check in onResume() covers the case in which BT was
             // not enabled during onStart(), so we were paused to enable it...
             // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-            if (cursor!=null && cursor.moveToNext() && !cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                cursor = getContentResolver()
-                        .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
-
+            if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.FALSE))) {
+                //try {
+                //    cursor.close();
+                //} catch (SQLException e) {
+                //    e.printStackTrace();
+                //}
+                //cursor = getContentResolver()
+                //        .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
                 //Only if the state is STATE_NONE, do we know that we haven't started already
-                if (cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
-                    // Start the Bluetooth chat services
+                //if (cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
+                //    // Start the Bluetooth chat services
                     getContentResolver()
                             .query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI, null, null, null, null);
-
-                }
+                //}
+            }else{
+                getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
+                getContentResolver().query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI, null, null, null, null);
             }
         } finally {
             if (cursor!=null) {
@@ -348,24 +348,24 @@ public class BluetoothChatActivity extends AppCompatActivity {
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                     // Bluetooth is now enabled, so set up a chat session
-                    Cursor cursor = null;
-                    try {
-                        cursor = getContentResolver()
-                                .query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
-                        if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
+                    //Cursor cursor = null;
+                    //try {
+                        //cursor = getContentResolver()
+                        //        .query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
+                        //if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
                             getContentResolver()
                                     .query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-                        }
+                        //}
                         setupChat();
-                    } finally {
-                        if (cursor!=null) {
-                            try {
-                                cursor.close();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                    //} finally {
+                    //    if (cursor!=null) {
+                    //        try {
+                    //            cursor.close();
+                    //        } catch (SQLException e) {
+                    //            e.printStackTrace();
+                    //        }
+                    //    }
+                    //}
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();

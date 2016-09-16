@@ -1,7 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce.providers;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -301,7 +300,13 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "initBluetoothChatService()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
-            mChatService = new BluetoothChatService(getContext(), mHandler);
+            if(mChatService==null){
+                mChatService = new BluetoothChatService(getContext(), mHandler);
+            }else{
+                mChatService.stop();
+                mChatService = null;
+                mChatService = new BluetoothChatService(getContext(), mHandler);
+            }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {
             e.printStackTrace();
@@ -311,7 +316,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
     }
 
     private Cursor getBluetoothAdapterScanMode() {
-        Log.d(TAG, "initBluetoothChatService()");
+        Log.d(TAG, "getBluetoothAdapterScanMode()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"scanMode", "exception_message"});
         try {
             cursor.addRow(new Object[]{mBluetoothAdapter.getScanMode(), null});
@@ -338,7 +343,14 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "startChatService()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
-            mChatService.start();
+            if(mChatService==null){
+                mChatService = new BluetoothChatService(getContext(), mHandler);
+                mChatService.start();
+            }else{
+                if(mChatService.getState()==BluetoothChatService.STATE_NONE){
+                    mChatService.start();
+                }
+            }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {
             e.printStackTrace();
@@ -348,7 +360,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
     }
 
     /**
-     * Establish connection with other divice
+     * Establish connection with other device
      */
     private Cursor connectDevice(Uri uri) {
         Log.d(TAG, "connectDevice(...)");
@@ -358,10 +370,9 @@ public class BluetoothConnectionProvider extends ContentProvider {
                     && uri.getQueryParameter(KEY_USE_SECURE_CONNECTION)!=null){
                 // Get the device MAC address
                 // Get the BluetoothDevice object
-                BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(uri.getQueryParameter(KEY_DEVICE_MAC_ADDRESS));
-                Log.v(TAG, "KEY_USE_SECURE_CONNECTION: "+uri.getQueryParameter(KEY_USE_SECURE_CONNECTION));
                 // Attempt to connect to the device
-                mChatService.connect(device, Boolean.valueOf(uri.getQueryParameter(KEY_USE_SECURE_CONNECTION)));
+                mChatService.connect(mBluetoothAdapter.getRemoteDevice(uri.getQueryParameter(KEY_DEVICE_MAC_ADDRESS)),
+                        Boolean.valueOf(uri.getQueryParameter(KEY_USE_SECURE_CONNECTION)));
                 cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
             }else{
                 throw new Exception("No parameters found!");

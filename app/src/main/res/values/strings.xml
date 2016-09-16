@@ -300,7 +300,9 @@
         <item>@string/search_by</item>
         <item>@string/categories</item>
         <item>@string/brands</item>
+        <item>@string/barcode</item>
     </string-array>
+    <string name="barcode">Cód. de barra</string>
     <string name="filter_by_product_name">NOMBRE</string>
     <string name="filter_by_product_internal_code">CÓDIGO</string>
     <string name="filter_by_product_brand_description">MARCA</string>
@@ -387,5 +389,7 @@
     <string name="secure_connect">Connect a device - Secure</string>
     <string name="insecure_connect">Connect a device - Insecure</string>
     <string name="discoverable">Make discoverable</string>
+    <string name="barcode_detail">Código capturado: %1$s</string>
+    <string name="no_barcode_captured">No se capturó ningún código de barra.</string>
 
 </resources>
