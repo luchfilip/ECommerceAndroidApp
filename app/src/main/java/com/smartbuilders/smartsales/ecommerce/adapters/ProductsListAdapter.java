@@ -169,6 +169,12 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
+            holder.productPrice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                }
+            });
             holder.productPrice.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
