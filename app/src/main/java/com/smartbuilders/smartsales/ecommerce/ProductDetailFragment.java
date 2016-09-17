@@ -42,7 +42,6 @@ public class ProductDetailFragment extends Fragment {
     private Product mProduct;
     private User mUser;
     private ShareActionProvider mShareActionProvider;
-    private Intent mShareIntent;
 
     public ProductDetailFragment() {
     }
@@ -87,7 +86,6 @@ public class ProductDetailFragment extends Fragment {
                             relatedProductsBySubCategoryId.addAll(productDB
                                     .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30));
                         }
-                        mShareIntent = Utils.createShareProductIntent(mProduct, getContext(), mUser);
                         //Se agrega el producto a la lista de productos recientemente vistos
                         (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId,
                                 Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
@@ -310,7 +308,7 @@ public class ProductDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(mShareIntent);
+        mShareActionProvider.setShareIntent(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct));
     }
 
     @Override
@@ -318,7 +316,7 @@ public class ProductDetailFragment extends Fragment {
         int i = item.getItemId();
         if (i == R.id.action_share) {
             if (mShareActionProvider!=null) {
-                mShareActionProvider.setShareIntent(mShareIntent);
+                mShareActionProvider.setShareIntent(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct));
             }
         } else if (i == R.id.search) {
             startActivity(new Intent(getContext(), SearchResultsActivity.class));

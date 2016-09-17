@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerce;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -115,8 +114,9 @@ public class DialogProductDetails extends DialogFragment {
             @Override
             public void onClick(View v) {
                 view.findViewById(R.id.share_imageView).setEnabled(false);
-                new CreateShareIntentThread(getActivity(), mProduct,
-                        ((ImageView) view.findViewById(R.id.share_imageView))).start();
+                startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct),
+                        getString(R.string.share_image)));
+                view.findViewById(R.id.share_imageView).setEnabled(true);
             }
         });
 
@@ -249,32 +249,6 @@ public class DialogProductDetails extends DialogFragment {
                 DialogAddToShoppingSale.newInstance(product, mUser);
         dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
                 DialogAddToShoppingSale.class.getSimpleName());
-    }
-
-    class CreateShareIntentThread extends Thread {
-        private Activity mActivity;
-        private Product mProduct;
-        private ImageView mShareProductImageView;
-
-        CreateShareIntentThread(Activity activity, Product product, ImageView shareProductImageView) {
-            mActivity = activity;
-            mProduct = product;
-            mShareProductImageView = shareProductImageView;
-        }
-
-        public void run() {
-            final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
-                    getContext(), mUser), getString(R.string.share_image));
-            if(mActivity!=null){
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(shareIntent);
-                        mShareProductImageView.setEnabled(true);
-                    }
-                });
-            }
-        }
     }
 
     @Override

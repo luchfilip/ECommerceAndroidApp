@@ -207,8 +207,10 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
-                        mDataset.get(holder.getAdapterPosition()).getProduct(), mContext, mUser), mContext.getString(R.string.share_image)));
+                holder.shareImageView.setEnabled(false);
+                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragment.getActivity(),
+                        mContext, mUser, mDataset.get(holder.getAdapterPosition()).getProduct()), mContext.getString(R.string.share_image)));
+                holder.shareImageView.setEnabled(true);
             }
         });
 

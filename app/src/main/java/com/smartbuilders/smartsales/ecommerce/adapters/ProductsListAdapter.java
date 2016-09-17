@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.app.FragmentActivity;
@@ -193,40 +192,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             @Override
             public void onClick(View v) {
                 holder.shareImageView.setEnabled(false);
-                new CreateShareIntentThread(mFragmentActivity, mDataset.get(holder.getAdapterPosition()),
-                        holder.shareImageView).start();
+                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragmentActivity,
+                        mContext, mUser, mDataset.get(holder.getAdapterPosition())), mContext.getString(R.string.share_image)));
+                holder.shareImageView.setEnabled(true);
             }
         });
-
-        //if(mDataset.get(position).isFavorite()){
-        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
-        //            if (result == null) {
-        //                mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-        //                notifyItemChanged(holder.getAdapterPosition());
-        //            } else {
-        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-        //            }
-        //        }
-        //    });
-        //}else{
-        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
-        //            if (result == null) {
-        //                mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-        //                notifyItemChanged(holder.getAdapterPosition());
-        //            } else {
-        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-        //            }
-        //        }
-        //    });
-        //}
 
         holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
                 ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
@@ -398,32 +368,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private void goToProductDetails(int productId){
         mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
                 .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
-    }
-
-    class CreateShareIntentThread extends Thread {
-        private Activity mActivity;
-        private Product mProduct;
-        private ImageView mShareProductImageView;
-
-        CreateShareIntentThread(Activity activity, Product product, ImageView shareProductImageView) {
-            mActivity = activity;
-            mProduct = product;
-            mShareProductImageView = shareProductImageView;
-        }
-
-        public void run() {
-            final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
-                    mContext, mUser), mContext.getString(R.string.share_image));
-            if(mActivity!=null){
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mContext.startActivity(shareIntent);
-                        mShareProductImageView.setEnabled(true);
-                    }
-                });
-            }
-        }
     }
 
     private void sortProductList(final int sortOption){

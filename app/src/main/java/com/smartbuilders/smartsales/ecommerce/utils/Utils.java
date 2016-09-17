@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -122,36 +124,67 @@ public class Utils {
 
     /**
      *
-     * @param product
+     * @param activity
      * @param context
      * @param user
+     * @param product
      * @return
      */
-    public static Intent createShareProductIntent(Product product, Context context, User user){
-        String fileName = "productTmpImage.jpg";
-        if(product.getImageFileName()!=null){
-            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, product.getImageFileName());
-            if(productImage==null){
-                //Si el archivo no existe entonces se descarga
-                GetFileFromServlet getFileFromServlet =
-                        new GetFileFromServlet(product.getImageFileName(), false, user, context);
-                try {
-                    productImage = getFileFromServlet.execute().get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(productImage==null){
-                productImage = Utils.getImageFromThumbDirByFileName(context, product.getImageFileName());
-            }
-            if(productImage!=null){
-                createFileInCacheDir(fileName, productImage, context);
-            }else{
-                createFileInCacheDir(fileName, R.drawable.no_image_available, context);
-            }
-        }else{
-            createFileInCacheDir(fileName, R.drawable.no_image_available, context);
+    public static Intent createShareProductIntentFromView(final Activity activity, final Context context,
+                                                          final User user, final Product product){
+        if(activity==null || context==null || user==null || product==null){
+            return null;
         }
+
+        final String fileName = "productTmpImage.jpg";
+
+        /****************************************************************************************/
+        final View view = ((LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.product_share_layout, null);
+        loadOriginalImageByFileName(context, user, product.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
+        if(!TextUtils.isEmpty(product.getName())){
+            ((TextView) view.findViewById(R.id.product_name)).setText(product.getName());
+            view.findViewById(R.id.product_name).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            view.findViewById(R.id.product_name).setVisibility(View.VISIBLE);
+        }else{
+            view.findViewById(R.id.product_name).setVisibility(View.GONE);
+        }
+        if(!TextUtils.isEmpty(product.getInternalCode())){
+            ((TextView) view.findViewById(R.id.product_internal_code)).setText(context.getString(R.string.product_internalCode,
+                    product.getInternalCode()));
+            view.findViewById(R.id.product_internal_code).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            view.findViewById(R.id.product_internal_code).setVisibility(View.VISIBLE);
+        }else{
+            view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
+        }
+        if(product.getProductBrand()!=null
+                && !TextUtils.isEmpty(product.getProductBrand().getName())){
+            ((TextView) view.findViewById(R.id.product_brand)).setText(context.getString(R.string.brand_detail,
+                    product.getProductBrand().getName()));
+            view.findViewById(R.id.product_brand).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            view.findViewById(R.id.product_brand).setVisibility(TextView.VISIBLE);
+        }else{
+            view.findViewById(R.id.product_brand).setVisibility(TextView.GONE);
+        }
+        if(!TextUtils.isEmpty(product.getDescription())){
+            ((TextView) view.findViewById(R.id.product_description)).setText(context.getString(R.string.product_description_detail,
+                    product.getDescription()));
+            view.findViewById(R.id.product_description).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            view.findViewById(R.id.product_description).setVisibility(View.VISIBLE);
+        }else{
+            view.findViewById(R.id.product_description).setVisibility(View.GONE);
+        }
+        if(!TextUtils.isEmpty(product.getPurpose())){
+            ((TextView) view.findViewById(R.id.product_purpose)).setText(context.getString(R.string.product_purpose_detail,
+                    product.getPurpose()));
+            view.findViewById(R.id.product_purpose).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            view.findViewById(R.id.product_purpose).setVisibility(View.VISIBLE);
+        }else{
+            view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
+        }
+        /****************************************************************************************/
+
+        createFileInCacheDir(fileName, getBitmapFromView(view), context);
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -161,6 +194,16 @@ public class Utils {
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
                 + CachedFileProvider.AUTHORITY + File.separator + fileName));
         return shareIntent;
+    }
+
+    private static Bitmap getBitmapFromView(View view) {
+        view.measure(250, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.draw(canvas);
+        return bitmap;
     }
 
     /**
@@ -728,39 +771,34 @@ public class Utils {
 
     /**
      *
+     * @param context
+     * @param user
      * @param navigationView
      */
     public static void loadNavigationViewBadge(Context context, User user, NavigationView navigationView){
-        if(navigationView!=null &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            TextView wishListNavView = (TextView) navigationView.getMenu()
-                    .findItem(R.id.nav_wish_list).getActionView();
-            if (wishListNavView!=null) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && context!=null && user!=null
+                && navigationView!=null && navigationView.getMenu()!=null
+                && navigationView.getMenu().findItem(R.id.nav_wish_list)!=null
+                && navigationView.getMenu().findItem(R.id.nav_recommended_products_list)!=null) {
+            try {
                 int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
                 if(count>0){
-                    wishListNavView.setText(count<100 ? String.valueOf(count) : "+99");
+                    ((TextView) navigationView.getMenu().findItem(R.id.nav_wish_list).getActionView())
+                            .setText(count<100 ? String.valueOf(count) : "+99");
                 }
+            } catch (NullPointerException e) {
+                // do nothing
             }
 
-            //if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_badge", false)) {
-            //    navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon()
-            //            .setColorFilter(Utils.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-            //} else {
-            //    navigationView.getMenu().findItem(R.id.nav_wish_list).getIcon().setColorFilter(null);
-            //}
-
-            TextView recommendedProductsNavView = (TextView) navigationView.getMenu()
-                    .findItem(R.id.nav_recommended_products_list).getActionView();
-            if (recommendedProductsNavView!=null) {
-                try {
-                    int count = (new RecommendedProductDB(context, user))
-                            .getRecommendedProductsCountByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(context, user));
-                    if(count>0){
-                        recommendedProductsNavView.setText(count<100 ? String.valueOf(count) : "+99");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                int count = (new RecommendedProductDB(context, user))
+                        .getRecommendedProductsCountByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(context, user));
+                if (count > 0) {
+                    ((TextView) navigationView.getMenu().findItem(R.id.nav_recommended_products_list).getActionView())
+                            .setText(count < 100 ? String.valueOf(count) : "+99");
                 }
+            } catch (Exception e) {
+                // do nothing
             }
         }
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,40 +151,12 @@ public class RecommendedProductsListAdapter extends
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntent(
-                        mDataset.get(holder.getAdapterPosition()), mContext, mUser), mContext.getString(R.string.share_image)));
+                holder.shareImageView.setEnabled(false);
+                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragment.getActivity(),
+                        mContext, mUser, mDataset.get(holder.getAdapterPosition())), mContext.getString(R.string.share_image)));
+                holder.shareImageView.setEnabled(true);
             }
         });
-
-        //if(mDataset.get(position).isFavorite()){
-        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
-        //            if (result == null) {
-        //                mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-        //                notifyItemChanged(holder.getAdapterPosition());
-        //            } else {
-        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-        //            }
-        //        }
-        //    });
-        //}else{
-        //    holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        //    holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
-        //            if (result == null) {
-        //                mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-        //                notifyItemChanged(holder.getAdapterPosition());
-        //            } else {
-        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-        //            }
-        //        }
-        //    });
-        //}
 
         holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
                 ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);

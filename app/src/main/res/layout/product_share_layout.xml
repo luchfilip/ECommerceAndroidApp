@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/product_share_layout_width"
+    android:layout_height="wrap_content"
+    android:background="@color/light_grey">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/shape_style"
+        android:background="@drawable/shape"
+        android:padding="4dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_name"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="10dp"
+            android:layout_marginBottom="1dp" />
+
+        <ImageView
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:id="@+id/product_image"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_internal_code"
+            android:textColor="@color/black"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:textStyle="bold"
+            android:textSize="9dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_brand"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_description"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:textColor="@color/black"
+            android:textSize="9dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_purpose"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:textColor="@color/black"
+            android:textSize="9dp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -316,39 +315,11 @@ public class MainActivityAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 viewHolder.shareImageView.setEnabled(false);
-                                new CreateShareIntentThread(mFragmentActivity, ((Product) mDataset.get(position)), viewHolder.shareImageView).start();
+                                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragmentActivity,
+                                        mContext, mUser, ((Product) mDataset.get(position))), mContext.getString(R.string.share_image)));
+                                viewHolder.shareImageView.setEnabled(true);
                             }
                         });
-
-                        //if(((Product) mDataset.get(position)).isFavorite()){
-                        //    viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                        //    viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                        //        @Override
-                        //        public void onClick(View v) {
-                        //            String result = removeFromWishList(((Product) mDataset.get(position)).getId());
-                        //            if (result == null) {
-                        //                ((Product) mDataset.get(position)).setFavorite(false);
-                        //                notifyDataSetChanged();
-                        //            } else {
-                        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                        //            }
-                        //        }
-                        //    });
-                        //}else{
-                        //    viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                        //    viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                        //        @Override
-                        //        public void onClick(View v) {
-                        //            String result = addToWishList(((Product) mDataset.get(position)));
-                        //            if (result == null) {
-                        //                ((Product) mDataset.get(position)).setFavorite(true);
-                        //                notifyDataSetChanged();
-                        //            } else {
-                        //                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                        //            }
-                        //        }
-                        //    });
-                        //}
 
                         viewHolder.favoriteImageView.setImageResource(((Product) mDataset.get(position)).isFavorite()
                                 ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
@@ -491,32 +462,6 @@ public class MainActivityAdapter extends BaseAdapter {
     private void goToProductDetails(int productId){
         mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
                 .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
-    }
-
-    class CreateShareIntentThread extends Thread {
-        private Activity mActivity;
-        private Product mProduct;
-        private ImageView mShareProductImageView;
-
-        CreateShareIntentThread(Activity activity, Product product, ImageView shareProductImageView) {
-            mActivity = activity;
-            mProduct = product;
-            mShareProductImageView = shareProductImageView;
-        }
-
-        public void run() {
-            final Intent shareIntent = Intent.createChooser(Utils.createShareProductIntent(mProduct,
-                    mContext, mUser), mContext.getString(R.string.share_image));
-            if(mActivity!=null){
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mContext.startActivity(shareIntent);
-                        mShareProductImageView.setEnabled(true);
-                    }
-                });
-            }
-        }
     }
 
     public void setData(ArrayList<Object> data){

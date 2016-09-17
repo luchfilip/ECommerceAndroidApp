@@ -77,4 +77,6 @@
     <integer name="two_pane_left_side_weight">3</integer>
     <integer name="two_pane_right_side_weight">4</integer>
 
+    <dimen name="product_share_layout_width">250dp</dimen>
+
 </resources>

@@ -331,7 +331,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "getChatServiceState()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"state", "exception_message"});
         try {
-            cursor.addRow(new Object[]{mChatService.getState(), null});
+            cursor.addRow(new Object[]{(mChatService==null ? -1 : mChatService.getState()), null});
         } catch (Exception e) {
             e.printStackTrace();
             cursor.addRow(new Object[]{-1, e.getMessage()});
