@@ -27,6 +27,7 @@ import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +49,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
+    private static final String TAG = BluetoothChatActivity.class.getSimpleName();
 
     // Layout Views
     private ListView mConversationView;
@@ -87,7 +89,9 @@ public class BluetoothChatActivity extends AppCompatActivity {
                         switch (extras.getInt("state")) {
                             case BluetoothChatService.STATE_CONNECTED:
                                 setStatus(extras.getString("status"));
-                                mConversationArrayAdapter.clear();
+                                if (mConversationArrayAdapter!=null) {
+                                    mConversationArrayAdapter.clear();
+                                }
                                 break;
                             case BluetoothChatService.STATE_CONNECTING:
                                 setStatus(extras.getString("status"));
@@ -97,11 +101,17 @@ public class BluetoothChatActivity extends AppCompatActivity {
                                 setStatus(extras.getString("status"));
                                 break;
                         }
-                        mConversationArrayAdapter.clear();
+                        if (mConversationArrayAdapter!=null) {
+                            mConversationArrayAdapter.clear();
+                        }
                     } else if(intent.getAction().equals(BluetoothConnectionProvider.MESSAGE_READ_BROADCAST)) {
-                        mConversationArrayAdapter.add(extras.getString("readMessage"));
+                        if (mConversationArrayAdapter!=null) {
+                            mConversationArrayAdapter.add(extras.getString("readMessage"));
+                        }
                     } else if(intent.getAction().equals(BluetoothConnectionProvider.MESSAGE_WRITE_BROADCAST)) {
-                        mConversationArrayAdapter.add(extras.getString("writeMessage"));
+                        if (mConversationArrayAdapter!=null) {
+                            mConversationArrayAdapter.add(extras.getString("writeMessage"));
+                        }
                     }
                 }
             }
@@ -113,12 +123,20 @@ public class BluetoothChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        Log.d(TAG, "onCreate(...)");
+
+        mConversationView = (ListView) findViewById(R.id.in);
+        mOutEditText = (EditText) findViewById(R.id.edit_text_out);
+        mSendButton = (Button) findViewById(R.id.button_send);
+
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_ADAPTER_URI, null, null, null, null);
-            if(cursor==null || !cursor.moveToNext() || cursor.getString(0).equals(String.valueOf(Boolean.FALSE))){
-                Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-                finish();
+            if(cursor!=null && cursor.moveToNext()) {
+                if(!cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
+                    Toast.makeText(this, getString(R.string.bt_not_enabled_leaving), Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
         } finally {
             if (cursor!=null) {
@@ -129,36 +147,26 @@ public class BluetoothChatActivity extends AppCompatActivity {
                 }
             }
         }
-
-        mConversationView = (ListView) findViewById(R.id.in);
-        mOutEditText = (EditText) findViewById(R.id.edit_text_out);
-        mSendButton = (Button) findViewById(R.id.button_send);
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart(...)");
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(BluetoothConnectionProvider.IS_BLUETOOTH_ENABLED_URI, null, null, null, null);
             // If BT is not on, request that it be enabled.
             // setupChat() will then be called during onActivityResult
-            if(cursor==null || !cursor.moveToNext() || cursor.getString(0).equals(String.valueOf(Boolean.FALSE))){
-                Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-                // Otherwise, setup the chat session
-            }else{
-                //try {
-                //    cursor.close();
-                //} catch (SQLException e) {
-                //    //do nothing
-                //}
-                //cursor = getContentResolver().query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
-                //if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
-                    getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-                //}
-                setupChat();
+            if(cursor!=null && cursor.moveToNext()){
+                if (!cursor.getString(0).equals(String.valueOf(Boolean.TRUE))){
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                    // Otherwise, setup the chat session
+                }else{
+                    setupChat();
+                }
             }
         } finally {
             if (cursor!=null) {
@@ -183,29 +191,27 @@ public class BluetoothChatActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume(...)");
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
             // Performing this check in onResume() covers the case in which BT was
             // not enabled during onStart(), so we were paused to enable it...
             // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-            if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.FALSE))) {
-                //try {
-                //    cursor.close();
-                //} catch (SQLException e) {
-                //    e.printStackTrace();
-                //}
-                //cursor = getContentResolver()
-                //        .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
+            if (cursor!=null && cursor.moveToNext() && !cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
+                try {
+                    cursor.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                cursor = getContentResolver()
+                        .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
                 //Only if the state is STATE_NONE, do we know that we haven't started already
-                //if (cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
-                //    // Start the Bluetooth chat services
+                if (cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
+                    // Start the Bluetooth chat services
                     getContentResolver()
                             .query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI, null, null, null, null);
-                //}
-            }else{
-                getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-                getContentResolver().query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI, null, null, null, null);
+                }
             }
         } finally {
             if (cursor!=null) {
@@ -249,6 +255,9 @@ public class BluetoothChatActivity extends AppCompatActivity {
                 sendMessage(message);
             }
         });
+
+        // Initialize the BluetoothChatService to perform bluetooth connections
+        getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
@@ -348,24 +357,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                     // Bluetooth is now enabled, so set up a chat session
-                    //Cursor cursor = null;
-                    //try {
-                        //cursor = getContentResolver()
-                        //        .query(BluetoothConnectionProvider.IS_CHAT_SERVICE_NULL_URI, null, null, null, null);
-                        //if (cursor!=null && cursor.moveToNext() && cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
-                            getContentResolver()
-                                    .query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-                        //}
-                        setupChat();
-                    //} finally {
-                    //    if (cursor!=null) {
-                    //        try {
-                    //            cursor.close();
-                    //        } catch (SQLException e) {
-                    //            e.printStackTrace();
-                    //        }
-                    //    }
-                    //}
+                    setupChat();
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();

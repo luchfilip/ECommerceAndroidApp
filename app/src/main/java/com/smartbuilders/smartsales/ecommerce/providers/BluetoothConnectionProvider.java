@@ -124,7 +124,6 @@ public class BluetoothConnectionProvider extends ContentProvider {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    Log.d(TAG, "Constants.MESSAGE_WRITE, writeMessage: "+writeMessage);
                     intent = new Intent(MESSAGE_WRITE_BROADCAST);
                     intent.putExtra("writeMessage", "Me:  " + writeMessage);
                     break;
@@ -132,7 +131,6 @@ public class BluetoothConnectionProvider extends ContentProvider {
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    Log.d(TAG, "Constants.MESSAGE_READ, readMessage: "+readMessage);
                     intent = new Intent(MESSAGE_READ_BROADCAST);
                     intent.putExtra("readMessage", mConnectedDeviceName + ":  " + readMessage);
                     break;
@@ -300,11 +298,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "initBluetoothChatService()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
-            if(mChatService==null){
-                mChatService = new BluetoothChatService(getContext(), mHandler);
-            }else{
-                mChatService.stop();
-                mChatService = null;
+            if (mChatService==null) {
                 mChatService = new BluetoothChatService(getContext(), mHandler);
             }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
@@ -343,13 +337,8 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "startChatService()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
-            if(mChatService==null){
-                mChatService = new BluetoothChatService(getContext(), mHandler);
+            if(mChatService.getState()==BluetoothChatService.STATE_NONE){
                 mChatService.start();
-            }else{
-                if(mChatService.getState()==BluetoothChatService.STATE_NONE){
-                    mChatService.start();
-                }
             }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {
