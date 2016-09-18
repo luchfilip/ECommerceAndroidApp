@@ -101,9 +101,14 @@ public class ProductDetailFragment extends Fragment {
                                 if (mProduct!=null) {
                                     ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
-                                    if (mProduct.getInternalCode() != null) {
+                                    Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
+                                            (ImageView) view.findViewById(R.id.product_image));
+
+                                    if (!TextUtils.isEmpty(mProduct.getInternalCode())) {
                                         ((TextView) view.findViewById(R.id.product_internal_code))
                                                 .setText(getContext().getString(R.string.product_internalCode, mProduct.getInternalCode()));
+                                    } else {
+                                        view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
                                     }
 
                                     if (Parameter.showProductRatingBar(getContext(), mUser)) {
@@ -112,13 +117,14 @@ public class ProductDetailFragment extends Fragment {
                                         if (mProduct.getRating() >= 0) {
                                             ((RatingBar) view.findViewById(R.id.product_ratingBar)).setRating(mProduct.getRating());
                                         }
-                                        view.findViewById(R.id.product_ratingBar_container).setVisibility(View.VISIBLE);
                                     } else {
                                         view.findViewById(R.id.product_ratingBar_container).setVisibility(View.GONE);
                                     }
 
-                                    if (mProduct.getDescription() != null) {
+                                    if (!TextUtils.isEmpty(mProduct.getDescription())) {
                                         ((TextView) view.findViewById(R.id.product_description)).setText(mProduct.getDescription());
+                                    } else {
+                                        view.findViewById(R.id.product_description).setVisibility(View.GONE);
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getDescription())) {
@@ -127,6 +133,7 @@ public class ProductDetailFragment extends Fragment {
                                     } else {
                                         view.findViewById(R.id.product_description).setVisibility(View.GONE);
                                     }
+
                                     if (!TextUtils.isEmpty(mProduct.getPurpose())) {
                                         ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
                                                 mProduct.getPurpose()));
@@ -137,6 +144,8 @@ public class ProductDetailFragment extends Fragment {
                                     if (mProduct.getProductBrand() != null && !TextUtils.isEmpty(mProduct.getProductBrand().getName())) {
                                         ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
                                                 mProduct.getProductBrand().getName()));
+                                    } else {
+                                        view.findViewById(R.id.product_brand).setVisibility(View.GONE);
                                     }
 
                                     final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
@@ -166,9 +175,6 @@ public class ProductDetailFragment extends Fragment {
                                         }
                                     });
 
-                                    Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
-                                            (ImageView) view.findViewById(R.id.product_image));
-
                                     view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -180,6 +186,7 @@ public class ProductDetailFragment extends Fragment {
                                             }
                                         }
                                     });
+
                                     if (TextUtils.isEmpty(mProduct.getImageFileName())) {
                                         view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
                                     }
@@ -229,47 +236,46 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
                                     }
 
-                                    if (mProduct.getProductCommercialPackage() != null) {
-                                        ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
-                                                mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
+                                    if (mProduct.getProductCommercialPackage()!=null
+                                            && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())
+                                            && mProduct.getProductCommercialPackage().getUnits()>0) {
+                                        ((TextView) view.findViewById(R.id.product_commercial_package))
+                                                .setText(getContext().getString(R.string.commercial_package_label_detail,
+                                                        mProduct.getProductCommercialPackage().getUnitDescription(),
+                                                        mProduct.getProductCommercialPackage().getUnits()));
                                     } else {
                                         view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);
                                     }
 
-                                    if (view.findViewById(R.id.product_addtoshoppingsales_button) != null) {
-                                        view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
-                                                new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        addToShoppingSale(mUser, mProduct);
-                                                    }
-                                                }
-                                        );
-                                    }
+                                    view.findViewById(R.id.product_addtoshoppingsales_button).setOnClickListener(
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                addToShoppingSale(mUser, mProduct);
+                                            }
+                                        }
+                                    );
 
-                                    if (view.findViewById(R.id.product_addtoshoppingcart_button) != null) {
-                                        view.findViewById(R.id.product_addtoshoppingcart_button).setOnClickListener(
-                                                new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        OrderLine orderLine = (new OrderLineDB(getContext(), mUser))
-                                                                .getOrderLineFromShoppingCartByProductId(mProductId);
-                                                        if (orderLine != null) {
-                                                            updateQtyOrderedInShoppingCart(orderLine, mUser);
-                                                        } else {
-                                                            addToShoppingCart(mUser, mProduct);
-                                                        }
-                                                    }
+                                    view.findViewById(R.id.product_addtoshoppingcart_button).setOnClickListener(
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                OrderLine orderLine = (new OrderLineDB(getContext(), mUser))
+                                                        .getOrderLineFromShoppingCartByProductId(mProductId);
+                                                if (orderLine != null) {
+                                                    updateQtyOrderedInShoppingCart(orderLine, mUser);
+                                                } else {
+                                                    addToShoppingCart(mUser, mProduct);
                                                 }
-                                        );
-                                    }
+                                            }
+                                        }
+                                    );
 
                                     if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
                                         ((TextView) view.findViewById(R.id.product_price))
                                                 .setText(getString(R.string.price_detail,
                                                         mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
                                                         mProduct.getDefaultProductPriceAvailability().getPrice()));
-                                        view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
                                     } else {
                                         view.findViewById(R.id.product_price).setVisibility(View.GONE);
                                     }

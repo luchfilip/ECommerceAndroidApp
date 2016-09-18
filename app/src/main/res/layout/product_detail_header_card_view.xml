@@ -81,13 +81,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/product_commercial_package"
-            android:textColor="@color/black"
-            android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/product_brand"
             android:textColor="@color/black"
             android:textSize="@dimen/productDetailActivity_productBrand_text_size" />
@@ -96,6 +89,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/product_description"
+            android:textSize="@dimen/productDetailActivity_description_text_size"
+            android:focusable="false"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_purpose"
             android:textSize="@dimen/productDetailActivity_description_text_size"
             android:focusable="false"
             android:textColor="@color/black" />
@@ -112,20 +113,19 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_commercial_package"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/productDetailActivity_productCommercialPackage_text_size" />
+
+                <TextView
                     android:id="@+id/product_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@color/product_details_price_color"
                     android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_purpose"
-                    android:textSize="@dimen/productDetailActivity_description_text_size"
-                    android:focusable="false"
-                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/product_availability"
@@ -139,8 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/product_ratingBar_container"
-                    android:visibility="gone">
+                    android:id="@+id/product_ratingBar_container" >
 
                     <TextView
                         android:layout_width="wrap_content"

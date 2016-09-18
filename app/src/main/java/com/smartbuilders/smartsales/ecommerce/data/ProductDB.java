@@ -31,7 +31,7 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
+            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
                         " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
@@ -79,7 +79,7 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
+            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
                         " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
@@ -125,7 +125,7 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
+            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
                         " PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
                     " FROM PRODUCT P " +
@@ -627,46 +627,50 @@ public class ProductDB {
      * Carga el objeto Product que se pasa por parametro a partir de un cursor que posea las siguientes columnas:
      * 0) PRODUCT.PRODUCT_ID
      * 1) PRODUCT.NAME
-     * 2) PRODUCT_IMAGE.FILE_NAME
-     * 3) BRAND.BRAND_ID
-     * 4) BRAND.NAME
-     * 5) BRAND.DESCRIPTION
-     * 6) SUBCATEGORY.CATEGORY_ID
-     * 7) SUBCATEGORY.SUBCATEGORY_ID
-     * 8) SUBCATEGORY.NAME
-     * 9) SUBCATEGORY.DESCRIPTION
-     * 10) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY
-     * 11) PRODUCT_RATING.RATING
-     * 12) CURRENCY.CURRENCY_ID
-     * 13) CURRENCY.UNICODE_DECIMAL
-     * 14) PRODUCT_PRICE_AVAILABILITY.PRICE
-     * 15) ECOMMERCE_ORDER_LINE.PRODUCT_ID
-     * 16) PRODUCT.INTERNAL_CODE
+     * 2) PRODUCT.DESCRIPTION
+     * 3) PRODUCT.PURPOSE
+     * 4) PRODUCT_IMAGE.FILE_NAME
+     * 5) BRAND.BRAND_ID
+     * 6) BRAND.NAME
+     * 7) BRAND.DESCRIPTION
+     * 8) SUBCATEGORY.CATEGORY_ID
+     * 9) SUBCATEGORY.SUBCATEGORY_ID
+     * 10) SUBCATEGORY.NAME
+     * 11) SUBCATEGORY.DESCRIPTION
+     * 12) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY
+     * 13) PRODUCT_RATING.RATING
+     * 14) CURRENCY.CURRENCY_ID
+     * 15) CURRENCY.UNICODE_DECIMAL
+     * 16) PRODUCT_PRICE_AVAILABILITY.PRICE
+     * 17) ECOMMERCE_ORDER_LINE.PRODUCT_ID
+     * 18) PRODUCT.INTERNAL_CODE
      * @param product
      * @param cursor
      */
     public static void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(1));
-        product.setImageFileName(cursor.getString(2));
-        product.setProductBrandId(cursor.getInt(3));
-        product.getProductBrand().setId(cursor.getInt(3));
-        product.getProductBrand().setName(cursor.getString(4));
-        product.getProductBrand().setDescription(cursor.getString(5));
-        product.setProductCategoryId(cursor.getInt(6));
-        product.setProductSubCategoryId(cursor.getInt(7));
-        product.getProductSubCategory().setProductCategoryId(cursor.getInt(6));
-        product.getProductSubCategory().setId(cursor.getInt(7));
-        product.getProductSubCategory().setName(cursor.getString(8));
-        product.getProductSubCategory().setDescription(cursor.getString(9));
-        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(10));
-        product.setRating(cursor.getFloat(11));
-        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(12));
-        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(12));
-        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(13));
-        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(14));
-        product.setFavorite(cursor.getString(15)!=null);
-        product.setInternalCode(cursor.getString(16));
+        product.setDescription(cursor.getString(2));
+        product.setPurpose(cursor.getString(3));
+        product.setImageFileName(cursor.getString(4));
+        product.setProductBrandId(cursor.getInt(5));
+        product.getProductBrand().setId(cursor.getInt(5));
+        product.getProductBrand().setName(cursor.getString(6));
+        product.getProductBrand().setDescription(cursor.getString(7));
+        product.setProductCategoryId(cursor.getInt(8));
+        product.setProductSubCategoryId(cursor.getInt(9));
+        product.getProductSubCategory().setProductCategoryId(cursor.getInt(8));
+        product.getProductSubCategory().setId(cursor.getInt(9));
+        product.getProductSubCategory().setName(cursor.getString(10));
+        product.getProductSubCategory().setDescription(cursor.getString(11));
+        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(12));
+        product.setRating(cursor.getFloat(13));
+        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(14));
+        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(14));
+        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(15));
+        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(16));
+        product.setFavorite(cursor.getString(17)!=null);
+        product.setInternalCode(cursor.getString(18));
     }
 
     public Product getProductByInternalCode(String productCode) {

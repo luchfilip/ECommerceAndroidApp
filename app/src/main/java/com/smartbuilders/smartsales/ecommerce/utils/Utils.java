@@ -136,24 +136,34 @@ public class Utils {
             return null;
         }
 
-        final String fileName = "productTmpImage.jpg";
-
         /****************************************************************************************/
-        final View view = ((LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.product_share_layout, null);
-        loadOriginalImageByFileName(context, user, product.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
+        final View view = activity.getLayoutInflater().inflate(R.layout.product_share_layout, null);
+        if(!TextUtils.isEmpty(product.getImageFileName())){
+            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, product.getImageFileName());
+            if(productImage==null){
+                //Si el archivo no existe entonces se descarga
+                try {
+                    productImage = (new GetFileFromServlet(product.getImageFileName(), false, user, context)).execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            //Si no se tiene el archivo en tamano original se recurre al de miniatura
+            if(productImage==null){
+                productImage = Utils.getImageFromThumbDirByFileName(context, product.getImageFileName());
+            }
+            if(productImage!=null){
+                ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(productImage);
+            }
+        }
         if(!TextUtils.isEmpty(product.getName())){
             ((TextView) view.findViewById(R.id.product_name)).setText(product.getName());
-            view.findViewById(R.id.product_name).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            view.findViewById(R.id.product_name).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_name).setVisibility(View.GONE);
         }
         if(!TextUtils.isEmpty(product.getInternalCode())){
             ((TextView) view.findViewById(R.id.product_internal_code)).setText(context.getString(R.string.product_internalCode,
                     product.getInternalCode()));
-            view.findViewById(R.id.product_internal_code).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            view.findViewById(R.id.product_internal_code).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
         }
@@ -161,33 +171,27 @@ public class Utils {
                 && !TextUtils.isEmpty(product.getProductBrand().getName())){
             ((TextView) view.findViewById(R.id.product_brand)).setText(context.getString(R.string.brand_detail,
                     product.getProductBrand().getName()));
-            view.findViewById(R.id.product_brand).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            view.findViewById(R.id.product_brand).setVisibility(TextView.VISIBLE);
         }else{
             view.findViewById(R.id.product_brand).setVisibility(TextView.GONE);
         }
         if(!TextUtils.isEmpty(product.getDescription())){
             ((TextView) view.findViewById(R.id.product_description)).setText(context.getString(R.string.product_description_detail,
                     product.getDescription()));
-            view.findViewById(R.id.product_description).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            view.findViewById(R.id.product_description).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_description).setVisibility(View.GONE);
         }
         if(!TextUtils.isEmpty(product.getPurpose())){
             ((TextView) view.findViewById(R.id.product_purpose)).setText(context.getString(R.string.product_purpose_detail,
                     product.getPurpose()));
-            view.findViewById(R.id.product_purpose).measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            view.findViewById(R.id.product_purpose).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
         }
         /****************************************************************************************/
-
+        final String fileName = "productShared.png";
         createFileInCacheDir(fileName, getBitmapFromView(view), context);
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        //shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("image/jpeg");
         shareIntent.putExtra(Intent.EXTRA_TEXT, product.getName() + " - http://"
                 + context.getString(R.string.company_host_name) + "/?product="+product.getInternalCode());
@@ -197,7 +201,7 @@ public class Utils {
     }
 
     private static Bitmap getBitmapFromView(View view) {
-        view.measure(250, View.MeasureSpec.UNSPECIFIED);
+        view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);

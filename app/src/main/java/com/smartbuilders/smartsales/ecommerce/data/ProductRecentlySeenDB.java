@@ -48,7 +48,7 @@ public class ProductRecentlySeenDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,
-                    "SELECT DISTINCT PRS.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
+                    "SELECT DISTINCT PRS.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
                         " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
@@ -98,7 +98,7 @@ public class ProductRecentlySeenDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT DISTINCT PRS.PRODUCT_ID, P.NAME, PI.FILE_NAME, B.BRAND_ID, " +
+                    "SELECT DISTINCT PRS.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
                         " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
