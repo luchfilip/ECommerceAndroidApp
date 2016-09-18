@@ -375,25 +375,41 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             @Override
             public int compare(Product lhs, Product rhs) {
                 try{
-                    switch (sortOption){
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC:
-                            return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_DESC:
-                            return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_ASC:
-                            return lhs.getInternalCode().compareTo(rhs.getInternalCode());
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC:
-                            return rhs.getInternalCode().compareTo(lhs.getInternalCode());
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC:
-                            return Integer.valueOf(lhs.getDefaultProductPriceAvailability().getAvailability())
-                                    .compareTo(rhs.getDefaultProductPriceAvailability().getAvailability());
-                        case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC:
-                            return Integer.valueOf(rhs.getDefaultProductPriceAvailability().getAvailability())
-                                    .compareTo(lhs.getDefaultProductPriceAvailability().getAvailability());
-                        default:
-                            return 0;
+                    if (lhs!=null && rhs!=null) {
+                        switch (sortOption){
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC:
+                                if (lhs.getName()!=null && rhs.getName()!=null) {
+                                    return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+                                }
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_DESC:
+                                if (lhs.getName()!=null && rhs.getName()!=null) {
+                                    return rhs.getName().toLowerCase().compareTo(lhs.getName().toLowerCase());
+                                }
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_ASC:
+                                if (lhs.getInternalCode()!=null && rhs.getInternalCode()!=null) {
+                                    return lhs.getInternalCode().compareTo(rhs.getInternalCode());
+                                }
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC:
+                                if (lhs.getInternalCode()!=null && rhs.getInternalCode()!=null) {
+                                    return rhs.getInternalCode().compareTo(lhs.getInternalCode());
+                                }
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC:
+                                if (lhs.getDefaultProductPriceAvailability()!=null
+                                        && rhs.getDefaultProductPriceAvailability()!=null) {
+                                    return Integer.valueOf(lhs.getDefaultProductPriceAvailability().getAvailability())
+                                            .compareTo(rhs.getDefaultProductPriceAvailability().getAvailability());
+                                }
+                            case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC:
+                                if (lhs.getDefaultProductPriceAvailability()!=null
+                                        && rhs.getDefaultProductPriceAvailability()!=null) {
+                                    return Integer.valueOf(rhs.getDefaultProductPriceAvailability().getAvailability())
+                                            .compareTo(lhs.getDefaultProductPriceAvailability().getAvailability());
+                                }
+                            default:
+                                return 0;
+                        }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return 0;
