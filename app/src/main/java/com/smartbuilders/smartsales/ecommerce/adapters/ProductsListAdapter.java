@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,7 @@ import java.util.Comparator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingSale;
@@ -192,9 +194,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             @Override
             public void onClick(View v) {
                 holder.shareImageView.setEnabled(false);
-                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragmentActivity,
-                        mContext, mUser, mDataset.get(holder.getAdapterPosition())), mContext.getString(R.string.share_image)));
-                holder.shareImageView.setEnabled(true);
+                new CreateShareIntentThread(mFragmentActivity, mContext, mUser, mDataset.get(holder.getAdapterPosition()),
+                        holder.shareImageView).start();
             }
         });
 

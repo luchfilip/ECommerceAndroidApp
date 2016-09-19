@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -208,9 +209,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 holder.shareImageView.setEnabled(false);
-                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragment.getActivity(),
-                        mContext, mUser, mDataset.get(holder.getAdapterPosition()).getProduct()), mContext.getString(R.string.share_image)));
-                holder.shareImageView.setEnabled(true);
+                new CreateShareIntentThread(mFragment.getActivity(), mContext, mUser,
+                        mDataset.get(holder.getAdapterPosition()).getProduct(), holder.shareImageView).start();
             }
         });
 

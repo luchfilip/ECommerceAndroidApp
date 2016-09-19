@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingSale;
@@ -315,9 +316,8 @@ public class MainActivityAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 viewHolder.shareImageView.setEnabled(false);
-                                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragmentActivity,
-                                        mContext, mUser, ((Product) mDataset.get(position))), mContext.getString(R.string.share_image)));
-                                viewHolder.shareImageView.setEnabled(true);
+                                new CreateShareIntentThread(mFragmentActivity, mContext, mUser,
+                                        ((Product) mDataset.get(position)), viewHolder.shareImageView).start();
                             }
                         });
 

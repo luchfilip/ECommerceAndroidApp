@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -152,9 +153,8 @@ public class RecommendedProductsListAdapter extends
             @Override
             public void onClick(View v) {
                 holder.shareImageView.setEnabled(false);
-                mContext.startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(mFragment.getActivity(),
-                        mContext, mUser, mDataset.get(holder.getAdapterPosition())), mContext.getString(R.string.share_image)));
-                holder.shareImageView.setEnabled(true);
+                new CreateShareIntentThread(mFragment.getActivity(), mContext, mUser,
+                        mDataset.get(holder.getAdapterPosition()), holder.shareImageView).start();
             }
         });
 

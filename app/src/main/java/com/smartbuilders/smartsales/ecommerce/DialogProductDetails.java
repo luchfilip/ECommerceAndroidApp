@@ -20,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -114,9 +115,8 @@ public class DialogProductDetails extends DialogFragment {
             @Override
             public void onClick(View v) {
                 view.findViewById(R.id.share_imageView).setEnabled(false);
-                startActivity(Intent.createChooser(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct),
-                        getString(R.string.share_image)));
-                view.findViewById(R.id.share_imageView).setEnabled(true);
+                new CreateShareIntentThread(getActivity(), getContext(), mUser,
+                        mProduct, ((ImageView) view.findViewById(R.id.share_imageView))).start();
             }
         });
 
