@@ -17,7 +17,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import java.util.ArrayList;
 
 /**
- * Created by Alberto on 26/3/2016.
+ * Jesus Sarco, 26/3/2016.
  */
 public class SubCategoriesListFragment extends Fragment {
 

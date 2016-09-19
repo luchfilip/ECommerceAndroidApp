@@ -139,8 +139,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                                 - (findViewById(R.id.fields_scrollView).getScrollY() + findViewById(R.id.fields_scrollView).getHeight());
                         ((ScrollView) findViewById(R.id.fields_scrollView)).smoothScrollBy(0, delta);
                     }
-                } else {
-                    // keyboard is down
                 }
             }
         });

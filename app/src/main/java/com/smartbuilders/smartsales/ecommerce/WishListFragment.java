@@ -39,7 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Alberto on 22/3/2016.
+ * Jesus Sarco, 22/3/2016.
  */
 public class WishListFragment extends Fragment implements WishListAdapter.Callback {
 

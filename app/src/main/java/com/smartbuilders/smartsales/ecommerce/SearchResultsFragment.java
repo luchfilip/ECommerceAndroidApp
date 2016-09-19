@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Alberto on 22/3/2016.
+ * Jesus Sarco, 22/3/2016.
  */
 public class SearchResultsFragment extends Fragment {
 

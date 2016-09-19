@@ -155,7 +155,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                         try {
                                             validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
                                                     new Locale("es","VE")).parse(mValidToEditText.getText().toString());
-                                        } catch (ParseException e){ }
+                                        } catch (ParseException e){
+                                            // do nothing
+                                        }
                                         catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -181,7 +183,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                         try {
                                                             validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
                                                                     new Locale("es","VE")).parse(mValidToEditText.getText().toString());
-                                                        } catch (ParseException e){ }
+                                                        } catch (ParseException e){
+                                                            // do nothing
+                                                        }
                                                         catch (Exception e) {
                                                             e.printStackTrace();
                                                         }

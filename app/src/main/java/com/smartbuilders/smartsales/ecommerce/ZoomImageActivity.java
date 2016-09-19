@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,8 +19,11 @@ public class ZoomImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoom_image);
 
-        Utils.setCustomActionbarTitle(this, getSupportActionBar(), true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null) {
+            Utils.setCustomActionbarTitle(this, actionBar, true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

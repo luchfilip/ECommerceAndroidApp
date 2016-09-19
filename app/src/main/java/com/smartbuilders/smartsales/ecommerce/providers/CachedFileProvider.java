@@ -2,14 +2,9 @@ package com.smartbuilders.smartsales.ecommerce.providers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,26 +22,21 @@ public class CachedFileProvider extends ContentProvider {
     // The authority is the symbolic name for the provider class 
     public static final String AUTHORITY = BuildConfig.CachedFileProvider_AUTHORITY;
 
-    static final Uri CONTENT_URI = Uri.parse(AUTHORITY);
-    
-    // UriMatcher used to match against incoming requests 
+    // UriMatcher used to match against incoming requests
     private UriMatcher uriMatcher; 
 	
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -64,14 +54,12 @@ public class CachedFileProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
@@ -88,39 +76,16 @@ public class CachedFileProvider extends ContentProvider {
             // path 
             // E.g. 
             // 'content://com.stephendnicholas.gmailattach.provider/Test.txt' 
-            // Take this and build the path to the file 
-            String fileLocation = getContext().getCacheDir() + File.separator 
-                    + uri.getLastPathSegment(); 
-
-            // Create & return a ParcelFileDescriptor pointing to the file 
+            // Create & return a ParcelFileDescriptor pointing to the file
             // Note: I don't care what mode they ask for - they're only getting 
-            // read only 
-            ParcelFileDescriptor pfd = ParcelFileDescriptor.open(new File( 
-                    fileLocation), ParcelFileDescriptor.MODE_READ_ONLY); 
-            return pfd; 
+            // read only
+            return ParcelFileDescriptor.open(new File(getContext().getCacheDir() + File.separator + uri.getLastPathSegment()),
+					ParcelFileDescriptor.MODE_READ_ONLY);
 
             // Otherwise unrecognised Uri 
         default: 
             throw new FileNotFoundException("Unsupported uri: "
                     + uri.toString()); 
         } 
-    } 
-
-	public static void createCachedFile(Context context, String fileName, 
-            String content) throws IOException { 
-
-	    File cacheFile = new File(context.getCacheDir() + File.separator 
-	                + fileName); 
-	    cacheFile.createNewFile(); 
-	
-	    FileOutputStream fos = new FileOutputStream(cacheFile); 
-	    OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF8"); 
-	    PrintWriter pw = new PrintWriter(osw); 
-	
-	    pw.println(content); 
-	
-	    pw.flush(); 
-	    pw.close(); 
-	}
-	
+    }
 }

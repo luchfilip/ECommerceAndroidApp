@@ -30,7 +30,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import java.util.List;
 
 /**
- * Created by stein on 2/6/2016.
+ * Jesus Sarco, 2/6/2016.
  */
 public class SplashScreen extends AppCompatActivity {
 
@@ -119,7 +119,7 @@ public class SplashScreen extends AppCompatActivity {
             e.printStackTrace();
         }
         super.onStart();
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
