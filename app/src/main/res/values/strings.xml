@@ -386,9 +386,11 @@
     <string name="button_scan">Buscando dispositivos</string>
 
     <!-- Options Menu -->
-    <string name="secure_connect">Connect a device - Secure</string>
-    <string name="insecure_connect">Connect a device - Insecure</string>
-    <string name="discoverable">Make discoverable</string>
+    <string name="secure_connect">Conectar un dispositivo - Seguro</string>
+    <string name="insecure_connect">Conectar un dispositivo - Inseguro</string>
+    <string name="stop_connection">Detener conexión</string>
+    <string name="discoverable">Activar visibilidad</string>
+
     <string name="barcode_detail">Código capturado: %1$s</string>
     <string name="no_barcode_captured">No se capturó ningún código de barra.</string>
 

@@ -19,8 +19,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
@@ -31,7 +31,6 @@ import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
 import com.smartbuilders.synchronizer.ids.utils.DataBaseUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ServerUtilities;
-import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.synchronizer.ids.data.ServerAddressBackupDB;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -155,8 +154,6 @@ public class MyGcmListenerService extends GcmListenerService {
      */
     public static final String KEY_NOTIFY_SERVER_IS_ALIVE = "com.smartbuilders.ids.gcm.KEY_NOTIFY_SERVER_IS_ALIVE";
 
-    private static final String TAG = MyGcmListenerService.class.getSimpleName();
-
     /**
      * Called when message is received.
      *
@@ -170,7 +167,6 @@ public class MyGcmListenerService extends GcmListenerService {
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
-            Log.d(TAG, "onMessageReceived("+from+", Bundle data)");
             // normal downstream message.
             //Run the Sync Adapter When Server Data Changes
             if(data.containsKey("action") && data.containsKey("requestMethodName")){
@@ -196,13 +192,20 @@ public class MyGcmListenerService extends GcmListenerService {
                                         }else if(!ApplicationUtilities.appRequireInitialLoad(this, account)){
                                             //se manda a correr la sincronizacion de manera inmediata
                                             if (data.containsKey(KEY_PARAM_TABLES_TO_SYNC) && data.getString(KEY_PARAM_TABLES_TO_SYNC)!=null) {
-                                                getContentResolver()
-                                                        .query(SynchronizerContentProvider.SYNC_DATA_FROM_SERVER_URI.buildUpon()
-                                                                .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID,
-                                                                        AccountManager.get(this).getUserData(account, AccountGeneral.USERDATA_USER_ID))
-                                                                .appendQueryParameter(SynchronizerContentProvider.KEY_TABLES_TO_SYNC,
-                                                                        data.getString(KEY_PARAM_TABLES_TO_SYNC)).build(),
-                                                                null, null, null, null);
+                                                Cursor cursor = null;
+                                                try {
+                                                    cursor = getContentResolver()
+                                                            .query(SynchronizerContentProvider.SYNC_DATA_FROM_SERVER_URI.buildUpon()
+                                                                            .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID,
+                                                                                    AccountManager.get(this).getUserData(account, AccountGeneral.USERDATA_USER_ID))
+                                                                            .appendQueryParameter(SynchronizerContentProvider.KEY_TABLES_TO_SYNC,
+                                                                                    data.getString(KEY_PARAM_TABLES_TO_SYNC)).build(),
+                                                                    null, null, null, null);
+                                                } finally {
+                                                    if (cursor!=null) {
+                                                        cursor.close();
+                                                    }
+                                                }
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "user: "+account.name+", tablesToSync: "+data.getString(KEY_PARAM_TABLES_TO_SYNC)+
                                                                 ", synchronization initialized.", null);
@@ -677,8 +680,6 @@ public class MyGcmListenerService extends GcmListenerService {
             } catch (Exception e){
                 e.printStackTrace();
             }
-        } else {
-            Log.e(TAG, "sendResponseToServer(...) - user is null");
         }
     }
 

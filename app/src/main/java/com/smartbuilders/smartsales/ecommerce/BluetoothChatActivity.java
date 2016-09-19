@@ -140,11 +140,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
             }
         } finally {
             if (cursor!=null) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cursor.close();
             }
         }
     }
@@ -170,11 +166,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
             }
         } finally {
             if (cursor!=null) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cursor.close();
             }
         }
 
@@ -199,34 +191,33 @@ public class BluetoothChatActivity extends AppCompatActivity {
             // not enabled during onStart(), so we were paused to enable it...
             // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
             if (cursor!=null && cursor.moveToNext() && !cursor.getString(0).equals(String.valueOf(Boolean.TRUE))) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                cursor = getContentResolver()
-                        .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
+                cursor.close();
+                cursor = getContentResolver().query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
                 //Only if the state is STATE_NONE, do we know that we haven't started already
-                if (cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
-                    // Start the Bluetooth chat services
-                    getContentResolver()
-                            .query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI, null, null, null, null);
+                if (cursor!=null && cursor.moveToNext()) {
+                    if (cursor.getInt(0)==BluetoothChatService.STATE_NONE) {
+                        cursor.close();
+                        // Start the Bluetooth chat services
+                        cursor = getContentResolver().query(BluetoothConnectionProvider.START_CHAT_SERVICE_URI,
+                                null, null, null, null);
+                    } else {
+                        cursor.close();
+                        // Start the Bluetooth chat services
+                        cursor = getContentResolver().query(BluetoothConnectionProvider.REPORT_CHAT_SERVICE_STATE_URI,
+                                null, null, null, null);
+                    }
                 }
             }
         } finally {
             if (cursor!=null) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cursor.close();
             }
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         try{
             unregisterReceiver(bluetoothConnectionProviderReceiver);
         }catch(Exception e){
@@ -256,9 +247,15 @@ public class BluetoothChatActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
-
+        Cursor cursor = null;
+        try {
+            // Initialize the BluetoothChatService to perform bluetooth connections
+            cursor = getContentResolver().query(BluetoothConnectionProvider.INIT_BLUETOOTH_CHAT_SERVICE_URI, null, null, null, null);
+        } finally {
+            if (cursor!=null) {
+                cursor.close();
+            }
+        }
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
     }
@@ -293,31 +290,34 @@ public class BluetoothChatActivity extends AppCompatActivity {
      * @param message A string of text to send.
      */
     private void sendMessage(String message) {
+        Log.v(TAG, "sendMessage()");
         Cursor cursor = null;
         try {
             cursor = getContentResolver()
                     .query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
             // Check that we're actually connected before trying anything
             if(cursor!=null && cursor.moveToNext() && cursor.getInt(0)!=BluetoothChatService.STATE_CONNECTED){
-                    Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "sendMessage(), chatServiceState: "+cursor.getInt(0));
+                Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
                 return;
             }
         } finally {
             if (cursor!=null) {
-                try {
-                    cursor.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                cursor.close();
             }
         }
 
         // Check that there's actually something to send
         if (message.length() > 0) {
-            // Get the message and tell the BluetoothChatService to write
-            getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
-                    .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, message).build(), null, null, null, null);
-
+            try {
+                // Get the message and tell the BluetoothChatService to write
+                cursor = getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
+                        .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, message).build(), null, null, null, null);
+            } finally {
+                if (cursor!=null) {
+                    cursor.close();
+                }
+            }
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
             mOutEditText.setText(mOutStringBuffer);
@@ -376,11 +376,18 @@ public class BluetoothChatActivity extends AppCompatActivity {
         if (data!=null && data.getExtras()!=null
                 && data.getExtras().containsKey(BluetoothDeviceListActivity.EXTRA_DEVICE_ADDRESS)
                 && data.getExtras().getString(BluetoothDeviceListActivity.EXTRA_DEVICE_ADDRESS)!=null) {
-            getContentResolver().query(BluetoothConnectionProvider.CONNECT_DEVICE_URI.buildUpon()
-                    .appendQueryParameter(BluetoothConnectionProvider.KEY_DEVICE_MAC_ADDRESS,
-                            data.getExtras().getString(BluetoothDeviceListActivity.EXTRA_DEVICE_ADDRESS))
-                    .appendQueryParameter(BluetoothConnectionProvider.KEY_USE_SECURE_CONNECTION, Boolean.valueOf(secure).toString())
-                    .build(), null, null, null, null);
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(BluetoothConnectionProvider.CONNECT_DEVICE_URI.buildUpon()
+                        .appendQueryParameter(BluetoothConnectionProvider.KEY_DEVICE_MAC_ADDRESS,
+                                data.getExtras().getString(BluetoothDeviceListActivity.EXTRA_DEVICE_ADDRESS))
+                        .appendQueryParameter(BluetoothConnectionProvider.KEY_USE_SECURE_CONNECTION, Boolean.valueOf(secure).toString())
+                        .build(), null, null, null, null);
+            } finally {
+                if (cursor!=null) {
+                    cursor.close();
+                }
+            }
         }
     }
 
@@ -403,6 +410,15 @@ public class BluetoothChatActivity extends AppCompatActivity {
             Intent serverIntent = new Intent(this, BluetoothDeviceListActivity.class);
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             return true;
+        } else if (i == R.id.stop_connection) {
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(BluetoothConnectionProvider.DISCONNECT_DEVICE_URI, null, null, null, null);
+            } finally {
+                if (cursor!=null) {
+                    cursor.close();
+                }
+            }
         } else if (i == R.id.discoverable) {
             ensureDiscoverable();
             return true;

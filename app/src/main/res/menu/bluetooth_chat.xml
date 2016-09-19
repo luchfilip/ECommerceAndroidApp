@@ -28,6 +28,11 @@
         android:title="@string/insecure_connect"/>
 
     <item
+        android:id="@+id/stop_connection"
+        app:showAsAction="never"
+        android:title="@string/stop_connection"/>
+
+    <item
         android:id="@+id/discoverable"
         app:showAsAction="never"
         android:title="@string/discoverable"/>

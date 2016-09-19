@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -19,6 +20,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
+import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
@@ -42,6 +45,7 @@ public class ProductDetailFragment extends Fragment {
     private Product mProduct;
     private User mUser;
     private ShareActionProvider mShareActionProvider;
+    private Intent mShareIntent;
 
     public ProductDetailFragment() {
     }
@@ -89,6 +93,27 @@ public class ProductDetailFragment extends Fragment {
                         //Se agrega el producto a la lista de productos recientemente vistos
                         (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId,
                                 Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+
+                        mShareIntent = Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct);
+
+                        // Se envia el id del producto por bluetooth
+                        Cursor cursor = null;
+                        try {
+                            cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
+                            // Check that we're actually connected before trying anything
+                            if(cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_CONNECTED){
+                                cursor.close();
+                                // Get the message and tell the BluetoothChatService to write
+                                cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
+                                        .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, String.valueOf(mProductId)).build(), null, null, null, null);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (cursor!=null) {
+                                cursor.close();
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -283,6 +308,10 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_availability))
                                             .setText(getString(R.string.availability,
                                                     mProduct.getDefaultProductPriceAvailability().getAvailability()));
+
+                                    if (mShareActionProvider!=null) {
+                                        mShareActionProvider.setShareIntent(mShareIntent);
+                                    }
                                 }
                             } catch (Exception e){
                                 e.printStackTrace();
@@ -309,12 +338,11 @@ public class ProductDetailFragment extends Fragment {
         MenuItem item = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        mShareActionProvider.setShareIntent(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct));
+        mShareActionProvider.setShareIntent(mShareIntent);
     }
 
     @Override
@@ -322,7 +350,7 @@ public class ProductDetailFragment extends Fragment {
         int i = item.getItemId();
         if (i == R.id.action_share) {
             if (mShareActionProvider!=null) {
-                mShareActionProvider.setShareIntent(Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct));
+                mShareActionProvider.setShareIntent(mShareIntent);
             }
         } else if (i == R.id.search) {
             startActivity(new Intent(getContext(), SearchResultsActivity.class));

@@ -41,6 +41,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
     public static final Uri GET_BLUETOOTH_ADAPTER_SCAN_MODE_URI = Uri.withAppendedPath(CONTENT_URI, "getBluetoothAdapterScanMode");
     public static final Uri GET_CHAT_SERVICE_STATE_URI          = Uri.withAppendedPath(CONTENT_URI, "getChatServiceState");
     public static final Uri START_CHAT_SERVICE_URI              = Uri.withAppendedPath(CONTENT_URI, "startChatService");
+    public static final Uri REPORT_CHAT_SERVICE_STATE_URI       = Uri.withAppendedPath(CONTENT_URI, "reportChatServiceState");
 
     public static final String KEY_DEVICE_MAC_ADDRESS           = "KEY_DEVICE_MAC_ADDRESS";
     public static final String KEY_USE_SECURE_CONNECTION        = "KEY_USE_SECURE_CONNECTION";
@@ -60,6 +61,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
     private static final int GET_BLUETOOTH_ADAPTER_SCAN_MODE    = 8;
     private static final int GET_CHAT_SERVICE_STATE             = 9;
     private static final int START_CHAT_SERVICE                 = 10;
+    private static final int REPORT_CHAT_SERVICE_STATE          = 11;
 
     private static final UriMatcher uriMatcher;
 
@@ -75,6 +77,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, "getBluetoothAdapterScanMode", GET_BLUETOOTH_ADAPTER_SCAN_MODE);
         uriMatcher.addURI(AUTHORITY, "getChatServiceState", GET_CHAT_SERVICE_STATE);
         uriMatcher.addURI(AUTHORITY, "startChatService", START_CHAT_SERVICE);
+        uriMatcher.addURI(AUTHORITY, "reportChatServiceState", REPORT_CHAT_SERVICE_STATE);
     }
 
     /**
@@ -95,7 +98,6 @@ public class BluetoothConnectionProvider extends ContentProvider {
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //FragmentActivity activity = getActivity();
             Intent intent = null;
             switch (msg.what) {
                 case Constants.MESSAGE_STATE_CHANGE:
@@ -195,6 +197,9 @@ public class BluetoothConnectionProvider extends ContentProvider {
             case START_CHAT_SERVICE:
                 response = startChatService();
                 break;
+            case REPORT_CHAT_SERVICE_STATE:
+                response = reportChatServiceState();
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -227,8 +232,10 @@ public class BluetoothConnectionProvider extends ContentProvider {
         Log.d(TAG, "disconnect()");
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
-            if (mChatService != null) {
+            if (mChatService!=null
+                    && mChatService.getState()==BluetoothChatService.STATE_CONNECTED) {
                 mChatService.stop();
+                mChatService.start();
             }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {
@@ -299,7 +306,7 @@ public class BluetoothConnectionProvider extends ContentProvider {
         MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
         try {
             if (mChatService==null) {
-                mChatService = new BluetoothChatService(getContext(), mHandler);
+                mChatService = new BluetoothChatService(mHandler);
             }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {
@@ -339,6 +346,41 @@ public class BluetoothConnectionProvider extends ContentProvider {
         try {
             if(mChatService.getState()==BluetoothChatService.STATE_NONE){
                 mChatService.start();
+            }
+            cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
+        } catch (Exception e) {
+            e.printStackTrace();
+            cursor.addRow(new Object[]{String.valueOf(Boolean.FALSE), e.getMessage()});
+        }
+        return cursor;
+    }
+
+    private Cursor reportChatServiceState() {
+        Log.d(TAG, "reportChatServiceState()");
+        MatrixCursor cursor = new MatrixCursor(new String[]{"result", "exception_message"});
+        try {
+            Intent intent = new Intent(BLUETOOTH_STATE_CHANGE_BROADCAST);
+            intent.putExtra("state", mChatService.getState());
+            switch (mChatService.getState()) {
+                case BluetoothChatService.STATE_CONNECTED:
+                    if (getContext()!=null) {
+                        intent.putExtra("status", getContext().getString(R.string.title_connected_to, mConnectedDeviceName));
+                    }
+                    break;
+                case BluetoothChatService.STATE_CONNECTING:
+                    if (getContext()!=null) {
+                        intent.putExtra("status", getContext().getString(R.string.title_connecting));
+                    }
+                    break;
+                case BluetoothChatService.STATE_LISTEN:
+                case BluetoothChatService.STATE_NONE:
+                    if (getContext()!=null) {
+                        intent.putExtra("status", getContext().getString(R.string.title_not_connected));
+                    }
+                    break;
+            }
+            if (getContext()!=null) {
+                getContext().sendBroadcast(intent);
             }
             cursor.addRow(new Object[]{String.valueOf(Boolean.TRUE), null});
         } catch (Exception e) {

@@ -20,6 +20,7 @@ import android.accounts.AccountManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -98,10 +99,17 @@ public class RegistrationIntentService extends IntentService {
                     accountManager.setUserData(account, AccountGeneral.USERDATA_GCM_REGISTRATION_ID, token);
                 }
             }
-            getContentResolver().query(SynchronizerContentProvider.REGISTER_GCM_ID_IN_SERVER_URI.buildUpon()
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(SynchronizerContentProvider.REGISTER_GCM_ID_IN_SERVER_URI.buildUpon()
                                 .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, userId)
                                 .appendQueryParameter(SynchronizerContentProvider.KEY_USER_GCM_ID, token).build(),
-                                null, null, null, null);
+                        null, null, null, null);
+            } finally {
+                if (cursor!=null) {
+                    cursor.close();
+                }
+            }
         }
     }
 
