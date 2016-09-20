@@ -221,11 +221,11 @@
     <string name="sync_periodicity_default_value">3600</string>
 
     <!-- Example settings for Notifications -->
-    <!--<string name="pref_header_notifications">Notifications</string>-->
-    <!--<string name="pref_title_new_message_notifications">New message notifications</string>-->
-    <!--<string name="pref_title_ringtone">Ringtone</string>-->
-    <!--<string name="pref_ringtone_silent">Silent</string>-->
-    <!--<string name="pref_title_vibrate">Vibrate</string>-->
+    <string name="pref_header_notifications">Notificaciones</string>
+    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias en lista de favoritos</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silencioso</string>
+    <string name="pref_title_vibrate">Vibrar</string>
 
     <string name="settings">Configuraciones</string>
     <string name="welcome_message_login_activity">Ahora Febeca está en tus manos</string>
@@ -358,7 +358,7 @@
     <string name="new_mandatory_version_available_message">Existe una nueva versión de la aplicación disponible en el Market. Para continuar con la aplicación debe actualizar.</string>
     <string name="product_ratingBar_label_text_detail">%1$s</string>
     <string name="new_availabilities">Nuevas existencias.</string>
-    <string name="new_availabilities_in_wishList">Existen productos con nuevas existencias en la lista de favoritos.</string>
+    <string name="new_availabilities_in_wishList">Nuevas existencias, lista de favoritos.</string>
     <string name="category_name_detail">Categoría: %1$s</string>
     <string name="wish_list_doc_name">Lista de Favoritos</string>
     <string name="recommended_products_doc_name">Productos Recomendados</string>

@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -40,7 +41,8 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                 }
             }
 
-            if(showNotification){
+            if(showNotification && PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean("notifications_new_availabilities_wish_list", true)){
                 BadgeUtils.setBadge(context, 1);
                 // Creates an explicit intent for an Activity in your app
                 final Intent resultIntent = new Intent(context, WishListActivity.class);
