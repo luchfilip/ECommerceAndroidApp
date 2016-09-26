@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -23,11 +24,22 @@ public class NotificationUtils {
 
     public static void createNotification(Context context, String contentTitle, String contentText,
                                           Intent resultIntent) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(contentTitle)
-                        .setContentText(contentText);
+        NotificationCompat.Builder mBuilder;
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText);
+        } else {
+            // Lollipop specific setColor method goes here.
+            mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_launcher_transparent)
+                    .setContentTitle(contentTitle)
+                    .setColor(context.getResources().getColor(R.color.colorPrimary))
+                    .setContentText(contentText);
+        }
+
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
@@ -37,8 +49,9 @@ public class NotificationUtils {
         //stackBuilder.addParentStack(ResultActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
 

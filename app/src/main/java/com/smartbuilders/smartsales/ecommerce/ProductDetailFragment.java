@@ -249,6 +249,9 @@ public class ProductDetailFragment extends Fragment {
                                     }
 
                                     if (!relatedProductsBySubCategoryId.isEmpty()) {
+                                        ((TextView) view.findViewById(R.id.related_products))
+                                                .setText(getString(R.string.related_products_by_sub_category_details,
+                                                        mProduct.getProductSubCategory().getName()));
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                                         // use this setting to improve performance if you know that changes
                                         // in content do not change the layout size of the RecyclerView

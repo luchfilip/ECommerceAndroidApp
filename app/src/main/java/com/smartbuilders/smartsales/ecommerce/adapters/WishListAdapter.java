@@ -189,7 +189,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 new AlertDialog.Builder(mContext)
                         .setMessage(mContext.getString(R.string.delete_from_wish_list_question,
                                 mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
                                 if(result == null){
@@ -200,7 +200,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                                 }
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(R.string.no, null)
                         .show();
             }
         });

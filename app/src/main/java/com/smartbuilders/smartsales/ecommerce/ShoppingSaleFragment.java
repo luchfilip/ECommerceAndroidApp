@@ -176,7 +176,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                         public void onClick(View v) {
                                             new AlertDialog.Builder(getContext())
                                                 .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Date validTo = null;
@@ -192,7 +192,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                         closeSalesOrder(validTo);
                                                     }
                                                 })
-                                                .setNegativeButton(android.R.string.no, null)
+                                                .setNegativeButton(R.string.no, null)
                                                 .show();
                                         }
                                     });

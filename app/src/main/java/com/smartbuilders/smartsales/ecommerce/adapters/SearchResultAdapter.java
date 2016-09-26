@@ -181,14 +181,14 @@ public class SearchResultAdapter extends BaseAdapter {
                     new AlertDialog.Builder(mContext)
                         .setMessage(mContext.getString(R.string.delete_recent_search,
                                 ((RecentSearch) mDataset.get(position)).getTextToSearch()))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 recentSearchDB.deleteRecentSearchById(((RecentSearch) mDataset.get(position)).getId());
                                 mDataset.remove(position);
                                 notifyDataSetChanged();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(R.string.no, null)
                         .show();
                 }
             });

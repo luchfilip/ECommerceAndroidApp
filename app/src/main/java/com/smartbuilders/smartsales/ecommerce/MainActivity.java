@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     private ProductDB mProductDB;
     private User mUser;
     private int productId;
+    private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                     .setText(getString(R.string.welcome_user, mUser.getUserName()));
         }
 
-        if(getIntent().getData()!=null){//check if intent is not null
+        if(getIntent()!=null && getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
             //String scheme = data.getScheme();//get the scheme (http,https)
             //String fullPath = data.getEncodedSchemeSpecificPart();//get the full path -scheme - fragments
@@ -212,13 +215,30 @@ public class MainActivity extends AppCompatActivity
         if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (isTaskRoot()) {
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, R.string.click_back_again_to_exit, Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Utils.navigationItemSelectedBehave(item.getItemId(), this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if(drawer!=null){

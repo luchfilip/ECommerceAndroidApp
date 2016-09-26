@@ -151,7 +151,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_shopping_sales_question,
                         salesOrder.getBusinessPartner().getName()))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = (new SalesOrderLineDB(ShoppingSalesListActivity.this, user))
                                 .deactiveLinesFromShoppingSaleByBusinessPartnerId(salesOrder.getBusinessPartnerId());
@@ -162,7 +162,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                         }
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(R.string.no, null)
                 .show();
     }
 

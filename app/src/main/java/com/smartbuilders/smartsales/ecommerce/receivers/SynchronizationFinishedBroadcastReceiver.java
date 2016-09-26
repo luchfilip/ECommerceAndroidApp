@@ -46,7 +46,7 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                 BadgeUtils.setBadge(context, 1);
                 // Creates an explicit intent for an Activity in your app
                 final Intent resultIntent = new Intent(context, WishListActivity.class);
-                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                 NotificationUtils.createNotification(context, context.getString(R.string.new_availabilities),
                         context.getString(R.string.new_availabilities_in_wishList), resultIntent);
             }

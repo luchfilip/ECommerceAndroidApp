@@ -107,7 +107,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/related_products"
                     android:id="@+id/related_products"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:focusable="false"

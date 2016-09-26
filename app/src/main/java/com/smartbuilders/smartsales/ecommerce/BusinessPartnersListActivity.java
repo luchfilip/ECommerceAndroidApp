@@ -241,7 +241,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
             if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.delete_business_partner, businessPartnerName))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
                                 if (result==null) {
@@ -269,12 +269,12 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 }
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(R.string.no, null)
                         .show();
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.init_session_business_partner, businessPartnerName))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Utils.setAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, businessPartnerId);
                                 if (mListView.getAdapter() instanceof BusinessPartnersListAdapter) {
@@ -285,7 +285,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                         businessPartnerName), Toast.LENGTH_LONG).show();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(R.string.no, null)
                         .show();
             }
         }

@@ -219,7 +219,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
                         salesOrder.getBusinessPartner().getName()))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = SalesOrderBR.deactiveSalesOrderById(SalesOrdersListActivity.this,
                                 user, salesOrder.getId());
@@ -230,7 +230,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         }
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(R.string.no, null)
                 .show();
     }
 

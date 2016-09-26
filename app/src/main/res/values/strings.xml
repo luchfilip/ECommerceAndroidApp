@@ -17,7 +17,6 @@
     <string name="share">Compartir</string>
     <string name="download">Descargar</string>
     <string name="title_activity_product_detail">Detalle del Producto</string>
-    <string name="related_products">Productos relacionados por Categoría</string>
     <string name="related_shopping_products">Productos relacionados según pedidos</string>
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="product_details_label">Detalles del Producto</string>
@@ -393,5 +392,7 @@
 
     <string name="barcode_detail">Código capturado: %1$s</string>
     <string name="no_barcode_captured">No se capturó ningún código de barra.</string>
+    <string name="related_products_by_sub_category_details">Más productos de la categoría %1$s</string>
+    <string name="click_back_again_to_exit">Pulse atrás nuevamente para salir de la aplicación</string>
 
 </resources>
