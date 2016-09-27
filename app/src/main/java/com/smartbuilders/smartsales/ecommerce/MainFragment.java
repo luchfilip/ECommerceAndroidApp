@@ -19,8 +19,8 @@ import java.util.ArrayList;
  */
 public class MainFragment extends Fragment {
 
-    private static final String STATE_LISTVIEW_INDEX = "STATE_LISTVIEW_INDEX";
-    private static final String STATE_LISTVIEW_TOP = "STATE_LISTVIEW_TOP";
+    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
+    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
     // save index and top position
     private int mListViewIndex;
@@ -47,11 +47,11 @@ public class MainFragment extends Fragment {
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LISTVIEW_INDEX);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
+                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
                         }
-                        if(savedInstanceState.containsKey(STATE_LISTVIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LISTVIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
+                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
                     mCurrentUser = Utils.getCurrentUser(getActivity());
@@ -101,15 +101,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListView.getFirstVisiblePosition());
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_INDEX, mListViewIndex);
+            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
         }
         try {
-            outState.putInt(STATE_LISTVIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
+            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
                     (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
         } catch (Exception e) {
-            outState.putInt(STATE_LISTVIEW_TOP, mListViewTop);
+            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         super.onSaveInstanceState(outState);
     }

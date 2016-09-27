@@ -51,7 +51,7 @@ public class ProductDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
@@ -81,14 +81,14 @@ public class ProductDetailFragment extends Fragment {
 
                     mProduct = productDB.getProductById(mProductId);
                     if (mProduct!=null) {
-                        relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 20));
+                        relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 12));
                         if (mProduct.getProductBrand()!=null) {
                             relatedProductsByBrandId.addAll(productDB
-                                    .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 50));
+                                    .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 12));
                         }
                         if (mProduct.getProductSubCategory()!=null) {
                             relatedProductsBySubCategoryId.addAll(productDB
-                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 30));
+                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 12));
                         }
                         //Se agrega el producto a la lista de productos recientemente vistos
                         (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId,
@@ -225,6 +225,16 @@ public class ProductDetailFragment extends Fragment {
                                         mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
                                                 relatedProductsByShopping, ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
+
+                                        view.findViewById(R.id.related_shopping_products_see_all)
+                                                .setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent = new Intent(getContext(), ProductsListActivity.class);
+                                                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductId);
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                     } else {
                                         view.findViewById(R.id.related_shopping_products_card_view).setVisibility(View.GONE);
                                     }
@@ -244,6 +254,16 @@ public class ProductDetailFragment extends Fragment {
                                                         !TextUtils.isEmpty(mProduct.getProductBrand().getDescription())
                                                                 ? mProduct.getProductBrand().getDescription()
                                                                 : mProduct.getProductBrand().getName()));
+
+                                        view.findViewById(R.id.related_products_by_brand_see_all)
+                                                .setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent = new Intent(getContext(), ProductsListActivity.class);
+                                                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, mProduct.getProductBrandId());
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                     } else {
                                         view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
                                     }
@@ -260,6 +280,16 @@ public class ProductDetailFragment extends Fragment {
                                         mRecyclerView.setAdapter(new ProductsListAdapter(getContext(), getActivity(),
                                                 relatedProductsBySubCategoryId, ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
+
+                                        view.findViewById(R.id.related_products_see_all)
+                                                .setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent = new Intent(getContext(), ProductsListActivity.class);
+                                                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, mProduct.getProductSubCategoryId());
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                     } else {
                                         view.findViewById(R.id.relatedproducts_card_view).setVisibility(View.GONE);
                                     }

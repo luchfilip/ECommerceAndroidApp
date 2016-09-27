@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce.data;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.smartbuilders.smartsales.ecommerce.ProductsListActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.BannerSection;
@@ -64,11 +66,14 @@ public class MainPageSectionsDB {
 
         try {
             ArrayList<Product> products = (new ProductRecentlySeenDB(mContext, mUser))
-                    .getProductsRecentlySeen();
+                    .getProductsRecentlySeen(12);
             if (products!=null && !products.isEmpty()) {
                 MainPageProductSection mainPageProductSection = new MainPageProductSection();
                 mainPageProductSection.setName(mContext.getString(R.string.products_recently_seen));
                 mainPageProductSection.setProducts(products);
+                Intent intent = new Intent(mContext, ProductsListActivity.class);
+                intent.putExtra(ProductsListActivity.KEY_SHOW_PRODUCTS_RECENTLY_SEEN, true);
+                mainPageProductSection.setSeeAllIntent(intent);
                 mainPageList.add(mainPageProductSection);
             }
         } catch (Exception e) {

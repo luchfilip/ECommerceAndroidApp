@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.data.ProductRecentlySeenDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
@@ -46,12 +47,17 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
     public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
+    public static final String KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
+    public static final String KEY_SHOW_PRODUCTS_RECENTLY_SEEN = "KEY_SHOW_PRODUCTS_RECENTLY_SEEN";
+
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK = "STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK";
     private static final String STATE_CURRENT_SORT_OPTION = "STATE_CURRENT_SORT_OPTION";
     private static final String STATE_CURRENT_FILTER_TEXT = "STATE_CURRENT_FILTER_TEXT";
     private static final String STATE_CURRENT_FILTER_OPTION = "STATE_CURRENT_FILTER_OPTION";
     private static final String STATE_SPINNER_SELECTED_ITEM_POSITION = "STATE_SPINNER_SELECTED_ITEM_POSITION";
+    private static final String STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
+    private static final String STATE_SHOW_PRODUCTS_RECENTLY_SEEN = "STATE_SHOW_PRODUCTS_RECENTLY_SEEN";
 
     private int productCategoryId;
     private int productSubCategoryId;
@@ -67,6 +73,8 @@ public class ProductsListActivity extends AppCompatActivity
     private String mCurrentFilterText;
     private int mCurrentFilterOption;
     private int mSpinnerSelectedItemPosition;
+    private int mProductIdShowRelatedShoppingProducts;
+    private boolean mShowProductsRecentlySeen;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -137,6 +145,12 @@ public class ProductsListActivity extends AppCompatActivity
                         if(savedInstanceState.containsKey(STATE_SPINNER_SELECTED_ITEM_POSITION)){
                             mSpinnerSelectedItemPosition = savedInstanceState.getInt(STATE_SPINNER_SELECTED_ITEM_POSITION);
                         }
+                        if(savedInstanceState.containsKey(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS)){
+                            mProductIdShowRelatedShoppingProducts = savedInstanceState.getInt(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS);
+                        }
+                        if(savedInstanceState.containsKey(STATE_SHOW_PRODUCTS_RECENTLY_SEEN)){
+                            mShowProductsRecentlySeen = savedInstanceState.getBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN);
+                        }
                     }
 
                     if(getIntent()!=null && getIntent().getExtras()!=null) {
@@ -155,6 +169,12 @@ public class ProductsListActivity extends AppCompatActivity
                         if(getIntent().getExtras().containsKey(KEY_SEARCH_PATTERN)){
                             mSearchPattern = getIntent().getExtras().getString(KEY_SEARCH_PATTERN);
                         }
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS)){
+                            mProductIdShowRelatedShoppingProducts = getIntent().getExtras().getInt(KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS);
+                        }
+                        if(getIntent().getExtras().containsKey(KEY_SHOW_PRODUCTS_RECENTLY_SEEN)){
+                            mShowProductsRecentlySeen = getIntent().getExtras().getBoolean(KEY_SHOW_PRODUCTS_RECENTLY_SEEN);
+                        }
                     }
 
                     products = new ArrayList<>();
@@ -167,6 +187,12 @@ public class ProductsListActivity extends AppCompatActivity
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByBrandId(productBrandId));
                     } else if (productName != null) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByName(productName));
+                    } else if (mProductIdShowRelatedShoppingProducts != 0) {
+                        products.addAll(new ProductDB(ProductsListActivity.this, user)
+                                .getRelatedShoppingProductsByProductId(mProductIdShowRelatedShoppingProducts, null));
+                    } else if (mShowProductsRecentlySeen) {
+                        products.addAll(new ProductRecentlySeenDB(ProductsListActivity.this, user)
+                                .getProductsRecentlySeen(null));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -252,6 +278,10 @@ public class ProductsListActivity extends AppCompatActivity
                                     } else if (productName != null) {
                                         categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
                                                 productName));
+                                    } else if (mProductIdShowRelatedShoppingProducts != 0) {
+                                        categorySubcategoryResultsTextView.setText(R.string.related_shopping_products);
+                                    } else if (mShowProductsRecentlySeen) {
+                                        categorySubcategoryResultsTextView.setText(R.string.products_recently_seen);
                                     }
                                 } else {
                                     categorySubcategoryResultsTextView.setText(getString(R.string.no_products_to_show));
@@ -478,6 +508,8 @@ public class ProductsListActivity extends AppCompatActivity
         outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
         outState.putInt(STATE_CURRENT_FILTER_OPTION, mCurrentFilterOption);
         outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
+        outState.putInt(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductIdShowRelatedShoppingProducts);
+        outState.putBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN, mShowProductsRecentlySeen);
         super.onSaveInstanceState(outState);
     }
 

@@ -41,7 +41,7 @@ public class ProductRecentlySeenDB {
         }
     }
 
-    public ArrayList<Product> getProductsRecentlySeen(){
+    public ArrayList<Product> getProductsRecentlySeen(Integer limit){
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
@@ -65,7 +65,7 @@ public class ProductRecentlySeenDB {
                             " AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE PRS.USER_ID = ? " +
                     " ORDER BY PRS.PRODUCT_RECENTLY_SEEN_ID desc " +
-                    " LIMIT 30",
+                    (limit!=null && limit>0 ? " LIMIT " + limit : ""),
                     new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE,

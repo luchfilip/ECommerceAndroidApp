@@ -94,6 +94,7 @@ public class MainActivityAdapter extends BaseAdapter {
         public ViewPager mViewPager;
         public TextView mTextView;
         public TextView mTitleTextView;
+        public TextView mSeeAllProductsTextView;
 
         /*********************************************/
         public TextView productName;
@@ -114,6 +115,7 @@ public class MainActivityAdapter extends BaseAdapter {
             mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
             mTextView = (TextView) v.findViewById(R.id.textView);
             mTitleTextView = (TextView) v.findViewById(R.id.title_textView);
+            mSeeAllProductsTextView = (TextView) v.findViewById(R.id.see_all_products_textView);
             /*********************************************/
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
@@ -203,7 +205,7 @@ public class MainActivityAdapter extends BaseAdapter {
                     }
                     break;
                 case VIEW_TYPE_RECYCLER_VIEW:
-                    MainPageProductSection mainPageProductSection = (MainPageProductSection) mDataset.get(position);
+                    final MainPageProductSection mainPageProductSection = (MainPageProductSection) mDataset.get(position);
 
                     if(mainPageProductSection !=null && mainPageProductSection.getProducts()!=null
                             && !mainPageProductSection.getProducts().isEmpty()){
@@ -237,6 +239,13 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mContext, mFragmentActivity,
                                 mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
+
+                        viewHolder.mSeeAllProductsTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mContext.startActivity(mainPageProductSection.getSeeAllIntent());
+                            }
+                        });
                     }
                     break;
                 case VIEW_TYPE_VIEWPAGER:

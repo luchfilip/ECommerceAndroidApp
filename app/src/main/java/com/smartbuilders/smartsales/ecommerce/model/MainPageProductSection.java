@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce.model;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,6 +15,7 @@ public class MainPageProductSection extends Model implements Parcelable {
     private String description;
     private int priority;
     private ArrayList<Product> products;
+    private Intent seeAllIntent;
 
     public MainPageProductSection() {
 
@@ -25,6 +27,7 @@ public class MainPageProductSection extends Model implements Parcelable {
         description = in.readString();
         priority = in.readInt();
         products = in.createTypedArrayList(Product.CREATOR);
+        seeAllIntent = in.readParcelable(Intent.class.getClassLoader());
     }
 
     @Override
@@ -34,6 +37,7 @@ public class MainPageProductSection extends Model implements Parcelable {
         dest.writeString(description);
         dest.writeInt(priority);
         dest.writeTypedList(products);
+        dest.writeParcelable(seeAllIntent, flags);
     }
 
     @Override
@@ -83,5 +87,13 @@ public class MainPageProductSection extends Model implements Parcelable {
 
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
+    }
+
+    public Intent getSeeAllIntent() {
+        return seeAllIntent;
+    }
+
+    public void setSeeAllIntent(Intent seeAllIntent) {
+        this.seeAllIntent = seeAllIntent;
     }
 }
