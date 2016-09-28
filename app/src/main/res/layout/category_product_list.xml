@@ -35,18 +35,15 @@
         <View style="@style/Divider"
             android:layout_marginTop="2dp" />
 
-        <TextView
+        <Button
+            style="@style/MainButtonAppTheme"
+            android:id="@+id/see_all_products_button"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:id="@+id/see_all_products_textView"
-            android:textSize="@dimen/related_products_label_text_size"
             android:text="@string/see_all_products"
-            android:padding="2dp"
-            android:focusable="false"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true" />
-
+            android:layout_gravity="right" />
     </LinearLayout>
 
 </LinearLayout>

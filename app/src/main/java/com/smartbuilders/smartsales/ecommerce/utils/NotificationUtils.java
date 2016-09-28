@@ -26,19 +26,20 @@ public class NotificationUtils {
                                           Intent resultIntent) {
         NotificationCompat.Builder mBuilder;
 
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        //if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             mBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_launcher)
                     .setContentTitle(contentTitle)
-                    .setContentText(contentText);
-        } else {
-            // Lollipop specific setColor method goes here.
-            mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_launcher_transparent)
-                    .setContentTitle(contentTitle)
                     .setColor(context.getResources().getColor(R.color.colorPrimary))
                     .setContentText(contentText);
-        }
+        //} else {
+        //    // Lollipop specific setColor method goes here.
+        //    mBuilder = new NotificationCompat.Builder(context)
+        //            .setSmallIcon(R.drawable.ic_launcher_transparent)
+        //            .setContentTitle(contentTitle)
+        //            .setColor(context.getResources().getColor(R.color.colorPrimary))
+        //            .setContentText(contentText);
+        //}
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.

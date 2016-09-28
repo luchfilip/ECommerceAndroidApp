@@ -39,8 +39,6 @@
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <!--<item name="android:layout_marginTop">1dp</item>-->
-        <!--<item name="android:layout_marginBottom">1dp</item>-->
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
@@ -91,37 +89,23 @@
     </style>
 
     <style name="title_text_style">
-        <!--<item name="android:textSize">16sp</item>-->
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_marginLeft">8dp</item>
-        <!--<item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="MainButtonAppTheme">
         <item name="android:background">@drawable/main_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <!--<item name="android:minHeight">9dip</item>
-        <item name="android:minWidth">9dip</item>
-        <item name="android:padding">7dp</item>
-        <item name="android:layout_margin">2dp</item>-->
     </style>
 
     <style name="GoldenButtonAppTheme">
         <item name="android:background">@drawable/golden_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <!--<item name="android:minHeight">9dip</item>
-        <item name="android:minWidth">9dip</item>
-        <item name="android:padding">7dp</item>
-        <item name="android:layout_margin">2dp</item>-->
     </style>
 
     <style name="GreyButtonAppTheme">
         <item name="android:background">@drawable/grey_button_selector</item>
         <item name="android:textColor">@color/button_text_color</item>
-        <!--<item name="android:minHeight">9dip</item>
-        <item name="android:minWidth">9dip</item>
-        <item name="android:padding">7dp</item>
-        <item name="android:layout_margin">2dp</item>-->
     </style>
 
     <style name="list_item_style">

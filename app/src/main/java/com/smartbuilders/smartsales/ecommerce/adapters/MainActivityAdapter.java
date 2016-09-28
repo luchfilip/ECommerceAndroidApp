@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -94,7 +95,7 @@ public class MainActivityAdapter extends BaseAdapter {
         public ViewPager mViewPager;
         public TextView mTextView;
         public TextView mTitleTextView;
-        public TextView mSeeAllProductsTextView;
+        public Button mSeeAllProductsButton;
 
         /*********************************************/
         public TextView productName;
@@ -115,7 +116,7 @@ public class MainActivityAdapter extends BaseAdapter {
             mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
             mTextView = (TextView) v.findViewById(R.id.textView);
             mTitleTextView = (TextView) v.findViewById(R.id.title_textView);
-            mSeeAllProductsTextView = (TextView) v.findViewById(R.id.see_all_products_textView);
+            mSeeAllProductsButton = (Button) v.findViewById(R.id.see_all_products_button);
             /*********************************************/
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
@@ -240,7 +241,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                 mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
 
-                        viewHolder.mSeeAllProductsTextView.setOnClickListener(new View.OnClickListener() {
+                        viewHolder.mSeeAllProductsButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 mContext.startActivity(mainPageProductSection.getSeeAllIntent());
