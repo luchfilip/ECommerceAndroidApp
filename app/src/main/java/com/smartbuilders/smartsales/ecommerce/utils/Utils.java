@@ -1051,8 +1051,8 @@ public class Utils {
             //stackBuilder.addParentStack(ResultActivity.class);
             // Adds the Intent that starts the Activity to the top of the stack
             stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT );
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
             mBuilder.setAutoCancel(true);
             NotificationManager mNotificationManager =
