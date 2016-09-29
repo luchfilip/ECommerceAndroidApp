@@ -60,13 +60,41 @@ public class MainPageProductSectionDB {
 
         if(!mainPageProductSections.isEmpty()) {
             for(MainPageProductSection mainPageProductSection : mainPageProductSections){
-                mainPageProductSection.setProducts(getActiveProductsByMainPageProductSectionId(mainPageProductSection.getId()));
+                mainPageProductSection.setProducts(getActiveProductsByMainPageProductSectionId(mainPageProductSection.getId(), 25));
             }
         }
         return mainPageProductSections;
     }
 
-    private ArrayList<Product> getActiveProductsByMainPageProductSectionId(int productSectionId){
+    public MainPageProductSection getActiveMainPageProductSectionById(int mainPageProductSectionId) {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT NAME, DESCRIPTION FROM MAINPAGE_PRODUCT_SECTION WHERE MAINPAGE_PRODUCT_SECTION_ID=? AND IS_ACTIVE=?",
+                    new String[] {String.valueOf(mainPageProductSectionId), "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                MainPageProductSection mainPageProductSection = new MainPageProductSection();
+                mainPageProductSection.setId(mainPageProductSectionId);
+                mainPageProductSection.setName(c.getString(0));
+                mainPageProductSection.setDescription(c.getString(1));
+                return mainPageProductSection;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Product> getActiveProductsByMainPageProductSectionId(int productSectionId, Integer limit){
         ArrayList<Product> productsByProductSectionId = new ArrayList<>();
         Cursor c = null;
         try {
@@ -88,7 +116,8 @@ public class MainPageProductSectionDB {
                         " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.BUSINESS_PARTNER_ID = ? " +
                             " AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
                     " WHERE M.MAINPAGE_PRODUCT_SECTION_ID = ? AND M.IS_ACTIVE = ? " +
-                    " ORDER BY M.PRIORITY ASC",
+                    " ORDER BY M.PRIORITY ASC " +
+                    (limit!=null && limit>0 ? " LIMIT " + limit : ""),
                     new String[]{"Y", "Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE,

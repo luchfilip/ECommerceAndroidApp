@@ -54,9 +54,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/related_shopping_products"
                     android:id="@+id/related_shopping_products"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/related_products_label_text_size"
-                    android:textColor="@color/label_color"
-                    android:textStyle="bold"
+                    android:textStyle="bold|italic"
                     android:focusable="false" />
 
                 <android.support.v7.widget.RecyclerView
@@ -74,10 +74,11 @@
                     style="@style/MainButtonAppTheme"
                     android:id="@+id/related_shopping_products_see_all"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 
@@ -94,9 +95,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/related_products_by_brand_tv"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/related_products_label_text_size"
-                    android:textColor="@color/label_color"
-                    android:textStyle="bold"
+                    android:textStyle="bold|italic"
                     android:focusable="false" />
 
                 <android.support.v7.widget.RecyclerView
@@ -114,10 +115,11 @@
                     style="@style/MainButtonAppTheme"
                     android:id="@+id/related_products_by_brand_see_all"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 
@@ -134,10 +136,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/related_products"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:focusable="false"
-                    android:textStyle="bold"
-                    android:textColor="@color/label_color" />
+                    android:textStyle="bold|italic" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/relatedproducts_recycler_view"
@@ -154,10 +156,11 @@
                     style="@style/MainButtonAppTheme"
                     android:id="@+id/related_products_see_all"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 

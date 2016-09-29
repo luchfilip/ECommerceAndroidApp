@@ -26,7 +26,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.data.MainPageProductSectionDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductRecentlySeenDB;
+import com.smartbuilders.smartsales.ecommerce.model.MainPageProductSection;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
@@ -49,6 +51,7 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
     public static final String KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
     public static final String KEY_SHOW_PRODUCTS_RECENTLY_SEEN = "KEY_SHOW_PRODUCTS_RECENTLY_SEEN";
+    public static final String KEY_MAIN_PAGE_PRODUCT_SECTION_ID = "KEY_MAIN_PAGE_PRODUCT_SECTION_ID";
 
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK = "STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK";
@@ -58,6 +61,7 @@ public class ProductsListActivity extends AppCompatActivity
     private static final String STATE_SPINNER_SELECTED_ITEM_POSITION = "STATE_SPINNER_SELECTED_ITEM_POSITION";
     private static final String STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
     private static final String STATE_SHOW_PRODUCTS_RECENTLY_SEEN = "STATE_SHOW_PRODUCTS_RECENTLY_SEEN";
+    private static final String STATE_MAIN_PAGE_PRODUCT_SECTION_ID = "STATE_MAIN_PAGE_PRODUCT_SECTION_ID";
 
     private int productCategoryId;
     private int productSubCategoryId;
@@ -75,6 +79,7 @@ public class ProductsListActivity extends AppCompatActivity
     private int mSpinnerSelectedItemPosition;
     private int mProductIdShowRelatedShoppingProducts;
     private boolean mShowProductsRecentlySeen;
+    private int mMainPageProductSectionId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -151,6 +156,9 @@ public class ProductsListActivity extends AppCompatActivity
                         if(savedInstanceState.containsKey(STATE_SHOW_PRODUCTS_RECENTLY_SEEN)){
                             mShowProductsRecentlySeen = savedInstanceState.getBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN);
                         }
+                        if(savedInstanceState.containsKey(STATE_MAIN_PAGE_PRODUCT_SECTION_ID)){
+                            mMainPageProductSectionId = savedInstanceState.getInt(STATE_MAIN_PAGE_PRODUCT_SECTION_ID);
+                        }
                     }
 
                     if(getIntent()!=null && getIntent().getExtras()!=null) {
@@ -175,6 +183,9 @@ public class ProductsListActivity extends AppCompatActivity
                         if(getIntent().getExtras().containsKey(KEY_SHOW_PRODUCTS_RECENTLY_SEEN)){
                             mShowProductsRecentlySeen = getIntent().getExtras().getBoolean(KEY_SHOW_PRODUCTS_RECENTLY_SEEN);
                         }
+                        if(getIntent().getExtras().containsKey(KEY_MAIN_PAGE_PRODUCT_SECTION_ID)){
+                            mMainPageProductSectionId = getIntent().getExtras().getInt(KEY_MAIN_PAGE_PRODUCT_SECTION_ID);
+                        }
                     }
 
                     products = new ArrayList<>();
@@ -193,6 +204,9 @@ public class ProductsListActivity extends AppCompatActivity
                     } else if (mShowProductsRecentlySeen) {
                         products.addAll(new ProductRecentlySeenDB(ProductsListActivity.this, user)
                                 .getProductsRecentlySeen(null));
+                    } else if (mMainPageProductSectionId != 0) {
+                        products.addAll(new MainPageProductSectionDB(ProductsListActivity.this, user)
+                                .getActiveProductsByMainPageProductSectionId(mMainPageProductSectionId, null));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -282,6 +296,13 @@ public class ProductsListActivity extends AppCompatActivity
                                         categorySubcategoryResultsTextView.setText(R.string.related_shopping_products);
                                     } else if (mShowProductsRecentlySeen) {
                                         categorySubcategoryResultsTextView.setText(R.string.products_recently_seen);
+                                    } else if (mMainPageProductSectionId != 0) {
+                                        MainPageProductSection mainPageProductSection =
+                                                (new MainPageProductSectionDB(ProductsListActivity.this, user))
+                                                        .getActiveMainPageProductSectionById(mMainPageProductSectionId);
+                                        if (mainPageProductSection!=null) {
+                                            categorySubcategoryResultsTextView.setText(mainPageProductSection.getName());
+                                        }
                                     }
                                 } else {
                                     categorySubcategoryResultsTextView.setText(getString(R.string.no_products_to_show));
@@ -510,6 +531,7 @@ public class ProductsListActivity extends AppCompatActivity
         outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
         outState.putInt(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductIdShowRelatedShoppingProducts);
         outState.putBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN, mShowProductsRecentlySeen);
+        outState.putInt(STATE_MAIN_PAGE_PRODUCT_SECTION_ID, mMainPageProductSectionId);
         super.onSaveInstanceState(outState);
     }
 

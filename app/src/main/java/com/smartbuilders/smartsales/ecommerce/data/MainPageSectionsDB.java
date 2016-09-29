@@ -89,6 +89,9 @@ public class MainPageSectionsDB {
                             && !mainPageProductSection.getProducts().isEmpty()) {
                         mainPageList.add(new MainPageTitleSection(mainPageProductSection.getName()));
                         mainPageList.addAll(mainPageProductSection.getProducts());
+                        Intent intent = new Intent(mContext, ProductsListActivity.class);
+                        intent.putExtra(ProductsListActivity.KEY_MAIN_PAGE_PRODUCT_SECTION_ID, mainPageProductSection.getId());
+                        mainPageList.add(intent);
                     }
                 }
             }

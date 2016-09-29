@@ -2,23 +2,23 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:state_pressed="true" >
         <shape android:shape="rectangle" >
-            <corners android:radius="3dp" android:startColor="@color/golden_medium" />
-            <stroke android:width="1dip" android:color="@color/golden_medium" />
-            <solid android:color="@color/golden_medium" />
+            <corners android:radius="3dp" android:startColor="@color/golden" />
+            <stroke android:width="1dip" android:color="@color/golden" />
+            <solid android:color="@color/golden" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape android:shape="rectangle" >
-            <corners android:radius="3dp" android:startColor="@color/golden" />
-            <stroke android:width="1dip" android:color="@color/golden" />
-            <solid android:color="@color/golden"/>
+            <corners android:radius="3dp" android:startColor="@color/golden_medium" />
+            <stroke android:width="1dip" android:color="@color/golden_medium" />
+            <solid android:color="@color/golden_medium"/>
         </shape>
     </item>
     <item >
         <shape android:shape="rectangle"  >
-            <corners android:radius="3dp" android:startColor="@color/golden" />
-            <stroke android:width="1dip" android:color="@color/golden" />
-            <solid android:color="@color/golden" />
+            <corners android:radius="3dp" android:startColor="@color/golden_medium" />
+            <stroke android:width="1dip" android:color="@color/golden_medium" />
+            <solid android:color="@color/golden_medium" />
         </shape>
     </item>
 </selector>

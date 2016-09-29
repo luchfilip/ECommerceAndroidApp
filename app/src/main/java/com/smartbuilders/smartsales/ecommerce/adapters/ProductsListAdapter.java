@@ -1,6 +1,5 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.app.FragmentActivity;

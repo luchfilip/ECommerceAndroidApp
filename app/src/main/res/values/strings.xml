@@ -395,5 +395,6 @@
     <string name="related_products_by_sub_category_details">Más productos de la categoría %1$s</string>
     <string name="click_back_again_to_exit">Pulse atrás nuevamente para salir de la aplicación</string>
     <string name="see_all_products">Ver todos</string>
+    <string name="our_brands">Nuestras Marcas</string>
 
 </resources>

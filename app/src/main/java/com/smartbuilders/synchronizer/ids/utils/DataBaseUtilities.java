@@ -5,10 +5,10 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import com.smartbuilders.synchronizer.ids.database.DatabaseHelper;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 
@@ -170,13 +170,14 @@ public class DataBaseUtilities {
 
     /**
      *
+     * @param db
      * @param data
+     * @param validSequenceIds
      * @param tableName
-     * @param context
      * @throws Exception
      */
-    public static void insertDataFromWSResultData(String data, String validSequenceIds, String tableName,
-                                                  Context context, User user) throws Exception {
+    public static void insertDataFromWSResultData(SQLiteDatabase db, String data, String validSequenceIds,
+                                                  String tableName) throws Exception {
         int counterEntireCompressedData = 0;
         int counter;
         JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
@@ -206,18 +207,14 @@ public class DataBaseUtilities {
                 e.printStackTrace();
             }
 
-            //int columnIndex;
-            SQLiteDatabase db = null;
             SQLiteStatement statement = null;
             try {
-                if(user == null){
-                    db = (new DatabaseHelper(context)).getWritableDatabase();
-                }else{
-                    db = (new DatabaseHelper(context, user)).getWritableDatabase();
-                }
-
                 statement = db.compileStatement(insertSentence.toString());
-                db.beginTransaction();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+                    db.beginTransactionNonExclusive();
+                } else {
+                    db.beginTransaction();
+                }
                 counter = 1;
                 Iterator<?> keysTemp;
                 String key;
@@ -270,10 +267,9 @@ public class DataBaseUtilities {
                         e.printStackTrace();
                     }
                 }
-                if (db!=null) {
+                if(db!=null) {
                     try {
                         db.endTransaction();
-                        db.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

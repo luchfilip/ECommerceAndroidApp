@@ -5,11 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <View android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_height="15dp"
-        android:background="@color/grey_medium"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,10 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/category_name"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/mainPageTitleSection_textSize"
             android:textStyle="bold|italic"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="2dp" />
+            android:layout_marginLeft="2dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/product_list"
@@ -39,11 +34,13 @@
             style="@style/MainButtonAppTheme"
             android:id="@+id/see_all_products_button"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/see_all_products"
-            android:layout_gravity="right" />
+            android:textAllCaps="false"
+            android:layout_gravity="right"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import org.ksoap2.serialization.SoapPrimitive;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.util.Log;
 
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -313,17 +314,34 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             if (result instanceof List<?>) {
                 try {
                     try {
-                        DataBaseUtilities.insertDataFromWSResultData(((List<SoapPrimitive>) result).get(0) != null ? ((List<SoapPrimitive>) result).get(0).toString() : null,
-                                ((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null,
-                                tableName, context, user);
-                    } catch (IOException e) {
+                        Uri uri =  DataBaseContentProvider.INSERT_UPDATE_DATA_FROM_WS_URI;
+                        if (user!=null) {
+                            uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build();
+                        }
+                        if (((List<SoapPrimitive>) result).get(0) != null
+                                && !((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
+                            uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS,
+                                    ((List<SoapPrimitive>) result).get(0).toString()).build();
+                            if (((List<SoapPrimitive>) result).get(1) != null) {
+                                uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS_VALID_SEQS_IDS,
+                                        ((List<SoapPrimitive>) result).get(1).toString()).build();
+                            }
+                            if (tableName!=null) {
+                                uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS_TABLE_NAME, tableName).build();
+                            }
+                            context.getContentResolver().update(uri, null, null, null);
+                        }
+                        //DataBaseUtilities.insertDataFromWSResultData(((List<SoapPrimitive>) result).get(0) != null ? ((List<SoapPrimitive>) result).get(0).toString() : null,
+                        //        ((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null,
+                        //        tableName, context, user);
+                    } /*catch (IOException e) {
                         if (((List<SoapPrimitive>) result).get(0) != null
                                 && ((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
                             //Log.d(TAG, "table: " + tableName + ", nothing to sync.");
                         } else {
                             throw e;
                         }
-                    } catch (SQLiteException e) {
+                    }*/ catch (SQLiteException e) {
                         e.printStackTrace();
                         reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
                     }

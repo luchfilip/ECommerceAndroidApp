@@ -60,6 +60,7 @@ public class MainActivityAdapter extends BaseAdapter {
     private static final int VIEW_TYPE_STRING           = 3;
     private static final int VIEW_TYPE_TITLE            = 4;
     private static final int VIEW_TYPE_PRODUCT          = 5;
+    private static final int VIEW_TYPE_INTENT_SEE_ALL   = 6;
 
     private Context mContext;
     private FragmentActivity mFragmentActivity;
@@ -84,6 +85,8 @@ public class MainActivityAdapter extends BaseAdapter {
             return VIEW_TYPE_TITLE;
         } else if (mDataset.get(position) instanceof Product) {
             return VIEW_TYPE_PRODUCT;
+        } else if (mDataset.get(position) instanceof Intent) {
+            return VIEW_TYPE_INTENT_SEE_ALL;
         }
         return VIEW_TYPE_EMPTY_LAYOUT;
     }
@@ -175,6 +178,10 @@ public class MainActivityAdapter extends BaseAdapter {
                 view = LayoutInflater.from(mContext)
                         .inflate(R.layout.product_main_activity, parent, false);
                 break;
+            case VIEW_TYPE_INTENT_SEE_ALL:
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.main_page_section_see_all_button, parent, false);
+                break;
             case VIEW_TYPE_EMPTY_LAYOUT:
             default:
                 view = LayoutInflater.from(mContext)
@@ -241,12 +248,17 @@ public class MainActivityAdapter extends BaseAdapter {
                                 mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
                                 DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
 
-                        viewHolder.mSeeAllProductsButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mContext.startActivity(mainPageProductSection.getSeeAllIntent());
-                            }
-                        });
+                        if (mainPageProductSection.getSeeAllIntent()!=null) {
+                            viewHolder.mSeeAllProductsButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    mContext.startActivity(mainPageProductSection.getSeeAllIntent());
+                                }
+                            });
+                            viewHolder.mSeeAllProductsButton.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.mSeeAllProductsButton.setVisibility(View.GONE);
+                        }
                     }
                     break;
                 case VIEW_TYPE_VIEWPAGER:
@@ -263,9 +275,9 @@ public class MainActivityAdapter extends BaseAdapter {
                         } else {
                             height = (metrics.widthPixels / 5);
                         }
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels - Utils.convertDpToPixel(10, mContext), height);
                         viewHolder.mViewPager.setLayoutParams(lp);
-                        viewHolder.mViewPager.setPageMargin(10);
+                        //viewHolder.mViewPager.setPageMargin(10);
                         ProductBrandPromotionalAdapter productBrandPromotionalAdapter =
                                 new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager(), metrics);
                         productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());
@@ -382,6 +394,16 @@ public class MainActivityAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 goToProductDetails(((Product) mDataset.get(position)).getId());
+                            }
+                        });
+                    }
+                    break;
+                case VIEW_TYPE_INTENT_SEE_ALL:
+                    if (mDataset!=null && mDataset.get(position) instanceof Intent){
+                        viewHolder.mSeeAllProductsButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mContext.startActivity((Intent) mDataset.get(position));
                             }
                         });
                     }
