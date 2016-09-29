@@ -51,6 +51,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private FragmentActivity mFragmentActivity;
     private ArrayList<Product> mDataset;
     private Context mContext;
+    private int mSortOption;
     private User mUser;
     private int mMask;
     private ArrayList<Product> filterAux;
@@ -109,10 +110,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mDataset = products;
         this.filterAux = new ArrayList<>();
         this.filterAux.addAll(mDataset);
+        mSortOption = sortOption;
         mUser = user;
         mMask = mask;
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
-        sortProductList(sortOption);
     }
 
     // Create new views (invoked by the layout manager)
@@ -144,6 +145,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        sortProductList();
+
         if(mMask!=MASK_PRODUCT_MIN_INFO && mMask!=MASK_PRODUCT_DETAILS
                 && mMask!=MASK_PRODUCT_LARGE_DETAILS){
             return;
@@ -370,13 +373,21 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
     }
 
-    private void sortProductList(final int sortOption){
+    private void sortProductList(){
+        if (mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC
+                && mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_DESC
+                && mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_ASC
+                && mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_INTERNAL_CODE_DESC
+                && mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC
+                && mSortOption!=DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC){
+            return;
+        }
         Collections.sort(mDataset, new Comparator<Product>() {
             @Override
             public int compare(Product lhs, Product rhs) {
                 try{
                     if (lhs!=null && rhs!=null) {
-                        switch (sortOption){
+                        switch (mSortOption){
                             case DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC:
                                 if (lhs.getName()!=null && rhs.getName()!=null) {
                                     return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());

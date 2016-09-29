@@ -17,6 +17,7 @@ public class DialogSortProductListOptions extends DialogFragment {
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
     private static final String STATE_CURRENT_SORT_OPTION = "STATE_CURRENT_SORT_OPTION";
 
+    public static final int SORT_BY_NO_SORT                     = 0;
     public static final int SORT_BY_PRODUCT_NAME_ASC            = 1;
     public static final int SORT_BY_PRODUCT_NAME_DESC           = 2;
     public static final int SORT_BY_PRODUCT_INTERNAL_CODE_ASC   = 3;

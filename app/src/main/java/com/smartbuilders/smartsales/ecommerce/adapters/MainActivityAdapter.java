@@ -246,7 +246,7 @@ public class MainActivityAdapter extends BaseAdapter {
 
                         viewHolder.mRecyclerView.setAdapter(new ProductsListAdapter(mContext, mFragmentActivity,
                                 mainPageProductSection.getProducts(), ProductsListAdapter.MASK_PRODUCT_MIN_INFO,
-                                DialogSortProductListOptions.SORT_BY_PRODUCT_NAME_ASC, mUser));
+                                DialogSortProductListOptions.SORT_BY_NO_SORT, mUser));
 
                         if (mainPageProductSection.getSeeAllIntent()!=null) {
                             viewHolder.mSeeAllProductsButton.setOnClickListener(new View.OnClickListener() {
