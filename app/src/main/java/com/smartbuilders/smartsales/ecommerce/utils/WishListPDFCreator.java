@@ -113,7 +113,7 @@ public class WishListPDFCreator {
             throws DocumentException, IOException {
         Font docNameFont;
         try{
-            docNameFont = new Font(BaseFont.createFont("assets/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 15f);
+            docNameFont = new Font(BaseFont.createFont("assets/fonts/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 15f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
@@ -154,7 +154,7 @@ public class WishListPDFCreator {
         BaseFont bf;
         Font font;
         try{
-            bf = BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            bf = BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
         }catch (Exception ex){
             ex.printStackTrace();
             try{

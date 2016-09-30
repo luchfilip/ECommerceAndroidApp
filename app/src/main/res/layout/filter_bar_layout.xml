@@ -8,7 +8,7 @@
     android:layout_gravity="center_vertical"
     android:id="@+id/filter_bar_linear_layout"
     android:baselineAligned="false"
-    android:background="@color/black">
+    android:background="@color/app_bar_background_color">
 
     <LinearLayout
         android:orientation="horizontal"

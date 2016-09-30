@@ -49,7 +49,7 @@
     <dimen name="productMainActivity_productImage_height">100dp</dimen>
     <dimen name="productMainActivity_marginLeftAndRight">5dp</dimen>
 
-    <dimen name="mainPageTitleSection_textSize">20sp</dimen>
+    <dimen name="mainPageTitleSection_textSize">19sp</dimen>
 
     <dimen name="related_products_label_text_size">16sp</dimen>
 

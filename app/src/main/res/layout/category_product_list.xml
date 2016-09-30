@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/category_name"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:textSize="@dimen/mainPageTitleSection_textSize"
             android:textStyle="bold|italic"
             android:layout_marginLeft="2dp" />
@@ -31,15 +31,13 @@
             android:layout_marginTop="2dp" />
 
         <Button
-            style="@style/MainButtonAppTheme"
+            style="@style/BlackButtonAppTheme"
             android:id="@+id/see_all_products_button"
-            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/see_all_products"
             android:textAllCaps="false"
-            android:layout_gravity="right"
-            android:textStyle="bold" />
+            android:layout_gravity="right" />
 
     </LinearLayout>
 

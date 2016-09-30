@@ -44,7 +44,7 @@
     <dimen name="productMainActivity_productImage_width">130dp</dimen>
     <dimen name="productMainActivity_productImage_height">130dp</dimen>
 
-    <dimen name="mainPageTitleSection_textSize">25sp</dimen>
+    <dimen name="mainPageTitleSection_textSize">23sp</dimen>
 
     <dimen name="related_products_label_text_size">21sp</dimen>
 

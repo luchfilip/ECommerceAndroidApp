@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/related_shopping_products"
                     android:id="@+id/related_shopping_products"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:textStyle="bold|italic"
                     android:focusable="false" />
@@ -71,14 +71,12 @@
                     android:layout_marginTop="2dp" />
 
                 <Button
-                    style="@style/MainButtonAppTheme"
+                    style="@style/BlackButtonAppTheme"
                     android:id="@+id/related_shopping_products_see_all"
-                    android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 
@@ -95,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/related_products_by_brand_tv"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:textStyle="bold|italic"
                     android:focusable="false" />
@@ -112,14 +110,12 @@
                     android:layout_marginTop="2dp" />
 
                 <Button
-                    style="@style/MainButtonAppTheme"
+                    style="@style/BlackButtonAppTheme"
                     android:id="@+id/related_products_by_brand_see_all"
-                    android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 
@@ -136,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/related_products"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/related_products_label_text_size"
                     android:focusable="false"
                     android:textStyle="bold|italic" />
@@ -153,14 +149,12 @@
                     android:layout_marginTop="2dp" />
 
                 <Button
-                    style="@style/MainButtonAppTheme"
+                    style="@style/BlackButtonAppTheme"
                     android:id="@+id/related_products_see_all"
-                    android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_products"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
                     android:layout_gravity="right" />
             </LinearLayout>
 

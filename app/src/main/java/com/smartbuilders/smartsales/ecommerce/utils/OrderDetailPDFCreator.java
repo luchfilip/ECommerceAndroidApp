@@ -135,8 +135,8 @@ public class OrderDetailPDFCreator {
         Font companyNameFont;
         Font font;
         try{
-            font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9.5f);
-            companyNameFont = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 13f);
+            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9.5f);
+            companyNameFont = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 13f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
@@ -184,8 +184,8 @@ public class OrderDetailPDFCreator {
         Font font;
         Font fontBold;
         try{
-            font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-            fontBold = new Font(BaseFont.createFont("assets/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            fontBold = new Font(BaseFont.createFont("assets/fonts/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
@@ -241,7 +241,7 @@ public class OrderDetailPDFCreator {
     private void addOrderTitle(Document document, Context ctx) throws DocumentException, IOException {
         BaseFont titleBaseFont;
         try{
-            titleBaseFont = BaseFont.createFont("assets/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            titleBaseFont = BaseFont.createFont("assets/fonts/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
@@ -262,7 +262,7 @@ public class OrderDetailPDFCreator {
         BaseFont bf;
         Font font;
         try{
-            bf = BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            bf = BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
@@ -344,7 +344,7 @@ public class OrderDetailPDFCreator {
     //private void addOrderFooter(Document document, Context ctx, Order order) throws DocumentException, IOException {
     //    Font font;
     //    try{
-    //        font = new Font(BaseFont.createFont("assets/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+    //        font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
     //    }catch (Exception ex){
     //        ex.printStackTrace();
     //        try{

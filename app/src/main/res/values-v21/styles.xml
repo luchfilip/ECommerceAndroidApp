@@ -63,6 +63,16 @@
         <item name="colorButtonNormal">@color/grey</item>
     </style>
 
+    <style name="BlackButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:theme">@style/Theme.MaterialBlackButton</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Theme.MaterialBlackButton" parent="AppTheme">
+        <item name="colorAccent">@color/black</item>
+        <item name="colorButtonNormal">@android:color/black</item>
+    </style>
+
     <style name="image_button_style">
         <item name="android:foreground">@drawable/ripple</item>
     </style>

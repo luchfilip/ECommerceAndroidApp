@@ -3,7 +3,7 @@
     <color name="colorPrimary">#009bef</color>
     <color name="colorPrimaryMedium">#4db5e7</color>
     <color name="colorPrimaryLight">#640692d6</color>
-    <color name="colorPrimaryDark">@color/black</color>
+    <color name="colorPrimaryDark">#222222</color>
     <color name="colorAccent">#cccccc</color>
 
     <color name="link">#0000EE</color>
@@ -36,8 +36,9 @@
     <color name="button_green">#10a54a</color>
     <color name="golden">#ffc400</color>
     <color name="golden_medium">#ffd700</color>
-    <color name="button_text_color">#333333</color>
-    <color name="black">#222222</color>
+    <color name="button_text_color">#444444</color>
+    <color name="black">#444444</color>
+    <color name="app_bar_background_color">#222222</color>
     <color name="title_background_color">#222222</color>
     <color name="products_list_size_color">#1556bf</color>
     <color name="phoneNumberLinkColor">#ff0099cc</color>
