@@ -29,11 +29,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:id="@+id/textView2"
                 android:textStyle="bold|italic"
-                android:textSize="36px"
+                android:textSize="34px"
                 android:layout_marginLeft="8px"
-                android:textColor="@color/black" />
+                android:textColor="#222222" />
         </LinearLayout>
 
         <LinearLayout
