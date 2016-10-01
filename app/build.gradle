@@ -140,6 +140,29 @@ android {
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
             resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
         }
+        grupoRivera {
+            applicationId "com.smartbuilders.smartsales.ecommerce.gruporivera"
+            minSdkVersion 10
+            targetSdkVersion 24
+            versionCode 1
+
+            //These are the values for the authorities and account types.
+            //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
+            buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.gruporivera\""
+            buildConfigField "String", "SYNC_ADAPTER_CONTENT_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "DataBaseContentProvider_AUTHORITY", "\"${applicationId}.providers.Syncadapter\""
+            buildConfigField "String", "SynchronizerContentProvider_AUTHORITY", "\"${applicationId}.providers.SynchronizerContentProvider\""
+            buildConfigField "String", "CachedFileProvider_AUTHORITY", "\"${applicationId}.providers.CachedFileProvider\""
+            buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
+
+            //Reference them in .xml files.
+            resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.gruporivera"
+            resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "DataBaseContentProvider_AUTHORITY", "${applicationId}.providers.Syncadapter"
+            resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
+            resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
+            resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
+        }
     }
 }
 

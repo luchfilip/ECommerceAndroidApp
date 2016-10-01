@@ -239,6 +239,45 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686820312802:android:a7f248277edfc944",
+        "android_client_info": {
+          "package_name": "com.smartbuilders.smartsales.ecommerce.gruporivera"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "686820312802-0dfj6qumki5a6lifbonft40hdp1d2skr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "686820312802-8bgldfqqvrjj9sogmffaqc0gmn25dvlk.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "686820312802-mpjita4h7r1ngcfj5gl5a4a0vesom5i4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmzy34I5zKuZyNmmMblU7EPrcgTN3Xfeg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

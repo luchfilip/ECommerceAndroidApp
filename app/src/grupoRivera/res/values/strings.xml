@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SFV Grupo Rivera C.A.</string>
+    <string name="ids_user_group_name">sfv-gruporivera</string>
+    <string name="company_name">Grupo Rivera C.A.</string>
+    <string name="company_host_name">www.gruporivera.com</string>
+    <string name="welcome_message_login_activity">Sistema de Fuerza de Ventas</string>
+    <!--<string name="gcm_sender_id">529456526909</string>-->
+    <!--<string name="gcm_server_api_key">AIzaSyDDtcYe8nQpw-cjbhsqCIgshwe5awQrQVY</string>-->
+</resources>
