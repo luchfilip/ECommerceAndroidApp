@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -735,7 +736,11 @@ public class Utils {
                     (toolbar.getChildAt(i)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, MainActivity.class));
+                            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                context.startActivity(new Intent(context, SalesForceSystemMainActivity.class));
+                            } else {
+                                context.startActivity(new Intent(context, MainActivity.class));
+                            }
                         }
                     });
                     break;
@@ -814,9 +819,13 @@ public class Utils {
     public static void navigationItemSelectedBehave(int itemId, Context context) {
         try {
             if (itemId == R.id.nav_home) {
-                context.startActivity(new Intent(context, MainActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    context.startActivity(new Intent(context, SalesForceSystemMainActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                } else {
+                    context.startActivity(new Intent(context, MainActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                }
             } else if (itemId == R.id.nav_shopping_cart) {
                 context.startActivity(new Intent(context, ShoppingCartActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));

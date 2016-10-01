@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/menu_home">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home" />
+    </group>
+    <group
+        android:id="@+id/menu_business_partners">
+        <item
+            android:id="@+id/nav_business_partners"
+            android:icon="@drawable/ic_supervisor_account_black_24dp"
+            android:title="@string/business_partners" />
+    </group>
+    <item android:title="@string/action_setting">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/nav_report_error"
+                android:icon="@drawable/ic_report_problem_black_24dp"
+                android:title="@string/report_error" />
+        </menu>
+    </item>
+</menu>

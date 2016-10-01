@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.utils.NotificationUtils;
+import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
@@ -90,7 +91,11 @@ public class WishListActivity extends AppCompatActivity
             // Esto es para cuando se entra a esta activity por la notificacion de nuevas existencias
             // y no está el MainActivity cargado.
             if (isTaskRoot()) {
-                startActivity(new Intent(this, MainActivity.class));
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    startActivity(new Intent(this, SalesForceSystemMainActivity.class));
+                } else {
+                    startActivity(new Intent(this, MainActivity.class));
+                }
                 finish();
             } else {
                 super.onBackPressed();

@@ -396,5 +396,6 @@
     <string name="click_back_again_to_exit">Pulse atrás nuevamente para salir</string>
     <string name="see_all_products">Ver todos</string>
     <string name="our_brands">Nuestras Marcas</string>
+    <string name="title_activity_sales_force_system_main">SalesForceSystemMainActivity</string>
 
 </resources>

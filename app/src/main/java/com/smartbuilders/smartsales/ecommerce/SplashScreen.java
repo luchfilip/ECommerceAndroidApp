@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
@@ -280,8 +281,13 @@ public class SplashScreen extends AppCompatActivity {
     private void initApp(){
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
-        startActivity(new Intent(SplashScreen.this, MainActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            startActivity(new Intent(SplashScreen.this, SalesForceSystemMainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        } else {
+            startActivity(new Intent(SplashScreen.this, MainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        }
         finish();
     }
 
