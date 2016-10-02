@@ -195,32 +195,36 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_brand).setVisibility(View.GONE);
                                     }
 
-                                    final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
+                                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                        view.findViewById(R.id.favorite_imageView).setVisibility(View.GONE);
+                                    } else {
+                                        final ImageView favoriteImageView = (ImageView) view.findViewById(R.id.favorite_imageView);
 
-                                    favoriteImageView.setImageResource(mProduct.isFavorite()
-                                            ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-                                    favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (mProduct.isFavorite()) {
-                                                String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
-                                                if (result == null) {
-                                                    mProduct.setFavorite(false);
-                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                        favoriteImageView.setImageResource(mProduct.isFavorite()
+                                                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+                                        favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (mProduct.isFavorite()) {
+                                                    String result = (new OrderLineDB(getContext(), mUser)).removeProductFromWishList(mProduct.getId());
+                                                    if (result == null) {
+                                                        mProduct.setFavorite(false);
+                                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                                    } else {
+                                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                    }
                                                 } else {
-                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                                                }
-                                            } else {
-                                                String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct);
-                                                if (result == null) {
-                                                    mProduct.setFavorite(true);
-                                                    favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                                } else {
-                                                    Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                    String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct);
+                                                    if (result == null) {
+                                                        mProduct.setFavorite(true);
+                                                        favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                                    } else {
+                                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                    }
                                                 }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
 
                                     if (!relatedProductsByShopping.isEmpty()) {
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);

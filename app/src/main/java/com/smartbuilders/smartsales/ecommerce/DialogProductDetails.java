@@ -124,32 +124,36 @@ public class DialogProductDetails extends DialogFragment {
             }
         });
 
-        ((ImageView) view.findViewById(R.id.favorite_imageView))
-                .setImageResource(mProduct.isFavorite() ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-        view.findViewById(R.id.favorite_imageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mProduct.isFavorite()){
-                    String result = removeFromWishList(mProduct.getId());
-                    if (result == null) {
-                        mProduct.setFavorite(false);
-                        ((ImageView) view.findViewById(R.id.favorite_imageView))
-                                .setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            view.findViewById(R.id.favorite_imageView).setVisibility(View.GONE);
+        } else {
+            ((ImageView) view.findViewById(R.id.favorite_imageView))
+                    .setImageResource(mProduct.isFavorite() ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+            view.findViewById(R.id.favorite_imageView).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mProduct.isFavorite()) {
+                        String result = removeFromWishList(mProduct.getId());
+                        if (result == null) {
+                            mProduct.setFavorite(false);
+                            ((ImageView) view.findViewById(R.id.favorite_imageView))
+                                    .setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        } else {
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    String result = addToWishList(mProduct);
-                    if (result == null) {
-                        mProduct.setFavorite(true);
-                        ((ImageView) view.findViewById(R.id.favorite_imageView))
-                                .setImageResource(R.drawable.ic_favorite_black_24dp);
-                    } else {
-                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                        String result = addToWishList(mProduct);
+                        if (result == null) {
+                            mProduct.setFavorite(true);
+                            ((ImageView) view.findViewById(R.id.favorite_imageView))
+                                    .setImageResource(R.drawable.ic_favorite_black_24dp);
+                        } else {
+                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         ((ImageView) view.findViewById(R.id.addToShoppingCart_imageView))
                 .setColorFilter(Utils.getColor(getContext(), R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);

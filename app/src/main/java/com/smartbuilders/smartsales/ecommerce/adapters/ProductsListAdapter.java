@@ -74,9 +74,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
+        public View shareImageViewContainer;
         public ImageView favoriteImageView;
-        public ImageView addToShoppingCartImage;
-        public ImageView addToShoppingSaleImage;
+        public View favoriteImageViewViewContainer;
+        public ImageView addToShoppingCartImageView;
+        public View addToShoppingCartImageViewContainer;
+        public ImageView addToShoppingSaleImageView;
+        public View addToShoppingSaleImageViewContainer;
         public View productRatingBarContainer;
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
@@ -94,9 +98,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
+            shareImageViewContainer = v.findViewById(R.id.share_imageView_container);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
-            addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
-            addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            favoriteImageViewViewContainer = v.findViewById(R.id.favorite_imageView_container);
+            addToShoppingCartImageView = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
+            addToShoppingCartImageViewContainer = v.findViewById(R.id.addToShoppingCart_imageView_container);
+            addToShoppingSaleImageView = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            addToShoppingSaleImageViewContainer = v.findViewById(R.id.addToShoppingSale_imageView_container);
             productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
@@ -207,33 +215,39 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         });
 
-        holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
-                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-        holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mDataset.get(holder.getAdapterPosition()).isFavorite()){
-                    String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
-                    if (result == null) {
-                        mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            holder.favoriteImageView.setVisibility(View.GONE);
+            if (holder.favoriteImageViewViewContainer!=null) {
+                holder.favoriteImageViewViewContainer.setVisibility(View.GONE);
+            }
+        } else {
+            holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
+                    ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDataset.get(holder.getAdapterPosition()).isFavorite()) {
+                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                        if (result == null) {
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
-                    if (result == null) {
-                        mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-                        holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    } else {
-                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
+                        if (result == null) {
+                            mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                        } else {
+                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
-        });
-
-        holder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-        holder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
+            });
+        }
+        holder.addToShoppingCartImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OrderLine orderLine = (new OrderLineDB(mContext, mUser))
@@ -246,8 +260,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         });
 
-        holder.addToShoppingSaleImage.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
-        holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
+        holder.addToShoppingSaleImageView.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+        holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addToShoppingSale(mDataset.get(holder.getAdapterPosition()));

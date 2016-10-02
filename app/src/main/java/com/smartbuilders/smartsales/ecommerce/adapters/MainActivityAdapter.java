@@ -347,30 +347,34 @@ public class MainActivityAdapter extends BaseAdapter {
                             }
                         });
 
-                        viewHolder.favoriteImageView.setImageResource(((Product) mDataset.get(position)).isFavorite()
-                                ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-                        viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(((Product) mDataset.get(position)).isFavorite()){
-                                    String result = removeFromWishList(((Product) mDataset.get(position)).getId());
-                                    if (result == null) {
-                                        ((Product) mDataset.get(position)).setFavorite(false);
-                                        viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                            viewHolder.favoriteImageView.setVisibility(View.GONE);
+                        } else {
+                            viewHolder.favoriteImageView.setImageResource(((Product) mDataset.get(position)).isFavorite()
+                                    ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+                            viewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (((Product) mDataset.get(position)).isFavorite()) {
+                                        String result = removeFromWishList(((Product) mDataset.get(position)).getId());
+                                        if (result == null) {
+                                            ((Product) mDataset.get(position)).setFavorite(false);
+                                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                        } else {
+                                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
-                                    }
-                                }else{
-                                    String result = addToWishList(((Product) mDataset.get(position)));
-                                    if (result == null) {
-                                        ((Product) mDataset.get(position)).setFavorite(true);
-                                        viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                                    } else {
-                                        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                        String result = addToWishList(((Product) mDataset.get(position)));
+                                        if (result == null) {
+                                            ((Product) mDataset.get(position)).setFavorite(true);
+                                            viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                                        } else {
+                                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
 
                         viewHolder.addToShoppingCartImage.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
                         viewHolder.addToShoppingCartImage.setOnClickListener(new View.OnClickListener() {
