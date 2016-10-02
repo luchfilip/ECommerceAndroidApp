@@ -65,7 +65,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if(navigationView!=null && mUser !=null){
-            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
+                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
+            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
             }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 navigationView.inflateMenu(R.menu.sales_man_drawer_menu);

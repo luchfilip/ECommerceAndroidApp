@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
@@ -152,19 +153,24 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             return;
         }
 
-        if(mMask==MASK_PRODUCT_LARGE_DETAILS){
-            Utils.loadOriginalImageByFileName(mContext, mUser,
-                    mDataset.get(position).getImageFileName(), holder.productImage);
-        }else{
-            Utils.loadThumbImageByFileName(mContext, mUser,
-                    mDataset.get(position).getImageFileName(), holder.productImage);
-        }
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            if (mMask == MASK_PRODUCT_LARGE_DETAILS) {
+                Utils.loadOriginalImageByFileName(mContext, mUser,
+                        mDataset.get(position).getImageFileName(), holder.productImage);
+            } else {
+                Utils.loadThumbImageByFileName(mContext, mUser,
+                        mDataset.get(position).getImageFileName(), holder.productImage);
             }
-        });
+
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                }
+            });
+        } else {
+            holder.productImage.setVisibility(View.GONE);
+        }
 
         holder.productName.setText(mDataset.get(position).getName());
 

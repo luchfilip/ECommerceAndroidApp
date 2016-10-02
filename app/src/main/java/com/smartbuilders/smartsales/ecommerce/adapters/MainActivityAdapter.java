@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
@@ -297,16 +298,19 @@ public class MainActivityAdapter extends BaseAdapter {
                     break;
                 case VIEW_TYPE_PRODUCT:
                     if (mDataset!=null && mDataset.get(position) instanceof Product){
-                        //final Product product = (Product) mDataset.get(position);
-                        Utils.loadThumbImageByFileName(mContext, mUser,
-                                ((Product) mDataset.get(position)).getImageFileName(), viewHolder.productImage);
+                        if (BuildConfig.USE_PRODUCT_IMAGE) {
+                            Utils.loadThumbImageByFileName(mContext, mUser,
+                                    ((Product) mDataset.get(position)).getImageFileName(), viewHolder.productImage);
 
-                        viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                goToProductDetails(((Product) mDataset.get(position)).getId());
-                            }
-                        });
+                            viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    goToProductDetails(((Product) mDataset.get(position)).getId());
+                                }
+                            });
+                        } else {
+                            viewHolder.productImage.setVisibility(View.GONE);
+                        }
 
                         viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
 

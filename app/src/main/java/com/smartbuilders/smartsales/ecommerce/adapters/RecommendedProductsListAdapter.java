@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
@@ -121,8 +122,12 @@ public class RecommendedProductsListAdapter extends
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Utils.loadThumbImageByFileName(mContext, mUser,
-                mDataset.get(position).getImageFileName(), holder.productImage);
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            Utils.loadThumbImageByFileName(mContext, mUser,
+                    mDataset.get(position).getImageFileName(), holder.productImage);
+        } else {
+            holder.productImage.setVisibility(View.GONE);
+        }
 
         holder.productName.setText(mDataset.get(position).getName());
 

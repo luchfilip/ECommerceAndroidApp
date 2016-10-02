@@ -126,8 +126,29 @@ public class ProductDetailFragment extends Fragment {
                                 if (mProduct!=null) {
                                     ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
-                                    Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
-                                            (ImageView) view.findViewById(R.id.product_image));
+                                    if (BuildConfig.USE_PRODUCT_IMAGE) {
+                                        Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
+                                                (ImageView) view.findViewById(R.id.product_image));
+
+                                        view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (TextUtils.isEmpty(mProduct.getImageFileName())) {
+                                                    Toast.makeText(getContext(), R.string.no_image_available, Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    startActivity((new Intent(getContext(), ZoomImageActivity.class)
+                                                            .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
+                                                }
+                                            }
+                                        });
+
+                                        if (TextUtils.isEmpty(mProduct.getImageFileName())) {
+                                            view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
+                                        }
+                                    } else {
+                                        view.findViewById(R.id.product_image).setVisibility(View.GONE);
+                                        view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
+                                    }
 
                                     if (!TextUtils.isEmpty(mProduct.getInternalCode())) {
                                         ((TextView) view.findViewById(R.id.product_internal_code))
@@ -199,22 +220,6 @@ public class ProductDetailFragment extends Fragment {
                                             }
                                         }
                                     });
-
-                                    view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                                Toast.makeText(getContext(), R.string.no_image_available, Toast.LENGTH_LONG).show();
-                                            } else {
-                                                startActivity((new Intent(getContext(), ZoomImageActivity.class)
-                                                        .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
-                                            }
-                                        }
-                                    });
-
-                                    if (TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                        view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
-                                    }
 
                                     if (!relatedProductsByShopping.isEmpty()) {
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.related_shopping_products_recycler_view);

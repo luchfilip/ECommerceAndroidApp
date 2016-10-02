@@ -15,14 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 
 /**
  * Created by Jesus Sarco, 01.10.2016
  */
 public class SalesForceSystemMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SalesForceSystemMainActivityFragment.Callback  {
 
     private User mUser;
     private boolean doubleBackToExitPressedOnce;
@@ -55,13 +59,22 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
         if(navigationView!=null && mUser !=null){
             navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
             navigationView.setNavigationItemSelectedListener(this);
-            try {
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                        .setText(getString(R.string.welcome_user, mUser.getUserName()));
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
         }
+
+        try {
+            BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
+                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+            if (businessPartner!=null) {
+                ((TextView) findViewById(R.id.business_partner_name_textView))
+                        .setText(businessPartner.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ApplicationUtilities.checkAppVersion(this, mUser);
     }
 
     @Override
@@ -102,4 +115,17 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void reload() {
+        try {
+            BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
+                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+            if (businessPartner!=null) {
+                ((TextView) findViewById(R.id.business_partner_name_textView))
+                        .setText(businessPartner.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

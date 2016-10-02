@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
@@ -126,15 +127,19 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Utils.loadThumbImageByFileName(mContext, mUser,
-                mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            Utils.loadThumbImageByFileName(mContext, mUser,
+                    mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
 
-        holder.productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                }
+            });
+        } else {
+            holder.productImage.setVisibility(View.GONE);
+        }
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
         holder.productName.setOnClickListener(new View.OnClickListener() {

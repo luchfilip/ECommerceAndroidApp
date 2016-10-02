@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerce.session;
 
 import android.content.Context;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -39,7 +40,8 @@ public class Parameter {
      * @return
      */
     public static boolean isManagePriceInOrder(Context context, User user){
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
+        return BuildConfig.IS_SALES_FORCE_SYSTEM ||
+                ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
     }
 
     /**
@@ -110,7 +112,8 @@ public class Parameter {
      * @return
      */
     public static boolean showProductRatingBar(Context context, User user){
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_RATING_BAR, true);
+        return !BuildConfig.IS_SALES_FORCE_SYSTEM
+                && ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_RATING_BAR, true);
     }
 
     /**

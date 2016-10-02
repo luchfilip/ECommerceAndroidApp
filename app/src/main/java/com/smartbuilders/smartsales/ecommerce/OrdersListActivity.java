@@ -55,15 +55,17 @@ public class OrdersListActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(mNavigationView!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                mNavigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if(navigationView!=null && user!=null){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
+                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
             }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                mNavigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
             }
-            mNavigationView.setNavigationItemSelectedListener(this);
-            ((TextView) mNavigationView.getHeaderView(0).findViewById(R.id.user_name))
+            navigationView.setNavigationItemSelectedListener(this);
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                     .setText(getString(R.string.welcome_user, user.getUserName()));
         }
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -113,8 +114,12 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                     mDataset.get(position).getProduct().getInternalCode()));
         }
 
-        Utils.loadThumbImageByFileName(mContext, mUser,
-                mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            Utils.loadThumbImageByFileName(mContext, mUser,
+                    mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
+        } else {
+            holder.productImage.setVisibility(View.GONE);
+        }
 
         if (mDataset.get(position).getProduct().getProductBrand() != null
                 && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())) {

@@ -71,14 +71,18 @@ public class DialogProductDetails extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
-        Utils.loadOriginalImageByFileName(getContext(), mUser,
-                mProduct.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
-        view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mProduct.getId());
-            }
-        });
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            Utils.loadOriginalImageByFileName(getContext(), mUser,
+                    mProduct.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
+            view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mProduct.getId());
+                }
+            });
+        } else {
+            view.findViewById(R.id.product_image).setVisibility(View.GONE);
+        }
 
         view.findViewById(R.id.go_to_product_details).setOnClickListener(new View.OnClickListener() {
             @Override

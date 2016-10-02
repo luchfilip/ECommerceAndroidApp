@@ -23,6 +23,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -174,23 +175,25 @@ public class WishListPDFCreator {
             borderTable.setWidthPercentage(100);
 
             /****************************************/
-            PdfPTable table = new PdfPTable(2);
+            PdfPTable table = new PdfPTable(BuildConfig.USE_PRODUCT_IMAGE ? 2 : 1);
             // Defiles the relative width of the columns
-            float[] columnWidths = new float[] {30f, 120f};
+            float[] columnWidths = BuildConfig.USE_PRODUCT_IMAGE ? new float[] {30f, 120f} : new float[] {120f};
             table.setWidths(columnWidths);
             table.setWidthPercentage(100);
-            Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
-            if(bmp==null){
-                bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
+            if (BuildConfig.USE_PRODUCT_IMAGE) {
+                Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
+                if (bmp == null) {
+                    bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
+                }
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Image productImage = Image.getInstance(stream.toByteArray());
+                PdfPCell cell = new PdfPCell(productImage, true);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setPadding(3);
+                cell.setBorder(PdfPCell.NO_BORDER);
+                table.addCell(cell);
             }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image productImage = Image.getInstance(stream.toByteArray());
-            PdfPCell cell = new PdfPCell(productImage, true);
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setPadding(3);
-            cell.setBorder(PdfPCell.NO_BORDER);
-            table.addCell(cell);
 
             PdfPCell cell2 = new PdfPCell();
             cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);

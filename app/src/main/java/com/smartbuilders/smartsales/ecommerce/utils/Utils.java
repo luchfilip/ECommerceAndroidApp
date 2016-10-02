@@ -138,24 +138,29 @@ public class Utils {
 
         /****************************************************************************************/
         final View view = activity.getLayoutInflater().inflate(R.layout.product_share_layout, null);
-        if(!TextUtils.isEmpty(product.getImageFileName())){
-            Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, product.getImageFileName());
-            if(productImage==null){
-                //Si el archivo no existe entonces se descarga
-                try {
-                    productImage = (new GetFileFromServlet(product.getImageFileName(), false, user, context)).execute().get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+        if (BuildConfig.USE_PRODUCT_IMAGE) {
+            if(!TextUtils.isEmpty(product.getImageFileName())){
+                Bitmap productImage = Utils.getImageFromOriginalDirByFileName(context, product.getImageFileName());
+                if(productImage==null){
+                    //Si el archivo no existe entonces se descarga
+                    try {
+                        productImage = (new GetFileFromServlet(product.getImageFileName(), false, user, context)).execute().get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //Si no se tiene el archivo en tamano original se recurre al de miniatura
+                if(productImage==null){
+                    productImage = Utils.getImageFromThumbDirByFileName(context, product.getImageFileName());
+                }
+                if(productImage!=null){
+                    ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(productImage);
                 }
             }
-            //Si no se tiene el archivo en tamano original se recurre al de miniatura
-            if(productImage==null){
-                productImage = Utils.getImageFromThumbDirByFileName(context, product.getImageFileName());
-            }
-            if(productImage!=null){
-                ((ImageView) view.findViewById(R.id.product_image)).setImageBitmap(productImage);
-            }
+        } else {
+            view.findViewById(R.id.product_image).setVisibility(View.GONE);
         }
+
         if(!TextUtils.isEmpty(product.getName())){
             ((TextView) view.findViewById(R.id.product_name)).setText(product.getName());
         }else{
