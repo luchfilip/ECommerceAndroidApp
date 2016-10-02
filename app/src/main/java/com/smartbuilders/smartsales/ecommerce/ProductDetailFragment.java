@@ -146,6 +146,7 @@ public class ProductDetailFragment extends Fragment {
                                             view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
                                         }
                                     } else {
+                                        view.findViewById(R.id.product_image_container).setVisibility(View.GONE);
                                         view.findViewById(R.id.product_image).setVisibility(View.GONE);
                                         view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
                                     }

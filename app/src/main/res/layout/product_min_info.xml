@@ -18,9 +18,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/product_name"
             android:textColor="@color/black"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
             android:textSize="@dimen/productMinInfo_product_name_text_size"
             android:lines="2"
@@ -38,20 +38,22 @@
             android:layout_height="wrap_content"
             android:id="@+id/product_price"
             android:textSize="@dimen/productMinInfo_price_text_size"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="2dp"
             android:textColor="@color/product_price_color"
             android:textStyle="bold"
-            android:lines="1" />
+            android:lines="1"
+            android:layout_marginRight="2dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/product_availability"
             android:textSize="@dimen/productMinInfo_availability_text_size"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="2dp"
             android:textColor="@color/product_availability_color"
             android:textStyle="bold"
-            android:lines="1" />
+            android:lines="1"
+            android:layout_marginRight="2dp" />
 
     </LinearLayout>
 

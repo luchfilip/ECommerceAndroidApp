@@ -10,7 +10,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/go_to_product_details">
+        android:id="@+id/go_to_product_details"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -21,9 +23,7 @@
             android:textSize="@dimen/productDetailCardView_name_text_size"
             android:maxLines="2"
             android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginLeft="2dp" />
+            android:layout_marginBottom="2dp" />
 
         <ImageView
             android:layout_width="@dimen/productLargeDetail_max_image_Width"
@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/product_internal_code"
             android:textColor="@color/black"
-            android:textSize="@dimen/productDetailCardView_internalCode_text_size"
             android:textStyle="bold" />
 
         <!--<TextView
@@ -77,7 +76,7 @@
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/product_details_price_color"
+            android:textColor="@color/product_price_color"
             android:textStyle="bold"
             android:textSize="@dimen/productDetailCardView_price_text_size" />
 
