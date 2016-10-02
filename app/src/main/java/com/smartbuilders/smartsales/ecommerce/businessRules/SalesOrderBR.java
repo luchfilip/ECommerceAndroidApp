@@ -3,8 +3,9 @@ package com.smartbuilders.smartsales.ecommerce.businessRules;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
-import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
@@ -78,6 +79,20 @@ public class SalesOrderBR {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void validateQuantityOrderedInOrderLines(Context context, User user, ArrayList<SalesOrderLine> salesOrderLines) {
+        if (salesOrderLines!=null && !salesOrderLines.isEmpty()) {
+            ProductDB productDB = new ProductDB(context, user);
+            for (SalesOrderLine salesOrderLine : salesOrderLines) {
+                Product product = productDB.getProductById(salesOrderLine.getProductId());
+                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                //esa linea del pedido tiene error en la cantidad pedida.
+                salesOrderLine.setQuantityOrderedInvalid((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                        || (salesOrderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0));
+            }
+        }
     }
 
     private static void syncDataWithServer(Context context, String userId) {

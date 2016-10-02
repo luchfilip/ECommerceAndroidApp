@@ -22,6 +22,7 @@ import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 /**
@@ -253,10 +254,17 @@ public class DialogProductDetails extends DialogFragment {
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(getContext(), mUser)).getProductById(product.getId());
-        DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, mUser);
-        dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, mUser);
+            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, mUser);
+            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     @Override

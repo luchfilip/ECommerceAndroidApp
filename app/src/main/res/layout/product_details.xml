@@ -35,7 +35,8 @@
             android:layout_weight="1"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
-            android:minHeight="@dimen/productDetail_max_image_Height">
+            android:minHeight="@dimen/productDetail_max_image_Height"
+            android:id="@+id/product_details_info_container">
 
             <LinearLayout
                 android:orientation="vertical"

@@ -104,7 +104,11 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
                             }
                             try {
                                 if (getTargetFragment()!=null) {
-                                    ((DialogAddToShoppingSale) getTargetFragment()).initViews();
+                                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                        // do nothing
+                                    } else {
+                                        ((DialogAddToShoppingSale) getTargetFragment()).initViews();
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

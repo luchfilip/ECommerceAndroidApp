@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
+import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
@@ -39,7 +41,7 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback,
-        DatePickerFragment.Callback {
+        ShoppingSaleAdapter2.Callback, DatePickerFragment.Callback, DialogUpdateShoppingSaleQtyOrdered.Callback {
 
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
@@ -50,6 +52,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private boolean mIsInitialLoad;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
+    private ShoppingSaleAdapter2 mShoppingSaleAdapter2;
     private View mBlankScreenView;
     private View mainLayout;
     private TextView mTotalLines;
@@ -114,7 +117,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                     mUser = Utils.getCurrentUser(getContext());
 
                     mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale(mCurrentBusinessPartnerId);
-                    mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
+                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                        mShoppingSaleAdapter2 = new ShoppingSaleAdapter2(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
+                    } else {
+                        mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
+                    }
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
@@ -141,7 +148,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(mShoppingSaleAdapter);
+                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                    recyclerView.setAdapter(mShoppingSaleAdapter2);
+                                } else {
+                                    recyclerView.setAdapter(mShoppingSaleAdapter);
+                                }
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -343,10 +354,23 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     @Override
+    public void updateQtyOrdered(SalesOrderLine salesOrderLine) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
+        dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
+        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+    }
+
+    @Override
     public void reloadShoppingSale(){
         mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mUser))
                 .getShoppingSale(mCurrentBusinessPartnerId);
-        mShoppingSaleAdapter.setData(mSalesOrderLines);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            mShoppingSaleAdapter2.setData(mSalesOrderLines);
+        } else {
+            mShoppingSaleAdapter.setData(mSalesOrderLines);
+        }
 
         if (mSalesOrderLines==null || mSalesOrderLines.isEmpty()) {
             mBlankScreenView.setVisibility(View.VISIBLE);

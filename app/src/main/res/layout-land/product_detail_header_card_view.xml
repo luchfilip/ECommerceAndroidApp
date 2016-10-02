@@ -208,7 +208,7 @@
                         style="@style/MainButtonAppTheme"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/buy"
+                        android:text="@string/add_to_shopping_cart"
                         android:id="@+id/product_addtoshoppingcart_button"
                         android:layout_weight="1" />
 
@@ -216,7 +216,7 @@
                         style="@style/GoldenButtonAppTheme"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/sell"
+                        android:text="@string/add_to_shopping_sales"
                         android:id="@+id/product_addtoshoppingsales_button"
                         android:layout_weight="1" />
                 </LinearLayout>

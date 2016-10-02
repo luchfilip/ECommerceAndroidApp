@@ -52,10 +52,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     public static DialogAddToShoppingSale newInstance(Product product, User user){
-        DialogAddToShoppingSale editQtyRequestedDialogFragment = new DialogAddToShoppingSale();
-        editQtyRequestedDialogFragment.mProduct = product;
-        editQtyRequestedDialogFragment.mUser = user;
-        return editQtyRequestedDialogFragment;
+        DialogAddToShoppingSale dialogAddToShoppingSale = new DialogAddToShoppingSale();
+        dialogAddToShoppingSale.mProduct = product;
+        dialogAddToShoppingSale.mUser = user;
+        return dialogAddToShoppingSale;
     }
 
     @Override

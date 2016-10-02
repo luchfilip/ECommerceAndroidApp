@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.RecommendedProductsListAdapter;
@@ -212,12 +213,18 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
     @Override
     public void addToShoppingSale(int productId, User user) {
-        Product product = (new ProductDB(getContext(), user))
-                .getProductById(productId);
-        DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, user);
-        dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), user)).getProductById(productId);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, user);
+            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, user);
+            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     @Override

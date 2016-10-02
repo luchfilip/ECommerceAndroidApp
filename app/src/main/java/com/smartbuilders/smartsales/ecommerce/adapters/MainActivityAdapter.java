@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
@@ -485,10 +486,17 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, mUser);
-        dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, mUser);
+            dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, mUser);
+            dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     private String addToWishList(Product product) {

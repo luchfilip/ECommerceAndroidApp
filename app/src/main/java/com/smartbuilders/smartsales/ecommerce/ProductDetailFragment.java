@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
 import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
@@ -319,7 +320,7 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                addToShoppingSale(mUser, mProduct);
+                                                addToShoppingSale(mProduct);
                                             }
                                         }
                                     );
@@ -416,11 +417,18 @@ public class ProductDetailFragment extends Fragment {
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
-    private void addToShoppingSale(User user, Product product) {
-        DialogAddToShoppingSale addToShoppingSaleFragment =
-                DialogAddToShoppingSale.newInstance(product, user);
-        addToShoppingSaleFragment.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+    private void addToShoppingSale(Product product) {
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, mUser);
+            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, mUser);
+            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     @Override

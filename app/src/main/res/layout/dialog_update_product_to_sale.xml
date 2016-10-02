@@ -24,18 +24,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/product_availability_textView"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:textColor="@color/product_availability_color"
-        android:textStyle="bold|italic" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/product_commercial_package"
         android:textStyle="italic"
         android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/product_availability_textView"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="@color/product_availability_color"
+        android:textStyle="bold|italic" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -167,12 +167,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/GreyButtonAppTheme"
             android:text="@string/cancel"
             android:id="@+id/cancel_button" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/GoldenButtonAppTheme"
             android:text="@string/accept"
             android:id="@+id/accept_button" />
     </LinearLayout>

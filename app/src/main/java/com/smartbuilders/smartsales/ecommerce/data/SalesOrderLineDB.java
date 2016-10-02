@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
@@ -30,6 +31,11 @@ public class SalesOrderLineDB {
 
     public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
         return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
+    }
+
+    public String addProductToShoppingSale(Product product, int qtyRequested, int businessPartnerId){
+        return addSalesOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
+                product.getProductTax().getPercentage(), SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
     }
 
     public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId, int businessPartnerId){

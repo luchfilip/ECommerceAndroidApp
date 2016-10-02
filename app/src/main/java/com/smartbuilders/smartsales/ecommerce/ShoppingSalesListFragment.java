@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
+import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSalesListAdapter;
@@ -19,12 +21,14 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleAdapter.Callback {
+public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleAdapter.Callback,
+        ShoppingSaleAdapter2.Callback {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
 
+    private User mUser;
     private boolean mIsInitialLoad;
     private ListView mListView;
     private int mListViewIndex;
@@ -49,7 +53,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
         final View view = inflater.inflate(R.layout.fragment_shopping_sales_list, container, false);
         mIsInitialLoad = true;
 
-        final User user = Utils.getCurrentUser(getContext());
+        mUser = Utils.getCurrentUser(getContext());
         new Thread() {
             @Override
             public void run() {
@@ -65,7 +69,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                             mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
                         }
                     }
-                    mSalesOrderDB = new SalesOrderDB(getContext(), user);
+                    mSalesOrderDB = new SalesOrderDB(getContext(), mUser);
                     mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getActiveShoppingSalesOrders());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -95,7 +99,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                         SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
                                         if (salesOrder != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(salesOrder, user);
+                                            ((Callback) getActivity()).onItemLongSelected(salesOrder, mUser);
                                         }
                                         return true;
                                     }
@@ -149,6 +153,15 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     @Override
     public void reloadShoppingSalesList(User user) {
         mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+    }
+
+    @Override
+    public void updateQtyOrdered(SalesOrderLine salesOrderLine) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
+        dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
+        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
     }
 
     @Override

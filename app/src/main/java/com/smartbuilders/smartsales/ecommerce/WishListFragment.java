@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.WishListAdapter;
@@ -187,10 +188,17 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public void addToShoppingSale(Product product, User user) {
-        DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, user);
-        dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, user);
+            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, user);
+            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     public void reloadWishList(){

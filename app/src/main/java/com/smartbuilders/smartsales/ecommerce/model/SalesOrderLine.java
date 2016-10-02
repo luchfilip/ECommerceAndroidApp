@@ -19,6 +19,7 @@ public class SalesOrderLine extends Model implements Parcelable {
     private double taxPercentage;
     private double totalLineAmount;
     private int businessPartnerId;
+    private boolean isQuantityOrderedInvalid;
 
     public SalesOrderLine(){
 
@@ -35,6 +36,7 @@ public class SalesOrderLine extends Model implements Parcelable {
         taxPercentage = in.readDouble();
         totalLineAmount = in.readDouble();
         businessPartnerId = in.readInt();
+        isQuantityOrderedInvalid = in.readByte() != 0;
     }
 
     @Override
@@ -49,6 +51,7 @@ public class SalesOrderLine extends Model implements Parcelable {
         dest.writeDouble(taxPercentage);
         dest.writeDouble(totalLineAmount);
         dest.writeInt(businessPartnerId);
+        dest.writeByte((byte) (isQuantityOrderedInvalid ? 1 : 0));
     }
 
     @Override
@@ -150,6 +153,14 @@ public class SalesOrderLine extends Model implements Parcelable {
 
     public void setCurrencyId(int currencyId) {
         this.currencyId = currencyId;
+    }
+
+    public boolean isQuantityOrderedInvalid() {
+        return isQuantityOrderedInvalid;
+    }
+
+    public void setQuantityOrderedInvalid(boolean quantityOrderedInvalid) {
+        isQuantityOrderedInvalid = quantityOrderedInvalid;
     }
 
     @Override

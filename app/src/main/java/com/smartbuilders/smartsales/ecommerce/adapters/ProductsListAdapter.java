@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
@@ -84,6 +85,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public View productRatingBarContainer;
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
+        public View productDetailsInfoContainer;
 
         public ViewHolder(View v) {
             super(v);
@@ -108,6 +110,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
+            productDetailsInfoContainer = v.findViewById(R.id.product_details_info_container);
         }
     }
 
@@ -178,6 +181,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             });
         } else {
             holder.productImage.setVisibility(View.GONE);
+            if (holder.productDetailsInfoContainer!=null) {
+                holder.productDetailsInfoContainer.setMinimumHeight(0);
+            }
         }
 
         holder.productName.setText(mDataset.get(position).getName());
@@ -374,10 +380,17 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        DialogAddToShoppingSale dialogAddToShoppingSale =
-                DialogAddToShoppingSale.newInstance(product, mUser);
-        dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogAddToShoppingSale.class.getSimpleName());
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                    DialogAddToShoppingSale2.newInstance(product, mUser);
+            dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingSale2.class.getSimpleName());
+        } else {
+            DialogAddToShoppingSale dialogAddToShoppingSale =
+                    DialogAddToShoppingSale.newInstance(product, mUser);
+            dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingSale.class.getSimpleName());
+        }
     }
 
     private String addToWishList(Product product) {

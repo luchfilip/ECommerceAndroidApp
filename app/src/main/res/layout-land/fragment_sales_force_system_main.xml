@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/shopping_cart"
             android:id="@+id/shopping_cart_button"
-            style="@style/BlackButtonAppTheme"
+            style="@style/MainButtonAppTheme"
             android:layout_gravity="center_horizontal" />
 
         <Button
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="@string/open_shopping_sale"
             android:id="@+id/shopping_sale_button"
-            style="@style/BlackButtonAppTheme"
+            style="@style/GoldenButtonAppTheme"
             android:layout_gravity="center_horizontal" />
 
         <Button

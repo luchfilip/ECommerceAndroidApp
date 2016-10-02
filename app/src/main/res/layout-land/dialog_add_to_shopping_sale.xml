@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="10dp"
     android:layout_height="wrap_content"
-    android:background="@color/light_grey">
+    android:background="@color/material_grey_100">
 
     <TextView
         android:layout_width="wrap_content"
@@ -193,7 +193,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sell"
+                android:text="@string/add_to_shopping_sales"
                 android:id="@+id/add_to_shopping_sale_button" />
         </TableRow>
 
