@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         public TextView productInternalCode;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productBrand;
         public TextView productTaxPercentage;
         public TextView productPrice;
         public TextView productAvailability;
@@ -60,7 +58,6 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productBrand = (TextView) v.findViewById(R.id.product_brand);
             productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
@@ -146,14 +143,6 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
                     mDataset.get(position).getProduct().getInternalCode()));
         }
 
-        if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getName()));
-        }else{
-            holder.productBrand.setVisibility(TextView.GONE);
-        }
-
         holder.productPrice.setText(mContext.getString(R.string.price_detail,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
@@ -163,7 +152,6 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
                 goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
-        holder.productPrice.setVisibility(View.VISIBLE);
 
         holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
                 mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
@@ -173,7 +161,6 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
                 goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
             }
         });
-        holder.productTaxPercentage.setVisibility(View.VISIBLE);
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));

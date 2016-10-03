@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public TextView productInternalCode;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productBrand;
         public TextView productTaxPercentage;
         public TextView productPrice;
         public TextView productAvailability;
@@ -63,7 +61,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productBrand = (TextView) v.findViewById(R.id.product_brand);
             productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
@@ -150,14 +147,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getProduct().getInternalCode()));
-        }
-
-        if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getName()));
-        }else{
-            holder.productBrand.setVisibility(TextView.GONE);
         }
 
         if (mIsManagePriceInOrder) {

@@ -53,7 +53,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productBrand;
+        public TextView productInternalCode;
         public EditText qtyOrdered;
         public EditText productPrice;
         public EditText productTaxPercentage;
@@ -64,7 +64,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productBrand = (TextView) v.findViewById(R.id.product_brand);
+            productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productPrice = (EditText) v.findViewById(R.id.product_price);
             productTaxPercentage = (EditText) v.findViewById(R.id.product_tax_percentage);
             totalLineAmount = (EditText) v.findViewById(R.id.total_line_amount);
@@ -147,18 +147,9 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             }
         });
 
-        if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getName()));
-            holder.productBrand.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-                }
-            });
-        }else{
-            holder.productBrand.setVisibility(TextView.GONE);
+        if(mDataset.get(position).getProduct().getInternalCode()!=null){
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
+                    mDataset.get(position).getProduct().getInternalCode()));
         }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {

@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         // each data item is just a string in this case
         public TextView productName;
         public TextView productInternalCode;
-        public TextView productBrand;
         public ImageView productImage;
         public TextView qtyOrdered;
         public TextView productPrice;
@@ -52,7 +50,6 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
-            productBrand = (TextView) v.findViewById(R.id.product_brand);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
             productPrice = (TextView) v.findViewById(R.id.product_price_textView);
@@ -96,17 +93,8 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         holder.productName.setText(mDataset.get(position).getProduct().getName());
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode_no_label,
+            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getProduct().getInternalCode()));
-        }
-
-        if(mDataset.get(position).getProduct().getProductBrand()!=null
-                && !TextUtils.isEmpty(mDataset.get(position).getProduct().getProductBrand().getName())){
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getName()));
-            holder.productBrand.setVisibility(View.VISIBLE);
-        }else{
-            holder.productBrand.setVisibility(TextView.GONE);
         }
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered_label_detail,
