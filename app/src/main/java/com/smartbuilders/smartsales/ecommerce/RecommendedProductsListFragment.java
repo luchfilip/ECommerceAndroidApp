@@ -149,7 +149,8 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     }
 
     private void setHeader() {
-        if (mUser != null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+        if (mUser != null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID)) {
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                         .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));

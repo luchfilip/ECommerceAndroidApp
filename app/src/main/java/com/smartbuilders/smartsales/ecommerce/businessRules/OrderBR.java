@@ -85,10 +85,10 @@ public class OrderBR {
         return null;
     }
 
-    public static String createOrderFromShoppingCart(Context context, User user, int businessPartnerId) {
+    public static String createOrderFromShoppingCart(Context context, User user) {
         String result;
         try {
-            result = (new OrderDB(context, user)).createOrderFromShoppingCart(businessPartnerId);
+            result = (new OrderDB(context, user)).createOrderFromShoppingCart();
         } catch (Exception e) {
             e.printStackTrace();
             result = e.getMessage();
@@ -99,11 +99,10 @@ public class OrderBR {
         return result;
     }
 
-    public static String createOrderFromOrderLines(Context context, User user, int salesOrderId,
-                                                   int businessPartnerId, ArrayList<OrderLine> orderLines){
+    public static String createOrderFromOrderLines(Context context, User user, int salesOrderId, ArrayList<OrderLine> orderLines){
         String result;
         try {
-            result = (new OrderDB(context, user)).createOrderFromOrderLines(salesOrderId, businessPartnerId, orderLines);
+            result = (new OrderDB(context, user)).createOrderFromOrderLines(salesOrderId, orderLines);
         } catch (Exception e) {
             e.printStackTrace();
             result = e.getMessage();

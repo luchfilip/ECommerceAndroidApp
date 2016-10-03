@@ -44,12 +44,12 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
 
         if (mBusinessPartnerId!=0 && findViewById(R.id.title_textView)!=null) {
             if(user!=null){
-                if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                    ((TextView) findViewById(R.id.title_textView))
-                            .setText(getString(R.string.update_business_partner));
-                }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                     ((TextView) findViewById(R.id.title_textView))
                             .setText(getString(R.string.business_partner_info));
+                }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                    ((TextView) findViewById(R.id.title_textView))
+                            .setText(getString(R.string.update_business_partner));
                 }
             }
             ((ImageView) findViewById(R.id.toolbar_imageView))

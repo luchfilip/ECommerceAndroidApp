@@ -35,34 +35,31 @@ public class SalesOrderLineDB {
      * @param qtyRequested
      * @param productPrice
      * @param productTaxPercentage
-     * @param businessPartnerId
      * @return
      */
-    public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
-        return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
+    public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage){
+        return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOC_TYPE, null);
     }
 
     /**
      *
      * @param product
      * @param qtyRequested
-     * @param businessPartnerId
      * @return
      */
-    public String addProductToShoppingSale(Product product, int qtyRequested, int businessPartnerId){
+    public String addProductToShoppingSale(Product product, int qtyRequested){
         return addSalesOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
-                product.getProductTax().getPercentage(), SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
+                product.getProductTax().getPercentage(), SHOPPING_SALE_DOC_TYPE, null);
     }
 
     /**
      *
      * @param orderLine
      * @param orderId
-     * @param businessPartnerId
      * @return
      */
-    public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId, int businessPartnerId){
-        return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOC_TYPE, orderId, businessPartnerId);
+    public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId){
+        return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOC_TYPE, orderId);
     }
 
     /**
@@ -76,11 +73,18 @@ public class SalesOrderLineDB {
 
     /**
      *
-     * @param businessPartnerId
      * @return
      */
-    public ArrayList<SalesOrderLine> getShoppingSale(int businessPartnerId){
-        return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOC_TYPE, businessPartnerId);
+    public ArrayList<SalesOrderLine> getShoppingSale(){
+        return getActiveSalesOrderLinesByDocType(SHOPPING_SALE_DOC_TYPE);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<SalesOrderLine> getShoppingSaleByBusinessPartnerId(int businessPartnersId){
+        return getActiveSalesOrderLinesByDocTypeAndBusinessPartnerId(SHOPPING_SALE_DOC_TYPE, businessPartnersId);
     }
 
     /**
@@ -182,11 +186,10 @@ public class SalesOrderLineDB {
      * @param productTaxPercentage
      * @param docType
      * @param orderId
-     * @param businessPartnerId
      * @return
      */
     private String addSalesOrderLine(int productId, int qtyRequested, double productPrice,
-                                double productTaxPercentage, String docType, Integer orderId, int businessPartnerId) {
+                                double productTaxPercentage, String docType, Integer orderId) {
         try {
             SalesOrderLine salesOrderLine = new SalesOrderLine();
             salesOrderLine.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER_LINE"));
@@ -205,7 +208,7 @@ public class SalesOrderLineDB {
                         " TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(salesOrderLine.getId()), String.valueOf(mUser.getServerUserId()),
-                            String.valueOf(salesOrderLine.getProductId()), String.valueOf(businessPartnerId),
+                            String.valueOf(salesOrderLine.getProductId()), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(salesOrderLine.getQuantityOrdered()), String.valueOf(salesOrderLine.getPrice()),
                             String.valueOf(salesOrderLine.getTaxPercentage()), String.valueOf(salesOrderLine.getTotalLineAmount()),
                             docType, (orderId==null ? null : String.valueOf(orderId)), DateFormat.getCurrentDateTimeSQLFormat(),
@@ -242,13 +245,22 @@ public class SalesOrderLineDB {
         return null;
     }
 
+    private ArrayList<SalesOrderLine> getActiveSalesOrderLinesByDocType(String docType) {
+        try {
+            return getActiveSalesOrderLinesByDocTypeAndBusinessPartnerId(docType, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<SalesOrderLine>();
+        }
+    }
+
     /**
      *
      * @param docType
      * @param businessPartnerId
      * @return
      */
-    private ArrayList<SalesOrderLine> getActiveSalesOrderLinesByBusinessPartnerId(String docType, int businessPartnerId) {
+    private ArrayList<SalesOrderLine> getActiveSalesOrderLinesByDocTypeAndBusinessPartnerId(String docType, int businessPartnerId) {
         ArrayList<SalesOrderLine> salesOrderLines = new ArrayList<>();
         Cursor c = null;
         try {
@@ -261,8 +273,8 @@ public class SalesOrderLineDB {
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
                     " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                     " ORDER BY SOL.CREATE_TIME DESC",
-                    new String[]{"Y", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
-                            docType, "Y"}, null);
+                    new String[]{"Y", String.valueOf(businessPartnerId),
+                            String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     SalesOrderLine salesOrderLine = new SalesOrderLine();

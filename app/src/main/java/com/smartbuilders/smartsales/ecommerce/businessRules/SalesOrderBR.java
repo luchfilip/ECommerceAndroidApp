@@ -56,11 +56,10 @@ public class SalesOrderBR {
         return String.format(new Locale("es", "VE"), "%,.2f", getTotalAmount(salesOrderLines));
     }
 
-    public static String createSalesOrderFromShoppingSale(Context context, User user, int businessPartnerId, Date validTo) {
+    public static String createSalesOrderFromShoppingSale(Context context, User user, Date validTo) {
         String result;
         try {
-            result = new SalesOrderDB(context, user)
-                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo);
+            result = new SalesOrderDB(context, user).createSalesOrderFromShoppingSale(validTo);
             syncDataWithServer(context, user.getUserId());
         } catch (Exception e) {
             result = e.getMessage();

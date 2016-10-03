@@ -104,7 +104,8 @@ public class OrderDetailFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                if(mUser!=null && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
+                                if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                                        || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
                                     if(mOrder.getBusinessPartner()!=null){
                                         ((TextView) view.findViewById(R.id.business_partner_name_textView))
                                                 .setText(getString(R.string.business_partner_detail, mOrder.getBusinessPartner().getName()));

@@ -204,11 +204,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
                     if (result==null) {
                         if (mSalesOrderId > 0) {
-                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser,
-                                    mSalesOrderId, mBusinessPartnerId, mOrderLines);
+                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, mOrderLines);
                         } else {
-                            result = OrderBR.createOrderFromShoppingCart(getContext(), mUser,
-                                    Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                            result = OrderBR.createOrderFromShoppingCart(getContext(), mUser);
                         }
                     }
                 } catch (Exception e) {
@@ -287,52 +285,52 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     }
 
     private void setHeader(){
-        if(mUser!=null
-                && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            if(!mIsShoppingCart){
-                SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                if(salesOrder!=null){
-                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                    if(businessPartner!=null){
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
-                        mBusinessPartnerName.setVisibility(View.VISIBLE);
+        if(mUser!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                if (mIsShoppingCart) {
+                    try {
+                        BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        if (businessPartner != null) {
+                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                            mBusinessPartnerName.setVisibility(View.VISIBLE);
 
-                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                        mSalesOrderNumber.setVisibility(View.VISIBLE);
+                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                    if (salesOrder != null) {
+                        BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                                .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                        if (businessPartner != null) {
+                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                            mBusinessPartnerName.setVisibility(View.VISIBLE);
 
-                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                            mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                            mSalesOrderNumber.setVisibility(View.VISIBLE);
+
+                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
-            }
-        }else if(mUser!=null
-                && mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-            if(mIsShoppingCart){
-                try {
-                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                    if (businessPartner != null) {
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
-                        mBusinessPartnerName.setVisibility(View.VISIBLE);
+            } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                if (!mIsShoppingCart) {
+                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                    if (salesOrder != null) {
+                        BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                                .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
+                        if (businessPartner != null) {
+                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                            mBusinessPartnerName.setVisibility(View.VISIBLE);
 
-                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else{
-                SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                if(salesOrder!=null){
-                    BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                    if(businessPartner!=null){
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
-                        mBusinessPartnerName.setVisibility(View.VISIBLE);
+                            mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                            mSalesOrderNumber.setVisibility(View.VISIBLE);
 
-                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                        mSalesOrderNumber.setVisibility(View.VISIBLE);
-
-                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }

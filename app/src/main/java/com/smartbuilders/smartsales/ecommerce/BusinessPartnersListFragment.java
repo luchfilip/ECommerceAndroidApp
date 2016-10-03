@@ -68,15 +68,15 @@ public class BusinessPartnersListFragment extends Fragment {
                         }
                     }
                     if(user!=null){
-                        if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                            mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
-                            mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0);
-                        }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                        if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                             mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
                                     mBusinessPartnerDB.getActiveBusinessPartners(),
                                     Utils.getAppCurrentBusinessPartnerId(getContext(), user));
+                        }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                            mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
+                            mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
+                                    mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0);
                         }
                     }
                 } catch (Exception e) {

@@ -114,8 +114,7 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
                                 }
                             }
                             String result = (new SalesOrderLineDB(getContext(), mUser))
-                                    .addProductToShoppingSale(mProduct, qtyRequested, PreferenceManager.getDefaultSharedPreferences(getContext())
-                                                    .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0));
+                                    .addProductToShoppingSale(mProduct, qtyRequested);
                             if(result == null){
                                 Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                         Toast.LENGTH_LONG).show();

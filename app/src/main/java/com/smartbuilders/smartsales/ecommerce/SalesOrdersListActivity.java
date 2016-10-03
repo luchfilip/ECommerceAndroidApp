@@ -263,26 +263,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }else{
                 switch (mCurrentTabSelected) {
                     case 0://SalesOrder
-                        System.out.println("Tab SalesOrder");
                         try {
                             ((FrameLayout) findViewById(R.id.sales_order_detail_container)).removeAllViews();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        //getSupportFragmentManager().beginTransaction()
-                        //        .replace(R.id.sales_order_detail_container, fragment, SALES_ORDER_DETAIL_FRAGMENT_TAG)
-                        //        .commit();
                         break;
                     case 1://Order
-                        System.out.println("Tab Order");
                         try {
                             ((FrameLayout) findViewById(R.id.order_detail_container)).removeAllViews();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        //getSupportFragmentManager().beginTransaction()
-                        //        .replace(R.id.order_detail_container, fragment, OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
-                        //        .commit();
                         break;
                 }
             }

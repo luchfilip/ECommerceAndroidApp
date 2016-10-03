@@ -804,8 +804,7 @@ public class Utils {
             }
 
             try {
-                int count = (new RecommendedProductDB(context, user))
-                        .getRecommendedProductsCountByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(context, user));
+                int count = (new RecommendedProductDB(context, user)).getRecommendedProductsCount();
                 if (count > 0) {
                     ((TextView) navigationView.getMenu().findItem(R.id.nav_recommended_products_list).getActionView())
                             .setText(count < 100 ? String.valueOf(count) : "+99");
@@ -837,7 +836,8 @@ public class Utils {
 
             } else if (itemId == R.id.nav_shopping_sale) {
                 User user = getCurrentUser(context);
-                if (user != null && user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                if (user != null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID)) {
                     try {
                         context.startActivity(new Intent(context, ShoppingSaleActivity.class)
                                 .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID,
@@ -1128,9 +1128,7 @@ public class Utils {
      */
     public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
         if(context!=null && user!=null){
-            if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                return user.getServerUserId();
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID ) {
                 if(!PreferenceManager.getDefaultSharedPreferences(context)
                         .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)){
                     setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
@@ -1138,6 +1136,8 @@ public class Utils {
                 }
                 return PreferenceManager.getDefaultSharedPreferences(context)
                         .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
+            }else  if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                return user.getServerUserId();
             }
             throw new Exception("UserProfileId no identificado en getAppCurrentBusinessPartnerId(...)");
         }else{

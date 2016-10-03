@@ -98,7 +98,8 @@ public class ProductDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql, new String[]{"Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                             String.valueOf(subCategoryId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
@@ -143,7 +144,8 @@ public class ProductDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql, new String[]{"Y", "Y", "Y", "Y", "Y", "1", "Y", "Y",
-                    String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
+                    String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
                     String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){

@@ -95,8 +95,7 @@ public class ProductDetailFragment extends Fragment {
                                     .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 12));
                         }
                         //Se agrega el producto a la lista de productos recientemente vistos
-                        (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId,
-                                Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId);
 
                         mShareIntent = Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct);
 

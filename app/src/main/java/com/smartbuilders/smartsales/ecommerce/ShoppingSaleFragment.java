@@ -30,6 +30,7 @@ import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.DatePickerFragment;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -116,7 +117,12 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
                     mUser = Utils.getCurrentUser(getContext());
 
-                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale(mCurrentBusinessPartnerId);
+                    if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+                    } else {
+                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                    }
+
                     if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
                         mShoppingSaleAdapter2 = new ShoppingSaleAdapter2(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
                     } else {
@@ -233,7 +239,12 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mIsInitialLoad = false;
         }else{
             try {
-                mCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                    mCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+                } else {
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -256,8 +267,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
-                            mCurrentBusinessPartnerId, validTo);
+                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();
@@ -369,8 +379,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void reloadShoppingSale(){
-        mSalesOrderLines = (new SalesOrderLineDB(getActivity(), mUser))
-                .getShoppingSale(mCurrentBusinessPartnerId);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+        } else {
+            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+        }
         if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
             mShoppingSaleAdapter2.setData(mSalesOrderLines);
         } else {

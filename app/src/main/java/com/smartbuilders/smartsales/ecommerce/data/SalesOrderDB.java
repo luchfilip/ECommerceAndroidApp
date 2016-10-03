@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -31,27 +32,15 @@ public class SalesOrderDB {
         this.mUser = user;
     }
 
-    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo){
-        return createSalesOrder(businessPartnerId, (new SalesOrderLineDB(mContext, mUser))
-                .getShoppingSale(businessPartnerId), validTo, false);
+    public String createSalesOrderFromShoppingSale(Date validTo) throws Exception {
+        return createSalesOrder((new SalesOrderLineDB(mContext, mUser)).getShoppingSale(), validTo, false);
     }
 
     public SalesOrder getActiveSalesOrderById(int salesOrderId) {
         Cursor c = null;
         SalesOrder salesOrder = null;
         try {
-            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                .build(), null,
-                        "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
-                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
-                        " FROM ECOMMERCE_SALES_ORDER SO " +
-                            " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
-                                " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                        " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.USER_ID = ? AND SO.IS_ACTIVE = ?",
-                        new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
@@ -63,6 +52,17 @@ public class SalesOrderDB {
                                 " AND BP.BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.USER_ID = ? AND SO.IS_ACTIVE = ?",
                         new String[]{"Y", "Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
+            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                .build(), null,
+                        "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
+                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
+                                " FROM ECOMMERCE_SALES_ORDER SO " +
+                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
+                                " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                                " WHERE SO.ECOMMERCE_SALES_ORDER_ID = ? AND SO.USER_ID = ? AND SO.IS_ACTIVE = ?",
+                        new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             }
 
             if(c!=null && c.moveToNext()){
@@ -93,14 +93,13 @@ public class SalesOrderDB {
                 }
             }
             if(salesOrder!=null){
-                if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                    salesOrder.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
-                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
-                }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                     salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mUser))
                             .getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+                }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                    salesOrder.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
+                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
                 }
-
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -120,19 +119,7 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                .build(), null,
-                        "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
-                                " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
-                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
-                                " AND BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                                " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
-                                " GROUP BY SOL.BUSINESS_PARTNER_ID",
-                        new String[]{"Y", String.valueOf(mUser.getServerUserId()),
-                                SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
@@ -145,6 +132,18 @@ public class SalesOrderDB {
                         " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                 String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
+            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                .build(), null,
+                        "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
+                                " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
+                                " AND BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                                " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                                " GROUP BY SOL.BUSINESS_PARTNER_ID",
+                        new String[]{"Y", String.valueOf(mUser.getServerUserId()),
+                                SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             }
 
             if(c!=null){
@@ -166,15 +165,15 @@ public class SalesOrderDB {
                 }
             }
         }
-        if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeOrders){
-                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
-            }
-        }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+        if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
             for(SalesOrder salesOrder : activeOrders){
                 salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            }
+        }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
+            for(SalesOrder salesOrder : activeOrders){
+                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }
         return activeOrders;
@@ -184,21 +183,7 @@ public class SalesOrderDB {
         ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                .build(), null,
-                        "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
-                            " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
-                            " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
-                        " FROM ECOMMERCE_SALES_ORDER SO " +
-                            " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
-                                " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                        " WHERE SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
-                        " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
-                        new String[]{"Y", String.valueOf(mUser.getServerUserId()),
-                                SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
@@ -213,6 +198,20 @@ public class SalesOrderDB {
                         " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                         new String[]{"Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                                 String.valueOf(mUser.getServerUserId()), SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
+            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                .build(), null,
+                        "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
+                                " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
+                                " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
+                                " FROM ECOMMERCE_SALES_ORDER SO " +
+                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
+                                " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                                " WHERE SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
+                                " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
+                        new String[]{"Y", String.valueOf(mUser.getServerUserId()),
+                                SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
             }
 
             if(c!=null){
@@ -257,23 +256,24 @@ public class SalesOrderDB {
             }
         }
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
-        if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeSalesOrders){
-                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
-                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
-            }
-        }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+        if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
             for(SalesOrder salesOrder : activeSalesOrders){
                 salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
                 salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
+        } else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
+            for(SalesOrder salesOrder : activeSalesOrders){
+                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
+                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            }
         }
         return activeSalesOrders;
     }
 
-    private String createSalesOrder(int businessPartnerId, ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB){
+    private String createSalesOrder(ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB) throws Exception {
+        int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
         int activeShoppingSalesLineNumber = salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId);
         if((orderLines != null && insertOrderLinesInDB) || activeShoppingSalesLineNumber>0){
@@ -309,7 +309,7 @@ public class SalesOrderDB {
             }
             if (orderLines!=null && insertOrderLinesInDB) {
                 for (SalesOrderLine orderLine : orderLines) {
-                    salesOrderLineDB.addSalesOrderLineToFinalizedSalesOrder(orderLine, salesOrderId, businessPartnerId);
+                    salesOrderLineDB.addSalesOrderLineToFinalizedSalesOrder(orderLine, salesOrderId);
                 }
             } else {
                 if(salesOrderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(businessPartnerId, salesOrderId)<=0){

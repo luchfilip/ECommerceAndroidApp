@@ -72,7 +72,7 @@ public class RecommendedProductDB {
         return products;
     }
 
-    public int getRecommendedProductsCountByBusinessPartnerId(int businessPartnerId){
+    public int getRecommendedProductsCount(){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -85,7 +85,8 @@ public class RecommendedProductDB {
                             " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
                             " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0" +
                         " WHERE R.BUSINESS_PARTNER_ID = ? AND R.IS_ACTIVE = ? ",
-                    new String[]{"Y", "Y", "Y", "Y", "Y", String.valueOf(businessPartnerId), "Y"}, null);
+                    new String[]{"Y", "Y", "Y", "Y", "Y",
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), "Y"}, null);
             if (c!=null && c.moveToNext()) {
                 return c.getInt(0);
             }

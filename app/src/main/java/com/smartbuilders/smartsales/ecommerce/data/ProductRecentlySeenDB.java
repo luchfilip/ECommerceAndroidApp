@@ -24,7 +24,7 @@ public class ProductRecentlySeenDB {
         this.mUser = user;
     }
 
-    public void addProduct(int productId, int businessPartnerId){
+    public void addProduct(int productId){
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -33,7 +33,7 @@ public class ProductRecentlySeenDB {
                             " USER_ID, PRODUCT_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "PRODUCT_RECENTLY_SEEN")),
-                            String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(productId), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
