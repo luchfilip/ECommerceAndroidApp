@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <group
         android:id="@+id/menu_home">
         <item
@@ -15,6 +14,30 @@
             android:icon="@drawable/ic_supervisor_account_black_24dp"
             android:title="@string/business_partners" />
     </group>
+    <item android:title="@string/my_orders">
+        <menu>
+            <item
+                android:id="@+id/nav_shopping_cart"
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
+                android:title="@string/shopping_cart" />
+            <item
+                android:id="@+id/nav_orders"
+                android:icon="@drawable/ic_view_list_black_24dp"
+                android:title="@string/orders_list" />
+        </menu>
+    </item>
+    <item android:title="@string/my_sales_orders">
+        <menu>
+            <item
+                android:id="@+id/nav_shopping_sale"
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
+                android:title="@string/open_shopping_sale" />
+            <item
+                android:id="@+id/nav_sales_orders"
+                android:icon="@drawable/ic_view_list_black_24dp"
+                android:title="@string/closed_sales_orders" />
+        </menu>
+    </item>
     <item android:title="@string/action_setting">
         <menu>
             <item
