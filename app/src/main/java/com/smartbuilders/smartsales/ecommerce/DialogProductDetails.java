@@ -17,12 +17,15 @@ import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 /**
@@ -176,7 +179,13 @@ public class DialogProductDetails extends DialogFragment {
         view.findViewById(R.id.addToShoppingSale_imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToShoppingSale(mProduct);
+                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
+                        .getSalesOrderLineFromShoppingSalesByProductId(mProduct.getId());
+                if (salesOrderLine != null) {
+                    updateQtyOrderedInShoppingSales(salesOrderLine);
+                } else {
+                    addToShoppingSale(mProduct);
+                }
             }
         });
 
@@ -265,6 +274,13 @@ public class DialogProductDetails extends DialogFragment {
             dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
                     DialogAddToShoppingSale.class.getSimpleName());
         }
+    }
+
+    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
+        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
     }
 
     @Override

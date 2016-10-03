@@ -21,8 +21,11 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingCart;
 import com.smartbuilders.smartsales.ecommerce.DialogAddToShoppingSale;
@@ -270,7 +273,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                        .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
+                if (salesOrderLine != null) {
+                    updateQtyOrderedInShoppingSales(salesOrderLine);
+                } else {
+                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                }
             }
         });
 
@@ -391,6 +400,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
                     DialogAddToShoppingSale.class.getSimpleName());
         }
+    }
+
+    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
+        dialogUpdateShoppingSaleQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
     }
 
     private String addToWishList(Product product) {

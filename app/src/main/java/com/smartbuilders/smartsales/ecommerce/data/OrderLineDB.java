@@ -366,8 +366,7 @@ public class OrderLineDB {
                     "SELECT OL.ECOMMERCE_ORDER_LINE_ID, OL.PRODUCT_ID, OL.QTY_REQUESTED, OL.SALES_PRICE, OL.TAX_PERCENTAGE, OL.TOTAL_LINE " +
                     " FROM ECOMMERCE_ORDER_LINE OL " +
                         " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE OL.PRODUCT_ID = ? AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? " +
-                    " ORDER BY OL.CREATE_TIME DESC",
+                    " WHERE OL.PRODUCT_ID = ? AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? ",
                     new String[]{"Y", String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){

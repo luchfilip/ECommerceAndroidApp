@@ -20,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.RecommendedProductsListAdapter;
@@ -42,7 +44,7 @@ import java.util.ArrayList;
  */
 public class RecommendedProductsListFragment extends Fragment implements RecommendedProductsListAdapter.Callback {
 
-    private static final String STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION = "STATE_LISTVIEW_CURRENT_FIRST_POSITION";
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String fileName = "ProductosRecomendados";
 
     private boolean mIsInitialLoad;
@@ -72,8 +74,8 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
             public void run() {
                 try {
                     if (savedInstanceState != null) {
-                        if (savedInstanceState.containsKey(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION)) {
-                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION);
+                        if (savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     }
                     mUser = Utils.getCurrentUser(getContext());
@@ -228,6 +230,14 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     }
 
     @Override
+    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, user);
+        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_recommended_products_list_fragment, menu);
@@ -375,14 +385,14 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     public void onSaveInstanceState(Bundle outState) {
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstVisibleItemPosition());
             } else {
-                outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION,
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
                         mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
             }
         } catch (Exception e) {
-            outState.putInt(STATE_RECYCLERVIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

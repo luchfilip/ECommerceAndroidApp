@@ -29,27 +29,76 @@ public class SalesOrderLineDB {
         this.mUser = user;
     }
 
+    /**
+     *
+     * @param productId
+     * @param qtyRequested
+     * @param productPrice
+     * @param productTaxPercentage
+     * @param businessPartnerId
+     * @return
+     */
     public String addProductToShoppingSale(int productId, int qtyRequested, double productPrice, double productTaxPercentage, int businessPartnerId){
         return addSalesOrderLine(productId, qtyRequested, productPrice, productTaxPercentage, SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
     }
 
+    /**
+     *
+     * @param product
+     * @param qtyRequested
+     * @param businessPartnerId
+     * @return
+     */
     public String addProductToShoppingSale(Product product, int qtyRequested, int businessPartnerId){
         return addSalesOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
                 product.getProductTax().getPercentage(), SHOPPING_SALE_DOC_TYPE, null, businessPartnerId);
     }
 
+    /**
+     *
+     * @param orderLine
+     * @param orderId
+     * @param businessPartnerId
+     * @return
+     */
     public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine orderLine, int orderId, int businessPartnerId){
         return addSalesOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(), 0, 0, FINALIZED_SALES_ORDER_DOC_TYPE, orderId, businessPartnerId);
     }
 
+    /**
+     *
+     * @param productId
+     * @return
+     */
+    public SalesOrderLine getSalesOrderLineFromShoppingSalesByProductId(int productId){
+        return getSalesOrderLineByProductIdAndDocType(productId, SHOPPING_SALE_DOC_TYPE);
+    }
+
+    /**
+     *
+     * @param businessPartnerId
+     * @return
+     */
     public ArrayList<SalesOrderLine> getShoppingSale(int businessPartnerId){
         return getActiveSalesOrderLinesByBusinessPartnerId(SHOPPING_SALE_DOC_TYPE, businessPartnerId);
     }
 
+    /**
+     *
+     * @param orderId
+     * @param businessPartnerId
+     * @return
+     */
     public ArrayList<SalesOrderLine> getActiveFinalizedSalesOrderLinesByOrderId(int orderId, int businessPartnerId){
         return getActiveOrderLinesByOrderId(FINALIZED_SALES_ORDER_DOC_TYPE, orderId, businessPartnerId);
     }
 
+    /**
+     *
+     * @param businessPartnerId
+     * @param orderId
+     * @return
+     */
     public int moveShoppingSaleToFinalizedSaleOrderByOrderId(int businessPartnerId, int orderId) {
         return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_SALES_ORDER_DOC_TYPE, SHOPPING_SALE_DOC_TYPE);
     }
@@ -58,6 +107,7 @@ public class SalesOrderLineDB {
      *
      * @param docType
      * @param orderId
+     * @param businessPartnerId
      * @return
      */
     private ArrayList<SalesOrderLine> getActiveOrderLinesByOrderId (String docType, int orderId, int businessPartnerId) {
@@ -92,6 +142,11 @@ public class SalesOrderLineDB {
         return null;
     }
 
+    /**
+     *
+     * @param businessPartnerId
+     * @return
+     */
     public int getActiveShoppingSaleLinesNumberByBusinessPartnerId(int businessPartnerId) {
         Cursor c = null;
         try {
@@ -250,6 +305,7 @@ public class SalesOrderLineDB {
      *
      * @param docType
      * @param salesOrderId
+     * @param businessPartnerId
      * @return
      */
     private ArrayList<SalesOrderLine> getSalesOrderLinesByOrderId(String docType, int salesOrderId, int businessPartnerId) {
@@ -309,6 +365,7 @@ public class SalesOrderLineDB {
     /**
      *
      * @param salesOrderId
+     * @param businessPartnerId
      * @return
      */
     public int getOrderLineNumbersBySalesOrderId(int salesOrderId, int businessPartnerId){
@@ -385,6 +442,55 @@ public class SalesOrderLineDB {
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param productId
+     * @param docType
+     * @return
+     */
+    private SalesOrderLine getSalesOrderLineByProductIdAndDocType(int productId, String docType){
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT SOL.ECOMMERCE_SALES_ORDER_LINE_ID, SOL.PRODUCT_ID, SOL.BUSINESS_PARTNER_ID, " +
+                        " SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
+                    " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                    " WHERE SOL.PRODUCT_ID = ? AND SOL.BUSINESS_PARTNER_ID = ? " +
+                        " AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ?",
+                    new String[]{"Y", String.valueOf(productId),
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+            if(c!=null && c.moveToNext()){
+                SalesOrderLine salesOrderLine = new SalesOrderLine();
+                salesOrderLine.setId(c.getInt(0));
+                salesOrderLine.setProductId(c.getInt(1));
+                salesOrderLine.setBusinessPartnerId(c.getInt(2));
+                salesOrderLine.setQuantityOrdered(c.getInt(3));
+                salesOrderLine.setPrice(c.getDouble(4));
+                salesOrderLine.setTaxPercentage(c.getDouble(5));
+                salesOrderLine.setTotalLineAmount(c.getDouble(6));
+                c.close();
+                salesOrderLine.setProduct((new ProductDB(mContext, mUser)).getProductById(salesOrderLine.getProductId()));
+                if(salesOrderLine.getProduct()!=null){
+                    return salesOrderLine;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null && !c.isClosed()) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }

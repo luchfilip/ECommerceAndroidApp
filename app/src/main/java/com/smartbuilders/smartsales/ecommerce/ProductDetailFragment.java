@@ -21,8 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
+import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
@@ -320,7 +323,13 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                addToShoppingSale(mProduct);
+                                                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
+                                                        .getSalesOrderLineFromShoppingSalesByProductId(mProductId);
+                                                if (salesOrderLine != null) {
+                                                    updateQtyOrderedInShoppingSales(salesOrderLine);
+                                                } else {
+                                                    addToShoppingSale(mProduct);
+                                                }
                                             }
                                         }
                                     );
@@ -334,7 +343,7 @@ public class ProductDetailFragment extends Fragment {
                                                 if (orderLine != null) {
                                                     updateQtyOrderedInShoppingCart(orderLine, mUser);
                                                 } else {
-                                                    addToShoppingCart(mUser, mProduct);
+                                                    addToShoppingCart(mProduct);
                                                 }
                                             }
                                         }
@@ -403,9 +412,9 @@ public class ProductDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addToShoppingCart(User user, Product product) {
+    private void addToShoppingCart(Product product) {
         DialogAddToShoppingCart addToShoppingCartFragment =
-                DialogAddToShoppingCart.newInstance(product, user);
+                DialogAddToShoppingCart.newInstance(product, mUser);
         addToShoppingCartFragment.show(getActivity().getSupportFragmentManager(),
                 DialogAddToShoppingCart.class.getSimpleName());
     }
@@ -429,6 +438,13 @@ public class ProductDetailFragment extends Fragment {
             dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
                     DialogAddToShoppingSale.class.getSimpleName());
         }
+    }
+
+    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
+        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
+        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
     }
 
     @Override

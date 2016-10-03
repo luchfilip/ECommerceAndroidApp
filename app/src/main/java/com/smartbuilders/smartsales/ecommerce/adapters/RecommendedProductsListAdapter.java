@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.CreateShareIntentThread;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
@@ -81,6 +83,7 @@ public class RecommendedProductsListAdapter extends
         void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user);
         void addToShoppingCart(int productId, User user);
         void addToShoppingSale(int productId, User user);
+        void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user);
     }
 
     public RecommendedProductsListAdapter(Context context, Fragment fragment,
@@ -210,7 +213,13 @@ public class RecommendedProductsListAdapter extends
         holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                        .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
+                if (salesOrderLine != null) {
+                    ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
+                } else {
+                    ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                }
             }
         });
 
