@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:minHeight="@dimen/productLargeDetail_max_image_Height"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:id="@+id/product_details_info_container">
 
         <LinearLayout
             android:orientation="vertical"

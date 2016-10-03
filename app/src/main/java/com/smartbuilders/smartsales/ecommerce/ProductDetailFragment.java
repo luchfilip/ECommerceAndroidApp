@@ -153,6 +153,9 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_image_container).setVisibility(View.GONE);
                                         view.findViewById(R.id.product_image).setVisibility(View.GONE);
                                         view.findViewById(R.id.zoom_imageView).setVisibility(View.GONE);
+                                        if (view.findViewById(R.id.product_details_info_container)!=null) {
+                                            view.findViewById(R.id.product_details_info_container).setMinimumHeight(0);
+                                        }
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getInternalCode())) {

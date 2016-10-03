@@ -184,6 +184,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
+            try {
+                mBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             reloadShoppingCart();
         }
         super.onStart();

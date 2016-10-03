@@ -232,6 +232,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
+            try {
+                mCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             reloadShoppingSale();
             reloadShoppingSalesList(mUser);
         }
