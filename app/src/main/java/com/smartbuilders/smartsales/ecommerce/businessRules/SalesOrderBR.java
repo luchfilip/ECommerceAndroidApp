@@ -80,7 +80,7 @@ public class SalesOrderBR {
         return result;
     }
 
-    public static void validateQuantityOrderedInOrderLines(Context context, User user, ArrayList<SalesOrderLine> salesOrderLines) {
+    public static void validateQuantityOrderedInSalesOrderLines(Context context, User user, ArrayList<SalesOrderLine> salesOrderLines) {
         if (salesOrderLines!=null && !salesOrderLines.isEmpty()) {
             ProductDB productDB = new ProductDB(context, user);
             for (SalesOrderLine salesOrderLine : salesOrderLines) {
@@ -92,6 +92,23 @@ public class SalesOrderBR {
                         || (salesOrderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0));
             }
         }
+    }
+
+    public static String isValidQuantityOrderedInSalesOrderLines(Context context, User user, ArrayList<SalesOrderLine> salesOrderLines) {
+        if (salesOrderLines!=null && !salesOrderLines.isEmpty()) {
+            ProductDB productDB = new ProductDB(context, user);
+            for (SalesOrderLine salesOrderLine : salesOrderLines) {
+                Product product = productDB.getProductById(salesOrderLine.getProductId());
+                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                //esa linea del pedido tiene error en la cantidad pedida.
+                if ((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                        || (salesOrderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0)) {
+                    return "Error en cantidad pedida del articulo "+product.getName();
+                }
+            }
+        }
+        return null;
     }
 
     private static void syncDataWithServer(Context context, String userId) {

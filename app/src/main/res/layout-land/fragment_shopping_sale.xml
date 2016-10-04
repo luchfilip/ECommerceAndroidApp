@@ -84,7 +84,7 @@
             android:layout_weight="7"
             android:gravity="bottom"
             android:layout_marginTop="2dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="2dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp">
 
@@ -93,14 +93,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:id="@+id/business_partner_commercial_name_tv"
-                android:visibility="gone"
                 android:textStyle="bold" />
 
             <View style="@style/Divider"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
-                android:id="@+id/divider"
-                android:visibility="gone" />
+                android:id="@+id/divider" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -133,7 +131,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/valid_to_layout_container">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -156,10 +155,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/proceed_to_checkout_shopping_sale"
                 android:id="@+id/proceed_to_checkout_shopping_sale_button"
-                android:layout_gravity="right"
-                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:layout_gravity="bottom|right"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp" />
+
+            <Button
+                style="@style/GoldenButtonAppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:id="@+id/go_to_finalize_options_button"
+                android:layout_gravity="bottom|right"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"/>
         </LinearLayout>
     </LinearLayout>
 

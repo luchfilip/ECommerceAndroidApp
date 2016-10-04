@@ -106,10 +106,9 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
             android:gravity="bottom">
 
             <LinearLayout
@@ -148,7 +147,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/proceed_to_checkout"
                 android:id="@+id/proceed_to_checkout_button"
-                android:textAppearance="@android:style/TextAppearance.Medium"
                 android:layout_gravity="bottom" />
 
             <Button
@@ -157,7 +155,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/next"
                 android:id="@+id/go_to_finalize_options_button"
-                android:textAppearance="@android:style/TextAppearance.Medium"
                 android:layout_gravity="bottom" />
 
         </LinearLayout>

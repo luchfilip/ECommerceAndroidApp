@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
+import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity;
 import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
@@ -30,7 +31,6 @@ import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.DatePickerFragment;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -47,7 +47,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
-    private static final String STATE_SHOW_BUSINESS_PARTNER_INFO = "STATE_SHOW_BUSINESS_PARTNER_INFO";
 
     private User mUser;
     private boolean mIsInitialLoad;
@@ -62,13 +61,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView mTotalAmount;
     private int mRecyclerViewCurrentFirstPosition;
     private LinearLayoutManager mLinearLayoutManager;
-    private boolean mShowBusinessPartnerInfo;
     private int mCurrentBusinessPartnerId;
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
     private String mValidToText;
     private TextView mBusinessPartnerName;
-    private View mDivider;
 
     public ShoppingSaleFragment() {
     }
@@ -97,9 +94,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(savedInstanceState.containsKey(STATE_VALID_TO)) {
                             mValidToText = savedInstanceState.getString(STATE_VALID_TO);
                         }
-                        if(savedInstanceState.containsKey(STATE_SHOW_BUSINESS_PARTNER_INFO)){
-                            mShowBusinessPartnerInfo = savedInstanceState.getBoolean(STATE_SHOW_BUSINESS_PARTNER_INFO);
-                        }
                     }
 
                     if(getArguments()!=null){
@@ -111,16 +105,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
                             mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
-                            mShowBusinessPartnerInfo = true;
                         }
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
 
-                    if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+                    if (mCurrentBusinessPartnerId!=0){
+                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
+                                .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
                     } else {
-                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                        mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
                     }
 
                     if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
@@ -129,7 +123,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         mShoppingSaleAdapter = new ShoppingSaleAdapter(getContext(), ShoppingSaleFragment.this, mSalesOrderLines, mUser);
                     }
                 } catch (Exception e) {
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
 
                 if (getActivity()!=null) {
@@ -138,7 +132,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         public void run() {
                             try {
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
-                                mDivider = view.findViewById(R.id.divider);
 
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
@@ -164,57 +157,82 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
-                                mValidToEditText = (EditText) view.findViewById(R.id.valid_to_editText);
-                                mValidToEditText.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Date validTo = null;
-                                        try {
-                                            validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                                                    new Locale("es","VE")).parse(mValidToEditText.getText().toString());
-                                        } catch (ParseException e){
-                                            // do nothing
-                                        }
-                                        catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        DialogFragment dialogFragment = DatePickerFragment.getInstance(validTo);
-                                        dialogFragment.setTargetFragment(ShoppingSaleFragment.this, 1);
-                                        dialogFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
-                                    }
-                                });
-                                mValidToEditText.setText(mValidToText);
+                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                    view.findViewById(R.id.valid_to_layout_container).setVisibility(View.GONE);
+                                    view.findViewById(R.id.proceed_to_checkout_shopping_sale_button).setVisibility(View.GONE);
+                                    view.findViewById(R.id.go_to_finalize_options_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    lockScreen();
+                                                    new Thread() {
+                                                        @Override
+                                                        public void run() {
+                                                            String result = null;
+                                                            try {
+                                                                result = SalesOrderBR.isValidQuantityOrderedInSalesOrderLines(getContext(), mUser, mSalesOrderLines);
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                result = e.getMessage();
+                                                            } finally {
+                                                                unlockScreen(result);
+                                                            }
+                                                        }
+                                                    }.start();
+                                                }
+                                            });
 
-                                fillFields();
-
-                                view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
-                                    .setOnClickListener(new View.OnClickListener() {
+                                } else {
+                                    mValidToEditText = (EditText) view.findViewById(R.id.valid_to_editText);
+                                    mValidToEditText.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            new AlertDialog.Builder(getContext())
-                                                .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        Date validTo = null;
-                                                        try {
-                                                            validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
-                                                                    new Locale("es","VE")).parse(mValidToEditText.getText().toString());
-                                                        } catch (ParseException e){
-                                                            // do nothing
-                                                        }
-                                                        catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        closeSalesOrder(validTo);
-                                                    }
-                                                })
-                                                .setNegativeButton(R.string.no, null)
-                                                .show();
+                                            Date validTo = null;
+                                            try {
+                                                validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                                        new Locale("es","VE")).parse(mValidToEditText.getText().toString());
+                                            } catch (ParseException e){
+                                                // do nothing
+                                            }
+                                            catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            DialogFragment dialogFragment = DatePickerFragment.getInstance(validTo);
+                                            dialogFragment.setTargetFragment(ShoppingSaleFragment.this, 1);
+                                            dialogFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
                                         }
                                     });
+                                    mValidToEditText.setText(mValidToText);
 
+                                    view.findViewById(R.id.go_to_finalize_options_button).setVisibility(View.GONE);
+                                    view.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    new AlertDialog.Builder(getContext())
+                                                            .setMessage(R.string.proceed_to_checkout_quoatation_question)
+                                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    Date validTo = null;
+                                                                    try {
+                                                                        validTo = DateFormat.getDateInstance(DateFormat.MEDIUM,
+                                                                                new Locale("es", "VE")).parse(mValidToEditText.getText().toString());
+                                                                    } catch (ParseException e) {
+                                                                        // do nothing
+                                                                    } catch (Exception e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                    closeSalesOrder(validTo);
+                                                                }
+                                                            })
+                                                            .setNegativeButton(R.string.no, null)
+                                                            .show();
+                                                }
+                                            });
+                                }
 
+                                fillFields();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -239,11 +257,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mIsInitialLoad = false;
         }else{
             try {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                    mCurrentBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
-                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+                if (mCurrentBusinessPartnerId!=0){
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
+                            .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
                 } else {
-                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -310,9 +328,13 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                             waitPlease = null;
                         }
                     } else {
-                        startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                        //Utils.unlockScreenOrientation(getActivity());
+                        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                            startActivity(new Intent(getContext(), ShoppingSaleFinalizeOptionsActivity.class)
+                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                        } else {
+                            startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
+                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                        }
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
@@ -327,15 +349,22 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        if(mShowBusinessPartnerInfo){
-            BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+        BusinessPartner businessPartner = null;
+        if(mCurrentBusinessPartnerId!=0) {
+            businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                     .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
-            if(businessPartner!=null){
-                mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                mBusinessPartnerName.setVisibility(View.VISIBLE);
-                mDivider.setVisibility(View.VISIBLE);
+        } else {
+            try {
+                businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
+        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail,
+                businessPartner!=null ? businessPartner.getName() : null));
+
         if (mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(mSalesOrderLines.size())));
@@ -379,10 +408,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void reloadShoppingSale(){
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
+        if (mCurrentBusinessPartnerId!=0){
+            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
+                    .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
         } else {
-            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+            mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
         }
         if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
             mShoppingSaleAdapter2.setData(mSalesOrderLines);
@@ -415,7 +445,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
-        outState.putBoolean(STATE_SHOW_BUSINESS_PARTNER_INFO, mShowBusinessPartnerInfo);
         super.onSaveInstanceState(outState);
     }
 }

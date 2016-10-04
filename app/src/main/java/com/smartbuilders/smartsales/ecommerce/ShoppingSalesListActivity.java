@@ -134,7 +134,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     public void onItemSelected(SalesOrder salesOrder) {
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId());
+            args.putInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartnerId());
 
             ShoppingSaleFragment fragment = new ShoppingSaleFragment();
             fragment.setArguments(args);
@@ -144,7 +144,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                     .commit();
         }else{
             startActivity(new Intent(this, ShoppingSaleActivity.class)
-                    .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartner().getId()));
+                    .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartnerId()));
         }
     }
 

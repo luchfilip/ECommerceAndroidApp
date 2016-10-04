@@ -53,18 +53,16 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:id="@+id/business_partner_commercial_name_tv"
-            android:visibility="gone"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:textStyle="bold"
             android:lines="1"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="2dp" />
 
         <View style="@style/Divider"
             android:layout_marginTop="1dp"
-            android:id="@+id/divider"
-            android:visibility="gone" />
+            android:id="@+id/divider" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shoppingSale_items_list"
@@ -91,63 +89,71 @@
                 android:layout_marginBottom="2dp"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/black"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginLeft="10dp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/subTotalAmount_tv"
-                android:layout_weight="1"
-                android:textColor="@color/black"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/taxesAmount_tv"
-                android:layout_weight="1"
-                android:textColor="@color/black"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/totalAmount_tv"
-                android:textColor="@color/black"
-                android:textAppearance="@android:style/TextAppearance.Medium"
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="2dp">
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:baselineAligned="false">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/valid_to_label"
-                    android:textColor="@color/black" />
-
-                <EditText
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:focusable="false"
-                    android:ems="10"
-                    android:id="@+id/valid_to_editText"
-                    android:focusableInTouchMode="false"
-                    android:layout_weight="1" />
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/subTotalAmount_tv"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/taxesAmount_tv"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/totalAmount_tv"
+                        android:textColor="@color/black"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:textStyle="bold"/>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/valid_to_layout_container">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/valid_to_label"
+                            android:textColor="@color/black" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="date"
+                            android:focusable="false"
+                            android:ems="10"
+                            android:id="@+id/valid_to_editText"
+                            android:focusableInTouchMode="false" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <Button
                     style="@style/GoldenButtonAppTheme"
@@ -155,8 +161,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/proceed_to_checkout_shopping_sale"
                     android:id="@+id/proceed_to_checkout_shopping_sale_button"
-                    android:layout_gravity="bottom"
-                    android:textAppearance="@android:style/TextAppearance.Medium" />
+                    android:layout_gravity="bottom" />
+
+                <Button
+                    style="@style/GoldenButtonAppTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/next"
+                    android:id="@+id/go_to_finalize_options_button"
+                    android:layout_gravity="bottom" />
+
             </LinearLayout>
 
         </LinearLayout>

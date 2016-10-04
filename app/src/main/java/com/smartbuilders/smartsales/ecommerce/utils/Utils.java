@@ -836,20 +836,10 @@ public class Utils {
 
             } else if (itemId == R.id.nav_shopping_sale) {
                 User user = getCurrentUser(context);
-                if (user != null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                        || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID)) {
-                    try {
-                        context.startActivity(new Intent(context, ShoppingSaleActivity.class)
-                                .putExtra(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID,
-                                        Utils.getAppCurrentBusinessPartnerId(context, user))
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        new AlertDialog.Builder(context)
-                                .setMessage(e.getMessage())
-                                .setPositiveButton(R.string.accept, null)
-                                .show();
-                    }
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || (user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)) {
+                    context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 } else {
                     context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));

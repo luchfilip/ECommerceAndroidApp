@@ -78,7 +78,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         mFragment = shoppingCartFragment;
         mDataset = data;
         mUser = user;
-        SalesOrderBR.validateQuantityOrderedInOrderLines(context, user, data);
+        SalesOrderBR.validateQuantityOrderedInSalesOrderLines(context, user, data);
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
     }
 
@@ -223,7 +223,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {
         mDataset = salesOrderLines;
-        SalesOrderBR.validateQuantityOrderedInOrderLines(mContext, mUser, mDataset);
+        SalesOrderBR.validateQuantityOrderedInSalesOrderLines(mContext, mUser, mDataset);
         notifyDataSetChanged();
     }
 }
