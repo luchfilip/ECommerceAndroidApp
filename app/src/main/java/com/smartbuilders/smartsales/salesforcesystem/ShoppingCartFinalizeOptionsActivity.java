@@ -51,7 +51,7 @@ public class ShoppingCartFinalizeOptionsActivity extends AppCompatActivity {
                     mIsShoppingCart = false;
                     mSalesOrderId = getIntent().getExtras().getInt(KEY_SALES_ORDER_ID);
                     mBusinessPartnerId = getIntent().getExtras().getInt(KEY_BUSINESS_PARTNER_ID);
-                    mOrderLines = getIntent().getExtras().getParcelableArrayList(STATE_ORDER_LINES);
+                    mOrderLines = getIntent().getExtras().getParcelableArrayList(KEY_ORDER_LINES);
                 }
             }
         }
