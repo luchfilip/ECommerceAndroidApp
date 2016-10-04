@@ -317,6 +317,12 @@
             android:label="@string/select_device"
             android:theme="@android:style/Theme.Dialog" />
         <!-- Bluetoothchat -->
+        <activity
+            android:name="com.smartbuilders.smartsales.salesforcesystem.ShoppingCartFinalizeOptionsActivity"
+            android:label="@string/title_activity_shopping_cart_finalize_options" />
+        <activity
+            android:name="com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity"
+            android:label="@string/title_activity_shopping_sales_finalize_options" />
     </application>
 
 </manifest>

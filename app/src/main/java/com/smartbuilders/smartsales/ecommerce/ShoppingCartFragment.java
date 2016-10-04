@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.salesforcesystem.ShoppingCartFinalizeOptionsActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingCartAdapter;
@@ -87,7 +88,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         if(savedInstanceState.containsKey(STATE_ORDER_LINES)){
                             mOrderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
                         }
-                    } else  if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+                    } else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
                                 && getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
                             mIsShoppingCart = false;
@@ -95,6 +96,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
                             mBusinessPartnerId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
+                            //Si viene de ShoppingCartFinalizeOptionsActivity
+                            if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_ORDER_LINES)){
+                                mOrderLines = getActivity().getIntent().getExtras()
+                                        .getParcelableArrayList(ShoppingCartActivity.KEY_ORDER_LINES);
+                            }
                         }
                     }
 
@@ -139,22 +145,48 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
-                                view.findViewById(R.id.proceed_to_checkout_button)
-                                        .setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                new AlertDialog.Builder(getContext())
-                                                        .setMessage(R.string.proceed_to_checkout_question)
-                                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                closeOrder();
+                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                    view.findViewById(R.id.proceed_to_checkout_button).setVisibility(View.GONE);
+                                    view.findViewById(R.id.go_to_finalize_options_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    lockScreen();
+                                                    new Thread() {
+                                                        @Override
+                                                        public void run() {
+                                                            String result = null;
+                                                            try {
+                                                                result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                                result = e.getMessage();
+                                                            } finally {
+                                                                unlockScreen(result);
                                                             }
-                                                        })
-                                                        .setNegativeButton(R.string.no, null)
-                                                        .show();
-                                            }
-                                        });
+                                                        }
+                                                    }.start();
+                                                }
+                                            });
+                                } else {
+                                    view.findViewById(R.id.go_to_finalize_options_button).setVisibility(View.GONE);
+                                    view.findViewById(R.id.proceed_to_checkout_button)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    new AlertDialog.Builder(getContext())
+                                                            .setMessage(R.string.proceed_to_checkout_question)
+                                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    closeOrder();
+                                                                }
+                                                            })
+                                                            .setNegativeButton(R.string.no, null)
+                                                            .show();
+                                                }
+                                            });
+                                }
                                 mTotalLines = (TextView) view.findViewById(R.id.total_lines);
                                 mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
                                 mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
@@ -251,24 +283,33 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             waitPlease = null;
                         }
                     } else {
-                        if(mIsShoppingCart){
-                            startActivity(new Intent(getContext(), OrdersListActivity.class)
-                                    .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
-                        }else{
-                            startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
-                                    .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
-                                    .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
+                        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                            if (mIsShoppingCart) {
+                                startActivity(new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class));
+                            } else {
+                                Intent intent = new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class);
+                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_BUSINESS_PARTNER_ID, mBusinessPartnerId);
+                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_SALES_ORDER_ID, mSalesOrderId);
+                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_ORDER_LINES, mOrderLines);
+                                startActivity(intent);
+                            }
+                        } else {
+                            if (mIsShoppingCart) {
+                                startActivity(new Intent(getContext(), OrdersListActivity.class)
+                                        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                            } else {
+                                startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
+                                        .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
+                                        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                            }
                         }
-                        //Utils.unlockScreenOrientation(getActivity());
-                        if (waitPlease!=null && waitPlease.isShowing()) {
+                        if (waitPlease != null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;
                         }
-                        //if(!mIsShoppingCart){
-                        if (getActivity()!=null) {
+                        if (getActivity() != null) {
                             getActivity().finish();
                         }
-                        //}
                     }
                 }
             });

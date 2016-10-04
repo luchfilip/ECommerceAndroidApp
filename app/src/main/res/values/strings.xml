@@ -397,5 +397,12 @@
     <string name="see_all_products">Ver todos</string>
     <string name="our_brands">Nuestras Marcas</string>
     <string name="title_activity_sales_force_system_main">SalesForceSystemMainActivity</string>
+    <string name="title_activity_shopping_cart_finalize_options">
+        Finalizar Pedido
+    </string>
+    <string name="title_activity_shopping_sales_finalize_options">
+        Finalizar Cotización
+    </string>
+    <string name="next">Siguiente</string>
 
 </resources>

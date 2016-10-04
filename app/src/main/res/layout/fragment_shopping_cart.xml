@@ -150,6 +150,16 @@
                 android:id="@+id/proceed_to_checkout_button"
                 android:textAppearance="@android:style/TextAppearance.Medium"
                 android:layout_gravity="bottom" />
+
+            <Button
+                style="@style/MainButtonAppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:id="@+id/go_to_finalize_options_button"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:layout_gravity="bottom" />
+
         </LinearLayout>
     </LinearLayout>
 
