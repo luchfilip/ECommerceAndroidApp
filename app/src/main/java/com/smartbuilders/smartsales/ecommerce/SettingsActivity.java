@@ -262,8 +262,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_periodicity"));
             bindPreferenceSummaryToValue(findPreference("server_address"));
-            bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
-            bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
+
 
             findPreference("sync_periodicity").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -310,58 +309,69 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
 
-            findPreference("save_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    final Context context = preference.getContext();
-                    if((Boolean) newValue){
-                        findPreference("sync_thumb_images").setSelectable(true);
-                        //TODO: setear el valor de sync_thumb_images en FALSE
-                    }else{
-                        findPreference("sync_thumb_images").setSelectable(false);
-                        context.stopService(new Intent(context, LoadProductsThumbImage.class));
-                        new AlertDialog.Builder(context)
-                                .setMessage(R.string.clean_thumb_dir)
-                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Utils.clearOriginalImagesFolder(context);
-                                        Utils.clearThumbImagesFolder(context);
-                                    }
-                                })
-                                .setNegativeButton(R.string.no, null)
-                                .setCancelable(false)
-                                .show();
-                    }
-                    return true;
-                }
-            });
+            if (BuildConfig.USE_PRODUCT_IMAGE) {
+                bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
+                bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
 
-            findPreference("sync_thumb_images").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    final Context context = preference.getContext();
-                    if((Boolean) newValue){
-                        if(!Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
-                            context.startService(new Intent(context, LoadProductsThumbImage.class));
+                findPreference("save_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final Context context = preference.getContext();
+                        if((Boolean) newValue){
+                            findPreference("sync_thumb_images").setSelectable(true);
+                            //TODO: setear el valor de sync_thumb_images en FALSE
+                        }else{
+                            findPreference("sync_thumb_images").setSelectable(false);
+                            context.stopService(new Intent(context, LoadProductsThumbImage.class));
+                            new AlertDialog.Builder(context)
+                                    .setMessage(R.string.clean_thumb_dir)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Utils.clearOriginalImagesFolder(context);
+                                            Utils.clearThumbImagesFolder(context);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, null)
+                                    .setCancelable(false)
+                                    .show();
                         }
-                    }else{
-                        context.stopService(new Intent(context, LoadProductsThumbImage.class));
-                        new AlertDialog.Builder(context)
-                                .setMessage(R.string.clean_thumb_dir)
-                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Utils.clearThumbImagesFolder(context);
-                                    }
-                                })
-                                .setNegativeButton(R.string.no, null)
-                                .setCancelable(false)
-                                .show();
+                        return true;
                     }
-                    return true;
-                }
-            });
+                });
+
+                findPreference("sync_thumb_images").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final Context context = preference.getContext();
+                        if((Boolean) newValue){
+                            if(!Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
+                                context.startService(new Intent(context, LoadProductsThumbImage.class));
+                            }
+                        }else{
+                            context.stopService(new Intent(context, LoadProductsThumbImage.class));
+                            new AlertDialog.Builder(context)
+                                    .setMessage(R.string.clean_thumb_dir)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Utils.clearThumbImagesFolder(context);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, null)
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    }
+                });
+            } else {
+                findPreference("save_images_in_device").setShouldDisableView(true);
+                findPreference("save_images_in_device").setEnabled(false);
+
+                findPreference("sync_thumb_images").setShouldDisableView(true);
+                findPreference("sync_thumb_images").setEnabled(false);
+            }
         }
 
         @Override
