@@ -9,12 +9,21 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
+import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -74,9 +83,9 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                     }
                     mUser = Utils.getCurrentUser(getContext());
 
-                    //if (mIsShoppingCart) {
-                    //    mOrderLines = (new OrderLineDB(getContext(), mUser)).getActiveOrderLinesFromShoppingCart();
-                    //}
+                    if(mOrderLines==null){
+                        mOrderLines = (new OrderLineDB(getContext(), mUser)).getActiveOrderLinesFromShoppingCart();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,6 +94,45 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                try {
+                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                    if (businessPartner!=null) {
+                                        ((TextView) rootView.findViewById(R.id.business_partner_name_textView))
+                                                .setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (mSalesOrderId!=0) {
+                                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                                    if (salesOrder!=null && salesOrder.getBusinessPartner()!=null) {
+                                        ((TextView) rootView.findViewById(R.id.sales_order_number_textView))
+                                                .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                                        rootView.findViewById(R.id.sales_order_number_textView).setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                ((TextView) rootView.findViewById(R.id.total_lines))
+                                        .setText(getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+
+                                Currency currency = (new CurrencyDB(getContext(), mUser))
+                                        .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+
+                                ((TextView) rootView.findViewById(R.id.subTotalAmount_tv))
+                                        .setText(getString(R.string.order_sub_total_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                OrderBR.getSubTotalAmountStringFormat(mOrderLines)));
+                                ((TextView) rootView.findViewById(R.id.taxesAmount_tv))
+                                        .setText(getString(R.string.order_tax_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                OrderBR.getTaxAmountStringFormat(mOrderLines)));
+                                ((TextView) rootView.findViewById(R.id.totalAmount_tv))
+                                        .setText(getString(R.string.order_total_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                OrderBR.getTotalAmountStringFormat(mOrderLines)));
+
                                 rootView.findViewById(R.id.proceed_to_checkout_button)
                                         .setOnClickListener(new View.OnClickListener() {
                                             @Override
