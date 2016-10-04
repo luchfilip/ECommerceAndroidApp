@@ -162,7 +162,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 mBusinessPartnerDB.getActiveBusinessPartners(),
                                 Utils.getAppCurrentBusinessPartnerId(this, mUser)));
                     }catch (Exception e){
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -251,7 +251,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                     ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
                                 }
                                 Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
-                                        businessPartnerName), Toast.LENGTH_LONG).show();
+                                        businessPartnerName), Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(R.string.no, null)
@@ -283,7 +283,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

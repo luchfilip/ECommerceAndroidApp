@@ -228,7 +228,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         if (result==null) {
                             reloadSalesOrdersList(listView, user);
                         } else {
-                            Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

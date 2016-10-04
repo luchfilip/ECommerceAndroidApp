@@ -224,7 +224,7 @@ public class Utils {
     public static void createFileInCacheDir(String fileName, int resId, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_SHORT).show();
         } else if (!TextUtils.isEmpty(fileName) && context!=null){
             //path for the image file in the external storage
             File imageFile = new File(context.getCacheDir() + File.separator + fileName);
@@ -238,7 +238,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_SHORT).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -254,7 +254,7 @@ public class Utils {
     public static void createFileInCacheDir(String fileName, Bitmap image, Context context){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
-            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.external_storage_unavailable), Toast.LENGTH_SHORT).show();
         } else if (!TextUtils.isEmpty(fileName) && image!=null && context!=null){
             //path for the image file in the external storage
             File imageFile = new File(context.getCacheDir() + File.separator + fileName);
@@ -267,7 +267,7 @@ public class Utils {
                 fo.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e1.getMessage(), Toast.LENGTH_SHORT).show();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -1073,7 +1073,7 @@ public class Utils {
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1639, mBuilder.build());
-            Toast toast = Toast.makeText(context, "Se creó el archivo "+fileName+" en la carpeta \"Descargas\"", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, "Se creó el archivo "+fileName+" en la carpeta \"Descargas\"", Toast.LENGTH_SHORT);
             toast.getView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1083,7 +1083,7 @@ public class Utils {
             toast.show();
         }catch(Exception e){
             e.printStackTrace();
-            Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Hubo un error creando el archivo en la carpeta de \"Descargas\".", Toast.LENGTH_SHORT).show();
         }
     }
 

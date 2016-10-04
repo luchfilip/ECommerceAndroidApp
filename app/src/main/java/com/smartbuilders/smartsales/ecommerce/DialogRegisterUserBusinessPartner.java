@@ -111,7 +111,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
                             }
                             dismiss();
                         } else {
-                            Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         new AlertDialog.Builder(getContext())

@@ -146,17 +146,17 @@ public class DialogAddToShoppingSale extends DialogFragment {
                                 .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice, productTaxPercentage);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
-                                    Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_SHORT).show();
                             dismiss();
                         } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), getString(R.string.invalid_qty_requested), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.invalid_qty_requested), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity
                  productId = mProductDB.getProductIdByBarCode(scanResult.getContents());
              }else{
                  productId = 0;
-                 Toast.makeText(this, getString(R.string.no_barcode_captured), Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, getString(R.string.no_barcode_captured), Toast.LENGTH_SHORT).show();
              }
              Utils.unlockScreenOrientation(this);
              // else continue with any other code you need in the method

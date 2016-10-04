@@ -183,7 +183,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
                                 if(result == null){
                                     ((Callback) mFragment).reloadShoppingSale();
                                 } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

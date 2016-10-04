@@ -167,7 +167,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                     ((Callback) mFragment).reloadShoppingSale();
                                     ((Callback) mFragment).reloadShoppingSalesList(mUser);
                                 } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

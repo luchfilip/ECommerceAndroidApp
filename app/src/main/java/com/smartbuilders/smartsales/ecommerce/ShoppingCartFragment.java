@@ -23,7 +23,6 @@ import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
-import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
@@ -343,35 +342,27 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     }
                 } else {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                    if (salesOrder != null) {
-                        BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                                .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                        if (businessPartner != null) {
-                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
-                            mBusinessPartnerName.setVisibility(View.VISIBLE);
+                    if (salesOrder != null && salesOrder.getBusinessPartner() != null) {
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()));
+                        mBusinessPartnerName.setVisibility(View.VISIBLE);
 
-                            mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                            mSalesOrderNumber.setVisibility(View.VISIBLE);
+                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                        mSalesOrderNumber.setVisibility(View.VISIBLE);
 
-                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
-                        }
+                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
                     }
                 }
             } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                 if (!mIsShoppingCart) {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
-                    if (salesOrder != null) {
-                        BusinessPartner businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                                .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId());
-                        if (businessPartner != null) {
-                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
-                            mBusinessPartnerName.setVisibility(View.VISIBLE);
+                    if (salesOrder != null && salesOrder.getBusinessPartner()!=null) {
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()));
+                        mBusinessPartnerName.setVisibility(View.VISIBLE);
 
-                            mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
-                            mSalesOrderNumber.setVisibility(View.VISIBLE);
+                        mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
+                        mSalesOrderNumber.setVisibility(View.VISIBLE);
 
-                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
-                        }
+                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -422,13 +413,17 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         .show();
             }
         }else{
-            mShoppingCartAdapter.setData(mOrderLines);
+            refreshInterface();
         }
     }
 
     @Override
     public void reloadShoppingCart(ArrayList<OrderLine> orderLines){
         mOrderLines = orderLines;
+        refreshInterface();
+    }
+
+    private void refreshInterface(){
         mShoppingCartAdapter.setData(mOrderLines);
         if (mOrderLines==null || mOrderLines.isEmpty()) {
             mBlankScreenView.setVisibility(View.VISIBLE);

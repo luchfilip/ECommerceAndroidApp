@@ -386,7 +386,7 @@ public class SettingsActivity extends PreferenceActivity
 							public void onClick(DialogInterface dialog, int which) {
 								try {
 									(new SyncLogDB(context)).cleanLog(mCurrentUser.getUserId(), 0);
-									Toast.makeText(context, context.getString(R.string.log_clean_succesfully), Toast.LENGTH_LONG).show();
+									Toast.makeText(context, context.getString(R.string.log_clean_succesfully), Toast.LENGTH_SHORT).show();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -455,7 +455,7 @@ public class SettingsActivity extends PreferenceActivity
 	            mAccountManager.setUserData(mAccount, 
 						AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, 
 						Boolean.valueOf(mCurrentUser.isSaveDBInExternalCard()).toString());
-        		Toast.makeText(this, getString(R.string.database_moved_successfully), Toast.LENGTH_LONG).show();
+        		Toast.makeText(this, getString(R.string.database_moved_successfully), Toast.LENGTH_SHORT).show();
         		return true;
         	}
 		} catch (InterruptedException | ExecutionException e) {

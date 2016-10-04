@@ -204,7 +204,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                                     ((Callback) mFragment).reloadShoppingCart(mDataset);
                                 }
                             } else {
-                                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                             }
                         }
                     })

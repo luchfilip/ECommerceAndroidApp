@@ -105,7 +105,7 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
                         if(getTargetFragment() instanceof Callback){
                             ((Callback) getTargetFragment()).reloadShoppingSale();
                         }else{
-                            Toast.makeText(getContext(), getString(R.string.qty_requested_updated), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getString(R.string.qty_requested_updated), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         throw new Exception(result);
@@ -113,11 +113,11 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
                     dismiss();
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     mSalesOrderLine.setQuantityOrdered(oldValue);
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

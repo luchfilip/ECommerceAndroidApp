@@ -188,9 +188,9 @@ public class CompanyFragment extends Fragment {
                                                 String result = userCompanyDB.insertUserCompany(mCompany);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
-                                                    Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                 }
                                             } else {
                                                 Company company = new Company();
@@ -205,9 +205,9 @@ public class CompanyFragment extends Fragment {
                                                 String result = userCompanyDB.updateUserCompany(company);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
-                                                    Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }
@@ -300,7 +300,7 @@ public class CompanyFragment extends Fragment {
         if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             companyLogoCropImageView.setImageUriAsync(mCropImageUri);
         } else {
-            Toast.makeText(getContext(), "Required permissions are not granted", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Required permissions are not granted", Toast.LENGTH_SHORT).show();
         }
     }
 

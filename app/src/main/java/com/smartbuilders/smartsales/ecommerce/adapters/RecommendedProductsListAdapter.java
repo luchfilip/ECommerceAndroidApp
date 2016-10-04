@@ -180,7 +180,7 @@ public class RecommendedProductsListAdapter extends
                             mDataset.get(holder.getAdapterPosition()).setFavorite(false);
                             holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                         } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
@@ -188,7 +188,7 @@ public class RecommendedProductsListAdapter extends
                             mDataset.get(holder.getAdapterPosition()).setFavorite(true);
                             holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                         } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

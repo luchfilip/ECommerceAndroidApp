@@ -143,7 +143,7 @@ public class DialogProductDetails extends DialogFragment {
                             ((ImageView) view.findViewById(R.id.favorite_imageView))
                                     .setImageResource(R.drawable.ic_favorite_border_black_24dp);
                         } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         String result = addToWishList(mProduct);
@@ -152,7 +152,7 @@ public class DialogProductDetails extends DialogFragment {
                             ((ImageView) view.findViewById(R.id.favorite_imageView))
                                     .setImageResource(R.drawable.ic_favorite_black_24dp);
                         } else {
-                            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

@@ -239,9 +239,9 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                                         if (result==null){
                                                             mOriginalTaxId = mBusinessPartner.getTaxId();
                                                             ((Callback) getActivity()).onBusinessPartnerUpdated();
-                                                            Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_SHORT).show();
                                                         } else {
-                                                            Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                         }
                                                     }else{
                                                         new AlertDialog.Builder(getContext())
@@ -253,9 +253,9 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                                     String result = userBusinessPartnerDB.updateUserBusinessPartner(mBusinessPartner);
                                                     if (result==null){
                                                         ((Callback) getActivity()).onBusinessPartnerUpdated();
-                                                        Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_SHORT).show();
                                                     } else {
-                                                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             } else {
@@ -274,7 +274,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                                     if (result==null){
                                                         ((Callback) getActivity()).onBusinessPartnerRegistered();
                                                     } else {
-                                                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                     }
                                                 } else {
                                                     new AlertDialog.Builder(getContext())

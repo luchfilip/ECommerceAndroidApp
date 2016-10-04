@@ -97,7 +97,7 @@ public class SchedulerManagerActivity extends Activity implements OnClickListene
 			schedulerManagerAdapter.removeItem(item);
 		}catch(Exception e){
 			e.printStackTrace();
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class SchedulerManagerActivity extends Activity implements OnClickListene
 			schedulerManagerAdapter.notifyDataSetChanged();
 		}catch(Exception e){
 			e.printStackTrace();
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	

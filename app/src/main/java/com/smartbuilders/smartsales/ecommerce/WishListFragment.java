@@ -280,11 +280,11 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                             if(result == null){
                                 reloadWishList();
                             } else {
-                                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

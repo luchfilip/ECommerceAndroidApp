@@ -161,7 +161,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                     dismiss();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

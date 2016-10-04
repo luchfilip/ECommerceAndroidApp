@@ -204,7 +204,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                                     mDataset.remove(holder.getAdapterPosition());
                                     ((Callback) mFragment).reloadWishList(mDataset);
                                 } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })

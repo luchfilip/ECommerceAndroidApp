@@ -160,7 +160,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                         if (result==null) {
                             reloadShoppingSalesList(user);
                         } else {
-                            Toast.makeText(ShoppingSalesListActivity.this, result, Toast.LENGTH_LONG).show();
+                            Toast.makeText(ShoppingSalesListActivity.this, result, Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

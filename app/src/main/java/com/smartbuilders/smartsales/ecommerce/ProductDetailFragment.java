@@ -137,7 +137,7 @@ public class ProductDetailFragment extends Fragment {
                                             @Override
                                             public void onClick(View v) {
                                                 if (TextUtils.isEmpty(mProduct.getImageFileName())) {
-                                                    Toast.makeText(getContext(), R.string.no_image_available, Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), R.string.no_image_available, Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     startActivity((new Intent(getContext(), ZoomImageActivity.class)
                                                             .putExtra(ZoomImageActivity.KEY_IMAGE_FILE_NAME, mProduct.getImageFileName())));
@@ -217,7 +217,7 @@ public class ProductDetailFragment extends Fragment {
                                                         mProduct.setFavorite(false);
                                                         favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                                     } else {
-                                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                     }
                                                 } else {
                                                     String result = (new OrderLineDB(getContext(), mUser)).addProductToWishList(mProduct);
@@ -225,7 +225,7 @@ public class ProductDetailFragment extends Fragment {
                                                         mProduct.setFavorite(true);
                                                         favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                                                     } else {
-                                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }

@@ -121,7 +121,7 @@ public class TimeDaysOfWeekPicker extends DialogFragment implements OnClickListe
 			dismiss();
 		}catch(Exception e){
 			e.printStackTrace();
-			Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 		
 	}

@@ -365,7 +365,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                             ((Product) mDataset.get(position)).setFavorite(false);
                                             viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                         } else {
-                                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
                                         String result = addToWishList(((Product) mDataset.get(position)));
@@ -373,7 +373,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                             ((Product) mDataset.get(position)).setFavorite(true);
                                             viewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
                                         } else {
-                                            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
