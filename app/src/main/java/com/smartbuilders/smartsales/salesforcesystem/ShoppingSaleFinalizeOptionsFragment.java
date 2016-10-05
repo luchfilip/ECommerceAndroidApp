@@ -11,16 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.model.Currency;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.DatePickerFragment;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -32,6 +41,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
 
     private User mUser;
+    private ArrayList<SalesOrderLine> mSalesOrderLines;
     private EditText mValidToEditText;
     private String mValidToText;
     private ProgressDialog waitPlease;
@@ -55,6 +65,8 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
+
+                    mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -63,6 +75,17 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                         @Override
                         public void run() {
                             try {
+                                try {
+                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                    if (businessPartner!=null) {
+                                        ((TextView) rootView.findViewById(R.id.business_partner_name_tv))
+                                                .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                                 mValidToEditText = (EditText) rootView.findViewById(R.id.valid_to_editText);
                                 mValidToEditText.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -83,6 +106,25 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                                     }
                                 });
                                 mValidToEditText.setText(mValidToText);
+
+                                ((TextView) rootView.findViewById(R.id.total_lines))
+                                        .setText(getString(R.string.order_lines_number, String.valueOf(mSalesOrderLines.size())));
+
+                                Currency currency = (new CurrencyDB(getContext(), mUser))
+                                        .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+
+                                ((TextView) rootView.findViewById(R.id.subTotalAmount_tv))
+                                        .setText(getString(R.string.sales_order_sub_total_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                SalesOrderBR.getSubTotalAmountStringFormat(mSalesOrderLines)));
+                                ((TextView) rootView.findViewById(R.id.taxesAmount_tv))
+                                        .setText(getString(R.string.sales_order_tax_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                SalesOrderBR.getTaxAmountStringFormat(mSalesOrderLines)));
+                                ((TextView) rootView.findViewById(R.id.totalAmount_tv))
+                                        .setText(getString(R.string.sales_order_total_amount,
+                                                currency!=null ? currency.getName() : "",
+                                                SalesOrderBR.getTotalAmountStringFormat(mSalesOrderLines)));
 
                                 rootView.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
                                         .setOnClickListener(new View.OnClickListener() {
@@ -109,7 +151,6 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                                                         .show();
                                             }
                                         });
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
