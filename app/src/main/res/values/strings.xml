@@ -404,5 +404,6 @@
         Finalizar Cotización
     </string>
     <string name="next">Siguiente</string>
+    <string name="delivery_address_label">Dirección de Despacho:</string>
 
 </resources>

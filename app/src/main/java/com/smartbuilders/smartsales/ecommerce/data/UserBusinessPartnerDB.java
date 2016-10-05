@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
@@ -61,6 +62,11 @@ public class UserBusinessPartnerDB {
                     e.printStackTrace();
                 }
             }
+        }
+        UserBusinessPartnerAddressDB userBusinessPartnerAddressDB = new UserBusinessPartnerAddressDB(mContext, mUser);
+        for (BusinessPartner businessPartner : activeBusinessPartners) {
+            businessPartner.setAddresses(userBusinessPartnerAddressDB
+                    .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
         }
         return activeBusinessPartners;
     }
@@ -178,6 +184,9 @@ public class UserBusinessPartnerDB {
                 businessPartner.setContactPerson(c.getString(4));
                 businessPartner.setEmailAddress(c.getString(5));
                 businessPartner.setPhoneNumber(c.getString(6));
+                c.close();
+                businessPartner.setAddresses((new UserBusinessPartnerAddressDB(mContext, mUser))
+                        .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
                 return businessPartner;
             }
         } catch (Exception e) {

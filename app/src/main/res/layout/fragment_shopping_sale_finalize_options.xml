@@ -55,19 +55,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="bottom">
-
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/delivery_address_label"
+                        android:layout_gravity="center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="@color/black" />
+
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/delivery_addresses_spinner"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/valid_to_label"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:layout_width="0dp"
@@ -86,8 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/total_lines"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"

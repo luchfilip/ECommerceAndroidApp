@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 10;
+	private static final int DATABASE_VERSION = 11;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -97,6 +97,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID))";
+
+    public static final String CREATE_PRODUCT_ATTRIBUTE =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_ATTRIBUTE (" +
+                    "PRODUCT_ID INTEGER DEFAULT NULL, " +
+                    " ATTRIBUTE_ID INTEGER DEFAULT NULL, " +
+                    " TEXT_VALUE TEXT DEFAULT NULL, " +
+                    " INTEGER_VALUE INTEGER DEFAULT NULL, " +
+                    " DOUBLE_VALUE DOUBLE DEFAULT NULL, " +
+                    " BOOLEAN_VALUE CHAR(1) DEFAULT NULL, " +
+                    " DATE_VALUE DATE DEFAULT NULL, " +
+                    " DATETIME_VALUE DATETIME DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (PRODUCT_ID, ATTRIBUTE_ID))";
 
 	public static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
             "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE_AVAILABILITY (" +
@@ -298,6 +312,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
+
+    public static final String CREATE_BUSINESS_PARTNER_ADDRESS =
+            "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER_ADDRESS (" +
+                    "BUSINESS_PARTNER_ADDRESS_ID INTEGER NOT NULL, " +
+                    " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " ADDRESS_TYPE INTEGER NOT NULL, " +
+                    " ADDRESS TEXT DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (BUSINESS_PARTNER_ADDRESS_ID))";
+
+    public static final String CREATE_USER_BUSINESS_PARTNER_ADDRESS =
+            "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER_ADDRESS (" +
+                    "USER_BUSINESS_PARTNER_ADDRESS_ID INTEGER NOT NULL, " +
+                    " USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " ADDRESS_TYPE INTEGER NOT NULL, " +
+                    " ADDRESS TEXT DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (USER_BUSINESS_PARTNER_ADDRESS_ID))";
 
     public static final String CREATE_USER_APP_PARAMETER =
             "CREATE TABLE IF NOT EXISTS USER_APP_PARAMETER (" +
@@ -521,6 +555,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_IDS_SERVER_ADDRESS_BACKUP);
 		}else{
             db.execSQL(CREATE_PRODUCT);
+            db.execSQL(CREATE_PRODUCT_ATTRIBUTE);
             db.execSQL(CREATE_PRODUCT_PRICE_AVAILABILITY);
             db.execSQL(CREATE_PRODUCT_IMAGE);
             db.execSQL("create index product_image_idx on product_image (product_id)");
@@ -540,6 +575,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_BRAND_PROMOTIONAL_CARD);
             db.execSQL(CREATE_APP_PARAMETER);
             db.execSQL(CREATE_BUSINESS_PARTNER);
+            db.execSQL(CREATE_BUSINESS_PARTNER_ADDRESS);
             db.execSQL(CREATE_USER_APP_PARAMETER);
             db.execSQL(CREATE_ECOMMERCE_ORDER);
             db.execSQL(CREATE_ECOMMERCE_ORDER_LINE);
@@ -550,6 +586,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_PRODUCT_RECENTLY_SEEN);
             db.execSQL(CREATE_RECOMMENDED_PRODUCT);
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
+            db.execSQL(CREATE_USER_BUSINESS_PARTNER_ADDRESS);
             db.execSQL(CREATE_USER_COMPANY);
             db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
             db.execSQL(CREATE_USER_TABLE_MAX_ID);
@@ -572,6 +609,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL(CREATE_MAINPAGE_PRODUCT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion<11) {
+                try {
+                    db.execSQL(CREATE_PRODUCT_ATTRIBUTE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_BUSINESS_PARTNER_ADDRESS);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_USER_BUSINESS_PARTNER_ADDRESS);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

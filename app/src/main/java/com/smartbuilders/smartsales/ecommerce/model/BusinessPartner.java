@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerce.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by stein on 30/5/2016.
  */
@@ -21,6 +23,7 @@ public class BusinessPartner extends Model implements Parcelable {
     private String contactPerson;
     private String emailAddress;
     private String phoneNumber;
+    private ArrayList<BusinessPartnerAddress> addresses;
 
     public BusinessPartner () {
 
@@ -36,6 +39,7 @@ public class BusinessPartner extends Model implements Parcelable {
         contactPerson = in.readString();
         emailAddress = in.readString();
         phoneNumber = in.readString();
+        addresses = in.createTypedArrayList(BusinessPartnerAddress.CREATOR);
     }
 
     @Override
@@ -49,6 +53,7 @@ public class BusinessPartner extends Model implements Parcelable {
         dest.writeString(contactPerson);
         dest.writeString(emailAddress);
         dest.writeString(phoneNumber);
+        dest.writeTypedList(addresses);
     }
 
     @Override
@@ -130,5 +135,13 @@ public class BusinessPartner extends Model implements Parcelable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public ArrayList<BusinessPartnerAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(ArrayList<BusinessPartnerAddress> addresses) {
+        this.addresses = addresses;
     }
 }

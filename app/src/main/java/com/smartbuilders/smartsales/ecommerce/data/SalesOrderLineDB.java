@@ -330,7 +330,7 @@ public class SalesOrderLineDB {
                     "SELECT SOL.ECOMMERCE_SALES_ORDER_LINE_ID, SOL.PRODUCT_ID, SOL.BUSINESS_PARTNER_ID, " +
                         " SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
                     " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
-                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
+                        " LEFT JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
                     " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.BUSINESS_PARTNER_ID = ? " +
                             " AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                     " ORDER BY SOL.CREATE_TIME DESC",
@@ -360,17 +360,21 @@ public class SalesOrderLineDB {
                 }
             }
         }
-        ArrayList<SalesOrderLine> salesOrderLinesToRemove = new ArrayList<>();
+        //ArrayList<SalesOrderLine> salesOrderLinesToRemove = new ArrayList<>();
         ProductDB productDB = new ProductDB(mContext, mUser);
         for (SalesOrderLine salesOrderLine : salesOrderLines) {
             salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
             if(salesOrderLine.getProduct()==null){
-                salesOrderLinesToRemove.add(salesOrderLine);
+                Product product = new Product();
+                product.setId(salesOrderLine.getProductId());
+                product.setName("No hay información disponible");
+                salesOrderLine.setProduct(product);
+                //salesOrderLinesToRemove.add(salesOrderLine);
             }
         }
-        if (!salesOrderLinesToRemove.isEmpty()) {
-            salesOrderLines.removeAll(salesOrderLinesToRemove);
-        }
+        //if (!salesOrderLinesToRemove.isEmpty()) {
+        //    salesOrderLines.removeAll(salesOrderLinesToRemove);
+        //}
         return salesOrderLines;
     }
 
