@@ -179,10 +179,14 @@ public class DialogProductDetails extends DialogFragment {
         view.findViewById(R.id.addToShoppingSale_imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
-                        .getSalesOrderLineFromShoppingSalesByProductId(mProduct.getId());
-                if (salesOrderLine != null) {
-                    updateQtyOrderedInShoppingSales(salesOrderLine);
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
+                            .getSalesOrderLineFromShoppingSalesByProductId(mProduct.getId());
+                    if (salesOrderLine != null) {
+                        updateQtyOrderedInShoppingSales(salesOrderLine);
+                    } else {
+                        addToShoppingSale(mProduct);
+                    }
                 } else {
                     addToShoppingSale(mProduct);
                 }

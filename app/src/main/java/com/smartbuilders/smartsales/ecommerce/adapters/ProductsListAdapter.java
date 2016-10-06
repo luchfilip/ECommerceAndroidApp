@@ -273,10 +273,14 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                        .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
-                if (salesOrderLine != null) {
-                    updateQtyOrderedInShoppingSales(salesOrderLine);
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                            .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
+                    if (salesOrderLine != null) {
+                        updateQtyOrderedInShoppingSales(salesOrderLine);
+                    } else {
+                        addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                    }
                 } else {
                     addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
                 }
