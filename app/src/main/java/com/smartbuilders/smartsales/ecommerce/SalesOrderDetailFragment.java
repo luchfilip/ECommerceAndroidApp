@@ -109,7 +109,7 @@ public class SalesOrderDetailFragment extends Fragment {
                                 if (mSalesOrder != null) {
                                     if(mSalesOrder.getBusinessPartner()!=null){
                                         ((TextView) view.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_detail, mSalesOrder.getBusinessPartner().getName()));
+                                                .setText(getString(R.string.business_partner_name_detail, mSalesOrder.getBusinessPartner().getName()));
                                         view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
                                     }
 

@@ -22,10 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/business_partner_name_textView"
-            android:textColor="@color/black"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            android:textStyle="bold" />
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:padding="10dp" />
 
     </android.support.design.widget.AppBarLayout>
 

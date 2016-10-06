@@ -242,7 +242,6 @@
     <string name="business_partner_internal_code_label">Código del Cliente:</string>
     <string name="business_partner_commercial_name_label">Nombre Comercial:</string>
     <string name="business_partner_commercial_name">Nombre comercial</string>
-    <string name="business_partner_detail">Cliente: %1$s</string>
     <string name="address">Dirección</string>
     <string name="address_detail">Dirección: %1$s</string>
     <string name="address_label">Dirección:</string>
@@ -406,6 +405,6 @@
         Finalizar Cotización
     </string>
     <string name="next">Siguiente</string>
-    <string name="delivery_address_label">Dirección de Despacho:</string>
+    <string name="delivery_address_label">Dirección de entrega:</string>
 
 </resources>

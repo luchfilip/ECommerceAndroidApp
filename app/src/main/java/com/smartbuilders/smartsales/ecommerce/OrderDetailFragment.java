@@ -108,7 +108,7 @@ public class OrderDetailFragment extends Fragment {
                                         || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
                                     if(mOrder.getBusinessPartner()!=null){
                                         ((TextView) view.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_detail, mOrder.getBusinessPartner().getName()));
+                                                .setText(getString(R.string.business_partner_name_detail, mOrder.getBusinessPartner().getName()));
                                         view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
                                     }
                                 }

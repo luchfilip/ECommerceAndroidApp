@@ -111,7 +111,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                                             .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                     if (businessPartner!=null) {
                                         ((TextView) rootView.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                                                .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
 
                                         /**************************/
                                         List<String> spinnerArray =  new ArrayList<>();

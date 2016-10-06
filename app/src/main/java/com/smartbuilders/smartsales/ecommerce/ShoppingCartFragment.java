@@ -332,7 +332,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                                 .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                         if (businessPartner != null) {
-                            mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                            mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                             mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                             mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
@@ -343,7 +343,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 } else {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner() != null) {
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()));
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
                         mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
@@ -356,7 +356,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 if (!mIsShoppingCart) {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner()!=null) {
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()));
+                        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
                         mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));

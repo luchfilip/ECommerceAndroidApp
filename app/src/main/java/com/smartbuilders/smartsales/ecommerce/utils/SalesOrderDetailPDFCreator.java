@@ -247,7 +247,7 @@ public class SalesOrderDetailPDFCreator {
         clientDataCell.setPadding(3);
         clientDataCell.disableBorderSide(Rectangle.UNDEFINED);
         clientDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_detail, salesOrder.getBusinessPartner().getName()), font));
+        clientDataCell.addElement(new Paragraph(ctx.getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()), font));
         //clientDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, salesOrder.getBusinessPartner().getAddress()), font));
         clientDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, salesOrder.getBusinessPartner().getTaxId()), font));
         headerTable.addCell(clientDataCell);

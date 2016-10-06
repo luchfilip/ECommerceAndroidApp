@@ -153,7 +153,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                         .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if(businessPartner!=null){
-                    mBusinessPartnerName.setText(getString(R.string.business_partner_detail, businessPartner.getName()));
+                    mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                     mBusinessPartnerName.setVisibility(View.VISIBLE);
                     mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
                 }

@@ -64,7 +64,7 @@ public class SalesOrdersListAdapter extends BaseAdapter {
         viewHolder.salesOrderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getLinesNumber())));
         if(mUser!=null && mUser.getUserProfileId()== UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            viewHolder.businessPartnerName.setText(mContext.getString(R.string.business_partner_detail,
+            viewHolder.businessPartnerName.setText(mContext.getString(R.string.business_partner_name_detail,
                     mDataset.get(position).getBusinessPartner().getName()));
             viewHolder.businessPartnerName.setVisibility(View.VISIBLE);
         }else{

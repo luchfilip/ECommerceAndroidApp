@@ -68,7 +68,7 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
                     .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
             if (businessPartner!=null) {
                 ((TextView) findViewById(R.id.business_partner_name_textView))
-                        .setText(businessPartner.getName());
+                        .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
                     .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
             if (businessPartner!=null) {
                 ((TextView) findViewById(R.id.business_partner_name_textView))
-                        .setText(businessPartner.getName());
+                        .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
             }
         } catch (Exception e) {
             e.printStackTrace();
