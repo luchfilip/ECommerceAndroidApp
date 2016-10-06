@@ -5,22 +5,6 @@
     android:orientation="horizontal"
     android:baselineAligned="false">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_grey"
-        android:id="@+id/company_logo_name"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/company_logo_name"
-            android:padding="10dp"
-            android:visibility="visible"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
     <LinearLayout android:id="@+id/progressContainer"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -56,13 +40,68 @@
             android:layout_height="match_parent"
             android:layout_weight="4">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/shoppingSale_items_list"
-                android:background="@color/light_grey"
-                android:scrollbars="vertical"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@color/light_grey">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape"
+                        style="@style/shape_style">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delivery_address_label"
+                            android:layout_gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:maxWidth="100dp" />
+
+                        <Spinner
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/business_partner_delivery_addresses_spinner"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape"
+                        style="@style/shape_style">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/valid_to_label"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:inputType="date"
+                            android:focusable="false"
+                            android:ems="10"
+                            android:id="@+id/valid_to_editText"
+                            android:focusableInTouchMode="false"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1" />
+                    </TableRow>
+                </TableLayout>
+
+            </LinearLayout>
 
             <View style="@style/Divider"
                 android:layout_marginBottom="1dp" />
@@ -92,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:id="@+id/business_partner_commercial_name_tv"
+                android:id="@+id/business_partner_name_tv"
                 android:textStyle="bold" />
 
             <View style="@style/Divider"
@@ -127,27 +166,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/valid_to_layout_container">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/valid_to_label"
-                    android:textColor="@color/black" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:focusable="false"
-                    android:ems="10"
-                    android:id="@+id/valid_to_editText" />
-            </LinearLayout>
-
             <Button
                 style="@style/GoldenButtonAppTheme"
                 android:layout_width="wrap_content"
@@ -157,16 +175,6 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp" />
-
-            <Button
-                style="@style/GoldenButtonAppTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/next"
-                android:id="@+id/go_to_finalize_options_button"
-                android:layout_gravity="bottom|right"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -3,8 +3,6 @@ package com.smartbuilders.smartsales.salesforcesystem;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +42,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
     private static final String STATE_ORDER_LINES = "state_order_lines";
+    private static final String STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID = "state_selected_business_partner_address_id";
 
     private User mUser;
     private int mSalesOrderId;
@@ -74,6 +73,9 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
                             mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                             mOrderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
+                        }
+                        if(savedInstanceState.containsKey(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID)){
+                            mSelectedBusinessPartnerAddressId = savedInstanceState.getInt(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID);
                         }
                     } else  if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartFinalizeOptionsActivity.KEY_SALES_ORDER_ID)
@@ -287,6 +289,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
             outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
             outState.putParcelableArrayList(STATE_ORDER_LINES, mOrderLines);
         }
+        outState.putInt(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID, mSelectedBusinessPartnerAddressId);
         super.onSaveInstanceState(outState);
     }
 }

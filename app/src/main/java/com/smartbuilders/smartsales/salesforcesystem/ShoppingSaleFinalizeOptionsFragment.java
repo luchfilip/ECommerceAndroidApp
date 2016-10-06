@@ -44,6 +44,7 @@ import java.util.Locale;
 public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements DatePickerFragment.Callback {
 
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
+    private static final String STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID = "state_selected_business_partner_address_id";
 
     private User mUser;
     private ArrayList<SalesOrderLine> mSalesOrderLines;
@@ -68,6 +69,9 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                     if(savedInstanceState != null) {
                         if(savedInstanceState.containsKey(STATE_VALID_TO)) {
                             mValidToText = savedInstanceState.getString(STATE_VALID_TO);
+                        }
+                        if(savedInstanceState.containsKey(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID)){
+                            mSelectedBusinessPartnerAddressId = savedInstanceState.getInt(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID);
                         }
                     }
 
@@ -280,6 +284,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(STATE_VALID_TO, mValidToText);
+        outState.putInt(STATE_SELECTED_BUSINESS_PARTNER_ADDRESS_ID, mSelectedBusinessPartnerAddressId);
         super.onSaveInstanceState(outState);
     }
 }

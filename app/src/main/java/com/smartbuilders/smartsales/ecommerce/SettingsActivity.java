@@ -187,7 +187,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            loadHeadersFromResource(R.xml.pref_headers_sales_force_system, target);
+        } else {
+            loadHeadersFromResource(R.xml.pref_headers, target);
+        }
     }
 
     /**
