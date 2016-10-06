@@ -108,22 +108,31 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             });
 
-            if (findViewById(R.id.reset_password_textView)!=null){
-                findViewById(R.id.reset_password_textView).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class));
-                    }
-                });
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                if (findViewById(R.id.reset_password_textView) != null) {
+                    findViewById(R.id.reset_password_textView).setVisibility(View.GONE);
+                }
+                if (findViewById(R.id.sign_up_textView) != null) {
+                    findViewById(R.id.sign_up_textView).setVisibility(View.GONE);
+                }
+            } else {
+                if (findViewById(R.id.reset_password_textView) != null) {
+                    findViewById(R.id.reset_password_textView).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class));
+                        }
+                    });
 
-            }
-            if (findViewById(R.id.sign_up_textView)!=null){
-                findViewById(R.id.sign_up_textView).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(AuthenticatorActivity.this, RequestUserPasswordActivity.class));
-                    }
-                });
+                }
+                if (findViewById(R.id.sign_up_textView) != null) {
+                    findViewById(R.id.sign_up_textView).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(AuthenticatorActivity.this, RequestUserPasswordActivity.class));
+                        }
+                    });
+                }
             }
         }
 

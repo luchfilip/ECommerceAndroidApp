@@ -26,6 +26,9 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
+import com.smartbuilders.smartsales.ecommerce.model.Currency;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
@@ -44,6 +47,9 @@ import java.util.ArrayList;
  * Created by Alberto on 6/4/2016.
  */
 public class OrderDetailPDFCreator {
+
+    private Currency currency;
+    private boolean managePriceInOrder;
 
     public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
         File pdfFile = null;
@@ -74,6 +80,10 @@ public class OrderDetailPDFCreator {
                     company = new Company();
                 }
 
+                currency = (new CurrencyDB(ctx, user)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(ctx, user));
+
+                managePriceInOrder = Parameter.isManagePriceInOrder(ctx, user);
+
                 //se agrega la informacion del cliente, numero de pedido, fecha de emision, etc.
                 addOrderHeader(document, ctx, company, order);
 
@@ -83,8 +93,10 @@ public class OrderDetailPDFCreator {
                 //se cargan las lineas del pedido
                 addOrderDetails(document, orderLines, ctx, user);
 
-                //se le agrega la informacion de subtotal, impuestos y total del pedido
-                //addOrderFooter(document, ctx, order);
+                if (managePriceInOrder) {
+                    //se le agrega la informacion de subtotal, impuestos y total del pedido
+                    addOrderFooter(document, ctx, order);
+                }
 
                 document.close();
 
@@ -306,22 +318,37 @@ public class OrderDetailPDFCreator {
             PdfPCell cell2 = new PdfPCell();
             cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             //cell2.setPadding(3);
-            cell2.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+            cell2.setBorder(BuildConfig.USE_PRODUCT_IMAGE ? (Rectangle.LEFT | Rectangle.RIGHT) : Rectangle.RIGHT);
             cell2.setUseVariableBorders(true);
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
+            cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
             cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
+            if (BuildConfig.USE_PRODUCT_IMAGE) {
+                cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
+                cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
+            }
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
             cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
             //cell3.setPadding(3);
             cell3.setBorder(PdfPCell.NO_BORDER);
-            cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered, String.valueOf(line.getQuantityOrdered())), font));
+            if (managePriceInOrder) {
+                cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price,
+                        currency!=null ? currency.getName() : "",
+                        line.getPriceStringFormat()), font));
+                cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
+                        currency!=null ? currency.getName() : "",
+                        line.getTaxAmountStringFormat()), font));
+            }
+            cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered_label_detail, String.valueOf(line.getQuantityOrdered())), font));
+            if (managePriceInOrder) {
+                cell3.addElement(new Paragraph(ctx.getString(R.string.order_sub_total_line_amount,
+                        currency!=null ? currency.getName() : "",
+                        line.getTotalLineAmountStringFormat()), font));
+            }
             //cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount, line.getTotalLineAmountStringFormat()), font));
             table.addCell(cell3);
             /*****************************************/
@@ -344,35 +371,38 @@ public class OrderDetailPDFCreator {
         document.add(new Phrase("\n"));
     }
 
-    //private void addOrderFooter(Document document, Context ctx, Order order) throws DocumentException, IOException {
-    //    Font font;
-    //    try{
-    //        font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-    //    }catch (Exception ex){
-    //        ex.printStackTrace();
-    //        try{
-    //            font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-    //        }catch(Exception e) {
-    //            e.printStackTrace();
-    //            font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
-    //        }
-    //    }
-    //
-    //    PdfPTable orderNumberTable = new PdfPTable(1);
-    //    orderNumberTable.setWidths(new float[] {560f});
-    //    PdfPCell orderNumberCell = new PdfPCell();
-    //    orderNumberCell.setPadding(3);
-    //    orderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
-    //    orderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-    //    orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_amount,
-    //            order.getSubTotalAmountStringFormat()), font));
-    //    orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
-    //            order.getTaxAmountStringFormat()), font));
-    //    orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_total_amount,
-    //            order.getTotalAmountStringFormat()), font));
-    //    orderNumberTable.addCell(orderNumberCell);
-    //    document.add(orderNumberTable);
-    //}
+    private void addOrderFooter(Document document, Context ctx, Order order) throws DocumentException, IOException {
+        Font font;
+        try{
+            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            try{
+                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            }catch(Exception e) {
+                e.printStackTrace();
+                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
+            }
+        }
+
+        PdfPTable orderNumberTable = new PdfPTable(1);
+        orderNumberTable.setWidths(new float[] {560f});
+        PdfPCell orderNumberCell = new PdfPCell();
+        orderNumberCell.setPadding(3);
+        orderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
+        orderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_sub_total_amount,
+                currency!=null ? currency.getName() : "",
+                order.getSubTotalAmountStringFormat()), font));
+        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_tax_amount,
+                currency!=null ? currency.getName() : "",
+                order.getTaxAmountStringFormat()), font));
+        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_total_amount,
+                currency!=null ? currency.getName() : "",
+                order.getTotalAmountStringFormat()), font));
+        orderNumberTable.addCell(orderNumberCell);
+        document.add(orderNumberTable);
+    }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
         int width = bm.getWidth();

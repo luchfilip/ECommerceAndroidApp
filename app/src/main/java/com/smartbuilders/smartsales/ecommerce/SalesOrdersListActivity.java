@@ -256,26 +256,23 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListIsLoaded(ListView listView) {
+    public void onListIsLoaded(ListView listView, boolean isOrdersFromSalesOrder) {
         if (mThreePane) {
             if (listView != null && listView.getAdapter()!=null && listView.getAdapter().getCount()>0) {
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
             }else{
-                switch (mCurrentTabSelected) {
-                    case 0://SalesOrder
-                        try {
-                            ((FrameLayout) findViewById(R.id.sales_order_detail_container)).removeAllViews();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case 1://Order
-                        try {
-                            ((FrameLayout) findViewById(R.id.order_detail_container)).removeAllViews();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
+                if (isOrdersFromSalesOrder) {//Order
+                    try {
+                        ((FrameLayout) findViewById(R.id.order_detail_container)).removeAllViews();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {//SalesOrder
+                    try {
+                        ((FrameLayout) findViewById(R.id.sales_order_detail_container)).removeAllViews();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

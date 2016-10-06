@@ -48,7 +48,7 @@ public class SalesOrdersListFragment extends Fragment {
         void onItemSelected(SalesOrder salesOrder);
         void onItemLongSelected(SalesOrder salesOrder, ListView listView, User user);
         void onItemSelected(Order order);
-        void onListIsLoaded(ListView listView);
+        void onListIsLoaded(ListView listView, boolean isOrdersFromSalesOrder);
         void setSelectedIndex(int selectedIndex, ListView listView);
     }
 
@@ -165,7 +165,7 @@ public class SalesOrdersListFragment extends Fragment {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
                                     if (savedInstanceState==null) {
-                                        ((Callback) getActivity()).onListIsLoaded(mListView);
+                                        ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
                                     } else {
                                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
                                     }
@@ -212,12 +212,12 @@ public class SalesOrdersListFragment extends Fragment {
                             getContext(), mUser)).getActiveSalesOrders());
                 }
                 if(mListView.getAdapter().getCount()!=oldListSize){
-                    ((Callback) getActivity()).onListIsLoaded(mListView);
+                    ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
                 }else{
                     ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
                 }
             }else{
-                ((Callback) getActivity()).onListIsLoaded(mListView);
+                ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
             }
             setHeader();
         }
