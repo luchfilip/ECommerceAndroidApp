@@ -45,6 +45,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
     private EditText mValidToEditText;
     private String mValidToText;
     private ProgressDialog waitPlease;
+    private int mSelectedBusinessPartnerAddressId;
 
     public ShoppingSaleFinalizeOptionsFragment() {
     }
@@ -178,7 +179,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo);
+                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, mSelectedBusinessPartnerAddressId);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

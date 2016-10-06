@@ -32,8 +32,8 @@ public class SalesOrderDB {
         this.mUser = user;
     }
 
-    public String createSalesOrderFromShoppingSale(Date validTo) throws Exception {
-        return createSalesOrder((new SalesOrderLineDB(mContext, mUser)).getShoppingSale(), validTo, false);
+    public String createSalesOrderFromShoppingSale(Date validTo, int businessPartnerAddressId) throws Exception {
+        return createSalesOrder((new SalesOrderLineDB(mContext, mUser)).getShoppingSale(), validTo, businessPartnerAddressId, false);
     }
 
     public SalesOrder getActiveSalesOrderById(int salesOrderId) {
@@ -45,7 +45,7 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
-                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
+                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO, SO.BUSINESS_PARTNER_ADDRESS_ID "+
                         " FROM ECOMMERCE_SALES_ORDER SO " +
                             " INNER JOIN USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SO.USER_ID AND UBP.IS_ACTIVE = ? " +
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
@@ -57,7 +57,7 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.CREATE_TIME, SO.LINES_NUMBER, " +
-                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO "+
+                                " SO.SUB_TOTAL, SO.TAX, SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO, SO.BUSINESS_PARTNER_ADDRESS_ID "+
                                 " FROM ECOMMERCE_SALES_ORDER SO " +
                                 " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
                                 " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
@@ -91,6 +91,7 @@ public class SalesOrderDB {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                salesOrder.setBusinessPartnerAddressId(c.getInt(8));
             }
             if(salesOrder!=null){
                 if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
@@ -189,7 +190,7 @@ public class SalesOrderDB {
                                 .build(), null,
                         "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
                             " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
-                            " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
+                            " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO, SO.BUSINESS_PARTNER_ADDRESS_ID " +
                         " FROM ECOMMERCE_SALES_ORDER SO " +
                             " INNER JOIN USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SO.USER_ID AND UBP.IS_ACTIVE = ? "+
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
@@ -203,13 +204,13 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT SO.ECOMMERCE_SALES_ORDER_ID, SO.DOC_STATUS, SO.CREATE_TIME, SO.UPDATE_TIME, " +
-                                " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
-                                " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO " +
-                                " FROM ECOMMERCE_SALES_ORDER SO " +
-                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
+                            " SO.APP_VERSION, SO.APP_USER_NAME, SO.LINES_NUMBER, SO.SUB_TOTAL, SO.TAX, " +
+                            " SO.TOTAL, SO.BUSINESS_PARTNER_ID, SO.VALID_TO, SO.BUSINESS_PARTNER_ADDRESS_ID " +
+                        " FROM ECOMMERCE_SALES_ORDER SO " +
+                            " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SO.USER_ID " +
                                 " AND BP.USER_BUSINESS_PARTNER_ID = SO.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                                " WHERE SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
-                                " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
+                        " WHERE SO.USER_ID = ? AND SO.DOC_TYPE = ? AND SO.IS_ACTIVE = ?  " +
+                        " order by SO.ECOMMERCE_SALES_ORDER_ID desc",
                         new String[]{"Y", String.valueOf(mUser.getServerUserId()),
                                 SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"}, null);
             }
@@ -272,7 +273,7 @@ public class SalesOrderDB {
         return activeSalesOrders;
     }
 
-    private String createSalesOrder(ArrayList<SalesOrderLine> orderLines, Date validTo, boolean insertOrderLinesInDB) throws Exception {
+    private String createSalesOrder(ArrayList<SalesOrderLine> orderLines, Date validTo, int businessPartnerAddressId, boolean insertOrderLinesInDB) throws Exception {
         int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
         int activeShoppingSalesLineNumber = salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId);
@@ -290,11 +291,12 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                 null,
-                                "INSERT INTO ECOMMERCE_SALES_ORDER (ECOMMERCE_SALES_ORDER_ID, USER_ID, BUSINESS_PARTNER_ID, DOC_STATUS, DOC_TYPE, " +
+                                "INSERT INTO ECOMMERCE_SALES_ORDER (ECOMMERCE_SALES_ORDER_ID, USER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID, DOC_STATUS, DOC_TYPE, " +
                                         " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
-                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
-                                        String.valueOf(businessPartnerId), "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
+                                        String.valueOf(businessPartnerId), String.valueOf(businessPartnerAddressId),
+                                        "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
                                         DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(),
                                         Utils.getMacAddress(mContext), String.valueOf(orderLines!=null ? orderLines.size() : activeShoppingSalesLineNumber),

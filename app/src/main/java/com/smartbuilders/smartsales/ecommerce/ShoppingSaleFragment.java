@@ -285,7 +285,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo);
+                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

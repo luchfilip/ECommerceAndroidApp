@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 12;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -360,6 +360,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TOTAL DOUBLE DEFAULT 0, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(4) DEFAULT NULL, " +
+                    " BUSINESS_PARTNER_ADDRESS_ID INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
@@ -402,6 +403,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " VALID_TO DATE DEFAULT NULL, " +
                     " DOC_STATUS CHAR(2) DEFAULT NULL, " +
                     " DOC_TYPE CHAR(4) DEFAULT NULL, " +
+                    " BUSINESS_PARTNER_ADDRESS_ID INTEGER DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
@@ -626,6 +628,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL(CREATE_USER_BUSINESS_PARTNER_ADDRESS);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion<12) {
+                try {
+                    db.execSQL("ALTER TABLE ECOMMERCE_ORDER ADD COLUMN BUSINESS_PARTNER_ADDRESS_ID INTEGER DEFAULT NULL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL("ALTER TABLE ECOMMERCE_SALES_ORDER ADD COLUMN BUSINESS_PARTNER_ADDRESS_ID INTEGER DEFAULT NULL");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

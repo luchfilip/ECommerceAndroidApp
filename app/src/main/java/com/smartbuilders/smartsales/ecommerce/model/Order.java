@@ -19,6 +19,7 @@ public class Order extends Model implements Parcelable {
     private int salesOrderId;
     private BusinessPartner businessPartner;
     private int businessPartnerId;
+    private int businessPartnerAddressId;
 
     public Order() {
 
@@ -108,6 +109,14 @@ public class Order extends Model implements Parcelable {
         this.businessPartnerId = businessPartnerId;
     }
 
+    public int getBusinessPartnerAddressId() {
+        return businessPartnerAddressId;
+    }
+
+    public void setBusinessPartnerAddressId(int businessPartnerAddressId) {
+        this.businessPartnerAddressId = businessPartnerAddressId;
+    }
+
     protected Order(Parcel in) {
         super(in);
         linesNumber = in.readInt();
@@ -117,6 +126,7 @@ public class Order extends Model implements Parcelable {
         salesOrderId = in.readInt();
         businessPartner = in.readParcelable(BusinessPartner.class.getClassLoader());
         businessPartnerId = in.readInt();
+        businessPartnerAddressId = in.readInt();
     }
 
     @Override
@@ -129,6 +139,7 @@ public class Order extends Model implements Parcelable {
         dest.writeInt(salesOrderId);
         dest.writeParcelable(businessPartner, flags);
         dest.writeInt(businessPartnerId);
+        dest.writeInt(businessPartnerAddressId);
     }
 
     @Override

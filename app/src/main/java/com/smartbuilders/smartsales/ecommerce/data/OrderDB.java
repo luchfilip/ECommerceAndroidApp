@@ -31,12 +31,12 @@ public class OrderDB {
         this.mUser = user;
     }
 
-    public String createOrderFromOrderLines(Integer salesOrderId, ArrayList<OrderLine> orderLines) throws Exception {
-        return createOrder(salesOrderId, orderLines, true);
+    public String createOrderFromOrderLines(Integer salesOrderId, int businessPartnerAddressId, ArrayList<OrderLine> orderLines) throws Exception {
+        return createOrder(salesOrderId, businessPartnerAddressId, orderLines, true);
     }
 
-    public String createOrderFromShoppingCart() throws Exception {
-        return createOrder(null, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
+    public String createOrderFromShoppingCart(int businessPartnerAddressId) throws Exception {
+        return createOrder(null, businessPartnerAddressId, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
     }
 
     public ArrayList<Order> getActiveOrders(){
@@ -54,7 +54,7 @@ public class OrderDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT ECOMMERCE_ORDER_ID, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, LINES_NUMBER, " +
-                            " SUB_TOTAL, TAX, TOTAL, BUSINESS_PARTNER_ID "+
+                            " SUB_TOTAL, TAX, TOTAL, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID "+
                     " FROM ECOMMERCE_ORDER " +
                     " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
@@ -78,6 +78,7 @@ public class OrderDB {
                 order.setTaxAmount(c.getDouble(5));
                 order.setTotalAmount(c.getDouble(6));
                 order.setBusinessPartnerId(c.getInt(7));
+                order.setBusinessPartnerAddressId(c.getInt(8));
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -103,7 +104,7 @@ public class OrderDB {
         return order;
     }
 
-    private String createOrder(Integer salesOrderId, ArrayList<OrderLine> orderLines,
+    private String createOrder(Integer salesOrderId, int businessPartnerAddressId, ArrayList<OrderLine> orderLines,
                                boolean insertOrderLinesInDB) throws Exception {
         OrderLineDB orderLineDB = new OrderLineDB(mContext, mUser);
         int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
@@ -121,12 +122,13 @@ public class OrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                 null,
-                                "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_ORDER_ID, USER_ID, ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, " +
+                                "INSERT INTO ECOMMERCE_ORDER (ECOMMERCE_ORDER_ID, USER_ID, ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID, " +
                                         " DOC_STATUS, DOC_TYPE, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL) " +
-                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
                                         salesOrderId==null ? null : String.valueOf(salesOrderId),
-                                        String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)), "CO",
+                                        String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                                        String.valueOf(businessPartnerAddressId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOC_TYPE, DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),
                                         String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
@@ -185,7 +187,7 @@ public class OrderDB {
                                     .build(), null,
                             "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
                                     " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
-                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
+                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID " +
                                     " FROM ECOMMERCE_ORDER " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                                     " ORDER BY ECOMMERCE_ORDER_ID desc",
@@ -197,7 +199,7 @@ public class OrderDB {
                                     .build(), null,
                             "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
                                     " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
-                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID " +
+                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID " +
                                     " FROM ECOMMERCE_ORDER " +
                                     " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
                                     " ORDER BY ECOMMERCE_ORDER_ID desc",
@@ -229,6 +231,7 @@ public class OrderDB {
                     order.setTotalAmount(c.getDouble(9));
                     order.setSalesOrderId(c.getInt(10));
                     order.setBusinessPartnerId(c.getInt(11));
+                    order.setBusinessPartnerAddressId(c.getInt(12));
                     activeOrders.add(order);
                 }
             }

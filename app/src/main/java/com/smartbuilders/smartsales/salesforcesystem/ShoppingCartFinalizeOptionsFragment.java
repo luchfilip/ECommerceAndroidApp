@@ -44,6 +44,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
     private ArrayList<OrderLine> mOrderLines;
     private ProgressDialog waitPlease;
     private boolean mIsShoppingCart = true;
+    private int mSelectedBusinessPartnerAddressId;
 
     public ShoppingCartFinalizeOptionsFragment() {
     }
@@ -171,9 +172,9 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                 String result = null;
                 try {
                     if (mSalesOrderId > 0) {
-                        result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, mOrderLines);
+                        result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, mSelectedBusinessPartnerAddressId, mOrderLines);
                     } else {
-                        result = OrderBR.createOrderFromShoppingCart(getContext(), mUser);
+                        result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, mSelectedBusinessPartnerAddressId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

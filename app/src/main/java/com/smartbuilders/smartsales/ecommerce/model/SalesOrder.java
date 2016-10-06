@@ -20,6 +20,7 @@ public class SalesOrder extends Model implements Parcelable {
     private BusinessPartner businessPartner;
     private int businessPartnerId;
     private Date validTo;
+    private int businessPartnerAddressId;
 
     public SalesOrder() {
 
@@ -120,6 +121,14 @@ public class SalesOrder extends Model implements Parcelable {
         return null;
     }
 
+    public int getBusinessPartnerAddressId() {
+        return businessPartnerAddressId;
+    }
+
+    public void setBusinessPartnerAddressId(int businessPartnerAddressId) {
+        this.businessPartnerAddressId = businessPartnerAddressId;
+    }
+
     protected SalesOrder(Parcel in) {
         super(in);
         linesNumber = in.readInt();
@@ -134,6 +143,7 @@ public class SalesOrder extends Model implements Parcelable {
                 validTo = new Date(date);
             }
         }catch(Exception e){}
+        businessPartnerAddressId = in.readInt();
     }
 
     @Override
@@ -146,6 +156,7 @@ public class SalesOrder extends Model implements Parcelable {
         dest.writeParcelable(businessPartner, flags);
         dest.writeInt(businessPartnerId);
         dest.writeLong(validTo!=null ? validTo.getTime() : 0);
+        dest.writeInt(businessPartnerAddressId);
     }
 
     @Override
