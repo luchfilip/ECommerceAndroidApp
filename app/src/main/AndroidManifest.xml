@@ -319,10 +319,10 @@
         <!-- Bluetoothchat -->
         <activity
             android:name="com.smartbuilders.smartsales.salesforcesystem.ShoppingCartFinalizeOptionsActivity"
-            android:label="@string/title_activity_shopping_cart_finalize_options" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity"
-            android:label="@string/title_activity_shopping_sales_finalize_options" />
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

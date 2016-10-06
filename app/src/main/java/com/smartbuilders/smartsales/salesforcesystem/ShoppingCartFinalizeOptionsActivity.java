@@ -55,8 +55,6 @@ public class ShoppingCartFinalizeOptionsActivity extends AppCompatActivity {
                 }
             }
         }
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

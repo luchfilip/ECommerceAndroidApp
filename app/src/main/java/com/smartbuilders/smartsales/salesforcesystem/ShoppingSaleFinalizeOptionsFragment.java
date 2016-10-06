@@ -10,7 +10,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -20,6 +23,7 @@ import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
@@ -31,6 +35,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -45,6 +50,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
     private EditText mValidToEditText;
     private String mValidToText;
     private ProgressDialog waitPlease;
+    private Spinner mBusinessPartnersAddressesSpinner;
     private int mSelectedBusinessPartnerAddressId;
 
     public ShoppingSaleFinalizeOptionsFragment() {
@@ -76,12 +82,45 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                         @Override
                         public void run() {
                             try {
+                                mBusinessPartnersAddressesSpinner = (Spinner) rootView
+                                        .findViewById(R.id.business_partner_delivery_addresses_spinner);
+
                                 try {
-                                    BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                                    final BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
                                             .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                     if (businessPartner!=null) {
                                         ((TextView) rootView.findViewById(R.id.business_partner_name_tv))
                                                 .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
+
+                                        /**************************/
+                                        List<String> spinnerArray =  new ArrayList<>();
+                                        int index = 0;
+                                        int selectedIndex = 0;
+                                        for (BusinessPartnerAddress businessPartnerAddress : businessPartner.getAddresses()) {
+                                            if(businessPartnerAddress.getId() == mSelectedBusinessPartnerAddressId){
+                                                selectedIndex = index;
+                                            }
+                                            spinnerArray.add(businessPartnerAddress.getAddress());
+                                            index++;
+                                        }
+
+                                        ArrayAdapter<String> adapter =
+                                                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+
+                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        mBusinessPartnersAddressesSpinner.setAdapter(adapter);
+                                        mBusinessPartnersAddressesSpinner.setSelection(selectedIndex);
+
+                                        mBusinessPartnersAddressesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                            @Override
+                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                mSelectedBusinessPartnerAddressId = businessPartner.getAddresses().get(position).getId();
+                                            }
+
+                                            @Override
+                                            public void onNothingSelected(AdapterView<?> parent) { }
+                                        });
+                                        /**************************/
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();

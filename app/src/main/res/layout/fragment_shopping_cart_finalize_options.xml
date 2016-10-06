@@ -81,13 +81,15 @@
                         android:text="@string/delivery_address_label"
                         android:layout_gravity="center_vertical"
                         android:textStyle="bold"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:layout_weight="1" />
 
                     <Spinner
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/delivery_addresses_spinner"
-                        android:layout_weight="1" />
+                        android:id="@+id/business_partner_delivery_addresses_spinner"
+                        android:layout_weight="3"
+                        android:layout_gravity="center_vertical" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -17,8 +17,6 @@ public class ShoppingSaleFinalizeOptionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_sale_finalize_options);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

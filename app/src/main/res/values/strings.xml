@@ -25,6 +25,7 @@
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>
+    <string name="finalize_open_order">Finalizar Pedido Abierto</string>
     <string name="open_shopping_sales">Cotizaciones Abiertas</string>
     <string name="open_shopping_sale">Cotización Abierta</string>
     <string name="home">Páginal Principal</string>
@@ -141,7 +142,8 @@
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s de la cotización?</string>
     <string name="accept">Aceptar</string>
-    <string name="title_activity_shopping_sale">Cotización</string>
+    <string name="title_activity_shopping_sale">Cotización Abierta</string>
+    <string name="title_activity_shopping_sale_finalize_options">Finalizar Cotización Abierta</string>
     <string name="title_activity_sales_order_detail">Detalle de la Cotización</string>
     <string name="qty_ordered">Cant.: %1$s</string>
     <string name="qty_ordered_label_detail">Cant. pedida: %1$s</string>
