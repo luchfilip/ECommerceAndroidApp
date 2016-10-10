@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
@@ -97,19 +98,13 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         view.findViewById(R.id.accept_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int oldValue = mOrderLine.getQuantityOrdered();
                 try {
-                    mOrderLine.setQuantityOrdered(Integer.valueOf(qtyOrderedEditText.getText().toString()));
-                    //TODO: mandar estas validaciones a una clase de businessRules
-                    if (mOrderLine.getQuantityOrdered()<=0) {
-                        throw new Exception(getString(R.string.invalid_qty_requested));
-                    }
-                    if ((mOrderLine.getQuantityOrdered() % mOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
-                        throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
-                    }
-                    if (mOrderLine.getQuantityOrdered() > mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
-                        throw new Exception(getString(R.string.invalid_availability_qty_requested));
-                    }
+                    OrderLineBR.validateQtyOrdered(getContext(), Integer.valueOf(qtyOrderedEditText.getText().toString()),
+                            mOrderLine.getProduct());
+
+                    OrderLineBR.fillOrderLine(Integer.valueOf(qtyOrderedEditText.getText().toString()),
+                            mOrderLine.getProduct(), mOrderLine);
+
                     String result = null;
                     if (mIsShoppingCart) {
                         result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
@@ -129,7 +124,6 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
                     Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mOrderLine.setQuantityOrdered(oldValue);
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }

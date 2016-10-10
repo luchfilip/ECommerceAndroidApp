@@ -65,7 +65,7 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
 
         try {
             BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
-                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+                    .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
             if (businessPartner!=null) {
                 ((TextView) findViewById(R.id.business_partner_name_textView))
                         .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
@@ -119,7 +119,7 @@ public class SalesForceSystemMainActivity extends AppCompatActivity
     public void reload() {
         try {
             BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
-                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+                    .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
             if (businessPartner!=null) {
                 ((TextView) findViewById(R.id.business_partner_name_textView))
                         .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));

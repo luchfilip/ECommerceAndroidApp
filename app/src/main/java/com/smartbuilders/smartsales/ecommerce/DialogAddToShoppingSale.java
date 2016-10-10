@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
@@ -121,29 +123,36 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        int qtyRequested = Integer
-                                .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                        //TODO: mandar estas validaciones a una clase de businessRules
+                        int qtyRequested = 0;
+                        try {
+                            qtyRequested = Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
+                        } catch (NumberFormatException e) {
+                            //empty
+                        }
                         if (qtyRequested<=0) {
                             throw new Exception(getString(R.string.invalid_qty_requested));
                         }
-                        double productPrice = 0;
+
+                        Product product = new Product();
+                        product.setId(mProduct.getId());
                         try {
-                            productPrice = Double
-                                    .valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString());
-                        } catch (Exception e) {
+                            product.getDefaultProductPriceAvailability().setPrice(Float
+                                    .valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString()));
+                        } catch (NumberFormatException e) {
                             //empty
                         }
-                        double productTaxPercentage = 0;
                         try {
-                            productTaxPercentage = Double
-                                    .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString());
-                        } catch (Exception e) {
+                            product.getProductTax().setPercentage(Float
+                                    .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString()));
+                        } catch (NumberFormatException e) {
                             //empty
                         }
 
+                        SalesOrderLine salesOrderLine = new SalesOrderLine();
+                        SalesOrderLineBR.fillSalesOrderLine(qtyRequested, mProduct, salesOrderLine);
+
                         String result = (new SalesOrderLineDB(getContext(), mUser))
-                                .addProductToShoppingSale(mProduct.getId(), qtyRequested, productPrice, productTaxPercentage);
+                                .addSalesOrderLinesToShoppingSale(salesOrderLine);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_SHORT).show();
@@ -151,9 +160,6 @@ public class DialogAddToShoppingSale extends DialogFragment {
                         } else {
                             Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         }
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), getString(R.string.invalid_qty_requested), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -196,10 +202,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
         }
 
         if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-            businessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getActiveUserBusinessPartners();
+            businessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getUserBusinessPartners();
         } else if (mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
             BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                    .getActiveBusinessPartnerById(appCurrentBusinessPartnerId);
+                    .getBusinessPartnerById(appCurrentBusinessPartnerId);
             if (businessPartner!=null) {
                 businessPartners = new ArrayList<>();
                 businessPartners.add(businessPartner);

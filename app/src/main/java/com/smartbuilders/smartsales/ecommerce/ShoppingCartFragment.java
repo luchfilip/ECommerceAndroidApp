@@ -330,7 +330,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 if (mIsShoppingCart) {
                     try {
                         BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                         if (businessPartner != null) {
                             mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                             mBusinessPartnerName.setVisibility(View.VISIBLE);
@@ -341,7 +341,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         e.printStackTrace();
                     }
                 } else {
-                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner() != null) {
                         mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
                         mBusinessPartnerName.setVisibility(View.VISIBLE);
@@ -354,7 +354,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 }
             } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                 if (!mIsShoppingCart) {
-                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner()!=null) {
                         mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
                         mBusinessPartnerName.setVisibility(View.VISIBLE);

@@ -147,19 +147,19 @@ public class BusinessPartnersListActivity extends AppCompatActivity
             if (mUserBusinessPartnerDB != null) {
                 if (mListView.getAdapter() != null) {
                     ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                            mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                            mUserBusinessPartnerDB.getUserBusinessPartners());
                 } else {
                     mListView.setAdapter(new BusinessPartnersListAdapter(this,
-                            mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0));
+                            mUserBusinessPartnerDB.getUserBusinessPartners(), 0));
                 }
             }else if(mBusinessPartnerDB != null){
                 if (mListView.getAdapter() != null) {
                     ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                            mBusinessPartnerDB.getActiveBusinessPartners());
+                            mBusinessPartnerDB.getBusinessPartners());
                 } else {
                     try{
                         mListView.setAdapter(new BusinessPartnersListAdapter(this,
-                                mBusinessPartnerDB.getActiveBusinessPartners(),
+                                mBusinessPartnerDB.getBusinessPartners(),
                                 Utils.getAppCurrentBusinessPartnerId(this, mUser)));
                     }catch (Exception e){
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -266,10 +266,10 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                     if (mListView != null) {
                                         if (mListView.getAdapter()!=null && (mListView.getAdapter() instanceof BusinessPartnersListAdapter)) {
                                             ((BusinessPartnersListAdapter) mListView.getAdapter())
-                                                    .setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                                                    .setData(mUserBusinessPartnerDB.getUserBusinessPartners());
                                         } else {
                                             mListView.setAdapter(new BusinessPartnersListAdapter(
-                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0));
+                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getUserBusinessPartners(), 0));
                                         }
                                         if (mTwoPane) {
                                             if(mListView.getAdapter().getCount()>0) {
@@ -302,7 +302,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     public void onBusinessPartnerUpdated() {
         if (mListView!=null && mListView.getAdapter()!=null && mUserBusinessPartnerDB!=null) {
             ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                    mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                    mUserBusinessPartnerDB.getUserBusinessPartners());
         }
     }
 

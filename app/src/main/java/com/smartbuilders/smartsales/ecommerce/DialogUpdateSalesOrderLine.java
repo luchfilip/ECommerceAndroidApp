@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
@@ -93,7 +94,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                 : getString(R.string.price_label));
 
         try {
-            productPriceEditText.setText(String.valueOf(mSaleOrderLine.getPrice()));
+            productPriceEditText.setText(String.valueOf(mSaleOrderLine.getProductPrice()));
             productPriceEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,7 +105,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             e.printStackTrace();
         }
         try {
-            productTaxEditText.setText(String.valueOf(mSaleOrderLine.getTaxPercentage()));
+            productTaxEditText.setText(String.valueOf(mSaleOrderLine.getProductTaxPercentage()));
             productTaxEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -130,28 +131,32 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
             @Override
             public void onClick(View v) {
                 try {
+                    int qtyOrdered = 0;
                     try {
-                        mSaleOrderLine.setQuantityOrdered(Integer.valueOf(qtyRequestedEditText.getText().toString()));
+                        qtyOrdered = Integer.valueOf(qtyRequestedEditText.getText().toString());
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        mSaleOrderLine.setQuantityOrdered(0);
+                        //do nothing
                     }
-                    if (mSaleOrderLine.getQuantityOrdered()<=0) {
+                    if (qtyOrdered<=0) {
                         throw new Exception(getString(R.string.invalid_qty_requested));
                     }
+
+                    Product product = new Product();
+                    product.setId(mSaleOrderLine.getProductId());
                     try {
-                        mSaleOrderLine.setPrice(Double.valueOf(productPriceEditText.getText().toString()));
+                        product.getDefaultProductPriceAvailability()
+                                .setPrice(Float.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        mSaleOrderLine.setPrice(0);
+                        //do nothing
                     }
                     try {
-                        mSaleOrderLine.setTaxPercentage(Double.valueOf(productTaxEditText.getText().toString()));
+                        product.getProductTax().setPercentage(Float.valueOf(productTaxEditText.getText().toString()));
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        mSaleOrderLine.setTaxPercentage(0);
+                        //do nothing
                     }
-                    mSaleOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(mSaleOrderLine));
+
+                    SalesOrderLineBR.fillSalesOrderLine(qtyOrdered, product, mSaleOrderLine);
+
                     String result = (new SalesOrderLineDB(getContext(), mUser)).updateSalesOrderLine(mSaleOrderLine);
                     if(result == null){
                         ((ShoppingSaleFragment) getTargetFragment()).reloadShoppingSale();

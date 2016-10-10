@@ -23,7 +23,7 @@ public class BusinessPartnerDB {
         this.mUser = user;
     }
 
-    public ArrayList<BusinessPartner> getActiveBusinessPartners(){
+    public ArrayList<BusinessPartner> getBusinessPartners(){
         ArrayList<BusinessPartner> activeBusinessPartners = new ArrayList<>();
         Cursor c = null;
         try {
@@ -71,7 +71,7 @@ public class BusinessPartnerDB {
         return activeBusinessPartners;
     }
 
-    public BusinessPartner getActiveBusinessPartnerById(int businessPartnerId) {
+    public BusinessPartner getBusinessPartnerById(int businessPartnerId) {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

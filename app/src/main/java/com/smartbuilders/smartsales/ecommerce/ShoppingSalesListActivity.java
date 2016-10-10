@@ -226,7 +226,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             int oldListSize = mListView.getCount();
             int selectedIndex = mListView.getCheckedItemPosition();
             ((ShoppingSalesListAdapter) mListView.getAdapter())
-                    .setData(new SalesOrderDB(this, user).getActiveShoppingSalesOrders());
+                    .setData(new SalesOrderDB(this, user).getShoppingSalesList());
 
             if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);

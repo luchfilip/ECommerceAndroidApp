@@ -91,12 +91,12 @@ public class SalesOrderDetailFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
 
                     if (mSalesOrderId>0) {
-                        mSalesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                        mSalesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     }
 
                     if (mSalesOrder != null) {
                         mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
-                                .getActiveFinalizedSalesOrderLinesByOrderId(mSalesOrder.getId(), mSalesOrder.getBusinessPartnerId());
+                                .getSalesOrderLinesList(mSalesOrder.getId(), mSalesOrder.getBusinessPartnerId());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

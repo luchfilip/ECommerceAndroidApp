@@ -513,10 +513,15 @@ public class MainActivityAdapter extends BaseAdapter {
     }
 
     public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
-        dialogUpdateShoppingSaleQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(mContext, mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, mUser);
+            dialogUpdateShoppingSaleQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     private String addToWishList(Product product) {

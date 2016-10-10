@@ -76,10 +76,10 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                         if(user!=null){
                             if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                                 mBusinessPartner = (new BusinessPartnerDB(getContext(), user))
-                                        .getActiveBusinessPartnerById(mBusinessPartnerId);
+                                        .getBusinessPartnerById(mBusinessPartnerId);
                             }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                                 mBusinessPartner = (new UserBusinessPartnerDB(getContext(), user))
-                                        .getActiveUserBusinessPartnerById(mBusinessPartnerId);
+                                        .getUserBusinessPartnerById(mBusinessPartnerId);
                                 mOriginalTaxId = mBusinessPartner.getTaxId();
                             }
                         }

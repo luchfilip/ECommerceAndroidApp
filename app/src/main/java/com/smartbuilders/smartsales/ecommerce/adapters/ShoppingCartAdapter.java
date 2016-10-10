@@ -52,7 +52,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public TextView productName;
         public TextView productTaxPercentage;
         public TextView productPrice;
-        public TextView productAvailability;
+        public TextView totalLine;
         public EditText qtyOrdered;
         public View goToProductDetails;
 
@@ -63,7 +63,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productName = (TextView) v.findViewById(R.id.product_name);
             productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
-            productAvailability = (TextView) v.findViewById(R.id.product_availability);
+            totalLine = (TextView) v.findViewById(R.id.total_line_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
@@ -153,36 +153,21 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
-            holder.productPrice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-                }
-            });
             holder.productPrice.setVisibility(View.VISIBLE);
 
             holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
                     mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
-            holder.productTaxPercentage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-                }
-            });
             holder.productTaxPercentage.setVisibility(View.VISIBLE);
+
+            holder.totalLine.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getTotalLineAmountStringFormat()));
+            holder.totalLine.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
             holder.productTaxPercentage.setVisibility(View.GONE);
+            holder.totalLine.setVisibility(View.GONE);
         }
-
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
-        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

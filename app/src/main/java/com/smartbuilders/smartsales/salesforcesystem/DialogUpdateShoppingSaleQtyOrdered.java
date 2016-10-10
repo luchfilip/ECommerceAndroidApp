@@ -13,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -22,14 +24,17 @@ import com.smartbuilders.synchronizer.ids.model.User;
  */
 public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
 
+    private static final String STATE_CURRENT_PRODUCT = "STATE_CURRENT_PRODUCT";
     private static final String STATE_CURRENT_SALES_ORDER_LINE = "STATE_CURRENT_SALES_ORDER_LINE";
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
+    private Product mProduct;
     private SalesOrderLine mSalesOrderLine;
     private User mUser;
 
-    public static DialogUpdateShoppingSaleQtyOrdered newInstance(SalesOrderLine salesOrderLine, User user){
+    public static DialogUpdateShoppingSaleQtyOrdered newInstance(Product product, SalesOrderLine salesOrderLine, User user){
         DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered = new DialogUpdateShoppingSaleQtyOrdered();
+        dialogUpdateShoppingSaleQtyOrdered.mProduct = product;
         dialogUpdateShoppingSaleQtyOrdered.mUser = user;
         dialogUpdateShoppingSaleQtyOrdered.mSalesOrderLine = salesOrderLine;
         return dialogUpdateShoppingSaleQtyOrdered;
@@ -52,6 +57,9 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(STATE_CURRENT_PRODUCT)){
+                mProduct = savedInstanceState.getParcelable(STATE_CURRENT_PRODUCT);
+            }
             if(savedInstanceState.containsKey(STATE_CURRENT_SALES_ORDER_LINE)){
                 mSalesOrderLine = savedInstanceState.getParcelable(STATE_CURRENT_SALES_ORDER_LINE);
             }
@@ -69,13 +77,13 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_price_textView))
                 .setText(getString(R.string.price_detail,
-                        mSalesOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mSalesOrderLine.getProduct().getDefaultProductPriceAvailability().getPrice()));
+                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mProduct.getDefaultProductPriceAvailability().getPrice()));
         view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability,
-                        mSalesOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,19 +95,13 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
         view.findViewById(R.id.accept_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int oldValue = mSalesOrderLine.getQuantityOrdered();
                 try {
-                    mSalesOrderLine.setQuantityOrdered(Integer.valueOf(qtyOrderedEditText.getText().toString()));
-                    //TODO: mandar estas validaciones a una clase de businessRules
-                    if (mSalesOrderLine.getQuantityOrdered()<=0) {
-                        throw new Exception(getString(R.string.invalid_qty_requested));
-                    }
-                    if ((mSalesOrderLine.getQuantityOrdered() % mSalesOrderLine.getProduct().getProductCommercialPackage().getUnits())!=0) {
-                        throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
-                    }
-                    if (mSalesOrderLine.getQuantityOrdered() > mSalesOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()) {
-                        throw new Exception(getString(R.string.invalid_availability_qty_requested));
-                    }
+                    SalesOrderLineBR.validateQtyOrdered(getContext(), Integer.valueOf(qtyOrderedEditText.getText().toString()),
+                            mProduct);
+
+                    SalesOrderLineBR.fillSalesOrderLine(Integer.valueOf(qtyOrderedEditText.getText().toString()),
+                            mProduct, mSalesOrderLine);
+
                     String result = (new SalesOrderLineDB(getContext(), mUser)).updateSalesOrderLine(mSalesOrderLine);
                     if(result == null){
                         if(getTargetFragment() instanceof Callback){
@@ -116,28 +118,30 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
                     Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mSalesOrderLine.setQuantityOrdered(oldValue);
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         if(view.findViewById(R.id.product_commercial_package) != null){
-            if(mSalesOrderLine.getProduct()!=null && mSalesOrderLine.getProduct().getProductCommercialPackage()!=null
-                    && !TextUtils.isEmpty(mSalesOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
-                        mSalesOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(), mSalesOrderLine.getProduct().getProductCommercialPackage().getUnits()));
+            if(mProduct!=null && mProduct.getProductCommercialPackage()!=null
+                    && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
+                ((TextView) view.findViewById(R.id.product_commercial_package))
+                        .setText(getContext().getString(R.string.commercial_package_label_detail,
+                                mProduct.getProductCommercialPackage().getUnitDescription(),
+                                mProduct.getProductCommercialPackage().getUnits()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }
         }
 
-        ((TextView) view.findViewById(R.id.product_name_textView)).setText(mSalesOrderLine.getProduct().getName());
+        ((TextView) view.findViewById(R.id.product_name_textView)).setText(mProduct.getName());
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(STATE_CURRENT_PRODUCT, mProduct);
         outState.putParcelable(STATE_CURRENT_USER, mUser);
         outState.putParcelable(STATE_CURRENT_SALES_ORDER_LINE, mSalesOrderLine);
         super.onSaveInstanceState(outState);

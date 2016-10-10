@@ -8,7 +8,6 @@ import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -25,32 +24,43 @@ public class OrderLineDB {
 
     private Context mContext;
     private User mUser;
-    private boolean mIsManagePriceInOrder;
 
     public OrderLineDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
-        this.mIsManagePriceInOrder = Parameter.isManagePriceInOrder(mContext, user);
     }
 
     public String addOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
-        return addOrderLine(orderLine.getProductId(), orderLine.getQuantityOrdered(),
-                orderLine.getPrice(), orderLine.getTaxPercentage(), FINALIZED_ORDER_DOC_TYPE, orderId);
+        return addOrderLine(orderLine, FINALIZED_ORDER_DOC_TYPE, orderId);
     }
 
-    public String addProductToShoppingCart(Product product, int qtyRequested){
-        if (mIsManagePriceInOrder) {
-            return addOrderLine(product.getId(), qtyRequested, product.getDefaultProductPriceAvailability().getPrice(),
-                    product.getProductTax().getPercentage(), SHOPPING_CART_DOC_TYPE, null);
-        } else {
-            return addOrderLine(product.getId(), qtyRequested, 0, 0, SHOPPING_CART_DOC_TYPE, null);
-        }
+    public String addOrderLineToShoppingCart(OrderLine orderLine){
+        return addOrderLine(orderLine, SHOPPING_CART_DOC_TYPE, null);
     }
 
     public String addProductToWishList(Product product){
-        return addOrderLine(product.getId(), product.getDefaultProductPriceAvailability().getAvailability(),
-                product.getDefaultProductPriceAvailability().getPrice(), product.getProductTax().getPercentage(),
-                WISH_LIST_DOC_TYPE, null);
+        try {
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "INSERT INTO ECOMMERCE_ORDER_LINE (ECOMMERCE_ORDER_LINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
+                            " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, DOC_TYPE, " +
+                            " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER_LINE")),
+                            String.valueOf(mUser.getServerUserId()),
+                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(product.getId()), String.valueOf(product.getDefaultProductPriceAvailability().getAvailability()),
+                            String.valueOf(product.getDefaultProductPriceAvailability().getPrice()),
+                            String.valueOf(product.getProductTax().getPercentage()), WISH_LIST_DOC_TYPE,
+                            DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(mContext),
+                            mUser.getUserName(), Utils.getMacAddress(mContext)});
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
     }
 
     public ArrayList<OrderLine> getActiveOrderLinesFromShoppingCart() throws Exception {
@@ -107,12 +117,13 @@ public class OrderLineDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
-                        " TAX_PERCENTAGE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                        " TAX_PERCENTAGE = ?, TAX_AMOUNT = ?, SUB_TOTAL_LINE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
                     " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(orderLine.getQuantityOrdered()),
-                    String.valueOf(orderLine.getPrice()), String.valueOf(orderLine.getTaxPercentage()),
-                    String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(),
-                    String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
+                            String.valueOf(orderLine.getProductPrice()), String.valueOf(orderLine.getProductTaxPercentage()),
+                            String.valueOf(orderLine.getLineTaxAmount()), String.valueOf(orderLine.getSubTotalLineAmount()),
+                            String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(),
+                            String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }
@@ -163,12 +174,11 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
-                    "SELECT SOL.PRODUCT_ID, SOL.QTY_REQUESTED, SOL.SALES_PRICE, SOL.TAX_PERCENTAGE, SOL.TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
-                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE SOL.ECOMMERCE_SALES_ORDER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
-                    " ORDER BY SOL.ECOMMERCE_SALES_ORDER_LINE_ID DESC",
-                    new String[]{"Y", String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
+                    "SELECT PRODUCT_ID, QTY_REQUESTED " +
+                    " FROM ECOMMERCE_SALES_ORDER_LINE " +
+                    " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " ORDER BY ECOMMERCE_SALES_ORDER_LINE_ID DESC",
+                    new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
                             SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE, "Y"},
                     null);
             if(c!=null){
@@ -203,11 +213,7 @@ public class OrderLineDB {
         for (OrderLine orderLine : orderLines) {
             orderLine.setProduct(productDB.getProductById(orderLine.getProductId()));
             if(orderLine.getProduct()!=null){
-                if (mIsManagePriceInOrder) {
-                    orderLine.setPrice(orderLine.getProduct().getDefaultProductPriceAvailability().getPrice());
-                    orderLine.setTaxPercentage(orderLine.getProduct().getProductTax().getPercentage());
-                }
-                orderLine.setTotalLineAmount(OrderLineBR.getTotalLine(orderLine));
+                OrderLineBR.fillOrderLine(orderLine.getQuantityOrdered(), orderLine.getProduct(), orderLine);
             }else{
                 orderLinesToRemove.add(orderLine);
             }
@@ -218,29 +224,24 @@ public class OrderLineDB {
         return orderLines;
     }
 
-    private String addOrderLine(int productId, int qtyRequested, double productPrice,
-                                double productTaxPercentage, String docType, Integer orderId) {
+    private String addOrderLine(OrderLine orderLine, String docType, Integer orderId) {
         try {
-            OrderLine ol = new OrderLine();
-            ol.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER_LINE"));
-            ol.setProductId(productId);
-            ol.setPrice(productPrice);
-            ol.setQuantityOrdered(qtyRequested);
-            ol.setTaxPercentage(productTaxPercentage);
-            ol.setTotalLineAmount(OrderLineBR.getTotalLine(ol));
+            orderLine.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER_LINE"));
+
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "INSERT INTO ECOMMERCE_ORDER_LINE (ECOMMERCE_ORDER_LINE_ID, USER_ID, BUSINESS_PARTNER_ID, " +
-                        " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TOTAL_LINE, DOC_TYPE, " +
-                        " ECOMMERCE_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{String.valueOf(ol.getId()), String.valueOf(mUser.getServerUserId()),
+                            " PRODUCT_ID, QTY_REQUESTED, SALES_PRICE, TAX_PERCENTAGE, TAX_AMOUNT, SUB_TOTAL_LINE, TOTAL_LINE, DOC_TYPE, " +
+                            " ECOMMERCE_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    new String[]{String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()),
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                            String.valueOf(ol.getProductId()), String.valueOf(ol.getQuantityOrdered()),
-                            String.valueOf(ol.getPrice()), String.valueOf(ol.getTaxPercentage()),
-                            String.valueOf(ol.getTotalLineAmount()), docType,
+                            String.valueOf(orderLine.getProductId()), String.valueOf(orderLine.getQuantityOrdered()),
+                            String.valueOf(orderLine.getProductPrice()), String.valueOf(orderLine.getProductTaxPercentage()),
+                            String.valueOf(orderLine.getLineTaxAmount()), String.valueOf(orderLine.getSubTotalLineAmount()),
+                            String.valueOf(orderLine.getTotalLineAmount()), docType,
                             (orderId==null ? null : String.valueOf(orderId)), DateFormat.getCurrentDateTimeSQLFormat(),
                             Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
         } catch (Exception e){
@@ -257,23 +258,25 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT OL.ECOMMERCE_ORDER_LINE_ID, OL.PRODUCT_ID, OL.QTY_REQUESTED, OL.SALES_PRICE, OL.TAX_PERCENTAGE, OL.TOTAL_LINE " +
-                    " FROM ECOMMERCE_ORDER_LINE OL " +
-                            " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE " + (orderId!=null ? " OL.ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
-                            (businessPartnerId!=null ? " OL.BUSINESS_PARTNER_ID = "+businessPartnerId+" AND " : "") +
-                            " OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? " +
-                    " ORDER BY OL.CREATE_TIME DESC",
-                    new String[]{"Y", String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+                    "SELECT ECOMMERCE_ORDER_LINE_ID, PRODUCT_ID, QTY_REQUESTED, " +
+                            " SALES_PRICE, TAX_PERCENTAGE, TAX_AMOUNT, SUB_TOTAL_LINE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDER_LINE " +
+                    " WHERE " + (orderId!=null ? " ECOMMERCE_ORDER_ID = "+orderId+ " AND " : "") +
+                            (businessPartnerId!=null ? " BUSINESS_PARTNER_ID = "+businessPartnerId+" AND " : "") +
+                            " USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                    " ORDER BY CREATE_TIME DESC",
+                    new String[]{String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     OrderLine orderLine = new OrderLine();
                     orderLine.setId(c.getInt(0));
                     orderLine.setProductId(c.getInt(1));
                     orderLine.setQuantityOrdered(c.getInt(2));
-                    orderLine.setPrice(c.getDouble(3));
-                    orderLine.setTaxPercentage(c.getDouble(4));
-                    orderLine.setTotalLineAmount(c.getDouble(5));
+                    orderLine.setProductPrice(c.getDouble(3));
+                    orderLine.setProductTaxPercentage(c.getDouble(4));
+                    orderLine.setLineTaxAmount(c.getDouble(5));
+                    orderLine.setSubTotalLineAmount(c.getDouble(6));
+                    orderLine.setTotalLineAmount(c.getDouble(7));
                     orderLines.add(orderLine);
                 }
             }
@@ -296,7 +299,9 @@ public class OrderLineDB {
                 if(docType.equals(WISH_LIST_DOC_TYPE)){
                     orderLinesToRemove.add(orderLine);
                 }else{
-                    orderLine.setProduct(new Product());
+                    Product product = new Product();
+                    product.setId(orderLine.getProductId());
+                    orderLine.setProduct(product);
                 }
             }
         }
@@ -312,7 +317,8 @@ public class OrderLineDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT COUNT(OL.PRODUCT_ID) FROM ECOMMERCE_ORDER_LINE OL " +
+                    "SELECT COUNT(OL.PRODUCT_ID) " +
+                    " FROM ECOMMERCE_ORDER_LINE OL " +
                             " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -363,20 +369,22 @@ public class OrderLineDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT OL.ECOMMERCE_ORDER_LINE_ID, OL.PRODUCT_ID, OL.QTY_REQUESTED, OL.SALES_PRICE, OL.TAX_PERCENTAGE, OL.TOTAL_LINE " +
-                    " FROM ECOMMERCE_ORDER_LINE OL " +
-                        " INNER JOIN PRODUCT P ON P.PRODUCT_ID = OL.PRODUCT_ID AND P.IS_ACTIVE = ? " +
-                    " WHERE OL.PRODUCT_ID = ? AND OL.BUSINESS_PARTNER_ID = ? AND OL.USER_ID = ? AND OL.DOC_TYPE = ? AND OL.IS_ACTIVE = ? ",
-                    new String[]{"Y", String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    "SELECT ECOMMERCE_ORDER_LINE_ID, PRODUCT_ID, QTY_REQUESTED, " +
+                            " SALES_PRICE, TAX_PERCENTAGE, TAX_AMOUNT, SUB_TOTAL_LINE, TOTAL_LINE " +
+                    " FROM ECOMMERCE_ORDER_LINE " +
+                    " WHERE PRODUCT_ID = ? AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                    new String[]{String.valueOf(productId), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 OrderLine orderLine = new OrderLine();
                 orderLine.setId(c.getInt(0));
                 orderLine.setProductId(c.getInt(1));
                 orderLine.setQuantityOrdered(c.getInt(2));
-                orderLine.setPrice(c.getDouble(3));
-                orderLine.setTaxPercentage(c.getDouble(4));
-                orderLine.setTotalLineAmount(c.getDouble(5));
+                orderLine.setProductPrice(c.getDouble(3));
+                orderLine.setProductTaxPercentage(c.getDouble(4));
+                orderLine.setLineTaxAmount(c.getDouble(5));
+                orderLine.setSubTotalLineAmount(c.getDouble(6));
+                orderLine.setTotalLineAmount(c.getDouble(7));
                 c.close();
                 orderLine.setProduct((new ProductDB(mContext, mUser)).getProductById(orderLine.getProductId()));
                 if(orderLine.getProduct()!=null){

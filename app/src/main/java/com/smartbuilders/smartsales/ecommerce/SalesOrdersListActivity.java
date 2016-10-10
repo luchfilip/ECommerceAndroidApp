@@ -283,7 +283,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
             int oldListSize = listView.getCount();
             int selectedIndex = listView.getCheckedItemPosition();
             ((SalesOrdersListAdapter) listView.getAdapter())
-                    .setData(new SalesOrderDB(this, user).getActiveSalesOrders());
+                    .setData(new SalesOrderDB(this, user).getSalesOrderList());
 
             if (listView.getCount()<oldListSize && listView.getCount()>0 && mThreePane) {
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);

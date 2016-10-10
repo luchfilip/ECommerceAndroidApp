@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -70,7 +72,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                         }
                     }
                     mSalesOrderDB = new SalesOrderDB(getContext(), mUser);
-                    mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getActiveShoppingSalesOrders());
+                    mShoppingSalesListAdapter = new ShoppingSalesListAdapter(getContext(), mSalesOrderDB.getShoppingSalesList());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -134,7 +136,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
         }else{
             if(mListView!=null && mShoppingSalesListAdapter!=null && mSalesOrderDB!=null){
                 int oldListSize = mShoppingSalesListAdapter.getCount();
-                mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+                mShoppingSalesListAdapter.setData(mSalesOrderDB.getShoppingSalesList());
                 if(mShoppingSalesListAdapter.getCount()!=oldListSize){
                     ((Callback) getActivity()).onListIsLoaded();
                 }else{
@@ -152,16 +154,21 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
 
     @Override
     public void reloadShoppingSalesList(User user) {
-        mShoppingSalesListAdapter.setData(mSalesOrderDB.getActiveShoppingSalesOrders());
+        mShoppingSalesListAdapter.setData(mSalesOrderDB.getShoppingSalesList());
     }
 
     @Override
     public void updateQtyOrdered(SalesOrderLine salesOrderLine) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
-        dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
-        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, mUser);
+            dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
+            dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     @Override

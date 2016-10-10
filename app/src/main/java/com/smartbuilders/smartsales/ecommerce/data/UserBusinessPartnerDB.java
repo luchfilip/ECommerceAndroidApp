@@ -25,8 +25,8 @@ public class UserBusinessPartnerDB {
         this.mUser = user;
     }
 
-    public ArrayList<BusinessPartner> getActiveUserBusinessPartners(){
-        ArrayList<BusinessPartner> activeBusinessPartners = new ArrayList<>();
+    public ArrayList<BusinessPartner> getUserBusinessPartners(){
+        ArrayList<BusinessPartner> businessPartners = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -49,7 +49,7 @@ public class UserBusinessPartnerDB {
                     businessPartner.setContactPerson(c.getString(5));
                     businessPartner.setEmailAddress(c.getString(6));
                     businessPartner.setPhoneNumber(c.getString(7));
-                    activeBusinessPartners.add(businessPartner);
+                    businessPartners.add(businessPartner);
                 }
             }
         } catch (Exception e) {
@@ -64,11 +64,11 @@ public class UserBusinessPartnerDB {
             }
         }
         UserBusinessPartnerAddressDB userBusinessPartnerAddressDB = new UserBusinessPartnerAddressDB(mContext, mUser);
-        for (BusinessPartner businessPartner : activeBusinessPartners) {
+        for (BusinessPartner businessPartner : businessPartners) {
             businessPartner.setAddresses(userBusinessPartnerAddressDB
                     .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
         }
-        return activeBusinessPartners;
+        return businessPartners;
     }
 
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
@@ -164,7 +164,7 @@ public class UserBusinessPartnerDB {
         return false;
     }
 
-    public BusinessPartner getActiveUserBusinessPartnerById(int businessPartnerId) {
+    public BusinessPartner getUserBusinessPartnerById(int businessPartnerId) {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

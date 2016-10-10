@@ -32,11 +32,12 @@ public class SalesOrderDB {
         this.mUser = user;
     }
 
-    public String createSalesOrderFromShoppingSale(Date validTo, int businessPartnerAddressId) throws Exception {
-        return createSalesOrder((new SalesOrderLineDB(mContext, mUser)).getShoppingSale(), validTo, businessPartnerAddressId, false);
+    public String createSalesOrderFromSalesOrderLines(ArrayList<SalesOrderLine> salesOrderLines,
+                                                      Date validTo, int businessPartnerAddressId) throws Exception {
+        return createSalesOrder(salesOrderLines, validTo, businessPartnerAddressId);
     }
 
-    public SalesOrder getActiveSalesOrderById(int salesOrderId) {
+    public SalesOrder getSalesOrderById(int salesOrderId) {
         Cursor c = null;
         SalesOrder salesOrder = null;
         try {
@@ -96,10 +97,10 @@ public class SalesOrderDB {
             if(salesOrder!=null){
                 if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                     salesOrder.setBusinessPartner((new BusinessPartnerDB(mContext, mUser))
-                            .getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+                            .getBusinessPartnerById(salesOrder.getBusinessPartnerId()));
                 }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                     salesOrder.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
-                            .getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+                            .getUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
                 }
             }
         } catch (Exception e){
@@ -116,8 +117,8 @@ public class SalesOrderDB {
         return salesOrder;
     }
 
-    public ArrayList<SalesOrder> getActiveShoppingSalesOrders(){
-        ArrayList<SalesOrder> activeOrders = new ArrayList<>();
+    public ArrayList<SalesOrder> getShoppingSalesList(){
+        ArrayList<SalesOrder> salesOrders = new ArrayList<>();
         Cursor c = null;
         try {
             if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
@@ -152,7 +153,7 @@ public class SalesOrderDB {
                     SalesOrder salesOrder = new SalesOrder();
                     salesOrder.setLinesNumber(c.getInt(0));
                     salesOrder.setBusinessPartnerId(c.getInt(1));
-                    activeOrders.add(salesOrder);
+                    salesOrders.add(salesOrder);
                 }
             }
         } catch (Exception e) {
@@ -168,20 +169,20 @@ public class SalesOrderDB {
         }
         if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeOrders){
-                salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            for(SalesOrder salesOrder : salesOrders){
+                salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeOrders){
-                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            for(SalesOrder salesOrder : salesOrders){
+                salesOrder.setBusinessPartner(userBusinessPartnerDB.getUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }
-        return activeOrders;
+        return salesOrders;
     }
 
-    public ArrayList<SalesOrder> getActiveSalesOrders(){
-        ArrayList<SalesOrder> activeSalesOrders = new ArrayList<>();
+    public ArrayList<SalesOrder> getSalesOrderList(){
+        ArrayList<SalesOrder> salesOrders = new ArrayList<>();
         Cursor c = null;
         try {
             if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
@@ -242,7 +243,7 @@ public class SalesOrderDB {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    activeSalesOrders.add(salesOrder);
+                    salesOrders.add(salesOrder);
                 }
             }
         } catch (Exception e) {
@@ -259,32 +260,31 @@ public class SalesOrderDB {
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
         if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
             BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeSalesOrders){
-                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
-                salesOrder.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            for(SalesOrder salesOrder : salesOrders){
+                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineQtyBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
+                salesOrder.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         } else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
-            for(SalesOrder salesOrder : activeSalesOrders){
-                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineNumbersBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
-                salesOrder.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
+            for(SalesOrder salesOrder : salesOrders){
+                salesOrder.setLinesNumber(salesOrderLineDB.getOrderLineQtyBySalesOrderId(salesOrder.getId(), salesOrder.getBusinessPartnerId()));
+                salesOrder.setBusinessPartner(userBusinessPartnerDB.getUserBusinessPartnerById(salesOrder.getBusinessPartnerId()));
             }
         }
-        return activeSalesOrders;
+        return salesOrders;
     }
 
-    private String createSalesOrder(ArrayList<SalesOrderLine> orderLines, Date validTo, int businessPartnerAddressId, boolean insertOrderLinesInDB) throws Exception {
+    private String createSalesOrder(ArrayList<SalesOrderLine> salesOrderLines, Date validTo, int businessPartnerAddressId) throws Exception {
         int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
         SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
-        int activeShoppingSalesLineNumber = salesOrderLineDB.getActiveShoppingSaleLinesNumberByBusinessPartnerId(businessPartnerId);
-        if((orderLines != null && insertOrderLinesInDB) || activeShoppingSalesLineNumber>0){
+        if(salesOrderLines!=null && !salesOrderLines.isEmpty()){
             int salesOrderId;
             try {
                 salesOrderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER");
 
-                double subTotal = SalesOrderBR.getSubTotalAmount(orderLines),
-                        tax = SalesOrderBR.getTaxAmount(orderLines),
-                        total = SalesOrderBR.getTotalAmount(orderLines);
+                double subTotal = SalesOrderBR.getSubTotalAmount(salesOrderLines),
+                        tax = SalesOrderBR.getTaxAmount(salesOrderLines),
+                        total = SalesOrderBR.getTotalAmount(salesOrderLines);
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -299,7 +299,7 @@ public class SalesOrderDB {
                                         "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
                                         DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(),
-                                        Utils.getMacAddress(mContext), String.valueOf(orderLines!=null ? orderLines.size() : activeShoppingSalesLineNumber),
+                                        Utils.getMacAddress(mContext), String.valueOf(salesOrderLines.size()),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total),
                                         validTo!=null?(new SimpleDateFormat("yyyy-MM-dd")).format(validTo):null});
                 if(rowsAffected <= 0){
@@ -309,29 +309,23 @@ public class SalesOrderDB {
                 e.printStackTrace();
                 return e.getMessage();
             }
-            if (orderLines!=null && insertOrderLinesInDB) {
-                for (SalesOrderLine orderLine : orderLines) {
-                    salesOrderLineDB.addSalesOrderLineToFinalizedSalesOrder(orderLine, salesOrderId);
-                }
-            } else {
-                if(salesOrderLineDB.moveShoppingSaleToFinalizedSaleOrderByOrderId(businessPartnerId, salesOrderId)<=0){
-                    try {
-                        int rowsAffected = mContext.getContentResolver()
-                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                                        null,
-                                        "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
-                                        new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId())});
-                        if(rowsAffected <= 0){
-                            return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        return e.getMessage();
+            if(salesOrderLineDB.moveShoppingSaleToSalesOrder(businessPartnerId, salesOrderId)<=0){
+                try {
+                    int rowsAffected = mContext.getContentResolver()
+                            .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                                    null,
+                                    "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
+                                    new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId())});
+                    if(rowsAffected <= 0){
+                        return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
                     }
-                    return "Error 002 - No se insertó la cotización en la base de datos.";
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return e.getMessage();
                 }
+                return "Error 002 - No se insertó la cotización en la base de datos.";
             }
         }else{
             return "No existen productos en el Carrito de compras.";

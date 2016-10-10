@@ -91,7 +91,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
 
                                 try {
                                     final BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                            .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                     if (businessPartner!=null) {
                                         ((TextView) rootView.findViewById(R.id.business_partner_name_tv))
                                                 .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
@@ -222,7 +222,8 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, mSelectedBusinessPartnerAddressId);
+                    result = SalesOrderBR.createSalesOrderFromSalesOrderLines(getContext(), mUser,
+                            mSalesOrderLines, validTo, mSelectedBusinessPartnerAddressId);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

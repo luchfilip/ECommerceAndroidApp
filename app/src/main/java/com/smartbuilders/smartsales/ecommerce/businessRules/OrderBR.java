@@ -24,7 +24,7 @@ public class OrderBR {
     public static double getSubTotalAmount(ArrayList<OrderLine> orderLines){
         double subTotal=0;
         for(OrderLine orderLine : orderLines){
-            subTotal += orderLine.getQuantityOrdered() * orderLine.getPrice();
+            subTotal += orderLine.getSubTotalLineAmount();
         }
         return new BigDecimal(subTotal).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -36,7 +36,7 @@ public class OrderBR {
     public static double getTaxAmount(ArrayList<OrderLine> orderLines){
         double tax=0;
         for(OrderLine orderLine : orderLines){
-            tax += orderLine.getQuantityOrdered() * orderLine.getPrice() * (orderLine.getTaxPercentage()/100);
+            tax += orderLine.getLineTaxAmount();
         }
         return new BigDecimal(tax).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }

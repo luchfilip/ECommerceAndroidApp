@@ -366,7 +366,7 @@ public class SalesOrderDetailPDFCreator {
                     line.getPriceStringFormat()), font));
             cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
                     currency!=null ? currency.getName() : "",
-                    line.getTaxAmountStringFormat()), font));
+                    line.getLineTaxAmountStringFormat()), font));
             cell3.addElement(new Paragraph(ctx.getString(R.string.qty_ordered, String.valueOf(line.getQuantityOrdered())), font));
             cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_line_amount,
                     currency!=null ? currency.getName() : "",

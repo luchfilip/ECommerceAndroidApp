@@ -34,7 +34,7 @@ public class MainPageSectionsDB {
 
         try {
             BusinessPartner businessPartner = (new BusinessPartnerDB(mContext, mUser))
-                    .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                    .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
             if (businessPartner!=null && businessPartner.getName()!=null) {
                 mainPageList.add(businessPartner.getName());
             }

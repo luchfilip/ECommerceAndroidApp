@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
+import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
@@ -90,21 +92,15 @@ public class DialogAddToShoppingCart extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        int qtyRequested = Integer
-                                .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                        //TODO: mandar estas validaciones a una clase de businessRules
-                        if (qtyRequested<=0) {
-                            throw new Exception(getString(R.string.invalid_qty_requested));
-                        }
-                        if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
-                            throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
-                        }
-                        if(mProduct.getDefaultProductPriceAvailability()!=null){
-                            if (qtyRequested > mProduct.getDefaultProductPriceAvailability().getAvailability()) {
-                                throw new Exception(getString(R.string.invalid_availability_qty_requested));
-                            }
-                        }
-                        String result = (new OrderLineDB(getContext(), mUser)).addProductToShoppingCart(mProduct, qtyRequested);
+                        OrderLineBR.validateQtyOrdered(getContext(),
+                                Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
+                                mProduct);
+
+                        OrderLine orderLine = new OrderLine();
+                        OrderLineBR.fillOrderLine(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
+                                mProduct, orderLine);
+
+                        String result = (new OrderLineDB(getContext(), mUser)).addOrderLineToShoppingCart(orderLine);
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_cart,
                                     Toast.LENGTH_SHORT).show();

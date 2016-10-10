@@ -447,10 +447,15 @@ public class ProductDetailFragment extends Fragment {
     }
 
     public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
-        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, mUser);
+            dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     @Override

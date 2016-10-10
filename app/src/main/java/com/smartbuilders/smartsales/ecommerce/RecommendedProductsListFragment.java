@@ -153,7 +153,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                 || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID)) {
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if (businessPartner != null) {
                     mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                     mBusinessPartnerName.setVisibility(View.VISIBLE);
@@ -232,10 +232,15 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
     @Override
     public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, user);
-        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, user);
+            dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     @Override

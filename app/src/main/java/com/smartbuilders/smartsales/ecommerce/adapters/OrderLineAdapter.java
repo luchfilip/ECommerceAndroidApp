@@ -126,7 +126,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             holder.productPrice.setVisibility(View.VISIBLE);
 
             holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
-                    mDataset.get(position).getTaxPercentageStringFormat()));
+                    mDataset.get(position).getProductTaxPercentageStringFormat()));
             holder.productTax.setVisibility(View.VISIBLE);
 
             holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,

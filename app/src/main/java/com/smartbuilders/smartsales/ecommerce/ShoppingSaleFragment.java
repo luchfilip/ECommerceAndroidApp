@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity;
 import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
@@ -285,7 +287,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0);
+                    result = SalesOrderBR.createSalesOrderFromSalesOrderLines(getContext(), mUser,
+                            mSalesOrderLines, validTo, 0);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();
@@ -352,11 +355,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
         BusinessPartner businessPartner = null;
         if(mCurrentBusinessPartnerId!=0) {
             businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                    .getActiveBusinessPartnerById(mCurrentBusinessPartnerId);
+                    .getBusinessPartnerById(mCurrentBusinessPartnerId);
         } else {
             try {
                 businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -399,11 +402,16 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void updateQtyOrdered(SalesOrderLine salesOrderLine) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, mUser);
-        dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
-        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, mUser);
+            dialogUpdateShoppingSaleQtyOrdered.setTargetFragment(this, 0);
+            dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     @Override

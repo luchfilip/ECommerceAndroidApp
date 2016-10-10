@@ -95,7 +95,7 @@ public class SalesOrdersListFragment extends Fragment {
                     if (mLoadOrdersFromSalesOrders) {
                         activeOrdersFromSalesOrders.addAll((new OrderDB(getContext(), mUser)).getActiveOrdersFromSalesOrders());
                     } else {
-                        activeSalesOrders.addAll((new SalesOrderDB(getContext(), mUser)).getActiveSalesOrders());
+                        activeSalesOrders.addAll((new SalesOrderDB(getContext(), mUser)).getSalesOrderList());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -184,7 +184,7 @@ public class SalesOrdersListFragment extends Fragment {
                 mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if(businessPartner!=null){
                     mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                     mBusinessPartnerName.setVisibility(View.VISIBLE);
@@ -209,7 +209,7 @@ public class SalesOrdersListFragment extends Fragment {
                             mUser)).getActiveOrdersFromSalesOrders());
                 }else{
                     ((SalesOrdersListAdapter) mListView.getAdapter()).setData((new SalesOrderDB(
-                            getContext(), mUser)).getActiveSalesOrders());
+                            getContext(), mUser)).getSalesOrderList());
                 }
                 if(mListView.getAdapter().getCount()!=oldListSize){
                     ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);

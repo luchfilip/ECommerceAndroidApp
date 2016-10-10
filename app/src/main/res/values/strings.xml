@@ -175,15 +175,15 @@
     <string name="sales_order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
     <string name="sales_order_valid_to">Válida hasta: %1$s</string>
     <string name="sales_order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
-    <string name="sales_order_tax_amount">Impuestos (%1$s): %2$s</string>
-    <string name="sales_order_tax_percentage">Impuestos (%%): %1$s</string>
+    <string name="sales_order_tax_amount">Impuesto (%1$s): %2$s</string>
+    <string name="sales_order_tax_percentage">Impuesto (%%): %1$s</string>
     <string name="sales_order_total_amount">Total (%1$s): %2$s</string>
     <string name="sales_order_lines_title">Líneas de la Cotización</string>
 
     <string name="order_product_price">Precio (%1$s): %2$s</string>
     <string name="order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
     <string name="order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
-    <string name="order_tax_amount">Impuestos (%1$s): %2$s</string>
+    <string name="order_tax_amount">Impuesto (%1$s): %2$s</string>
     <string name="order_total_amount">Total (%1$s): %2$s</string>
     <string name="order_lines_title">Líneas del Pedido</string>
 

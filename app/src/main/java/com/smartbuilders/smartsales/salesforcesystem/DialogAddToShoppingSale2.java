@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 /**
@@ -69,8 +71,10 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
         if(view.findViewById(R.id.product_commercial_package_textView) != null){
             if(mProduct.getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package_textView)).setText(getContext().getString(R.string.commercial_package_label_detail,
-                        mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
+                ((TextView) view.findViewById(R.id.product_commercial_package_textView))
+                        .setText(getContext().getString(R.string.commercial_package_label_detail,
+                                mProduct.getProductCommercialPackage().getUnitDescription(),
+                                mProduct.getProductCommercialPackage().getUnits()));
             }else{
                 view.findViewById(R.id.product_commercial_package_textView).setVisibility(TextView.GONE);
             }
@@ -99,22 +103,18 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         try {
-                            int qtyRequested = Integer
-                                    .valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                            //TODO: mandar estas validaciones a una clase de businessRules
-                            if (qtyRequested<=0) {
-                                throw new Exception(getString(R.string.invalid_qty_requested));
-                            }
-                            if ((qtyRequested % mProduct.getProductCommercialPackage().getUnits())!=0) {
-                                throw new Exception(getString(R.string.invalid_commercial_package_qty_requested));
-                            }
-                            if(mProduct.getDefaultProductPriceAvailability()!=null){
-                                if (qtyRequested > mProduct.getDefaultProductPriceAvailability().getAvailability()) {
-                                    throw new Exception(getString(R.string.invalid_availability_qty_requested));
-                                }
-                            }
+                            SalesOrderLineBR.validateQtyOrdered(getContext(),
+                                    Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
+                                    mProduct);
+
+                            SalesOrderLine salesOrderLine = new SalesOrderLine();
+
+                            SalesOrderLineBR.fillSalesOrderLine(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
+                                    mProduct, salesOrderLine);
+
                             String result = (new SalesOrderLineDB(getContext(), mUser))
-                                    .addProductToShoppingSale(mProduct, qtyRequested);
+                                    .addSalesOrderLinesToShoppingSale(salesOrderLine);
+
                             if(result == null){
                                 Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                         Toast.LENGTH_SHORT).show();
@@ -122,7 +122,6 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
                             } else {
                                 Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                             }
-
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), R.string.invalid_qty_requested, Toast.LENGTH_SHORT).show();

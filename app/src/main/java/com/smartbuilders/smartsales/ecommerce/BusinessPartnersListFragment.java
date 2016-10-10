@@ -71,12 +71,12 @@ public class BusinessPartnersListFragment extends Fragment {
                         if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                             mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mBusinessPartnerDB.getActiveBusinessPartners(),
+                                    mBusinessPartnerDB.getBusinessPartners(),
                                     Utils.getAppCurrentBusinessPartnerId(getContext(), user));
                         }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                             mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mUserBusinessPartnerDB.getActiveUserBusinessPartners(), 0);
+                                    mUserBusinessPartnerDB.getUserBusinessPartners(), 0);
                         }
                     }
                 } catch (Exception e) {
@@ -143,9 +143,9 @@ public class BusinessPartnersListFragment extends Fragment {
         }else{
             if(mListView!=null && mBusinessPartnersListAdapter!=null){
                 if(mUserBusinessPartnerDB!=null) {
-                    mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getActiveUserBusinessPartners());
+                    mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getUserBusinessPartners());
                 }else if(mBusinessPartnerDB!=null) {
-                    mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getActiveBusinessPartners());
+                    mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getBusinessPartners());
                 }
             }
         }

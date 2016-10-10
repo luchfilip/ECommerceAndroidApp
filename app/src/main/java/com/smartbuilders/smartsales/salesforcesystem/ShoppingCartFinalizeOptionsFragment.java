@@ -110,7 +110,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
 
                                 try {
                                     final BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                            .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                            .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                     if (businessPartner!=null) {
                                         ((TextView) rootView.findViewById(R.id.business_partner_name_textView))
                                                 .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
@@ -150,7 +150,7 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                                 }
 
                                 if (mSalesOrderId!=0) {
-                                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getActiveSalesOrderById(mSalesOrderId);
+                                    SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                                     if (salesOrder!=null && salesOrder.getBusinessPartner()!=null) {
                                         ((TextView) rootView.findViewById(R.id.sales_order_number_textView))
                                                 .setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));

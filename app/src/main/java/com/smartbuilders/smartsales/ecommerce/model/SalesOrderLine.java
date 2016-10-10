@@ -13,11 +13,12 @@ public class SalesOrderLine extends Model implements Parcelable {
     private int productId;
     private Product product;
     private int quantityOrdered;
-    private double price;
     private int currencyId;
     private Currency currency;
-    private double taxPercentage;
-    private double taxAmount;
+    private double productPrice;
+    private double productTaxPercentage;
+    private double lineTaxAmount;
+    private double subTotalLineAmount;
     private double totalLineAmount;
     private int businessPartnerId;
     private boolean isQuantityOrderedInvalid;
@@ -31,11 +32,12 @@ public class SalesOrderLine extends Model implements Parcelable {
         productId = in.readInt();
         product = in.readParcelable(Product.class.getClassLoader());
         quantityOrdered = in.readInt();
-        price = in.readDouble();
+        productPrice = in.readDouble();
         currencyId = in.readInt();
         currency = in.readParcelable(Currency.class.getClassLoader());
-        taxPercentage = in.readDouble();
-        taxAmount = in.readDouble();
+        productTaxPercentage = in.readDouble();
+        lineTaxAmount = in.readDouble();
+        subTotalLineAmount = in.readDouble();
         totalLineAmount = in.readDouble();
         businessPartnerId = in.readInt();
         isQuantityOrderedInvalid = in.readByte() != 0;
@@ -47,11 +49,12 @@ public class SalesOrderLine extends Model implements Parcelable {
         dest.writeInt(productId);
         dest.writeParcelable(product, flags);
         dest.writeInt(quantityOrdered);
-        dest.writeDouble(price);
+        dest.writeDouble(productPrice);
         dest.writeInt(currencyId);
         dest.writeParcelable(currency, flags);
-        dest.writeDouble(taxPercentage);
-        dest.writeDouble(taxAmount);
+        dest.writeDouble(productTaxPercentage);
+        dest.writeDouble(lineTaxAmount);
+        dest.writeDouble(subTotalLineAmount);
         dest.writeDouble(totalLineAmount);
         dest.writeInt(businessPartnerId);
         dest.writeByte((byte) (isQuantityOrderedInvalid ? 1 : 0));
@@ -74,16 +77,16 @@ public class SalesOrderLine extends Model implements Parcelable {
         }
     };
 
-    public double getPrice() {
-        return price;
+    public double getProductPrice() {
+        return productPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
     }
 
     public String getPriceStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getPrice());
+        return String.format(new Locale("es", "VE"), "%,.2f", getProductPrice());
     }
 
     public int getQuantityOrdered() {
@@ -110,28 +113,40 @@ public class SalesOrderLine extends Model implements Parcelable {
         this.currency = currency;
     }
 
-    public double getTaxPercentage() {
-        return taxPercentage;
+    public double getProductTaxPercentage() {
+        return productTaxPercentage;
     }
 
-    public void setTaxPercentage(double taxPercentage) {
-        this.taxPercentage = taxPercentage;
+    public void setProductTaxPercentage(double productTaxPercentage) {
+        this.productTaxPercentage = productTaxPercentage;
     }
 
-    public String getTaxPercentageStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getTaxPercentage());
+    public String getProductTaxPercentageStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getProductTaxPercentage());
     }
 
-    public double getTaxAmount() {
-        return taxAmount;
+    public double getLineTaxAmount() {
+        return lineTaxAmount;
     }
 
-    public void setTaxAmount(double taxAmount) {
-        this.taxAmount = taxAmount;
+    public void setLineTaxAmount(double lineTaxAmount) {
+        this.lineTaxAmount = lineTaxAmount;
     }
 
-    public String getTaxAmountStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getTaxAmount());
+    public String getLineTaxAmountStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getLineTaxAmount());
+    }
+
+    public double getSubTotalLineAmount() {
+        return subTotalLineAmount;
+    }
+
+    public void setSubTotalLineAmount(double subTotalLineAmount) {
+        this.subTotalLineAmount = subTotalLineAmount;
+    }
+
+    public String getSubTotalLineAmountStringFormat(){
+        return String.format(new Locale("es", "VE"), "%,.2f", getSubTotalLineAmount());
     }
 
     public double getTotalLineAmount() {

@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
@@ -151,7 +152,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getActiveBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                 if(businessPartner!=null){
                     mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
                     mBusinessPartnerName.setVisibility(View.VISIBLE);
@@ -206,10 +207,15 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user) {
-        DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
-                DialogUpdateShoppingSaleQtyOrdered.newInstance(salesOrderLine, user);
-        dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
-                DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        Product product = (new ProductDB(getContext(), mUser)).getProductById(salesOrderLine.getProductId());
+        if (product!=null) {
+            DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
+                    DialogUpdateShoppingSaleQtyOrdered.newInstance(product, salesOrderLine, user);
+            dialogUpdateShoppingSaleQtyOrdered.show(getActivity().getSupportFragmentManager(),
+                    DialogUpdateShoppingSaleQtyOrdered.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     public void reloadWishList(){

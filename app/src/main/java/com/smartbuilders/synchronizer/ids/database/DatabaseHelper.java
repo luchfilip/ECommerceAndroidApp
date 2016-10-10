@@ -12,7 +12,7 @@ import java.io.File;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 13;
+	private static final int DATABASE_VERSION = 14;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -381,6 +381,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SALES_PRICE DOUBLE DEFAULT NULL, " +
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
 					" TAX_AMOUNT DOUBLE DEFAULT NULL, " +
+                    " SUB_TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
@@ -425,6 +426,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SALES_PRICE DOUBLE DEFAULT NULL, " +
                     " TAX_PERCENTAGE DOUBLE DEFAULT NULL, " +
 					" TAX_AMOUNT DOUBLE DEFAULT NULL, " +
+                    " SUB_TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " TOTAL_LINE DOUBLE DEFAULT NULL, " +
                     " DOC_TYPE CHAR(4) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
@@ -654,6 +656,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL("ALTER TABLE ECOMMERCE_SALES_ORDER_LINE ADD COLUMN TAX_AMOUNT DOUBLE DEFAULT NULL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion<14) {
+                try {
+                    db.execSQL("ALTER TABLE ECOMMERCE_ORDER_LINE ADD COLUMN SUB_TOTAL_LINE DOUBLE DEFAULT NULL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL("ALTER TABLE ECOMMERCE_SALES_ORDER_LINE ADD COLUMN SUB_TOTAL_LINE DOUBLE DEFAULT NULL");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

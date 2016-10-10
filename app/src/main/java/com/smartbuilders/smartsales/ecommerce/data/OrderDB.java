@@ -95,10 +95,10 @@ public class OrderDB {
         if(order!=null && order.getBusinessPartnerId()>0){
             if(mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID && order.getSalesOrderId()>0){
                 order.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
-                        .getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+                        .getUserBusinessPartnerById(order.getBusinessPartnerId()));
             }else{
                 order.setBusinessPartner((new BusinessPartnerDB(mContext, mUser))
-                        .getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                        .getBusinessPartnerById(order.getBusinessPartnerId()));
             }
         }
         return order;
@@ -254,12 +254,12 @@ public class OrderDB {
             if(order.getBusinessPartnerId()>0){
                 if(mUser!=null){
                     if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                        order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                        order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
                     }else if(mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                         if(order.getSalesOrderId()>0){
-                            order.setBusinessPartner(userBusinessPartnerDB.getActiveUserBusinessPartnerById(order.getBusinessPartnerId()));
+                            order.setBusinessPartner(userBusinessPartnerDB.getUserBusinessPartnerById(order.getBusinessPartnerId()));
                         }else{
-                            order.setBusinessPartner(businessPartnerDB.getActiveBusinessPartnerById(order.getBusinessPartnerId()));
+                            order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
                         }
                     }
                 }
