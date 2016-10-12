@@ -34,7 +34,7 @@ public class ProductDB {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -82,7 +82,7 @@ public class ProductDB {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -128,7 +128,8 @@ public class ProductDB {
         try {
             String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
                         " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, PA.PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
+                        " PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -178,7 +179,7 @@ public class ProductDB {
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -243,7 +244,7 @@ public class ProductDB {
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
@@ -290,7 +291,7 @@ public class ProductDB {
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                         " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -346,7 +347,7 @@ public class ProductDB {
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                            " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                            " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -369,7 +370,7 @@ public class ProductDB {
                             " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
                             " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                             " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                            " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                            " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                         " FROM PRODUCT P " +
                             " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -526,7 +527,7 @@ public class ProductDB {
                         " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, " +
                         " B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
                         " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
+                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID " +
                     " FROM PRODUCT P " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
@@ -584,9 +585,11 @@ public class ProductDB {
      *     19) CURRENCY.CURRENCY_ID,
      *     20) CURRENCY.UNICODE_DECIMAL,
      *     21) PRODUCT_PRICE_AVAILABILITY.PRICE
-     *     22) PRODUCT_TAX.PRODUCT_TAX_ID,
-     *     23) PRODUCT_TAX.PERCENTAGE
-     *     24) ECOMMERCE_ORDER_LINE.PRODUCT_ID
+     *     22) PRODUCT_PRICE_AVAILABILITY.TAX
+     *     23) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
+     *     24) PRODUCT_TAX.PRODUCT_TAX_ID,
+     *     25) PRODUCT_TAX.PERCENTAGE
+     *     26) ECOMMERCE_ORDER_LINE.PRODUCT_ID
      * @param product
      * @param cursor
      */
@@ -618,10 +621,12 @@ public class ProductDB {
         product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(19));
         product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(20));
         product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(21));
-        product.setProductTaxId(cursor.getInt(22));
-        product.getProductTax().setId(cursor.getInt(22));
-        product.getProductTax().setPercentage(cursor.getFloat(23));
-        product.setFavorite(cursor.getString(24)!=null);
+        product.getDefaultProductPriceAvailability().setTax(cursor.getFloat(22));
+        product.getDefaultProductPriceAvailability().setTotalPrice(cursor.getFloat(23));
+        product.setProductTaxId(cursor.getInt(24));
+        product.getProductTax().setId(cursor.getInt(25));
+        product.getProductTax().setPercentage(cursor.getFloat(26));
+        product.setFavorite(cursor.getString(27)!=null);
     }
 
 
@@ -644,8 +649,10 @@ public class ProductDB {
      * 14) CURRENCY.CURRENCY_ID
      * 15) CURRENCY.UNICODE_DECIMAL
      * 16) PRODUCT_PRICE_AVAILABILITY.PRICE
-     * 17) ECOMMERCE_ORDER_LINE.PRODUCT_ID
-     * 18) PRODUCT.INTERNAL_CODE
+     * 17) PRODUCT_PRICE_AVAILABILITY.TAX
+     * 18) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
+     * 19) ECOMMERCE_ORDER_LINE.PRODUCT_ID
+     * 20) PRODUCT.INTERNAL_CODE
      * @param product
      * @param cursor
      */
@@ -671,8 +678,10 @@ public class ProductDB {
         product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(14));
         product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(15));
         product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(16));
-        product.setFavorite(cursor.getString(17)!=null);
-        product.setInternalCode(cursor.getString(18));
+        product.getDefaultProductPriceAvailability().setTax(cursor.getFloat(17));
+        product.getDefaultProductPriceAvailability().setTotalPrice(cursor.getFloat(18));
+        product.setFavorite(cursor.getString(19)!=null);
+        product.setInternalCode(cursor.getString(20));
     }
 
     public Product getProductByInternalCode(String productCode) {

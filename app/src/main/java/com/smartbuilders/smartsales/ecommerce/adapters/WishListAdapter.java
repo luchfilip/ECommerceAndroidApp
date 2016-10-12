@@ -166,7 +166,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);

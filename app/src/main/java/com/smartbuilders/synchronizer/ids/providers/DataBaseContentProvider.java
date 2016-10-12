@@ -11,17 +11,20 @@ import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
 import com.smartbuilders.synchronizer.ids.utils.DataBaseUtilities;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 
 /**
  * http://developer.android.com/guide/topics/providers/content-provider-creating.html
@@ -30,28 +33,28 @@ import android.net.Uri;
  */
 public class DataBaseContentProvider extends ContentProvider implements OnAccountsUpdateListener {
 
-	public static final String AUTHORITY = BuildConfig.DataBaseContentProvider_AUTHORITY;
-	
-	public static final String KEY_USER_ID 						= "DataBaseContentProvider.USER_ID";
-	public static final String KEY_USER_DB_NAME 				= "DataBaseContentProvider.USER_DB_NAME";
-	public static final String KEY_USER_SAVE_DB_EXTERNAL_CARD 	= "DataBaseContentProvider.USER_SAVE_DB_EXTERNAL_CARD";
-    public static final String KEY_SEND_DATA_TO_SERVER			= "DataBaseContentProvider.SEND_DATA_TO_SERVER";
-    public static final String KEY_DATA_FROM_WS                 = "DataBaseContentProvider.KEY_DATA_FROM_WS";
-    public static final String KEY_DATA_FROM_WS_VALID_SEQS_IDS  = "DataBaseContentProvider.KEY_DATA_FROM_WS_VALID_SEQS_IDS";
-    public static final String KEY_DATA_FROM_WS_TABLE_NAME      = "DataBaseContentProvider.KEY_DATA_FROM_WS_TABLE_NAME";
+    public static final String AUTHORITY = BuildConfig.DataBaseContentProvider_AUTHORITY;
 
-	private static final Uri CONTENT_URI 				    = Uri.parse("content://" + AUTHORITY);
-	public static final Uri INTERNAL_DB_URI				    = Uri.withAppendedPath(CONTENT_URI, "internalDB");
-	public static final Uri REMOTE_DB_URI 				    = Uri.withAppendedPath(CONTENT_URI, "remoteDB");
-	public static final Uri DROP_USER_DB_URI			    = Uri.withAppendedPath(CONTENT_URI, "dropUserDB");
-	public static final Uri INSERT_UPDATE_DATA_FROM_WS_URI  = Uri.withAppendedPath(CONTENT_URI, "insertUpdateDataFromWS");
-	
-	private static final int INTERNAL_DB 			    = 1;
-	private static final int REMOTE_DB 				    = 2;
-	private static final int DROP_USER_DB 			    = 3;
-	private static final int INSERT_UPDATE_DATA_FROM_WS = 4;
+    public static final String KEY_USER_ID = "DataBaseContentProvider.USER_ID";
+    public static final String KEY_USER_DB_NAME = "DataBaseContentProvider.USER_DB_NAME";
+    public static final String KEY_USER_SAVE_DB_EXTERNAL_CARD = "DataBaseContentProvider.USER_SAVE_DB_EXTERNAL_CARD";
+    public static final String KEY_SEND_DATA_TO_SERVER = "DataBaseContentProvider.SEND_DATA_TO_SERVER";
+    public static final String KEY_DATA_FROM_WS = "DataBaseContentProvider.KEY_DATA_FROM_WS";
+    public static final String KEY_DATA_FROM_WS_VALID_SEQS_IDS = "DataBaseContentProvider.KEY_DATA_FROM_WS_VALID_SEQS_IDS";
+    public static final String KEY_DATA_FROM_WS_TABLE_NAME = "DataBaseContentProvider.KEY_DATA_FROM_WS_TABLE_NAME";
 
-	private static final UriMatcher uriMatcher;
+    private static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final Uri INTERNAL_DB_URI = Uri.withAppendedPath(CONTENT_URI, "internalDB");
+    public static final Uri REMOTE_DB_URI = Uri.withAppendedPath(CONTENT_URI, "remoteDB");
+    public static final Uri DROP_USER_DB_URI = Uri.withAppendedPath(CONTENT_URI, "dropUserDB");
+    public static final Uri INSERT_UPDATE_DATA_FROM_WS_URI = Uri.withAppendedPath(CONTENT_URI, "insertUpdateDataFromWS");
+
+    private static final int INTERNAL_DB = 1;
+    private static final int REMOTE_DB = 2;
+    private static final int DROP_USER_DB = 3;
+    private static final int INSERT_UPDATE_DATA_FROM_WS = 4;
+
+    private static final UriMatcher uriMatcher;
 
     private static DatabaseHelper dbHelper;
     private static SQLiteDatabase mUserReadableDB;
@@ -59,37 +62,37 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
     private static SQLiteDatabase mIDSReadableDB;
     private static SQLiteDatabase mIDSWriteableDB;
 
-	static{
-		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(AUTHORITY, "internalDB", INTERNAL_DB);
-		uriMatcher.addURI(AUTHORITY, "remoteDB", REMOTE_DB);
-		uriMatcher.addURI(AUTHORITY, "dropUserDB", DROP_USER_DB);
-		uriMatcher.addURI(AUTHORITY, "insertUpdateDataFromWS", INSERT_UPDATE_DATA_FROM_WS);
-	}
-	
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
-	}
+    static {
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(AUTHORITY, "internalDB", INTERNAL_DB);
+        uriMatcher.addURI(AUTHORITY, "remoteDB", REMOTE_DB);
+        uriMatcher.addURI(AUTHORITY, "dropUserDB", DROP_USER_DB);
+        uriMatcher.addURI(AUTHORITY, "insertUpdateDataFromWS", INSERT_UPDATE_DATA_FROM_WS);
+    }
 
-	@Override
-	public String getType(Uri arg0) {
-		return null;
-	}
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        return 0;
+    }
 
-	/**
-	 * Utilizar el metodo Update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
-	 */
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		return null;
-	}
+    @Override
+    public String getType(Uri arg0) {
+        return null;
+    }
 
-	@Override
-	public boolean onCreate() {
-		//TODO: manejar permisos en el manifest para mejorar la seguridad
-        if(dbHelper == null) {
-		    dbHelper = new DatabaseHelper(getContext());
+    /**
+     * Utilizar el metodo Update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
+     */
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        return null;
+    }
+
+    @Override
+    public boolean onCreate() {
+        //TODO: manejar permisos en el manifest para mejorar la seguridad
+        if (dbHelper == null) {
+            dbHelper = new DatabaseHelper(getContext());
         }
 		AccountManager mAccountManager = AccountManager.get(getContext());
 		mAccountManager.addOnAccountsUpdatedListener(this, null, false);
@@ -190,7 +193,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
     @Override
 	public void onAccountsUpdated(final Account[] accounts) {
 	    //Removes content associated with accounts that are not currently in the device
-	    ApplicationUtilities.cleanUsersData(getContext());
+	    ApplicationUtilities.cleanUsersData(getContext(), accounts);
 	}
 	
 	/**

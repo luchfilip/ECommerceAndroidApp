@@ -380,7 +380,7 @@ public class ApplicationUtilities {
 			e.printStackTrace();
 		}
     }
-    
+
     /**
      * Devuelve el Id del usuario si existe AccountManager, sino devuelve null
      * @param serverAddress
@@ -393,13 +393,13 @@ public class ApplicationUtilities {
 		AccountManager mAccountManager = AccountManager.get(ctx);
 		for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
 			if((serverAddress!=null 
-					&& mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS)!=null 
+					&& mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS)!=null
 					&& serverAddress.equals(mAccountManager.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS)))
 				&& (userName!=null 
 					&& account.name!=null 
 					&& userName.equals(account.name))
 				&& (userGroup!=null 
-					&& mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP)!=null 
+					&& mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP)!=null
 					&& userGroup.equals(mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_GROUP)))){
 				return mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID);
 			}
@@ -1031,7 +1031,7 @@ public class ApplicationUtilities {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ctx
 	 * @param userId
 	 * @return
@@ -1279,20 +1279,22 @@ public class ApplicationUtilities {
     	    throw e;
     	}
 	}
-	
+
 	/**
 	 * Clean users data in device and data base
 	 * @param ctx
 	 */
-	public static void cleanUsersData(Context ctx){
+	public static void cleanUsersData(Context ctx, Account[] accounts){
     	Cursor c = null;
     	try{
     		//currents users
     		ArrayList<User> currentsUsers = new ArrayList<User>();
     		AccountManager mAccountManager = AccountManager.get(ctx);
-			for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
-				currentsUsers.add(getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)));
-				//Log.v(TAG+" - Current Users", getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)).toString());
+			for(Account account : accounts){
+                if (account.type.equals(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)) {
+                    currentsUsers.add(getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)));
+                    //Log.v(TAG+" - Current Users", getUserByIdFromAccountManager(ctx, mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID)).toString());
+                }
 			}
     		//registered users
     		ArrayList<User> registeredUsers = new ArrayList<User>();

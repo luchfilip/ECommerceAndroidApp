@@ -194,7 +194,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
+                    mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -98,7 +98,7 @@ public class DialogProductDetails extends DialogFragment {
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_price)).setText(getString(R.string.price_detail,
                     mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mProduct.getDefaultProductPriceAvailability().getPrice()));
+                    mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
             view.findViewById(R.id.product_price).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

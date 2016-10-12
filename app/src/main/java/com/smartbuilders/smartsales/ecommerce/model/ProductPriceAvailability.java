@@ -3,6 +3,8 @@ package com.smartbuilders.smartsales.ecommerce.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 /**
  * Created by stein on 17/7/2016.
  */
@@ -12,6 +14,8 @@ public class ProductPriceAvailability extends Model implements Parcelable {
     private int availability;
     private int currencyId;
     private Currency currency;
+    private float tax;
+    private float totalPrice;
 
     public ProductPriceAvailability() {
         super();
@@ -24,6 +28,8 @@ public class ProductPriceAvailability extends Model implements Parcelable {
         availability = in.readInt();
         currencyId = in.readInt();
         currency = in.readParcelable(Currency.class.getClassLoader());
+        tax = in.readFloat();
+        totalPrice = in.readFloat();
     }
 
     @Override
@@ -33,6 +39,8 @@ public class ProductPriceAvailability extends Model implements Parcelable {
         dest.writeInt(availability);
         dest.writeInt(currencyId);
         dest.writeParcelable(currency, flags);
+        dest.writeFloat(tax);
+        dest.writeFloat(totalPrice);
     }
 
     @Override
@@ -60,6 +68,10 @@ public class ProductPriceAvailability extends Model implements Parcelable {
         this.price = price;
     }
 
+    public String getPriceStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getPrice());
+    }
+
     public int getAvailability() {
         return availability;
     }
@@ -78,5 +90,29 @@ public class ProductPriceAvailability extends Model implements Parcelable {
 
     public Currency getCurrency() {
         return currency;
+    }
+
+    public float getTax() {
+        return tax;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
+    }
+
+    public String getTaxStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getTax());
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getTotalPriceStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getTotalPrice());
     }
 }

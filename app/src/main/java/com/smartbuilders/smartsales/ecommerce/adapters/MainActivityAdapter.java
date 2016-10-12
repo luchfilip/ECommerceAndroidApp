@@ -321,7 +321,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         if (mIsManagePriceInOrder) {
                             viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
                                     ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
-                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPrice()));
+                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPriceStringFormat()));
                             viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {

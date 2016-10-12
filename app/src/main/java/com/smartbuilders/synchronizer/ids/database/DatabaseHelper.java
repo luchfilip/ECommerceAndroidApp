@@ -117,6 +117,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " PRODUCT_PRICE_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRICE DECIMAL DEFAULT 0 NOT NULL, " +
+					" TAX DECIMAL DEFAULT 0 NOT NULL, " +
+					" TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL, " +
                     " AVAILABILITY INTEGER DEFAULT 0 NOT NULL, " +
                     " CURRENCY_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRIORITY INTEGER DEFAULT 1 NOT NULL, " +
@@ -528,6 +530,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID))";
 
+    public static final String CREATE_PRODUCT_CHARGE =
+            "CREATE TABLE IF NOT EXISTS PRODUCT_CHARGE (" +
+                    "PRODUCT_CHARGE_ID INTEGER NOT NULL, " +
+                    " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
+                    " NAME VARCHAR(255) DEFAULT NULL, " +
+                    " DESCRIPTION CLOB DEFAULT NULL, " +
+                    " FACTOR DECIMAL DEFAULT 0 NOT NULL, " +
+                    " AMOUNT DECIMAL DEFAULT 0 NOT NULL, " +
+                    " PERCENTAGE DECIMAL DEFAULT 0 NOT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (PRODUCT_PRICE_ID))";
+
 	/**
 	 * 
 	 * @param context
@@ -597,6 +612,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
             db.execSQL(CREATE_USER_TABLE_MAX_ID);
             db.execSQL(CREATE_USER_BUSINESS_PARTNERS);
+            db.execSQL(CREATE_PRODUCT_CHARGE);
 		}
 	}
 
@@ -671,7 +687,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            }if (oldVersion < 15) {
+				try {
+					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL, TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+                try {
+                    db.execSQL(CREATE_PRODUCT_CHARGE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+			}
         }
 	}
 

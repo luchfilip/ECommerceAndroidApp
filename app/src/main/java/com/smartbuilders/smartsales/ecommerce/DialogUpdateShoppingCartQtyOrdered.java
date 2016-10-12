@@ -78,7 +78,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
             ((TextView) view.findViewById(R.id.product_price_textView))
                     .setText(getString(R.string.price_detail,
                             mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getPrice()));
+                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
             view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.product_price_textView).setVisibility(View.GONE);

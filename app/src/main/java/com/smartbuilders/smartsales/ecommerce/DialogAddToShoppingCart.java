@@ -68,7 +68,7 @@ public class DialogAddToShoppingCart extends DialogFragment {
             ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
                     .setText(getString(R.string.price_detail,
                             mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mProduct.getDefaultProductPriceAvailability().getPrice()));
+                            mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
             view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.GONE);

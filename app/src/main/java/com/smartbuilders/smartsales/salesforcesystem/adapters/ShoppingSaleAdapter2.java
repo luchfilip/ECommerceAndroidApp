@@ -145,7 +145,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
         holder.productPrice.setText(mContext.getString(R.string.price_detail,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPrice()));
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
 
         holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
                 mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));

@@ -359,7 +359,7 @@ public class ProductDetailFragment extends Fragment {
                                         ((TextView) view.findViewById(R.id.product_price))
                                                 .setText(getString(R.string.price_detail,
                                                         mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                                                        mProduct.getDefaultProductPriceAvailability().getPrice()));
+                                                        mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
                                     } else {
                                         view.findViewById(R.id.product_price).setVisibility(View.GONE);
                                     }

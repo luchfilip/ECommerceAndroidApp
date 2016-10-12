@@ -148,7 +148,7 @@ public class RecommendedProductsListAdapter extends
         if (mIsManagePriceInOrder) {
             holder.productPrice.setText(mContext.getString(R.string.price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getDefaultProductPriceAvailability().getPrice()));
+                    mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
