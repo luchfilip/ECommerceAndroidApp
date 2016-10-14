@@ -46,7 +46,10 @@ public class OrderBR {
     }
 
     public static double getTotalAmount(ArrayList<OrderLine> orderLines){
-        double total = getSubTotalAmount(orderLines) + getTaxAmount(orderLines);
+        double total=0;
+        for(OrderLine orderLine : orderLines){
+            total += orderLine.getTotalLineAmount();
+        }
         return new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 

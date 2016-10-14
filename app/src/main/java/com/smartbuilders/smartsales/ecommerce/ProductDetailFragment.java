@@ -360,8 +360,18 @@ public class ProductDetailFragment extends Fragment {
                                                 .setText(getString(R.string.price_detail,
                                                         mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
                                                         mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                        ((TextView) view.findViewById(R.id.product_tax))
+                                                .setText(getString(R.string.product_tax_detail,
+                                                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                                        mProduct.getDefaultProductPriceAvailability().getTaxStringFormat()));
+                                        ((TextView) view.findViewById(R.id.product_total_price))
+                                                .setText(getString(R.string.product_total_price_detail,
+                                                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
                                     } else {
                                         view.findViewById(R.id.product_price).setVisibility(View.GONE);
+                                        view.findViewById(R.id.product_tax).setVisibility(View.GONE);
+                                        view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
                                     }
 
                                     ((TextView) view.findViewById(R.id.product_availability))

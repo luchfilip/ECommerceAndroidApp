@@ -150,6 +150,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
+
+                        <TextView
+                            android:id="@+id/product_tax"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
+
+                        <TextView
+                            android:id="@+id/product_total_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
                             android:textColor="@color/product_price_color"
                             android:textSize="@dimen/productDetailActivity_productPrice_text_size" />
 

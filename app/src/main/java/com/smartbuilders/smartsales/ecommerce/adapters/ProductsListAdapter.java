@@ -73,8 +73,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productBrand;
         public TextView productDescription;
         public TextView productPurpose;
-        //public TextView commercialPackage;
         public TextView productPrice;
+        public TextView productTax;
+        public TextView productTotalPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -99,8 +100,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
-            //commercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTax = (TextView) v.findViewById(R.id.product_tax);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             shareImageViewContainer = v.findViewById(R.id.share_imageView_container);
@@ -123,8 +125,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = products;
-        this.filterAux = new ArrayList<>();
-        this.filterAux.addAll(mDataset);
+        filterAux = new ArrayList<>();
+        filterAux.addAll(mDataset);
         mSortOption = sortOption;
         mUser = user;
         mMask = mask;
@@ -192,18 +194,54 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.productName.setText(mDataset.get(position).getName());
 
         if (mIsManagePriceInOrder) {
-            holder.productPrice.setText(mContext.getString(R.string.price_detail,
-                    mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
-            holder.productPrice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                }
-            });
-            holder.productPrice.setVisibility(View.VISIBLE);
+            if (holder.productPrice != null) {
+                holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                holder.productPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                    }
+                });
+                holder.productPrice.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.productTax != null) {
+                holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getTaxStringFormat()));
+                holder.productTax.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                    }
+                });
+                holder.productTax.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.productTotalPrice != null) {
+                holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                holder.productTotalPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                    }
+                });
+                holder.productTotalPrice.setVisibility(View.VISIBLE);
+            }
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            if (holder.productPrice != null) {
+                holder.productPrice.setVisibility(View.GONE);
+            }
+            if (holder.productTax != null) {
+                holder.productTax.setVisibility(View.GONE);
+            }
+            if (holder.productTotalPrice != null) {
+                holder.productTotalPrice.setVisibility(View.GONE);
+            }
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
@@ -319,22 +357,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }else{
                 holder.productRatingBarContainer.setVisibility(View.GONE);
             }
-
-            //if(mDataset.get(position).getProductCommercialPackage()!=null
-            //        && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())){
-            //    if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
-            //        holder.commercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
-            //                mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-            //                mDataset.get(position).getProductCommercialPackage().getUnits()));
-            //    } else {
-            //        holder.commercialPackage.setText(mContext.getString(R.string.commercial_package,
-            //                mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-            //                mDataset.get(position).getProductCommercialPackage().getUnits()));
-            //    }
-            //    holder.commercialPackage.setVisibility(TextView.VISIBLE);
-            //}else{
-            //    holder.commercialPackage.setVisibility(TextView.GONE);
-            //}
 
             if(holder.productDescription!=null){
                 if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){

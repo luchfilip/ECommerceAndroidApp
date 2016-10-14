@@ -16,10 +16,10 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getTaxAmount(SalesOrderLine salesOrderLine){
+    private static double getTaxAmount(SalesOrderLine salesOrderLine, Product product){
         double taxAmount = 0;
         try {
-            taxAmount = (salesOrderLine.getProductPrice() * (salesOrderLine.getProductTaxPercentage()/100)) * salesOrderLine.getQuantityOrdered();
+            taxAmount = product.getDefaultProductPriceAvailability().getTax() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,10 +31,10 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getSubTotalLine(SalesOrderLine salesOrderLine){
+    private static double getSubTotalLine(SalesOrderLine salesOrderLine, Product product){
         double subTotalLine = 0;
         try {
-            subTotalLine = salesOrderLine.getProductPrice() * salesOrderLine.getQuantityOrdered();
+            subTotalLine = product.getDefaultProductPriceAvailability().getPrice() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,10 +46,10 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getTotalLine(SalesOrderLine salesOrderLine){
+    private static double getTotalLine(SalesOrderLine salesOrderLine, Product product){
         double totalLine = 0;
         try {
-            totalLine = getSubTotalLine(salesOrderLine) + getTaxAmount(salesOrderLine);
+            totalLine = product.getDefaultProductPriceAvailability().getTotalPrice() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,9 +74,9 @@ public class SalesOrderLineBR {
         salesOrderLine.setQuantityOrdered(qtyOrdered);
         salesOrderLine.setProductPrice(product.getDefaultProductPriceAvailability().getPrice());
         salesOrderLine.setProductTaxPercentage(product.getProductTax().getPercentage());
-        salesOrderLine.setLineTaxAmount(SalesOrderLineBR.getTaxAmount(salesOrderLine));
-        salesOrderLine.setSubTotalLineAmount(SalesOrderLineBR.getSubTotalLine(salesOrderLine));
-        salesOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(salesOrderLine));
+        salesOrderLine.setLineTaxAmount(SalesOrderLineBR.getTaxAmount(salesOrderLine, product));
+        salesOrderLine.setSubTotalLineAmount(SalesOrderLineBR.getSubTotalLine(salesOrderLine, product));
+        salesOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(salesOrderLine, product));
     }
 
 }

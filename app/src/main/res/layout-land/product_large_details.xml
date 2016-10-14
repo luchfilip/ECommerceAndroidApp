@@ -124,11 +124,25 @@
                 android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_price_text_size" />
+
+            <TextView
+                android:id="@+id/product_tax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_price_text_size" />
+
+            <TextView
+                android:id="@+id/product_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textColor="@color/product_price_color"
                 android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_price_text_size"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
+                android:textSize="@dimen/productDetailCardView_price_text_size"/>
 
             <TextView
                 android:id="@+id/product_availability"
@@ -136,9 +150,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/product_availability_color"
                 android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_availability_text_size"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp" />
+                android:textSize="@dimen/productDetailCardView_availability_text_size"/>
 
             <View style="@style/Divider"
                 android:layout_marginTop="2dp"

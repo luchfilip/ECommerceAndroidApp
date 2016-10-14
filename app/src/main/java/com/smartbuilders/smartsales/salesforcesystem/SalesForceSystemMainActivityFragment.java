@@ -66,6 +66,14 @@ public class SalesForceSystemMainActivityFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.prices_list_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), PricesListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            }
+        });
+
         return view;
     }
 

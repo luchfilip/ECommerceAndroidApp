@@ -193,7 +193,7 @@
     <string name="related_products_by_brand_title">Más productos de la marca %1$s</string>
     <string name="loading">Cargando</string>
     <string name="loading_data">Cargando Datos</string>
-    <string name="add_to_shopping_cart">Enviar al Pedido</string>
+    <string name="add_to_shopping_cart">Enviar a Pedido</string>
     <string name="add_to_shopping_sales">Enviar a Cotización</string>
     <string name="title_activity_settings">Configuraciones</string>
 
@@ -341,7 +341,9 @@
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
     <string name="smallest_width">default</string>
-    <string name="price_detail">Precio (%1$s): %2$s</string>
+    <string name="price_detail">Base (%1$s): %2$s</string>
+    <string name="product_tax_detail">Imp (%1$s): %2$s</string>
+    <string name="product_total_price_detail">Precio (%1$s): %2$s</string>
     <string name="save_images_in_device">Guardar imagenes en el dispositivo</string>
     <string name="load_thumb_images">Mantener sincronizadas imagenes miniatura de los productos</string>
     <string name="load_thumb_images_summaryOff">Las imagenes en miniatura de los productos se cargan cada vez que se requiere. Se necesita acceso a internet para que puedan ser mostradas las imagenes.</string>
@@ -411,5 +413,9 @@
     <string name="error_permissions_not_granted">No se han otorgado los permisos requeridos</string>
     <string name="discard_image">Descartar</string>
     <string name="discard_image_question">¿Desea descartar la imágen?</string>
+    <string name="prices_list">Listas de Precios</string>
+    <string name="prices_list_details">Detalles Lista de Precios</string>
+    <string name="title_activity_prices_list">PricesListActivity</string>
+    <string name="title_activity_price_list_detail">PriceListDetailActivity</string>
 
 </resources>

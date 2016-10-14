@@ -50,7 +50,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productPrice;
+        public TextView productTotalPrice;
         public TextView productAvailability;
         public TextView productAvailabilityVariation;
         public TextView productBrand;
@@ -67,7 +67,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -164,12 +164,12 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         }
 
         if (mIsManagePriceInOrder) {
-            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
-            holder.productPrice.setVisibility(View.VISIBLE);
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+            holder.productTotalPrice.setVisibility(View.VISIBLE);
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            holder.productTotalPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

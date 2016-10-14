@@ -47,8 +47,9 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         public TextView productInternalCode;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productTaxPercentage;
         public TextView productPrice;
+        public TextView productTax;
+        public TextView productTotalPrice;
         public TextView totalLineAmount;
         public EditText qtyOrdered;
         public View goToProductDetails;
@@ -58,8 +59,9 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTax = (TextView) v.findViewById(R.id.product_tax);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
@@ -147,8 +149,13 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
 
-        holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
-                mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
+        holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+
+        holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
 
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),

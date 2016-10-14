@@ -96,18 +96,18 @@ public class DialogProductDetails extends DialogFragment {
         });
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-            ((TextView) view.findViewById(R.id.product_price)).setText(getString(R.string.price_detail,
+            ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_total_price_detail,
                     mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
-            view.findViewById(R.id.product_price).setOnClickListener(new View.OnClickListener() {
+                    mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+            view.findViewById(R.id.product_total_price).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     goToProductDetails(mProduct.getId());
                 }
             });
-            view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
         } else {
-            view.findViewById(R.id.product_price).setVisibility(View.GONE);
+            view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
         }
 
         ((TextView) view.findViewById(R.id.product_availability)).setText(getString(R.string.availability,

@@ -75,11 +75,10 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
         //se coloca el indicador del focus al final del texto
         qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
 
-        ((TextView) view.findViewById(R.id.product_price_textView))
-                .setText(getString(R.string.price_detail,
+        ((TextView) view.findViewById(R.id.product_total_price_textView))
+                .setText(getString(R.string.product_total_price_detail,
                         mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
-        view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
+                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability,

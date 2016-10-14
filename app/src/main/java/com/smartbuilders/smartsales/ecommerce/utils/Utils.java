@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
@@ -904,6 +905,11 @@ public class Utils {
                         new String[]{Parameter.getReportErrorEmail(context, getCurrentUser(context))});
 
                 context.startActivity(Intent.createChooser(contactUsEmailIntent, context.getString(R.string.send_error_report)));
+
+            } else if (itemId == R.id.nav_prices_list) {
+                context.startActivity(new Intent(context, PricesListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+
             }
         } catch (Exception e) {
             e.printStackTrace();

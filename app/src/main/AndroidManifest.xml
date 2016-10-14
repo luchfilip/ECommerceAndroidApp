@@ -323,6 +323,12 @@
         <activity
             android:name="com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.smartbuilders.smartsales.salesforcesystem.PricesListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.smartbuilders.smartsales.salesforcesystem.PriceListDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -1,83 +1,108 @@
  <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-     android:background="@color/material_grey_50">
+     android:paddingBottom="@dimen/activity_vertical_margin"
+     android:paddingLeft="@dimen/activity_horizontal_margin"
+     android:paddingRight="@dimen/activity_horizontal_margin"
+     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/material_grey_50">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_orders"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
-
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/shopping_cart"
-            android:id="@+id/shopping_cart_button"
-            style="@style/MainButtonAppTheme"
-            android:layout_gravity="center_horizontal" />
 
-        <Button
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_orders"
+                android:textAppearance="@android:style/TextAppearance.Medium" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shopping_cart"
+                android:id="@+id/shopping_cart_button"
+                style="@style/MainButtonAppTheme"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/orders_list"
+                android:id="@+id/orders_list_button"
+                style="@style/BlackButtonAppTheme"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/orders_list"
-            android:id="@+id/orders_list_button"
-            style="@style/BlackButtonAppTheme"
-            android:layout_gravity="center_horizontal" />
+            android:layout_weight="1"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp">
 
-        <View style="@style/Divider"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_sales_orders"
+                android:textAppearance="@android:style/TextAppearance.Medium" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/open_shopping_sale"
+                android:id="@+id/shopping_sale_button"
+                style="@style/GoldenButtonAppTheme"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/closed_sales_orders"
+                android:id="@+id/sales_orders_list_button"
+                style="@style/BlackButtonAppTheme"
+                android:layout_gravity="center_horizontal" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_weight="1">
+     <View style="@style/Divider"
+         android:layout_marginBottom="2dp"
+         android:layout_marginTop="2dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_sales_orders"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/prices_list"
+         android:textAppearance="@android:style/TextAppearance.Medium" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/open_shopping_sale"
-            android:id="@+id/shopping_sale_button"
-            style="@style/GoldenButtonAppTheme"
-            android:layout_gravity="center_horizontal" />
+     <Button
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/prices_list"
+         android:id="@+id/prices_list_button"
+         style="@style/BlackButtonAppTheme"
+         android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/closed_sales_orders"
-            android:id="@+id/sales_orders_list_button"
-            style="@style/BlackButtonAppTheme"
-            android:layout_gravity="center_horizontal" />
+     <View style="@style/Divider"
+         android:layout_marginBottom="2dp"
+         android:layout_marginTop="2dp" />
 
-        <View style="@style/Divider"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp" />
-    </LinearLayout>
 </LinearLayout>

@@ -689,7 +689,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }if (oldVersion < 15) {
 				try {
-					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL, TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
+					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL, " +
+                            " ADD COLUMN TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

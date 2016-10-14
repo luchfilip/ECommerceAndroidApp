@@ -62,7 +62,7 @@
                     android:textSize="@dimen/productDetailCardView_brand_text_size" />
 
                 <TextView
-                    android:id="@+id/product_price"
+                    android:id="@+id/product_total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/product_price_color"

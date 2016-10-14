@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/business_partner_name_textView"
             android:textColor="@android:color/white"
-            android:background="@android:color/black"
+            android:background="@color/black"
             android:padding="10dp" />
 
     </android.support.design.widget.AppBarLayout>

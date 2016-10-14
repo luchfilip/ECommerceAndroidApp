@@ -50,8 +50,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public TextView productInternalCode;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productTaxPercentage;
         public TextView productPrice;
+        public TextView productTax;
+        public TextView productTotalPrice;
         public TextView totalLine;
         public EditText qtyOrdered;
         public View goToProductDetails;
@@ -61,8 +62,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productTaxPercentage = (TextView) v.findViewById(R.id.product_tax_percentage);
             productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTax = (TextView) v.findViewById(R.id.product_tax);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             totalLine = (TextView) v.findViewById(R.id.total_line_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
@@ -155,9 +157,15 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setVisibility(View.VISIBLE);
 
-            holder.productTaxPercentage.setText(mContext.getString(R.string.product_tax_percentage_detail,
-                    mDataset.get(position).getProduct().getProductTax().getPercentageStringFormat()));
-            holder.productTaxPercentage.setVisibility(View.VISIBLE);
+            holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+            holder.productTax.setVisibility(View.VISIBLE);
+
+            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+            holder.productTotalPrice.setVisibility(View.VISIBLE);
 
             holder.totalLine.setText(mContext.getString(R.string.order_sub_total_line_amount,
                     mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
@@ -165,7 +173,8 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.totalLine.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
-            holder.productTaxPercentage.setVisibility(View.GONE);
+            holder.productTax.setVisibility(View.GONE);
+            holder.productTotalPrice.setVisibility(View.GONE);
             holder.totalLine.setVisibility(View.GONE);
         }
 

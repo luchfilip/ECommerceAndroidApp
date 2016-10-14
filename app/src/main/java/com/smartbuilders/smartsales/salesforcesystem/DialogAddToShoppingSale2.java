@@ -80,10 +80,10 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
             }
         }
 
-        ((TextView) view.findViewById(R.id.product_price_textView))
-                .setText(getString(R.string.price_detail,
+        ((TextView) view.findViewById(R.id.product_total_price_textView))
+                .setText(getString(R.string.product_total_price_detail,
                         mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getString(R.string.availability,

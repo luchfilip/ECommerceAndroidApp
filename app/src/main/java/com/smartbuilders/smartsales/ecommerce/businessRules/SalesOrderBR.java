@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
+import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -47,7 +48,10 @@ public class SalesOrderBR {
     }
 
     public static double getTotalAmount(ArrayList<SalesOrderLine> salesOrderLines){
-        double total = getSubTotalAmount(salesOrderLines) + getTaxAmount(salesOrderLines);
+        double total=0;
+        for(SalesOrderLine salesOrderLine : salesOrderLines){
+            total += salesOrderLine.getTotalLineAmount();
+        }
         return new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 

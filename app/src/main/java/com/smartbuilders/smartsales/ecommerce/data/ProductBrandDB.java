@@ -31,13 +31,13 @@ public class ProductBrandDB {
                     "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
                     " FROM BRAND B " +
                         " INNER JOIN PRODUCT P ON P.BRAND_ID = B.BRAND_ID AND P.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
+                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
                         " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
                     " WHERE B.IS_ACTIVE = ? " +
                     " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
                     " ORDER BY B.NAME ASC ",
-                    new String[]{"Y", "Y", "Y", "Y", "Y"}, null);
+                    new String[]{"Y", "0", "Y", "Y", "Y", "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     ProductBrand productBrand = new ProductBrand();

@@ -108,7 +108,7 @@ public class MainActivityAdapter extends BaseAdapter {
         /*********************************************/
         public TextView productName;
         public ImageView productImage;
-        public TextView productPrice;
+        public TextView productTotalPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -129,7 +129,7 @@ public class MainActivityAdapter extends BaseAdapter {
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
-            productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
@@ -319,18 +319,18 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
 
                         if (mIsManagePriceInOrder) {
-                            viewHolder.productPrice.setText(mContext.getString(R.string.price_detail,
+                            viewHolder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
                                     ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
-                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPriceStringFormat()));
-                            viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                            viewHolder.productTotalPrice.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     goToProductDetails(((Product) mDataset.get(position)).getId());
                                 }
                             });
-                            viewHolder.productPrice.setVisibility(View.VISIBLE);
+                            viewHolder.productTotalPrice.setVisibility(View.VISIBLE);
                         } else {
-                            viewHolder.productPrice.setVisibility(View.GONE);
+                            viewHolder.productTotalPrice.setVisibility(View.GONE);
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,

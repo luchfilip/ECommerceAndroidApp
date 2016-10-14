@@ -47,7 +47,7 @@ public class RecommendedProductsListAdapter extends
         // each data item is just a string in this case
         public ImageView productImage;
         public TextView productName;
-        public TextView productPrice;
+        public TextView productTotalPrice;
         public TextView productAvailability;
         public TextView productBrand;
         public TextView productInternalCode;
@@ -64,7 +64,7 @@ public class RecommendedProductsListAdapter extends
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productPrice = (TextView) v.findViewById(R.id.product_price);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
@@ -146,12 +146,12 @@ public class RecommendedProductsListAdapter extends
         }
 
         if (mIsManagePriceInOrder) {
-            holder.productPrice.setText(mContext.getString(R.string.price_detail,
+            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
                     mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
-            holder.productPrice.setVisibility(View.VISIBLE);
+                    mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+            holder.productTotalPrice.setVisibility(View.VISIBLE);
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            holder.productTotalPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
