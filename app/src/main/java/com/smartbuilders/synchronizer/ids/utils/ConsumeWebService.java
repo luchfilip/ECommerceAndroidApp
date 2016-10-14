@@ -1,8 +1,6 @@
 package com.smartbuilders.synchronizer.ids.utils;
 
-import java.io.IOException;
 import java.net.ConnectException;
-import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.LinkedHashMap;
@@ -14,7 +12,6 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 
@@ -25,7 +22,6 @@ import com.smartbuilders.smartsales.ecommerce.BuildConfig;
  */
 public class ConsumeWebService {
 	
-	private static final String TAG 				= ConsumeWebService.class.getSimpleName();
 	public static final String SHOW_TOAST_MESSAGE 	= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".SHOW_TOAST_MESSAGE";
 	public static final String MESSAGE 				= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
@@ -72,8 +68,7 @@ public class ConsumeWebService {
 		Object response = null;
 		try {
 			//Hace la llamada al ws
-			//long timeBefore = System.currentTimeMillis();
-			
+
 			//Se crea un objeto SoapObject para poder realizar la peticion
 			//para consumir el ws SOAP. El constructor recibe
 			//el namespace. Por lo regular el namespace es el dominio
@@ -93,32 +88,13 @@ public class ConsumeWebService {
 			envelope.setOutputSoapObject(request);
 			transporte.call(soapAction, envelope);
 			response = envelope.getResponse();
-			//Log.i(TAG, "transport time: "+(System.currentTimeMillis() - timeBefore)+"ms");
         } catch(ConnectException e){
-			Log.e(TAG, "ConnectException");
-        	//e.printStackTrace();
-        	return retry(e);
+			return retry(e);
         } catch(SocketTimeoutException e){
-			Log.e(TAG, "SocketTimeoutException");
-			//e.printStackTrace();
 			return retry(e);
         } catch(SocketException e){
-			Log.e(TAG, "SocketException");
-        	//e.printStackTrace();
-        	return retry(e);
-        } catch (MalformedURLException e) {
-			Log.e(TAG, "MalformedURLException");
-			//e.printStackTrace();
-			throw e;
-			//return retry(e);
-		} catch(IOException e){
-			Log.e(TAG, "IOException");
-        	//e.printStackTrace();
-            throw e;
-       		//return retry(e);
+			return retry(e);
         } catch(Exception e){
-			Log.e(TAG, "Exception");
-			//e.printStackTrace();
 			throw e;
 		}
 		return response;
@@ -127,7 +103,6 @@ public class ConsumeWebService {
 	private Object retry(Exception exception) throws Exception{
     	if(++retryNumber <= MAX_RETRY_NUMBER){
     		try {
-    			Log.e(TAG, "Retry in "+((2*retryNumber)*1000)+" milliseconds.");
     			context.sendBroadcast((new Intent(SHOW_TOAST_MESSAGE))
     					.putExtra(MESSAGE, "Failed to communicate with server, retry in "+((2*retryNumber)*1000)+" milliseconds."));
                 //Se incrementa el tiempo de timeOut
