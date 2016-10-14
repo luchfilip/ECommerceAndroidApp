@@ -47,9 +47,9 @@ public class BluetoothConnectionProvider extends ContentProvider {
     public static final String KEY_USE_SECURE_CONNECTION        = "KEY_USE_SECURE_CONNECTION";
     public static final String KEY_MESSAGE                      = "KEY_MESSAGE";
 
-    public static final String BLUETOOTH_STATE_CHANGE_BROADCAST = "BLUETOOTH_STATE_CHANGE_BROADCAST";
-    public static final String MESSAGE_WRITE_BROADCAST          = "MESSAGE_WRITE_BROADCAST";
-    public static final String MESSAGE_READ_BROADCAST           = "MESSAGE_READ_BROADCAST";
+    public static final String BLUETOOTH_STATE_CHANGE_BROADCAST = BuildConfig.APPLICATION_ID + BluetoothConnectionProvider.class.getSimpleName() + ".BLUETOOTH_STATE_CHANGE_BROADCAST";
+    public static final String MESSAGE_WRITE_BROADCAST          = BuildConfig.APPLICATION_ID + BluetoothConnectionProvider.class.getSimpleName() + ".MESSAGE_WRITE_BROADCAST";
+    public static final String MESSAGE_READ_BROADCAST           = BuildConfig.APPLICATION_ID + BluetoothConnectionProvider.class.getSimpleName() + ".MESSAGE_READ_BROADCAST";
 
     private static final int CONNECT 						    = 1;
     private static final int DISCONNECT						    = 2;

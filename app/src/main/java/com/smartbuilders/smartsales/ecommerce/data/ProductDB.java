@@ -624,9 +624,9 @@ public class ProductDB {
         product.getDefaultProductPriceAvailability().setTax(cursor.getFloat(22));
         product.getDefaultProductPriceAvailability().setTotalPrice(cursor.getFloat(23));
         product.setProductTaxId(cursor.getInt(24));
-        product.getProductTax().setId(cursor.getInt(25));
-        product.getProductTax().setPercentage(cursor.getFloat(26));
-        product.setFavorite(cursor.getString(27)!=null);
+        product.getProductTax().setId(cursor.getInt(24));
+        product.getProductTax().setPercentage(cursor.getFloat(25));
+        product.setFavorite(cursor.getString(26)!=null);
     }
 
 

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:baselineAligned="false">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -201,12 +203,10 @@
 
                 <com.theartofdev.edmodo.cropper.CropImageView
                     android:id="@+id/company_logo_imageView"
+                    android:src="@drawable/no_company_logo_image_available"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/company_logo_imageView_min_height"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/no_image_available"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_height="300dp"
+                    android:layout_gravity="center" />
 
                 <!--<ImageView-->
                     <!--android:layout_width="wrap_content"-->
@@ -218,14 +218,31 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/crop_image_button"
-                    android:text="@string/crop_image"/>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/choose_company_logo_image_button"
-                    android:text="@string/choose_image"/>
+                    android:text="@string/choose_image"
+                    style="@style/GreyButtonAppTheme" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/crop_image_button"
+                        android:text="@string/crop_image"
+                        android:layout_weight="1"
+                        style="@style/GreyButtonAppTheme" />
+
+                    <Button
+                        android:text="@string/discard_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/discard_image_button"
+                        android:layout_weight="1"
+                        style="@style/GreyButtonAppTheme" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

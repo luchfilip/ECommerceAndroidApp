@@ -571,7 +571,7 @@ public class Utils {
      * @param context
      * @param user
      */
-    public static void createFileInUserCompanyDir(Bitmap image, Context context, User user){
+    public static void saveUserCompanyImage(Bitmap image, Context context, User user){
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             Log.e(TAG, context.getString(R.string.external_storage_unavailable));
@@ -600,7 +600,7 @@ public class Utils {
         }
     }
 
-    public static void createFileInUserCompanyDir(Context context, User user, InputStream inputStream){
+    public static void saveUserCompanyImage(Context context, User user, InputStream inputStream){
         OutputStream outputStream = null;
         try {
             // write the inputStream to a FileOutputStream
@@ -612,7 +612,7 @@ public class Utils {
                 outputStream = new FileOutputStream(new File(getImagesUserCompanyFolderPath(context, user),
                         "user_company_logo.jpg"));
             }
-            int read = 0;
+            int read;
             byte[] bytes = new byte[1024];
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
@@ -637,7 +637,7 @@ public class Utils {
         }
     }
 
-    public static Bitmap getImageFromUserCompanyDir(Context context, User user){
+    public static Bitmap getUserCompanyImage(Context context, User user){
         try {
             File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");
             if(imgFile.exists()){
@@ -646,7 +646,19 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return BitmapFactory.decodeResource(context.getResources(), R.drawable.no_image_available);
+        return null;
+    }
+
+    public static boolean deleteUserCompanyImage(Context context, User user) {
+        try {
+            File imgFile = new File(getImagesUserCompanyFolderPath(context, user), "user_company_logo.jpg");
+            if (imgFile.exists()) {
+                return imgFile.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -953,12 +965,40 @@ public class Utils {
                 + File.separator + user.getUserName() + "/images/userCompany/";
     }
 
+    //public static void setCurrentUser(Context context, User user) {
+    //    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+    //    editor.putString(AccountGeneral.USERDATA_USER_ID, user.getUserId());
+    //    editor.putInt(AccountGeneral.USERDATA_USER_PROFILE_ID, user.getUserProfileId());
+    //    editor.putInt(AccountGeneral.USERDATA_SERVER_USER_ID, user.getServerUserId());
+    //    editor.putString(AccountGeneral.USERDATA_USER_NAME, user.getUserName());
+    //    editor.putString("password", user.getUserPass());
+    //    editor.putString(AccountGeneral.USERDATA_SERVER_ADDRESS, user.getServerAddress());
+    //    editor.putString(AccountGeneral.USERDATA_USER_GROUP, user.getUserGroup());
+    //    editor.putString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, user.getGcmRegistrationId());
+    //    editor.putBoolean(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, user.isSaveDBInExternalCard());
+    //    editor.putString("auth_token", user.getAuthToken());
+    //    editor.apply();
+    //}
+
     public static User getCurrentUser(Context context) {
         try {
+            //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            //if (sharedPreferences.contains(AccountGeneral.USERDATA_USER_ID)) {
+            //    User user = new User(sharedPreferences.getString(AccountGeneral.USERDATA_USER_ID, null));
+            //    user.setUserProfileId(sharedPreferences.getInt(AccountGeneral.USERDATA_USER_PROFILE_ID, 0));
+            //    user.setServerUserId(sharedPreferences.getInt(AccountGeneral.USERDATA_SERVER_USER_ID, 0));
+            //    user.setUserName(sharedPreferences.getString(AccountGeneral.USERDATA_USER_NAME, null));
+            //    user.setUserPass(sharedPreferences.getString("password", null));
+            //    user.setServerAddress(sharedPreferences.getString(AccountGeneral.USERDATA_SERVER_ADDRESS, null));
+            //    user.setUserGroup(sharedPreferences.getString(AccountGeneral.USERDATA_USER_GROUP, null));
+            //    user.setGcmRegistrationId(sharedPreferences.getString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, null));
+            //    user.setSaveDBInExternalCard(sharedPreferences.getBoolean(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, false));
+            //    user.setAuthToken(sharedPreferences.getString("auth_token", null));
+            //}
             AccountManager accountManager = AccountManager.get(context);
             final Account availableAccounts[] = accountManager
                     .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
-            if (availableAccounts.length>0) {
+            if (availableAccounts.length > 0) {
                 return ApplicationUtilities.getUserByIdFromAccountManager(context,
                         accountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
             }
@@ -1118,16 +1158,21 @@ public class Utils {
      */
     public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
         if(context!=null && user!=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID ) {
-                if(!PreferenceManager.getDefaultSharedPreferences(context)
-                        .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)){
-                    setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
-                            .getMaxActiveBusinessPartnerId());
+            try {
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                    if (!PreferenceManager.getDefaultSharedPreferences(context)
+                            .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)) {
+                        setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
+                                .getMaxActiveBusinessPartnerId());
+                    }
+                    return PreferenceManager.getDefaultSharedPreferences(context)
+                            .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY,
+                                    (new BusinessPartnerDB(context, user)).getMaxActiveBusinessPartnerId());
+                } else if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                    return user.getServerUserId();
                 }
-                return PreferenceManager.getDefaultSharedPreferences(context)
-                        .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
-            }else  if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                return user.getServerUserId();
+            } catch (Exception e) {
+                throw new Exception("Error consultando el cliente. Message: " + e.getMessage());
             }
             throw new Exception("UserProfileId no identificado en getAppCurrentBusinessPartnerId(...)");
         }else{

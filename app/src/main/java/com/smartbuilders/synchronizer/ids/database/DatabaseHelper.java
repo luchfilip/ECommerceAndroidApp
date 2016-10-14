@@ -541,7 +541,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " PERCENTAGE DECIMAL DEFAULT 0 NOT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " PRIMARY KEY (PRODUCT_PRICE_ID))";
+                    " PRIMARY KEY (PRODUCT_CHARGE_ID))";
 
 	/**
 	 * 

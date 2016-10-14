@@ -114,7 +114,7 @@ public class BusinessPartnerDB {
         return null;
     }
 
-    public int getMaxActiveBusinessPartnerId(){
+    public int getMaxActiveBusinessPartnerId() throws Exception{
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -138,7 +138,7 @@ public class BusinessPartnerDB {
                 }
             }
         }
-        return 0;
+        throw new Exception("No se pudo obtener el id del cliente.");
     }
 
 }

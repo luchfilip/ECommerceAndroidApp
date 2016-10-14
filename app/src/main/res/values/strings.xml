@@ -119,8 +119,8 @@
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">%1$s %2$s</string>
-    <string name="commercial_package_label_detail">Empaque: %1$s %2$i</string>
-    <string name="availability">Disponibilidad: %1$i</string>
+    <string name="commercial_package_label_detail">Empaque: %1$s %2$d</string>
+    <string name="availability">Disponibilidad: %1$d</string>
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
     <string name="quantity_label">Cantidad:</string>
@@ -289,7 +289,7 @@
     <string name="valid_to_label">Válida hasta:</string>
     <string name="undefined">Indefinido</string>
     <string name="company_logo_label">Logo de la compañía:</string>
-    <string name="crop_image">Recortar Imágen</string>
+    <string name="crop_image">Recortar</string>
     <string name="choose_image">Escoger Imágen</string>
     <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
     <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
@@ -408,5 +408,8 @@
     <string name="delivery_address_label">Dirección de entrega:</string>
     <string name="close_app">Cerrar aplicación</string>
     <string name="error_initializing_app">Error iniciando la aplicación</string>
+    <string name="error_permissions_not_granted">No se han otorgado los permisos requeridos</string>
+    <string name="discard_image">Descartar</string>
+    <string name="discard_image_question">¿Desea descartar la imágen?</string>
 
 </resources>

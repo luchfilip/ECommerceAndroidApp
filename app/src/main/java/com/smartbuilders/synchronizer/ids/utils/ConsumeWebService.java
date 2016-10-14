@@ -16,6 +16,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+
 /**
  * before 27.02.2016
  * @author jsarco
@@ -24,8 +26,8 @@ import android.util.Log;
 public class ConsumeWebService {
 	
 	private static final String TAG 				= ConsumeWebService.class.getSimpleName();
-	public static final String SHOW_TOAST_MESSAGE 	= "com.smartbuilders.ids.utlis.ConsumeWebService.SHOW_TOAST_MESSAGE";
-	public static final String MESSAGE 				= "com.smartbuilders.ids.utlis.ConsumeWebService.MESSAGE";
+	public static final String SHOW_TOAST_MESSAGE 	= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".SHOW_TOAST_MESSAGE";
+	public static final String MESSAGE 				= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
 	private final int MAX_RETRY_NUMBER 				= 3;
 	private final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds

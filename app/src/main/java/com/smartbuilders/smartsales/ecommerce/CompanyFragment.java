@@ -2,18 +2,17 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.system.ErrnoException;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,8 +33,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -89,29 +86,6 @@ public class CompanyFragment extends Fragment {
                                 final EditText companyEmailAddress = (EditText) rootView.findViewById(R.id.business_partner_email_address_editText);
                                 final EditText companyPhoneNumber = (EditText) rootView.findViewById(R.id.business_partner_phone_number_editText);
                                 final Button saveButton = (Button) rootView.findViewById(R.id.save_button);
-
-                                companyLogoCropImageView = (CropImageView) rootView.findViewById(R.id.company_logo_imageView);
-                                companyLogoCropImageView.setImageBitmap(Utils.getImageFromUserCompanyDir(getContext(), mUser));
-                                companyLogoCropImageView.setFixedAspectRatio(true);
-                                companyLogoCropImageView.setAspectRatio(230, 80);
-
-                                rootView.findViewById(R.id.choose_company_logo_image_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                       pickImage();
-                                    }
-                                });
-
-                                rootView.findViewById(R.id.crop_image_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Bitmap cropped = companyLogoCropImageView.getCroppedImage(230, 80);
-                                        if (cropped != null){
-                                            companyLogoCropImageView.setImageBitmap(cropped);
-                                            Utils.createFileInUserCompanyDir(cropped, getContext(), mUser);
-                                        }
-                                    }
-                                });
 
                                 if (mCompany!=null){
                                     companyName.setText(mCompany.getName());
@@ -185,7 +159,7 @@ public class CompanyFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             if (mCompany!=null) {
-                                                String result = userCompanyDB.insertUserCompany(mCompany);
+                                                String result = userCompanyDB.updateUserCompany(mCompany);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_SHORT).show();
@@ -202,7 +176,7 @@ public class CompanyFragment extends Fragment {
                                                 company.setEmailAddress(companyEmailAddress.getText().toString());
                                                 company.setPhoneNumber(companyPhoneNumber.getText().toString());
 
-                                                String result = userCompanyDB.updateUserCompany(company);
+                                                String result = userCompanyDB.insertUserCompany(company);
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_SHORT).show();
@@ -213,6 +187,55 @@ public class CompanyFragment extends Fragment {
                                         }
                                     });
                                 }
+
+                                companyLogoCropImageView = (CropImageView) rootView.findViewById(R.id.company_logo_imageView);
+                                Bitmap image = Utils.getUserCompanyImage(getContext(), mUser);
+                                if (image != null) {
+                                    companyLogoCropImageView.setImageBitmap(image);
+                                } else {
+                                    companyLogoCropImageView.setImageResource(R.drawable.no_company_logo_image_available);
+                                }
+                                companyLogoCropImageView.setFixedAspectRatio(true);
+                                companyLogoCropImageView.setAspectRatio(230, 80);
+
+                                rootView.findViewById(R.id.choose_company_logo_image_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        pickImage();
+                                    }
+                                });
+
+                                rootView.findViewById(R.id.crop_image_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        try {
+                                            Bitmap cropped = companyLogoCropImageView.getCroppedImage();
+                                            if (cropped != null) {
+                                                companyLogoCropImageView.setImageBitmap(cropped);
+                                                Utils.saveUserCompanyImage(cropped, getContext(), mUser);
+                                            }
+                                        } catch (IllegalArgumentException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+                                rootView.findViewById(R.id.discard_image_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        new AlertDialog.Builder(getContext())
+                                                .setMessage(getString(R.string.discard_image_question))
+                                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if (Utils.deleteUserCompanyImage(getContext(), mUser)) {
+                                                            companyLogoCropImageView.setImageResource(R.drawable.no_company_logo_image_available);
+                                                        }
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.no, null)
+                                                .show();
+                                    }
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -246,9 +269,9 @@ public class CompanyFragment extends Fragment {
     //    if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
     //        if (data != null) {
     //            try {
-    //                Utils.createFileInUserCompanyDir(getContext(), mUser,
+    //                Utils.saveUserCompanyImage(getContext(), mUser,
     //                        getContext().getContentResolver().openInputStream(data.getData()));
-    //                companyLogoCropImageView.setImageBitmap(Utils.getImageFromUserCompanyDir(getContext(), mUser));
+    //                companyLogoCropImageView.setImageBitmap(Utils.getUserCompanyImage(getContext(), mUser));
     //            } catch (IOException e) {
     //                e.printStackTrace();
     //            }
@@ -263,9 +286,9 @@ public class CompanyFragment extends Fragment {
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 try {
-                    Utils.createFileInUserCompanyDir(getContext(), mUser,
+                    Utils.saveUserCompanyImage(getContext(), mUser,
                             getContext().getContentResolver().openInputStream(data.getData()));
-                    //companyLogoCropImageView.setImageBitmap(Utils.getImageFromUserCompanyDir(getContext(), mUser));
+                    //companyLogoCropImageView.setImageBitmap(Utils.getUserCompanyImage(getContext(), mUser));
 
                     Uri imageUri = getPickImageResultUri(data);
 
@@ -300,65 +323,65 @@ public class CompanyFragment extends Fragment {
         if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             companyLogoCropImageView.setImageUriAsync(mCropImageUri);
         } else {
-            Toast.makeText(getContext(), "Required permissions are not granted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.error_permissions_not_granted, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * Create a chooser intent to select the source to get image from.<br/>
-     * The source can be camera's (ACTION_IMAGE_CAPTURE) or gallery's (ACTION_GET_CONTENT).<br/>
-     * All possible sources are added to the intent chooser.
-     */
-    public Intent getPickImageChooserIntent() {
-
-        // Determine Uri of camera image to save.
-        Uri outputFileUri = getCaptureImageOutputUri();
-
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getActivity().getPackageManager();
-
-        // collect all camera intents
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        // collect all gallery intents
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        // the main intent is the last in the list (fucking android) so pickup the useless one
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        // Create a chooser from the main intent
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-
-        // Add all other intents
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-
-        return chooserIntent;
-    }
+    ///**
+    // * Create a chooser intent to select the source to get image from.<br/>
+    // * The source can be camera's (ACTION_IMAGE_CAPTURE) or gallery's (ACTION_GET_CONTENT).<br/>
+    // * All possible sources are added to the intent chooser.
+    // */
+    //public Intent getPickImageChooserIntent() {
+    //
+    //    // Determine Uri of camera image to save.
+    //    Uri outputFileUri = getCaptureImageOutputUri();
+    //
+    //    List<Intent> allIntents = new ArrayList<>();
+    //    PackageManager packageManager = getActivity().getPackageManager();
+    //
+    //    // collect all camera intents
+    //    Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+    //    List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+    //    for (ResolveInfo res : listCam) {
+    //        Intent intent = new Intent(captureIntent);
+    //        intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+    //        intent.setPackage(res.activityInfo.packageName);
+    //        if (outputFileUri != null) {
+    //            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+    //        }
+    //        allIntents.add(intent);
+    //    }
+    //
+    //    // collect all gallery intents
+    //    Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+    //    galleryIntent.setType("image/*");
+    //    List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
+    //    for (ResolveInfo res : listGallery) {
+    //        Intent intent = new Intent(galleryIntent);
+    //        intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+    //        intent.setPackage(res.activityInfo.packageName);
+    //        allIntents.add(intent);
+    //    }
+    //
+    //    // the main intent is the last in the list (fucking android) so pickup the useless one
+    //    Intent mainIntent = allIntents.get(allIntents.size() - 1);
+    //    for (Intent intent : allIntents) {
+    //        if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
+    //            mainIntent = intent;
+    //            break;
+    //        }
+    //    }
+    //    allIntents.remove(mainIntent);
+    //
+    //    // Create a chooser from the main intent
+    //    Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
+    //
+    //    // Add all other intents
+    //    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+    //
+    //    return chooserIntent;
+    //}
 
     /**
      * Get URI to image received from capture by camera.
@@ -373,7 +396,7 @@ public class CompanyFragment extends Fragment {
     }
 
     /**
-     * Get the URI of the selected image from {@link #getPickImageChooserIntent()}.<br/>
+     * Get the URI of the selected image from {@link #/*getPickImageChooserIntent()}.<br/>
      * Will return the correct URI for camera and gallery image.
      *
      * @param data the returned data of the activity result

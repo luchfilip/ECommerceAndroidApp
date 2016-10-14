@@ -30,10 +30,8 @@ import java.net.URLConnection;
  */
 public class RequestResetUserPasswordFragment extends Fragment {
 
-    public static final String ACTION_RESP =
-            "RequestResetUserPasswordFragment.ResponseReceiver.ACTION_RESP";
-    public static final String MESSAGE =
-            "RequestResetUserPasswordFragment.ResponseReceiver.MESSAGE";
+    public static final String ACTION_RESP = BuildConfig.APPLICATION_ID + RequestResetUserPasswordFragment.class.getSimpleName() + ".ACTION_RESP";
+    public static final String MESSAGE = BuildConfig.APPLICATION_ID + RequestResetUserPasswordFragment.class.getSimpleName() + ".MESSAGE";
 
     private ResponseReceiver receiver;
     private boolean mServiceRunning;

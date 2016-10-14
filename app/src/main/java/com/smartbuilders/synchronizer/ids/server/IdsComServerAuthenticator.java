@@ -37,7 +37,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
+
         Cursor response = null;
         try{
         	response = ctx.getContentResolver()

@@ -166,7 +166,7 @@ public class SalesOrderDetailPDFCreator {
 
         if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
             try{
-                Bitmap bmp = Utils.getImageFromUserCompanyDir(ctx, user);
+                Bitmap bmp = Utils.getUserCompanyImage(ctx, user);
                 if(bmp!=null) {
                     bmp = getResizedBitmap(bmp, 230, 80);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();

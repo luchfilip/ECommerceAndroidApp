@@ -30,10 +30,8 @@ import java.net.URLConnection;
  */
 public class RequestUserPasswordFragment extends Fragment {
 
-    public static final String ACTION_RESP =
-            "RequestUserPasswordFragment.ResponseReceiver.ACTION_RESP";
-    public static final String MESSAGE =
-            "RequestUserPasswordFragment.ResponseReceiver.MESSAGE";
+    public static final String ACTION_RESP = BuildConfig.APPLICATION_ID + RequestUserPasswordFragment.class.getSimpleName() + ".ACTION_RESP";
+    public static final String MESSAGE = BuildConfig.APPLICATION_ID + RequestUserPasswordFragment.class.getSimpleName() + ".MESSAGE";
 
     private ResponseReceiver receiver;
     private boolean mServiceRunning;

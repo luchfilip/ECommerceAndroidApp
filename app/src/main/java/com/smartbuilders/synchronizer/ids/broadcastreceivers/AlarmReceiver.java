@@ -5,7 +5,6 @@ import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.scheduler.SchedulerSyncData;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerce.R;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -16,9 +15,9 @@ import android.os.Bundle;
 
 public class AlarmReceiver extends BroadcastReceiver{
 
-	public static final String KEY_CURRENT_USER_ID 	= "com.smartbuilders.ids.scheduler.AlarmReceiver.KEY_CURRENT_USER_ID";
-	public static final String KEY_CURRENT_ALARM_ID = "com.smartbuilders.ids.scheduler.AlarmReceiver.KEY_CURRENT_ALARM_ID";
-	public static final String ACTION 				= "com.smartbuilders.ids.scheduler.AlarmReceiver.Action";
+	public static final String KEY_CURRENT_USER_ID 	= BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_USER_ID";
+	public static final String KEY_CURRENT_ALARM_ID = BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_ALARM_ID";
+	public static final String ACTION 				= BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".ACTION";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {

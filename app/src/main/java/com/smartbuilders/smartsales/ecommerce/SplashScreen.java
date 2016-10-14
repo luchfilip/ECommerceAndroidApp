@@ -339,6 +339,7 @@ public class SplashScreen extends AppCompatActivity {
                                 String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
                                         .getString(AccountGeneral.USERDATA_USER_ID);
                                 mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this, userId);
+                                checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));
                                 //final Account availableAccounts[] = mAccountManager
                                 //        .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                                 //if (availableAccounts.length>0) {
@@ -368,10 +369,10 @@ public class SplashScreen extends AppCompatActivity {
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
         if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            startActivity(new Intent(SplashScreen.this, SalesForceSystemMainActivity.class)
+            startActivity(new Intent(this, SalesForceSystemMainActivity.class)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         } else {
-            startActivity(new Intent(SplashScreen.this, MainActivity.class)
+            startActivity(new Intent(this, MainActivity.class)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         }
         finish();
