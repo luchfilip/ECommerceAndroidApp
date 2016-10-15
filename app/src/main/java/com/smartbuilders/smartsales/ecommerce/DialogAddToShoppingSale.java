@@ -150,6 +150,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
                         SalesOrderLine salesOrderLine = new SalesOrderLine();
                         SalesOrderLineBR.fillSalesOrderLine(qtyRequested, mProduct, salesOrderLine);
+                        salesOrderLine.setBusinessPartnerId(businessPartners.get(businessPartnersSpinner.getSelectedItemPosition()).getId());
 
                         String result = (new SalesOrderLineDB(getContext(), mUser))
                                 .addSalesOrderLinesToShoppingSale(salesOrderLine);

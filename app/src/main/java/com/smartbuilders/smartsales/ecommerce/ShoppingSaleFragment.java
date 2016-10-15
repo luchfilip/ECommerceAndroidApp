@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity;
@@ -46,7 +47,7 @@ import java.util.Locale;
 public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback,
         ShoppingSaleAdapter2.Callback, DatePickerFragment.Callback, DialogUpdateShoppingSaleQtyOrdered.Callback {
 
-    private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
+    private static final String STATE_USER_BUSINESS_PARTNER_ID = "STATE_USER_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_VALID_TO = "STATE_VALID_TO";
 
@@ -63,7 +64,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private TextView mTotalAmount;
     private int mRecyclerViewCurrentFirstPosition;
     private LinearLayoutManager mLinearLayoutManager;
-    private int mCurrentBusinessPartnerId;
+    private int mUserBusinessPartnerId;
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
     private String mValidToText;
@@ -87,8 +88,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 try {
                     if(savedInstanceState!=null) {
-                        if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
-                            mCurrentBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
+                        if(savedInstanceState.containsKey(STATE_USER_BUSINESS_PARTNER_ID)) {
+                            mUserBusinessPartnerId = savedInstanceState.getInt(STATE_USER_BUSINESS_PARTNER_ID);
                         }
                         if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
@@ -99,22 +100,22 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                     }
 
                     if(getArguments()!=null){
-                        if(getArguments().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)){
-                            mCurrentBusinessPartnerId = getArguments().getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+                        if(getArguments().containsKey(ShoppingSaleActivity.KEY_USER_BUSINESS_PARTNER_ID)){
+                            mUserBusinessPartnerId = getArguments().getInt(ShoppingSaleActivity.KEY_USER_BUSINESS_PARTNER_ID);
                         }
                     }else if(getActivity()!=null && getActivity().getIntent()!=null
                             && getActivity().getIntent().getExtras()!=null){
-                        if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID)) {
-                            mCurrentBusinessPartnerId = getActivity().getIntent().getExtras()
-                                    .getInt(ShoppingSaleActivity.KEY_BUSINESS_PARTNER_ID);
+                        if(getActivity().getIntent().getExtras().containsKey(ShoppingSaleActivity.KEY_USER_BUSINESS_PARTNER_ID)) {
+                            mUserBusinessPartnerId = getActivity().getIntent().getExtras()
+                                    .getInt(ShoppingSaleActivity.KEY_USER_BUSINESS_PARTNER_ID);
                         }
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
 
-                    if (mCurrentBusinessPartnerId!=0){
+                    if (mUserBusinessPartnerId !=0){
                         mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
-                                .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                                .getShoppingSaleByBusinessPartnerId(mUserBusinessPartnerId);
                     } else {
                         mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
                     }
@@ -259,9 +260,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             mIsInitialLoad = false;
         }else{
             try {
-                if (mCurrentBusinessPartnerId!=0){
+                if (mUserBusinessPartnerId !=0){
                     mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
-                            .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                            .getShoppingSaleByBusinessPartnerId(mUserBusinessPartnerId);
                 } else {
                     mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
                 }
@@ -353,9 +354,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     public void fillFields(){
         BusinessPartner businessPartner = null;
-        if(mCurrentBusinessPartnerId!=0) {
-            businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                    .getBusinessPartnerById(mCurrentBusinessPartnerId);
+        if(mUserBusinessPartnerId !=0) {
+            businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
+                    .getUserBusinessPartnerById(mUserBusinessPartnerId);
         } else {
             try {
                 businessPartner = (new BusinessPartnerDB(getContext(), mUser))
@@ -416,9 +417,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void reloadShoppingSale(){
-        if (mCurrentBusinessPartnerId!=0){
+        if (mUserBusinessPartnerId !=0){
             mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser))
-                    .getShoppingSaleByBusinessPartnerId(mCurrentBusinessPartnerId);
+                    .getShoppingSaleByBusinessPartnerId(mUserBusinessPartnerId);
         } else {
             mSalesOrderLines = (new SalesOrderLineDB(getContext(), mUser)).getShoppingSale();
         }
@@ -440,7 +441,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_BUSINESS_PARTNER_ID, mCurrentBusinessPartnerId);
+        outState.putInt(STATE_USER_BUSINESS_PARTNER_ID, mUserBusinessPartnerId);
         outState.putString(STATE_VALID_TO, mValidToText);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {

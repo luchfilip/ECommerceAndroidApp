@@ -25,7 +25,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String KEY_SALES_ORDER_ID = "KEY_SALES_ORDER_ID";
-    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
+    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_USER_BUSINESS_PARTNER_ID";
     public static final String KEY_ORDER_LINES = "KEY_ORDER_LINES";
 
     @Override

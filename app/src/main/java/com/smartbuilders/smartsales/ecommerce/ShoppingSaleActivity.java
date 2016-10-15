@@ -24,7 +24,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class ShoppingSaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ShoppingSaleFragment.Callback {
 
-    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
+    public static final String KEY_USER_BUSINESS_PARTNER_ID = "KEY_USER_BUSINESS_PARTNER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

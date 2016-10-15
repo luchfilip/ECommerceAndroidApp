@@ -139,11 +139,11 @@ public class SalesOrderDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
                         "SELECT COUNT(SOL.BUSINESS_PARTNER_ID), SOL.BUSINESS_PARTNER_ID " +
-                                " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
-                                " INNER JOIN USER_BUSINESS_PARTNER BP ON BP.USER_ID = SOL.USER_ID " +
-                                " AND BP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
-                                " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
-                                " GROUP BY SOL.BUSINESS_PARTNER_ID",
+                        " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
+                            " INNER JOIN USER_BUSINESS_PARTNER UBP ON UBP.USER_ID = SOL.USER_ID " +
+                                " AND UBP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND UBP.IS_ACTIVE = ? " +
+                        " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
+                        " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", String.valueOf(mUser.getServerUserId()),
                                 SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
             }

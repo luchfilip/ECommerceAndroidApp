@@ -19,7 +19,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class RegisterBusinessPartnerActivity extends AppCompatActivity
         implements RegisterBusinessPartnerFragment.Callback {
 
-    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
+    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_USER_BUSINESS_PARTNER_ID";
 
     private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
 

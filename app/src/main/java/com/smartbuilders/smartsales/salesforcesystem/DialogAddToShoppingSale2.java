@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 /**
@@ -108,9 +108,9 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
                                     mProduct);
 
                             SalesOrderLine salesOrderLine = new SalesOrderLine();
-
                             SalesOrderLineBR.fillSalesOrderLine(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
                                     mProduct, salesOrderLine);
+                            salesOrderLine.setBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
 
                             String result = (new SalesOrderLineDB(getContext(), mUser))
                                     .addSalesOrderLinesToShoppingSale(salesOrderLine);

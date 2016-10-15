@@ -268,9 +268,9 @@ public class ApplicationUtilities {
 		Cursor c = null;
 		try{
             c = ctx.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-                    "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE = ? OR LOG_TYPE = ?)",
-                    new String[]{userId, SyncAdapter.FULL_SYNCHRONIZATION_FINISHED,
-                            SyncAdapter.PERIODIC_SYNCHRONIZATION_FINISHED}, null);
+                    "SELECT MAX(CREATE_TIME) FROM IDS_SYNC_LOG WHERE USER_ID=? AND (LOG_TYPE LIKE ? OR LOG_TYPE LIKE ?)",
+                    new String[]{userId, "%.FULL_SYNCHRONIZATION_FINISHED",
+                            "%.PERIODIC_SYNCHRONIZATION_FINISHED"}, null);
             if(c!=null && c.moveToNext() && c.getString(0)!=null){
                 return sdf.parse(c.getString(0));
             }

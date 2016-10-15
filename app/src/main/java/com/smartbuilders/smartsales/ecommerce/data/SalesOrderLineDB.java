@@ -237,7 +237,7 @@ public class SalesOrderLineDB {
                             " TOTAL_LINE, DOC_TYPE, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(salesOrderLine.getId()), String.valueOf(mUser.getServerUserId()),
-                            String.valueOf(salesOrderLine.getProductId()), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(salesOrderLine.getProductId()), String.valueOf(salesOrderLine.getBusinessPartnerId()),
                             String.valueOf(salesOrderLine.getQuantityOrdered()), String.valueOf(salesOrderLine.getProductPrice()),
                             String.valueOf(salesOrderLine.getProductTaxPercentage()), String.valueOf(salesOrderLine.getLineTaxAmount()),
                             String.valueOf(salesOrderLine.getSubTotalLineAmount()), String.valueOf(salesOrderLine.getTotalLineAmount()),
