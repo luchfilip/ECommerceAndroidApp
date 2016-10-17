@@ -222,8 +222,8 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromSalesOrderLines(getContext(), mUser,
-                            mSalesOrderLines, validTo, mSelectedBusinessPartnerAddressId);
+                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                            validTo, mSelectedBusinessPartnerAddressId);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

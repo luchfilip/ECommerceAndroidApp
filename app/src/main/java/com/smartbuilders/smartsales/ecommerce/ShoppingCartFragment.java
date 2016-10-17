@@ -39,7 +39,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         DialogUpdateShoppingCartQtyOrdered.Callback {
 
     private static final String STATE_SALES_ORDER_ID = "state_sales_order_id";
-    private static final String STATE_BUSINESS_PARTNER_ID = "state_business_partner_id";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION =
             "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
     private static final String STATE_ORDER_LINES = "STATE_ORDER_LINES";
@@ -47,7 +46,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private boolean mIsInitialLoad;
     private User mUser;
     private int mSalesOrderId;
-    private int mBusinessPartnerId;
     private ShoppingCartAdapter mShoppingCartAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -75,11 +73,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)
-                                && savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
+                        if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                             mIsShoppingCart = false;
                             mSalesOrderId = savedInstanceState.getInt(STATE_SALES_ORDER_ID);
-                            mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
                         if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
@@ -93,8 +89,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mIsShoppingCart = false;
                             mSalesOrderId = getActivity().getIntent().getExtras()
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
-                            mBusinessPartnerId = getActivity().getIntent().getExtras()
-                                    .getInt(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID);
                             //Si viene de ShoppingCartFinalizeOptionsActivity
                             if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_ORDER_LINES)){
                                 mOrderLines = getActivity().getIntent().getExtras()
@@ -215,11 +209,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            try {
-                mBusinessPartnerId = Utils.getAppCurrentBusinessPartnerId(getContext(), mUser);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             reloadShoppingCart();
         }
         super.onStart();
@@ -286,11 +275,26 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             if (mIsShoppingCart) {
                                 startActivity(new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class));
                             } else {
-                                Intent intent = new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class);
-                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_BUSINESS_PARTNER_ID, mBusinessPartnerId);
-                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_SALES_ORDER_ID, mSalesOrderId);
-                                intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_ORDER_LINES, mOrderLines);
-                                startActivity(intent);
+                                try {
+                                    //TODO: arreglar aqui, me parece que no es necesario colocar el businessPartnerId
+                                    Intent intent = new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class);
+                                    intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_BUSINESS_PARTNER_ID, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                    intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_SALES_ORDER_ID, mSalesOrderId);
+                                    intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_ORDER_LINES, mOrderLines);
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    new AlertDialog.Builder(getContext())
+                                            .setMessage(e.getMessage())
+                                            .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Utils.unlockScreenOrientation(getActivity());
+                                                }
+                                            })
+                                            .setCancelable(false)
+                                            .show();
+                                }
                             }
                         } else {
                             if (mIsShoppingCart) {
@@ -353,6 +357,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     }
                 }
             } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                //solamente muestra el nombre del cliente y el numero de cotizacion cuando se esta
+                //pasando de cotizacion a pedido
                 if (!mIsShoppingCart) {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner()!=null) {
@@ -439,7 +445,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public void onSaveInstanceState(Bundle outState) {
         if (!mIsShoppingCart) {
             outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
-            outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
             outState.putParcelableArrayList(STATE_ORDER_LINES, mOrderLines);
         }
         try {

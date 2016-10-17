@@ -5,9 +5,9 @@ import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
-import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
 
@@ -59,16 +59,26 @@ public class SalesOrderBR {
         return String.format(new Locale("es", "VE"), "%,.2f", getTotalAmount(salesOrderLines));
     }
 
-    public static String createSalesOrderFromSalesOrderLines(Context context, User user,
-                                                             ArrayList<SalesOrderLine> salesOrderLines, Date validTo, int businessPartnerAddressId) {
+    public static String createSalesOrderFromShoppingSale(Context context, User user,
+                                                          Date validTo, int businessPartnerAddressId){
+        try {
+            return createSalesOrderFromShoppingSale(context, user,
+                    Utils.getAppCurrentBusinessPartnerId(context, user), validTo, businessPartnerAddressId);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    public static String createSalesOrderFromShoppingSale(Context context, User user, Integer businessPartnerId,
+                                                          Date validTo, int businessPartnerAddressId){
         String result;
         try {
             result = new SalesOrderDB(context, user)
-                    .createSalesOrderFromSalesOrderLines(salesOrderLines, validTo, businessPartnerAddressId);
+                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo, businessPartnerAddressId);
             syncDataWithServer(context, user.getUserId());
         } catch (Exception e) {
-            result = e.getMessage();
             e.printStackTrace();
+            result = e.getMessage();
         }
         return result;
     }

@@ -141,25 +141,32 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                         throw new Exception(getString(R.string.invalid_qty_requested));
                     }
 
+                    /**********************************************************/
                     Product product = new Product();
                     product.setId(mSaleOrderLine.getProductId());
                     try {
-                        product.getDefaultProductPriceAvailability()
-                                .setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+                        product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {
-                        //do nothing
+                        e.printStackTrace();
                     }
                     try {
                         product.getProductTax().setPercentage(Float.valueOf(productTaxEditText.getText().toString()));
+                        product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
+                                * (product.getProductTax().getPercentage() / 100));
                     } catch (NumberFormatException e) {
-                        //do nothing
+                        e.printStackTrace();
                     }
+                    product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
+                            + product.getDefaultProductPriceAvailability().getTax());
+                    /**********************************************************/
 
                     SalesOrderLineBR.fillSalesOrderLine(qtyOrdered, product, mSaleOrderLine);
 
                     String result = (new SalesOrderLineDB(getContext(), mUser)).updateSalesOrderLine(mSaleOrderLine);
                     if(result == null){
-                        ((ShoppingSaleFragment) getTargetFragment()).reloadShoppingSale();
+                        if (getTargetFragment() instanceof  ShoppingSaleFragment) {
+                            ((ShoppingSaleFragment) getTargetFragment()).reloadShoppingSale();
+                        }
                     } else {
                         throw new Exception(result);
                     }

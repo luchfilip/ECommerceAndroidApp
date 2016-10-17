@@ -288,8 +288,12 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromSalesOrderLines(getContext(), mUser,
-                            mSalesOrderLines, validTo, 0);
+                    if (mUserBusinessPartnerId != 0) {
+                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                                mUserBusinessPartnerId, validTo, 0);
+                    } else {
+                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();
@@ -387,9 +391,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     @Override
-    public void updateSalesOrderLine(SalesOrderLine orderLine, int focus) {
+    public void updateSalesOrderLine(SalesOrderLine salesOrderLine, int focus) {
         DialogUpdateSalesOrderLine dialogUpdateSalesOrderLine =
-                DialogUpdateSalesOrderLine.newInstance(orderLine, mUser, focus);
+                DialogUpdateSalesOrderLine.newInstance(salesOrderLine, mUser, focus);
         dialogUpdateSalesOrderLine.setTargetFragment(this, 0);
         dialogUpdateSalesOrderLine.show(getActivity().getSupportFragmentManager(),
                 DialogUpdateSalesOrderLine.class.getSimpleName());

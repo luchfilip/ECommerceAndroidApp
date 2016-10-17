@@ -18,6 +18,7 @@ public class Product extends Model implements Parcelable {
     private String description;
     private String purpose;
     private String imageFileName;
+    private String reference;
     private int productCategoryId;
     private ProductCategory productCategory;
     private int productSubCategoryId;
@@ -52,6 +53,7 @@ public class Product extends Model implements Parcelable {
         description = in.readString();
         purpose = in.readString();
         imageFileName = in.readString();
+        reference = in.readString();
         productCategoryId = in.readInt();
         productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategoryId = in.readInt();
@@ -75,6 +77,7 @@ public class Product extends Model implements Parcelable {
         dest.writeString(description);
         dest.writeString(purpose);
         dest.writeString(imageFileName);
+        dest.writeString(reference);
         dest.writeInt(productCategoryId);
         dest.writeParcelable(productCategory, flags);
         dest.writeInt(productSubCategoryId);
@@ -143,6 +146,14 @@ public class Product extends Model implements Parcelable {
 
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public ProductBrand getProductBrand() {

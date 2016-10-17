@@ -241,12 +241,17 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                            .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getProductId());
-                    if (salesOrderLine != null) {
-                        ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
-                    } else {
-                        ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
+                    try {
+                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                                .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getProductId(),
+                                        Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                        if (salesOrderLine != null) {
+                            ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
+                        } else {
+                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
+                        }
+                    } catch (Exception e) {
+                        //do nothing
                     }
                 } else {
                     ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);

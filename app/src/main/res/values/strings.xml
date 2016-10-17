@@ -137,6 +137,7 @@
     <string name="products_availables">Artículos disponibles: %1$s</string>
     <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
     <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
+    <string name="shopping_sale_updated_successfully">Cotización actualizada exitosamente.</string>
     <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
     <string name="clear_wish_list_question">¿Está seguro que desea eliminar todos los registros de la lista de favoritos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
@@ -417,5 +418,7 @@
     <string name="prices_list_details">Detalles Lista de Precios</string>
     <string name="title_activity_prices_list">PricesListActivity</string>
     <string name="title_activity_price_list_detail">PriceListDetailActivity</string>
+    <string name="code">Código</string>
+    <string name="reference">Referencia</string>
 
 </resources>

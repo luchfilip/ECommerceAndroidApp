@@ -110,6 +110,7 @@ public class OrderDB {
         int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
         if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
             int orderId;
+            int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
             try {
                 orderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER");
 
@@ -127,7 +128,7 @@ public class OrderDB {
                                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
                                 new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()),
                                         salesOrderId==null ? null : String.valueOf(salesOrderId),
-                                        String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                                        String.valueOf(businessPartnerId),
                                         String.valueOf(businessPartnerAddressId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOC_TYPE, DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),
@@ -136,14 +137,13 @@ public class OrderDB {
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }
-
-
             } catch (Exception e){
                 e.printStackTrace();
                 return e.getMessage();
             }
             if (orderLines!=null && insertOrderLinesInDB) {
                 for (OrderLine orderLine : orderLines) {
+                    orderLine.setBusinessPartnerId(businessPartnerId);
                     orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
                 }
             } else {
@@ -247,22 +247,11 @@ public class OrderDB {
             }
         }
 
-        UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(mContext, mUser);
         BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
         ArrayList<Order> ordersToRemove = new ArrayList<>();
         for(Order order : activeOrders){
             if(order.getBusinessPartnerId()>0){
-                if(mUser!=null){
-                    if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID){
-                        order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
-                    }else if(mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                        if(order.getSalesOrderId()>0){
-                            order.setBusinessPartner(userBusinessPartnerDB.getUserBusinessPartnerById(order.getBusinessPartnerId()));
-                        }else{
-                            order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
-                        }
-                    }
-                }
+                order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
             }
             if(order.getBusinessPartner()==null) {
                 ordersToRemove.add(order);

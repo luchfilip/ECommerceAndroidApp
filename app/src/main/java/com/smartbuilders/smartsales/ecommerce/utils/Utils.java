@@ -206,7 +206,7 @@ public class Utils {
         return shareIntent;
     }
 
-    private static Bitmap getBitmapFromView(View view) {
+    public static Bitmap getBitmapFromView(View view) {
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(),
                 Bitmap.Config.ARGB_8888);
@@ -1163,32 +1163,22 @@ public class Utils {
      * @throws Exception
      */
     public static int getAppCurrentBusinessPartnerId(Context context, User user) throws Exception {
-        if(context!=null && user!=null){
-            try {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
-                    if (!PreferenceManager.getDefaultSharedPreferences(context)
-                            .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)) {
-                        setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
-                                .getMaxActiveBusinessPartnerId());
-                    }
-                    return PreferenceManager.getDefaultSharedPreferences(context)
-                            .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY,
-                                    (new BusinessPartnerDB(context, user)).getMaxActiveBusinessPartnerId());
-                } else if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                    return user.getServerUserId();
+        try {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                if (!PreferenceManager.getDefaultSharedPreferences(context)
+                        .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)) {
+                    setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
+                            .getMaxActiveBusinessPartnerId());
                 }
-            } catch (Exception e) {
-                throw new Exception("Error consultando el cliente. Message: " + e.getMessage());
+                return PreferenceManager.getDefaultSharedPreferences(context)
+                        .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
+            } else if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                return user.getServerUserId();
+            } else {
+                throw new Exception("UserProfileId no identificado.");
             }
-            throw new Exception("UserProfileId no identificado en getAppCurrentBusinessPartnerId(...)");
-        }else{
-            if (context==null && user==null) {
-                throw new Exception("Context y User es null en getAppCurrentBusinessPartnerId(...)");
-            }else if(context==null){
-                throw new Exception("Context es null en getAppCurrentBusinessPartnerId(...)");
-            }else{
-                throw new Exception("User es null en getAppCurrentBusinessPartnerId(...)");
-            }
+        } catch (Exception e) {
+            throw new Exception("Error consultando el cliente. Message: " + e.getMessage());
         }
     }
 

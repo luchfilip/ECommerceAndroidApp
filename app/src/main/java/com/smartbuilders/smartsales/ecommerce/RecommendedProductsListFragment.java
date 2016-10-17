@@ -282,7 +282,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
         private ArrayList<Product> mProducts;
 
-        public ReloadShareIntentThread(ArrayList<Product> products) {
+        ReloadShareIntentThread(ArrayList<Product> products) {
             this.mProducts = products;
         }
 
@@ -318,7 +318,8 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                     try {
-                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf", getContext(), mUser);
+                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf",
+                                getActivity(), getContext(), mUser);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

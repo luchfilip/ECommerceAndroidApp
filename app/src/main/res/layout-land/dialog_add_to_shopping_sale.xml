@@ -187,14 +187,24 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/GreyButtonAppTheme"
                 android:text="@string/cancel"
                 android:id="@+id/cancel_button" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/GoldenButtonAppTheme"
                 android:text="@string/add_to_shopping_sales"
                 android:id="@+id/add_to_shopping_sale_button" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/GoldenButtonAppTheme"
+                android:text="@string/update"
+                android:id="@+id/update_shopping_sale_button"
+                android:visibility="gone"/>
         </TableRow>
 
     </TableLayout>

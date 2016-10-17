@@ -39,21 +39,12 @@ public class SalesOrderLineDB {
 
     /**
      *
-     * @param salesOrderLine
-     * @param orderId
-     * @return
-     */
-    public String addSalesOrderLineToFinalizedSalesOrder(SalesOrderLine salesOrderLine, int orderId){
-        return addSalesOrderLine(salesOrderLine, FINALIZED_SALES_ORDER_DOC_TYPE, orderId);
-    }
-
-    /**
-     *
      * @param productId
+     * @param businessPartnerId
      * @return
      */
-    public SalesOrderLine getSalesOrderLineFromShoppingSalesByProductId(int productId){
-        return getSalesOrderLineByProductIdAndDocType(productId, SHOPPING_SALE_DOC_TYPE);
+    public SalesOrderLine getSalesOrderLineFromShoppingSales(int productId, int businessPartnerId){
+        return getSalesOrderLine(productId, businessPartnerId, SHOPPING_SALE_DOC_TYPE);
     }
 
     /**
@@ -187,38 +178,6 @@ public class SalesOrderLineDB {
 
     /**
      *
-     * @param businessPartnerId
-     * @return
-     */
-    public int getActiveShoppingSaleLinesNumberByBusinessPartnerId(int businessPartnerId) {
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .build(), null,
-                    "SELECT COUNT(*) FROM ECOMMERCE_SALES_ORDER_LINE " +
-                        " WHERE BUSINESS_PARTNER_ID=? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
-                            SHOPPING_SALE_DOC_TYPE, "Y"}, null);
-            if(c!=null && c.moveToNext()){
-                return c.getInt(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(c!=null){
-                try {
-                    c.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     *
      * @param salesOrderLine
      * @param docType
      * @param orderId
@@ -227,7 +186,6 @@ public class SalesOrderLineDB {
     private String addSalesOrderLine(SalesOrderLine salesOrderLine, String docType, Integer orderId) {
         try {
             salesOrderLine.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER_LINE"));
-
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
@@ -403,10 +361,11 @@ public class SalesOrderLineDB {
     /**
      *
      * @param productId
+     * @param businessPartnerId
      * @param docType
      * @return
      */
-    private SalesOrderLine getSalesOrderLineByProductIdAndDocType(int productId, String docType){
+    private SalesOrderLine getSalesOrderLine(int productId, int businessPartnerId, String docType){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -416,8 +375,7 @@ public class SalesOrderLineDB {
                     " FROM ECOMMERCE_SALES_ORDER_LINE " +
                     " WHERE PRODUCT_ID = ? AND BUSINESS_PARTNER_ID = ? " +
                         " AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(productId),
-                            String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                    new String[]{String.valueOf(productId), String.valueOf(businessPartnerId),
                             String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if(c!=null && c.moveToNext()){
                 SalesOrderLine salesOrderLine = new SalesOrderLine();

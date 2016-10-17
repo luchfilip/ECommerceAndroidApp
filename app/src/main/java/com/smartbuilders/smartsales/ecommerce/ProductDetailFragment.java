@@ -326,12 +326,16 @@ public class ProductDetailFragment extends Fragment {
                                             @Override
                                             public void onClick(View v) {
                                                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
-                                                            .getSalesOrderLineFromShoppingSalesByProductId(mProductId);
-                                                    if (salesOrderLine != null) {
-                                                        updateQtyOrderedInShoppingSales(salesOrderLine);
-                                                    } else {
-                                                        addToShoppingSale(mProduct);
+                                                    try {
+                                                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
+                                                                .getSalesOrderLineFromShoppingSales(mProductId, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                                        if (salesOrderLine != null) {
+                                                            updateQtyOrderedInShoppingSales(salesOrderLine);
+                                                        } else {
+                                                            addToShoppingSale(mProduct);
+                                                        }
+                                                    } catch (Exception e) {
+                                                        //do nothing
                                                     }
                                                 } else {
                                                     addToShoppingSale(mProduct);

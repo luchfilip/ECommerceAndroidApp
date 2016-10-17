@@ -1,31 +1,27 @@
 package com.smartbuilders.smartsales.ecommerce.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.GrayColor;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPCellEvent;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.io.ByteArrayOutputStream;
@@ -39,7 +35,20 @@ import java.util.ArrayList;
  */
 public class WishListPDFCreator {
 
-    public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
+    private View view;
+    private ImageView productImageView;
+    private Typeface typeface;
+    private Typeface typefaceBold;
+    private TextView productNameTextView;
+    private TextView productBrandTextView;
+    private TextView productDescriptionTextView;
+    private TextView productPurposeTextView;
+    private TextView productCodeLabelTextView;
+    private TextView productCodeTextView;
+    private TextView productReferenceLabelTextView;
+    private TextView productReferenceTextView;
+
+    public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Activity activity, Context ctx, User user) throws Exception {
         File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -54,7 +63,7 @@ public class WishListPDFCreator {
             }
         }
         //create a new document
-        Document document = new Document(PageSize.LETTER, 40, 40, 130, 40);
+        Document document = new Document(PageSize.LETTER, 20, 20, 90, 60);
 
         if(pdfFile.exists()) {
             try {
@@ -64,7 +73,7 @@ public class WishListPDFCreator {
                 document.open();
 
                 //se cargan las lineas del pedido
-                addDetails(document, orderLines, ctx, user);
+                addDetails(document, orderLines, activity, ctx, user);
 
                 document.close();
 
@@ -74,8 +83,8 @@ public class WishListPDFCreator {
                 PdfStamper stamper = new PdfStamper(reader,
                         new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
 
-                //Se le agrega la cabecera a cada pagina
-                addPageHeader(reader, stamper, ctx);
+                //Se le agrega la cabecera y el pie de pagina a cada pagina
+                addPageHeaderFooter(reader, stamper, ctx);
 
                 // Close the stamper
                 stamper.close();
@@ -87,20 +96,54 @@ public class WishListPDFCreator {
         return pdfFile;
     }
 
-    private void addPageHeader(PdfReader reader, PdfStamper stamper,
-                               Context ctx) throws DocumentException, IOException {
-        Image companyLogo = null;
-        Bitmap bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.company_logo_pdf_docs, 1024/4, 389/4);
+    private void addPageHeaderFooter(PdfReader reader, PdfStamper stamper,
+                                     Context ctx) throws DocumentException, IOException {
+        Image headerImage = null;
+        Bitmap bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.catalog_header_wish_list, 1325, 180);
         if(bmp!=null){
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            companyLogo = Image.getInstance(stream.toByteArray());
-            companyLogo.setAbsolutePosition(50, 680);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            headerImage = Image.getInstance(stream.toByteArray());
+            stream.close();
         }
+
+        Image footerImage = null;
+        bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.catalog_footer, 1325, 180);
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            footerImage = Image.getInstance(stream.toByteArray());
+            stream.close();
+        }
+
+        Image headerRightImage = null;
+        bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.catalog_header_right, 1325, 180);
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            headerRightImage = Image.getInstance(stream.toByteArray());
+            stream.close();
+        }
+
+        Image footerRightImage = null;
+        bmp = Utils.decodeSampledBitmapFromResource(ctx.getResources(), R.drawable.catalog_footer_right, 1325, 180);
+        if(bmp!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            footerRightImage = Image.getInstance(stream.toByteArray());
+            stream.close();
+        }
+
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, ctx, companyLogo).writeSelectedRows(0, -1, 60, 780, stamper.getOverContent(i));
+            if (i%2 == 0) {
+                getHeaderTable(i, n, headerRightImage).writeSelectedRows(0, -1, 0, 800, stamper.getOverContent(i));
+                getFooterTable(i, n, footerRightImage).writeSelectedRows(0, -1, 0, 40, stamper.getOverContent(i));
+            } else {
+                getHeaderTable(i, n, headerImage).writeSelectedRows(0, -1, 0, 800, stamper.getOverContent(i));
+                getFooterTable(i, n, footerImage).writeSelectedRows(0, -1, 0, 40, stamper.getOverContent(i));
+            }
         }
     }
 
@@ -110,130 +153,109 @@ public class WishListPDFCreator {
      * @param y the total number of pages
      * @return a table that can be used as header
      */
-    public static PdfPTable getHeaderTable(int x, int y, Context ctx, Image companyLogo)
+    private static PdfPTable getHeaderTable(int x, int y, Image companyLogo)
             throws DocumentException, IOException {
-        Font docNameFont;
-        try{
-            docNameFont = new Font(BaseFont.createFont("assets/fonts/Roboto-Italic.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 15f);
-        }catch (Exception ex){
-            ex.printStackTrace();
-            try{
-                docNameFont = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 15f);
-            }catch(Exception e) {
-                e.printStackTrace();
-                docNameFont = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 15f);
-            }
-        }
 
-        PdfPTable headerTable = new PdfPTable(2);
-        headerTable.setWidths(new float[] {230f, 250f});
-        headerTable.setTotalWidth(480);
+        PdfPTable headerTable = new PdfPTable(1);
+        headerTable.setWidths(new float[] {612f});
+        headerTable.setTotalWidth(612);
 
-        PdfPCell companyLogoCell;
-        if(companyLogo!=null){
-            companyLogoCell = new PdfPCell(companyLogo, true);
-        }else{
-            companyLogoCell = new PdfPCell();
-        }
-        companyLogoCell.setPadding(3);
+        PdfPCell companyLogoCell = new PdfPCell(companyLogo, true);
         companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         companyLogoCell.disableBorderSide(Rectangle.UNDEFINED);
         headerTable.addCell(companyLogoCell);
+        return headerTable;
+    }
 
-        PdfPCell companyDataCell = new PdfPCell();
-        companyDataCell.setPadding(3);
-        companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
-        companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.wish_list_doc_name), docNameFont));
-        headerTable.addCell(companyDataCell);
+    /**
+     * Create a header table with page X of Y
+     * @param x the page number
+     * @param y the total number of pages
+     * @return a table that can be used as header
+     */
+    private static PdfPTable getFooterTable(int x, int y, Image companyLogo)
+            throws DocumentException, IOException {
 
+        PdfPTable headerTable = new PdfPTable(1);
+        headerTable.setWidths(new float[] {612f});
+        headerTable.setTotalWidth(612);
+
+        PdfPCell companyLogoCell = new PdfPCell(companyLogo, true);
+        companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        companyLogoCell.disableBorderSide(Rectangle.UNDEFINED);
+        headerTable.addCell(companyLogoCell);
         return headerTable;
     }
 
     private void addDetails(Document document, ArrayList<OrderLine> orderLines,
-                            Context ctx, User user) throws DocumentException, IOException {
-        BaseFont bf;
-        Font font;
-        try{
-            bf = BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
-        }catch (Exception ex){
-            ex.printStackTrace();
-            try{
-                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED);
-            }catch(Exception e) {
-                e.printStackTrace();
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-            }
-        }
-        font = new Font(bf, 7.5f);
+                            Activity activity, Context ctx, User user) throws DocumentException, IOException {
+        PdfPTable superTable = new PdfPTable(2);
+        superTable.setWidths(new int[] {280, 280});
+        superTable.setTotalWidth(560);
+        for(int i = 0; i<orderLines.size(); i++){
+            Bitmap bmp = getProductCardImage(activity, ctx, user, orderLines.get(i).getProduct());
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            PdfPCell cell = new PdfPCell(Image.getInstance(stream.toByteArray()), true);
+            stream.close();
+            cell.setBorder(PdfPCell.NO_BORDER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            superTable.addCell(cell);
 
-        //document.add(new Phrase("\n"));
-
-        PdfPTable superTable = new PdfPTable(1);
-        for(OrderLine line : orderLines){
-            PdfPTable borderTable = new PdfPTable(1);
-            borderTable.setWidthPercentage(100);
-
-            /****************************************/
-            PdfPTable table = new PdfPTable(BuildConfig.USE_PRODUCT_IMAGE ? 2 : 1);
-            // Defiles the relative width of the columns
-            float[] columnWidths = BuildConfig.USE_PRODUCT_IMAGE ? new float[] {30f, 120f} : new float[] {120f};
-            table.setWidths(columnWidths);
-            table.setWidthPercentage(100);
-            if (BuildConfig.USE_PRODUCT_IMAGE) {
-                Bitmap bmp = Utils.getThumbImage(ctx, user, line.getProduct().getImageFileName());
-                if (bmp == null) {
-                    bmp = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.no_image_available);
-                }
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            if (++i<orderLines.size()) {
+                bmp = getProductCardImage(activity, ctx, user, orderLines.get(i).getProduct());
+                stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                Image productImage = Image.getInstance(stream.toByteArray());
-                PdfPCell cell = new PdfPCell(productImage, true);
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setPadding(3);
+                cell = new PdfPCell(Image.getInstance(stream.toByteArray()), true);
+                stream.close();
                 cell.setBorder(PdfPCell.NO_BORDER);
-                table.addCell(cell);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                superTable.addCell(cell);
+            } else {
+                cell = new PdfPCell();
+                cell.setBorder(PdfPCell.NO_BORDER);
+                superTable.addCell(cell);
             }
-
-            PdfPCell cell2 = new PdfPCell();
-            cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell2.setPadding(3);
-            cell2.setBorder(Rectangle.LEFT);
-            cell2.setUseVariableBorders(true);
-            cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
-            cell2.addElement(new Paragraph(line.getProduct().getName(), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
-            cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
-            table.addCell(cell2);
-            /*****************************************/
-
-            PdfPCell borderTableCell = new PdfPCell();
-            borderTableCell.setCellEvent(new RoundRectangle());
-            borderTableCell.setBorder(PdfPCell.NO_BORDER);
-            borderTableCell.addElement(table);
-            borderTable.addCell(borderTableCell);
-
-            /***************************************************************/
-            PdfPCell superTableCell = new PdfPCell();
-            superTableCell.setPadding(5);
-            superTableCell.setBorder(PdfPCell.NO_BORDER);
-            superTableCell.addElement(borderTable);
-            superTable.addCell(superTableCell);
         }
         document.add(superTable);
-        document.add(new Phrase("\n"));
     }
 
-    class RoundRectangle implements PdfPCellEvent {
-
-        public void cellLayout(PdfPCell cell, Rectangle rect,
-                               PdfContentByte[] canvas) {
-            PdfContentByte cb = canvas[PdfPTable.LINECANVAS];
-            cb.setColorStroke(new GrayColor(0.8f));
-            cb.roundRectangle(rect.getLeft(), rect.getBottom(), rect.getWidth(), rect.getHeight(), 3);
-            cb.stroke();
+    private Bitmap getProductCardImage(Activity activity, Context ctx, User user, Product product) {
+        if (view == null) {
+            view = activity.getLayoutInflater().inflate(R.layout.product_pdf_layout, null);
+            typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
+            typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
+            productImageView = (ImageView) view.findViewById(R.id.productImage_imageView);
+            productNameTextView = (TextView) view.findViewById(R.id.productName_textView);
+            productNameTextView.setTypeface(typefaceBold);
+            productBrandTextView = (TextView) view.findViewById(R.id.productBrand_textView);
+            productBrandTextView.setTypeface(typefaceBold);
+            productDescriptionTextView = (TextView) view.findViewById(R.id.productDescription_textView);
+            productDescriptionTextView.setTypeface(typeface);
+            productPurposeTextView = (TextView) view.findViewById(R.id.productPurpose_textView);
+            productPurposeTextView.setTypeface(typeface);
+            productCodeTextView = (TextView) view.findViewById(R.id.productCode_textView);
+            productCodeTextView.setTypeface(typeface);
+            productReferenceTextView = (TextView) view.findViewById(R.id.productReference_textView);
+            productReferenceTextView.setTypeface(typeface);
+            productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
+            productCodeLabelTextView.setTypeface(typefaceBold);
+            productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
+            productReferenceLabelTextView.setTypeface(typefaceBold);
         }
+
+        Bitmap bmp = Utils.getThumbImage(ctx, user, product.getImageFileName());
+        if (bmp != null) {
+            productImageView.setImageBitmap(bmp);
+        } else {
+            productImageView.setImageDrawable(Utils.getNoImageAvailableDrawable(ctx));
+        }
+        productNameTextView.setText(product.getName());
+        productBrandTextView.setText(product.getProductBrand().getName());
+        productDescriptionTextView.setText(product.getDescription());
+        productPurposeTextView.setText(product.getPurpose());
+        productCodeTextView.setText(product.getInternalCode().charAt(0)+"-"+product.getInternalCode().substring(1,4)+"-"+product.getInternalCode().substring(4));
+        productReferenceTextView.setText(product.getReference());
+        return Utils.getBitmapFromView(view);
     }
 }

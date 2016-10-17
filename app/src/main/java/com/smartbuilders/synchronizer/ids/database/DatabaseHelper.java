@@ -1,18 +1,21 @@
 package com.smartbuilders.synchronizer.ids.database;
 
+import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.synchronizer.ids.model.SyncLog;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 16;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -520,7 +523,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " APP_USER_NAME VARCHAR(128) NOT NULL, " +
                     " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " PRIMARY KEY (USER_ID, TABLE_NAME, ID))";
+                    " PRIMARY KEY (USER_ID, TABLE_NAME))";
 
     public static final String CREATE_USER_BUSINESS_PARTNERS =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNERS (" +
@@ -687,7 +690,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }if (oldVersion < 15) {
+            }
+            if (oldVersion < 15) {
 				try {
 					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL, " +
                             " ADD COLUMN TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
@@ -700,6 +704,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     e.printStackTrace();
                 }
 			}
+            if (oldVersion < 16) {
+                ArrayList<String> sqlSentences = new ArrayList<>();
+                Cursor cursor = null;
+                try {
+                    cursor = db.rawQuery("SELECT USER_ID,TABLE_NAME,MAX(ID),MAX(APP_VERSION),MAX(APP_USER_NAME),MAX(DEVICE_MAC_ADDRESS) FROM USER_TABLE_MAX_ID GROUP BY USER_ID,TABLE_NAME", null);
+                    if (cursor != null) {
+                        while (cursor.moveToNext()) {
+                            sqlSentences.add("INSERT INTO USER_TABLE_MAX_ID (USER_ID,TABLE_NAME,ID,CREATE_TIME,APP_VERSION,APP_USER_NAME,DEVICE_MAC_ADDRESS) " +
+                                    " VALUES ("+cursor.getInt(0)+",'"+cursor.getString(1)+"',"+ cursor.getInt(2)+",'"+ DateFormat.getCurrentDateTimeSQLFormat()+"'," +
+                                            "'"+cursor.getString(3)+"','"+cursor.getString(4)+"','"+cursor.getString(5)+"')");
+                        }
+                    }
+                    db.execSQL("DROP TABLE USER_TABLE_MAX_ID");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (cursor != null) {
+                        try {
+                            cursor.close();
+                        } catch (Exception e) {
+                            //do nothing
+                        }
+                    }
+                }
+                try {
+                    db.execSQL(CREATE_USER_TABLE_MAX_ID);
+                    for (String sqlSentence : sqlSentences) {
+                        try {
+                            db.execSQL(sqlSentence);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 	}
 

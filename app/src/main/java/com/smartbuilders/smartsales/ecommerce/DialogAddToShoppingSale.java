@@ -45,9 +45,15 @@ public class DialogAddToShoppingSale extends DialogFragment {
     private Product mProduct;
     private User mUser;
     private Spinner businessPartnersSpinner;
+    private ArrayList<BusinessPartner> businessPartners;
+    private int mSalesOrderLineId;
     private View buttonsContainer;
     private View registerBusinessPartnerButton;
-    private ArrayList<BusinessPartner> businessPartners;
+    private View addToShoppingSaleButton;
+    private View updateShoppingSaleButton;
+    private EditText productPriceEditText;
+    private EditText productTaxPercentageEditText;
+    private EditText qtyRequestedEditText;
 
     public DialogAddToShoppingSale() {
         // Empty constructor required for DialogFragment
@@ -83,20 +89,22 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_sale, container);
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
-                .setText(getContext().getString(R.string.availability,
+                .setText(getString(R.string.availability,
                         mProduct.getDefaultProductPriceAvailability().getAvailability()));
 
         businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
         buttonsContainer = view.findViewById(R.id.buttons_container);
         registerBusinessPartnerButton = view.findViewById(R.id.register_business_partner_button);
+        addToShoppingSaleButton = view.findViewById(R.id.add_to_shopping_sale_button);
+        updateShoppingSaleButton = view.findViewById(R.id.update_shopping_sale_button);
+        productPriceEditText = (EditText) view.findViewById(R.id.product_price_editText);
+        productTaxPercentageEditText = (EditText) view.findViewById(R.id.product_tax_editText);
+        qtyRequestedEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
         Currency currency = (new CurrencyDB(getContext(), mUser)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
         ((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
                 ? getString(R.string.price_currency_label_detail, currency.getName())
                 : getString(R.string.price_label));
-
-        ((EditText) view.findViewById(R.id.product_tax_editText))
-                .setText(mProduct.getProductTax() !=null ? String.valueOf(mProduct.getProductTax().getPercentage()) : "0.00");
 
         if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
@@ -118,42 +126,13 @@ public class DialogAddToShoppingSale extends DialogFragment {
             }
         );
 
-        view.findViewById(R.id.add_to_shopping_sale_button).setOnClickListener(
+        addToShoppingSaleButton.setOnClickListener(
             new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
-                        int qtyRequested = 0;
-                        try {
-                            qtyRequested = Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString());
-                        } catch (NumberFormatException e) {
-                            //empty
-                        }
-                        if (qtyRequested<=0) {
-                            throw new Exception(getString(R.string.invalid_qty_requested));
-                        }
-
-                        Product product = new Product();
-                        product.setId(mProduct.getId());
-                        try {
-                            product.getDefaultProductPriceAvailability().setPrice(Float
-                                    .valueOf(((EditText) view.findViewById(R.id.product_price_editText)).getText().toString()));
-                        } catch (NumberFormatException e) {
-                            //empty
-                        }
-                        try {
-                            product.getProductTax().setPercentage(Float
-                                    .valueOf(((EditText) view.findViewById(R.id.product_tax_editText)).getText().toString()));
-                        } catch (NumberFormatException e) {
-                            //empty
-                        }
-
-                        SalesOrderLine salesOrderLine = new SalesOrderLine();
-                        SalesOrderLineBR.fillSalesOrderLine(qtyRequested, mProduct, salesOrderLine);
-                        salesOrderLine.setBusinessPartnerId(businessPartners.get(businessPartnersSpinner.getSelectedItemPosition()).getId());
-
                         String result = (new SalesOrderLineDB(getContext(), mUser))
-                                .addSalesOrderLinesToShoppingSale(salesOrderLine);
+                                .addSalesOrderLinesToShoppingSale(getSalesOrderLine());
                         if(result == null){
                             Toast.makeText(getContext(), R.string.product_moved_to_shopping_sale,
                                     Toast.LENGTH_SHORT).show();
@@ -169,10 +148,30 @@ public class DialogAddToShoppingSale extends DialogFragment {
             }
         );
 
+        updateShoppingSaleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String result = (new SalesOrderLineDB(getContext(), mUser))
+                            .updateSalesOrderLine(getSalesOrderLine());
+                    if(result == null){
+                        Toast.makeText(getContext(), R.string.shopping_sale_updated_successfully,
+                                Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    } else {
+                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         if(view.findViewById(R.id.product_commercial_package) != null){
             if(mProduct.getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getString(R.string.commercial_package_label_detail,
                         mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
@@ -239,6 +238,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
                     editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartners.get(position).getId());
                     editor.apply();
+                    loadFields(businessPartners.get(position).getId());
                 }
 
                 @Override
@@ -259,6 +259,58 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 registerBusinessPartnerButton.setVisibility(View.VISIBLE);
             }
             buttonsContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private SalesOrderLine getSalesOrderLine() throws Exception {
+        int qtyRequested = 0;
+        try {
+            qtyRequested = Integer.valueOf(qtyRequestedEditText.getText().toString());
+        } catch (NumberFormatException e) {
+            //empty
+        }
+        if (qtyRequested<=0) {
+            throw new Exception(getString(R.string.invalid_qty_requested));
+        }
+
+        /**********************************************************/
+        Product product = new Product();
+        product.setId(mProduct.getId());
+
+        product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+
+        product.getProductTax().setPercentage(Float.valueOf(productTaxPercentageEditText.getText().toString()));
+        product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
+                * (product.getProductTax().getPercentage() / 100));
+
+        product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
+                + product.getDefaultProductPriceAvailability().getTax());
+        /**********************************************************/
+
+        SalesOrderLine salesOrderLine = new SalesOrderLine();
+        salesOrderLine.setId(mSalesOrderLineId);
+        SalesOrderLineBR.fillSalesOrderLine(qtyRequested, product, salesOrderLine);
+        salesOrderLine.setBusinessPartnerId(businessPartners.get(businessPartnersSpinner.getSelectedItemPosition()).getId());
+        return salesOrderLine;
+    }
+
+    private void loadFields(int businessPartnerId) {
+        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
+                .getSalesOrderLineFromShoppingSales(mProduct.getId(), businessPartnerId);
+        if (salesOrderLine != null) {
+            mSalesOrderLineId = salesOrderLine.getId();
+            productPriceEditText.setText(String.valueOf(salesOrderLine.getProductPrice()));
+            productTaxPercentageEditText.setText(String.valueOf(salesOrderLine.getProductTaxPercentage()));
+            qtyRequestedEditText.setText(String.valueOf(salesOrderLine.getQuantityOrdered()));
+            addToShoppingSaleButton.setVisibility(View.GONE);
+            updateShoppingSaleButton.setVisibility(View.VISIBLE);
+        } else {
+            mSalesOrderLineId = 0;
+            productPriceEditText.setText(null);
+            productTaxPercentageEditText.setText(String.valueOf(mProduct.getProductTax().getPercentage()));
+            qtyRequestedEditText.setText(null);
+            updateShoppingSaleButton.setVisibility(View.GONE);
+            addToShoppingSaleButton.setVisibility(View.VISIBLE);
         }
     }
 

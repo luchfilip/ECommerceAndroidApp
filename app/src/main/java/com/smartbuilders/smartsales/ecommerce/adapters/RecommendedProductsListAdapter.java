@@ -214,12 +214,17 @@ public class RecommendedProductsListAdapter extends
             @Override
             public void onClick(View v) {
                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                            .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
-                    if (salesOrderLine != null) {
-                        ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
-                    } else {
-                        ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                    try {
+                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                                .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
+                                        Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                        if (salesOrderLine != null) {
+                            ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
+                        } else {
+                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                        }
+                    } catch (Exception e) {
+                        //do nothing
                     }
                 } else {
                     ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);

@@ -302,7 +302,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         private ArrayList<OrderLine> mWishListLines;
 
-        public ReloadShareIntentThread(ArrayList<OrderLine> wishListLines) {
+        ReloadShareIntentThread(ArrayList<OrderLine> wishListLines) {
             this.mWishListLines = wishListLines;
         }
 
@@ -338,7 +338,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
                     try{
-                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf", getContext(), mUser);
+                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf",
+                                getActivity(), getContext(), mUser);
                     }catch(Exception e) {
                         e.printStackTrace();
                     }

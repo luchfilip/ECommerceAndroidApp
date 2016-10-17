@@ -399,12 +399,17 @@ public class MainActivityAdapter extends BaseAdapter {
                             @Override
                             public void onClick(View v) {
                                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                                            .getSalesOrderLineFromShoppingSalesByProductId(((Product) mDataset.get(position)).getId());
-                                    if (salesOrderLine != null) {
-                                        updateQtyOrderedInShoppingSales(salesOrderLine);
-                                    } else {
-                                        addToShoppingSale(((Product) mDataset.get(position)));
+                                    try {
+                                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                                                .getSalesOrderLineFromShoppingSales(((Product) mDataset.get(position)).getId(),
+                                                        Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                                        if (salesOrderLine != null) {
+                                            updateQtyOrderedInShoppingSales(salesOrderLine);
+                                        } else {
+                                            addToShoppingSale(((Product) mDataset.get(position)));
+                                        }
+                                    } catch (Exception e) {
+                                        //do nothing
                                     }
                                 } else {
                                     addToShoppingSale(((Product) mDataset.get(position)));
@@ -490,7 +495,7 @@ public class MainActivityAdapter extends BaseAdapter {
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
-    public void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
+    private void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
         DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
                 DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mUser);
         dialogUpdateShoppingCartQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
@@ -512,7 +517,7 @@ public class MainActivityAdapter extends BaseAdapter {
         }
     }
 
-    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
+    private void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
         Product product = (new ProductDB(mContext, mUser)).getProductById(salesOrderLine.getProductId());
         if (product!=null) {
             DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =

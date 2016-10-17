@@ -312,12 +312,17 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             @Override
             public void onClick(View v) {
                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                    SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                            .getSalesOrderLineFromShoppingSalesByProductId(mDataset.get(holder.getAdapterPosition()).getId());
-                    if (salesOrderLine != null) {
-                        updateQtyOrderedInShoppingSales(salesOrderLine);
-                    } else {
-                        addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                    try {
+                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                                .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
+                                        Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                        if (salesOrderLine != null) {
+                            updateQtyOrderedInShoppingSales(salesOrderLine);
+                        } else {
+                            addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                        }
+                    } catch (Exception e) {
+                        //do nothing
                     }
                 } else {
                     addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
@@ -406,7 +411,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 DialogAddToShoppingCart.class.getSimpleName());
     }
 
-    public void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
+    private void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
         DialogUpdateShoppingCartQtyOrdered dialogUpdateShoppingCartQtyOrdered =
                 DialogUpdateShoppingCartQtyOrdered.newInstance(orderLine, true, mUser);
         dialogUpdateShoppingCartQtyOrdered.show(mFragmentActivity.getSupportFragmentManager(),
@@ -428,7 +433,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
     }
 
-    public void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
+    private void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine) {
         Product product = (new ProductDB(mContext, mUser)).getProductById(salesOrderLine.getProductId());
         if (product!=null) {
             DialogUpdateShoppingSaleQtyOrdered dialogUpdateShoppingSaleQtyOrdered =
