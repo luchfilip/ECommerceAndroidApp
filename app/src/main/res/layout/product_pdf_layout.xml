@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/product_pdf_card_shape"
+        android:padding="10px"
+        android:layout_marginBottom="20px"
+        android:layout_marginTop="20px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/productName_textView"
+            android:layout_weight="1"
+            android:textStyle="normal|bold"
+            android:textSize="32px"
+            android:textColor="@android:color/black"
+            android:layout_margin="3px" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="5px"
+                android:layout_marginRight="5px"
+                android:layout_height="340px"
+                android:layout_width="600px">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@android:color/darker_gray"
+                    android:layout_height="2px"
+                    android:paddingTop="2px"
+                    android:paddingRight="2px" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:id="@+id/productBrand_textView"
+                    android:textSize="24px"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px"
+                    android:layout_width="match_parent"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/productDescription_textView"
+                    android:textSize="20px"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/productPurpose_textView"
+                    android:textSize="20px"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/productCommercialPackage_textView"
+                    android:textSize="20px"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px"/>
+
+                <TableLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="1px"
+                    android:layout_marginTop="1px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/dark_grey"
+                            android:layout_margin="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:layout_weight="1" >
+                            <TextView
+                                android:text="@string/code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@android:color/white"
+                                android:layout_gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="20px"
+                                android:id="@+id/productCodeLabel_textView" />
+                        </FrameLayout>
+
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/dark_grey"
+                            android:layout_margin="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:layout_weight="1">
+                            <TextView
+                                android:text="@string/reference"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@android:color/white"
+                                android:layout_gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="20px"
+                                android:id="@+id/productReferenceLabel_textView" />
+                        </FrameLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/productCode_textView"
+                            android:textSize="20px"
+                            android:layout_gravity="center"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/productReference_textView"
+                            android:textSize="20px"
+                            android:layout_gravity="center"
+                            android:textColor="@android:color/black"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1" />
+                    </TableRow>
+
+                </TableLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/productImage_imageView"
+                android:layout_gravity="center"
+                android:layout_margin="5px"
+                android:layout_width="260px"
+                android:layout_height="260px" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
