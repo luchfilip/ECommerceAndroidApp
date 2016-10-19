@@ -41,6 +41,10 @@
                 android:id="@+id/nav_orders"
                 android:icon="@drawable/ic_view_list_black_24dp"
                 android:title="@string/orders_list" />
+            <item
+                android:id="@+id/nav_orders_tracking"
+                android:icon="@drawable/ic_track_changes_black_24dp"
+                android:title="@string/orders_tracking_list" />
         </menu>
     </item>
     <item android:title="@string/my_sales_orders">

@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
 import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -910,6 +911,9 @@ public class Utils {
                 context.startActivity(new Intent(context, PricesListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
+            } else if (itemId == R.id.nav_orders_tracking) {
+                context.startActivity(new Intent(context, OrdersTrackingListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }
         } catch (Exception e) {
             e.printStackTrace();

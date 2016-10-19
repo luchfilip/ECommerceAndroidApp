@@ -3,9 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
@@ -53,11 +51,12 @@ public class OrderDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT ECOMMERCE_ORDER_ID, ECOMMERCE_SALES_ORDER_ID, CREATE_TIME, LINES_NUMBER, " +
-                            " SUB_TOTAL, TAX, TOTAL, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID "+
-                    " FROM ECOMMERCE_ORDER " +
-                    " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
+                    "SELECT O.ECOMMERCE_ORDER_ID, O.ECOMMERCE_SALES_ORDER_ID, O.CREATE_TIME, O.LINES_NUMBER, " +
+                            " O.SUB_TOTAL, O.TAX, O.TOTAL, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID "+
+                    " FROM ECOMMERCE_ORDER O " +
+                            " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE O.ECOMMERCE_ORDER_ID = ? AND O.USER_ID = ? AND O.IS_ACTIVE = ?",
+                    new String[]{"Y", String.valueOf(orderId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 order = new Order();
                 order.setId(c.getInt(0));
@@ -92,14 +91,9 @@ public class OrderDB {
             }
         }
 
-        if(order!=null && order.getBusinessPartnerId()>0){
-            if(mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID && order.getSalesOrderId()>0){
-                order.setBusinessPartner((new UserBusinessPartnerDB(mContext, mUser))
-                        .getUserBusinessPartnerById(order.getBusinessPartnerId()));
-            }else{
-                order.setBusinessPartner((new BusinessPartnerDB(mContext, mUser))
-                        .getBusinessPartnerById(order.getBusinessPartnerId()));
-            }
+        if(order!=null /*&& order.getBusinessPartnerId()>0*/){
+            order.setBusinessPartner((new BusinessPartnerDB(mContext, mUser))
+                    .getBusinessPartnerById(order.getBusinessPartnerId()));
         }
         return order;
     }
@@ -180,32 +174,18 @@ public class OrderDB {
         ArrayList<Order> activeOrders = new ArrayList<>();
         Cursor c = null;
         try {
-            if(mUser!=null) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
-                    c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .build(), null,
-                            "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
-                                    " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
-                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID " +
-                                    " FROM ECOMMERCE_ORDER " +
-                                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                                    " ORDER BY ECOMMERCE_ORDER_ID desc",
-                            new String[]{String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                                    String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
-                } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                    c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .build(), null,
-                            "SELECT ECOMMERCE_ORDER_ID, DOC_STATUS, CREATE_TIME, UPDATE_TIME, " +
-                                    " APP_VERSION, APP_USER_NAME, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, " +
-                                    " ECOMMERCE_SALES_ORDER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID " +
-                                    " FROM ECOMMERCE_ORDER " +
-                                    " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                                    " ORDER BY ECOMMERCE_ORDER_ID desc",
-                            new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
-                }
-            }
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                    "SELECT O.ECOMMERCE_ORDER_ID, O.DOC_STATUS, O.CREATE_TIME, O.UPDATE_TIME, " +
+                        " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
+                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID " +
+                    " FROM ECOMMERCE_ORDER O " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                    " WHERE O.BUSINESS_PARTNER_ID = ? AND O.USER_ID = ? AND O.DOC_TYPE = ? AND O.IS_ACTIVE = ? " +
+                    " ORDER BY O.ECOMMERCE_ORDER_ID desc",
+                    new String[]{"Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
 
             if(c!=null){
                 while(c.moveToNext()){
@@ -248,17 +228,17 @@ public class OrderDB {
         }
 
         BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
-        ArrayList<Order> ordersToRemove = new ArrayList<>();
+        //ArrayList<Order> ordersToRemove = new ArrayList<>();
         for(Order order : activeOrders){
-            if(order.getBusinessPartnerId()>0){
+            //if(order.getBusinessPartnerId()>0){
                 order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
-            }
-            if(order.getBusinessPartner()==null) {
-                ordersToRemove.add(order);
-            }
+            //}
+            //if(order.getBusinessPartner()==null) {
+            //    ordersToRemove.add(order);
+            //}
         }
         //se eliminan los pedidos que no tienen businessPartner asociado.
-        activeOrders.removeAll(ordersToRemove);
+        //activeOrders.removeAll(ordersToRemove);
         return activeOrders;
     }
 }

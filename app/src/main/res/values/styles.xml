@@ -66,6 +66,10 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+    <style name="orders_tracking_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
     <style name="prices_list_style">
         <item name="android:background">@android:color/white</item>
     </style>

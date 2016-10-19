@@ -8,12 +8,15 @@ import android.view.MenuItem;
 /**
  * Created by Jesus Sarco, 18.10.2016
  */
-public class OrderTrackingActivity extends AppCompatActivity {
+public class OrderTrackingDetailActivity extends AppCompatActivity {
+
+    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
+    public static final String KEY_ORDER_ID = "KEY_ORDER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_tracking);
+        setContentView(R.layout.activity_order_tracking_detail);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null) {

@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -254,18 +255,30 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
+            if (mCurrentUser != null && mCurrentUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                addPreferencesFromResource(R.xml.pref_data_sync_business_partner);
+            } else {
+                addPreferencesFromResource(R.xml.pref_data_sync);
+            }
             setHasOptionsMenu(true);
 
-            getPreferenceManager().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());
-            ((EditTextPreference)getPreferenceManager().findPreference("server_address")).setText(mCurrentUser.getServerAddress());
+            try {
+                getPreferenceManager().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());
+                ((EditTextPreference) getPreferenceManager().findPreference("server_address")).setText(mCurrentUser.getServerAddress());
+            } catch (NullPointerException e) {
+                //do nothing
+            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_periodicity"));
-            bindPreferenceSummaryToValue(findPreference("server_address"));
+            try {
+                bindPreferenceSummaryToValue(findPreference("server_address"));
+            } catch (NullPointerException e) {
+                //do nothing
+            }
 
 
             findPreference("sync_periodicity").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -296,22 +309,26 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             });
 
 
-            findPreference("server_address").setDefaultValue(mCurrentUser.getServerAddress());
-            findPreference("server_address").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    mCurrentUser.setServerAddress(newValue.toString());
-                    AccountManager accountManager = AccountManager.get(preference.getContext());
-                    Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
-                    accountManager.setUserData(account,
-                            AccountGeneral.USERDATA_SERVER_ADDRESS,
-                            newValue.toString());
+            try {
+                findPreference("server_address").setDefaultValue(mCurrentUser.getServerAddress());
+                findPreference("server_address").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        mCurrentUser.setServerAddress(newValue.toString());
+                        AccountManager accountManager = AccountManager.get(preference.getContext());
+                        Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
+                        accountManager.setUserData(account,
+                                AccountGeneral.USERDATA_SERVER_ADDRESS,
+                                newValue.toString());
 
-                    // Set the summary to reflect the new value.
-                    preference.setSummary(newValue.toString());
-                    return true;
-                }
-            });
+                        // Set the summary to reflect the new value.
+                        preference.setSummary(newValue.toString());
+                        return true;
+                    }
+                });
+            } catch (NullPointerException e) {
+                //do nothing
+            }
 
             if (BuildConfig.USE_PRODUCT_IMAGE) {
                 bindPreferenceSummaryToValue(findPreference("save_images_in_device"));

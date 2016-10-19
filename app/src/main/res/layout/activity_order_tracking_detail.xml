@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true" >
 
-    <include layout="@layout/app_bar_order_tracking" />
+    <include layout="@layout/app_bar_order_tracking_detail" />
 
 </android.support.v4.widget.DrawerLayout>

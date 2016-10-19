@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,13 +47,18 @@ public class RequestResetUserPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_request_reset_user_password, container, false);
 
+        if (TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
+            rootView.findViewById(R.id.serverAddress_editText).setVisibility(View.VISIBLE);
+        }
+
         submit = (Button) rootView.findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String serverAddress = ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
+                final String serverAddress = !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
+                        ? BuildConfig.SERVER_ADDRESS : ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
                 final String userEmail = ((EditText) rootView.findViewById(R.id.userEmail_editText)).getText().toString();
-                if (!mServiceRunning && validateInputFields(serverAddress, userEmail)) {
+                if (!mServiceRunning && validateInputFields(userEmail)) {
                     lockScreen();
 
                     new AsyncTask<Void, Void, String>() {
@@ -159,7 +165,7 @@ public class RequestResetUserPasswordFragment extends Fragment {
         super.onStop();
     }
 
-    private boolean validateInputFields(String serverAddress, String userEmail) {
+    private boolean validateInputFields(String userEmail) {
         EmailValidator emailValidator = new EmailValidator();
         if (!emailValidator.validate(userEmail)) {
             new AlertDialog.Builder(getContext())

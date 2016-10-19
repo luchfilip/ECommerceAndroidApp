@@ -64,6 +64,7 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "false"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
+            buildConfigField "String", "SERVER_ADDRESS", "\"http://138.186.178.23:8089\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.febeca"
@@ -89,6 +90,7 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "false"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
+            buildConfigField "String", "SERVER_ADDRESS", "\"http://69.42.117.234:8089\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.sillaca"
@@ -114,6 +116,7 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "false"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
+            buildConfigField "String", "SERVER_ADDRESS", ""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.beval"
@@ -139,6 +142,7 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "false"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "false"
+            buildConfigField "String", "SERVER_ADDRESS", ""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.ids"
@@ -164,6 +168,7 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "true"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "false"
+            buildConfigField "String", "SERVER_ADDRESS", ""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.gruporivera"

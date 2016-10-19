@@ -10,11 +10,14 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.smartbuilders.smartsales.ecommerce.services.RequestUserPasswordService;
 import com.smartbuilders.smartsales.ecommerce.utils.EmailValidator;
@@ -24,6 +27,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -46,11 +51,16 @@ public class RequestUserPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_request_user_password, container, false);
 
+        if (TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
+            rootView.findViewById(R.id.serverAddress_editText).setVisibility(View.VISIBLE);
+        }
+
         submit = (Button) rootView.findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String serverAddress = ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
+                final String serverAddress = !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
+                        ? BuildConfig.SERVER_ADDRESS : ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
                 final String userName = ((EditText) rootView.findViewById(R.id.userName_editText)).getText().toString();
                 final String userEmail = ((EditText) rootView.findViewById(R.id.userEmail_editText)).getText().toString();
 
@@ -95,6 +105,17 @@ public class RequestUserPasswordFragment extends Fragment {
             lockScreen();
         }else{
             unlockScreen(null);
+        }
+
+        if (rootView.findViewById(R.id.user_prefix_spinner) != null) {
+            List<String> spinnerArray =  new ArrayList<>();
+            spinnerArray.add("J");
+            spinnerArray.add("V");
+            spinnerArray.add("E");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ((Spinner) rootView.findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
         }
 
         return rootView;

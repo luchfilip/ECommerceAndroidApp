@@ -22,7 +22,7 @@ public class OrderTrackingDB {
         this.mUser = user;
     }
 
-    public ArrayList<OrderTracking> getOrderTrackings () {
+    public ArrayList<OrderTracking> getOrderTracking (int businessPartnerId, int orderId) {
         ArrayList<OrderTracking> orderTrackings = new ArrayList<>();
 
         OrderTracking orderTracking = new OrderTracking();

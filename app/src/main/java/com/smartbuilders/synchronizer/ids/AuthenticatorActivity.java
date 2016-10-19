@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity;
 import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.syncadapter.authenticator.Authenticator;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -20,15 +23,19 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +88,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             if (mAuthTokenType == null) {
                 mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
             }
+
             if(getIntent().getStringExtra(ARG_USER_ID)!=null){
                 mUser = ApplicationUtilities.getUserByIdFromAccountManager(this, getIntent().getStringExtra(ARG_USER_ID));
                 mAccount = ApplicationUtilities.getAccountByIdFromAccountManager(this, getIntent().getStringExtra(ARG_USER_ID));
@@ -108,6 +116,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             });
 
+            if (TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
+                findViewById(R.id.server_address).setVisibility(View.VISIBLE);
+            }
+
             if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
                 if (findViewById(R.id.reset_password_textView) != null) {
                     findViewById(R.id.reset_password_textView).setVisibility(View.GONE);
@@ -133,6 +145,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         }
                     });
                 }
+            }
+
+            if (findViewById(R.id.user_prefix_spinner) != null) {
+                List<String> spinnerArray =  new ArrayList<>();
+                spinnerArray.add("J");
+                spinnerArray.add("V");
+                spinnerArray.add("E");
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ((Spinner) findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
             }
         }
 
@@ -177,7 +200,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 ? getString(R.string.ids_user_group_name) : ((TextView) findViewById(R.id.user_group)).getText().toString();
         final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
-        final String serverAddress 	= ((EditText) findViewById(R.id.server_address)).getText().toString();
+        final String serverAddress 	= !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
+                ? BuildConfig.SERVER_ADDRESS : ((EditText) findViewById(R.id.server_address)).getText().toString();
         final boolean saveDBInExternalCard = false;
 
         Utils.lockScreenOrientation(this);

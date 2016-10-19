@@ -168,13 +168,6 @@ public class OrderDetailFragment extends Fragment {
                                         }
                                     }
                                 });
-
-                                view.findViewById(R.id.order_tracking_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(getContext(), OrderTrackingActivity.class));
-                                    }
-                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -224,7 +217,6 @@ public class OrderDetailFragment extends Fragment {
                         getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
                         fileName + ".pdf");
             }
-
         }
         return super.onOptionsItemSelected(item);
     }

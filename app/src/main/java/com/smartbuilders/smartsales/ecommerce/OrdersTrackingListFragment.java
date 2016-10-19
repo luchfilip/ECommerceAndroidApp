@@ -7,23 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
-import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.adapters.OrdersTrackingListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class OrdersListFragment extends Fragment {
+public class OrdersTrackingListFragment extends Fragment {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
@@ -31,14 +27,12 @@ public class OrdersListFragment extends Fragment {
 
     private boolean mIsInitialLoad;
     private ListView mListView;
-    private OrdersListAdapter mOrdersListAdapter;
+    private OrdersTrackingListAdapter mOrdersTrackingListAdapter;
     private OrderDB mOrderDB;
     private int mListViewIndex;
     private int mListViewTop;
     private int mCurrentSelectedIndex;
     private User mUser;
-    private TextView mBusinessPartnerName;
-    private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
         void onItemSelected(Order order);
@@ -46,13 +40,13 @@ public class OrdersListFragment extends Fragment {
         void setSelectedIndex(int selectedIndex);
     }
 
-    public OrdersListFragment() {
+    public OrdersTrackingListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_orders_tracking_list, container, false);
         mIsInitialLoad = true;
 
         final ArrayList<Order> activeOrders = new ArrayList<>();
@@ -85,14 +79,10 @@ public class OrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
-                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
-                                setHeader();
+                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), activeOrders);
 
-                                mOrdersListAdapter = new OrdersListAdapter(getActivity(), activeOrders);
-
-                                mListView = (ListView) view.findViewById(R.id.orders_list);
-                                mListView.setAdapter(mOrdersListAdapter);
+                                mListView = (ListView) view.findViewById(R.id.orders_tracking_list);
+                                mListView.setAdapter(mOrdersTrackingListAdapter);
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                                     @Override
@@ -102,7 +92,7 @@ public class OrdersListFragment extends Fragment {
                                         // if it cannot seek to that position.
                                         Order order = (Order) adapterView.getItemAtPosition(position);
                                         if (order != null) {
-                                            ((Callback) getActivity()).onItemSelected(order);
+                                            ((OrdersTrackingListFragment.Callback) getActivity()).onItemSelected(order);
                                         }
                                     }
                                 });
@@ -114,9 +104,9 @@ public class OrdersListFragment extends Fragment {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
                                     if (savedInstanceState==null) {
-                                        ((Callback) getActivity()).onListIsLoaded();
+                                        ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
                                     } else {
-                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                        ((OrdersTrackingListFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                                     }
                                 }
                             }
@@ -133,39 +123,21 @@ public class OrdersListFragment extends Fragment {
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            setHeader();
-            if(mListView!=null && mOrdersListAdapter!=null && mOrderDB!=null){
-                int oldListSize = mOrdersListAdapter.getCount();
-                mOrdersListAdapter.setData(mOrderDB.getActiveOrders());
-                if(mOrdersListAdapter.getCount()>0 && getActivity()!=null){
-                    if(mOrdersListAdapter.getCount()!=oldListSize){
-                        ((Callback) getActivity()).onListIsLoaded();
+            if(mListView!=null && mOrdersTrackingListAdapter!=null && mOrderDB!=null){
+                int oldListSize = mOrdersTrackingListAdapter.getCount();
+                mOrdersTrackingListAdapter.setData(mOrderDB.getActiveOrders());
+                if(mOrdersTrackingListAdapter.getCount()>0 && getActivity()!=null){
+                    if(mOrdersTrackingListAdapter.getCount()!=oldListSize){
+                        ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
                     }else{
-                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                        ((OrdersTrackingListFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                     }
                 }else{
-                    ((Callback) getActivity()).onListIsLoaded();
+                    ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
                 }
             }
         }
         super.onStart();
-    }
-
-    private void setHeader(){
-        if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
-            try {
-                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                if(businessPartner!=null){
-                    mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    mBusinessPartnerName.setVisibility(View.VISIBLE);
-                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

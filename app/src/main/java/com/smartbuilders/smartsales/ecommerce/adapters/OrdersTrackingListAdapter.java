@@ -15,12 +15,12 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 7/4/2016.
  */
-public class OrdersListAdapter extends BaseAdapter {
+public class OrdersTrackingListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<Order> mDataset;
 
-    public OrdersListAdapter(Context context, ArrayList<Order> data) {
+    public OrdersTrackingListAdapter(Context context, ArrayList<Order> data) {
         mContext = context;
         mDataset = data;
     }
@@ -58,7 +58,7 @@ public class OrdersListAdapter extends BaseAdapter {
         View view = convertView;
         ViewHolder viewHolder;
         if(view==null){//si la vista es null la crea sino la reutiliza
-            view = LayoutInflater.from(mContext).inflate(R.layout.orders_list_item, parent, false);
+            view = LayoutInflater.from(mContext).inflate(R.layout.orders_tracking_list_item, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         }else{
@@ -75,9 +75,7 @@ public class OrdersListAdapter extends BaseAdapter {
         }
 
         viewHolder.orderNumber.setText(mContext.getString(R.string.order_number, mDataset.get(position).getOrderNumber()));
-        viewHolder.orderDate.setText(mContext.getString(R.string.order_date, mDataset.get(position).getCreatedStringFormat()));
-        viewHolder.orderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
-                String.valueOf(mDataset.get(position).getLinesNumber())));
+
 
         return view;
     }
@@ -89,14 +87,10 @@ public class OrdersListAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView salesOrderNumber;
         public TextView orderNumber;
-        public TextView orderDate;
-        public TextView orderLinesNumber;
 
         public ViewHolder(View v) {
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
             orderNumber = (TextView) v.findViewById(R.id.order_number_tv);
-            orderDate = (TextView) v.findViewById(R.id.order_date_tv);
-            orderLinesNumber = (TextView) v.findViewById(R.id.order_lines_number_tv);
         }
     }
 

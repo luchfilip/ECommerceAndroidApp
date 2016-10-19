@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="5dp"
             style="@style/shape_style"
             android:layout_weight="1">
 
@@ -60,7 +60,8 @@
                 android:maxLines="1"
                 android:inputType="textUri"
                 android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:focusableInTouchMode="true"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/user_group"
@@ -75,15 +76,31 @@
                 android:focusable="false"
                 android:focusableInTouchMode="true" />
 
-            <EditText
-                android:id="@+id/accountName"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/user_name"
-                android:maxLines="1"
-                android:inputType="text"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:layout_height="match_parent">
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_prefix_spinner"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+
+                <EditText
+                    android:id="@+id/accountName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/user_name_tax_id"
+                    android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ012345789"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/accountPassword"
