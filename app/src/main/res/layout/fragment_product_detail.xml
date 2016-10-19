@@ -21,7 +21,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/loading"
             android:paddingTop="4dip"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
     </LinearLayout>
 
@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingTop="2dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -46,8 +47,7 @@
                 android:layout_height="match_parent"
                 android:focusable="false"
                 android:id="@+id/related_shopping_products_card_view"
-                android:background="@drawable/shape"
-                android:layout_margin="4dp">
+                style="@style/shape_style">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,8 +88,7 @@
                 android:layout_height="match_parent"
                 android:focusable="false"
                 android:id="@+id/related_products_by_brand_card_view"
-                android:background="@drawable/shape"
-                android:layout_margin="4dp">
+                style="@style/shape_style">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -128,9 +127,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
-                android:background="@drawable/shape"
-                android:id="@+id/relatedproducts_card_view"
-                android:layout_margin="4dp">
+                style="@style/shape_style"
+                android:id="@+id/relatedproducts_card_view">
 
                 <TextView
                     android:layout_width="wrap_content"

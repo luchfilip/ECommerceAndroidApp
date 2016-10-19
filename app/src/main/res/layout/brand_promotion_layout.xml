@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         style="@style/shape_style"
-        android:background="@drawable/shape"
         android:baselineAligned="false">
 
         <ImageView

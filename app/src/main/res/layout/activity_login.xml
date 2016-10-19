@@ -46,7 +46,6 @@
                 android:orientation="vertical"
                 android:padding="10dp"
                 style="@style/shape_style"
-                android:background="@drawable/shape"
                 android:layout_marginBottom="20dp">
 
                 <EditText
@@ -55,7 +54,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/server_address"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:inputType="textUri"
                     android:focusable="true"
                     android:focusableInTouchMode="true" />
@@ -67,7 +65,6 @@
                     android:hint="@string/sync_user_group"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/material_grey_50"
                     android:visibility="gone"
@@ -80,7 +77,6 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:inputType="text"
                     android:focusable="true"
                     android:focusableInTouchMode="true" />
@@ -92,7 +88,6 @@
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true" />
 

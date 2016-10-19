@@ -54,7 +54,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/loading_data"
             android:paddingTop="4dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
@@ -65,7 +65,6 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         style="@style/shape_style"
-        android:background="@drawable/shape"
         android:id="@+id/error_loading_data_linearLayout"
         android:visibility="gone">
 

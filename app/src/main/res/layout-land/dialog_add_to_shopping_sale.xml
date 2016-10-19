@@ -18,7 +18,7 @@
         android:layout_margin="2dp"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:singleLine="true"
+        android:maxLines="1"
         android:minEms="28"/>
 
     <TextView
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/business_partners_spinner"
-                android:background="@drawable/shape"
+                style="@style/shape_style"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:visibility="visible" />

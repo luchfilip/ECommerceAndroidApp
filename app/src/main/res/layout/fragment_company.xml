@@ -23,7 +23,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/loading"
             android:paddingTop="4dip"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
     </LinearLayout>
 
@@ -38,16 +38,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/scrollView"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingTop="2dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape">
+                style="@style/shape_style">
 
                 <TextView
                     android:layout_width="match_parent"

@@ -33,6 +33,7 @@
     <string name="recommended_products">Recomendados</string>
     <string name="my_company">Mi Compañía</string>
     <string name="orders_list">Pedidos Cerrados</string>
+    <string name="order_tracking">Rastreo del pedido</string>
     <string name="business_partners">Clientes</string>
     <string name="closed_sales_orders">Cotizaciones Cerradas</string>
     <string name="invoces_list">Facturas</string>
@@ -320,6 +321,8 @@
     <string name="product_internalCode">Código: %1$s</string>
     <string name="product_internalCode_no_label">%1$s</string>
     <string name="invalid_qty_requested">Cantidad solicitada inválida.</string>
+    <string name="invalid_product_price">Precio del producto inválido.</string>
+    <string name="invalid_product_tax_percentage">Porcentaje de impuesto inválido.</string>
     <string name="invalid_commercial_package_qty_requested">La cantidad pedida debe ser multiplo del empaque comercial.</string>
     <string name="invalid_availability_qty_requested">La cantidad pedida no puede ser mayor a la disponibilidad.</string>
     <string name="products_recently_seen">Productos Recientemente Vistos</string>
@@ -420,5 +423,6 @@
     <string name="title_activity_price_list_detail">PriceListDetailActivity</string>
     <string name="code">Código</string>
     <string name="reference">Referencia</string>
+    <string name="title_activity_order_tracking">Rastreo del Pedido</string>
 
 </resources>

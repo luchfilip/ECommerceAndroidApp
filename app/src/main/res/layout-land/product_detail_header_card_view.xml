@@ -4,9 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape"
-    android:id="@+id/card_view"
-    android:layout_margin="4dp">
+    style="@style/shape_style"
+    android:id="@+id/card_view">
 
     <TextView
         android:layout_width="match_parent"

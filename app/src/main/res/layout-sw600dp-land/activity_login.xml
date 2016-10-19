@@ -49,8 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:background="@drawable/shape"
-            android:layout_marginLeft="5dp"
+            style="@style/shape_style"
             android:layout_weight="1">
 
             <EditText
@@ -59,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/server_address"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:inputType="textUri"
                 android:focusable="true"
                 android:focusableInTouchMode="true" />
@@ -71,7 +69,6 @@
                 android:hint="@string/sync_user_group"
                 android:inputType="text"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/material_grey_50"
                 android:visibility="gone"
@@ -84,7 +81,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/user_name"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:inputType="text"
                 android:focusable="true"
                 android:focusableInTouchMode="true" />
@@ -95,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:inputType="textPassword" />
@@ -138,7 +133,7 @@
             android:layout_height="wrap_content"
             android:text="@string/loading"
             android:paddingTop="4dip"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
     </LinearLayout>
 

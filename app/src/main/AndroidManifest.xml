@@ -329,6 +329,9 @@
         <activity
             android:name="com.smartbuilders.smartsales.salesforcesystem.PriceListDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrderTrackingActivity"
+            android:label="@string/title_activity_order_tracking" />
     </application>
 
 </manifest>

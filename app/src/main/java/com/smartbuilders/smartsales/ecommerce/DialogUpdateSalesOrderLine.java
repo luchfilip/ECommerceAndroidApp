@@ -147,14 +147,14 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                     try {
                         product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                        throw new Exception(getString(R.string.invalid_product_price));
                     }
                     try {
                         product.getProductTax().setPercentage(Float.valueOf(productTaxEditText.getText().toString()));
                         product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
                                 * (product.getProductTax().getPercentage() / 100));
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                        throw new Exception(getString(R.string.invalid_product_tax_percentage));
                     }
                     product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
                             + product.getDefaultProductPriceAvailability().getTax());

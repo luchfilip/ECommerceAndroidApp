@@ -19,7 +19,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/loading"
             android:paddingTop="4dip"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
     </LinearLayout>
 
@@ -126,9 +126,10 @@
 
             </LinearLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <Button
                     style="@style/GreyButtonAppTheme"
@@ -137,7 +138,14 @@
                     android:text="@string/share"
                     android:id="@+id/share_button"
                     android:layout_gravity="bottom|right" />
-            </FrameLayout>
+
+                <Button
+                    style="@style/GreyButtonAppTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_tracking"
+                    android:id="@+id/order_tracking_button" />
+            </LinearLayout>
 
         </LinearLayout>
 

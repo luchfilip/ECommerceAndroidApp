@@ -20,11 +20,9 @@ import android.widget.TextView;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrderLineAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
@@ -170,6 +168,13 @@ public class OrderDetailFragment extends Fragment {
                                         }
                                     }
                                 });
+
+                                view.findViewById(R.id.order_tracking_button).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(getContext(), OrderTrackingActivity.class));
+                                    }
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -229,7 +234,7 @@ public class OrderDetailFragment extends Fragment {
         private Order mOrder;
         private ArrayList<OrderLine> mOrderLines;
 
-        public CreateShareIntentThread(Order order, ArrayList<OrderLine> orderLines) {
+        CreateShareIntentThread(Order order, ArrayList<OrderLine> orderLines) {
             this.mOrder = order;
             this.mOrderLines = orderLines;
         }

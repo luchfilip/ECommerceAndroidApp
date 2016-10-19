@@ -277,11 +277,19 @@ public class DialogAddToShoppingSale extends DialogFragment {
         Product product = new Product();
         product.setId(mProduct.getId());
 
-        product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+        try {
+            product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+        } catch (NumberFormatException e) {
+            throw new Exception(getString(R.string.invalid_product_price));
+        }
 
-        product.getProductTax().setPercentage(Float.valueOf(productTaxPercentageEditText.getText().toString()));
-        product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
-                * (product.getProductTax().getPercentage() / 100));
+        try {
+            product.getProductTax().setPercentage(Float.valueOf(productTaxPercentageEditText.getText().toString()));
+            product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
+                    * (product.getProductTax().getPercentage() / 100));
+        } catch (NumberFormatException e) {
+            throw new Exception(getString(R.string.invalid_product_tax_percentage));
+        }
 
         product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
                 + product.getDefaultProductPriceAvailability().getTax());
