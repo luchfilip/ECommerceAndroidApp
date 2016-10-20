@@ -52,6 +52,7 @@ public class BusinessPartnersListFragment extends Fragment {
         void onItemLongSelected(int businessPartnerId, String businessPartnerName, User user);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
+        Integer getBusinessPartnerIdInDetailFragment();
     }
 
     public BusinessPartnersListFragment() {
@@ -145,7 +146,8 @@ public class BusinessPartnersListFragment extends Fragment {
                                                 mSpinnerSelectedItemPosition = position;
                                                 if (parent.getItemAtPosition(position) != null) {
                                                     if (!TextUtils.isEmpty(mCurrentFilterText)) {
-                                                        mBusinessPartnersListAdapter.filter(mCurrentFilterText, (String) parent.getItemAtPosition(position));
+                                                        mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                                                                mCurrentFilterText, (String) parent.getItemAtPosition(position));
                                                     }
                                                 }
                                             }
@@ -184,8 +186,8 @@ public class BusinessPartnersListFragment extends Fragment {
                                                     filterImageView.setOnClickListener(null);
                                                 }
                                                 mCurrentFilterText = s.toString();
-                                                mBusinessPartnersListAdapter.filter(mCurrentFilterText,
-                                                        (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                                                mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                                                        mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
                                             }
 
                                             @Override
@@ -229,8 +231,8 @@ public class BusinessPartnersListFragment extends Fragment {
                 }else if(mBusinessPartnerDB!=null) {
                     mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getBusinessPartners());
                 }
-                mBusinessPartnersListAdapter.filter(mCurrentFilterText,
-                        (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                        mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
             }
         }
         super.onStart();

@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
@@ -300,6 +301,7 @@ public class OrderLineDB {
                     orderLinesToRemove.add(orderLine);
                 }else{
                     Product product = new Product();
+                    product.setName(mContext.getString(R.string.no_info_available));
                     product.setId(orderLine.getProductId());
                     orderLine.setProduct(product);
                 }

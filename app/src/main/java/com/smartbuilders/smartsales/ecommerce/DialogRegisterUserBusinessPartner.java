@@ -24,7 +24,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
 
     private static final String STATE_CURRENT_USER = "STATE_CURRENT_USER";
 
-    private User mCurrentUser;
+    private User mUser;
 
     public DialogRegisterUserBusinessPartner() {
         // Empty constructor required for DialogFragment
@@ -37,7 +37,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
     public static DialogRegisterUserBusinessPartner newInstance(User user){
         DialogRegisterUserBusinessPartner dialogRegisterUserBusinessPartner = new DialogRegisterUserBusinessPartner();
         dialogRegisterUserBusinessPartner.setCancelable(false);
-        dialogRegisterUserBusinessPartner.mCurrentUser = user;
+        dialogRegisterUserBusinessPartner.mUser = user;
         return dialogRegisterUserBusinessPartner;
     }
 
@@ -54,7 +54,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
                              Bundle savedInstanceState) {
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_USER)){
-                mCurrentUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
+                mUser = savedInstanceState.getParcelable(STATE_CURRENT_USER);
             }
         }
 
@@ -81,7 +81,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mCurrentUser);
+                    UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mUser);
                     BusinessPartner businessPartner = new BusinessPartner();
                     businessPartner.setName(businessPartnerName.getText().toString());
                     businessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
@@ -91,7 +91,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
                     businessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
                     businessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
                     String result = UserBusinessPartnerBR.validateBusinessPartner(businessPartner,
-                            getContext(), mCurrentUser);
+                            getContext(), mUser);
                     if (result==null) {
                         result = userBusinessPartnerDB.registerUserBusinessPartner(businessPartner);
                         if (result==null){
@@ -128,7 +128,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(STATE_CURRENT_USER, mCurrentUser);
+        outState.putParcelable(STATE_CURRENT_USER, mUser);
         super.onSaveInstanceState(outState);
     }
 }

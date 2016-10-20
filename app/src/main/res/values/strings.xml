@@ -442,5 +442,8 @@
     <string name="title_activity_order_tracking">Rastreo del Pedido</string>
     <string name="title_activity_orders_tracking_list">OrdersTrackingListActivity</string>
     <string name="orders_tracking_list">Rastreo de Pedidos</string>
+    <string name="no_product_details">No hay detalles del producto</string>
+    <string name="product_name_unavailable">Nombre de producto no disponible</string>
+    <string name="no_info_available">No hay información disponible</string>
 
 </resources>

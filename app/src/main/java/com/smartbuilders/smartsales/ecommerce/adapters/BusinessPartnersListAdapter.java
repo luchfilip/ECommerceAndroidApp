@@ -135,7 +135,14 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
         mAppCurrentBusinessPartnerId = appCurrentBusinessPartnerId;
     }
 
-    public void filter(String charText, String filterBy) {
+    /**
+     *
+     * @param currentBusinessPartnerId, se usa cuando se esta en twoPanel para no borrar el
+     *                                  actual businessPartner que se muestra en el detalle
+     * @param charText
+     * @param filterBy
+     */
+    public void filter(Integer currentBusinessPartnerId, String charText, String filterBy) {
         if(charText == null || filterBy == null){
             return;
         }
@@ -147,32 +154,45 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
             if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_code))){
                 if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
                     for (BusinessPartner businessPartner : filterAux) {
-                        if (!TextUtils.isEmpty(businessPartner.getInternalCode()) &&
-                                businessPartner.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
+                        if ((!TextUtils.isEmpty(businessPartner.getInternalCode()) &&
+                                businessPartner.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText))
+                                || (currentBusinessPartnerId!=null && businessPartner.getId()==currentBusinessPartnerId)) {
                             mDataset.add(businessPartner);
                         }
                     }
                 }else{
-                    mDataset.clear();
-                }
-            }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_commercial_name))){
-                for (BusinessPartner businessPartner : filterAux) {
-                    if (!TextUtils.isEmpty(businessPartner.getCommercialName()) &&
-                            businessPartner.getCommercialName().toLowerCase(Locale.getDefault()).contains(charText)) {
-                        mDataset.add(businessPartner);
+                    if (currentBusinessPartnerId!=null) {
+                        for (BusinessPartner businessPartner : filterAux) {
+                            if (businessPartner.getId()==currentBusinessPartnerId) {
+                                mDataset.add(businessPartner);
+                                break;
+                            }
+                        }
+                    } else {
+                        mDataset.clear();
                     }
                 }
             }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_name))){
                 for (BusinessPartner businessPartner : filterAux) {
-                    if (!TextUtils.isEmpty(businessPartner.getName()) &&
-                            businessPartner.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    if ((!TextUtils.isEmpty(businessPartner.getName()) &&
+                            businessPartner.getName().toLowerCase(Locale.getDefault()).contains(charText))
+                            || (currentBusinessPartnerId!=null && businessPartner.getId()==currentBusinessPartnerId)) {
+                        mDataset.add(businessPartner);
+                    }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_commercial_name))){
+                for (BusinessPartner businessPartner : filterAux) {
+                    if ((!TextUtils.isEmpty(businessPartner.getCommercialName()) &&
+                            businessPartner.getCommercialName().toLowerCase(Locale.getDefault()).contains(charText))
+                            || (currentBusinessPartnerId!=null && businessPartner.getId()==currentBusinessPartnerId)) {
                         mDataset.add(businessPartner);
                     }
                 }
             }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_tax_id))){
                 for (BusinessPartner businessPartner : filterAux) {
-                    if (!TextUtils.isEmpty(businessPartner.getTaxId()) &&
-                            businessPartner.getTaxId().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    if ((!TextUtils.isEmpty(businessPartner.getTaxId()) &&
+                            businessPartner.getTaxId().toLowerCase(Locale.getDefault()).contains(charText))
+                            || (currentBusinessPartnerId!=null && businessPartner.getId()==currentBusinessPartnerId)) {
                         mDataset.add(businessPartner);
                     }
                 }

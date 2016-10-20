@@ -44,6 +44,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     private boolean mTwoPane;
     private ListView mListView;
     private User mUser;
+    private Integer mBusinessPartnerIdInDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,8 +245,14 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
+    public Integer getBusinessPartnerIdInDetailFragment() {
+        return mBusinessPartnerIdInDetailFragment;
+    }
+
+    @Override
     public void onItemSelected(int businessPartnerId) {
         if (mTwoPane) {
+            mBusinessPartnerIdInDetailFragment = businessPartnerId;
             Bundle args = new Bundle();
             args.putInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId);
             RegisterBusinessPartnerFragment fragment = new RegisterBusinessPartnerFragment();

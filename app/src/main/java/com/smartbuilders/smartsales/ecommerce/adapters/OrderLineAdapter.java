@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -141,14 +143,18 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProductId());
             }
         });
     }
 
-    private void goToProductDetails(Product product) {
-        Intent intent = new Intent(mContext, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
-        mContext.startActivity(intent);
+    private void goToProductDetails(int productId) {
+        if ((new ProductDB(mContext, mUser)).getProductById(productId)!=null) {
+            Intent intent = new Intent(mContext, ProductDetailActivity.class);
+            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId);
+            mContext.startActivity(intent);
+        } else {
+            Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+        }
     }
 }
