@@ -123,8 +123,8 @@ public class ProductsListActivity extends AppCompatActivity
         //de filtrar del tamaño definitivo
         final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.filter_by_options, R.layout.spinner_custom_prompt_item);
-        if(filterByOptionsSpinner!=null && adapter!=null) {
+                this, R.array.filter_products_by_options, R.layout.spinner_custom_prompt_item);
+        if(filterByOptionsSpinner!=null) {
             adapter.setDropDownViewResource(R.layout.spinner_custom_item);
             filterByOptionsSpinner.setAdapter(adapter);
         }
@@ -337,7 +337,7 @@ public class ProductsListActivity extends AppCompatActivity
                                             String.valueOf(mRecyclerView.getAdapter().getItemCount())));
                                 }
 
-                                if(filterByOptionsSpinner!=null && adapter!=null){
+                                if(filterByOptionsSpinner!=null){
                                     filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {

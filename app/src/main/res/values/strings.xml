@@ -311,12 +311,27 @@
     <string name="filter_by_product_brand_description">MARCA</string>
     <string name="filter_by_product_description">DESCRIPCIÓN</string>
     <string name="filter_by_product_purpose">USO</string>
-    <string-array name="filter_by_options">
+    <string-array name="filter_products_by_options">
         <item>@string/filter_by_product_name</item>
         <item>@string/filter_by_product_internal_code</item>
         <item>@string/filter_by_product_brand_description</item>
         <item>@string/filter_by_product_description</item>
         <item>@string/filter_by_product_purpose</item>
+    </string-array>
+    <string name="filter_by_business_partner_commercial_name">NOMBRE C.</string>
+    <string name="filter_by_business_partner_name">RAZON S.</string>
+    <string name="filter_by_business_partner_tax_id">RIF</string>
+    <string name="filter_by_business_partner_code">CÓDIGO</string>
+    <string-array name="filter_business_partner_by_options">
+        <item>@string/filter_by_business_partner_code</item>
+        <item>@string/filter_by_business_partner_name</item>
+        <item>@string/filter_by_business_partner_commercial_name</item>
+        <item>@string/filter_by_business_partner_tax_id</item>
+    </string-array>
+    <string-array name="filter_user_business_partner_by_options">
+        <item>@string/filter_by_business_partner_name</item>
+        <item>@string/filter_by_business_partner_commercial_name</item>
+        <item>@string/filter_by_business_partner_tax_id</item>
     </string-array>
     <string name="product_internalCode_and_name">Cód: %1$s - %2$s</string>
     <string name="product_internalCode">Código: %1$s</string>

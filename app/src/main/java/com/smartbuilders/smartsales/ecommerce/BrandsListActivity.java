@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +87,16 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (findViewById(R.id.filter_editText) != null
+                && !TextUtils.isEmpty(((EditText) findViewById(R.id.filter_editText)).getText())) {
+            ((EditText) findViewById(R.id.filter_editText)).setText(null);
+        } else {
+            super.onBackPressed();
         }
     }
 

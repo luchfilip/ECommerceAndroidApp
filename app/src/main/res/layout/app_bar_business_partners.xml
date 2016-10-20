@@ -21,24 +21,93 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             style="@style/title_style"
-            android:gravity="center_vertical">
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
-            <ImageView
-                android:id="@+id/toolbar_imageView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:src="@drawable/ic_supervisor_account_white_24dp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp">
 
-            <TextView
-                android:text="@string/business_partners"
-                android:id="@+id/title_textView"
-                android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/toolbar_imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_supervisor_account_white_24dp"/>
+
+                <TextView
+                    android:text="@string/business_partners"
+                    android:id="@+id/title_textView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    style="@style/title_text_style"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/title_text_style"
-                android:layout_weight="1" />
+                android:layout_gravity="center_vertical"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:background="@drawable/search_box_bg"
+                    android:foregroundGravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/lateral_menu_bg_color"
+                        android:hint="@string/filter_by"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:inputType="text"
+                        android:id="@+id/filter_businessPartner_editText"
+                        android:focusable="false"
+                        android:padding="2dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/filter_imageView"
+                        android:src="@drawable/ic_filter_list_black_24dp" />
+
+                </LinearLayout>
+
+                <Spinner
+                    android:id="@+id/filter_by_options_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_dark_shape"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>

@@ -6,4 +6,4 @@
     android:text="Medium Text"
     android:textColor="@android:color/white"
     android:id="@android:id/text1"
-    android:padding="4dp" />
+    android:padding="3dp" />

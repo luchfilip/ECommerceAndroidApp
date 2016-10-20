@@ -11,10 +11,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +81,22 @@ public class BusinessPartnersListActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                     .setText(getString(R.string.welcome_user, mUser.getUserName()));
+        }
+
+        //por cuestiones esteticas se carga el spinner de una vez aqui para que se coloque la barra
+        //de filtrar del tamaño definitivo
+        final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
+        final ArrayAdapter<CharSequence> adapter;
+        if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+            adapter = ArrayAdapter.createFromResource(
+                    this, R.array.filter_user_business_partner_by_options, R.layout.spinner_custom_prompt_item);
+        } else {
+            adapter = ArrayAdapter.createFromResource(
+                    this, R.array.filter_business_partner_by_options, R.layout.spinner_custom_prompt_item);
+        }
+        if(filterByOptionsSpinner!=null) {
+            adapter.setDropDownViewResource(R.layout.spinner_custom_item);
+            filterByOptionsSpinner.setAdapter(adapter);
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -184,6 +204,9 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (findViewById(R.id.filter_businessPartner_editText) != null
+                && !TextUtils.isEmpty(((EditText) findViewById(R.id.filter_businessPartner_editText)).getText())){
+            ((EditText) findViewById(R.id.filter_businessPartner_editText)).setText(null);
         } else {
             super.onBackPressed();
         }

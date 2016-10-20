@@ -15,20 +15,28 @@ import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Created by Alberto on 7/4/2016.
  */
 public class BusinessPartnersListAdapter extends BaseAdapter {
 
+    // Regular expression in Java to check if String is number or not
+    private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
+
     private Context mContext;
     private ArrayList<BusinessPartner> mDataset;
+    private ArrayList<BusinessPartner> filterAux;
     private int mAppCurrentBusinessPartnerId;
 
     public BusinessPartnersListAdapter(Context context, ArrayList<BusinessPartner> data,
                                        int appCurrentBusinessPartnerId) {
         mContext = context;
         mDataset = data;
+        filterAux = new ArrayList<>();
+        filterAux.addAll(mDataset);
         mAppCurrentBusinessPartnerId = appCurrentBusinessPartnerId;
     }
 
@@ -82,6 +90,7 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
             viewHolder.businessPartnerInternalCode.setVisibility(View.GONE);
         }
 
+        viewHolder.businessPartnerCommercialName.setText(mDataset.get(position).getCommercialName());
         viewHolder.businessPartnerName.setText(mDataset.get(position).getName());
         viewHolder.businessPartnerTaxId.setText(mContext.getString(R.string.tax_id, mDataset.get(position).getTaxId()));
 
@@ -100,13 +109,15 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
+        public TextView businessPartnerCommercialName;
         public TextView businessPartnerName;
         public TextView businessPartnerTaxId;
         public TextView businessPartnerInternalCode;
         public ImageView appCurrentBusinessPartnerIndicator;
 
         public ViewHolder(View v) {
-            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
+            businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
+            businessPartnerName = (TextView) v.findViewById(R.id.business_partner_name_textView);
             businessPartnerTaxId = (TextView) v.findViewById(R.id.business_partner_tax_id_textView);
             businessPartnerInternalCode = (TextView) v.findViewById(R.id.business_partner_internal_code_textView);
             appCurrentBusinessPartnerIndicator = (ImageView) v.findViewById(R.id.app_current_business_partner_indicator_imageView);
@@ -115,10 +126,58 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
 
     public void setData(ArrayList<BusinessPartner> businessPartners) {
         mDataset = businessPartners;
+        filterAux = new ArrayList<>();
+        filterAux.addAll(mDataset);
         notifyDataSetChanged();
     }
 
     public void setAppCurrentBusinessPartnerId(int appCurrentBusinessPartnerId){
         mAppCurrentBusinessPartnerId = appCurrentBusinessPartnerId;
+    }
+
+    public void filter(String charText, String filterBy) {
+        if(charText == null || filterBy == null){
+            return;
+        }
+        charText = charText.toLowerCase(Locale.getDefault());
+        mDataset.clear();
+        if (charText.length() == 0) {
+            mDataset.addAll(filterAux);
+        } else {
+            if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_code))){
+                if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
+                    for (BusinessPartner businessPartner : filterAux) {
+                        if (!TextUtils.isEmpty(businessPartner.getInternalCode()) &&
+                                businessPartner.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
+                            mDataset.add(businessPartner);
+                        }
+                    }
+                }else{
+                    mDataset.clear();
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_commercial_name))){
+                for (BusinessPartner businessPartner : filterAux) {
+                    if (!TextUtils.isEmpty(businessPartner.getCommercialName()) &&
+                            businessPartner.getCommercialName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(businessPartner);
+                    }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_name))){
+                for (BusinessPartner businessPartner : filterAux) {
+                    if (!TextUtils.isEmpty(businessPartner.getName()) &&
+                            businessPartner.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(businessPartner);
+                    }
+                }
+            }else if(filterBy.equals(mContext.getString(R.string.filter_by_business_partner_tax_id))){
+                for (BusinessPartner businessPartner : filterAux) {
+                    if (!TextUtils.isEmpty(businessPartner.getTaxId()) &&
+                            businessPartner.getTaxId().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(businessPartner);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
