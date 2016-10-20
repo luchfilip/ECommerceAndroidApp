@@ -50,26 +50,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/business_partner_commercial_name_label"
-                    android:id="@+id/business_partner_commercial_name_textView"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/business_partner_commercial_name_editText"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:hint="@string/business_partner_commercial_name" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/business_partner_name_label"
                     android:id="@+id/business_partner_name_textView"
                     android:layout_marginLeft="8dp"
@@ -86,6 +66,26 @@
                     android:paddingEnd="5dp"
                     android:paddingStart="5dp"
                     android:hint="@string/business_partner_name" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/business_partner_commercial_name_label"
+                    android:id="@+id/business_partner_commercial_name_textView"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partner_commercial_name_editText"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:hint="@string/business_partner_commercial_name" />
 
                 <TextView
                     android:layout_width="match_parent"
