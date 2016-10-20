@@ -79,7 +79,7 @@ public class OrdersTrackingListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), activeOrders);
+                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), mUser, activeOrders);
 
                                 mListView = (ListView) view.findViewById(R.id.orders_tracking_list);
                                 mListView.setAdapter(mOrdersTrackingListAdapter);

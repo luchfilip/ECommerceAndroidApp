@@ -269,44 +269,49 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 //do nothing
             }
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_periodicity"));
+
             try {
+                // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+                // to their values. When their values change, their summaries are
+                // updated to reflect the new value, per the Android Design
+                // guidelines.
+                bindPreferenceSummaryToValue(findPreference("sync_periodicity"));
                 bindPreferenceSummaryToValue(findPreference("server_address"));
             } catch (NullPointerException e) {
                 //do nothing
             }
 
 
-            findPreference("sync_periodicity").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
-                    ContentResolver.removePeriodicSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, new Bundle());
-                    if (Long.valueOf(newValue.toString()) <=0) {
-                        //Turn off periodic syncing
-                        ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, false);
-                    }else{
-                        //Turn on periodic syncing
-                        ContentResolver.setIsSyncable(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, 1);
-                        ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, true);
+            try {
+                findPreference("sync_periodicity").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Account account = ApplicationUtilities.getAccountByIdFromAccountManager(preference.getContext(), mCurrentUser.getUserId());
+                        ContentResolver.removePeriodicSync(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, new Bundle());
+                        if (Long.valueOf(newValue.toString()) <= 0) {
+                            //Turn off periodic syncing
+                            ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, false);
+                        } else {
+                            //Turn on periodic syncing
+                            ContentResolver.setIsSyncable(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, 1);
+                            ContentResolver.setSyncAutomatically(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY, true);
 
-                        ContentResolver.addPeriodicSync(
-                                account,
-                                BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY,
-                                Bundle.EMPTY,
-                                Utils.getSyncPeriodicityFromPreferences(getActivity()));
+                            ContentResolver.addPeriodicSync(
+                                    account,
+                                    BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY,
+                                    Bundle.EMPTY,
+                                    Utils.getSyncPeriodicityFromPreferences(getActivity()));
+                        }
+
+                        int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
+                        // Set the summary to reflect the new value.
+                        preference.setSummary(index >= 0 ? ((ListPreference) preference).getEntries()[index] : null);
+                        return true;
                     }
-
-                    int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
-                    // Set the summary to reflect the new value.
-                    preference.setSummary(index >= 0 ? ((ListPreference) preference).getEntries()[index] : null);
-                    return true;
-                }
-            });
+                });
+            } catch (NullPointerException e) {
+                //do nothing
+            }
 
 
             try {

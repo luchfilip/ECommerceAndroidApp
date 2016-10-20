@@ -17,6 +17,7 @@ public class OrderTracking extends Model implements Parcelable {
     private String subTitle;
     private Date date;
     private int imageResId;
+    private boolean isLastState;
 
     public OrderTracking() {
 
@@ -43,6 +44,7 @@ public class OrderTracking extends Model implements Parcelable {
         title = in.readString();
         subTitle = in.readString();
         imageResId = in.readInt();
+        isLastState = in.readByte() != 0;
     }
 
     @Override
@@ -50,6 +52,7 @@ public class OrderTracking extends Model implements Parcelable {
         dest.writeString(title);
         dest.writeString(subTitle);
         dest.writeInt(imageResId);
+        dest.writeByte((byte) (isLastState ? 1 : 0));
     }
 
     public String getTitle() {
@@ -90,5 +93,13 @@ public class OrderTracking extends Model implements Parcelable {
                     new Locale("es","VE")).format(getDate());
         } catch (Exception e) { }
         return null;
+    }
+
+    public boolean isLastState() {
+        return isLastState;
+    }
+
+    public void setLastState(boolean lastState) {
+        isLastState = lastState;
     }
 }

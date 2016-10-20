@@ -31,6 +31,7 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
         // each data item is just a string in this case
 
         public ImageView iconImageView;
+        public ImageView checkImageView;
         public TextView titleTextView;
         public TextView subTitleTextView;
         public TextView dateTextView;
@@ -39,6 +40,7 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
         public ViewHolder(View v) {
             super(v);
             iconImageView = (ImageView) v.findViewById(R.id.icon_imageView);
+            checkImageView = (ImageView) v.findViewById(R.id.check_imageView);
             titleTextView = (TextView) v.findViewById(R.id.title_textView);
             subTitleTextView = (TextView) v.findViewById(R.id.subTitle_textView);
             dateTextView = (TextView) v.findViewById(R.id.date_textView);
@@ -70,20 +72,35 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
 
             holder.dateTextView.setText(mOrderTrackings.get(position).getDateStringFormat());
 
-            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                holder.containerLinearLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
+            if (mOrderTrackings.get(position).isLastState()) {
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.containerLinearLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.order_tracking_item_last_state_shape));
+                } else {
+                    holder.containerLinearLayout.setBackground(mContext.getResources().getDrawable(R.drawable.order_tracking_item_last_state_shape));
+                }
             } else {
-                holder.containerLinearLayout.setBackground(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.containerLinearLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
+                } else {
+                    holder.containerLinearLayout.setBackground(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
+                }
             }
-            holder.titleTextView.setTextColor(Utils.getColor(mContext, R.color.green_dark));
-            holder.subTitleTextView.setTextColor(Utils.getColor(mContext, R.color.black));
-            holder.dateTextView.setTextColor(Utils.getColor(mContext, R.color.black));
+
+            holder.titleTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
+            holder.subTitleTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
+            holder.dateTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
+
+            holder.checkImageView.setVisibility(View.VISIBLE);
         }
 
         if (mOrderTrackings.get(position).getImageResId() != 0) {
             holder.iconImageView.setImageResource(mOrderTrackings.get(position).getImageResId());
             if (mOrderTrackings.get(position).getDate() != null) {
-                holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.green_dark));
+                if (mOrderTrackings.get(position).isLastState()) {
+                    holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
+                } else {
+                    holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+                }
             } else {
                 holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.dark_grey));
             }

@@ -43,4 +43,6 @@
     <color name="phoneNumberLinkColor">#ff0099cc</color>
     <color name="emailLinkColor">#222222</color>
     <color name="colorQtyOrderedError">#e73740</color>
+    <color name="successDarkColor">#FF4F8A10</color>
+    <color name="successLightColor">#FFDFF2BF</color>
 </resources>
