@@ -86,9 +86,9 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
                 }
             }
 
-            holder.titleTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
-            holder.subTitleTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
-            holder.dateTextView.setTextColor(Utils.getColor(mContext, android.R.color.black));
+            holder.titleTextView.setTextColor(Utils.getColor(mContext, R.color.black));
+            holder.subTitleTextView.setTextColor(Utils.getColor(mContext, R.color.black));
+            holder.dateTextView.setTextColor(Utils.getColor(mContext, R.color.black));
 
             holder.checkImageView.setVisibility(View.VISIBLE);
         }
@@ -98,8 +98,10 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
             if (mOrderTrackings.get(position).getDate() != null) {
                 if (mOrderTrackings.get(position).isLastState()) {
                     holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
+                    holder.checkImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
                 } else {
                     holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+                    holder.checkImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
                 }
             } else {
                 holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.dark_grey));

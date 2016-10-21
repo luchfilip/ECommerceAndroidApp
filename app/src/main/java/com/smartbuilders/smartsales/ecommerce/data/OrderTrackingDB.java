@@ -62,7 +62,7 @@ public class OrderTrackingDB {
         orderTracking.setLastState(true);
         orderTracking.setTitle("Mercancia Entregada");
         orderTracking.setSubTitle("Recibida por: ");
-        //orderTracking.setDate(new Date());
+        orderTracking.setDate(new Date());
         orderTracking.setImageResId(R.drawable.ic_store_black_48dp);
         orderTrackings.add(orderTracking);
 
@@ -106,5 +106,13 @@ public class OrderTrackingDB {
                 break;
         }
         return orderTracking;
+    }
+
+    public float getProgressPercentage(int businessPartnerId, int orderId) {
+        return 0;
+    }
+
+    public String getProgressText(int businessPartnerId, int orderId) {
+        return "Completado!";
     }
 }

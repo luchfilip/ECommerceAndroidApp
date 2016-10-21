@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -88,23 +87,12 @@ public class OrdersTrackingListAdapter extends BaseAdapter {
                 .getMaxOrderTracking(mDataset.get(position).getBusinessPartnerId(), mDataset.get(position).getId());
 
         viewHolder.titleTextView.setText(orderTracking.getTitle());
-        viewHolder.subTitleTextView.setText(orderTracking.getSubTitle());
         viewHolder.dateTextView.setText(orderTracking.getDateStringFormat());
 
         if (orderTracking.isLastState()) {
-            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                viewHolder.containerLinearLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.order_tracking_item_last_state_shape));
-            } else {
-                viewHolder.containerLinearLayout.setBackground(mContext.getResources().getDrawable(R.drawable.order_tracking_item_last_state_shape));
-            }
             viewHolder.iconImageView.setImageResource(R.drawable.ic_check_circle_white_48dp);
             viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
         } else {
-            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                viewHolder.containerLinearLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
-            } else {
-                viewHolder.containerLinearLayout.setBackground(mContext.getResources().getDrawable(R.drawable.order_tracking_item_active_shape));
-            }
             viewHolder.iconImageView.setImageResource(orderTracking.getImageResId());
             viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
         }
@@ -118,19 +106,15 @@ public class OrdersTrackingListAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView salesOrderNumber;
         public TextView orderNumber;
-        public LinearLayout containerLinearLayout;
         public ImageView iconImageView;
         public TextView titleTextView;
-        public TextView subTitleTextView;
         public TextView dateTextView;
 
         public ViewHolder(View v) {
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
             orderNumber = (TextView) v.findViewById(R.id.order_number_tv);
-            containerLinearLayout = (LinearLayout) v.findViewById(R.id.container_linearLayout);
             iconImageView = (ImageView) v.findViewById(R.id.icon_imageView);
             titleTextView = (TextView) v.findViewById(R.id.title_textView);
-            subTitleTextView = (TextView) v.findViewById(R.id.subTitle_textView);
             dateTextView = (TextView) v.findViewById(R.id.date_textView);
         }
     }
