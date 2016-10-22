@@ -70,7 +70,7 @@ public class OrdersTrackingListFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
 
                     mOrderDB = new OrderDB(getContext(), mUser);
-                    activeOrders.addAll(mOrderDB.getActiveOrders());
+                    activeOrders.addAll(mOrderDB.getActiveOrdersWithTracking());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -79,7 +79,7 @@ public class OrdersTrackingListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), mUser, activeOrders);
+                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), activeOrders);
 
                                 mListView = (ListView) view.findViewById(R.id.orders_tracking_list);
                                 mListView.setAdapter(mOrdersTrackingListAdapter);

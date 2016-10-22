@@ -21,7 +21,7 @@
     <color name="state_pressed_selector_color">#64c2f4</color>
     <color name="state_activated_selector_color">#64c2f4</color>
     <color name="dark_grey">#777777</color>
-    <color name="grey">#CCCCCC</color>
+    <color name="grey">#cccccc</color>
     <color name="grey_medium">#dddddd</color>
     <color name="light_grey">#eeeeee</color>
     <color name="transparent_light_grey">#AAeeeeee</color>

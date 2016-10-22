@@ -138,7 +138,6 @@ public class OrdersTrackingListActivity extends AppCompatActivity
     public void onItemSelected(Order order) {
         if(mTwoPane){
             Bundle args = new Bundle();
-            args.putInt(OrderTrackingDetailActivity.KEY_BUSINESS_PARTNER_ID, order.getBusinessPartnerId());
             args.putInt(OrderTrackingDetailActivity.KEY_ORDER_ID, order.getId());
 
             OrderTrackingDetailFragment fragment = new OrderTrackingDetailFragment();
@@ -149,7 +148,6 @@ public class OrdersTrackingListActivity extends AppCompatActivity
                     .commit();
         }else{
             Intent intent = new Intent(this, OrderTrackingDetailActivity.class);
-            intent.putExtra(OrderTrackingDetailActivity.KEY_BUSINESS_PARTNER_ID, order.getBusinessPartnerId());
             intent.putExtra(OrderTrackingDetailActivity.KEY_ORDER_ID, order.getId());
             startActivity(intent);
         }

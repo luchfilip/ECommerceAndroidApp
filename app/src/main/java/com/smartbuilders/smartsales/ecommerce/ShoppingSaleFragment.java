@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
@@ -143,6 +144,19 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 mSubTotalAmount = (TextView) view.findViewById(R.id.subTotalAmount_tv);
                                 mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
                                 mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
+
+                                if (view.findViewById(R.id.empty_shopping_sale_imageView) != null) {
+                                    ((ImageView) view.findViewById(R.id.empty_shopping_sale_imageView))
+                                            .setColorFilter(Utils.getColor(getContext(), R.color.golden_medium));
+                                }
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.shoppingSale_items_list);
                                 // use this setting to improve performance if you know that changes

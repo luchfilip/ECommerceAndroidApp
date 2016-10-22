@@ -9,11 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.data.OrderTrackingDB;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
-import com.smartbuilders.smartsales.ecommerce.model.OrderTracking;
-import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
 
@@ -23,12 +19,10 @@ import java.util.ArrayList;
 public class OrdersTrackingListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private User mUser;
     private ArrayList<Order> mDataset;
 
-    public OrdersTrackingListAdapter(Context context, User user, ArrayList<Order> data) {
+    public OrdersTrackingListAdapter(Context context, ArrayList<Order> data) {
         mContext = context;
-        mUser = user;
         mDataset = data;
     }
 
@@ -83,19 +77,11 @@ public class OrdersTrackingListAdapter extends BaseAdapter {
 
         viewHolder.orderNumber.setText(mContext.getString(R.string.order_number, mDataset.get(position).getOrderNumber()));
 
-        OrderTracking orderTracking = (new OrderTrackingDB(mContext, mUser))
-                .getMaxOrderTracking(mDataset.get(position).getBusinessPartnerId(), mDataset.get(position).getId());
+        viewHolder.titleTextView.setText(mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getTitle());
+        viewHolder.dateTextView.setText(mDataset.get(position).getMaxOrderTracking().getCreatedStringFormat());
 
-        viewHolder.titleTextView.setText(orderTracking.getTitle());
-        viewHolder.dateTextView.setText(orderTracking.getDateStringFormat());
-
-        if (orderTracking.isLastState()) {
-            viewHolder.iconImageView.setImageResource(R.drawable.ic_check_circle_white_48dp);
-            viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
-        } else {
-            viewHolder.iconImageView.setImageResource(orderTracking.getImageResId());
-            viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
-        }
+//            viewHolder.iconImageView.setImageResource(R.drawable.ic_check_circle_white_48dp);
+//            viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
         return view;
     }
 

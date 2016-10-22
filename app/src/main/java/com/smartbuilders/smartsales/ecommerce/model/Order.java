@@ -20,6 +20,7 @@ public class Order extends Model implements Parcelable {
     private BusinessPartner businessPartner;
     private int businessPartnerId;
     private int businessPartnerAddressId;
+    private OrderTracking maxOrderTracking;
 
     public Order() {
 
@@ -127,6 +128,7 @@ public class Order extends Model implements Parcelable {
         businessPartner = in.readParcelable(BusinessPartner.class.getClassLoader());
         businessPartnerId = in.readInt();
         businessPartnerAddressId = in.readInt();
+        maxOrderTracking = in.readParcelable(OrderTracking.class.getClassLoader());
     }
 
     @Override
@@ -140,6 +142,7 @@ public class Order extends Model implements Parcelable {
         dest.writeParcelable(businessPartner, flags);
         dest.writeInt(businessPartnerId);
         dest.writeInt(businessPartnerAddressId);
+        dest.writeParcelable(maxOrderTracking, flags);
     }
 
     @Override
@@ -178,4 +181,12 @@ public class Order extends Model implements Parcelable {
             return new Order[size];
         }
     };
+
+    public OrderTracking getMaxOrderTracking() {
+        return maxOrderTracking;
+    }
+
+    public void setMaxOrderTracking(OrderTracking maxOrderTracking) {
+        this.maxOrderTracking = maxOrderTracking;
+    }
 }

@@ -241,4 +241,73 @@ public class OrderDB {
         //activeOrders.removeAll(ordersToRemove);
         return activeOrders;
     }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Order> getActiveOrdersWithTracking(){
+        ArrayList<Order> activeOrders = new ArrayList<>();
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                    "SELECT DISTINCT O.ECOMMERCE_ORDER_ID, O.DOC_STATUS, O.CREATE_TIME, O.UPDATE_TIME, " +
+                        " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
+                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID " +
+                    " FROM ECOMMERCE_ORDER O " +
+                        " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                        " INNER JOIN ORDER_TRACKING OT ON OT.ECOMMERCE_ORDER_ID = O.ECOMMERCE_ORDER_ID AND O.USER_ID = O.USER_ID AND OT.IS_ACTIVE = ? " +
+                        " INNER JOIN ORDER_TRACKING_STATE OTS ON OTS.ORDER_TRACKING_STATE_ID = OT.ORDER_TRACKING_STATE_ID AND OTS.IS_ACTIVE = ? " +
+                    " WHERE O.BUSINESS_PARTNER_ID = ? AND O.USER_ID = ? AND O.DOC_TYPE = ? AND O.IS_ACTIVE = ? " +
+                    " ORDER BY O.ECOMMERCE_ORDER_ID desc",
+                    new String[]{"Y", "Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.FINALIZED_ORDER_DOC_TYPE, "Y"}, null);
+
+            if(c!=null){
+                while(c.moveToNext()){
+                    Order order = new Order();
+                    order.setId(c.getInt(0));
+                    try{
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    }catch(ParseException ex){
+                        try {
+                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        } catch (ParseException e) {
+                            //empty
+                        }
+                    }catch(Exception ex){
+                        //empty
+                    }
+                    order.setLinesNumber(c.getInt(6));
+                    order.setSubTotalAmount(c.getDouble(7));
+                    order.setTaxAmount(c.getDouble(8));
+                    order.setTotalAmount(c.getDouble(9));
+                    order.setSalesOrderId(c.getInt(10));
+                    order.setBusinessPartnerId(c.getInt(11));
+                    order.setBusinessPartnerAddressId(c.getInt(12));
+                    activeOrders.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
+        OrderTrackingDB orderTrackingDB = new OrderTrackingDB(mContext, mUser);
+        for(Order order : activeOrders){
+            order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
+            order.setMaxOrderTracking(orderTrackingDB.getMaxOrderTracking(order.getId()));
+        }
+        return activeOrders;
+    }
 }

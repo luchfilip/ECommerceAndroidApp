@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 16;
+	private static final int DATABASE_VERSION = 17;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " CREATE_TIME DATETIME DEFAULT (datetime('now','localtime')))";
 
-    public static final String CREATE_IDS_SERVER_ADDRESS_BACKUP =
+    private static final String CREATE_IDS_SERVER_ADDRESS_BACKUP =
             "CREATE TABLE IF NOT EXISTS IDS_SERVER_ADDRESS_BACKUP (" +
                     "SERVER_ADDRESS VARCHAR(255) DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
@@ -78,7 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**********************************************************************************************/
 
-	public static final String CREATE_PRODUCT =
+	private static final String CREATE_PRODUCT =
             "CREATE TABLE IF NOT EXISTS PRODUCT (" +
                     "PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
@@ -101,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID))";
 
-    public static final String CREATE_PRODUCT_ATTRIBUTE =
+    private static final String CREATE_PRODUCT_ATTRIBUTE =
             "CREATE TABLE IF NOT EXISTS PRODUCT_ATTRIBUTE (" +
                     "PRODUCT_ID INTEGER DEFAULT NULL, " +
                     " ATTRIBUTE_ID INTEGER DEFAULT NULL, " +
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, ATTRIBUTE_ID))";
 
-	public static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
+	private static final String CREATE_PRODUCT_PRICE_AVAILABILITY =
             "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE_AVAILABILITY (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " PRODUCT_PRICE_ID INTEGER DEFAULT 0 NOT NULL, " +
@@ -129,7 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, PRODUCT_PRICE_ID))";
 
-	public static final String CREATE_PRODUCT_IMAGE =
+	private static final String CREATE_PRODUCT_IMAGE =
             "CREATE TABLE IF NOT EXISTS PRODUCT_IMAGE (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " FILE_NAME VARCHAR(255) NOT NULL, " +
@@ -138,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, FILE_NAME))";
 
-    public static final String CREATE_PRODUCT_RATING =
+    private static final String CREATE_PRODUCT_RATING =
             "CREATE TABLE IF NOT EXISTS PRODUCT_RATING (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " RATING DOUBLE NOT NULL, " +
@@ -146,7 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID))";
 
-	public static final String CREATE_PRODUCT_TAX =
+	private static final String CREATE_PRODUCT_TAX =
             "CREATE TABLE IF NOT EXISTS PRODUCT_TAX (" +
                     " PRODUCT_TAX_ID INTEGER NOT NULL, " +
                     " PERCENTAGE DOUBLE NOT NULL, " +
@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_TAX_ID))";
 
-    public static final String CREATE_CURRENCY =
+    private static final String CREATE_CURRENCY =
             "CREATE TABLE IF NOT EXISTS CURRENCY (" +
                     "CURRENCY_ID INTEGER NOT NULL, " +
                     " COUNTRY_NAME VARCHAR(128) NOT NULL, " +
@@ -167,7 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (CURRENCY_ID))";
 
-	public static final String CREATE_PRODUCT_SHOPPING_RELATED =
+	private static final String CREATE_PRODUCT_SHOPPING_RELATED =
             "CREATE TABLE IF NOT EXISTS PRODUCT_SHOPPING_RELATED (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " PRODUCT_RELATED_ID INTEGER NOT NULL, " +
@@ -176,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_ID, PRODUCT_RELATED_ID))";
 
-	public static final String CREATE_BRAND =
+	private static final String CREATE_BRAND =
             "CREATE TABLE IF NOT EXISTS BRAND (" +
                     "BRAND_ID INTEGER NOT NULL, " +
                     " NAME VARCHAR(255) DEFAULT NULL, " +
@@ -185,7 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BRAND_ID))";
 
-	public static final String CREATE_CATEGORY =
+	private static final String CREATE_CATEGORY =
             "CREATE TABLE IF NOT EXISTS CATEGORY (" +
                     "CATEGORY_ID INTEGER NOT NULL, " +
                     " NAME VARCHAR(255) DEFAULT NULL, " +
@@ -194,7 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (CATEGORY_ID))";
 
-	public static final String CREATE_SUBCATEGORY =
+	private static final String CREATE_SUBCATEGORY =
             "CREATE TABLE IF NOT EXISTS SUBCATEGORY (" +
                     "SUBCATEGORY_ID INTEGER NOT NULL, " +
                     " CATEGORY_ID INTEGER NOT NULL, " +
@@ -204,7 +204,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (SUBCATEGORY_ID))";
 
-    public static final String CREATE_COMPANY =
+    private static final String CREATE_COMPANY =
             "CREATE TABLE IF NOT EXISTS COMPANY (" +
                     "COMPANY_ID INTEGER NOT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
@@ -221,7 +221,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (COMPANY_ID))";
 
-	public static final String CREATE_MAINPAGE_PRODUCT_SECTION =
+	private static final String CREATE_MAINPAGE_PRODUCT_SECTION =
             "CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT_SECTION (" +
                     "MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, " +
                     " NAME VARCHAR(128) DEFAULT NULL, " +
@@ -231,7 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID))";
 
-	public static final String CREATE_MAINPAGE_PRODUCT =
+	private static final String CREATE_MAINPAGE_PRODUCT =
             "CREATE TABLE IF NOT EXISTS MAINPAGE_PRODUCT (" +
                     "MAINPAGE_PRODUCT_SECTION_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
@@ -240,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (MAINPAGE_PRODUCT_SECTION_ID, PRODUCT_ID))";
 
-	public static final String CREATE_BANNER =
+	private static final String CREATE_BANNER =
             "CREATE TABLE IF NOT EXISTS BANNER (" +
                     "BANNER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
@@ -252,7 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BANNER_ID))";
 
-	public static final String CREATE_BRAND_PROMOTIONAL_CARD =
+	private static final String CREATE_BRAND_PROMOTIONAL_CARD =
             "CREATE TABLE IF NOT EXISTS BRAND_PROMOTIONAL_CARD (" +
                     "BRAND_PROMOTIONAL_CARD_ID INTEGER NOT NULL, " +
                     " BRAND_ID INTEGER NOT NULL, " +
@@ -268,7 +268,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BRAND_PROMOTIONAL_CARD_ID))";
 
-    public static final String CREATE_APP_PARAMETER =
+    private static final String CREATE_APP_PARAMETER =
             "CREATE TABLE IF NOT EXISTS APP_PARAMETER (" +
                     "APP_PARAMETER_ID INTEGER NOT NULL, " +
                     " PARAMETER_DESCRIPTION VARCHAR(255) DEFAULT NULL, " +
@@ -282,7 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (APP_PARAMETER_ID))";
 
-    public static final String CREATE_BUSINESS_PARTNER =
+    private static final String CREATE_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER (" +
                     "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
@@ -297,7 +297,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BUSINESS_PARTNER_ID))";
 
-    public static final String CREATE_USER_BUSINESS_PARTNER =
+    private static final String CREATE_USER_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER (" +
                     "USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -318,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_BUSINESS_PARTNER_ID, USER_ID))";
 
-    public static final String CREATE_BUSINESS_PARTNER_ADDRESS =
+    private static final String CREATE_BUSINESS_PARTNER_ADDRESS =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER_ADDRESS (" +
                     "BUSINESS_PARTNER_ADDRESS_ID INTEGER NOT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
@@ -328,7 +328,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BUSINESS_PARTNER_ADDRESS_ID))";
 
-    public static final String CREATE_USER_BUSINESS_PARTNER_ADDRESS =
+    private static final String CREATE_USER_BUSINESS_PARTNER_ADDRESS =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNER_ADDRESS (" +
                     "USER_BUSINESS_PARTNER_ADDRESS_ID INTEGER NOT NULL, " +
                     " USER_BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
@@ -338,7 +338,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_BUSINESS_PARTNER_ADDRESS_ID))";
 
-    public static final String CREATE_USER_APP_PARAMETER =
+    private static final String CREATE_USER_APP_PARAMETER =
             "CREATE TABLE IF NOT EXISTS USER_APP_PARAMETER (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " APP_PARAMETER_ID INTEGER NOT NULL, " +
@@ -353,7 +353,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, APP_PARAMETER_ID))";
 
-    public static final String CREATE_ECOMMERCE_ORDER =
+    private static final String CREATE_ECOMMERCE_ORDER =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER (" +
                     "ECOMMERCE_ORDER_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -375,7 +375,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID))";
 
-    public static final String CREATE_ECOMMERCE_ORDER_LINE =
+    private static final String CREATE_ECOMMERCE_ORDER_LINE =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_ORDER_LINE (" +
                     "ECOMMERCE_ORDER_LINE_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -398,7 +398,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_ORDER_LINE_ID, USER_ID))";
 
-    public static final String CREATE_ECOMMERCE_SALES_ORDER =
+    private static final String CREATE_ECOMMERCE_SALES_ORDER =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER (" +
                     "ECOMMERCE_SALES_ORDER_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -420,7 +420,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_SALES_ORDER_ID, USER_ID))";
 
-    public static final String CREATE_ECOMMERCE_SALES_ORDER_LINE =
+    private static final String CREATE_ECOMMERCE_SALES_ORDER_LINE =
             "CREATE TABLE IF NOT EXISTS ECOMMERCE_SALES_ORDER_LINE (" +
                     "ECOMMERCE_SALES_ORDER_LINE_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -443,7 +443,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (ECOMMERCE_SALES_ORDER_LINE_ID, USER_ID))";
 
-    public static final String CREATE_RECENT_SEARCH =
+    private static final String CREATE_RECENT_SEARCH =
             "CREATE TABLE IF NOT EXISTS RECENT_SEARCH (" +
                     "RECENT_SEARCH_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -459,7 +459,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (RECENT_SEARCH_ID, USER_ID))";
 
-	public static final String CREATE_PRODUCT_RECENTLY_SEEN =
+	private static final String CREATE_PRODUCT_RECENTLY_SEEN =
             "CREATE TABLE IF NOT EXISTS PRODUCT_RECENTLY_SEEN (" +
                     "PRODUCT_RECENTLY_SEEN_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
@@ -474,7 +474,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID, PRODUCT_ID))";
 
-    public static final String CREATE_RECOMMENDED_PRODUCT =
+    private static final String CREATE_RECOMMENDED_PRODUCT =
             "CREATE TABLE IF NOT EXISTS RECOMMENDED_PRODUCT (" +
                     "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
                     " PRODUCT_ID INTEGER NOT NULL, " +
@@ -483,7 +483,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (BUSINESS_PARTNER_ID, PRODUCT_ID))";
 
-    public static final String CREATE_USER_COMPANY =
+    private static final String CREATE_USER_COMPANY =
             "CREATE TABLE IF NOT EXISTS USER_COMPANY (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
@@ -505,7 +505,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID))";
 
-    public static final String CREATE_FAILED_SYNC_DATA_WITH_SERVER =
+    private static final String CREATE_FAILED_SYNC_DATA_WITH_SERVER =
             "CREATE TABLE IF NOT EXISTS FAILED_SYNC_DATA_WITH_SERVER (" +
                     " row_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " selection TEXT DEFAULT NULL, " +
@@ -513,7 +513,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " columnCount INTEGER DEFAULT NULL)";
 
-    public static final String CREATE_USER_TABLE_MAX_ID =
+    private static final String CREATE_USER_TABLE_MAX_ID =
             "CREATE TABLE IF NOT EXISTS USER_TABLE_MAX_ID (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " TABLE_NAME VARCHAR(255) NOT NULL, " +
@@ -525,7 +525,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, TABLE_NAME))";
 
-    public static final String CREATE_USER_BUSINESS_PARTNERS =
+    private static final String CREATE_USER_BUSINESS_PARTNERS =
             "CREATE TABLE IF NOT EXISTS USER_BUSINESS_PARTNERS (" +
                     "USER_ID INTEGER NOT NULL, " +
                     " BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
@@ -533,7 +533,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID, BUSINESS_PARTNER_ID))";
 
-    public static final String CREATE_PRODUCT_CHARGE =
+    private static final String CREATE_PRODUCT_CHARGE =
             "CREATE TABLE IF NOT EXISTS PRODUCT_CHARGE (" +
                     "PRODUCT_CHARGE_ID INTEGER NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
@@ -545,6 +545,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (PRODUCT_CHARGE_ID))";
+
+    private static final String CREATE_ORDER_TRACKING_STATE =
+            "CREATE TABLE IF NOT EXISTS ORDER_TRACKING_STATE (" +
+                    "ORDER_TRACKING_STATE_ID INTEGER NOT NULL, " +
+                    " TITLE VARCHAR(128) DEFAULT NULL, " +
+                    " ICON_RES_NAME VARCHAR(255) DEFAULT NULL, " +
+                    " ICON_FILE_NAME VARCHAR(255) DEFAULT NULL, " +
+                    " PRIORITY INTEGER DEFAULT NULL, " +
+                    " BACKGROUND_R_COLOR INTEGER DEFAULT NULL, " +
+                    " BACKGROUND_G_COLOR INTEGER DEFAULT NULL, " +
+                    " BACKGROUND_B_COLOR INTEGER DEFAULT NULL, " +
+                    " BORDER_R_COLOR INTEGER DEFAULT NULL, " +
+                    " BORDER_G_COLOR INTEGER DEFAULT NULL, " +
+                    " BORDER_B_COLOR INTEGER DEFAULT NULL, " +
+                    " TITLE_TEXT_R_COLOR INTEGER DEFAULT NULL, " +
+                    " TITLE_TEXT_G_COLOR INTEGER DEFAULT NULL, " +
+                    " TITLE_TEXT_B_COLOR INTEGER DEFAULT NULL, " +
+                    " ICON_R_COLOR INTEGER DEFAULT NULL, " +
+                    " ICON_G_COLOR INTEGER DEFAULT NULL, " +
+                    " ICON_B_COLOR INTEGER DEFAULT NULL, " +
+                    " IS_ALWAYS_VISIBLE CHAR(1) DEFAULT 'Y', " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (ORDER_TRACKING_STATE_ID))";
+
+    private static final String CREATE_ORDER_TRACKING =
+            "CREATE TABLE IF NOT EXISTS ORDER_TRACKING (" +
+                    "ECOMMERCE_ORDER_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " ORDER_TRACKING_STATE_ID INTEGER NOT NULL, " +
+                    " DETAILS TEXT DEFAULT NULL, " +
+                    " CREATE_TIME DATETIME DEFAULT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
+                    " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID, ORDER_TRACKING_STATE_ID))";
 
 	/**
 	 * 
@@ -616,6 +651,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_TABLE_MAX_ID);
             db.execSQL(CREATE_USER_BUSINESS_PARTNERS);
             db.execSQL(CREATE_PRODUCT_CHARGE);
+            db.execSQL(CREATE_ORDER_TRACKING_STATE);
+            db.execSQL(CREATE_ORDER_TRACKING);
 		}
 	}
 
@@ -740,6 +777,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+            if (oldVersion < 17) {
+                db.execSQL(CREATE_ORDER_TRACKING_STATE);
+                db.execSQL(CREATE_ORDER_TRACKING);
             }
         }
 	}

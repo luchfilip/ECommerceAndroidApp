@@ -24,16 +24,17 @@ public class OrderTrackingDetailFragment extends Fragment {
 
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION =
             "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
-    private static final String STATE_BUSINESS_PARTNER_ID = "STATE_BUSINESS_PARTNER_ID";
     private static final String STATE_ORDER_ID = "STATE_ORDER_ID";
 
     private boolean mIsInitialLoad;
-    private int mBusinessPartnerId;
     private int mOrderId;
     private int mRecyclerViewCurrentFirstPosition;
     private TextView mProgressTextView;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
+    private String mProgressText;
+    private int mProgressPercentage;
+    private ArrayList<OrderTracking> mOrderTrackings;
 
     public OrderTrackingDetailFragment() {
     }
@@ -44,8 +45,6 @@ public class OrderTrackingDetailFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_order_tracking_detail, container, false);
         mIsInitialLoad = true;
 
-        final ArrayList<OrderTracking> orderTrackings = new ArrayList<>();
-
         new Thread() {
             @Override
             public void run() {
@@ -54,25 +53,20 @@ public class OrderTrackingDetailFragment extends Fragment {
                         if (savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
-                        if (savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)) {
-                            mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
-                        }
                         if (savedInstanceState.containsKey(STATE_ORDER_ID)) {
                             mOrderId = savedInstanceState.getInt(STATE_ORDER_ID);
                         }
                     }
                     if (getActivity()!=null && getActivity().getIntent() != null &&
                             getActivity().getIntent().getExtras() != null) {
-                        if (getActivity().getIntent().getExtras().containsKey(OrderTrackingDetailActivity.KEY_BUSINESS_PARTNER_ID)) {
-                            mBusinessPartnerId = getActivity().getIntent().getExtras().getInt(OrderTrackingDetailActivity.KEY_BUSINESS_PARTNER_ID);
-                        }
                         if (getActivity().getIntent().getExtras().containsKey(OrderTrackingDetailActivity.KEY_ORDER_ID)) {
                             mOrderId = getActivity().getIntent().getExtras().getInt(OrderTrackingDetailActivity.KEY_ORDER_ID);
                         }
                     }
-
-                    orderTrackings.addAll((new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext())))
-                            .getOrderTracking(mBusinessPartnerId, mOrderId));
+                    OrderTrackingDB orderTrackingDB = new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext()));
+                    mProgressText = orderTrackingDB.getProgressText(mOrderId);
+                    mProgressPercentage = orderTrackingDB.getProgressPercentage(mOrderId);
+                    mOrderTrackings = orderTrackingDB.getOrderTrackings(mOrderId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,7 +79,7 @@ public class OrderTrackingDetailFragment extends Fragment {
                                 mProgressTextView = (TextView) view.findViewById(R.id.progress_textView);
                                 mRecyclerView = (RecyclerView) view.findViewById(R.id.order_tracking);
 
-                                loadViews("Progreso: 1/5", 20, orderTrackings);
+                                loadViews(mProgressText, mProgressPercentage, mOrderTrackings);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -105,21 +99,16 @@ public class OrderTrackingDetailFragment extends Fragment {
         if (mIsInitialLoad) {
             mIsInitialLoad = false;
         } else {
-            loadViews("Progreso: 1/5", 20, (new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext())))
-                    .getOrderTracking(mBusinessPartnerId, mOrderId));
+            OrderTrackingDB orderTrackingDB = new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext()));
+            loadViews(orderTrackingDB.getProgressText(mOrderId),
+                    orderTrackingDB.getProgressPercentage(mOrderId),
+                    orderTrackingDB.getOrderTrackings(mOrderId));
         }
         super.onStart();
     }
 
     private void loadViews(String progressText, int progressPercentage, ArrayList<OrderTracking> orderTrackings) {
         mProgressTextView.setText(progressText);
-
-        //if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-        //    mProgressBar.setProgressDrawable(getContext().getResources()
-        //            .getDrawable(R.drawable.order_tracking_progress_bar));
-        //} else {
-        //    mProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.order_tracking_progress_bar));
-        //}
         mProgressBar.setProgress(progressPercentage);
 
         // use this setting to improve performance if you know that changes

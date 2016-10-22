@@ -10,7 +10,6 @@ import android.view.MenuItem;
  */
 public class OrderTrackingDetailActivity extends AppCompatActivity {
 
-    public static final String KEY_BUSINESS_PARTNER_ID = "KEY_BUSINESS_PARTNER_ID";
     public static final String KEY_ORDER_ID = "KEY_ORDER_ID";
 
     @Override

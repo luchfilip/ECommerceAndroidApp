@@ -8,19 +8,36 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by AlbertoSarco on 18/10/2016.
+ * Created by AlbertoSarco on 21/10/2016.
  */
 
-public class OrderTracking extends Model implements Parcelable {
+public class OrderTracking implements Parcelable {
 
-    private String title;
-    private String subTitle;
-    private Date date;
-    private int imageResId;
-    private boolean isLastState;
+    private int orderTrackingStateId;
+    private String details;
+    private Date created;
+    private OrderTrackingState orderTrackingState;
 
     public OrderTracking() {
 
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    private OrderTracking(Parcel in) {
+        orderTrackingStateId = in.readInt();
+        details = in.readString();
+        orderTrackingState = in.readParcelable(OrderTrackingState.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(orderTrackingStateId);
+        dest.writeString(details);
+        dest.writeParcelable(orderTrackingState, flags);
     }
 
     public static final Creator<OrderTracking> CREATOR = new Creator<OrderTracking>() {
@@ -35,71 +52,44 @@ public class OrderTracking extends Model implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getOrderTrackingStateId() {
+        return orderTrackingStateId;
     }
 
-    private OrderTracking(Parcel in) {
-        title = in.readString();
-        subTitle = in.readString();
-        imageResId = in.readInt();
-        isLastState = in.readByte() != 0;
+    public void setOrderTrackingStateId(int orderTrackingStateId) {
+        this.orderTrackingStateId = orderTrackingStateId;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(subTitle);
-        dest.writeInt(imageResId);
-        dest.writeByte((byte) (isLastState ? 1 : 0));
+    public String getDetails() {
+        return details;
     }
 
-    public String getTitle() {
-        return title;
+    public void setDetails(String details) {
+        this.details = details;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Date getCreated() {
+        return created;
     }
 
-    public String getSubTitle() {
-        return subTitle;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
-    }
-
-    public String getDateStringFormat (){
+    public String getCreatedStringFormat() {
         try {
             return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-                    new Locale("es","VE")).format(getDate());
-        } catch (Exception e) { }
-        return null;
+                    new Locale("es","VE")).format(getCreated());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public boolean isLastState() {
-        return isLastState;
+    public OrderTrackingState getOrderTrackingState() {
+        return orderTrackingState;
     }
 
-    public void setLastState(boolean lastState) {
-        isLastState = lastState;
+    public void setOrderTrackingState(OrderTrackingState orderTrackingState) {
+        this.orderTrackingState = orderTrackingState;
     }
 }

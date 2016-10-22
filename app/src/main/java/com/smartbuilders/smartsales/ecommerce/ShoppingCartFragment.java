@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingCartFinalizeOptionsActivity;
@@ -123,6 +124,19 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mSalesOrderNumber = (TextView) view.findViewById(R.id.sales_order_number_textView);
                                 mSalesOrderInfoSeparator = view.findViewById(R.id.sales_order_info_separator);
+
+                                if (view.findViewById(R.id.empty_shopping_cart_imageView) != null) {
+                                    ((ImageView) view.findViewById(R.id.empty_shopping_cart_imageView))
+                                            .setColorFilter(Utils.getColor(getContext(), R.color.colorAccent));
+                                }
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
 
                                 setHeader();
 
