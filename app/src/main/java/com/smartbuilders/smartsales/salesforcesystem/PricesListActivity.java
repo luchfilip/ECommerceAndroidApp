@@ -23,7 +23,7 @@ import com.smartbuilders.synchronizer.ids.model.UserProfile;
  *
  */
 public class PricesListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PricesListActivityFragment.Callback {
+        implements NavigationView.OnNavigationItemSelectedListener, PricesListFragment.Callback {
 
     private static final String PRICES_LIST_DETAILS_FRAGMENT_TAG = "PRICES_LIST_DETAILS_FRAGMENT_TAG";
 

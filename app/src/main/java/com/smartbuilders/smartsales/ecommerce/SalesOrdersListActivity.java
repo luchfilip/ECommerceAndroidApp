@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +28,8 @@ import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.ViewPager;
+
+import java.util.ArrayList;
 
 /**
  * Jesus Sarco, 12.05.2016
@@ -43,6 +45,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     private boolean mThreePane;
     private TabLayout mTabLayout;
     private int mCurrentTabSelected;
+    private ArrayList<Fragment> fragments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +118,18 @@ public class SalesOrdersListActivity extends AppCompatActivity
                     manageMenu();
                     switch (tab.getPosition()) {
                         case 0:
-                            findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
-                            findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                            try {
+                                showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(0).getView().findViewById(R.id.sales_orders_list)), false);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case 1:
-                            findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
-                            findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
+                            try {
+                                showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(1).getView().findViewById(R.id.sales_orders_list)), true);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             break;
                     }
                 }
@@ -137,6 +146,12 @@ public class SalesOrdersListActivity extends AppCompatActivity
             }
         });
         viewPager.setAllowSwap(!mThreePane);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        fragments.add(fragment);
     }
 
     @Override
@@ -258,21 +273,54 @@ public class SalesOrdersListActivity extends AppCompatActivity
     @Override
     public void onListIsLoaded(ListView listView, boolean isOrdersFromSalesOrder) {
         if (mThreePane) {
-            if (listView != null && listView.getAdapter()!=null && listView.getAdapter().getCount()>0) {
+            if (listView != null && listView.getAdapter() != null && !listView.getAdapter().isEmpty()) {
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
-            }else{
+            }
+        }
+        if ((mCurrentTabSelected==0 && !isOrdersFromSalesOrder)
+                || (mCurrentTabSelected==1 && isOrdersFromSalesOrder)) {
+            showOrHideEmptyLayoutWallpaper(listView, isOrdersFromSalesOrder);
+        }
+    }
+
+    private void showOrHideEmptyLayoutWallpaper(ListView listView, boolean isOrdersFromSalesOrder) {
+        if (mThreePane) {
+            if (listView != null && listView.getAdapter()!=null && !listView.getAdapter().isEmpty()) {
+                if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                    findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
+                }
+                if (findViewById(R.id.main_layout) != null) {
+                    findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                }
+                /****************/
                 if (isOrdersFromSalesOrder) {//Order
-                    try {
-                        ((FrameLayout) findViewById(R.id.order_detail_container)).removeAllViews();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (findViewById(R.id.order_detail_container) != null) {
+                        findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+                    }
+                    if (findViewById(R.id.sales_order_detail_container) != null) {
+                        findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                     }
                 } else {//SalesOrder
-                    try {
-                        ((FrameLayout) findViewById(R.id.sales_order_detail_container)).removeAllViews();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (findViewById(R.id.sales_order_detail_container) != null) {
+                        findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
                     }
+                    if (findViewById(R.id.order_detail_container) != null) {
+                        findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                    }
+                }
+            }else{
+                if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                    findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+                }
+                if (findViewById(R.id.main_layout) != null) {
+                    findViewById(R.id.main_layout).setVisibility(View.GONE);
+                }
+                /****************/
+                if (findViewById(R.id.order_detail_container) != null) {
+                    findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                }
+                if (findViewById(R.id.sales_order_detail_container) != null) {
+                    findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                 }
             }
         }
@@ -285,17 +333,16 @@ public class SalesOrdersListActivity extends AppCompatActivity
             ((SalesOrdersListAdapter) listView.getAdapter())
                     .setData(new SalesOrderDB(this, user).getSalesOrderList());
 
-            if (listView.getCount()<oldListSize && listView.getCount()>0 && mThreePane) {
-                listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
-            } else if (listView.getCount()>selectedIndex && mThreePane) {
-                listView.setSelection(selectedIndex);
-                listView.setItemChecked(selectedIndex, true);
-            } else if (mThreePane) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.sales_order_detail_container, new SalesOrderDetailFragment(), SALES_ORDER_DETAIL_FRAGMENT_TAG)
-                        .commit();
+            if (mThreePane) {
+                if (listView.getCount() < oldListSize && !listView.getAdapter().isEmpty()) {
+                    listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
+                } else if (listView.getCount() > selectedIndex) {
+                    listView.setSelection(selectedIndex);
+                    listView.setItemChecked(selectedIndex, true);
+                }
             }
         }
+        showOrHideEmptyLayoutWallpaper(listView, mCurrentTabSelected==1);
     }
 
     @Override

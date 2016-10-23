@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * Created by stein on 11/6/2016.
  */
 public class SalesOrderListPagerAdapter extends FragmentStatePagerAdapter {
-    int mNumOfTabs;
+    private int numOfTabs;
 
-    public SalesOrderListPagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public SalesOrderListPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+        this.numOfTabs = numOfTabs;
     }
 
     @Override
@@ -37,6 +37,6 @@ public class SalesOrderListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return numOfTabs;
     }
 }

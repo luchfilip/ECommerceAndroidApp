@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 /**
@@ -29,8 +30,12 @@ public class CategoriesListActivity extends AppCompatActivity implements Categor
     public void onCategoriesListIsLoaded() {
         if (mTwoPane) {
             ListView lv = (ListView) findViewById(R.id.categories_list);
-            if (lv!=null && lv.getAdapter()!=null && lv.getAdapter().getCount()>0) {
+            if (lv!=null && lv.getAdapter()!=null && !lv.getAdapter().isEmpty()) {
                 lv.performItemClick(lv.getAdapter().getView(0, null, null), 0, 0);
+            } else {
+                if (findViewById(R.id.subcategory_list_container) != null) {
+                    findViewById(R.id.subcategory_list_container).setVisibility(View.GONE);
+                }
             }
         }
     }

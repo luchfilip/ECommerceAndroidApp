@@ -166,6 +166,7 @@
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
     <string name="init_session_business_partner">¿Desea iniciar sesión con el cliente %1$s?</string>
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
+    <string name="delete_order_question">¿Desea eliminar el pedido No. %1$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
     <string name="price_label">Precio:</string>
     <string name="price_currency_label_detail">Precio (%1$s):</string>
@@ -447,9 +448,12 @@
     <string name="no_info_available">No hay información disponible</string>
     <string name="empty_shopping_cart">No hay productos en el Pedido</string>
     <string name="empty_shopping_sale">No hay productos en la Cotización</string>
-    <string name="empty_sales_order_list">No hay Cotizaciones Abiertas</string>
-    <string name="empty_shopping_sale_list">No hay Cotizaciones Cerradas</string>
+    <string name="empty_sales_order_list">No hay Cotizaciones Cerradas</string>
+    <string name="empty_orders_from_sales_orders">No hay Cotizaciones Hechas Pedidos</string>
+    <string name="empty_shopping_sale_list">No hay Cotizaciones Abiertas</string>
     <string name="empty_orders_list">No hay Pedidos Cerrados</string>
-    <string name="empty_wish_list">No hay productos en la lista de Favoritos</string>
+    <string name="empty_wish_list">No hay productos en la Lista de Favoritos</string>
     <string name="empty_recommended_products_list">No hay productos en la lista de Recomendados</string>
+    <string name="empty_business_partners_list">No existen Clientes registrados</string>
+    <string name="empty_orders_tracking_list">No hay data para el Rastreo de Pedidos</string>
 </resources>

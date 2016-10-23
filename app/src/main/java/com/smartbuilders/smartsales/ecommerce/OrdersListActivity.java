@@ -1,11 +1,13 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
@@ -30,6 +34,7 @@ public class OrdersListActivity extends AppCompatActivity
 
     private boolean mTwoPane;
     private ListView mListView;
+    private OrderDB mOrderDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,7 @@ public class OrdersListActivity extends AppCompatActivity
 
         mTwoPane = findViewById(R.id.order_detail_container) != null;
         mListView = (ListView) findViewById(R.id.orders_list);
+        mOrderDB = new OrderDB(this, user);
     }
 
     @Override
@@ -104,10 +110,9 @@ public class OrdersListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
             if (mTwoPane) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                findViewById(R.id.fragment_order_list).setVisibility(View.VISIBLE);
                 findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
             }else{
                 findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
@@ -115,7 +120,6 @@ public class OrdersListActivity extends AppCompatActivity
             findViewById(R.id.company_logo_name).setVisibility(View.GONE);
         } else {
             if (mTwoPane) {
-                findViewById(R.id.fragment_order_list).setVisibility(View.GONE);
                 findViewById(R.id.order_detail_container).setVisibility(View.GONE);
             } else {
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
@@ -151,6 +155,36 @@ public class OrdersListActivity extends AppCompatActivity
             intent.putExtra(OrderDetailActivity.KEY_ORDER_ID, order.getId());
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onItemLongSelected(Order order) {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //String result = OrderBR.deactiveOrderById(OrdersListActivity.this,
+                        //        user, order.getId());
+                        //if (result==null) {
+                            reloadOrdersList();
+                        //} else {
+                        //    Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_SHORT).show();
+                        //}
+                    }
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
+    }
+
+    public void reloadOrdersList() {
+        if (mListView != null && mOrderDB != null) {
+            if (mListView.getAdapter() != null) {
+                ((OrdersListAdapter) mListView.getAdapter()).setData(mOrderDB.getActiveOrders());
+            } else {
+                mListView.setAdapter(new OrdersListAdapter(this, mOrderDB.getActiveOrders()));
+            }
+        }
+        onListIsLoaded();
     }
 
     @Override

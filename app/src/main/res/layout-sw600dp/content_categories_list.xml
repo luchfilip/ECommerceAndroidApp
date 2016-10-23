@@ -13,12 +13,12 @@
         -->
 
     <fragment
-        android:id="@+id/fragment_category"
+        android:id="@+id/fragment_categories_list"
         android:name="com.smartbuilders.smartsales.ecommerce.CategoriesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"
-        tools:layout="@android:layout/list_content" />
+        tools:layout="@layout/fragment_categories_list" />
 
     <FrameLayout
         android:id="@+id/subcategory_list_container"

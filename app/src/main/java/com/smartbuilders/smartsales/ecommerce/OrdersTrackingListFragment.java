@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,6 @@ import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
-import java.util.ArrayList;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -24,6 +24,7 @@ public class OrdersTrackingListFragment extends Fragment {
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
     private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
+    private static final String TAG = OrdersTrackingListFragment.class.getSimpleName();
 
     private boolean mIsInitialLoad;
     private ListView mListView;
@@ -49,8 +50,6 @@ public class OrdersTrackingListFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_orders_tracking_list, container, false);
         mIsInitialLoad = true;
 
-        final ArrayList<Order> activeOrders = new ArrayList<>();
-
         new Thread() {
             @Override
             public void run() {
@@ -70,7 +69,8 @@ public class OrdersTrackingListFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
 
                     mOrderDB = new OrderDB(getContext(), mUser);
-                    activeOrders.addAll(mOrderDB.getActiveOrdersWithTracking());
+                    mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(),
+                            mOrderDB.getActiveOrdersWithTracking());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -79,8 +79,6 @@ public class OrdersTrackingListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mOrdersTrackingListAdapter = new OrdersTrackingListAdapter(getActivity(), activeOrders);
-
                                 mListView = (ListView) view.findViewById(R.id.orders_tracking_list);
                                 mListView.setAdapter(mOrdersTrackingListAdapter);
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,21 +90,32 @@ public class OrdersTrackingListFragment extends Fragment {
                                         // if it cannot seek to that position.
                                         Order order = (Order) adapterView.getItemAtPosition(position);
                                         if (order != null) {
-                                            ((OrdersTrackingListFragment.Callback) getActivity()).onItemSelected(order);
+                                            ((Callback) getActivity()).onItemSelected(order);
                                         }
                                     }
                                 });
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
-                                    if (savedInstanceState==null) {
-                                        ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
+                                    //entra en esta condicion si esta vacio para que coloque el wallpaper
+                                    if (savedInstanceState==null || mOrdersTrackingListAdapter.isEmpty()) {
+                                        ((Callback) getActivity()).onListIsLoaded();
                                     } else {
-                                        ((OrdersTrackingListFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                                     }
                                 }
                             }
@@ -125,16 +134,18 @@ public class OrdersTrackingListFragment extends Fragment {
         }else{
             if(mListView!=null && mOrdersTrackingListAdapter!=null && mOrderDB!=null){
                 int oldListSize = mOrdersTrackingListAdapter.getCount();
-                mOrdersTrackingListAdapter.setData(mOrderDB.getActiveOrders());
+                mOrdersTrackingListAdapter.setData(mOrderDB.getActiveOrdersWithTracking());
                 if(mOrdersTrackingListAdapter.getCount()>0 && getActivity()!=null){
                     if(mOrdersTrackingListAdapter.getCount()!=oldListSize){
-                        ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
+                        ((Callback) getActivity()).onListIsLoaded();
                     }else{
-                        ((OrdersTrackingListFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                     }
                 }else{
-                    ((OrdersTrackingListFragment.Callback) getActivity()).onListIsLoaded();
+                    ((Callback) getActivity()).onListIsLoaded();
                 }
+            } else {
+                ((Callback) getActivity()).onListIsLoaded();
             }
         }
         super.onStart();

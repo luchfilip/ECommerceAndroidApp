@@ -8,31 +8,15 @@
     android:orientation="horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_grey"
-        android:id="@+id/company_logo_name"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/company_logo_name"
-            android:padding="10dp"
-            android:visibility="visible"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
     <!-- This layout is a two-pane layout for the Items master/detail flow. -->
 
     <fragment
-        android:id="@+id/fragment_sales_order_list"
+        android:id="@+id/fragment_shopping_sales_list"
         android:name="com.smartbuilders.smartsales.ecommerce.ShoppingSalesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"
-        tools:layout="@android:layout/list_content" />
+        tools:layout="@layout/fragment_shopping_sales_list" />
 
     <FrameLayout
         android:id="@+id/shopping_sale_order_detail_container"

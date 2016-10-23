@@ -334,7 +334,6 @@
             android:label="@string/title_activity_order_tracking" />
         <activity
             android:name=".OrdersTrackingListActivity"
-            android:label="@string/title_activity_orders_tracking_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -32,7 +32,7 @@
                 android:src="@drawable/ic_track_changes_white_24dp"/>
 
             <TextView
-                android:text="@string/order_tracking"
+                android:text="@string/orders_tracking_list"
                 android:id="@+id/title_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

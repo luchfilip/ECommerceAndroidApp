@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -201,7 +202,7 @@ public class OrderDetailFragment extends Fragment {
 
         // Attach an intent to this ShareActionProvider. You can update this at any time,
         // like when the user selects a new piece of data they might like to share.
-        new CreateShareIntentThread(mOrder, mOrderLines).start();
+        new CreateShareIntentThread(mUser, mOrder, mOrderLines).start();
     }
 
     @Override
@@ -223,29 +224,36 @@ public class OrderDetailFragment extends Fragment {
 
     class CreateShareIntentThread extends Thread {
 
+        private User mUser;
         private Order mOrder;
         private ArrayList<OrderLine> mOrderLines;
 
-        CreateShareIntentThread(Order order, ArrayList<OrderLine> orderLines) {
+        CreateShareIntentThread(User user, Order order, ArrayList<OrderLine> orderLines) {
+            this.mUser = user;
             this.mOrder = order;
             this.mOrderLines = orderLines;
         }
 
         public void run() {
-            mShareIntent = createShareIntent(mOrder, mOrderLines);
-            if(getActivity()!=null){
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mShareActionProvider!=null) {
-                            mShareActionProvider.setShareIntent(mShareIntent);
+            if (mUser!=null && mOrder!=null && mOrderLines!=null) {
+                mShareIntent = createShareIntent(mUser, mOrder, mOrderLines);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mShareActionProvider != null) {
+                                mShareActionProvider.setShareIntent(mShareIntent);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+            } else {
+                Log.e(OrderDetailFragment.class.getSimpleName(),
+                        "CreateShareIntentThread - mUser==null or mOrder==null or mOrderLines==null");
             }
         }
 
-        private Intent createShareIntent(Order order, ArrayList<OrderLine> orderLines){
+        private Intent createShareIntent(User user, Order order, ArrayList<OrderLine> orderLines){
             String subject = "";
             String message = "";
 
@@ -257,7 +265,7 @@ public class OrderDetailFragment extends Fragment {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message);
 
             try{
-                new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), mUser);
+                new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), user);
             }catch(Exception e){
                 e.printStackTrace();
             }

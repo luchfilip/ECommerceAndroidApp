@@ -159,19 +159,19 @@ public class BusinessPartnersListFragment extends Fragment {
                                         mFilterByOptionsSpinner.setSelection(mSpinnerSelectedItemPosition);
                                     }
 
-                                    final EditText filterBusinessPartnerTextView = (EditText) getActivity().findViewById(R.id.filter_businessPartner_editText);
+                                    final EditText filterBusinessPartnerEditText = (EditText) getActivity().findViewById(R.id.filter_businessPartner_editText);
                                     final ImageView filterImageView = (ImageView) getActivity().findViewById(R.id.filter_imageView);
-                                    if (filterBusinessPartnerTextView != null && filterImageView != null) {
-                                        filterBusinessPartnerTextView.setFocusableInTouchMode(true);
+                                    if (filterBusinessPartnerEditText != null && filterImageView != null) {
+                                        filterBusinessPartnerEditText.setFocusableInTouchMode(true);
 
                                         final View.OnClickListener filterImageViewOnClickListener =
                                                 new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-                                                        filterBusinessPartnerTextView.setText(null);
+                                                        filterBusinessPartnerEditText.setText(null);
                                                     }
                                                 };
-                                        filterBusinessPartnerTextView.addTextChangedListener(new TextWatcher() {
+                                        filterBusinessPartnerEditText.addTextChangedListener(new TextWatcher() {
                                             @Override
                                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                                             }
@@ -194,8 +194,8 @@ public class BusinessPartnersListFragment extends Fragment {
                                             public void afterTextChanged(Editable s) {
                                             }
                                         });
-                                        filterBusinessPartnerTextView.setText(mCurrentFilterText);
-                                        filterBusinessPartnerTextView.setSelection(filterBusinessPartnerTextView.length());
+                                        filterBusinessPartnerEditText.setText(mCurrentFilterText);
+                                        filterBusinessPartnerEditText.setSelection(filterBusinessPartnerEditText.length());
                                     }
                                 }
                                 /*******************************************************************************/
@@ -205,7 +205,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 if (getActivity()!=null) {
-                                    if (savedInstanceState==null) {
+                                    if (savedInstanceState==null || mBusinessPartnersListAdapter.isEmpty()) {
                                         ((Callback) getActivity()).onListIsLoaded();
                                     } else {
                                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
@@ -225,14 +225,28 @@ public class BusinessPartnersListFragment extends Fragment {
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            if(mListView!=null && mBusinessPartnersListAdapter!=null){
+            if(mListView!=null && mBusinessPartnersListAdapter!=null
+                    && (mUserBusinessPartnerDB!=null || mBusinessPartnerDB!=null)){
+                int oldListSize = mBusinessPartnersListAdapter.getCount();
                 if(mUserBusinessPartnerDB!=null) {
                     mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getUserBusinessPartners());
                 }else if(mBusinessPartnerDB!=null) {
                     mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getBusinessPartners());
                 }
-                mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+
+                if(mBusinessPartnersListAdapter.getCount()>0 && getActivity()!=null){
+                    if(mBusinessPartnersListAdapter.getCount()!=oldListSize){
+                        ((Callback) getActivity()).onListIsLoaded();
+                    }else{
+                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                    }
+                    mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
                         mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                }else{
+                    ((Callback) getActivity()).onListIsLoaded();
+                }
+            } else {
+                ((Callback) getActivity()).onListIsLoaded();
             }
         }
         super.onStart();

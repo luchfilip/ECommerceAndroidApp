@@ -170,53 +170,46 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
-            mListView.setVisibility(View.VISIBLE);
-            if (mTwoPane) {
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.VISIBLE);
-                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.VISIBLE);
+        if (mTwoPane) {
+            if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-            }else{
-                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                findViewById(R.id.progressContainer).setVisibility(View.GONE);
             }
-            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
+        }
+        showOrHideEmptyLayoutWallpaper();
+    }
+
+    private void showOrHideEmptyLayoutWallpaper() {
+        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
+            if (findViewById(R.id.shopping_sale_order_detail_container) != null) {
+                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.main_layout) != null) {
+                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.company_logo_name) != null) {
+                findViewById(R.id.company_logo_name).setVisibility(View.GONE);
+            }
         } else {
-            if (mTwoPane) {
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
+            if (findViewById(R.id.company_logo_name) != null) {
+                findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.shopping_sale_order_detail_container) != null) {
                 findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.GONE);
-            } else {
-                findViewById(R.id.progressContainer).setVisibility(View.GONE);
+            }
+            if (findViewById(R.id.main_layout) != null) {
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
             }
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        if (mListView!=null && mListView.getAdapter()!=null
-                && mListView.getAdapter().getCount()>selectedIndex) {
-            if (mTwoPane) {
-                mListView.setVisibility(View.VISIBLE);
+        if (mTwoPane) {
+            if (mListView!=null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.VISIBLE);
-                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.VISIBLE);
-            }else{
-                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                findViewById(R.id.progressContainer).setVisibility(View.GONE);
             }
-            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
-        } else {
-            if (mTwoPane) {
-                findViewById(R.id.fragment_sales_order_list).setVisibility(View.GONE);
-                findViewById(R.id.shopping_sale_order_detail_container).setVisibility(View.GONE);
-            } else {
-                findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                findViewById(R.id.main_layout).setVisibility(View.GONE);
-            }
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
         }
     }
 
@@ -227,21 +220,16 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             int selectedIndex = mListView.getCheckedItemPosition();
             ((ShoppingSalesListAdapter) mListView.getAdapter())
                     .setData(new SalesOrderDB(this, user).getShoppingSalesList());
-
-            if (mListView.getCount()<oldListSize && mListView.getCount()>0 && mTwoPane) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                mListView.setVisibility(View.VISIBLE);
-                findViewById(R.id.company_logo_name).setVisibility(View.GONE);
-            } else if (mListView.getCount()>selectedIndex && mTwoPane) {
-                mListView.setSelection(selectedIndex);
-                mListView.setItemChecked(selectedIndex, true);
-                mListView.setVisibility(View.VISIBLE);
-                findViewById(R.id.company_logo_name).setVisibility(View.GONE);
-            } else if(mListView.getCount()==0) { //se bloquea la pantalla
-                findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
-                mListView.setVisibility(View.GONE);
+            if (mTwoPane) {
+                if (mListView.getCount() < oldListSize && !mListView.getAdapter().isEmpty()){
+                    mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                } else if (mListView.getCount() > selectedIndex) {
+                    mListView.setSelection(selectedIndex);
+                    mListView.setItemChecked(selectedIndex, true);
+                }
             }
         }
+        showOrHideEmptyLayoutWallpaper();
     }
 
 }

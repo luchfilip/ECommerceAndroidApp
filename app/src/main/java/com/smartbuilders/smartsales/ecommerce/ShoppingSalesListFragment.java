@@ -1,11 +1,13 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
@@ -81,6 +83,19 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                         @Override
                         public void run() {
                             try {
+                                if (view.findViewById(R.id.empty_shopping_sale_list_imageView) != null) {
+                                    ((ImageView) view.findViewById(R.id.empty_shopping_sale_list_imageView))
+                                            .setColorFilter(Utils.getColor(getContext(), R.color.golden_medium));
+                                }
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
+
                                 mListView = (ListView) view.findViewById(R.id.shopping_sales_orders_list);
 
                                 mListView.setAdapter(mShoppingSalesListAdapter);
@@ -114,7 +129,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
-                                    if (savedInstanceState==null) {
+                                    if (savedInstanceState==null || mShoppingSalesListAdapter.isEmpty()) {
                                         ((Callback) getActivity()).onListIsLoaded();
                                     } else {
                                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);

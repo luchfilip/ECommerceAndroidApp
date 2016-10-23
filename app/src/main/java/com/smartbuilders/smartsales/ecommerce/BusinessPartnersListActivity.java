@@ -187,10 +187,8 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     }
                 }
             }
-            if (mTwoPane && mListView.getAdapter()!=null) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-            }
         }
+        onListIsLoaded();
     }
 
     private void showDialogCreateBusinessPartner(User user) {
@@ -227,8 +225,33 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     @Override
     public void onListIsLoaded() {
         if (mTwoPane) {
-            if (mListView != null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>0) {
+            if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+            }
+        }
+        showOrHideEmptyLayoutWallpaper();
+    }
+
+    private void showOrHideEmptyLayoutWallpaper() {
+        if (mListView==null || mListView.getAdapter()==null || mListView.getAdapter().isEmpty()) {
+            if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.business_partner_detail_container) != null) {
+                findViewById(R.id.business_partner_detail_container).setVisibility(View.GONE);
+            }
+            if (mListView != null) {
+                mListView.setVisibility(View.GONE);
+            }
+        } else {
+            if (mListView != null) {
+                mListView.setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.business_partner_detail_container) != null) {
+                findViewById(R.id.business_partner_detail_container).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
             }
         }
     }
@@ -293,25 +316,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
                                 if (result==null) {
-                                    if (mListView != null) {
-                                        if (mListView.getAdapter()!=null && (mListView.getAdapter() instanceof BusinessPartnersListAdapter)) {
-                                            ((BusinessPartnersListAdapter) mListView.getAdapter())
-                                                    .setData(mUserBusinessPartnerDB.getUserBusinessPartners());
-                                        } else {
-                                            mListView.setAdapter(new BusinessPartnersListAdapter(
-                                                    BusinessPartnersListActivity.this, mUserBusinessPartnerDB.getUserBusinessPartners(), 0));
-                                        }
-                                        if (mTwoPane) {
-                                            if(mListView.getAdapter().getCount()>0) {
-                                                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                                            } else {
-                                                getSupportFragmentManager().beginTransaction()
-                                                        .replace(R.id.business_partner_detail_container,
-                                                                new RegisterBusinessPartnerFragment(), REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
-                                                        .commit();
-                                            }
-                                        }
-                                    }
+                                    reloadBusinessPartnersList();
                                 } else {
                                     Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_SHORT).show();
                                 }
@@ -335,5 +340,4 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     mUserBusinessPartnerDB.getUserBusinessPartners());
         }
     }
-
 }

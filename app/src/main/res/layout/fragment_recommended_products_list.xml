@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent" >
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_height="match_parent"
@@ -23,7 +22,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_sentiment_neutral_black_48dp"
-                android:layout_gravity="center"
                 android:background="@drawable/shape_circular" />
 
             <TextView
@@ -111,4 +109,4 @@
                 android:src="@drawable/ic_share_white_24dp" />
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

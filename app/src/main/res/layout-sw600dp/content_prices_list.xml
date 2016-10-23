@@ -14,11 +14,11 @@
 
     <fragment
         android:id="@+id/fragment_prices_list"
-        android:name="com.smartbuilders.smartsales.salesforcesystem.PricesListActivityFragment"
+        android:name="com.smartbuilders.smartsales.salesforcesystem.PricesListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="@integer/two_pane_left_side_weight"
-        tools:layout="@android:layout/list_content" />
+        tools:layout="@layout/fragment_prices_list" />
 
     <FrameLayout
         android:id="@+id/price_list_detail_container"

@@ -102,6 +102,16 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
+
                                 setHeader();
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recommended_products_list);

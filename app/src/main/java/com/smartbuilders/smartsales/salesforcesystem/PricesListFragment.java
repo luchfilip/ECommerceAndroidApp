@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PricesListActivityFragment extends Fragment {
+public class PricesListFragment extends Fragment {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
@@ -36,7 +36,7 @@ public class PricesListActivityFragment extends Fragment {
         void setSelectedIndex(int selectedIndex);
     }
 
-    public PricesListActivityFragment() {
+    public PricesListFragment() {
     }
 
     @Override
@@ -96,7 +96,7 @@ public class PricesListActivityFragment extends Fragment {
                                         // if it cannot seek to that position.
                                         PricesList pricesList = (PricesList) adapterView.getItemAtPosition(position);
                                         if (pricesList != null) {
-                                            ((PricesListActivityFragment.Callback) getActivity()).onItemSelected(pricesList.getId());
+                                            ((PricesListFragment.Callback) getActivity()).onItemSelected(pricesList.getId());
                                         }
                                     }
                                 });
@@ -108,9 +108,9 @@ public class PricesListActivityFragment extends Fragment {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 rootView.findViewById(R.id.prices_list_listView).setVisibility(View.VISIBLE);
                                 if (savedInstanceState==null && getActivity()!=null) {
-                                    ((PricesListActivityFragment.Callback) getActivity()).onPricesListIsLoaded();
+                                    ((PricesListFragment.Callback) getActivity()).onPricesListIsLoaded();
                                 } else {
-                                    ((PricesListActivityFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                    ((PricesListFragment.Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
                                 }
                             }
                         }

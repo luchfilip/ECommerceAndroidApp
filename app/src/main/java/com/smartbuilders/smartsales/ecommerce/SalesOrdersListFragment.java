@@ -1,11 +1,13 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -107,6 +109,31 @@ public class SalesOrdersListFragment extends Fragment {
                             try {
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+
+                                if (view.findViewById(R.id.empty_sales_order_list_imageView) != null) {
+                                    ((ImageView) view.findViewById(R.id.empty_sales_order_list_imageView))
+                                            .setColorFilter(Utils.getColor(getActivity(), R.color.golden));
+                                }
+
+                                if (view.findViewById(R.id.empty_sales_order_list_textView) != null) {
+                                    if (mLoadOrdersFromSalesOrders) {
+                                        ((TextView) view.findViewById(R.id.empty_sales_order_list_textView))
+                                                .setText(R.string.empty_orders_from_sales_orders);
+                                    } else {
+                                        ((TextView) view.findViewById(R.id.empty_sales_order_list_textView))
+                                                .setText(R.string.empty_sales_order_list);
+                                    }
+                                }
+
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
+
                                 setHeader();
 
                                 mListView = (ListView) view.findViewById(R.id.sales_orders_list);
@@ -164,7 +191,8 @@ public class SalesOrdersListFragment extends Fragment {
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
-                                    if (savedInstanceState==null) {
+                                    if (savedInstanceState==null || mListView.getAdapter()==null
+                                            || mListView.getAdapter().isEmpty()) {
                                         ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
                                     } else {
                                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);

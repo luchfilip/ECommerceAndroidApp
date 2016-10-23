@@ -56,8 +56,6 @@
 
     <style name="toolbar_products_list_style"></style>
 
-    <style name="business_partners_style"></style>
-
     <style name="business_partners_list_style">
         <item name="android:background">@android:color/white</item>
     </style>

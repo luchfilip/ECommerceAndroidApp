@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
@@ -42,6 +43,7 @@ public class OrdersListFragment extends Fragment {
 
     public interface Callback {
         void onItemSelected(Order order);
+        void onItemLongSelected(Order order);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
     }
@@ -104,6 +106,18 @@ public class OrdersListFragment extends Fragment {
                                         if (order != null) {
                                             ((Callback) getActivity()).onItemSelected(order);
                                         }
+                                    }
+                                });
+                                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                    @Override
+                                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                        // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                        // if it cannot seek to that position.
+                                        Order order = (Order) parent.getItemAtPosition(position);
+                                        if (order != null) {
+                                            ((Callback) getActivity()).onItemLongSelected(order);
+                                        }
+                                        return false;
                                     }
                                 });
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
