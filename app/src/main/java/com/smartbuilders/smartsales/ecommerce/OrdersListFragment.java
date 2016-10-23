@@ -1,15 +1,16 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
@@ -89,6 +90,21 @@ public class OrdersListFragment extends Fragment {
                             try {
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
+
+                                if (view.findViewById(R.id.empty_orders_list_imageView) != null) {
+                                    ((ImageView) view.findViewById(R.id.empty_orders_list_imageView))
+                                            .setColorFilter(Utils.getColor(getActivity(), R.color.colorPrimary));
+                                }
+
+                                if (view.findViewById(R.id.search_fab) != null) {
+                                    view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getActivity(), SearchResultsActivity.class));
+                                        }
+                                    });
+                                }
+
                                 setHeader();
 
                                 mOrdersListAdapter = new OrdersListAdapter(getActivity(), activeOrders);
@@ -127,7 +143,7 @@ public class OrdersListFragment extends Fragment {
                                 view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (getActivity()!=null) {
-                                    if (savedInstanceState==null) {
+                                    if (savedInstanceState==null || mOrdersListAdapter==null || mOrdersListAdapter.isEmpty()) {
                                         ((Callback) getActivity()).onListIsLoaded();
                                     } else {
                                         ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);

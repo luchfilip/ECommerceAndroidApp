@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
+import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
@@ -32,7 +34,6 @@ public class OrdersListActivity extends AppCompatActivity
 
     public static final String ORDER_DETAIL_FRAGMENT_TAG = "ORDER_DETAIL_FRAGMENT_TAG";
 
-    private boolean mTwoPane;
     private ListView mListView;
     private OrderDB mOrderDB;
 
@@ -74,7 +75,6 @@ public class OrdersListActivity extends AppCompatActivity
                     .setText(getString(R.string.welcome_user, user.getUserName()));
         }
 
-        mTwoPane = findViewById(R.id.order_detail_container) != null;
         mListView = (ListView) findViewById(R.id.orders_list);
         mOrderDB = new OrderDB(this, user);
     }
@@ -110,28 +110,43 @@ public class OrdersListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
-            if (mTwoPane) {
+        if (findViewById(R.id.order_detail_container) != null) {
+            if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
-                findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
-            }else{
+            }
+        }
+        showOrHideEmptyLayoutWallpaper();
+    }
+
+    private void showOrHideEmptyLayoutWallpaper() {
+        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
+            if (findViewById(R.id.main_layout) != null) {
                 findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
             }
-            findViewById(R.id.company_logo_name).setVisibility(View.GONE);
+            if (findViewById(R.id.order_detail_container) != null) {
+                findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
+            }
         } else {
-            if (mTwoPane) {
+            if (findViewById(R.id.empty_layout_wallpaper) != null) {
+                findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+            }
+            if (findViewById(R.id.order_detail_container) != null) {
                 findViewById(R.id.order_detail_container).setVisibility(View.GONE);
-            } else {
+            }
+            if (findViewById(R.id.main_layout) != null) {
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
             }
-            findViewById(R.id.company_logo_name).setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        if (mTwoPane) {
-            if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
+        if (findViewById(R.id.order_detail_container) != null) {
+            if (mListView!=null && mListView.getAdapter()!=null
+                    && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
             }
@@ -140,7 +155,7 @@ public class OrdersListActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(Order order) {
-        if(mTwoPane){
+        if(findViewById(R.id.order_detail_container) != null){
             Bundle args = new Bundle();
             args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
 
@@ -158,18 +173,18 @@ public class OrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemLongSelected(Order order) {
+    public void onItemLongSelected(final Order order) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //String result = OrderBR.deactiveOrderById(OrdersListActivity.this,
-                        //        user, order.getId());
-                        //if (result==null) {
+                        String result = OrderBR.deactiveOrderById(OrdersListActivity.this,
+                                Utils.getCurrentUser(OrdersListActivity.this), order.getId());
+                        if (result==null) {
                             reloadOrdersList();
-                        //} else {
-                        //    Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_SHORT).show();
-                        //}
+                        } else {
+                            Toast.makeText(OrdersListActivity.this, result, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.no, null)

@@ -310,4 +310,34 @@ public class OrderDB {
         }
         return activeOrders;
     }
+
+    public String deactiveOrderById(int orderId) {
+        try {
+            mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            null,
+                            "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                                    " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderId),
+                                    String.valueOf(mUser.getServerUserId())});
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            null,
+                            "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                                    " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderId),
+                                    String.valueOf(mUser.getServerUserId())});
+            if(rowsAffected <= 0){
+                return "No se actualizó ningún registro en la base de datos";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
 }

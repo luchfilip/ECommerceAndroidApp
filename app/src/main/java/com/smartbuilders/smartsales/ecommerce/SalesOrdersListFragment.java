@@ -50,6 +50,7 @@ public class SalesOrdersListFragment extends Fragment {
         void onItemSelected(SalesOrder salesOrder);
         void onItemLongSelected(SalesOrder salesOrder, ListView listView, User user);
         void onItemSelected(Order order);
+        void onItemLongSelected(Order order, ListView listView, User user);
         void onListIsLoaded(ListView listView, boolean isOrdersFromSalesOrder);
         void setSelectedIndex(int selectedIndex, ListView listView);
     }
@@ -111,8 +112,13 @@ public class SalesOrdersListFragment extends Fragment {
                                 mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
 
                                 if (view.findViewById(R.id.empty_sales_order_list_imageView) != null) {
-                                    ((ImageView) view.findViewById(R.id.empty_sales_order_list_imageView))
-                                            .setColorFilter(Utils.getColor(getActivity(), R.color.golden));
+                                    if (mLoadOrdersFromSalesOrders) {
+                                        ((ImageView) view.findViewById(R.id.empty_sales_order_list_imageView))
+                                                .setColorFilter(Utils.getColor(getActivity(), R.color.colorPrimary));
+                                    } else {
+                                        ((ImageView) view.findViewById(R.id.empty_sales_order_list_imageView))
+                                                .setColorFilter(Utils.getColor(getActivity(), R.color.golden));
+                                    }
                                 }
 
                                 if (view.findViewById(R.id.empty_sales_order_list_textView) != null) {
@@ -151,6 +157,19 @@ public class SalesOrdersListFragment extends Fragment {
                                             if (order != null) {
                                                 ((Callback) getActivity()).onItemSelected(order);
                                             }
+                                        }
+                                    });
+
+                                    mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                        @Override
+                                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                            // if it cannot seek to that position.
+                                            Order order = (Order) parent.getItemAtPosition(position);
+                                            if (order != null) {
+                                                ((Callback) getActivity()).onItemLongSelected(order, mListView, mUser);
+                                            }
+                                            return true;
                                         }
                                     });
                                 } else {

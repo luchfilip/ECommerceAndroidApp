@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
@@ -113,6 +114,18 @@ public class OrderBR {
         }
         if (result==null) {
             syncDataWithServer(context, user.getUserId());
+        }
+        return result;
+    }
+
+    public static String deactiveOrderById(Context context, User user, int orderId) {
+        String result;
+        try {
+            result = (new OrderDB(context, user)).deactiveOrderById(orderId);
+            syncDataWithServer(context, user.getUserId());
+        } catch (Exception e) {
+            result = e.getMessage();
+            e.printStackTrace();
         }
         return result;
     }
