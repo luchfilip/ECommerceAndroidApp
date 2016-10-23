@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -26,9 +25,7 @@ public class OrdersTrackingListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OrdersTrackingListFragment.Callback {
 
     public static final String ORDER_TRACKING_DETAIL_FRAGMENT_TAG = "ORDER_TRACKING_DETAIL_FRAGMENT_TAG";
-    private static final String TAG = OrdersTrackingListActivity.class.getSimpleName();
 
-    private boolean mTwoPane;
     private ListView mListView;
 
     @Override
@@ -68,7 +65,6 @@ public class OrdersTrackingListActivity extends AppCompatActivity
                     .setText(getString(R.string.welcome_user, user.getUserName()));
         }
 
-        mTwoPane = findViewById(R.id.order_tracking_detail_container) != null;
         mListView = (ListView) findViewById(R.id.orders_tracking_list);
     }
 
@@ -106,12 +102,16 @@ public class OrdersTrackingListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        Log.w(TAG, "onListIsLoaded()");
-        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
-            Log.w(TAG, "onListIsLoaded() paso 1");
-            if (mTwoPane) {
+        if (findViewById(R.id.order_tracking_detail_container) != null) {
+            if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
+        }
+        showOrHideEmptyLayoutWallpaper();
+    }
+
+    private void showOrHideEmptyLayoutWallpaper() {
+        if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
             if (findViewById(R.id.order_tracking_detail_container) != null) {
                 findViewById(R.id.order_tracking_detail_container).setVisibility(View.VISIBLE);
             }
@@ -122,30 +122,21 @@ public class OrdersTrackingListActivity extends AppCompatActivity
                 findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
             }
         } else {
-            Log.w(TAG, "onListIsLoaded() paso 2");
             if (findViewById(R.id.order_tracking_detail_container) != null) {
-                Log.w(TAG, "onListIsLoaded() paso 2.2");
                 findViewById(R.id.order_tracking_detail_container).setVisibility(View.GONE);
             }
             if (findViewById(R.id.main_layout) != null) {
-                Log.w(TAG, "onListIsLoaded() paso 2.3");
                 findViewById(R.id.main_layout).setVisibility(View.GONE);
             }
             if (findViewById(R.id.empty_layout_wallpaper) != null) {
-                Log.w(TAG, "onListIsLoaded() paso 2.4");
                 findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
             }
         }
     }
 
-    private void showOrHideEmptyLayoutWallpaper() {
-
-    }
-
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        Log.w(TAG, "setSelectedIndex("+selectedIndex+")");
-        if (mTwoPane) {
+        if (findViewById(R.id.order_tracking_detail_container) != null) {
             if (mListView!=null && mListView.getAdapter()!=null && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
                 mListView.setItemChecked(selectedIndex, true);
@@ -155,7 +146,7 @@ public class OrdersTrackingListActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(Order order) {
-        if(mTwoPane){
+        if(findViewById(R.id.order_tracking_detail_container) != null){
             Bundle args = new Bundle();
             args.putInt(OrderTrackingDetailActivity.KEY_ORDER_ID, order.getId());
 

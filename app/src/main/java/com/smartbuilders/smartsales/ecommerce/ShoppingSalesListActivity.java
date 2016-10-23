@@ -36,7 +36,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
     public static final String SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG =
             "SHOPPING_SALES_ORDER_DETAIL_FRAGMENT_TAG";
 
-    private boolean mTwoPane;
     private ListView mListView;
 
     @Override
@@ -77,7 +76,6 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                     .setText(getString(R.string.welcome_user, user.getUserName()));
         }
 
-        mTwoPane = findViewById(R.id.shopping_sale_order_detail_container)!=null;
         mListView = (ListView) findViewById(R.id.shopping_sales_orders_list);
     }
 
@@ -132,7 +130,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(SalesOrder salesOrder) {
-        if(mTwoPane){
+        if(findViewById(R.id.shopping_sale_order_detail_container) != null){
             Bundle args = new Bundle();
             args.putInt(ShoppingSaleActivity.KEY_USER_BUSINESS_PARTNER_ID, salesOrder.getBusinessPartnerId());
 
@@ -170,7 +168,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void onListIsLoaded() {
-        if (mTwoPane) {
+        if (findViewById(R.id.shopping_sale_order_detail_container) != null) {
             if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
                 mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
             }
@@ -204,7 +202,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
 
     @Override
     public void setSelectedIndex(int selectedIndex) {
-        if (mTwoPane) {
+        if (findViewById(R.id.shopping_sale_order_detail_container) != null) {
             if (mListView!=null && mListView.getAdapter()!=null
                     && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
@@ -220,7 +218,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
             int selectedIndex = mListView.getCheckedItemPosition();
             ((ShoppingSalesListAdapter) mListView.getAdapter())
                     .setData(new SalesOrderDB(this, user).getShoppingSalesList());
-            if (mTwoPane) {
+            if (findViewById(R.id.shopping_sale_order_detail_container) != null) {
                 if (mListView.getCount() < oldListSize && !mListView.getAdapter().isEmpty()){
                     mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
                 } else if (mListView.getCount() > selectedIndex) {

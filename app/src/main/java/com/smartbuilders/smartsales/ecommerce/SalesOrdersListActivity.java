@@ -117,35 +117,33 @@ public class SalesOrdersListActivity extends AppCompatActivity
             public void onTabSelected(TabLayout.Tab tab) {
                 mCurrentTabSelected = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
-                if(mThreePane) {
-                    manageMenu();
-                    switch (tab.getPosition()) {
-                        case 0:
-                            try {
-                                showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(0).getView().findViewById(R.id.sales_orders_list)), false);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 1:
-                            try {
-                                showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(1).getView().findViewById(R.id.sales_orders_list)), true);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                    }
+                manageMenu();
+                switch (tab.getPosition()) {
+                    case 0:
+                        if (fragments!=null && fragments.size()>0 && fragments.get(0)!=null
+                                && fragments.get(0).getView()!=null) {
+                            showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(0).getView()
+                                    .findViewById(R.id.sales_orders_list)), false);
+                        }
+                        break;
+                    case 1:
+                        if (fragments!=null && fragments.size()>1 && fragments.get(1)!=null
+                                && fragments.get(1).getView()!=null) {
+                            showOrHideEmptyLayoutWallpaper(((ListView) fragments.get(1).getView()
+                                    .findViewById(R.id.sales_orders_list)), true);
+                        }
+                        break;
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                //do nothing
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                //do nothing
             }
         });
         viewPager.setAllowSwap(!mThreePane);
@@ -325,50 +323,48 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     private void showOrHideEmptyLayoutWallpaper(ListView listView, boolean isOrdersFromSalesOrder) {
-        if (mThreePane) {
-            if (listView != null && listView.getAdapter()!=null && !listView.getAdapter().isEmpty()) {
-                if (fragments.get(mCurrentTabSelected)!=null && fragments.get(mCurrentTabSelected).getView() != null) {
-                    if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
-                        fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
-                    }
-                    if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
-                        fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                    }
+        if (listView != null && listView.getAdapter()!=null && !listView.getAdapter().isEmpty()) {
+            if (fragments.get(mCurrentTabSelected)!=null && fragments.get(mCurrentTabSelected).getView() != null) {
+                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
+                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
                 }
+                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
+                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                }
+            }
 
-                /****************/
-                if (isOrdersFromSalesOrder) {//Order
-                    if (findViewById(R.id.order_detail_container) != null) {
-                        findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
-                    }
-                    if (findViewById(R.id.sales_order_detail_container) != null) {
-                        findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
-                    }
-                } else {//SalesOrder
-                    if (findViewById(R.id.sales_order_detail_container) != null) {
-                        findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
-                    }
-                    if (findViewById(R.id.order_detail_container) != null) {
-                        findViewById(R.id.order_detail_container).setVisibility(View.GONE);
-                    }
-                }
-            }else{
-                if (fragments.get(mCurrentTabSelected)!=null) {
-                    if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
-                        fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
-                    }
-                    if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
-                        fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.GONE);
-                    }
-                }
-
-                /****************/
+            /****************/
+            if (isOrdersFromSalesOrder) {//Order
                 if (findViewById(R.id.order_detail_container) != null) {
-                    findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                    findViewById(R.id.order_detail_container).setVisibility(View.VISIBLE);
                 }
                 if (findViewById(R.id.sales_order_detail_container) != null) {
                     findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
                 }
+            } else {//SalesOrder
+                if (findViewById(R.id.sales_order_detail_container) != null) {
+                    findViewById(R.id.sales_order_detail_container).setVisibility(View.VISIBLE);
+                }
+                if (findViewById(R.id.order_detail_container) != null) {
+                    findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+                }
+            }
+        }else{
+            if (fragments.get(mCurrentTabSelected) != null && fragments.get(mCurrentTabSelected).getView() != null) {
+                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
+                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+                }
+                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
+                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.GONE);
+                }
+            }
+
+            /****************/
+            if (findViewById(R.id.order_detail_container) != null) {
+                findViewById(R.id.order_detail_container).setVisibility(View.GONE);
+            }
+            if (findViewById(R.id.sales_order_detail_container) != null) {
+                findViewById(R.id.sales_order_detail_container).setVisibility(View.GONE);
             }
         }
     }

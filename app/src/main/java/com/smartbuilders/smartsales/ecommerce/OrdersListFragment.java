@@ -133,7 +133,7 @@ public class OrdersListFragment extends Fragment {
                                         if (order != null) {
                                             ((Callback) getActivity()).onItemLongSelected(order);
                                         }
-                                        return false;
+                                        return true;
                                     }
                                 });
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
