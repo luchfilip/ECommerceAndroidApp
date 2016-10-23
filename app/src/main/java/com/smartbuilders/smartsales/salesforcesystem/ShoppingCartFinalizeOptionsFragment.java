@@ -264,11 +264,11 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                         if(mIsShoppingCart){
                             startActivity(new Intent(getContext(), OrdersListActivity.class)
                                     .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
-                        }else{
-                            startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
-                                    .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
-                                    .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
-                        }
+                        }//else{
+                            //startActivity(new Intent(getContext(), SalesOrdersListActivity.class)
+                            //        .putExtra(SalesOrdersListActivity.KEY_CURRENT_TAB_SELECTED, 1)
+                            //        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT ));
+                        //}
                         if (waitPlease!=null && waitPlease.isShowing()) {
                             waitPlease.cancel();
                             waitPlease = null;

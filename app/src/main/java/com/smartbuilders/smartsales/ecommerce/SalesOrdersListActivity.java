@@ -323,13 +323,14 @@ public class SalesOrdersListActivity extends AppCompatActivity
     }
 
     private void showOrHideEmptyLayoutWallpaper(ListView listView, boolean isOrdersFromSalesOrder) {
+        int index = isOrdersFromSalesOrder ? 1 : 0;
         if (listView != null && listView.getAdapter()!=null && !listView.getAdapter().isEmpty()) {
-            if (fragments.get(mCurrentTabSelected)!=null && fragments.get(mCurrentTabSelected).getView() != null) {
-                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
-                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
+            if (fragments.get(index)!=null && fragments.get(index).getView() != null) {
+                if (fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
+                    fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.GONE);
                 }
-                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
-                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                if (fragments.get(index).getView().findViewById(R.id.main_layout) != null) {
+                    fragments.get(index).getView().findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                 }
             }
 
@@ -350,12 +351,12 @@ public class SalesOrdersListActivity extends AppCompatActivity
                 }
             }
         }else{
-            if (fragments.get(mCurrentTabSelected) != null && fragments.get(mCurrentTabSelected).getView() != null) {
-                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
-                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+            if (fragments.get(index) != null && fragments.get(index).getView() != null) {
+                if (fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
+                    fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
                 }
-                if (fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout) != null) {
-                    fragments.get(mCurrentTabSelected).getView().findViewById(R.id.main_layout).setVisibility(View.GONE);
+                if (fragments.get(index).getView().findViewById(R.id.main_layout) != null) {
+                    fragments.get(index).getView().findViewById(R.id.main_layout).setVisibility(View.GONE);
                 }
             }
 
