@@ -7,14 +7,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#00897B"
+    android:background="#6D4C41"
     android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="¡Conoce el estatus de tus pedidos!"
+        android:lines="2"
+        android:text="¡Comparte contenidos!"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -31,11 +32,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_track_changes_black_48dp"
+            android:src="@drawable/ic_share_black_48dp"
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/orders_tracking_list"
+            android:text="Comparte contenidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -43,17 +44,33 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_weight="3">
         <TextView
-            android:text="Mantente informado del estatus de tus pedidos desde la creación de la factura hasta el momento del despacho de tu mercancia."
+            android:text="Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_gravity="top"
             android:gravity="center_horizontal"
             android:textColor="@android:color/white" />
-    </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_gravity="bottom|end"
+                android:text="Ir a la Aplicación"
+                android:id="@+id/go_to_app_textView"
+                android:layout_margin="10dp" />
+        </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

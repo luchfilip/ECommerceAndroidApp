@@ -49,33 +49,51 @@ public class WelcomeScreenSlidePageFragment extends Fragment {
             case 0:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.welcome_layout_business_partners, container, false);
+                        .inflate(R.layout.welcome_layout_welcome, container, false);
                 break;
             case 1:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.welcome_layout_sales_order, container, false);
+                        .inflate(R.layout.welcome_layout_business_partners, container, false);
                 break;
             case 2:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.welcome_layout_wish_list, container, false);
+                        .inflate(R.layout.welcome_layout_sales_order, container, false);
                 break;
             case 3:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.welcome_layout_recommended_products, container, false);
+                        .inflate(R.layout.welcome_layout_wish_list, container, false);
                 break;
             case 4:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.welcome_layout_orders, container, false);
+                        .inflate(R.layout.welcome_layout_recommended_products, container, false);
                 break;
-
             case 5:
                 // Inflate the layout.
                 rootView = (ViewGroup) inflater
+                        .inflate(R.layout.welcome_layout_orders, container, false);
+                break;
+            case 6:
+                // Inflate the layout.
+                rootView = (ViewGroup) inflater
                         .inflate(R.layout.welcome_layout_order_tracking, container, false);
+                break;
+            case 7:
+                // Inflate the layout.
+                rootView = (ViewGroup) inflater
+                        .inflate(R.layout.welcome_layout_share, container, false);
+
+                if (rootView.findViewById(R.id.go_to_app_textView) != null) {
+                    rootView.findViewById(R.id.go_to_app_textView).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getActivity().finish();
+                        }
+                    });
+                }
                 break;
 
             default:
