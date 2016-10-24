@@ -176,7 +176,7 @@ public class OrdersListActivity extends AppCompatActivity
     public void onItemLongSelected(final Order order) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = OrderBR.deactiveOrderById(OrdersListActivity.this,
                                 Utils.getCurrentUser(OrdersListActivity.this), order.getId());
@@ -187,7 +187,7 @@ public class OrdersListActivity extends AppCompatActivity
                         }
                     }
                 })
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 

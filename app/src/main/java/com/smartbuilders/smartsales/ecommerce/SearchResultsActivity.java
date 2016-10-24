@@ -279,7 +279,7 @@ public class SearchResultsActivity extends AppCompatActivity
         if (id == R.id.delete_all_recent_searches) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.delete_all_recent_searches_question))
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             (new RecentSearchDB(SearchResultsActivity.this, Utils.getCurrentUser(SearchResultsActivity.this)))
                                     .deleteAllRecentSearches();
@@ -287,7 +287,7 @@ public class SearchResultsActivity extends AppCompatActivity
                             mSearchResultAdapter.notifyDataSetChanged();
                         }
                     })
-                    .setNegativeButton(R.string.no, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;
         }

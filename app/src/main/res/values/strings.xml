@@ -456,4 +456,5 @@
     <string name="empty_recommended_products_list">No hay productos en la lista de Recomendados</string>
     <string name="empty_business_partners_list">No existen Clientes registrados</string>
     <string name="empty_orders_tracking_list">No hay data para el Rastreo de Pedidos</string>
+    <string name="delete">Eliminar</string>
 </resources>

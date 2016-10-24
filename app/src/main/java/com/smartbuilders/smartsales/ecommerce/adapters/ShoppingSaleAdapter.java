@@ -157,7 +157,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                 new AlertDialog.Builder(mContext)
                         .setMessage(mContext.getString(R.string.delete_from_shopping_sale_question,
                                 mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mSalesOrderLineDB.deactiveSalesOrderLine(mDataset.get(holder.getAdapterPosition()));
                                 if(result == null){
@@ -170,7 +170,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.no, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .show();
             }
         });

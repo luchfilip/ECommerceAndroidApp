@@ -1,6 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,33 +70,81 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.titleTextView.setText(mOrderTrackings.get(position).getOrderTrackingState().getTitle());
 
-        if (mOrderTrackings.get(position).getCreated() != null) {
-            holder.detailsTextView.setText(mOrderTrackings.get(position).getDetails());
-
-            holder.dateTextView.setText(mOrderTrackings.get(position).getCreatedStringFormat());
-
-            holder.titleTextView.setTextColor(Utils.getColor(mContext, R.color.black));
-            holder.detailsTextView.setTextColor(Utils.getColor(mContext, R.color.black));
-            holder.dateTextView.setTextColor(Utils.getColor(mContext, R.color.black));
-
-            holder.checkImageView.setVisibility(View.VISIBLE);
+        if (mOrderTrackings.get(position).getOrderTrackingState().getIconResName() != null) {
+            try {
+                holder.iconImageView.setImageResource(mContext.getResources()
+                        .getIdentifier(mOrderTrackings.get(position).getOrderTrackingState().getIconResName(),
+                                "drawable", mContext.getPackageName()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-//        if (mOrderTrackingStates.get(position).getIconResName() != 0) {
-//            holder.iconImageView.setImageResource(mOrderTrackingStates.get(position).getIconResName());
-//            if (mOrderTrackingStates.get(position).getDate() != null) {
-//                if (mOrderTrackingStates.get(position).isLastState()) {
-//                    holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
-//                    holder.checkImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
-//                } else {
-//                    holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
-//                    holder.checkImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
-//                }
-//            } else {
-//                holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.dark_grey));
-//            }
-//        }
+        if (mOrderTrackings.get(position).getCreated() != null) {
+            //Cambia el color al titulo
+            if (mOrderTrackings.get(position).getOrderTrackingState().getTitle_R_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getTitle_G_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getTitle_B_Color() >= 0) {
+                holder.titleTextView.setTextColor(Color.rgb(mOrderTrackings.get(position).getOrderTrackingState().getTitle_R_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getTitle_G_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getTitle_B_Color()));
+            } else {
+                holder.titleTextView.setTextColor(Utils.getColor(mContext, R.color.black));
+            }
 
+            //Muestra la imagen de check en la cartica
+            holder.checkImageView.setVisibility(View.VISIBLE);
+
+            //Cambia el color a la imagen
+            if (mOrderTrackings.get(position).getOrderTrackingState().getIcon_R_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getIcon_G_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getIcon_B_Color() >= 0) {
+                holder.iconImageView.setColorFilter(Color.rgb(mOrderTrackings.get(position).getOrderTrackingState().getIcon_R_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getIcon_G_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getIcon_B_Color()));
+            } else {
+                holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+            }
+
+            //Muestra el detalle del tracking
+            holder.detailsTextView.setText(mOrderTrackings.get(position).getDetails());
+
+            //muestra la fecha de creacion del tracking
+            holder.dateTextView.setText(mOrderTrackings.get(position).getCreatedStringFormat());
+
+            /********************************************************************************/
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadius(Utils.convertDpToPixel(4, mContext));
+            //cambia el color del fondo de la cartica
+            if (mOrderTrackings.get(position).getOrderTrackingState().getBackground_R_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getBackground_G_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getBackground_B_Color() >= 0) {
+                shape.setColor(Color.rgb(mOrderTrackings.get(position).getOrderTrackingState().getBackground_R_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getBackground_G_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getBackground_B_Color()));
+            } else {
+                shape.setColor(Utils.getColor(mContext, android.R.color.white));
+            }
+
+            //cambia el color del borde de la cartica
+            if (mOrderTrackings.get(position).getOrderTrackingState().getBorder_R_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getBorder_G_Color() >= 0
+                    && mOrderTrackings.get(position).getOrderTrackingState().getBorder_B_Color() >= 0) {
+                shape.setStroke(Utils.convertDpToPixel(1, mContext),
+                        Color.rgb(mOrderTrackings.get(position).getOrderTrackingState().getBorder_R_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getBorder_G_Color(),
+                        mOrderTrackings.get(position).getOrderTrackingState().getBorder_B_Color()));
+            } else {
+                shape.setStroke(Utils.convertDpToPixel(1, mContext), Utils.getColor(mContext, R.color.colorPrimary));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                holder.containerLinearLayout.setBackground(shape);
+            } else {
+                holder.containerLinearLayout.setBackgroundDrawable(shape);
+            }
+            /********************************************************************************/
+        }
     }
 
     @Override

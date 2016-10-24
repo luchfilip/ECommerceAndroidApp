@@ -289,7 +289,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private void clearWishList () {
         new AlertDialog.Builder(getContext())
                 .setMessage(getContext().getString(R.string.clear_wish_list_question))
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             String result = mOrderLineDB.clearWishList();
@@ -304,7 +304,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                         }
                     }
                 })
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 

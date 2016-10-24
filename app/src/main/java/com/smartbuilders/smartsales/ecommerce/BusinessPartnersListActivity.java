@@ -312,7 +312,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
             } else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.delete_business_partner, businessPartnerName))
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
                                 if (result==null) {
@@ -322,7 +322,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.no, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .show();
             }
         }

@@ -237,7 +237,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_sales_order_question, salesOrder.getSalesOrderNumber(),
                         salesOrder.getBusinessPartner().getName()))
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = SalesOrderBR.deactiveSalesOrderById(SalesOrdersListActivity.this,
                                 user, salesOrder.getId());
@@ -248,7 +248,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         }
                     }
                 })
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -275,7 +275,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
     public void onItemLongSelected(final Order order, final ListView listView, final User user) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = OrderBR.deactiveOrderById(SalesOrdersListActivity.this,
                                 user, order.getId());
@@ -286,7 +286,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         }
                     }
                 })
-                .setNegativeButton(R.string.no, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 

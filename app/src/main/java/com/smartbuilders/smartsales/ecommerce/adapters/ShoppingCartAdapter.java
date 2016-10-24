@@ -184,7 +184,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 new AlertDialog.Builder(mContext)
                     .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
                             mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             String result = null;
                             if(mIsShoppingCart){
@@ -202,7 +202,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                             }
                         }
                     })
-                    .setNegativeButton(R.string.no, null)
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
             }
         });

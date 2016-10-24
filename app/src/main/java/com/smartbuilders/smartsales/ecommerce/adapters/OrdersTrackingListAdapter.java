@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -80,8 +82,25 @@ public class OrdersTrackingListAdapter extends BaseAdapter {
         viewHolder.titleTextView.setText(mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getTitle());
         viewHolder.dateTextView.setText(mDataset.get(position).getMaxOrderTracking().getCreatedStringFormat());
 
-//            viewHolder.iconImageView.setImageResource(R.drawable.ic_check_circle_white_48dp);
-//            viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.successDarkColor));
+        if (mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIconResName() != null) {
+            try {
+                viewHolder.iconImageView.setImageResource(mContext.getResources()
+                        .getIdentifier(mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIconResName(),
+                                "drawable", mContext.getPackageName()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //Cambia el color a la imagen
+        if (mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_R_Color() >= 0
+                && mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_G_Color() >= 0
+                && mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_B_Color() >= 0) {
+            viewHolder.iconImageView.setColorFilter(Color.rgb(mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_R_Color(),
+                    mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_G_Color(),
+                    mDataset.get(position).getMaxOrderTracking().getOrderTrackingState().getIcon_B_Color()));
+        } else {
+            viewHolder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+        }
         return view;
     }
 
