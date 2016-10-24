@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/light_grey">
+        android:background="@android:color/white">
 
         <LinearLayout
             android:orientation="vertical"
