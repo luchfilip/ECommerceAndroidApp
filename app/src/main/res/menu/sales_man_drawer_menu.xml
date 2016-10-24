@@ -96,4 +96,13 @@
         </menu>
     </item>
 
+    <item android:title="@string/help">
+        <menu>
+            <item
+                android:id="@+id/nav_welcome_message"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="@string/welcome_message" />
+        </menu>
+    </item>
+
 </menu>

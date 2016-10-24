@@ -255,7 +255,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            if (mCurrentUser != null && mCurrentUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+            if (!TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS) &&  mCurrentUser != null
+                    && mCurrentUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                 addPreferencesFromResource(R.xml.pref_data_sync_business_partner);
             } else {
                 addPreferencesFromResource(R.xml.pref_data_sync);

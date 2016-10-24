@@ -29,7 +29,7 @@
     <string name="open_shopping_sales">Cotizaciones Abiertas</string>
     <string name="open_shopping_sale">Cotización Abierta</string>
     <string name="home">Páginal Principal</string>
-    <string name="wish_list">Lista de Favoritos</string>
+    <string name="wish_list">Favoritos</string>
     <string name="recommended_products">Recomendados</string>
     <string name="my_company">Mi Compañía</string>
     <string name="orders_list">Pedidos Cerrados</string>
@@ -45,7 +45,7 @@
     <string name="value_us">Valoranos</string>
     <string name="google_play">Google Play</string>
     <string name="tools">Herramientas</string>
-    <string name="add_to_wishlist">Enviar a la lista de favoritos</string>
+    <string name="add_to_wishlist">Enviar a Favoritos</string>
     <string name="move_to_shopping_cart">Mover al pedido</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar</string>
@@ -117,7 +117,7 @@
     <string name="title_activity_checkout">Finalizar Pedido</string>
     <string name="title_activity_order_list">Pedidos</string>
     <string name="title_activity_order_detail">Detalle del Pedido</string>
-    <string name="title_activity_wish_list">Lista de Favoritos</string>
+    <string name="title_activity_wish_list">Favoritos</string>
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">%1$s %2$s</string>
@@ -140,8 +140,8 @@
     <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
     <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
     <string name="shopping_sale_updated_successfully">Cotización actualizada exitosamente.</string>
-    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de la lista de favoritos?</string>
-    <string name="clear_wish_list_question">¿Está seguro que desea eliminar todos los registros de la lista de favoritos?</string>
+    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de Favoritos?</string>
+    <string name="clear_wish_list_question">¿Está seguro que desea eliminar todos los registros en Favoritos?</string>
     <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
     <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s de la cotización?</string>
     <string name="accept">Aceptar</string>
@@ -151,7 +151,7 @@
     <string name="qty_ordered">Cant.: %1$s</string>
     <string name="qty_ordered_label_detail">Cant. pedida: %1$s</string>
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
-    <string name="product_put_in_wishlist">Producto agregado a la lista de favoritos.</string>
+    <string name="product_put_in_wishlist">Producto agregado a Favoritos.</string>
     <string name="brand_detail">Marca: %1$s</string>
     <string name="my_purchases">Mis Compras</string>
     <string name="my_orders">Mis Pedidos</string>
@@ -161,7 +161,7 @@
     <string name="welcome_user">Bienvenido %1$s</string>
     <string name="delete_recent_search">¿Desea eliminar la busqueda "%1$s" del historial de busquedas?</string>
     <string name="delete_search_historical">Borrar historial</string>
-    <string name="clear_wish_list">Limpiar lista de favoritos</string>
+    <string name="clear_wish_list">Limpiar Favoritos</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsquedas?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
     <string name="init_session_business_partner">¿Desea iniciar sesión con el cliente %1$s?</string>
@@ -227,7 +227,7 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notificaciones</string>
-    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias en lista de favoritos</string>
+    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias en Favoritos</string>
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silencioso</string>
     <string name="pref_title_vibrate">Vibrar</string>
@@ -381,9 +381,9 @@
     <string name="new_mandatory_version_available_message">Existe una nueva versión de la aplicación disponible en el Market. Para continuar con la aplicación debe actualizar.</string>
     <string name="product_ratingBar_label_text_detail">%1$s</string>
     <string name="new_availabilities">Nuevas existencias.</string>
-    <string name="new_availabilities_in_wishList">Nuevas existencias, lista de favoritos.</string>
+    <string name="new_availabilities_in_wishList">Nuevas existencias, productos en Favoritos.</string>
     <string name="category_name_detail">Categoría: %1$s</string>
-    <string name="wish_list_doc_name">Lista de Favoritos</string>
+    <string name="wish_list_doc_name">Favoritos</string>
     <string name="recommended_products_doc_name">Productos Recomendados</string>
     <string name="progress_percentage">%1$s %%</string>
     <string name="error">Error</string>
@@ -452,9 +452,17 @@
     <string name="empty_orders_from_sales_orders">No hay Cotizaciones Hechas Pedidos</string>
     <string name="empty_shopping_sale_list">No hay Cotizaciones Abiertas</string>
     <string name="empty_orders_list">No hay Pedidos Cerrados</string>
-    <string name="empty_wish_list">No hay productos en la Lista de Favoritos</string>
+    <string name="empty_wish_list">No hay productos en la lista de Favoritos</string>
     <string name="empty_recommended_products_list">No hay productos en la lista de Recomendados</string>
     <string name="empty_business_partners_list">No existen Clientes registrados</string>
     <string name="empty_orders_tracking_list">No hay data para el Rastreo de Pedidos</string>
     <string name="delete">Eliminar</string>
+    <string name="order_tracking_detail">Detalle Rastreo del Pedido</string>
+    <string name="action_previous">Anterior</string>
+    <string name="action_next">Siguiente</string>
+    <string name="action_finish">Finalizar</string>
+    <string name="help">Ayuda</string>
+    <string name="welcome_message">Mensaje Bienvenida</string>
+    <string name="orders">Pedidos</string>
+    <string name="sales_orders">Cotizaciones</string>
 </resources>

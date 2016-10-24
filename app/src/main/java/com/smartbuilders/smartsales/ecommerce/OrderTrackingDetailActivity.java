@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+
 /**
  * Created by Jesus Sarco, 18.10.2016
  */
@@ -19,6 +21,7 @@ public class OrderTrackingDetailActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null) {
+            Utils.setCustomActionbarTitle(this, actionBar, false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
