@@ -20,7 +20,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
         android:layout_marginBottom="10dp"
-        android:textSize="25sp" />
+        android:textSize="@dimen/welcome_layout_title_text_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:text="@string/welcome_layout_orders_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/welcome_layout_subtitle_text_size"
             android:gravity="center_horizontal"
             android:textColor="@android:color/white"
             android:textStyle="normal|bold" />
@@ -53,6 +53,7 @@
             android:text="@string/welcome_layout_orders_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/welcome_layout_details_text_size"
             android:layout_marginTop="10dp"
             android:layout_gravity="top"
             android:gravity="center_horizontal"

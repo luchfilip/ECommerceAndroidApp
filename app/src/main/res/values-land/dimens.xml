@@ -20,4 +20,8 @@
     <dimen name="shape_circular_transparent_white_padding_bottom">30dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_top">30dp</dimen>
 
+    <dimen name="welcome_layout_title_text_size">25sp</dimen>
+    <dimen name="welcome_layout_subtitle_text_size">22sp</dimen>
+    <dimen name="welcome_layout_details_text_size">14sp</dimen>
+
 </resources>

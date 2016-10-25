@@ -71,4 +71,8 @@
     <dimen name="shape_circular_transparent_white_padding_right">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_bottom">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_top">60dp</dimen>
+
+    <dimen name="welcome_layout_title_text_size">33sp</dimen>
+    <dimen name="welcome_layout_subtitle_text_size">30sp</dimen>
+    <dimen name="welcome_layout_details_text_size">22sp</dimen>
 </resources>
