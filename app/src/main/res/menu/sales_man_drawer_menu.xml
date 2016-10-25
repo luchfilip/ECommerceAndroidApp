@@ -100,7 +100,7 @@
         <menu>
             <item
                 android:id="@+id/nav_welcome_message"
-                android:icon="@android:drawable/ic_menu_help"
+                android:icon="@drawable/ic_burst_mode_black_24dp"
                 android:title="@string/welcome_message" />
         </menu>
     </item>

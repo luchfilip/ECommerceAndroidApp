@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:lines="@integer/welcome_layout_title_lines"
         android:text="@string/welcome_layout_recommended_products_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -26,7 +27,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="bottom"
-        android:layout_weight="2">
+        android:layout_weight="@integer/welcome_layout_top_container_weight">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +48,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3">
+        android:layout_weight="@integer/welcome_layout_bottom_container_weight">
         <TextView
             android:text="@string/welcome_layout_recommended_products_details"
             android:layout_width="match_parent"

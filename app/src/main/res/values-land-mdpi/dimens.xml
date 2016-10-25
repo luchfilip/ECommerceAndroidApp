@@ -4,4 +4,9 @@
 
     <dimen name="productLargeDetail_max_image_Width">210dp</dimen>
     <dimen name="productLargeDetail_max_image_Height">210dp</dimen>
+
+    <dimen name="shape_circular_transparent_white_padding_left">20dp</dimen>
+    <dimen name="shape_circular_transparent_white_padding_right">20dp</dimen>
+    <dimen name="shape_circular_transparent_white_padding_bottom">20dp</dimen>
+    <dimen name="shape_circular_transparent_white_padding_top">20dp</dimen>
 </resources>

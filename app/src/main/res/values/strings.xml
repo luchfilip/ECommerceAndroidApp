@@ -473,21 +473,21 @@
     <string name="welcome_layout_order_tracking_details">Conoce en tiempo real el estado de tus pedidos desde la creación de la factura hasta el despacho y entrega de tu mercancia.</string>
     <string name="welcome_layout_orders_title">Realiza pedidos en cualquier momento</string>
     <string name="welcome_layout_orders_subtitle">Pedidos</string>
-    <string name="welcome_layout_orders_details">Crea pedidos con los porductos que te interesan desde donde estes y en la comodidad de tu teléfono personal o tablet.</string>
+    <string name="welcome_layout_orders_details">Ubica de manera sencilla los productos que deseas y crea pedidos en cualquier momento y desde la comodidad de tu teléfono personal o tablet.</string>
     <string name="welcome_layout_recommended_products_title">Queremos orientarte e impulsar tu negocio</string>
     <string name="welcome_layout_recommended_products_subtitle">Productos Recomendados</string>
-    <string name="welcome_layout_recommended_products_details">Hemos creado para ti una lista de productos Recomendados para tu facilidad.</string>
+    <string name="welcome_layout_recommended_products_details">Hemos creado para ti una lista de Productos Recomendados establecida por tu tipo de negocio y tus areas de interés.</string>
     <string name="welcome_layout_sales_order_title">Haz negociaciones de forma elegante y fácil</string>
     <string name="welcome_layout_sales_order_subtitle">Cotizaciones</string>
     <string name="welcome_layout_sales_order_details">Crea Cotizaciones para tus clientes con tus propios precios y la mercancía que Febeca C.A. dispone para ti.</string>
     <string name="welcome_layout_share_title">Comparte contenidos y amplía tus oportunidades</string>
     <string name="welcome_layout_share_subtitle">Compartelo Todo</string>
-    <string name="welcome_layout_share_details">Comparte desde la imágen del producto con su nombre y descripción hasta las lista de favoritos de forma elegante y fácil.</string>
+    <string name="welcome_layout_share_details">Comparte desde la imágen del producto con su nombre y descripción hasta las lista de favoritos de forma fácil y elegante.</string>
     <string name="go_to_application">Ir a la Aplicación</string>
-    <string name="welcome_layout_welcome_title">!Bienvenido a \nCatálogo Digital Febeca!</string>
+    <string name="welcome_layout_welcome_title">!Bienvenido a Catálogo Digital Febeca!</string>
     <string name="welcome_layout_welcome_subtitle">Febeca está en tus manos</string>
     <string name="welcome_layout_welcome_details">¡Gracias por descargar la aplicación! \nDesde ahora tienes en tus manos la posibilidad de comercializar todos los productos que Febeca C.A. tiene para ti.</string>
-    <string name="welcome_layout_wish_list_title">Ahorra tiempo con lo habitual</string>
+    <string name="welcome_layout_wish_list_title">Ahorra tiempo en lo habitual</string>
     <string name="welcome_layout_wish_list_subtitle">Lista de Favoritos</string>
     <string name="welcome_layout_wish_list_details">Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas. Tambien podrás enterarte en tiempo real si algún producto incremento su disponibilidad.</string>
 </resources>
