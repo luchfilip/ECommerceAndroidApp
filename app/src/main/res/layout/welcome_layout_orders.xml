@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="¡Realiza pedidos en cualquier momento!"
+        android:text="@string/welcome_layout_orders_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -35,12 +35,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/orders"
+            android:text="@string/welcome_layout_orders_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -48,7 +49,7 @@
         android:layout_height="match_parent"
         android:layout_weight="3">
         <TextView
-            android:text="Crea pedidos con los porductos que te interesan desde donde estes y en la comodidad de tu teléfono personal o table,"
+            android:text="@string/welcome_layout_orders_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:lines="2"
-        android:text="¡Comparte contenidos!"
+        android:text="@string/welcome_layout_share_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -36,12 +36,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="Comparte contenidos"
+            android:text="@string/welcome_layout_share_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +51,7 @@
         android:orientation="vertical"
         android:layout_weight="3">
         <TextView
-            android:text="Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas."
+            android:text="@string/welcome_layout_share_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:layout_gravity="bottom|end"
-                android:text="Ir a la Aplicación"
+                android:text="@string/go_to_application"
                 android:id="@+id/go_to_app_textView"
                 android:layout_margin="10dp" />
         </FrameLayout>

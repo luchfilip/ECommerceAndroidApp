@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:lines="2"
-        android:text="¡Una lista de tus productos favoritos!"
+        android:text="@string/welcome_layout_wish_list_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -36,12 +36,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/wish_list"
+            android:text="@string/welcome_layout_wish_list_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -49,7 +50,7 @@
         android:layout_height="match_parent"
         android:layout_weight="3">
         <TextView
-            android:text="Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas."
+            android:text="@string/welcome_layout_wish_list_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

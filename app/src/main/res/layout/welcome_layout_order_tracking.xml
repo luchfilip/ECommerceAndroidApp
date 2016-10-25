@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="¡Conoce el estatus de tus pedidos!"
+        android:text="@string/welcome_layout_order_tracking_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -35,12 +35,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/orders_tracking_list"
+            android:text="@string/welcome_layout_order_tracking_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -48,7 +49,7 @@
         android:layout_height="match_parent"
         android:layout_weight="3">
         <TextView
-            android:text="Mantente informado del estatus de tus pedidos desde la creación de la factura hasta el momento del despacho de tu mercancia."
+            android:text="@string/welcome_layout_order_tracking_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

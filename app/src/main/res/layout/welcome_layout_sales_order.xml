@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:lines="2"
-        android:text="¡Crea oportunidades con tus clientes!"
+        android:text="@string/welcome_layout_sales_order_title"
         android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -36,12 +36,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/sales_orders"
+            android:text="@string/welcome_layout_sales_order_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -49,7 +50,7 @@
         android:layout_height="match_parent"
         android:layout_weight="3">
         <TextView
-            android:text="Crea Cotizaciones para tus clientes con tus precios y la mercancía que Febeca C.A. dispone para ti."
+            android:text="@string/welcome_layout_sales_order_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="¡Queremos orientarte e impulsar tu negocio!"
+        android:text="@string/welcome_layout_recommended_products_title"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -35,12 +35,13 @@
             android:layout_gravity="center_horizontal|bottom"
             android:background="@drawable/shape_circular_transparent_white"/>
         <TextView
-            android:text="@string/recommended_products"
+            android:text="@string/welcome_layout_recommended_products_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -48,7 +49,7 @@
         android:layout_height="match_parent"
         android:layout_weight="3">
         <TextView
-            android:text="Hemos creado para ti una lista de productos Recomendados para tu facilidad."
+            android:text="@string/welcome_layout_recommended_products_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
