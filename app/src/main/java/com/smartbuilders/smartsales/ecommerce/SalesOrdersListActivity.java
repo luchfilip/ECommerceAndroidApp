@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
@@ -24,7 +22,6 @@ import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
@@ -61,32 +58,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(View view) {
-                super.onDrawerOpened(view); //must call super
-                Utils.loadNavigationViewBadge(getApplicationContext(), user,
-                        (NavigationView) findViewById(R.id.nav_view));
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && user!=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
-                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
-            }
-            navigationView.setNavigationItemSelectedListener(this);
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, user.getUserName()));
-        }
+        Utils.inflateNavigationView(this, this, toolbar, user);
 
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){

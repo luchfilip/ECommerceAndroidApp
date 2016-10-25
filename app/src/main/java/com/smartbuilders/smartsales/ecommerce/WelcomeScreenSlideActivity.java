@@ -9,6 +9,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+
 /**
  * Created by AlbertoSarco on 24/10/2016.
  */
@@ -37,7 +40,8 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(),
+                Parameter.isActiveOrderTracking(this, Utils.getCurrentUser(this)));
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -59,18 +63,21 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        private boolean mIsActiveOrderTracking;
+
+        public ScreenSlidePagerAdapter(FragmentManager fm, boolean isActiveOrderTracking) {
             super(fm);
+            mIsActiveOrderTracking = isActiveOrderTracking;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return WelcomeScreenSlidePageFragment.create(position);
+            return WelcomeScreenSlidePageFragment.create(position, mIsActiveOrderTracking);
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return mIsActiveOrderTracking ? NUM_PAGES : NUM_PAGES - 1;
         }
     }
 

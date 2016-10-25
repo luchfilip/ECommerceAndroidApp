@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +30,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.SearchResultAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.RecentSearchDB;
@@ -59,32 +57,7 @@ public class SearchResultsActivity extends AppCompatActivity
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(View view) {
-                super.onDrawerOpened(view); //must call super
-                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
-                        (NavigationView) findViewById(R.id.nav_view));
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && mUser !=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
-                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
-            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
-            }
-            navigationView.setNavigationItemSelectedListener(this);
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
-        }
+        Utils.inflateNavigationView(this, this, toolbar, mUser);
 
         mSearchResultAdapter = new SearchResultAdapter(this, null, null, mUser);
         ((ListView) findViewById(R.id.search_result_list)).setAdapter(mSearchResultAdapter);

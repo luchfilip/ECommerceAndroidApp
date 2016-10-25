@@ -339,20 +339,11 @@ public class SplashScreen extends AppCompatActivity {
                                 String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
                                         .getString(AccountGeneral.USERDATA_USER_ID);
                                 mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this, userId);
+
+                                //mostrar pantalla de bienvenida de la aplicacion
+                                startActivity(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class));
+
                                 checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));
-                                //final Account availableAccounts[] = mAccountManager
-                                //        .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
-                                //if (availableAccounts.length>0) {
-                                //    for(Account account : availableAccounts){
-                                //        if(mAccountManager.getUserData(account,
-                                //                AccountGeneral.USERDATA_USER_ID).equals(userId)){
-                                //            mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this,
-                                //                    mAccountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                                //            checkInitialLoad(mAccountManager, account);
-                                //            break;
-                                //        }
-                                //    }
-                                //}
                             }
                         } catch(OperationCanceledException e){
                             if(finishActivityOnResultOperationCanceledException){

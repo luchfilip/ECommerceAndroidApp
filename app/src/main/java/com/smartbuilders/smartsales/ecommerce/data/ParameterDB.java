@@ -35,6 +35,7 @@ public class ParameterDB {
     public static final int RATING_BAR_LABEL_TEXT = 10;
     public static final int REPORT_ERROR_EMAIL = 11;
     public static final int SHOW_PRODUCT_IMAGES = 12;
+    public static final int IS_ACTIVE_ORDER_TRACKING = 13;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER

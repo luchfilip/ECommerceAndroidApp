@@ -143,4 +143,14 @@ public class Parameter {
     public static boolean showProductImages(Context context, User user) {
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRODUCT_IMAGES, true);
     }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean isActiveOrderTracking(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_ACTIVE_ORDER_TRACKING, false);
+    }
 }

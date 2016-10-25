@@ -27,7 +27,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -925,6 +927,41 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static void inflateNavigationView(NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener,
+                                             final Activity activity, final Toolbar toolbar, final User user) {
+        DrawerLayout drawer = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(activity, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View view) {
+                super.onDrawerOpened(view); //must call super
+                Utils.loadNavigationViewBadge(activity, user,
+                        (NavigationView) activity.findViewById(R.id.nav_view));
+            }
+        };
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) activity.findViewById(R.id.nav_view);
+        if(navigationView!=null && user!=null){
+            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
+                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
+            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+            }
+            if (!Parameter.isActiveOrderTracking(activity, user) && navigationView.getMenu()!=null
+                    && navigationView.getMenu().findItem(R.id.nav_orders_tracking)!=null) {
+                navigationView.getMenu().findItem(R.id.nav_orders_tracking).setVisible(false);
+            }
+            navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
+                    .setText(activity.getString(R.string.welcome_user, user.getUserName()));
+        }
+    }
+
 
     private static String imagesThumbFolderPath;
     public static String getImagesThumbFolderPath(Context context){

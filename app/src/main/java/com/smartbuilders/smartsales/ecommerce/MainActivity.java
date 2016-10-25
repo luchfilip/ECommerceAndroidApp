@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -16,13 +15,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
@@ -50,32 +47,7 @@ public class MainActivity extends AppCompatActivity
         Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(View view) {
-                super.onDrawerOpened(view); //must call super
-                Utils.loadNavigationViewBadge(getApplicationContext(), mUser,
-                        (NavigationView) findViewById(R.id.nav_view));
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView!=null && mUser !=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
-                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
-            }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
-            }
-            navigationView.setNavigationItemSelectedListener(this);
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
-                    .setText(getString(R.string.welcome_user, mUser.getUserName()));
-        }
+        Utils.inflateNavigationView(this, this, toolbar, mUser);
 
         if(getIntent()!=null && getIntent().getData()!=null){//check if intent is not null
             Uri data = getIntent().getData();//set a variable for the Intent
@@ -96,7 +68,7 @@ public class MainActivity extends AppCompatActivity
             final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                     this, R.array.search_by_options, R.layout.spinner_custom_prompt_item);
-            if(searchByOptionsSpinner!=null && adapter!=null) {
+            if(searchByOptionsSpinner!=null) {
                 adapter.setDropDownViewResource(R.layout.spinner_custom_item);
                 searchByOptionsSpinner.setAdapter(adapter);
                 searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
