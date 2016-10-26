@@ -342,6 +342,7 @@ public class SplashScreen extends AppCompatActivity {
 
                                 //mostrar pantalla de bienvenida de la aplicacion
                                 startActivity(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class));
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                 checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));
                             }

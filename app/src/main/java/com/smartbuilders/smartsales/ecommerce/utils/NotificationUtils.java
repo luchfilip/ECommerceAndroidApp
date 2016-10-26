@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -30,7 +29,7 @@ public class NotificationUtils {
             mBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_launcher)
                     .setContentTitle(contentTitle)
-                    .setColor(context.getResources().getColor(R.color.colorPrimary))
+                    .setColor(context.getResources().getColor(R.color.colorAccent))
                     .setContentText(contentText);
         //} else {
         //    // Lollipop specific setColor method goes here.
@@ -79,13 +78,25 @@ public class NotificationUtils {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean("is_notification_shown", true);
+        editor.apply();
     }
 
     public static void cancelNotification(Context context){
         try {
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+            editor.putBoolean("is_notification_shown", false);
+            editor.apply();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isNotificationShown(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean("is_notification_shown", false);
     }
 }

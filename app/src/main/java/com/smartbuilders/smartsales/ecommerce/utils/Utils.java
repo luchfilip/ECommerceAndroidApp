@@ -835,69 +835,69 @@ public class Utils {
     /**
      *
      * @param itemId
-     * @param context
+     * @param activity
      */
-    public static void navigationItemSelectedBehave(int itemId, Context context) {
+    public static void navigationItemSelectedBehave(int itemId, Activity activity) {
         try {
             if (itemId == R.id.nav_home) {
                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                    context.startActivity(new Intent(context, SalesForceSystemMainActivity.class)
+                    activity.startActivity(new Intent(activity, SalesForceSystemMainActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 } else {
-                    context.startActivity(new Intent(context, MainActivity.class)
+                    activity.startActivity(new Intent(activity, MainActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
             } else if (itemId == R.id.nav_shopping_cart) {
-                context.startActivity(new Intent(context, ShoppingCartActivity.class)
+                activity.startActivity(new Intent(activity, ShoppingCartActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_shopping_sale) {
-                User user = getCurrentUser(context);
+                User user = getCurrentUser(activity);
                 if (BuildConfig.IS_SALES_FORCE_SYSTEM
                         || (user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)) {
-                    context.startActivity(new Intent(context, ShoppingSaleActivity.class)
+                    activity.startActivity(new Intent(activity, ShoppingSaleActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 } else {
-                    context.startActivity(new Intent(context, ShoppingSalesListActivity.class)
+                    activity.startActivity(new Intent(activity, ShoppingSalesListActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 }
 
             } else if (itemId == R.id.nav_recommended_products_list) {
-                context.startActivity(new Intent(context, RecommendedProductsListActivity.class)
+                activity.startActivity(new Intent(activity, RecommendedProductsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_wish_list) {
-                context.startActivity(new Intent(context, WishListActivity.class)
+                activity.startActivity(new Intent(activity, WishListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_orders) {
-                context.startActivity(new Intent(context, OrdersListActivity.class)
+                activity.startActivity(new Intent(activity, OrdersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_sales_orders) {
-                context.startActivity(new Intent(context, SalesOrdersListActivity.class)
+                activity.startActivity(new Intent(activity, SalesOrdersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_settings) {
-                context.startActivity(new Intent(context, SettingsActivity.class));
+                activity.startActivity(new Intent(activity, SettingsActivity.class));
 
             } else if (itemId == R.id.nav_business_partners) {
-                context.startActivity(new Intent(context, BusinessPartnersListActivity.class)
+                activity.startActivity(new Intent(activity, BusinessPartnersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_share) {
                 try {
-                    showPromptShareApp(context);
+                    showPromptShareApp(activity);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
 
             } else if (itemId == R.id.nav_my_company) {
-                context.startActivity(new Intent(context, CompanyActivity.class)
+                activity.startActivity(new Intent(activity, CompanyActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_conctac_us) {
-                context.startActivity(new Intent(context, ContactUsActivity.class)
+                activity.startActivity(new Intent(activity, ContactUsActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_report_error) {
@@ -906,22 +906,22 @@ public class Utils {
                 // need this to prompts email client only
                 contactUsEmailIntent.setType("message/rfc822");
                 contactUsEmailIntent.putExtra(Intent.EXTRA_EMAIL,
-                        new String[]{Parameter.getReportErrorEmail(context, getCurrentUser(context))});
+                        new String[]{Parameter.getReportErrorEmail(activity, getCurrentUser(activity))});
 
-                context.startActivity(Intent.createChooser(contactUsEmailIntent, context.getString(R.string.send_error_report)));
+                activity.startActivity(Intent.createChooser(contactUsEmailIntent, activity.getString(R.string.send_error_report)));
 
             } else if (itemId == R.id.nav_prices_list) {
-                context.startActivity(new Intent(context, PricesListActivity.class)
+                activity.startActivity(new Intent(activity, PricesListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_orders_tracking) {
-                context.startActivity(new Intent(context, OrdersTrackingListActivity.class)
+                activity.startActivity(new Intent(activity, OrdersTrackingListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
             } else if (itemId == R.id.nav_welcome_message) {
-                context.startActivity(new Intent(context, WelcomeScreenSlideActivity.class)
+                activity.startActivity(new Intent(activity, WelcomeScreenSlideActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         } catch (Exception e) {
             e.printStackTrace();

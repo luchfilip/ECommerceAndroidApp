@@ -29,26 +29,28 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
     }
 
     private void checkNewAvailabilitiesInWishList(Context context){
-        User user = Utils.getCurrentUser(context);
-        if (user!=null) {
-            OrderLineDB orderLineDB = new OrderLineDB(context, user);
-            ArrayList<OrderLine> orderLines = orderLineDB.getWishList();
-            boolean showNotification = false;
-            for (OrderLine orderLine : orderLines) {
-                if (orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()>orderLine.getQuantityOrdered()) {
-                    showNotification = true;
-                    break;
+        if (!NotificationUtils.isNotificationShown(context) && PreferenceManager
+                .getDefaultSharedPreferences(context).getBoolean("notifications_new_availabilities_wish_list", true)) {
+            User user = Utils.getCurrentUser(context);
+            if (user != null) {
+                OrderLineDB orderLineDB = new OrderLineDB(context, user);
+                ArrayList<OrderLine> orderLines = orderLineDB.getWishList();
+                boolean showNotification = false;
+                for (OrderLine orderLine : orderLines) {
+                    if (orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability() > orderLine.getQuantityOrdered()) {
+                        showNotification = true;
+                        break;
+                    }
                 }
-            }
 
-            if(showNotification && PreferenceManager.getDefaultSharedPreferences(context)
-                    .getBoolean("notifications_new_availabilities_wish_list", true)){
-                BadgeUtils.setBadge(context, 1);
-                // Creates an explicit intent for an Activity in your app
-                final Intent resultIntent = new Intent(context, WishListActivity.class);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-                NotificationUtils.createNotification(context, context.getString(R.string.app_name),
-                        context.getString(R.string.new_availabilities_in_wishList), resultIntent);
+                if (showNotification) {
+                    BadgeUtils.setBadge(context, 1);
+                    // Creates an explicit intent for an Activity in your app
+                    final Intent resultIntent = new Intent(context, WishListActivity.class);
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    NotificationUtils.createNotification(context, context.getString(R.string.app_name),
+                            context.getString(R.string.new_availabilities_in_wishList), resultIntent);
+                }
             }
         }
     }

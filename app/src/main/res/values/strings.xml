@@ -477,12 +477,12 @@
     <string name="welcome_layout_recommended_products_title">Queremos orientarte e impulsar tu negocio</string>
     <string name="welcome_layout_recommended_products_subtitle">Productos Recomendados</string>
     <string name="welcome_layout_recommended_products_details">Hemos creado para ti una lista de Productos Recomendados establecida por tu tipo de negocio y tus areas de interés.</string>
-    <string name="welcome_layout_sales_order_title">Haz negociaciones de forma elegante y fácil</string>
+    <string name="welcome_layout_sales_order_title">Haz negociaciones de forma fácil y elegante</string>
     <string name="welcome_layout_sales_order_subtitle">Cotizaciones</string>
-    <string name="welcome_layout_sales_order_details">Crea Cotizaciones para tus clientes con tus propios precios y la mercancía que Febeca C.A. dispone para ti.</string>
+    <string name="welcome_layout_sales_order_details">Crea Cotizaciones para tus clientes con tus propios precios y la mercancía que Febeca C.A. dispone para ti, luego enviala por correo a tu cliente.</string>
     <string name="welcome_layout_share_title">Comparte contenidos y amplía tus oportunidades</string>
     <string name="welcome_layout_share_subtitle">Compartelo Todo</string>
-    <string name="welcome_layout_share_details">Comparte desde la imágen del producto con su nombre y descripción hasta las lista de favoritos de forma fácil y elegante.</string>
+    <string name="welcome_layout_share_details">Comparte desde la imágen del producto con su nombre y descripción hasta las cotizaciones realizadas de forma fácil y elegante.</string>
     <string name="go_to_application">Ir a la Aplicación</string>
     <string name="welcome_layout_welcome_title">!Bienvenido a Catálogo Digital Febeca!</string>
     <string name="welcome_layout_welcome_subtitle">Febeca está en tus manos</string>
