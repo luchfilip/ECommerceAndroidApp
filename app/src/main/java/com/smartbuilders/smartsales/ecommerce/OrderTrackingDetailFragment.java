@@ -57,7 +57,12 @@ public class OrderTrackingDetailFragment extends Fragment {
                             mOrderId = savedInstanceState.getInt(STATE_ORDER_ID);
                         }
                     }
-                    if (getActivity()!=null && getActivity().getIntent() != null &&
+
+                    if (getArguments() != null) {
+                        if (getArguments().containsKey(OrderTrackingDetailActivity.KEY_ORDER_ID)) {
+                            mOrderId = getArguments().getInt(OrderTrackingDetailActivity.KEY_ORDER_ID);
+                        }
+                    } else if (getActivity()!=null && getActivity().getIntent() != null &&
                             getActivity().getIntent().getExtras() != null) {
                         if (getActivity().getIntent().getExtras().containsKey(OrderTrackingDetailActivity.KEY_ORDER_ID)) {
                             mOrderId = getActivity().getIntent().getExtras().getInt(OrderTrackingDetailActivity.KEY_ORDER_ID);
