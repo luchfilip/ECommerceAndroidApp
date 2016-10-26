@@ -1,6 +1,5 @@
 package com.smartbuilders.synchronizer.ids.datamanager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -15,6 +14,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
@@ -31,7 +31,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 
 	private static final String TAG = TablesDataSendToAndReceiveFromServer.class.getSimpleName();
 
-	private Context context;
+	private Context mContext;
 	private boolean sync;
 	private String exceptionMessage;
 	private String exceptionClass;
@@ -43,6 +43,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private String mTablesToSyncJSONObject;
     private boolean mIsInitialLoad;
     private int mTransmissionWay;
+    private int mCurrentAppVersionCode;
 
     public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject,
                                                 int transmissionWay) throws Exception{
@@ -52,7 +53,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     }
 
 	public TablesDataSendToAndReceiveFromServer(User user, Context context, boolean isInitialLoad) throws Exception{
-		this.context = context;
+		this.mContext = context;
 		this.mUser = user;
         this.mConnectionTimeOut = Parameter.getConnectionTimeOutValue(context, mUser);
         this.sync = true;
@@ -62,7 +63,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 	 * detiene el hilo de sincronizacion
 	 */
 	public void stopSynchronization(){
-		//Log.d(TAG, "stopSynchronization()");
 		sync = false;
 	}
 	
@@ -79,6 +79,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 		Log.d(TAG, "run()");
 		try {
             syncPercentage = 0f;
+            mCurrentAppVersionCode = Utils.getAppVersionCode(mContext);
             long initTime = System.currentTimeMillis();
             List<SoapPrimitive> tablesToSync = new ArrayList<>();
             if (mTablesToSyncJSONObject!=null) {
@@ -92,7 +93,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                                         (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
                             }
                             numberOfTablesToSync = tablesToSync.size();
-                            getDataFromWS(context, mUser, tablesToSync);
+                            getDataFromWS(mContext, mUser, tablesToSync);
                             break;
                         case TRANSMISSION_CLIENT_TO_SERVER:
                             numberOfTablesToSync = (new JSONObject(mTablesToSyncJSONObject)).length();
@@ -113,22 +114,17 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     } else {
                         tablesToSync.addAll(getTablesToSync());
                     }
-                    //tablesToSync.addAll(getUserTablesToSync());
                 }
-                //if (sync) {
-                //    tablesToSync.addAll(getGlobalTablesToSync());
-                //}
                 if (sync) {
                     numberOfTablesToSync = (userTablesAndSqlToSync!=null ? userTablesAndSqlToSync.length() : 0) + tablesToSync.size();
                     sendUserDataToServer(userTablesAndSqlToSync);
-                    //(new FailedSyncDataWithServerDB(context, mUser)).cleanFailedSyncDataWithServer();
                 }
                 if(sync){
-                    getDataFromWS(context, mUser, tablesToSync);
+                    getDataFromWS(mContext, mUser, tablesToSync);
                 }
             }
             syncPercentage = 100f;
-            Log.d(TAG, "Total Load Time: "+(System.currentTimeMillis() - initTime)+"ms");
+            Log.d(TAG, "Total Synchronization Time: "+(System.currentTimeMillis() - initTime)+"ms");
 		} catch (Exception e) {
 			e.printStackTrace();
             reportSyncError(String.valueOf(e.getMessage()), String.valueOf(e.getClass().getName()));
@@ -143,9 +139,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
-        ConsumeWebService a = new ConsumeWebService(context,
+        parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+        parameters.put("appVersionCode", mCurrentAppVersionCode);
+        ConsumeWebService a = new ConsumeWebService(mContext,
                 mUser.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                 "getTablesAndSQLToReceiveFromClient",
                 "urn:getTablesAndSQLToReceiveFromClient",
                 parameters,
@@ -158,10 +156,12 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
+        parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+        parameters.put("appVersionCode", mCurrentAppVersionCode);
         parameters.put("tablesNamesJSONObject", tablesNamesJSONObject);
-        ConsumeWebService a = new ConsumeWebService(context,
+        ConsumeWebService a = new ConsumeWebService(mContext,
                 mUser.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                 "getSQLToReceiveFromClient",
                 "urn:getSQLToReceiveFromClient",
                 parameters,
@@ -176,7 +176,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 String key = (String) keysTemp.next();
                 if (userTablesToSync.get(key)!=null) {
                     Object result = DataBaseUtilities
-                            .getJsonBase64CompressedQueryResult(context, mUser, (String) userTablesToSync.get(key));
+                            .getJsonBase64CompressedQueryResult(mContext, mUser, (String) userTablesToSync.get(key));
                     if(sync){
                         numberOfTableSynced++;
                         syncPercentage = ((numberOfTableSynced * 100) / numberOfTablesToSync);
@@ -205,12 +205,14 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
+        parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+        parameters.put("appVersionCode", mCurrentAppVersionCode);
         parameters.put("tableName", tableName);
         parameters.put("data", data);
         parameters.put("errorMessage", errorMessage);
-        ConsumeWebService a = new ConsumeWebService(context,
+        ConsumeWebService a = new ConsumeWebService(mContext,
                 mUser.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                 "receiveDataFromClient",
                 "urn:receiveDataFromClient",
                 parameters,
@@ -223,9 +225,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
-        ConsumeWebService a = new ConsumeWebService(context,
+        parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+        parameters.put("appVersionCode", mCurrentAppVersionCode);
+        ConsumeWebService a = new ConsumeWebService(mContext,
                 mUser.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                 "getTablesToSync",
                 "urn:getTablesToSync",
                 parameters,
@@ -238,9 +242,11 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         parameters.put("authToken", mUser.getAuthToken());
         parameters.put("userGroupName", mUser.getUserGroup());
         parameters.put("userId", mUser.getServerUserId());
-        ConsumeWebService a = new ConsumeWebService(context,
+        parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+        parameters.put("appVersionCode", mCurrentAppVersionCode);
+        ConsumeWebService a = new ConsumeWebService(mContext,
                 mUser.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                 "getTablesToSyncInitialLoad",
                 "urn:getTablesToSyncInitialLoad",
                 parameters,
@@ -248,7 +254,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
         return (List<SoapPrimitive>) a.getWSResponse();
     }
 
-    public void getDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
+    private void getDataFromWS(Context context, User user, List<SoapPrimitive> tablesToSync) throws Exception {
         if (tablesToSync!=null && !tablesToSync.isEmpty()) {
             for (SoapPrimitive tableToSync : tablesToSync) {
                 if (sync) {
@@ -287,6 +293,8 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 parameters.put("authToken", mUser.getAuthToken());
                 parameters.put("userGroupName", mUser.getUserGroup());
                 parameters.put("userId", mUser.getServerUserId());
+                parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+                parameters.put("appVersionCode", mCurrentAppVersionCode);
                 parameters.put("tableName", tableName);
                 parameters.put("tableCount", c.getInt(0));
                 parameters.put("maxSeqId", c.getString(1)==null ? -1 : c.getInt(1));
@@ -302,10 +310,10 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             }
         }
 
-        if(parameters!=null && parameters.size()==6) {
+        if(parameters!=null && parameters.size()==8) {
             ConsumeWebService a = new ConsumeWebService(context,
                     mUser.getServerAddress(),
-                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                     "sendDataToClient",
                     "urn:sendDataToClient",
                     parameters,
@@ -333,7 +341,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                         }
                         //DataBaseUtilities.insertDataFromWSResultData(((List<SoapPrimitive>) result).get(0) != null ? ((List<SoapPrimitive>) result).get(0).toString() : null,
                         //        ((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null,
-                        //        tableName, context, user);
+                        //        tableName, mContext, user);
                     } /*catch (IOException e) {
                         if (((List<SoapPrimitive>) result).get(0) != null
                                 && ((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
@@ -364,11 +372,13 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
             parameters.put("authToken", mUser.getAuthToken());
             parameters.put("userGroupName", mUser.getUserGroup());
             parameters.put("userId", mUser.getServerUserId());
+            parameters.put("syncSessionId", mUser.getServerSyncSessionId());
+            parameters.put("appVersionCode", mCurrentAppVersionCode);
             parameters.put("errorMessage", errorMessage);
             parameters.put("exceptionClass", exceptionClass);
-            ConsumeWebService a = new ConsumeWebService(context,
+            ConsumeWebService a = new ConsumeWebService(mContext,
                     mUser.getServerAddress(),
-                    "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
+                    "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
                     "reportSyncError",
                     "urn:reportSyncError",
                     parameters,

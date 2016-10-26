@@ -1409,7 +1409,7 @@ public class ApplicationUtilities {
     	}
     	return null;
     }
-    
+
 
 
 	public static void initSyncDataWithServerService(Context context, String userId){

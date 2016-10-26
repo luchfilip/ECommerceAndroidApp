@@ -1213,7 +1213,9 @@ public class Utils {
         try {
             if (BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
                 if (!PreferenceManager.getDefaultSharedPreferences(context)
-                        .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY)) {
+                        .contains(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY) ||
+                        PreferenceManager.getDefaultSharedPreferences(context)
+                                .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0) == 0) {
                     setAppCurrentBusinessPartnerId(context, (new BusinessPartnerDB(context, user))
                             .getMaxActiveBusinessPartnerId());
                 }

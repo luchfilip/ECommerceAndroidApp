@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by AlbertoSarco on 18/10/2016.
@@ -28,76 +27,6 @@ public class OrderTrackingDB {
     }
 
     public ArrayList<OrderTracking> getOrderTrackings (int orderId) {
-        try {
-            ArrayList<String> inserts = new ArrayList<>();
-            inserts.add("INSERT INTO ORDER_TRACKING_STATE (ORDER_TRACKING_STATE_ID, TITLE, ICON_RES_NAME, ICON_FILE_NAME, PRIORITY," +
-                    "BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    "BORDER_R_COLOR, BORDER_G_COLOR, BORDER_B_COLOR, " +
-                    "TITLE_TEXT_R_COLOR, TITLE_TEXT_G_COLOR, TITLE_TEXT_B_COLOR, " +
-                    "ICON_R_COLOR, ICON_G_COLOR, ICON_B_COLOR, " +
-                    "IS_ALWAYS_VISIBLE, IS_ACTIVE) " +
-                    "VALUES (1, 'PEDIDO RECIBIDO POR VENDEDOR', 'ic_phone_android_black_48dp', null, 1, null, null, null, null, null, null, null, null, null, null, null, null, 'Y', 'Y')");
-
-            inserts.add("INSERT INTO ORDER_TRACKING_STATE (ORDER_TRACKING_STATE_ID, TITLE, ICON_RES_NAME, ICON_FILE_NAME, PRIORITY," +
-                    "BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    "BORDER_R_COLOR, BORDER_G_COLOR, BORDER_B_COLOR, " +
-                    "TITLE_TEXT_R_COLOR, TITLE_TEXT_G_COLOR, TITLE_TEXT_B_COLOR, " +
-                    "ICON_R_COLOR, ICON_G_COLOR, ICON_B_COLOR, " +
-                    "IS_ALWAYS_VISIBLE, IS_ACTIVE) " +
-                    "VALUES (2, 'PEDIDO GENERADO', 'ic_receipt_black_48dp', null, 2, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "'Y', 'Y')");
-
-            inserts.add("INSERT INTO ORDER_TRACKING_STATE (ORDER_TRACKING_STATE_ID, TITLE, ICON_RES_NAME, ICON_FILE_NAME, PRIORITY," +
-                    "BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    "BORDER_R_COLOR, BORDER_G_COLOR, BORDER_B_COLOR, " +
-                    "TITLE_TEXT_R_COLOR, TITLE_TEXT_G_COLOR, TITLE_TEXT_B_COLOR, " +
-                    "ICON_R_COLOR, ICON_G_COLOR, ICON_B_COLOR, " +
-                    "IS_ALWAYS_VISIBLE, IS_ACTIVE) " +
-                    "VALUES (3, 'FACTURA GENERADA', 'ic_description_black_48dp', null, 3, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "'Y', 'Y')");
-
-            inserts.add("INSERT INTO ORDER_TRACKING_STATE (ORDER_TRACKING_STATE_ID, TITLE, ICON_RES_NAME, ICON_FILE_NAME, PRIORITY," +
-                    "BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    "BORDER_R_COLOR, BORDER_G_COLOR, BORDER_B_COLOR, " +
-                    "TITLE_TEXT_R_COLOR, TITLE_TEXT_G_COLOR, TITLE_TEXT_B_COLOR, " +
-                    "ICON_R_COLOR, ICON_G_COLOR, ICON_B_COLOR, " +
-                    "IS_ALWAYS_VISIBLE, IS_ACTIVE) " +
-                    "VALUES (4, 'MERCANCIA DESPACHADA', 'ic_local_shipping_black_48dp', null, 1, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "null, null, null, " +
-                    "'Y', 'Y')");
-
-            inserts.add("INSERT INTO ORDER_TRACKING_STATE (ORDER_TRACKING_STATE_ID, TITLE, ICON_RES_NAME, ICON_FILE_NAME, PRIORITY," +
-                    "BACKGROUND_R_COLOR, BACKGROUND_G_COLOR, BACKGROUND_B_COLOR, " +
-                    "BORDER_R_COLOR, BORDER_G_COLOR, BORDER_B_COLOR, " +
-                    "TITLE_TEXT_R_COLOR, TITLE_TEXT_G_COLOR, TITLE_TEXT_B_COLOR, " +
-                    "ICON_R_COLOR, ICON_G_COLOR, ICON_B_COLOR, " +
-                    "IS_ALWAYS_VISIBLE, IS_ACTIVE) " +
-                    "VALUES (5, 'MERCANCIA ENTREGADA', 'ic_check_circle_black_48dp', null, 5, " +
-                    "255, 255, 255, " +
-                    "79, 138, 16, " +
-                    "null, null, null, " +
-                    "79, 138, 16, " +
-                    "'Y', 'Y')");
-            for (String inssert :inserts) {
-                mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                        null, inssert, null);
-            }
-        } catch (Exception e) {
-            //
-        }
         ArrayList<OrderTracking> orderTrackings = new ArrayList<>();
         Cursor c = null;
         try {
@@ -239,31 +168,7 @@ public class OrderTrackingDB {
                 }
             }
         }
-        OrderTracking orderTracking = new OrderTracking();
-        orderTracking.setOrderTrackingStateId(1);
-        orderTracking.setDetails("El pedido fue recibido en el sistema de ventas del vendedor.");
-        orderTracking.setCreated(new Date());
-        OrderTrackingState orderTrackingState = new OrderTrackingState();
-        orderTrackingState.setId(1);
-        orderTrackingState.setTitle("PEDIDO RECIBIDO POR VENDEDOR");
-        orderTrackingState.setIconResName("ic_phone_android_black_48dp");
-        orderTrackingState.setIconFileName(null);
-        orderTrackingState.setBackground_R_Color(-1);
-        orderTrackingState.setBackground_G_Color(-1);
-        orderTrackingState.setBackground_B_Color(-1);
-        orderTrackingState.setBorder_R_Color(-1);
-        orderTrackingState.setBorder_G_Color(-1);
-        orderTrackingState.setBorder_B_Color(-1);
-        orderTrackingState.setTitle_R_Color(-1);
-        orderTrackingState.setTitle_G_Color(-1);
-        orderTrackingState.setTitle_B_Color(-1);
-        orderTrackingState.setIcon_R_Color(-1);
-        orderTrackingState.setIcon_G_Color(-1);
-        orderTrackingState.setIcon_B_Color(-1);
-        orderTrackingState.setAlwaysVisible(true);
-        orderTracking.setOrderTrackingState(orderTrackingState);
-        return orderTracking;
-        //return null;
+        return null;
     }
 
     public int getProgressPercentage(int orderId) {
@@ -313,7 +218,7 @@ public class OrderTrackingDB {
                     null);
             if(c!=null && c.moveToNext() && c.getInt(0)!=0){
                 if (c.getInt(0) == c.getInt(1)) {
-                    return "Completado!";
+                    return "¡Completado!";
                 } else {
                     return "Progreso: " + c.getInt(1) + "/" + c.getInt(0);
                 }
