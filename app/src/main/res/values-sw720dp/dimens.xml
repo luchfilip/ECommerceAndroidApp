@@ -5,4 +5,7 @@
     <dimen name="welcome_layout_subtitle_text_size">33sp</dimen>
     <dimen name="welcome_layout_details_text_size">25sp</dimen>
 
+    <integer name="welcome_layout_top_container_weight">1</integer>
+    <integer name="welcome_layout_bottom_container_weight">1</integer>
+
 </resources>
