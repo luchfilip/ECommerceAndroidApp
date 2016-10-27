@@ -63,6 +63,7 @@
     <!-- Hasta aqui permisos relacionados a la notificacion que se muestra en el icono de la aplicacion -->
     <application
         android:name="android.support.multidex.MultiDexApplication"
+        android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

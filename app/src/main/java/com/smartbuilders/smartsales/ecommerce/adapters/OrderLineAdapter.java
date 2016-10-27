@@ -19,7 +19,6 @@ import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
-import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
@@ -34,6 +33,11 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     private User mUser;
     private String mCurrencyName;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPriceInOrderLine;
+    private boolean mShowProductTaxInOrderLine;
+    private boolean mShowProductTotalPriceInOrderLine;
+    private boolean mShowSubTotalLineAmountInOrderLine;
+    private boolean mShowTotalLineAmountInOrderLine;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -46,6 +50,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         public TextView qtyOrdered;
         public TextView productPrice;
         public TextView productTax;
+        public TextView productTotalPrice;
+        public TextView subTotalLineAmount;
         public TextView totalLineAmount;
         public View goToProductDetails;
 
@@ -57,6 +63,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             qtyOrdered = (TextView) v.findViewById(R.id.qty_requested_textView);
             productPrice = (TextView) v.findViewById(R.id.product_price_textView);
             productTax = (TextView) v.findViewById(R.id.product_tax_percentage_textView);
+            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price_textView);
+            subTotalLineAmount = (TextView) v.findViewById(R.id.sub_total_line_amount_textView);
             totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
@@ -71,6 +79,11 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                 .getActiveCurrencyById(Parameter.getDefaultCurrencyId(context, user));
         mCurrencyName = currency!=null ? currency.getName() : "";
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPriceInOrderLine = Parameter.showProductPriceInOrderLine(context, user);
+        mShowProductTaxInOrderLine = Parameter.showProductTaxInOrderLine(context, user);
+        mShowProductTotalPriceInOrderLine = Parameter.showProductTotalPriceInOrderLine(context, user);
+        mShowSubTotalLineAmountInOrderLine = Parameter.showSubTotalLineAmountInOrderLine(context, user);
+        mShowTotalLineAmountInOrderLine = Parameter.showTotalLineAmountInOrderLine(context, user);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -123,17 +136,45 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered_label_detail,
                 String.valueOf(mDataset.get(position).getQuantityOrdered())));
         if (mIsManagePriceInOrder) {
-            holder.productPrice.setText(mContext.getString(R.string.order_product_price,
-                    mCurrencyName, mDataset.get(position).getPriceStringFormat()));
-            holder.productPrice.setVisibility(View.VISIBLE);
+            if (mShowProductPriceInOrderLine) {
+                holder.productPrice.setText(mContext.getString(R.string.order_product_price,
+                        mDataset.get(position).getProductPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productPrice.setVisibility(View.GONE);
+            }
 
-            holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
-                    mDataset.get(position).getProductTaxPercentageStringFormat()));
-            holder.productTax.setVisibility(View.VISIBLE);
+            if (mShowProductTaxInOrderLine) {
+                holder.productTax.setText(mContext.getString(R.string.product_tax_percentage_detail,
+                        mDataset.get(position).getProductTaxPercentageStringFormat()));
+                holder.productTax.setVisibility(View.VISIBLE);
+            } else {
+                holder.productTax.setVisibility(View.GONE);
+            }
 
-            holder.totalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
-                    mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
-            holder.totalLineAmount.setVisibility(View.VISIBLE);
+            if (mShowProductTotalPriceInOrderLine) {
+                holder.productTotalPrice.setText(mContext.getString(R.string.order_product_total_price_detail,
+                        mDataset.get(position).getProductTotalPriceStringFormat()));
+                holder.productTotalPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productTotalPrice.setVisibility(View.GONE);
+            }
+
+            if (mShowSubTotalLineAmountInOrderLine) {
+                holder.subTotalLineAmount.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                        mCurrencyName, mDataset.get(position).getSubTotalLineAmountStringFormat()));
+                holder.subTotalLineAmount.setVisibility(View.VISIBLE);
+            } else {
+                holder.subTotalLineAmount.setVisibility(View.GONE);
+            }
+
+            if (mShowTotalLineAmountInOrderLine) {
+                holder.totalLineAmount.setText(mContext.getString(R.string.order_total_line_amount,
+                        mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
+                holder.totalLineAmount.setVisibility(View.VISIBLE);
+            } else {
+                holder.totalLineAmount.setVisibility(View.GONE);
+            }
         } else {
             holder.productPrice.setVisibility(View.GONE);
             holder.productTax.setVisibility(View.GONE);

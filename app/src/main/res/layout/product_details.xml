@@ -60,14 +60,6 @@
                     android:maxLines="1"
                     android:textSize="@dimen/productDetailCardView_brand_text_size" />
 
-                <TextView
-                    android:id="@+id/product_total_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/product_price_color"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/productDetailCardView_price_text_size" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,6 +91,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false">
+
+                <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/product_price_color"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/productDetailCardView_price_text_size" />
 
                 <TextView
                     android:id="@+id/product_availability"

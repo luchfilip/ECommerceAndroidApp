@@ -40,6 +40,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private OrderLineDB orderLineDB;
     private boolean mIsShoppingCart;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTax;
+    private boolean mShowProductTotalPrice;
+    private boolean mShowSubTotalLineAmount;
+    private boolean mShowTotalLineAmount;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -53,6 +58,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public TextView productPrice;
         public TextView productTax;
         public TextView productTotalPrice;
+        public TextView subTotalLine;
         public TextView totalLine;
         public EditText qtyOrdered;
         public View goToProductDetails;
@@ -65,6 +71,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productTax = (TextView) v.findViewById(R.id.product_tax);
             productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
+            subTotalLine = (TextView) v.findViewById(R.id.sub_total_line_textView);
             totalLine = (TextView) v.findViewById(R.id.total_line_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
@@ -88,6 +95,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         OrderBR.validateQuantityOrderedInOrderLines(context, user, data);
         orderLineDB = new OrderLineDB(context, user);
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTax = Parameter.showProductTax(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
+        mShowSubTotalLineAmount = Parameter.showSubTotalLineAmountInOrderLine(context, user);
+        mShowTotalLineAmount = Parameter.showTotalLineAmountInOrderLine(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -152,25 +164,54 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         }
 
         if (mIsManagePriceInOrder) {
-            holder.productPrice.setText(mContext.getString(R.string.price_detail,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
-            holder.productPrice.setVisibility(View.VISIBLE);
+            if (mShowProductPrice) {
+                //holder.productPrice.setText(mContext.getString(R.string.price_detail,
+                //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getProductPriceStringFormat()));
+                holder.productPrice.setText(mContext.getString(R.string.product_price,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productPrice.setVisibility(View.GONE);
+            }
 
-            holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
-            holder.productTax.setVisibility(View.VISIBLE);
+            if (mShowProductTax) {
+                //holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
+                //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+                holder.productTax.setText(mContext.getString(R.string.product_tax,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+                holder.productTax.setVisibility(View.VISIBLE);
+            } else {
+                holder.productTax.setVisibility(View.GONE);
+            }
 
-            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            holder.productTotalPrice.setVisibility(View.VISIBLE);
+            if (mShowProductTotalPrice) {
+                holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                holder.productTotalPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productTotalPrice.setVisibility(View.GONE);
+            }
 
-            holder.totalLine.setText(mContext.getString(R.string.order_sub_total_line_amount,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getTotalLineAmountStringFormat()));
-            holder.totalLine.setVisibility(View.VISIBLE);
+            if (mShowSubTotalLineAmount) {
+                holder.subTotalLine.setText(mContext.getString(R.string.order_sub_total_line_amount,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getSubTotalLineAmountStringFormat()));
+                holder.subTotalLine.setVisibility(View.VISIBLE);
+            } else {
+                holder.subTotalLine.setVisibility(View.GONE);
+            }
+
+            if (mShowTotalLineAmount) {
+                holder.totalLine.setText(mContext.getString(R.string.order_total_line_amount,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getTotalLineAmountStringFormat()));
+                holder.totalLine.setVisibility(View.VISIBLE);
+            } else {
+                holder.totalLine.setVisibility(View.GONE);
+            }
         } else {
             holder.productPrice.setVisibility(View.GONE);
             holder.productTax.setVisibility(View.GONE);

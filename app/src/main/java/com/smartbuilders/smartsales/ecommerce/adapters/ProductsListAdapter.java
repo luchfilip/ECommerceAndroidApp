@@ -61,6 +61,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private int mMask;
     private ArrayList<Product> filterAux;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTotalPrice;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -74,8 +76,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productDescription;
         public TextView productPurpose;
         public TextView productPrice;
-        public TextView productTax;
-        public TextView productTotalPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -101,8 +101,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
             productPrice = (TextView) v.findViewById(R.id.product_price);
-            productTax = (TextView) v.findViewById(R.id.product_tax);
-            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             shareImageViewContainer = v.findViewById(R.id.share_imageView_container);
@@ -130,7 +128,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mSortOption = sortOption;
         mUser = user;
         mMask = mask;
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -194,8 +194,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.productName.setText(mDataset.get(position).getName());
 
         if (mIsManagePriceInOrder) {
-            if (holder.productPrice != null) {
-                holder.productPrice.setText(mContext.getString(R.string.price_detail,
+            //se toma solo uno de los dos precios, teniendo como prioridad el precio total
+            if (mShowProductTotalPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                holder.productPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
+                    }
+                });
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else if (mShowProductPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
                         mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                         mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setOnClickListener(new View.OnClickListener() {
@@ -205,43 +217,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                     }
                 });
                 holder.productPrice.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.productTax != null) {
-                holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getTaxStringFormat()));
-                holder.productTax.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                    }
-                });
-                holder.productTax.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.productTotalPrice != null) {
-                holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-                holder.productTotalPrice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                    }
-                });
-                holder.productTotalPrice.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (holder.productPrice != null) {
+            } else {
                 holder.productPrice.setVisibility(View.GONE);
             }
-            if (holder.productTax != null) {
-                holder.productTax.setVisibility(View.GONE);
-            }
-            if (holder.productTotalPrice != null) {
-                holder.productTotalPrice.setVisibility(View.GONE);
-            }
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

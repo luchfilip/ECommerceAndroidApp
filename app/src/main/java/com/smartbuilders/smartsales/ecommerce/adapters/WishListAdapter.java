@@ -41,6 +41,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     private User mUser;
     private OrderLineDB orderLineDB;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTotalPrice;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -50,7 +52,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
-        public TextView productTotalPrice;
+        public TextView productPrice;
         public TextView productAvailability;
         public TextView productAvailabilityVariation;
         public TextView productBrand;
@@ -67,7 +69,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -97,7 +99,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         mDataset = data;
         mUser = user;
         orderLineDB = new OrderLineDB(context, user);
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -164,12 +168,21 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         }
 
         if (mIsManagePriceInOrder) {
-            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            holder.productTotalPrice.setVisibility(View.VISIBLE);
+            if (mShowProductTotalPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else if (mShowProductPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productPrice.setVisibility(View.GONE);
+            }
         } else {
-            holder.productTotalPrice.setVisibility(View.GONE);
+            holder.productPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

@@ -143,6 +143,9 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
             } else {
                 holder.containerLinearLayout.setBackgroundDrawable(shape);
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.containerLinearLayout.setElevation(5);
+            }
             /********************************************************************************/
         }
     }

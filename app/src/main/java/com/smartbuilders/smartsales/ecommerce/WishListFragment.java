@@ -1,18 +1,17 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,8 +51,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     private boolean mIsInitialLoad;
     private User mUser;
-    private ShareActionProvider mShareActionProvider;
-    private Intent mShareIntent;
     private WishListAdapter mWishListAdapter;
     private OrderLineDB mOrderLineDB;
     private LinearLayoutManager mLinearLayoutManager;
@@ -62,6 +59,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private View mainLayout;
     private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
+    private Intent mShareIntent;
+    private ProgressDialog waitPlease;
     private ArrayList<OrderLine> mWishListLines;
 
     public WishListFragment() {
@@ -132,7 +131,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if (mShareIntent!=null) {
+                                        if (mShareIntent == null) {
+                                            new CreateShareAndDownloadIntentThread(0).start();
+                                        } else {
                                             startActivity(mShareIntent);
                                         }
                                     }
@@ -237,9 +238,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     @Override
     public void reloadWishList(ArrayList<OrderLine> wishListLines){
+        mWishListLines = wishListLines;
         mWishListAdapter.setData(wishListLines);
-        //Se debe recargar el documento pdf que se tiene para compartir
-        new ReloadShareIntentThread(wishListLines).start();
+        mShareIntent = null;
         if (wishListLines==null || wishListLines.size()==0) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);
@@ -253,33 +254,19 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_wishlist_fragment, menu);
-
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        // Attach an intent to this ShareActionProvider. You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        new ReloadShareIntentThread(mWishListLines).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_share) {
-            if (mShareActionProvider!=null) {
-                mShareActionProvider.setShareIntent(mShareIntent);
-            }
-        } else if (i == R.id.action_download) {
-            if (mShareIntent != null) {
+        if (i == R.id.action_download) {
+            if (mShareIntent == null) {
+                new CreateShareAndDownloadIntentThread(1).start();
+            } else {
                 Utils.createPdfFileInDownloadFolder(getContext(),
                         getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
                         fileName + ".pdf");
             }
-
         } else if (i == R.id.clear_wish_list) {
             clearWishList();
         }
@@ -308,62 +295,82 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                 .show();
     }
 
-    class ReloadShareIntentThread extends Thread {
+    class CreateShareAndDownloadIntentThread extends Thread {
 
-        private ArrayList<OrderLine> mWishListLines;
+        private int mMode;
+        private String mErrorMessage;
 
-        ReloadShareIntentThread(ArrayList<OrderLine> wishListLines) {
-            this.mWishListLines = wishListLines;
+        CreateShareAndDownloadIntentThread(int mode) {
+            this.mMode = mode;
         }
 
         public void run() {
-            mShareIntent = createShareIntent(mWishListLines);
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
+                        Utils.lockScreenOrientation(getActivity());
+                        if (waitPlease==null || !waitPlease.isShowing()){
+                            waitPlease = ProgressDialog.show(getContext(), null,
+                                    getString(R.string.creating_wish_list_wait_please), true, false);
+                        }
+                    }
+                });
+            }
+
+            try {
+                createShareAndDownloadIntent();
+            } catch (Exception e) {
+                e.printStackTrace();
+                mErrorMessage = e.getMessage();
+            }
+
             if(getActivity()!=null){
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (mShareActionProvider!=null) {
-                            mShareActionProvider.setShareIntent(mShareIntent);
+                        if (TextUtils.isEmpty(mErrorMessage)) {
+                            if (mShareIntent != null) {
+                                switch (mMode) {
+                                    case 0:
+                                        startActivity(mShareIntent);
+                                        break;
+                                    case 1:
+                                        Utils.createPdfFileInDownloadFolder(getContext(),
+                                                getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                                                fileName + ".pdf");
+                                        break;
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getContext(), mErrorMessage, Toast.LENGTH_SHORT).show();
                         }
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.dismiss();
+                            waitPlease = null;
+                        }
+                        Utils.unlockScreenOrientation(getActivity());
                     }
                 });
             }
         }
 
-        private Intent createShareIntent(ArrayList<OrderLine> wishListLines) {
+        private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (wishListLines!=null && !wishListLines.isEmpty()) {
-                    String subject = "";
-                    String message = "";
+                if (mWishListLines!=null && !mWishListLines.isEmpty()) {
+                    new WishListPDFCreator().generatePDF(mWishListLines, fileName + ".pdf",
+                            getActivity(), getContext(), mUser);
 
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                    } else {
-                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                    }
-                    // need this to prompts email client only
-                    shareIntent.setType("message/rfc822");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-                    try{
-                        new WishListPDFCreator().generatePDF(wishListLines, fileName + ".pdf",
-                                getActivity(), getContext(), mUser);
-                    }catch(Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    //Add the attachment by specifying a reference to our custom ContentProvider
-                    //and the specific file of interest
-                    shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                            + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-                    return shareIntent;
+                    mShareIntent = new Intent(Intent.ACTION_SEND);
+                    mShareIntent.setType("application/pdf");
+                    mShareIntent.putExtra(Intent.EXTRA_STREAM,
+                            Uri.parse("content://"+CachedFileProvider.AUTHORITY+File.separator+fileName+".pdf"));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                mShareIntent = null;
+                throw  e;
             }
-            return null;
         }
     }
 
@@ -382,12 +389,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                             return  true;
                     }
                     break;
-                //case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                //    break;
-                //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                //    break;
-                //case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                //    break;
             }
         }
         return false;
@@ -408,12 +409,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                         break;
                 }
                 break;
-            //case Configuration.SCREENLAYOUT_SIZE_LARGE:
-            //    break;
-            //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-            //    break;
-            //case Configuration.SCREENLAYOUT_SIZE_SMALL:
-            //    break;
         }
         return 2;
     }

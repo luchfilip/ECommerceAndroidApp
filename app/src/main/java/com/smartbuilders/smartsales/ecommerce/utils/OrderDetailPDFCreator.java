@@ -312,6 +312,7 @@ public class OrderDetailPDFCreator {
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setPadding(3);
                 cell.setBorder(PdfPCell.NO_BORDER);
+                cell.setFixedHeight(50);
                 table.addCell(cell);
             }
 
@@ -325,10 +326,10 @@ public class OrderDetailPDFCreator {
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
             cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
             cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
-            if (BuildConfig.USE_PRODUCT_IMAGE) {
-                cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
-                cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
-            }
+            //if (BuildConfig.USE_PRODUCT_IMAGE) {
+            //    cell2.addElement(new Paragraph(ctx.getString(R.string.product_description_detail, line.getProduct().getDescription()), font));
+            //    cell2.addElement(new Paragraph(ctx.getString(R.string.product_purpose_detail, line.getProduct().getPurpose()), font));
+            //}
             table.addCell(cell2);
 
             PdfPCell cell3 = new PdfPCell();
@@ -338,7 +339,7 @@ public class OrderDetailPDFCreator {
             if (managePriceInOrder) {
                 cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_product_price,
                         currency!=null ? currency.getName() : "",
-                        line.getPriceStringFormat()), font));
+                        line.getProductPriceStringFormat()), font));
                 cell3.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
                         currency!=null ? currency.getName() : "",
                         line.getLineTaxAmountStringFormat()), font));

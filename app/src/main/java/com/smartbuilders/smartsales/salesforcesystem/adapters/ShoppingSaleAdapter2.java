@@ -22,6 +22,7 @@ import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -37,6 +38,9 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
     private ArrayList<SalesOrderLine> mDataset;
     private User mUser;
     private SalesOrderLineDB mSalesOrderLineDB;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTax;
+    private boolean mShowProductTotalPrice;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -82,6 +86,9 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         mUser = user;
         SalesOrderBR.validateQuantityOrderedInSalesOrderLines(context, user, data);
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTax = Parameter.showProductTax(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -143,19 +150,41 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getProduct().getInternalCode()));
+            holder.productInternalCode.setVisibility(View.VISIBLE);
+        } else {
+            holder.productInternalCode.setVisibility(View.GONE);
         }
 
-        holder.productPrice.setText(mContext.getString(R.string.price_detail,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+        if (mShowProductPrice) {
+            //holder.productPrice.setText(mContext.getString(R.string.price_detail,
+            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getProductPriceStringFormat()));
+            holder.productPrice.setText(mContext.getString(R.string.product_price,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+            holder.productPrice.setVisibility(View.VISIBLE);
+        } else {
+            holder.productPrice.setVisibility(View.GONE);
+        }
 
-        holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+        if (mShowProductTax) {
+            //holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
+            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+            holder.productTax.setText(mContext.getString(R.string.product_tax,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+            holder.productTax.setVisibility(View.VISIBLE);
+        } else {
+            holder.productTax.setVisibility(View.GONE);
+        }
 
-        holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+        if (mShowProductTotalPrice) {
+            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+            holder.productTotalPrice.setVisibility(View.VISIBLE);
+        } else {
+            holder.productTotalPrice.setVisibility(View.GONE);
+        }
 
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),

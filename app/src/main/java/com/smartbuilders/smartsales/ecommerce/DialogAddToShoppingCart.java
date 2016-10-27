@@ -66,13 +66,23 @@ public class DialogAddToShoppingCart extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-            ((TextView) view.findViewById(R.id.product_total_price_dialog_edit_qty_requested_tv))
-                    .setText(getString(R.string.product_total_price_detail,
-                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            view.findViewById(R.id.product_total_price_dialog_edit_qty_requested_tv).setVisibility(View.VISIBLE);
+            if (Parameter.showProductTotalPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
+                        .setText(getString(R.string.product_total_price_detail,
+                                mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.VISIBLE);
+            } else if (Parameter.showProductPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
+                        .setText(getString(R.string.product_price_detail,
+                                mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                                mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+            }
         } else {
-            view.findViewById(R.id.product_total_price_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
+            view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv).setVisibility(View.GONE);
         }
 
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))

@@ -37,15 +37,15 @@ public class WishListPDFCreator {
 
     private View view;
     private ImageView productImageView;
-    private Typeface typeface;
-    private Typeface typefaceBold;
+    //private Typeface typeface;
+    //private Typeface typefaceBold;
     private TextView productNameTextView;
     private TextView productBrandTextView;
     private TextView productDescriptionTextView;
     private TextView productPurposeTextView;
-    private TextView productCodeLabelTextView;
+    //private TextView productCodeLabelTextView;
     private TextView productCodeTextView;
-    private TextView productReferenceLabelTextView;
+    //private TextView productReferenceLabelTextView;
     private TextView productReferenceTextView;
 
     public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Activity activity, Context ctx, User user) throws Exception {
@@ -57,6 +57,9 @@ public class WishListPDFCreator {
             //path for the PDF file in the external storage
             pdfFile = new File(ctx.getCacheDir() + File.separator + fileName);
             try {
+                if (pdfFile.exists()) {
+                    pdfFile.delete();
+                }
                 pdfFile.createNewFile();
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -197,6 +200,7 @@ public class WishListPDFCreator {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             PdfPCell cell = new PdfPCell(Image.getInstance(stream.toByteArray()), true);
+            bmp.recycle();
             stream.close();
             cell.setBorder(PdfPCell.NO_BORDER);
             cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
@@ -207,6 +211,7 @@ public class WishListPDFCreator {
                 stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 cell = new PdfPCell(Image.getInstance(stream.toByteArray()), true);
+                bmp.recycle();
                 stream.close();
                 cell.setBorder(PdfPCell.NO_BORDER);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
@@ -223,28 +228,28 @@ public class WishListPDFCreator {
     private Bitmap getProductCardImage(Activity activity, Context ctx, User user, Product product) {
         if (view == null) {
             view = activity.getLayoutInflater().inflate(R.layout.product_pdf_layout, null);
-            typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
-            typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
+            //typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
+            //typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
             productImageView = (ImageView) view.findViewById(R.id.productImage_imageView);
             productNameTextView = (TextView) view.findViewById(R.id.productName_textView);
-            productNameTextView.setTypeface(typefaceBold);
+            //productNameTextView.setTypeface(typefaceBold);
             productBrandTextView = (TextView) view.findViewById(R.id.productBrand_textView);
-            productBrandTextView.setTypeface(typefaceBold);
+            //productBrandTextView.setTypeface(typefaceBold);
             productDescriptionTextView = (TextView) view.findViewById(R.id.productDescription_textView);
-            productDescriptionTextView.setTypeface(typeface);
+            //productDescriptionTextView.setTypeface(typeface);
             productPurposeTextView = (TextView) view.findViewById(R.id.productPurpose_textView);
-            productPurposeTextView.setTypeface(typeface);
+            //productPurposeTextView.setTypeface(typeface);
             productCodeTextView = (TextView) view.findViewById(R.id.productCode_textView);
-            productCodeTextView.setTypeface(typeface);
+            //productCodeTextView.setTypeface(typeface);
             productReferenceTextView = (TextView) view.findViewById(R.id.productReference_textView);
-            productReferenceTextView.setTypeface(typeface);
-            productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
-            productCodeLabelTextView.setTypeface(typefaceBold);
-            productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
-            productReferenceLabelTextView.setTypeface(typefaceBold);
+            //productReferenceTextView.setTypeface(typeface);
+            //productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
+            //productCodeLabelTextView.setTypeface(typefaceBold);
+            //productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
+            //productReferenceLabelTextView.setTypeface(typefaceBold);
         }
 
-        Bitmap bmp = Utils.getThumbImage(ctx, user, product.getImageFileName());
+        Bitmap bmp = Utils.getThumbImage(ctx, user, product.getImageFileName(), 130, 130);
         if (bmp != null) {
             productImageView.setImageBitmap(bmp);
         } else {

@@ -39,6 +39,8 @@ public class RecommendedProductsListAdapter extends
     private ArrayList<Product> mDataset;
     private User mUser;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTotalPrice;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -47,7 +49,7 @@ public class RecommendedProductsListAdapter extends
         // each data item is just a string in this case
         public ImageView productImage;
         public TextView productName;
-        public TextView productTotalPrice;
+        public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
         public TextView productInternalCode;
@@ -58,13 +60,12 @@ public class RecommendedProductsListAdapter extends
         public View productRatingBarContainer;
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
-        public View goToProductDetails;
 
         public ViewHolder(View v) {
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
-            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
@@ -75,7 +76,6 @@ public class RecommendedProductsListAdapter extends
             productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
         }
     }
 
@@ -92,7 +92,9 @@ public class RecommendedProductsListAdapter extends
         mFragment = fragment;
         mDataset = data;
         mUser = user;
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -128,11 +130,24 @@ public class RecommendedProductsListAdapter extends
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadThumbImageByFileName(mContext, mUser,
                     mDataset.get(position).getImageFileName(), holder.productImage);
+            holder.productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+                }
+            });
+            holder.productImage.setVisibility(View.VISIBLE);
         } else {
             holder.productImage.setVisibility(View.GONE);
         }
 
         holder.productName.setText(mDataset.get(position).getName());
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
 
         if(Parameter.showProductRatingBar(mContext, mUser)){
             holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
@@ -140,22 +155,52 @@ public class RecommendedProductsListAdapter extends
             if(mDataset.get(position).getRating()>=0){
                 holder.productRatingBar.setRating(mDataset.get(position).getRating());
             }
+            holder.productRatingBarContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+                }
+            });
             holder.productRatingBarContainer.setVisibility(View.VISIBLE);
         }else{
             holder.productRatingBarContainer.setVisibility(View.GONE);
         }
 
         if (mIsManagePriceInOrder) {
-            holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                    mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            holder.productTotalPrice.setVisibility(View.VISIBLE);
+            if (mShowProductTotalPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else if (mShowProductPrice) {
+                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
+                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                holder.productPrice.setVisibility(View.VISIBLE);
+            } else {
+                holder.productPrice.setVisibility(View.GONE);
+            }
+
+            if (holder.productPrice.getVisibility() == View.VISIBLE) {
+                holder.productPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+                    }
+                });
+            }
         } else {
-            holder.productTotalPrice.setVisibility(View.GONE);
+            holder.productPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,6 +281,12 @@ public class RecommendedProductsListAdapter extends
                 && mDataset.get(position).getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProductBrand().getName()));
+            holder.productBrand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+                }
+            });
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.GONE);
@@ -244,17 +295,16 @@ public class RecommendedProductsListAdapter extends
         if(mDataset.get(position).getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getInternalCode()));
+            holder.productInternalCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+                }
+            });
             holder.productInternalCode.setVisibility(View.VISIBLE);
         }else{
             holder.productInternalCode.setVisibility(View.GONE);
         }
-
-        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-            }
-        });
     }
 
     private String addToWishList(Product product) {

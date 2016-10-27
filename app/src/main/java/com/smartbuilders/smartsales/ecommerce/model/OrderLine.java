@@ -85,7 +85,7 @@ public class OrderLine extends Model implements Parcelable {
         this.productPrice = productPrice;
     }
 
-    public String getPriceStringFormat() {
+    public String getProductPriceStringFormat() {
         return String.format(new Locale("es", "VE"), "%,.2f", getProductPrice());
     }
 
@@ -131,6 +131,14 @@ public class OrderLine extends Model implements Parcelable {
 
     public String getProductTaxPercentageStringFormat() {
         return String.format(new Locale("es", "VE"), "%,.2f", getProductTaxPercentage());
+    }
+
+    private double getProductTotalPrice() {
+        return getProductPrice() * (1 + (getProductTaxPercentage()/100));
+    }
+
+    public String getProductTotalPriceStringFormat() {
+        return String.format(new Locale("es", "VE"), "%,.2f", getProductTotalPrice());
     }
 
     public double getLineTaxAmount() {

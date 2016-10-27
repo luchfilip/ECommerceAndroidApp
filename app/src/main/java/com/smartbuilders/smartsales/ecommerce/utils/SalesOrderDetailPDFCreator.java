@@ -340,6 +340,7 @@ public class SalesOrderDetailPDFCreator {
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setPadding(3);
                 cell.setBorder(PdfPCell.NO_BORDER);
+                cell.setFixedHeight(50);
                 table.addCell(cell);
             }
 

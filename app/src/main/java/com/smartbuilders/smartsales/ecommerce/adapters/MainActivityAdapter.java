@@ -75,6 +75,8 @@ public class MainActivityAdapter extends BaseAdapter {
     private String mUrlScreenParameters;
     private boolean mIsLandscape;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTotalPrice;
 
     @Override
     public int getItemViewType(int position) {
@@ -108,7 +110,7 @@ public class MainActivityAdapter extends BaseAdapter {
         /*********************************************/
         public TextView productName;
         public ImageView productImage;
-        public TextView productTotalPrice;
+        public TextView productPrice;
         public TextView productAvailability;
         public View goToProductDetails;
         public ImageView shareImageView;
@@ -129,7 +131,7 @@ public class MainActivityAdapter extends BaseAdapter {
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
-            productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
+            productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
@@ -151,7 +153,9 @@ public class MainActivityAdapter extends BaseAdapter {
 
         mIsLandscape = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         mUrlScreenParameters = Utils.getUrlScreenParameters(mIsLandscape, context);
-        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, mUser);
+        mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
     }
 
     @Override
@@ -319,18 +323,34 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
 
                         if (mIsManagePriceInOrder) {
-                            viewHolder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
-                                    ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-                            viewHolder.productTotalPrice.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    goToProductDetails(((Product) mDataset.get(position)).getId());
-                                }
-                            });
-                            viewHolder.productTotalPrice.setVisibility(View.VISIBLE);
+                            //solo se muestra uno de los precios, tomando como prioridad el precio total
+                            if (mShowProductTotalPrice) {
+                                viewHolder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
+                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                                viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        goToProductDetails(((Product) mDataset.get(position)).getId());
+                                    }
+                                });
+                                viewHolder.productPrice.setVisibility(View.VISIBLE);
+                            } else if (mShowProductPrice) {
+                                viewHolder.productPrice.setText(mContext.getString(R.string.product_price_detail,
+                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
+                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        goToProductDetails(((Product) mDataset.get(position)).getId());
+                                    }
+                                });
+                                viewHolder.productPrice.setVisibility(View.VISIBLE);
+                            } else {
+                                viewHolder.productPrice.setVisibility(View.GONE);
+                            }
                         } else {
-                            viewHolder.productTotalPrice.setVisibility(View.GONE);
+                            viewHolder.productPrice.setVisibility(View.GONE);
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,

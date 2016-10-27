@@ -685,10 +685,14 @@ public class Utils {
     }
 
     public static Bitmap getThumbImage(Context context, User user, String fileName){
+        return getThumbImage(context, user, fileName, 150, 150);
+    }
+
+    public static Bitmap getThumbImage(Context context, User user, String fileName, int reqWidth, int reqHeight){
         if(!TextUtils.isEmpty(fileName)){
             File imgFile = new File(getImagesThumbFolderPath(context), fileName);
             if(imgFile.exists()){
-                return decodeSampledBitmap(imgFile.getAbsolutePath(), 150, 150);
+                return decodeSampledBitmap(imgFile.getAbsolutePath(), reqWidth, reqHeight);
             } else {
                 //Si el archivo no existe entonces se descarga
                 GetFileFromServlet getFileFromServlet =
