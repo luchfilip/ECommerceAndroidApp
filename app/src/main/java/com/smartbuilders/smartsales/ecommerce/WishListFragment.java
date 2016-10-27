@@ -131,11 +131,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if (mShareIntent == null) {
-                                            new CreateShareAndDownloadIntentThread(0).start();
-                                        } else {
-                                            startActivity(mShareIntent);
-                                        }
+                                        new CreateShareAndDownloadIntentThread(0).start();
                                     }
                                 });
                             } catch (Exception e) {
@@ -260,13 +256,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_download) {
-            if (mShareIntent == null) {
-                new CreateShareAndDownloadIntentThread(1).start();
-            } else {
-                Utils.createPdfFileInDownloadFolder(getContext(),
-                        getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
-                        fileName + ".pdf");
-            }
+            new CreateShareAndDownloadIntentThread(1).start();
         } else if (i == R.id.clear_wish_list) {
             clearWishList();
         }
@@ -320,7 +310,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
             }
 
             try {
-                createShareAndDownloadIntent();
+                if (mShareIntent==null) {
+                    createShareAndDownloadIntent();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 mErrorMessage = e.getMessage();
@@ -366,6 +358,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     mShareIntent.setType("application/pdf");
                     mShareIntent.putExtra(Intent.EXTRA_STREAM,
                             Uri.parse("content://"+CachedFileProvider.AUTHORITY+File.separator+fileName+".pdf"));
+                } else {
+                    mShareIntent = null;
                 }
             } catch (Exception e) {
                 mShareIntent = null;

@@ -286,7 +286,10 @@
     <string name="no_products_to_show">No se encontraron productos para mostrar.</string>
     <string name="closing_sales_order_wait_please">Finalizando cotización, espere por favor...</string>
     <string name="closing_order_wait_please">Finalizando pedido, espere por favor...</string>
-    <string name="creating_wish_list_wait_please">Creando Lista de Favoritos en pdf, espere por favor...</string>
+    <string name="creating_wish_list_wait_please">Creando lista de Favoritos en pdf, espere por favor...</string>
+    <string name="creating_recommended_products_list_wait_please">Creando lista de Productos Recomendados en pdf, espere por favor...</string>
+    <string name="creating_order_wait_please">Creando Pedido en pdf, espere por favor...</string>
+    <string name="creating_sales_order_wait_please">Creando Cotización en pdf, espere por favor...</string>
     <string name="send_email">Enviar correo electrónico</string>
     <string name="send_error_report">Enviar reporte de error</string>
     <string name="contact_center_label">Centro de Contacto</string>

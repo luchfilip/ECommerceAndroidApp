@@ -1,16 +1,15 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
@@ -48,17 +48,17 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private static final String fileName = "ProductosRecomendados";
 
     private boolean mIsInitialLoad;
-    private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private RecommendedProductsListAdapter mRecommendedProductsListAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
-    private View mBlankScreenView;
+    private View mEmptyLayoutWallPaper;
     private View mainLayout;
     private User mUser;
     private TextView mBusinessPartnerName;
     private View mBusinessPartnerInfoSeparator;
     private ArrayList<Product> mRecommendedProducts;
+    private ProgressDialog waitPlease;
 
     public RecommendedProductsListFragment() {
     }
@@ -97,7 +97,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                         @Override
                         public void run() {
                             try {
-                                mBlankScreenView = view.findViewById(R.id.company_logo_name);
+                                mEmptyLayoutWallPaper = view.findViewById(R.id.empty_layout_wallpaper);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
@@ -133,9 +133,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if (mShareIntent!=null) {
-                                            startActivity(mShareIntent);
-                                        }
+                                        new CreateShareAndDownloadIntentThread(0).start();
                                     }
                                 });
                             } catch (Exception e) {
@@ -143,7 +141,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 if (mRecommendedProducts.isEmpty()) {
-                                    mBlankScreenView.setVisibility(View.VISIBLE);
+                                    mEmptyLayoutWallPaper.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
                                 }
@@ -180,7 +178,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
         if (mIsInitialLoad) {
             mIsInitialLoad = false;
         } else {
-            setHeader();
             reloadRecommendedProductsList();
         }
         super.onStart();
@@ -189,17 +186,16 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private void reloadRecommendedProductsList() {
         setHeader();
         try {
-            ArrayList<Product> recommendedProducts = (new RecommendedProductDB(getActivity(), mUser))
+            mRecommendedProducts = (new RecommendedProductDB(getActivity(), mUser))
                     .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-            mRecommendedProductsListAdapter.setData(recommendedProducts);
-            //Se debe recargar el documento pdf que se tiene para compartir
-            new ReloadShareIntentThread(recommendedProducts).start();
-            if (recommendedProducts == null || recommendedProducts.size() == 0) {
-                mBlankScreenView.setVisibility(View.VISIBLE);
+            mRecommendedProductsListAdapter.setData(mRecommendedProducts);
+            mShareIntent = null;
+            if (mRecommendedProducts == null || mRecommendedProducts.size() == 0) {
+                mEmptyLayoutWallPaper.setVisibility(View.VISIBLE);
                 mainLayout.setVisibility(View.GONE);
             }else{
                 mainLayout.setVisibility(View.VISIBLE);
-                mBlankScreenView.setVisibility(View.GONE);
+                mEmptyLayoutWallPaper.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,93 +253,96 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_recommended_products_list_fragment, menu);
-
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        // Attach an intent to this ShareActionProvider. You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        new ReloadShareIntentThread(mRecommendedProducts).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_share) {
-            if (mShareActionProvider!=null) {
-                mShareActionProvider.setShareIntent(mShareIntent);
-            }
-        } else if (i == R.id.action_download) {
-            if (mShareIntent != null) {
-                Utils.createPdfFileInDownloadFolder(getContext(),
-                        getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
-                        fileName + ".pdf");
-            }
-
+        if (i == R.id.action_download) {
+            new CreateShareAndDownloadIntentThread(1).start();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    class ReloadShareIntentThread extends Thread {
+    class CreateShareAndDownloadIntentThread extends Thread {
+        private int mMode;
+        private String mErrorMessage;
 
-        private ArrayList<Product> mProducts;
-
-        ReloadShareIntentThread(ArrayList<Product> products) {
-            this.mProducts = products;
+        CreateShareAndDownloadIntentThread(int mode) {
+            this.mMode = mode;
         }
 
         public void run() {
-            mShareIntent = createShareIntent(mProducts);
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
+                        Utils.lockScreenOrientation(getActivity());
+                        if (waitPlease==null || !waitPlease.isShowing()){
+                            waitPlease = ProgressDialog.show(getContext(), null,
+                                    getString(R.string.creating_recommended_products_list_wait_please), true, false);
+                        }
+                    }
+                });
+            }
+
+            try {
+                if (mShareIntent == null) {
+                    createShareAndDownloadIntent();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mErrorMessage = e.getMessage();
+            }
+
             if(getActivity()!=null){
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (mShareActionProvider!=null) {
-                            mShareActionProvider.setShareIntent(mShareIntent);
+                        if (TextUtils.isEmpty(mErrorMessage)) {
+                            if (mShareIntent != null) {
+                                switch (mMode) {
+                                    case 0:
+                                        startActivity(mShareIntent);
+                                        break;
+                                    case 1:
+                                        Utils.createPdfFileInDownloadFolder(getContext(),
+                                                getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                                                fileName + ".pdf");
+                                        break;
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getContext(), mErrorMessage, Toast.LENGTH_SHORT).show();
                         }
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.dismiss();
+                            waitPlease = null;
+                        }
+                        Utils.unlockScreenOrientation(getActivity());
                     }
                 });
             }
         }
 
-        private Intent createShareIntent(ArrayList<Product> products) {
+        private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (products != null && !products.isEmpty()) {
-                    String subject = "";
-                    String message = "";
+                if (mRecommendedProducts != null && !mRecommendedProducts.isEmpty()) {
+                    new RecommendedProductsPDFCreator().generatePDF(mRecommendedProducts, fileName + ".pdf",
+                            getActivity(), getContext(), mUser);
 
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    if (Build.VERSION.SDK_INT >= 21) {
-                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                    } else {
-                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                    }
-                    // need this to prompts email client only
-                    shareIntent.setType("message/rfc822");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-                    try {
-                        new RecommendedProductsPDFCreator().generatePDF(products, fileName + ".pdf",
-                                getActivity(), getContext(), mUser);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    //Add the attachment by specifying a reference to our custom ContentProvider
-                    //and the specific file of interest
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"
-                            + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-                    return shareIntent;
+                    mShareIntent = new Intent(Intent.ACTION_SEND);
+                    mShareIntent.setType("application/pdf");
+                    mShareIntent.putExtra(Intent.EXTRA_STREAM,
+                            Uri.parse("content://"+CachedFileProvider.AUTHORITY+File.separator+fileName+".pdf"));
+                } else {
+                    mShareIntent = null;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                mShareIntent = null;
+                throw e;
             }
-            return null;
         }
     }
 
@@ -362,12 +361,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                             return  true;
                     }
                     break;
-                //case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                //    break;
-                //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                //    break;
-                //case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                //    break;
             }
         }
         return false;
@@ -388,12 +381,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                         break;
                 }
                 break;
-            //case Configuration.SCREENLAYOUT_SIZE_LARGE:
-            //    break;
-            //case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-            //    break;
-            //case Configuration.SCREENLAYOUT_SIZE_SMALL:
-            //    break;
         }
         return 2;
     }

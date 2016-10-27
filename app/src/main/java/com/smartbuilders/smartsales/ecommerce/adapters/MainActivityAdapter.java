@@ -328,26 +328,22 @@ public class MainActivityAdapter extends BaseAdapter {
                                 viewHolder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
                                         ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
                                         ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-                                viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        goToProductDetails(((Product) mDataset.get(position)).getId());
-                                    }
-                                });
                                 viewHolder.productPrice.setVisibility(View.VISIBLE);
                             } else if (mShowProductPrice) {
                                 viewHolder.productPrice.setText(mContext.getString(R.string.product_price_detail,
                                         ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
                                         ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                viewHolder.productPrice.setVisibility(View.VISIBLE);
+                            } else {
+                                viewHolder.productPrice.setVisibility(View.GONE);
+                            }
+                            if (viewHolder.productPrice.getVisibility() == View.VISIBLE) {
                                 viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         goToProductDetails(((Product) mDataset.get(position)).getId());
                                     }
                                 });
-                                viewHolder.productPrice.setVisibility(View.VISIBLE);
-                            } else {
-                                viewHolder.productPrice.setVisibility(View.GONE);
                             }
                         } else {
                             viewHolder.productPrice.setVisibility(View.GONE);

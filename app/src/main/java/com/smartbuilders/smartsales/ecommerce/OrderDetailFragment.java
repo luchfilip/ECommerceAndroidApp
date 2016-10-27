@@ -1,15 +1,14 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
@@ -49,10 +49,10 @@ public class OrderDetailFragment extends Fragment {
     private int mOrderId;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
-    private ShareActionProvider mShareActionProvider;
     private Order mOrder;
     private ArrayList<OrderLine> mOrderLines;
     private Intent mShareIntent;
+    private ProgressDialog waitPlease;
 
     public OrderDetailFragment() {
     }
@@ -164,9 +164,7 @@ public class OrderDetailFragment extends Fragment {
                                 view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (mShareIntent!=null) {
-                                            startActivity(mShareIntent);
-                                        }
+                                        new CreateShareAndDownloadIntentThread(0).start();
                                     }
                                 });
                             } catch (Exception e) {
@@ -192,89 +190,97 @@ public class OrderDetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_order_detail_fragment, menu);
-
-        // Retrieve the share menu item
-        MenuItem item = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-        // Attach an intent to this ShareActionProvider. You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        new CreateShareIntentThread(mUser, mOrder, mOrderLines).start();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        if (i == R.id.action_share) {
-            if (mShareActionProvider!=null) {
-                mShareActionProvider.setShareIntent(mShareIntent);
-            }
-        } else if (i == R.id.action_download) {
-            if (mShareIntent!=null) {
-                Utils.createPdfFileInDownloadFolder(getContext(),
-                        getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
-                        fileName + ".pdf");
-            }
+        if (i == R.id.action_download) {
+            new CreateShareAndDownloadIntentThread(1).start();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    class CreateShareIntentThread extends Thread {
+    class CreateShareAndDownloadIntentThread extends Thread {
 
-        private User mUser;
-        private Order mOrder;
-        private ArrayList<OrderLine> mOrderLines;
+        private int mMode;
+        private String mErrorMessage;
 
-        CreateShareIntentThread(User user, Order order, ArrayList<OrderLine> orderLines) {
-            this.mUser = user;
-            this.mOrder = order;
-            this.mOrderLines = orderLines;
+        CreateShareAndDownloadIntentThread(int mode) {
+            mMode = mode;
         }
 
         public void run() {
-            if (mUser!=null && mOrder!=null && mOrderLines!=null) {
-                mShareIntent = createShareIntent(mUser, mOrder, mOrderLines);
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mShareActionProvider != null) {
-                                mShareActionProvider.setShareIntent(mShareIntent);
-                            }
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Se bloquea la rotacion de la pantalla para evitar que se mate a la aplicacion
+                        Utils.lockScreenOrientation(getActivity());
+                        if (waitPlease==null || !waitPlease.isShowing()){
+                            waitPlease = ProgressDialog.show(getContext(), null,
+                                    getString(R.string.creating_order_wait_please), true, false);
                         }
-                    });
+                    }
+                });
+            }
+
+            try {
+                if (mShareIntent == null) {
+                    createShareAndDownloadIntent();
                 }
-            } else {
-                Log.e(OrderDetailFragment.class.getSimpleName(),
-                        "CreateShareIntentThread - mUser==null or mOrder==null or mOrderLines==null");
+            } catch (Exception e) {
+                e.printStackTrace();
+                mErrorMessage = e.getMessage();
+            }
+
+            if(getActivity()!=null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (TextUtils.isEmpty(mErrorMessage)) {
+                            if (mShareIntent != null) {
+                                switch (mMode) {
+                                    case 0:
+                                        startActivity(mShareIntent);
+                                        break;
+                                    case 1:
+                                        Utils.createPdfFileInDownloadFolder(getContext(),
+                                                getContext().getCacheDir() + File.separator + (fileName + ".pdf"),
+                                                fileName + ".pdf");
+                                        break;
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getContext(), mErrorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                        if (waitPlease!=null && waitPlease.isShowing()) {
+                            waitPlease.dismiss();
+                            waitPlease = null;
+                        }
+                        Utils.unlockScreenOrientation(getActivity());
+                    }
+                });
             }
         }
 
-        private Intent createShareIntent(User user, Order order, ArrayList<OrderLine> orderLines){
-            String subject = "";
-            String message = "";
+        private void createShareAndDownloadIntent() throws Exception {
+            try {
+                if (mUser!=null && mOrder != null && mOrderLines!=null && !mOrderLines.isEmpty()) {
+                    new OrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName + ".pdf",
+                            getContext(), mUser);
 
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            // need this to prompts email client only
-            shareIntent.setType("message/rfc822");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-
-            try{
-                new OrderDetailPDFCreator().generatePDF(order, orderLines, fileName+".pdf", getContext(), user);
-            }catch(Exception e){
-                e.printStackTrace();
+                    mShareIntent = new Intent(Intent.ACTION_SEND);
+                    mShareIntent.setType("application/pdf");
+                    mShareIntent.putExtra(Intent.EXTRA_STREAM,
+                            Uri.parse("content://"+CachedFileProvider.AUTHORITY+File.separator+fileName+".pdf"));
+                } else {
+                    mShareIntent = null;
+                }
+            } catch (Exception e) {
+                mShareIntent = null;
+                throw e;
             }
-
-            //Add the attachment by specifying a reference to our custom ContentProvider
-            //and the specific file of interest
-            shareIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse("content://"
-                    + CachedFileProvider.AUTHORITY + File.separator + fileName + ".pdf"));
-            return shareIntent;
         }
     }
 
