@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/product_total_price_textView"
+        android:id="@+id/product_price_textView"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@color/product_price_color"
         android:textStyle="bold|italic" />
