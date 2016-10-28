@@ -659,8 +659,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(this.dataBaseName.equals(DATABASE_NAME)){
-            if(oldVersion<1){
-
+            if(newVersion==17){
+                try {
+                    //SE BORRAN ESTA TABLAS PARA FORZAR LA SINCRONIZACION
+                    db.execSQL("DELETE FROM IDS_SYNC_LOG");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }else{
             if(oldVersion<10) {
@@ -730,11 +735,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             if (oldVersion < 15) {
 				try {
-					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL, " +
-                            " ADD COLUMN TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TAX DECIMAL DEFAULT 0 NOT NULL");
+                    db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL");
+                    //SE BORRA ESTA TABLA PARA FORZAR SE RECARGUEN LOS NUEVOS CAMPOS
+                    db.execSQL("DELETE FROM PRODUCT_PRICE_AVAILABILITY");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 try {
                     db.execSQL(CREATE_PRODUCT_CHARGE);
                 } catch (Exception e) {

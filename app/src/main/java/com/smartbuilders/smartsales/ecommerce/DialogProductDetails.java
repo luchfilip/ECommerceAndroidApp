@@ -96,16 +96,28 @@ public class DialogProductDetails extends DialogFragment {
         });
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-            ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_total_price_detail,
-                    mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            view.findViewById(R.id.product_total_price).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mProduct.getId());
-                }
-            });
-            view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
+            if (Parameter.showProductTotalPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_total_price_detail,
+                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
+            } else if (Parameter.showProductPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_price_detail,
+                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                        mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
+            }
+
+            if (view.findViewById(R.id.product_total_price).getVisibility()==View.VISIBLE) {
+                view.findViewById(R.id.product_total_price).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToProductDetails(mProduct.getId());
+                    }
+                });
+            }
         } else {
             view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
         }

@@ -17,6 +17,7 @@ import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 /**
@@ -75,10 +76,20 @@ public class DialogUpdateShoppingSaleQtyOrdered extends DialogFragment {
         //se coloca el indicador del focus al final del texto
         qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
 
-        ((TextView) view.findViewById(R.id.product_total_price_textView))
-                .setText(getString(R.string.product_total_price_detail,
-                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+        if (Parameter.showProductTotalPrice(getContext(), mUser)) {
+            ((TextView) view.findViewById(R.id.product_total_price_textView))
+                    .setText(getString(R.string.product_total_price_detail,
+                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                            mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+        } else if (Parameter.showProductPrice(getContext(), mUser)) {
+            ((TextView) view.findViewById(R.id.product_total_price_textView))
+                    .setText(getString(R.string.product_price_detail,
+                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
+                            mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+        } else {
+            view.findViewById(R.id.product_total_price_textView).setVisibility(View.GONE);
+        }
+
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability,

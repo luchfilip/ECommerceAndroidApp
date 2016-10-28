@@ -243,7 +243,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         				}
     	        	}catch(OperationCanceledException e){
     	        		e.printStackTrace();
-    	        		syncProgressPercentage = 1000F;
+    	        		//syncProgressPercentage = 1000F;
     	        		syncStatus = SYNCHRONIZATION_CANCELLED;
     	        		//notify synchronization canceled
     	        		recordLogAndSendBroadcast(user.getUserId(), SYNCHRONIZATION_CANCELED,

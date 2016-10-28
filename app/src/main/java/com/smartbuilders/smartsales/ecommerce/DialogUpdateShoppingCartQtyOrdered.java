@@ -75,13 +75,23 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
-            ((TextView) view.findViewById(R.id.product_total_price_textView))
-                    .setText(getString(R.string.product_total_price_detail,
-                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mOrderLine.getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-            view.findViewById(R.id.product_total_price_textView).setVisibility(View.VISIBLE);
+            if (Parameter.showProductTotalPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_price_textView))
+                        .setText(getString(R.string.product_total_price_detail,
+                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
+            } else if (Parameter.showProductPrice(getContext(), mUser)) {
+                ((TextView) view.findViewById(R.id.product_price_textView))
+                        .setText(getString(R.string.product_price_detail,
+                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.product_price_textView).setVisibility(View.GONE);
+            }
         } else {
-            view.findViewById(R.id.product_total_price_textView).setVisibility(View.GONE);
+            view.findViewById(R.id.product_price_textView).setVisibility(View.GONE);
         }
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
