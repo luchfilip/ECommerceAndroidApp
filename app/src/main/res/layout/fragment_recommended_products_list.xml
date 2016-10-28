@@ -22,7 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_sentiment_neutral_black_48dp"
-                android:background="@drawable/shape_circular" />
+                android:background="@drawable/shape_circular"
+                android:layout_gravity="center" />
 
             <TextView
                 android:text="@string/empty_recommended_products_list"
@@ -48,7 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:visibility="visible">
 
         <ProgressBar style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
