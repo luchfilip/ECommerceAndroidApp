@@ -164,6 +164,13 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
                                     }
 
+                                    if (!TextUtils.isEmpty(mProduct.getReference())) {
+                                        ((TextView) view.findViewById(R.id.product_reference))
+                                                .setText(getContext().getString(R.string.product_reference, mProduct.getReference()));
+                                    } else {
+                                        view.findViewById(R.id.product_reference).setVisibility(View.GONE);
+                                    }
+
                                     if (Parameter.showProductRatingBar(getContext(), mUser)) {
                                         ((TextView) view.findViewById(R.id.product_ratingBar_label_textView))
                                                 .setText(getString(R.string.product_ratingBar_label_text_detail, Parameter.getProductRatingBarLabelText(getContext(), mUser)));

@@ -57,6 +57,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productAvailabilityVariation;
         public TextView productBrand;
         public TextView productInternalCode;
+        public TextView productReference;
         public ImageView shareImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
@@ -74,6 +75,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
+            productReference = (TextView) v.findViewById(R.id.product_reference);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
@@ -281,13 +283,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        if(mDataset.get(position).getProduct().getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                    mDataset.get(position).getProduct().getInternalCode()));
-            holder.productInternalCode.setVisibility(View.VISIBLE);
-        }else{
-            holder.productInternalCode.setVisibility(View.GONE);
-        }
+        holder.productInternalCode.setText(mDataset.get(position).getProduct().getInternalCode());
+
+        holder.productReference.setText(mDataset.get(position).getProduct().getReference());
 
         holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -53,6 +53,7 @@ public class RecommendedProductsListAdapter extends
         public TextView productAvailability;
         public TextView productBrand;
         public TextView productInternalCode;
+        public TextView productReference;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
@@ -69,6 +70,7 @@ public class RecommendedProductsListAdapter extends
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
+            productReference = (TextView) v.findViewById(R.id.product_reference);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
@@ -292,19 +294,21 @@ public class RecommendedProductsListAdapter extends
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        if(mDataset.get(position).getInternalCode()!=null){
-            holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                    mDataset.get(position).getInternalCode()));
-            holder.productInternalCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
-            holder.productInternalCode.setVisibility(View.VISIBLE);
-        }else{
-            holder.productInternalCode.setVisibility(View.GONE);
-        }
+        holder.productInternalCode.setText(mDataset.get(position).getInternalCode());
+        holder.productInternalCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.productReference.setText(mDataset.get(position).getReference());
+        holder.productReference.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     private String addToWishList(Product product) {

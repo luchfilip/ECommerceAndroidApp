@@ -40,8 +40,8 @@ public class Parameter {
      * @return
      */
     public static boolean isManagePriceInOrder(Context context, User user){
-        return BuildConfig.IS_SALES_FORCE_SYSTEM ||
-                ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
+        return true; //BuildConfig.IS_SALES_FORCE_SYSTEM ||
+                //ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
     }
 
     /**
@@ -151,6 +151,86 @@ public class Parameter {
      * @return
      */
     public static boolean isActiveOrderTracking(Context context, User user) {
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_ACTIVE_ORDER_TRACKING, false);
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_ACTIVE_ORDER_TRACKING, true);
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductTax(Context context, User user) {
+        return false;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductPrice(Context context, User user) {
+        return true;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductTotalPrice(Context context, User user) {
+        return false;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductTaxInOrderLine(Context context, User user) {
+        return false;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductPriceInOrderLine(Context context, User user) {
+        return true;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductTotalPriceInOrderLine(Context context, User user) {
+        return false;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showSubTotalLineAmountInOrderLine(Context context, User user) {
+        return true;
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showTotalLineAmountInOrderLine(Context context, User user) {
+        return false;
     }
 }

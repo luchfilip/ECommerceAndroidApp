@@ -71,6 +71,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         // each data item is just a string in this case
         public TextView productName;
         public TextView productInternalCode;
+        public TextView productReference;
         public ImageView productImage;
         public TextView productBrand;
         public TextView productDescription;
@@ -95,6 +96,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             super(v);
             productName = (TextView) v.findViewById(R.id.product_name);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
+            productReference = (TextView) v.findViewById(R.id.product_reference);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -318,15 +320,17 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         });
 
         if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
-            if(mDataset.get(position).getInternalCode()!=null){
-                holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                        mDataset.get(position).getInternalCode()));
-            }
+            holder.productInternalCode.setText(mDataset.get(position).getInternalCode());
+            holder.productReference.setText(mDataset.get(position).getReference());
 
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                        mDataset.get(position).getProductBrand().getName()));
+                if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
+                    holder.productBrand.setText(mDataset.get(position).getProductBrand().getName());
+                } else {
+                    holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                            mDataset.get(position).getProductBrand().getName()));
+                }
                 holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);
