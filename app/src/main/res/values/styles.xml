@@ -137,6 +137,14 @@
         <item name="android:layout_marginBottom">2dp</item>
     </style>
 
+    <style name="shape_selector_style">
+        <item name="android:background">@drawable/shape</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
     <style name="product_ratingBar_text_label_style">
         <item name="android:textColor">@color/ratingBar_label_color</item>
         <item name="android:layout_marginRight">2dp</item>

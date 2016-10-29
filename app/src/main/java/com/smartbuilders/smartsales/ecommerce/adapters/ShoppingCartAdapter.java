@@ -22,7 +22,6 @@ import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
-import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -61,7 +60,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public TextView subTotalLine;
         public TextView totalLine;
         public EditText qtyOrdered;
-        public View goToProductDetails;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -75,7 +74,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             totalLine = (TextView) v.findViewById(R.id.total_line_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -139,24 +138,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadThumbImageByFileName(mContext, mUser,
                     mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
-
-            holder.productImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-                }
-            });
         } else {
             holder.productImage.setVisibility(View.GONE);
         }
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
@@ -263,18 +249,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }
         });
 
-        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+        holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProductId()));
             }
         });
-    }
-
-    private void goToProductDetails(Product product) {
-        Intent intent = new Intent(mContext, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
-        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<OrderLine> orderLines) {

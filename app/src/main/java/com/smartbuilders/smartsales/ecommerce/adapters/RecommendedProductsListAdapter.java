@@ -61,6 +61,7 @@ public class RecommendedProductsListAdapter extends
         public View productRatingBarContainer;
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -78,6 +79,7 @@ public class RecommendedProductsListAdapter extends
             productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -129,27 +131,22 @@ public class RecommendedProductsListAdapter extends
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.containerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+            }
+        });
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadThumbImageByFileName(mContext, mUser,
                     mDataset.get(position).getImageFileName(), holder.productImage);
-            holder.productImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
             holder.productImage.setVisibility(View.VISIBLE);
         } else {
             holder.productImage.setVisibility(View.GONE);
         }
 
         holder.productName.setText(mDataset.get(position).getName());
-        holder.productName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-            }
-        });
 
         if(Parameter.showProductRatingBar(mContext, mUser)){
             holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
@@ -157,12 +154,6 @@ public class RecommendedProductsListAdapter extends
             if(mDataset.get(position).getRating()>=0){
                 holder.productRatingBar.setRating(mDataset.get(position).getRating());
             }
-            holder.productRatingBarContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
             holder.productRatingBarContainer.setVisibility(View.VISIBLE);
         }else{
             holder.productRatingBarContainer.setVisibility(View.GONE);
@@ -182,27 +173,12 @@ public class RecommendedProductsListAdapter extends
             } else {
                 holder.productPrice.setVisibility(View.GONE);
             }
-
-            if (holder.productPrice.getVisibility() == View.VISIBLE) {
-                holder.productPrice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-                    }
-                });
-            }
         } else {
             holder.productPrice.setVisibility(View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
-        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-            }
-        });
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,32 +259,14 @@ public class RecommendedProductsListAdapter extends
                 && mDataset.get(position).getProductBrand().getName() != null) {
             holder.productBrand.setText(mContext.getString(R.string.brand_detail,
                     mDataset.get(position).getProductBrand().getName()));
-            holder.productBrand.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-                }
-            });
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.GONE);
         }
 
         holder.productInternalCode.setText(mDataset.get(position).getInternalCode());
-        holder.productInternalCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-            }
-        });
 
         holder.productReference.setText(mDataset.get(position).getReference());
-        holder.productReference.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()));
-            }
-        });
     }
 
     private String addToWishList(Product product) {
@@ -317,12 +275,6 @@ public class RecommendedProductsListAdapter extends
 
     private String removeFromWishList(int productId) {
         return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
-    }
-
-    private void goToProductDetails(Product product) {
-        Intent intent = new Intent(mContext, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
-        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<Product> products) {

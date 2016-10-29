@@ -8,10 +8,11 @@
     android:paddingBottom="2dp">
 
     <LinearLayout
+        android:id="@+id/container_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/shape_style" >
+        style="@style/shape_selector_style" >
 
         <ImageView
             android:layout_width="@dimen/productMainActivity_productImage_width"
@@ -31,8 +32,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/go_to_product_details">
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="wrap_content"

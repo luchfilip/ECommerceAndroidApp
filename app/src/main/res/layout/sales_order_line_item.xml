@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/shape_style"
-    android:id="@+id/go_to_product_details">
+    style="@style/shape_selector_style">
 
     <TextView
         android:layout_width="match_parent"

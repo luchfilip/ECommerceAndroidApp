@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_layout"
     android:layout_width="@dimen/productMinInfo_cardView_Width"
     android:layout_height="wrap_content"
-    style="@style/shape_style"
+    style="@style/shape_selector_style"
     android:orientation="vertical">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/go_to_product_details">
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="match_parent"

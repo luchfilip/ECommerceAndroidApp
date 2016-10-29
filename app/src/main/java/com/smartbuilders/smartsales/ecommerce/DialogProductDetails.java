@@ -73,27 +73,22 @@ public class DialogProductDetails extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_product_details, container);
 
+        view.findViewById(R.id.container_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mProduct.getId()));
+            }
+        });
+
         ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadOriginalImageByFileName(getContext(), mUser,
                     mProduct.getImageFileName(), ((ImageView) view.findViewById(R.id.product_image)));
-            view.findViewById(R.id.product_image).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mProduct.getId());
-                }
-            });
         } else {
             view.findViewById(R.id.product_image).setVisibility(View.GONE);
         }
-
-        view.findViewById(R.id.go_to_product_details).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mProduct.getId());
-            }
-        });
 
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
@@ -109,27 +104,12 @@ public class DialogProductDetails extends DialogFragment {
             } else {
                 view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
             }
-
-            if (view.findViewById(R.id.product_total_price).getVisibility()==View.VISIBLE) {
-                view.findViewById(R.id.product_total_price).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goToProductDetails(mProduct.getId());
-                    }
-                });
-            }
         } else {
             view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
         }
 
         ((TextView) view.findViewById(R.id.product_availability)).setText(getString(R.string.availability,
                 mProduct.getDefaultProductPriceAvailability().getAvailability()));
-        view.findViewById(R.id.product_availability).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mProduct.getId());
-            }
-        });
 
         view.findViewById(R.id.share_imageView).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,11 +231,6 @@ public class DialogProductDetails extends DialogFragment {
         }
 
         return view;
-    }
-
-    private void goToProductDetails(int productId){
-        startActivity(new Intent(getContext(), ProductDetailActivity.class)
-                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
     }
 
     private String addToWishList(Product product) {

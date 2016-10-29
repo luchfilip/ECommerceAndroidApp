@@ -53,7 +53,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         public TextView productTotalPrice;
         public TextView subTotalLineAmount;
         public TextView totalLineAmount;
-        public View goToProductDetails;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -66,7 +66,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             productTotalPrice = (TextView) v.findViewById(R.id.product_total_price_textView);
             subTotalLineAmount = (TextView) v.findViewById(R.id.sub_total_line_amount_textView);
             totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -181,21 +181,16 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             holder.totalLineAmount.setVisibility(View.GONE);
         }
 
-        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+        holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProductId());
+                if ((new ProductDB(mContext, mUser)).getProductById(mDataset.get(holder.getAdapterPosition()).getProductId())!=null) {
+                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProductId()));
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-    }
-
-    private void goToProductDetails(int productId) {
-        if ((new ProductDB(mContext, mUser)).getProductById(productId)!=null) {
-            Intent intent = new Intent(mContext, ProductDetailActivity.class);
-            intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId);
-            mContext.startActivity(intent);
-        } else {
-            Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
-        }
     }
 }

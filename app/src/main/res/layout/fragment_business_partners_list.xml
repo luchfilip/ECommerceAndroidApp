@@ -45,10 +45,6 @@
             android:id="@+id/empty_layout_wallpaper"
             android:background="@android:color/white"
             android:visibility="gone" >
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,12 +52,7 @@
                     android:src="@drawable/ic_supervisor_account_black_48dp"
                     android:layout_gravity="center_horizontal|bottom"
                     android:background="@drawable/shape_circular" />
-            </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
                 <TextView
                     android:text="@string/empty_business_partners_list"
                     android:layout_width="match_parent"
@@ -71,7 +62,6 @@
                     android:layout_gravity="top"
                     android:gravity="center_horizontal"
                     android:textColor="@android:color/darker_gray" />
-            </FrameLayout>
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton

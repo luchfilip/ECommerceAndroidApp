@@ -40,8 +40,8 @@ public class Parameter {
      * @return
      */
     public static boolean isManagePriceInOrder(Context context, User user){
-        return true; //BuildConfig.IS_SALES_FORCE_SYSTEM ||
-                //ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
+        return BuildConfig.IS_SALES_FORCE_SYSTEM ||
+                ParameterDB.getParameterBooleanValue(context, user, ParameterDB.MANAGE_PRICE_IN_ORDER, false);
     }
 
     /**

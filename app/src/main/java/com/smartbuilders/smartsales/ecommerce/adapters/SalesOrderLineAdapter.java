@@ -16,7 +16,6 @@ import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
-import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -44,7 +43,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         public TextView productPrice;
         public TextView productTax;
         public TextView totalLineAmount;
-        public View goToProductDetails;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -55,7 +54,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
             productPrice = (TextView) v.findViewById(R.id.product_price_textView);
             productTax = (TextView) v.findViewById(R.id.product_tax_percentage_textView);
             totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -106,18 +105,13 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
                 mCurrencyName, mDataset.get(position).getTotalLineAmountStringFormat()));
 
-        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
+        holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
+                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProductId()));
             }
         });
-    }
-
-    private void goToProductDetails(Product product) {
-        Intent intent = new Intent(mContext, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
-        mContext.startActivity(intent);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

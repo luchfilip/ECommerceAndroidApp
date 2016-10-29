@@ -112,11 +112,11 @@ public class MainActivityAdapter extends BaseAdapter {
         public ImageView productImage;
         public TextView productPrice;
         public TextView productAvailability;
-        public View goToProductDetails;
         public ImageView shareImageView;
         public ImageView favoriteImageView;
         public ImageView addToShoppingCartImage;
         public ImageView addToShoppingSaleImage;
+        public View containerLayout;
         /*********************************************/
 
         public ViewHolder(View v) {
@@ -130,13 +130,13 @@ public class MainActivityAdapter extends BaseAdapter {
             /*********************************************/
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             addToShoppingCartImage = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
             addToShoppingSaleImage = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
+            containerLayout = v.findViewById(R.id.container_layout);
             /***************************************************/
         }
     }
@@ -306,16 +306,18 @@ public class MainActivityAdapter extends BaseAdapter {
                     break;
                 case VIEW_TYPE_PRODUCT:
                     if (mDataset!=null && mDataset.get(position) instanceof Product){
+                        if (viewHolder.containerLayout != null) {
+                            viewHolder.containerLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, ((Product) mDataset.get(position)).getId()));
+                                }
+                            });
+                        }
                         if (BuildConfig.USE_PRODUCT_IMAGE) {
                             Utils.loadThumbImageByFileName(mContext, mUser,
                                     ((Product) mDataset.get(position)).getImageFileName(), viewHolder.productImage);
-
-                            viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    goToProductDetails(((Product) mDataset.get(position)).getId());
-                                }
-                            });
                         } else {
                             viewHolder.productImage.setVisibility(View.GONE);
                         }
@@ -337,26 +339,12 @@ public class MainActivityAdapter extends BaseAdapter {
                             } else {
                                 viewHolder.productPrice.setVisibility(View.GONE);
                             }
-                            if (viewHolder.productPrice.getVisibility() == View.VISIBLE) {
-                                viewHolder.productPrice.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        goToProductDetails(((Product) mDataset.get(position)).getId());
-                                    }
-                                });
-                            }
                         } else {
                             viewHolder.productPrice.setVisibility(View.GONE);
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
                                 ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getAvailability()));
-                        viewHolder.productAvailability.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                goToProductDetails(((Product) mDataset.get(position)).getId());
-                            }
-                        });
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -430,13 +418,6 @@ public class MainActivityAdapter extends BaseAdapter {
                                 } else {
                                     addToShoppingSale(((Product) mDataset.get(position)));
                                 }
-                            }
-                        });
-
-                        viewHolder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                goToProductDetails(((Product) mDataset.get(position)).getId());
                             }
                         });
                     }
@@ -551,11 +532,6 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private String removeFromWishList(int productId) {
         return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
-    }
-
-    private void goToProductDetails(int productId){
-        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
     }
 
     public void setData(ArrayList<Object> data){

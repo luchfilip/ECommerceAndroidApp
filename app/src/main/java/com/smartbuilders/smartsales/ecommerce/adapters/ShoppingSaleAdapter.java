@@ -22,7 +22,6 @@ import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
-import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -58,6 +57,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         public EditText productTaxPercentage;
         public EditText totalLineAmount;
         public TextView productPriceLabel;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -70,6 +70,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
             productPriceLabel = (TextView) v.findViewById(R.id.product_price_label_textView);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -124,27 +125,22 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.containerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProductId()));
+            }
+        });
+
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadThumbImageByFileName(mContext, mUser,
                     mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
-
-            holder.productImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-                }
-            });
         } else {
             holder.productImage.setVisibility(View.GONE);
         }
 
         holder.productName.setText(mDataset.get(position).getProduct().getName());
-        holder.productName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getProduct());
-            }
-        });
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
@@ -202,12 +198,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         });
 
         holder.totalLineAmount.setText(mDataset.get(position).getTotalLineAmountStringFormat());
-    }
-
-    private void goToProductDetails(Product product) {
-        Intent intent = new Intent(mContext, ProductDetailActivity.class);
-        intent.putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId());
-        mContext.startActivity(intent);
     }
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {

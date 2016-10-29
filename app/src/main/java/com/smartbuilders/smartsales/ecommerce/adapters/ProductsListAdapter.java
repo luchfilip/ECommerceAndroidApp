@@ -78,7 +78,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productPurpose;
         public TextView productPrice;
         public TextView productAvailability;
-        public View goToProductDetails;
         public ImageView shareImageView;
         public View shareImageViewContainer;
         public ImageView favoriteImageView;
@@ -91,6 +90,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
         public View productDetailsInfoContainer;
+        public View containerLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -98,7 +98,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productReference = (TextView) v.findViewById(R.id.product_reference);
             productImage = (ImageView) v.findViewById(R.id.product_image);
-            goToProductDetails = v.findViewById(R.id.go_to_product_details);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
@@ -116,6 +115,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);
             productDetailsInfoContainer = v.findViewById(R.id.product_details_info_container);
+            containerLayout = v.findViewById(R.id.container_layout);
         }
     }
 
@@ -171,6 +171,16 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             return;
         }
 
+        if (holder.containerLayout != null) {
+            holder.containerLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+                }
+            });
+        }
+
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             if (mMask == MASK_PRODUCT_LARGE_DETAILS) {
                 Utils.loadOriginalImageByFileName(mContext, mUser,
@@ -179,13 +189,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 Utils.loadThumbImageByFileName(mContext, mUser,
                         mDataset.get(position).getImageFileName(), holder.productImage);
             }
-
-            holder.productImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                }
-            });
         } else {
             holder.productImage.setVisibility(View.GONE);
             if (holder.productDetailsInfoContainer!=null) {
@@ -201,23 +204,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
                         mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                         mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
-                holder.productPrice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                    }
-                });
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
                         mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
                         mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
-                holder.productPrice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-                    }
-                });
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
                 holder.productPrice.setVisibility(View.GONE);
@@ -228,12 +219,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
-        holder.productAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
-            }
-        });
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,13 +294,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 } else {
                     addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
                 }
-            }
-        });
-
-        holder.goToProductDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToProductDetails(mDataset.get(holder.getAdapterPosition()).getId());
             }
         });
 
@@ -435,11 +413,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private String removeFromWishList(int productId) {
         return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
-    }
-
-    private void goToProductDetails(int productId){
-        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, productId));
     }
 
     private void sortProductList(){
