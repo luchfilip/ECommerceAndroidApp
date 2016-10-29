@@ -46,7 +46,8 @@ public class ProductsListActivity extends AppCompatActivity
     public static final String KEY_PRODUCT_SUBCATEGORY_ID = "KEY_PRODUCT_SUBCATEGORY_ID";
     public static final String KEY_PRODUCT_BRAND_ID = "KEY_PRODUCT_BRAND_ID";
     public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
-    public static final String KEY_SEARCH_PATTERN = "KEY_SEARCH_PATTERN";
+    public static final String KEY_PRODUCT_REFERENCE = "KEY_PRODUCT_REFERENCE";
+    public static final String KEY_PRODUCT_PURPOSE = "KEY_PRODUCT_PURPOSE";
     public static final String KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
     public static final String KEY_SHOW_PRODUCTS_RECENTLY_SEEN = "KEY_SHOW_PRODUCTS_RECENTLY_SEEN";
     public static final String KEY_MAIN_PAGE_PRODUCT_SECTION_ID = "KEY_MAIN_PAGE_PRODUCT_SECTION_ID";
@@ -65,7 +66,8 @@ public class ProductsListActivity extends AppCompatActivity
     private int productSubCategoryId;
     private int productBrandId;
     private String productName;
-    private String mSearchPattern;
+    private String productReference;
+    private String productPurpose;
     private ArrayList<Product> products;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
@@ -149,8 +151,11 @@ public class ProductsListActivity extends AppCompatActivity
                         if(getIntent().getExtras().containsKey(KEY_PRODUCT_NAME)){
                             productName = getIntent().getExtras().getString(KEY_PRODUCT_NAME);
                         }
-                        if(getIntent().getExtras().containsKey(KEY_SEARCH_PATTERN)){
-                            mSearchPattern = getIntent().getExtras().getString(KEY_SEARCH_PATTERN);
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_REFERENCE)){
+                            productReference = getIntent().getExtras().getString(KEY_PRODUCT_REFERENCE);
+                        }
+                        if(getIntent().getExtras().containsKey(KEY_PRODUCT_PURPOSE)){
+                            productPurpose = getIntent().getExtras().getString(KEY_PRODUCT_PURPOSE);
                         }
                         if(getIntent().getExtras().containsKey(KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS)){
                             mProductIdShowRelatedShoppingProducts = getIntent().getExtras().getInt(KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS);
@@ -168,11 +173,15 @@ public class ProductsListActivity extends AppCompatActivity
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByCategoryId(productCategoryId));
                     } else if (productSubCategoryId != 0) {
-                        products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsBySubCategoryId(productSubCategoryId, mSearchPattern));
+                        products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsBySubCategoryId(productSubCategoryId, productName, productReference, productPurpose));
                     } else if (productBrandId != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByBrandId(productBrandId));
                     } else if (productName != null) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByName(productName));
+                    } else if (productReference != null) {
+                        products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByReference(productReference));
+                    } else if (productPurpose != null) {
+                        products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByPurpose(productPurpose));
                     } else if (mProductIdShowRelatedShoppingProducts != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user)
                                 .getRelatedShoppingProductsByProductId(mProductIdShowRelatedShoppingProducts, null));
@@ -267,6 +276,12 @@ public class ProductsListActivity extends AppCompatActivity
                                     } else if (productName != null) {
                                         categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
                                                 productName));
+                                    } else if (productReference != null) {
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
+                                                productReference));
+                                    } else if (productPurpose != null) {
+                                        categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,
+                                                productPurpose));
                                     } else if (mProductIdShowRelatedShoppingProducts != 0) {
                                         categorySubcategoryResultsTextView.setText(R.string.related_shopping_products);
                                     } else if (mShowProductsRecentlySeen) {

@@ -9,6 +9,9 @@ import android.os.Parcelable;
 public class RecentSearch extends Model implements Parcelable {
 
     private String textToSearch;
+    private String productName;
+    private String productReference;
+    private String productPurpose;
     private int productId;
     private int subcategoryId;
     private ProductSubCategory productSubCategory;
@@ -20,6 +23,9 @@ public class RecentSearch extends Model implements Parcelable {
     protected RecentSearch(Parcel in) {
         super(in);
         textToSearch = in.readString();
+        productName = in.readString();
+        productReference = in.readString();
+        productPurpose = in.readString();
         productId = in.readInt();
         subcategoryId = in.readInt();
         productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
@@ -29,6 +35,9 @@ public class RecentSearch extends Model implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(textToSearch);
+        dest.writeString(productName);
+        dest.writeString(productReference);
+        dest.writeString(productPurpose);
         dest.writeInt(productId);
         dest.writeInt(subcategoryId);
         dest.writeParcelable(productSubCategory, flags);
@@ -57,6 +66,30 @@ public class RecentSearch extends Model implements Parcelable {
 
     public void setTextToSearch(String textToSearch) {
         this.textToSearch = textToSearch;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductReference() {
+        return productReference;
+    }
+
+    public void setProductReference(String productReference) {
+        this.productReference = productReference;
+    }
+
+    public String getProductPurpose() {
+        return productPurpose;
+    }
+
+    public void setProductPurpose(String productPurpose) {
+        this.productPurpose = productPurpose;
     }
 
     public int getProductId() {

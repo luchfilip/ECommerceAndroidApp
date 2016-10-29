@@ -166,7 +166,8 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId, String searchPattern){
+    public ArrayList<Product> getProductsBySubCategoryId(int subCategoryId, String productName,
+                                                         String productReference, String productPurpose){
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
@@ -194,8 +195,20 @@ public class ProductDB {
                             String.valueOf(subCategoryId), "Y"}, null);
             if (c!=null) {
                 String[] words;
+                String searchPattern = productName;
+                int filterColumn = 3;
+                if (productName!=null) {
+                    searchPattern = productName;
+                    filterColumn = 3;
+                } else if (productReference!=null) {
+                    searchPattern = productReference;
+                    filterColumn = 27;
+                } else if (productPurpose!=null) {
+                    searchPattern = productPurpose;
+                    filterColumn = 5;
+                }
                 try {
-                    words = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+                    words = searchPattern == null ? null : searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
                 } catch (Exception e) {
                     words = null;
                 }
@@ -204,7 +217,7 @@ public class ProductDB {
                     if(searchPattern!=null && words!=null){
                         try {
                             for(String word : words){
-                                if(!c.getString(3).toUpperCase().contains(word)){
+                                if(!c.getString(filterColumn).toUpperCase().contains(word)){
                                     continue whileStatement;
                                 }
                             }
@@ -407,6 +420,118 @@ public class ProductDB {
         return products;
     }
 
+    public ArrayList<Product> getProductsByReference(String reference){
+        ArrayList<Product> products = new ArrayList<>();
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(reference) || reference.length()>120
+                || reference.replaceAll("\\s+", " ").trim().split(" ").length>15){
+            return products;
+        }
+        reference = reference.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
+                            " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                            " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
+                            " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
+                            " FROM PRODUCT P " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
+                            " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ?" +
+                            " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
+                            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
+                            " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
+                            " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
+                            " WHERE (replace(replace(replace(replace(replace(lower(P.REFERENCE_ID),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                            " OR replace(replace(replace(replace(replace(lower(P.REFERENCE_ID),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                            " AND P.IS_ACTIVE = ? " +
+                            " ORDER BY P.NAME ASC",
+                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
+                            reference+"%", "% "+reference+"%", "Y"}, null);
+            if (c!=null) {
+                while(c.moveToNext()){
+                    Product p = new Product();
+                    fillFullProductInfoFromCursor(p, c);
+                    products.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> getProductsByPurpose(String purpose){
+        ArrayList<Product> products = new ArrayList<>();
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(purpose) || purpose.length()>120
+                || purpose.replaceAll("\\s+", " ").trim().split(" ").length>15){
+            return products;
+        }
+        purpose = purpose.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
+                            " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
+                            " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
+                            " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
+                            " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
+                            " FROM PRODUCT P " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
+                            " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ?" +
+                            " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
+                            " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
+                            " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
+                            " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
+                            " WHERE (replace(replace(replace(replace(replace(lower(P.PURPOSE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                            " OR replace(replace(replace(replace(replace(lower(P.PURPOSE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                            " AND P.IS_ACTIVE = ? " +
+                            " ORDER BY P.NAME ASC",
+                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
+                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
+                            purpose+"%", "% "+purpose+"%", "Y"}, null);
+            if (c!=null) {
+                while(c.moveToNext()){
+                    Product p = new Product();
+                    fillFullProductInfoFromCursor(p, c);
+                    products.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return products;
+    }
+
     public ArrayList<Product> getLightProductsByName(String searchPattern){
         ArrayList<Product> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
@@ -493,6 +618,162 @@ public class ProductDB {
                     if(!isNumeric && products.contains(p)){
                         continue;
                     }
+                    p.getProductSubCategory().setName(c.getString(4));
+                    p.getProductSubCategory().setDescription(c.getString(5));
+                    products.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> getLightProductsByReference(String searchPattern){
+        ArrayList<Product> products = new ArrayList<>();
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
+                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
+            return products;
+        }
+        searchPattern = searchPattern.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        Cursor c = null;
+        try {
+            String sql = "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.REFERENCE_ID), P.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
+                    " FROM PRODUCT P " +
+                    " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                    " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                    " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                    " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 "+
+                    " WHERE (replace(replace(replace(replace(replace(lower(P.REFERENCE_ID),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                    " OR replace(replace(replace(replace(replace(lower(P.REFERENCE_ID),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                    " AND P.IS_ACTIVE = ? " +
+                    " ORDER BY P.NAME ASC " +
+                    (searchPattern.length()>1 ? "" : " LIMIT 100");
+            String aux = null;
+            String firstWord = "";
+            for (String word : searchPattern.split(" ")){
+                if(aux==null){
+                    if (searchPattern.length()>1 && searchPattern.split(" ").length==1) {
+                        firstWord = "% "+word+"%";
+                    }
+                    aux = word+"%";
+                } else {
+                    aux += " "+word+"%";
+                }
+            }
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    sql, new String[]{"Y", "Y", "Y", "0", "Y", firstWord, aux, "Y"}, null);
+
+            if (c!=null) {
+                boolean searchPatternIsOneWord = searchPattern.split(" ").length==1;
+                while(c.moveToNext()){
+                    Product p = new Product();
+                    p.setId(c.getInt(0));
+                    if(searchPatternIsOneWord) {
+                        for(String aux2 : c.getString(2).replaceAll("\\s+", " ").split(" ")){
+                            if(aux2.contains(searchPattern)){
+                                p.setReference(aux2);
+                                break;
+                            }
+                        }
+                        if(p.getName()==null){
+                            p.setReference(c.getString(2));
+                        }
+                    } else {
+                        p.setReference(c.getString(2));
+                    }
+                    p.setInternalCode(c.getString(3));
+                    p.setProductSubCategoryId(c.getInt(1));
+                    p.getProductSubCategory().setId(c.getInt(1));
+                    p.getProductSubCategory().setName(c.getString(4));
+                    p.getProductSubCategory().setDescription(c.getString(5));
+                    products.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> getLightProductsByPurpose(String searchPattern){
+        ArrayList<Product> products = new ArrayList<>();
+        //Se valida que la busqueda no este vacia o no sea muy grande
+        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
+                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
+            return products;
+        }
+        searchPattern = searchPattern.replaceAll("\\s+", " ").trim().toUpperCase();
+
+        Cursor c = null;
+        try {
+            String sql = "SELECT P.PRODUCT_ID, P.SUBCATEGORY_ID, UPPER(P.PURPOSE), P.INTERNAL_CODE, S.NAME, S.DESCRIPTION " +
+                    " FROM PRODUCT P " +
+                    " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
+                    " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
+                    " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                    " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 "+
+                    " WHERE (replace(replace(replace(replace(replace(lower(P.PURPOSE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE " +
+                    " OR replace(replace(replace(replace(replace(lower(P.PURPOSE),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE NOCASE) " +
+                    " AND P.IS_ACTIVE = ? " +
+                    " ORDER BY P.NAME ASC " +
+                    (searchPattern.length()>1 ? "" : " LIMIT 100");
+            String aux = null;
+            String firstWord = "";
+            for (String word : searchPattern.split(" ")){
+                if(aux==null){
+                    if (searchPattern.length()>1 && searchPattern.split(" ").length==1) {
+                        firstWord = "% "+word+"%";
+                    }
+                    aux = word+"%";
+                } else {
+                    aux += " "+word+"%";
+                }
+            }
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+                    sql, new String[]{"Y", "Y", "Y", "0", "Y", firstWord, aux, "Y"}, null);
+
+            if (c!=null) {
+                boolean searchPatternIsOneWord = searchPattern.split(" ").length==1;
+                while(c.moveToNext()){
+                    Product p = new Product();
+                    p.setId(c.getInt(0));
+                    if(searchPatternIsOneWord) {
+                        for(String aux2 : c.getString(2).replaceAll("\\s+", " ").split(" ")){
+                            if(aux2.contains(searchPattern)){
+                                p.setPurpose(aux2);
+                                break;
+                            }
+                        }
+                        if(p.getName()==null){
+                            p.setPurpose(c.getString(2));
+                        }
+                    } else {
+                        p.setPurpose(c.getString(2));
+                    }
+                    p.setInternalCode(c.getString(3));
+                    p.setProductSubCategoryId(c.getInt(1));
+                    p.getProductSubCategory().setId(c.getInt(1));
                     p.getProductSubCategory().setName(c.getString(4));
                     p.getProductSubCategory().setDescription(c.getString(5));
                     products.add(p);

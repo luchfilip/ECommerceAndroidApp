@@ -28,13 +28,15 @@ public class RecentSearchDB {
 
     /**
      *
-     * @param text
+     * @param productName
+     * @param productReference
+     * @param productPurpose
      * @param productId
      * @param subCategoryId
      */
-    public void insertRecentSearch(String text, int productId, int subCategoryId){
+    public void insertRecentSearch(String productName, String productReference, String productPurpose, int productId, int subCategoryId){
         try {
-            if(!TextUtils.isEmpty(text)){
+            if(!TextUtils.isEmpty(productName)){
                 mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                         .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
@@ -43,7 +45,7 @@ public class RecentSearchDB {
                                 " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "RECENT_SEARCH")),
                                 String.valueOf(mUser.getServerUserId()), String.valueOf(productId),
-                                String.valueOf(subCategoryId), text, DateFormat.getCurrentDateTimeSQLFormat(),
+                                String.valueOf(subCategoryId), productName, DateFormat.getCurrentDateTimeSQLFormat(),
                                 Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             }
         } catch (Exception e){
@@ -88,6 +90,7 @@ public class RecentSearchDB {
                     RecentSearch recentSearch = new RecentSearch();
                     recentSearch.setId(c.getInt(0));
                     recentSearch.setTextToSearch(c.getString(1));
+                    recentSearch.setProductName(c.getString(1));
                     recentSearch.setProductId(c.getInt(2));
                     recentSearch.setSubcategoryId(c.getInt(3));
                     recentSearches.add(recentSearch);

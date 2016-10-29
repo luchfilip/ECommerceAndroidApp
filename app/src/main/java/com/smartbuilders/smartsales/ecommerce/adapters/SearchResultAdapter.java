@@ -76,6 +76,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 mDataset.add(mContext.getString(R.string.search_by_brand));
             }
         }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -115,6 +116,10 @@ public class SearchResultAdapter extends BaseAdapter {
                 }else{
                     viewHolder.title.setText(((Product) mDataset.get(position)).getName());
                 }
+            }else if (!TextUtils.isEmpty(((Product) mDataset.get(position)).getReference())){
+                viewHolder.title.setText(((Product) mDataset.get(position)).getReference());
+            }else if (!TextUtils.isEmpty(((Product) mDataset.get(position)).getPurpose())){
+                viewHolder.title.setText(((Product) mDataset.get(position)).getPurpose());
             }else{
                 viewHolder.title.setVisibility(TextView.GONE);
             }
@@ -128,9 +133,13 @@ public class SearchResultAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     recentSearchDB.insertRecentSearch(((Product) mDataset.get(position)).getName(),
+                            ((Product) mDataset.get(position)).getReference(),
+                            ((Product) mDataset.get(position)).getPurpose(),
                             ((Product) mDataset.get(position)).getId(),
                             ((Product) mDataset.get(position)).getProductSubCategory().getId());
-                    goToProductList(((Product) mDataset.get(position)).getName(), (Product) mDataset.get(position));
+                    goToProductList(((Product) mDataset.get(position)).getName(),
+                            ((Product) mDataset.get(position)).getReference(),
+                            ((Product) mDataset.get(position)).getPurpose(), (Product) mDataset.get(position));
                 }
             });
         }else if(mDataset.get(position) instanceof String){
@@ -201,7 +210,9 @@ public class SearchResultAdapter extends BaseAdapter {
                         Product product = new Product();
                         product.setId(((RecentSearch) mDataset.get(position)).getProductId());
                         product.setProductSubCategoryId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
-                        goToProductList(((RecentSearch) mDataset.get(position)).getTextToSearch(), product);
+                        goToProductList(((RecentSearch) mDataset.get(position)).getProductName(),
+                                ((RecentSearch) mDataset.get(position)).getProductReference(),
+                                ((RecentSearch) mDataset.get(position)).getProductPurpose(), product);
                     }else{
                         Intent intent = new Intent(mContext, ProductsListActivity.class);
                         intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch());
@@ -214,10 +225,12 @@ public class SearchResultAdapter extends BaseAdapter {
         return view;
     }
 
-    private void goToProductList(String searchPattern, Product product){
+    private void goToProductList(String productName, String productReference, String productPurpose, Product product){
         Intent intent = new Intent(mContext, ProductsListActivity.class);
         intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategoryId());
-        intent.putExtra(ProductsListActivity.KEY_SEARCH_PATTERN, searchPattern);
+        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, productName);
+        intent.putExtra(ProductsListActivity.KEY_PRODUCT_REFERENCE, productReference);
+        intent.putExtra(ProductsListActivity.KEY_PRODUCT_PURPOSE, productPurpose);
         mContext.startActivity(intent);
     }
 

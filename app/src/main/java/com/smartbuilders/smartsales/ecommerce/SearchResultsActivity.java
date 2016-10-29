@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -41,10 +42,16 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class SearchResultsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String KEY_SEARCH_BY = "KEY_SEARCH_BY";
+
+    private static final String STATE_SEARCH_BY = "KEY_SEARCH_BY";
+
     private SearchResultAdapter mSearchResultAdapter;
     private ProductDB mProductDB;
     private User mUser;
     private int productId;
+    private String mCurrentSearchByOptions;
+    private String mCurrentFilterText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,42 +66,83 @@ public class SearchResultsActivity extends AppCompatActivity
 
         Utils.inflateNavigationView(this, this, toolbar, mUser);
 
+        if (getIntent()!=null && getIntent().getExtras()!=null) {
+            if (getIntent().getExtras().containsKey(KEY_SEARCH_BY)) {
+                mCurrentSearchByOptions = getIntent().getExtras().getString(KEY_SEARCH_BY);
+            }
+        }
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_SEARCH_BY)) {
+                mCurrentSearchByOptions = savedInstanceState.getString(STATE_SEARCH_BY);
+            }
+        }
+        if (mCurrentSearchByOptions == null) {
+            mCurrentSearchByOptions = getString(R.string.name);
+        }
+
         mSearchResultAdapter = new SearchResultAdapter(this, null, null, mUser);
         ((ListView) findViewById(R.id.search_result_list)).setAdapter(mSearchResultAdapter);
 
         if(findViewById(R.id.search_bar_linear_layout)!=null){
+            final ProductDB productDB = new ProductDB(this, mUser);
             final Spinner searchByOptionsSpinner = (Spinner) findViewById(R.id.search_by_options_spinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+            final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                     this, R.array.search_by_options, R.layout.spinner_custom_prompt_item);
-            if(searchByOptionsSpinner!=null && adapter!=null){
+            if(searchByOptionsSpinner!=null){
                 adapter.setDropDownViewResource(R.layout.spinner_custom_item);
                 searchByOptionsSpinner.setAdapter(adapter);
                 searchByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String selectedOption = (String) parent.getItemAtPosition(position);
-                        if(selectedOption!=null){
-                            if(selectedOption.equals(getString(R.string.categories))){
-                                startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
-                            }else if(selectedOption.equals(getString(R.string.brands))){
-                                startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
-                            }else if(selectedOption.equals(getString(R.string.barcode))){
-                                Utils.lockScreenOrientation(SearchResultsActivity.this);
-                                IntentIntegrator integrator = new IntentIntegrator(SearchResultsActivity.this);
-                                integrator.initiateScan();
+                        if (position>0) {
+                            String selectedOption = (String) parent.getItemAtPosition(position);
+                            if (selectedOption != null && !mCurrentSearchByOptions.equals(selectedOption)) {
+                                if (selectedOption.equals(getString(R.string.name))) {
+                                    mCurrentSearchByOptions = selectedOption;
+                                    if (!TextUtils.isEmpty(mCurrentFilterText)) {
+                                        mSearchResultAdapter.setData(mCurrentFilterText, productDB.getLightProductsByName(mCurrentFilterText));
+                                    }
+                                } else if (selectedOption.equals(getString(R.string.reference))) {
+                                    mCurrentSearchByOptions = selectedOption;
+                                    if (!TextUtils.isEmpty(mCurrentFilterText)) {
+                                        mSearchResultAdapter.setData(mCurrentFilterText, productDB.getLightProductsByReference(mCurrentFilterText));
+                                    }
+                                } else if (selectedOption.equals(getString(R.string.purpose))) {
+                                    mCurrentSearchByOptions = selectedOption;
+                                    if (!TextUtils.isEmpty(mCurrentFilterText)) {
+                                        mSearchResultAdapter.setData(mCurrentFilterText, productDB.getLightProductsByPurpose(mCurrentFilterText));
+                                    }
+                                } else if (selectedOption.equals(getString(R.string.categories))) {
+                                    startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
+                                    searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
+                                } else if (selectedOption.equals(getString(R.string.brands))) {
+                                    startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
+                                    searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
+                                } else if (selectedOption.equals(getString(R.string.barcode))) {
+                                    Utils.lockScreenOrientation(SearchResultsActivity.this);
+                                    IntentIntegrator integrator = new IntentIntegrator(SearchResultsActivity.this);
+                                    integrator.initiateScan();
+                                    searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
+                                }
                             }
+                        } else {
+                            searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
                         }
-                        searchByOptionsSpinner.setSelection(0);
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) { }
                 });
+
+                try {
+                    searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
+                } catch (Exception e) {
+                    //do nothing
+                }
             }
 
             final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
-                final ProductDB productDB = new ProductDB(this, mUser);
                 searchEditText.setFocusable(true);
                 searchEditText.setFocusableInTouchMode(true);
                 searchEditText.addTextChangedListener(new TextWatcher() {
@@ -103,12 +151,23 @@ public class SearchResultsActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if(TextUtils.isEmpty(s)){
-                            mSearchResultAdapter.setData(null, null);
-                        }else{
-                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
+                        if (s != null) {
+                            mCurrentFilterText = s.toString();
+                            if (TextUtils.isEmpty(s)) {
+                                mSearchResultAdapter.setData(null, null);
+                            } else {
+                                if (mCurrentSearchByOptions.equals(getString(R.string.name))) {
+                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
+                                } else if (mCurrentSearchByOptions.equals(getString(R.string.reference))) {
+                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByReference(s.toString()));
+                                } else if (mCurrentSearchByOptions.equals(getString(R.string.purpose))) {
+                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByPurpose(s.toString()));
+                                } else {
+                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
+                                }
+                            }
+                            mSearchResultAdapter.notifyDataSetChanged();
                         }
-                        mSearchResultAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -118,10 +177,23 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         if(actionId==EditorInfo.IME_ACTION_SEARCH && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, mUser)
-                                    .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
-                            startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
-                                    .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            if (mCurrentSearchByOptions.equals(getString(R.string.name))) {
+                                new RecentSearchDB(SearchResultsActivity.this, mUser)
+                                        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            } else if (mCurrentSearchByOptions.equals(getString(R.string.reference))) {
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_REFERENCE, searchEditText.getText().toString()));
+                            } else if (mCurrentSearchByOptions.equals(getString(R.string.purpose))) {
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_PURPOSE, searchEditText.getText().toString()));
+                            } else {
+                                new RecentSearchDB(SearchResultsActivity.this, mUser)
+                                        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            }
                             return true;
                         }
                         return false;
@@ -135,8 +207,8 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if(searchEditText!=null && searchEditText.getText()!=null){
-                            new RecentSearchDB(SearchResultsActivity.this, mUser)
-                                    .insertRecentSearch(searchEditText.getText().toString(), 0, 0);
+                            //new RecentSearchDB(SearchResultsActivity.this, mUser)
+                            //        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
                             Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
                             intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
                             startActivity(intent);
@@ -266,5 +338,11 @@ public class SearchResultsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putString(STATE_SEARCH_BY, mCurrentSearchByOptions);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }

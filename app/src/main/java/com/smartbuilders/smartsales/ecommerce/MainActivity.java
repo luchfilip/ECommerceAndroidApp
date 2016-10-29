@@ -76,7 +76,16 @@ public class MainActivity extends AppCompatActivity
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selectedOption = (String) parent.getItemAtPosition(position);
                         if (selectedOption != null) {
-                            if (selectedOption.equals(getString(R.string.categories))) {
+                            if (selectedOption.equals(getString(R.string.name))) {
+                                startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                                        .putExtra(SearchResultsActivity.KEY_SEARCH_BY, getString(R.string.name)));
+                            } else if (selectedOption.equals(getString(R.string.reference))) {
+                                startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                                        .putExtra(SearchResultsActivity.KEY_SEARCH_BY, getString(R.string.reference)));
+                            } else if (selectedOption.equals(getString(R.string.purpose))) {
+                                startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
+                                        .putExtra(SearchResultsActivity.KEY_SEARCH_BY, getString(R.string.purpose)));
+                            } else if (selectedOption.equals(getString(R.string.categories))) {
                                 startActivity(new Intent(MainActivity.this, CategoriesListActivity.class));
                             } else if (selectedOption.equals(getString(R.string.brands))) {
                                 startActivity(new Intent(MainActivity.this, BrandsListActivity.class));
