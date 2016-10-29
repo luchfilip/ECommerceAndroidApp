@@ -18,11 +18,8 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.MainPageProductSectionDB;
@@ -56,7 +53,6 @@ public class ProductsListActivity extends AppCompatActivity
     private static final String STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK = "STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK";
     private static final String STATE_CURRENT_SORT_OPTION = "STATE_CURRENT_SORT_OPTION";
     private static final String STATE_CURRENT_FILTER_TEXT = "STATE_CURRENT_FILTER_TEXT";
-    private static final String STATE_CURRENT_FILTER_OPTION = "STATE_CURRENT_FILTER_OPTION";
     private static final String STATE_SPINNER_SELECTED_ITEM_POSITION = "STATE_SPINNER_SELECTED_ITEM_POSITION";
     private static final String STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS = "STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS";
     private static final String STATE_SHOW_PRODUCTS_RECENTLY_SEEN = "STATE_SHOW_PRODUCTS_RECENTLY_SEEN";
@@ -75,7 +71,6 @@ public class ProductsListActivity extends AppCompatActivity
     private int mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
     private int mCurrentSortOption;
     private String mCurrentFilterText;
-    private int mCurrentFilterOption;
     private int mSpinnerSelectedItemPosition;
     private int mProductIdShowRelatedShoppingProducts;
     private boolean mShowProductsRecentlySeen;
@@ -94,16 +89,6 @@ public class ProductsListActivity extends AppCompatActivity
 
         Utils.inflateNavigationView(this, this, toolbar, user);
 
-        //por cuestiones esteticas se carga el spinner de una vez aqui para que se coloque la barra
-        //de filtrar del tamaño definitivo
-        final Spinner filterByOptionsSpinner = (Spinner) findViewById(R.id.filter_by_options_spinner);
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.filter_products_by_options, R.layout.spinner_custom_prompt_item);
-        if(filterByOptionsSpinner!=null) {
-            adapter.setDropDownViewResource(R.layout.spinner_custom_item);
-            filterByOptionsSpinner.setAdapter(adapter);
-        }
-
         new Thread() {
             @Override
             public void run() {
@@ -120,9 +105,6 @@ public class ProductsListActivity extends AppCompatActivity
                         }
                         if(savedInstanceState.containsKey(STATE_CURRENT_FILTER_TEXT)){
                             mCurrentFilterText = savedInstanceState.getString(STATE_CURRENT_FILTER_TEXT);
-                        }
-                        if(savedInstanceState.containsKey(STATE_CURRENT_FILTER_OPTION)){
-                            mCurrentFilterOption = savedInstanceState.getInt(STATE_CURRENT_FILTER_OPTION);
                         }
                         if(savedInstanceState.containsKey(STATE_SPINNER_SELECTED_ITEM_POSITION)){
                             mSpinnerSelectedItemPosition = savedInstanceState.getInt(STATE_SPINNER_SELECTED_ITEM_POSITION);
@@ -205,9 +187,9 @@ public class ProductsListActivity extends AppCompatActivity
                             final ImageView changeLayoutImageButton = (ImageView) findViewById(R.id.change_layout_button);
                             if(changeLayoutImageButton!=null){
                                 if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
-                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
+                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_white_24dp);
                                 }else{
-                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_black_24dp);
+                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_white_24dp);
                                 }
 
                                 changeLayoutImageButton.setOnClickListener(new View.OnClickListener() {
@@ -225,13 +207,13 @@ public class ProductsListActivity extends AppCompatActivity
                                                     mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                                                 }
                                             }
-                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_black_24dp);
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_white_24dp);
                                         }else{
                                             mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS;
                                             if(mLinearLayoutManager instanceof GridLayoutManager){
                                                 mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                                             }
-                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_black_24dp);
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_white_24dp);
                                         }
                                         mRecyclerView.setLayoutManager(mLinearLayoutManager);
                                         mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
@@ -325,28 +307,6 @@ public class ProductsListActivity extends AppCompatActivity
                                             String.valueOf(mRecyclerView.getAdapter().getItemCount())));
                                 }
 
-                                if(filterByOptionsSpinner!=null){
-                                    filterByOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                        @Override
-                                        public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
-                                            mSpinnerSelectedItemPosition = position;
-                                            if(parent.getItemAtPosition(position)!=null){
-                                                if(!TextUtils.isEmpty(mCurrentFilterText)){
-                                                    ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText, (String) parent.getItemAtPosition(position));
-                                                    if(productsListSize!=null){
-                                                        productsListSize.setText(getString(R.string.products_list_size_details,
-                                                                String.valueOf(mRecyclerView.getAdapter().getItemCount())));
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onNothingSelected(AdapterView<?> parent) { }
-                                    });
-                                    filterByOptionsSpinner.setSelection(mSpinnerSelectedItemPosition);
-                                }
-
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
                                     filterProduct.setFocusableInTouchMode(true);
@@ -372,12 +332,9 @@ public class ProductsListActivity extends AppCompatActivity
                                                 filterImageView.setOnClickListener(null);
                                             }
                                             mCurrentFilterText = s.toString();
-                                            if (filterByOptionsSpinner!=null) {
-                                                ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText,
-                                                        (String) filterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
-                                                productsListSize.setText(getString(R.string.products_list_size_details,
-                                                            String.valueOf(mRecyclerView.getAdapter().getItemCount())));
-                                            }
+                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText);
+                                            productsListSize.setText(getString(R.string.products_list_size_details,
+                                                        String.valueOf(mRecyclerView.getAdapter().getItemCount())));
                                         }
 
                                         @Override
@@ -517,7 +474,6 @@ public class ProductsListActivity extends AppCompatActivity
         }
         outState.putInt(STATE_CURRENT_SORT_OPTION, mCurrentSortOption);
         outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
-        outState.putInt(STATE_CURRENT_FILTER_OPTION, mCurrentFilterOption);
         outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
         outState.putInt(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductIdShowRelatedShoppingProducts);
         outState.putBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN, mShowProductsRecentlySeen);

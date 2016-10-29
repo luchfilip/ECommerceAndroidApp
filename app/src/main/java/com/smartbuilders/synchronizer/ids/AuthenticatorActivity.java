@@ -12,7 +12,6 @@ import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity;
 import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.syncadapter.authenticator.Authenticator;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -23,11 +22,9 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -54,6 +51,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_AUTH_TYPE 				= "AUTH_TYPE";
     public final static String ARG_USER_ID 			        = "USER_ID";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT 	= "IS_ADDING_ACCOUNT";
+    public final static String STATE_PREFIX_SELECTED_ITEM_POSITION = "AuthenticatorActivity.state_prefixSelectedItemPosition";
     public final static String STATE_USERNAME 		        = "AuthenticatorActivity.state_username";
     public final static String STATE_USER_PASS              = "AuthenticatorActivity.state_userpass";
     public final static String STATE_SERVER_ADDRESS         = "AuthenticatorActivity.state_serveraddress";
@@ -102,7 +100,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     ((EditText) findViewById(R.id.user_group)).setText(mUser.getUserGroup());
                 }
             } else if (savedInstanceState != null) {
-
+                if (findViewById(R.id.user_prefix_spinner) != null && savedInstanceState.containsKey(STATE_PREFIX_SELECTED_ITEM_POSITION)) {
+                    ((Spinner) findViewById(R.id.user_prefix_spinner))
+                            .setSelection(savedInstanceState.getInt(STATE_PREFIX_SELECTED_ITEM_POSITION));
+                }
                 ((EditText) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
                 ((EditText) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USER_PASS));
                 ((EditText) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVER_ADDRESS));
@@ -192,13 +193,24 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         outState.putString(STATE_USER_PASS, ((EditText) findViewById(R.id.accountPassword)).getText().toString());
         outState.putString(STATE_SERVER_ADDRESS, ((EditText) findViewById(R.id.server_address)).getText().toString());
         outState.putString(STATE_USER_GROUP, ((EditText) findViewById(R.id.user_group)).getText().toString());
+        if (findViewById(R.id.user_prefix_spinner) != null) {
+            outState.putInt(STATE_PREFIX_SELECTED_ITEM_POSITION, ((Spinner) findViewById(R.id.user_prefix_spinner)).getSelectedItemPosition());
+        }
         super.onSaveInstanceState(outState);
     }
 
     public void submit() {
         final String userGroup 		= (findViewById(R.id.user_group)!=null && findViewById(R.id.user_group).getVisibility()!=View.VISIBLE)
                 ? getString(R.string.ids_user_group_name) : ((TextView) findViewById(R.id.user_group)).getText().toString();
-        final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
+        String prefix = "";
+        try {
+            if (findViewById(R.id.user_prefix_spinner) != null) {
+                prefix = ((Spinner) findViewById(R.id.user_prefix_spinner)).getSelectedItem().toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final String userName 		= prefix + ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
                 ? BuildConfig.SERVER_ADDRESS : ((EditText) findViewById(R.id.server_address)).getText().toString();

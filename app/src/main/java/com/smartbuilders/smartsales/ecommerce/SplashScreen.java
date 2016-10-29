@@ -97,9 +97,9 @@ public class SplashScreen extends AppCompatActivity {
                             } else {
                                 mSynchronizationState = SYNC_ERROR;
                                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
-                                if (extras.containsKey(SyncAdapter.LOG_MESSAGE_DETAIL)) {
-                                    ((TextView) findViewById(R.id.error_message)).setText(String.valueOf(extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
-                                }
+                                //if (extras.containsKey(SyncAdapter.LOG_MESSAGE_DETAIL)) {
+                                //    ((TextView) findViewById(R.id.error_message)).setText(String.valueOf(extras.getString(SyncAdapter.LOG_MESSAGE_DETAIL)));
+                                //}
                                 findViewById(R.id.progressContainer).setVisibility(View.GONE);
                             }
                         }

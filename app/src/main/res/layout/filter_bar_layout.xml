@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/lateral_menu_bg_color"
-                android:hint="@string/filter_by"
+                android:hint="@string/filter"
                 android:textColor="@color/black"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -60,13 +60,25 @@
 
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/filter_by_options_spinner"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/spinner_dark_shape"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"/>
+            android:id="@+id/change_layout_button"
+            android:src="@drawable/ic_view_agenda_white_24dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_gravity="center"
+            android:background="@drawable/image_dark_shape" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sort_products_list_button"
+            android:src="@drawable/ic_sort_white_24dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_gravity="center"
+            android:background="@drawable/image_dark_shape" />
 
     </LinearLayout>
 
@@ -78,54 +90,28 @@
         android:divider="@color/black"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:paddingBottom="1dp"
+        android:paddingBottom="2dp"
         android:gravity="center_vertical">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:id="@+id/category_subcategory_results"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
+            android:layout_marginRight="2dp"
+            android:maxLines="1"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/products_list_size"
+            android:layout_marginLeft="2dp"
             android:layout_marginRight="4dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/category_subcategory_results"
-                android:textColor="@color/black"
-                android:layout_gravity="center_vertical"
-                android:maxLines="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/products_list_size"
-                android:layout_gravity="right"
-                android:textColor="@color/products_list_size_color"
-                android:textStyle="italic" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/change_layout_button"
-            android:src="@drawable/ic_view_agenda_black_24dp"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:background="@drawable/image_dark_shape" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sort_products_list_button"
-            android:src="@drawable/ic_sort_black_24dp"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:background="@drawable/image_dark_shape" />
+            android:textColor="@color/products_list_size_color"
+            android:textStyle="italic" />
     </LinearLayout>
 </LinearLayout>

@@ -36,15 +36,15 @@ public class RecommendedProductsPDFCreator {
 
     private View view;
     private ImageView productImageView;
-    private Typeface typeface;
-    private Typeface typefaceBold;
+    //private Typeface typeface;
+    //private Typeface typefaceBold;
     private TextView productNameTextView;
     private TextView productBrandTextView;
     private TextView productDescriptionTextView;
     private TextView productPurposeTextView;
-    private TextView productCodeLabelTextView;
+    //private TextView productCodeLabelTextView;
     private TextView productCodeTextView;
-    private TextView productReferenceLabelTextView;
+    //private TextView productReferenceLabelTextView;
     private TextView productReferenceTextView;
 
     public File generatePDF(ArrayList<Product> products, String fileName, Activity activity, Context ctx, User user) throws Exception {
@@ -222,25 +222,25 @@ public class RecommendedProductsPDFCreator {
     private Bitmap getProductCardImage(Activity activity, Context ctx, User user, Product product) {
         if (view == null) {
             view = activity.getLayoutInflater().inflate(R.layout.product_pdf_layout, null);
-            typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
-            typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
+            //typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
+            //typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
             productImageView = (ImageView) view.findViewById(R.id.productImage_imageView);
             productNameTextView = (TextView) view.findViewById(R.id.productName_textView);
-            productNameTextView.setTypeface(typefaceBold);
+            //productNameTextView.setTypeface(typefaceBold);
             productBrandTextView = (TextView) view.findViewById(R.id.productBrand_textView);
-            productBrandTextView.setTypeface(typefaceBold);
+            //productBrandTextView.setTypeface(typefaceBold);
             productDescriptionTextView = (TextView) view.findViewById(R.id.productDescription_textView);
-            productDescriptionTextView.setTypeface(typeface);
+            //productDescriptionTextView.setTypeface(typeface);
             productPurposeTextView = (TextView) view.findViewById(R.id.productPurpose_textView);
-            productPurposeTextView.setTypeface(typeface);
+            //productPurposeTextView.setTypeface(typeface);
             productCodeTextView = (TextView) view.findViewById(R.id.productCode_textView);
-            productCodeTextView.setTypeface(typeface);
+            //productCodeTextView.setTypeface(typeface);
             productReferenceTextView = (TextView) view.findViewById(R.id.productReference_textView);
-            productReferenceTextView.setTypeface(typeface);
-            productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
-            productCodeLabelTextView.setTypeface(typefaceBold);
-            productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
-            productReferenceLabelTextView.setTypeface(typefaceBold);
+            //productReferenceTextView.setTypeface(typeface);
+            //productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
+            //productCodeLabelTextView.setTypeface(typefaceBold);
+            //productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
+            //productReferenceLabelTextView.setTypeface(typefaceBold);
 
         }
 

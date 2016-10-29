@@ -470,57 +470,42 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         });
     }
 
-    public void filter(String charText, String filterBy) {
-        if(charText == null || filterBy == null){
-            return;
-        }
-        charText = charText.toLowerCase(Locale.getDefault());
-        mDataset.clear();
-        if (charText.length() == 0) {
-            mDataset.addAll(filterAux);
-        } else {
-            if(filterBy.equals(mContext.getString(R.string.filter_by_product_name))){
-                for (Product product : filterAux) {
+    public void filter(String charText) {
+        try {
+            mDataset.clear();
+            if (TextUtils.isEmpty(charText)) {
+                mDataset.addAll(filterAux);
+                return;
+            }
+            charText = charText.toLowerCase(Locale.getDefault());
+            for (Product product : filterAux) {
+                try {
                     if (!TextUtils.isEmpty(product.getName()) &&
                             product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                         mDataset.add(product);
-                    }
-                }
-            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_internal_code))){
-                if(charText.length()<8 && !patternIsNotNumeric.matcher(charText).matches()){
-                    for (Product product : filterAux) {
-                        if (!TextUtils.isEmpty(product.getInternalCode()) &&
-                                product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
-                            mDataset.add(product);
-                        }
-                    }
-                }else{
-                    mDataset.clear();
-                }
-            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_brand_description))){
-                for (Product product : filterAux) {
-                    if (product.getProductBrand()!=null &&
+                    } else if (!TextUtils.isEmpty(product.getInternalCode()) &&
+                            product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
+                        mDataset.add(product);
+                    } else if (!TextUtils.isEmpty(product.getPurpose()) &&
+                            product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
+                    } else if (!TextUtils.isEmpty(product.getReference()) &&
+                            product.getReference().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        mDataset.add(product);
+                    } else if (product.getProductBrand() != null &&
                             !TextUtils.isEmpty(product.getProductBrand().getName()) &&
                             product.getProductBrand().getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                         mDataset.add(product);
-                    }
-                }
-            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_description))){
-                for (Product product : filterAux) {
-                    if (!TextUtils.isEmpty(product.getDescription()) &&
+                    } else if (!TextUtils.isEmpty(product.getDescription()) &&
                             product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
                         mDataset.add(product);
                     }
-                }
-            }else if(filterBy.equals(mContext.getString(R.string.filter_by_product_purpose))){
-                for (Product product : filterAux) {
-                    if (!TextUtils.isEmpty(product.getPurpose()) &&
-                            product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
-                        mDataset.add(product);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+        } finally {
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 }
