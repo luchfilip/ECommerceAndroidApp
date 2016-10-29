@@ -151,7 +151,7 @@ public class Parameter {
      * @return
      */
     public static boolean isActiveOrderTracking(Context context, User user) {
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_ACTIVE_ORDER_TRACKING, true);
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_ACTIVE_ORDER_TRACKING, false);
     }
 
     /**

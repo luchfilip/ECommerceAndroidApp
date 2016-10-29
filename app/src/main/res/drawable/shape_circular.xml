@@ -12,10 +12,10 @@
     </stroke>
 
     <padding
-        android:left="60dp"
-        android:top="60dp"
-        android:right="60dp"
-        android:bottom="60dp"    >
+        android:left="@dimen/shape_circular_padding_left"
+        android:top="@dimen/shape_circular_padding_top"
+        android:right="@dimen/shape_circular_padding_right"
+        android:bottom="@dimen/shape_circular_padding_bottom"    >
     </padding>
 
     <corners

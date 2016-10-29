@@ -15,6 +15,11 @@
     <integer name="welcome_layout_top_container_weight">4</integer>
     <integer name="welcome_layout_bottom_container_weight">5</integer>
 
+    <dimen name="shape_circular_padding_left">30dp</dimen>
+    <dimen name="shape_circular_padding_right">30dp</dimen>
+    <dimen name="shape_circular_padding_bottom">30dp</dimen>
+    <dimen name="shape_circular_padding_top">30dp</dimen>
+
     <dimen name="shape_circular_transparent_white_padding_left">30dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_right">30dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_bottom">30dp</dimen>

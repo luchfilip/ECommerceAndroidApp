@@ -90,6 +90,11 @@
     <dimen name="welcome_layout_subtitle_text_size">22sp</dimen>
     <dimen name="welcome_layout_details_text_size">14sp</dimen>
 
+    <dimen name="shape_circular_padding_left">60dp</dimen>
+    <dimen name="shape_circular_padding_right">60dp</dimen>
+    <dimen name="shape_circular_padding_bottom">60dp</dimen>
+    <dimen name="shape_circular_padding_top">60dp</dimen>
+
     <dimen name="shape_circular_transparent_white_padding_left">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_right">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_bottom">60dp</dimen>

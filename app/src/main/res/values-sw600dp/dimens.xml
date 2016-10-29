@@ -69,6 +69,11 @@
 
     <dimen name="company_logo_imageView_min_height">500dp</dimen>
 
+    <dimen name="shape_circular_padding_left">60dp</dimen>
+    <dimen name="shape_circular_padding_right">60dp</dimen>
+    <dimen name="shape_circular_padding_bottom">60dp</dimen>
+    <dimen name="shape_circular_padding_top">60dp</dimen>
+
     <dimen name="shape_circular_transparent_white_padding_left">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_right">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_bottom">60dp</dimen>
