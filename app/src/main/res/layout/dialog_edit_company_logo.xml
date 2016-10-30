@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_logo_label"
+        android:textColor="@color/black"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/shape_style">
+
+        <com.theartofdev.edmodo.cropper.CropImageView
+            android:id="@+id/company_logo_imageView"
+            android:src="@drawable/no_company_logo_image_available"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="300dp" >
+
+        </com.theartofdev.edmodo.cropper.CropImageView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/choose_company_logo_image_button"
+                android:text="@string/choose_image"
+                style="@style/GreyButtonAppTheme"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/crop_image_button"
+                android:text="@string/crop_image"
+                style="@style/GreyButtonAppTheme"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/GreyButtonAppTheme"
+            android:text="@string/accept"
+            android:id="@+id/accept_button"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/GreyButtonAppTheme"
+            android:text="@string/cancel"
+            android:id="@+id/cancel_button"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

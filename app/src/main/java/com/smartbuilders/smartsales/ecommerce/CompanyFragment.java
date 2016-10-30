@@ -1,19 +1,10 @@
 package com.smartbuilders.smartsales.ecommerce;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.system.ErrnoException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,29 +12,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.UserCompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CompanyFragment extends Fragment {
+public class CompanyFragment extends Fragment implements DialogEditCompanyLogo.Callback {
 
     private static final String STATE_COMPANY = "STATE_COMPANY";
-    private static final int PICK_IMAGE = 100;
 
     private User mUser;
-    private CropImageView companyLogoCropImageView;
+    private ImageView companyLogoImageView;
+    private View noImageLoadedTextView;
     private Company mCompany;
 
     public CompanyFragment() {
@@ -86,6 +72,8 @@ public class CompanyFragment extends Fragment {
                                 final EditText companyEmailAddress = (EditText) rootView.findViewById(R.id.business_partner_email_address_editText);
                                 final EditText companyPhoneNumber = (EditText) rootView.findViewById(R.id.business_partner_phone_number_editText);
                                 final Button saveButton = (Button) rootView.findViewById(R.id.save_button);
+
+                                noImageLoadedTextView = rootView.findViewById(R.id.no_image_loaded_textView);
 
                                 if (mCompany!=null){
                                     companyName.setText(mCompany.getName());
@@ -176,7 +164,12 @@ public class CompanyFragment extends Fragment {
                                                 company.setEmailAddress(companyEmailAddress.getText().toString());
                                                 company.setPhoneNumber(companyPhoneNumber.getText().toString());
 
-                                                String result = userCompanyDB.insertUserCompany(company);
+                                                String result;
+                                                if (saveButton.getText().equals(getString(R.string.update))) {
+                                                    result = userCompanyDB.updateUserCompany(company);
+                                                } else {
+                                                    result = userCompanyDB.insertUserCompany(company);
+                                                }
                                                 if (result==null){
                                                     saveButton.setText(getString(R.string.update));
                                                     Toast.makeText(getContext(), getString(R.string.company_updated_successfully), Toast.LENGTH_SHORT).show();
@@ -188,35 +181,21 @@ public class CompanyFragment extends Fragment {
                                     });
                                 }
 
-                                companyLogoCropImageView = (CropImageView) rootView.findViewById(R.id.company_logo_imageView);
+                                companyLogoImageView = (ImageView) rootView.findViewById(R.id.company_logo_imageView);
                                 Bitmap image = Utils.getUserCompanyImage(getContext(), mUser);
                                 if (image != null) {
-                                    companyLogoCropImageView.setImageBitmap(image);
+                                    companyLogoImageView.setImageBitmap(image);
+                                    companyLogoImageView.setVisibility(View.VISIBLE);
+                                    noImageLoadedTextView.setVisibility(View.GONE);
                                 } else {
-                                    companyLogoCropImageView.setImageResource(R.drawable.no_company_logo_image_available);
+                                    noImageLoadedTextView.setVisibility(View.VISIBLE);
+                                    companyLogoImageView.setVisibility(View.GONE);
                                 }
-                                companyLogoCropImageView.setFixedAspectRatio(true);
-                                companyLogoCropImageView.setAspectRatio(230, 80);
 
                                 rootView.findViewById(R.id.choose_company_logo_image_button).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         pickImage();
-                                    }
-                                });
-
-                                rootView.findViewById(R.id.crop_image_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        try {
-                                            Bitmap cropped = companyLogoCropImageView.getCroppedImage();
-                                            if (cropped != null) {
-                                                companyLogoCropImageView.setImageBitmap(cropped);
-                                                Utils.saveUserCompanyImage(cropped, getContext(), mUser);
-                                            }
-                                        } catch (IllegalArgumentException e) {
-                                            e.printStackTrace();
-                                        }
                                     }
                                 });
 
@@ -228,7 +207,8 @@ public class CompanyFragment extends Fragment {
                                                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         if (Utils.deleteUserCompanyImage(getContext(), mUser)) {
-                                                            companyLogoCropImageView.setImageResource(R.drawable.no_company_logo_image_available);
+                                                            noImageLoadedTextView.setVisibility(View.VISIBLE);
+                                                            companyLogoImageView.setVisibility(View.GONE);
                                                         }
                                                     }
                                                 })
@@ -251,187 +231,31 @@ public class CompanyFragment extends Fragment {
     }
 
     private void pickImage(){
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, getString(R.string.choose_image));
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        DialogEditCompanyLogo dialogEditCompanyLogo =
+                DialogEditCompanyLogo.newInstance(mUser);
+        dialogEditCompanyLogo.setTargetFragment(this, 0);
+        dialogEditCompanyLogo.show(getActivity().getSupportFragmentManager(),
+                DialogEditCompanyLogo.class.getSimpleName());
     }
-
-    //@Override
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //    super.onActivityResult(requestCode, resultCode, data);
-    //    if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-    //        if (data != null) {
-    //            try {
-    //                Utils.saveUserCompanyImage(getContext(), mUser,
-    //                        getContext().getContentResolver().openInputStream(data.getData()));
-    //                companyLogoCropImageView.setImageBitmap(Utils.getUserCompanyImage(getContext(), mUser));
-    //            } catch (IOException e) {
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //}
-
-    /**********************************************************************************************/
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                try {
-                    Utils.saveUserCompanyImage(getContext(), mUser,
-                            getContext().getContentResolver().openInputStream(data.getData()));
-                    //companyLogoCropImageView.setImageBitmap(Utils.getUserCompanyImage(getContext(), mUser));
-
-                    Uri imageUri = getPickImageResultUri(data);
-
-                    // For API >= 23 we need to check specifically that we have permissions to read external storage,
-                    // but we don't know if we need to for the URI so the simplest is to try open the stream and see if we get error.
-                    boolean requirePermissions = false;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                            getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                            isUriRequiresPermissions(imageUri)) {
-
-                        // request permissions and handle the result in onRequestPermissionsResult()
-                        requirePermissions = true;
-                        mCropImageUri = imageUri;
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-                    }
-
-                    if (!requirePermissions) {
-                        companyLogoCropImageView.setImageUriAsync(imageUri);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
-
-    private Uri mCropImageUri;
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            companyLogoCropImageView.setImageUriAsync(mCropImageUri);
-        } else {
-            Toast.makeText(getContext(), R.string.error_permissions_not_granted, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    ///**
-    // * Create a chooser intent to select the source to get image from.<br/>
-    // * The source can be camera's (ACTION_IMAGE_CAPTURE) or gallery's (ACTION_GET_CONTENT).<br/>
-    // * All possible sources are added to the intent chooser.
-    // */
-    //public Intent getPickImageChooserIntent() {
-    //
-    //    // Determine Uri of camera image to save.
-    //    Uri outputFileUri = getCaptureImageOutputUri();
-    //
-    //    List<Intent> allIntents = new ArrayList<>();
-    //    PackageManager packageManager = getActivity().getPackageManager();
-    //
-    //    // collect all camera intents
-    //    Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-    //    List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-    //    for (ResolveInfo res : listCam) {
-    //        Intent intent = new Intent(captureIntent);
-    //        intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-    //        intent.setPackage(res.activityInfo.packageName);
-    //        if (outputFileUri != null) {
-    //            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-    //        }
-    //        allIntents.add(intent);
-    //    }
-    //
-    //    // collect all gallery intents
-    //    Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-    //    galleryIntent.setType("image/*");
-    //    List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-    //    for (ResolveInfo res : listGallery) {
-    //        Intent intent = new Intent(galleryIntent);
-    //        intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-    //        intent.setPackage(res.activityInfo.packageName);
-    //        allIntents.add(intent);
-    //    }
-    //
-    //    // the main intent is the last in the list (fucking android) so pickup the useless one
-    //    Intent mainIntent = allIntents.get(allIntents.size() - 1);
-    //    for (Intent intent : allIntents) {
-    //        if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-    //            mainIntent = intent;
-    //            break;
-    //        }
-    //    }
-    //    allIntents.remove(mainIntent);
-    //
-    //    // Create a chooser from the main intent
-    //    Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-    //
-    //    // Add all other intents
-    //    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-    //
-    //    return chooserIntent;
-    //}
-
-    /**
-     * Get URI to image received from capture by camera.
-     */
-    private Uri getCaptureImageOutputUri() {
-        Uri outputFileUri = null;
-        File getImage = getActivity().getExternalCacheDir();
-        if (getImage != null) {
-            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
-        }
-        return outputFileUri;
-    }
-
-    /**
-     * Get the URI of the selected image from {@link #/*getPickImageChooserIntent()}.<br/>
-     * Will return the correct URI for camera and gallery image.
-     *
-     * @param data the returned data of the activity result
-     */
-    public Uri getPickImageResultUri(Intent data) {
-        boolean isCamera = true;
-        if (data != null && data.getData() != null) {
-            String action = data.getAction();
-            isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
-        }
-        return isCamera ? getCaptureImageOutputUri() : data.getData();
-    }
-
-    /**
-     * Test if we can open the given Android URI to test if permission required error is thrown.<br>
-     */
-    public boolean isUriRequiresPermissions(Uri uri) {
-        try {
-            ContentResolver resolver = getActivity().getContentResolver();
-            InputStream stream = resolver.openInputStream(uri);
-            stream.close();
-            return false;
-        } catch (FileNotFoundException e) {
-            if (e.getCause() instanceof ErrnoException) {
-                return true;
-            }
-        } catch (Exception e) {
-        }
-        return false;
-    }
-    /**********************************************************************************************/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_COMPANY, mCompany);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void reloadCompanyLogoImageView() {
+        if (companyLogoImageView != null) {
+            Bitmap image = Utils.getUserCompanyImage(getContext(), mUser);
+            if (image != null) {
+                companyLogoImageView.setImageBitmap(image);
+                companyLogoImageView.setVisibility(View.VISIBLE);
+                noImageLoadedTextView.setVisibility(View.GONE);
+            } else {
+                noImageLoadedTextView.setVisibility(View.VISIBLE);
+                companyLogoImageView.setVisibility(View.GONE);
+            }
+        }
     }
 }

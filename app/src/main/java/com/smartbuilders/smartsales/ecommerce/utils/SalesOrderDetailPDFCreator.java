@@ -1,10 +1,15 @@
 package com.smartbuilders.smartsales.ecommerce.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -52,8 +57,8 @@ public class SalesOrderDetailPDFCreator {
     private Currency currency;
 
     public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName,
-                            Context ctx, User user) throws Exception {
-        File pdfFile = null;
+                            Activity activity, Context ctx, User user) throws Exception {
+        File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             throw new Exception(ctx.getString(R.string.external_storage_unavailable));
@@ -111,7 +116,7 @@ public class SalesOrderDetailPDFCreator {
                         new FileOutputStream(ctx.getCacheDir() + File.separator + fileName));
 
                 //Se le agrega la cabecera a cada pagina
-                addPageHeader(reader, stamper, company, ctx, user);
+                addPageHeader(reader, stamper, company, activity, ctx, user);
 
                 // Close the stamper
                 stamper.close();
@@ -124,11 +129,11 @@ public class SalesOrderDetailPDFCreator {
     }
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper, Company userCompany,
-                               Context ctx, User user) throws DocumentException, IOException {
+                               Activity activity, Context ctx, User user) throws DocumentException, IOException {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx, user).writeSelectedRows(0, -1, 60, 780,
+            getHeaderTable(i, n, userCompany, activity, ctx, user).writeSelectedRows(0, -1, 60, 750,
                     stamper.getOverContent(i));
         }
     }
@@ -139,7 +144,7 @@ public class SalesOrderDetailPDFCreator {
      * @param y the total number of pages
      * @return a table that can be used as header
      */
-    public static PdfPTable getHeaderTable(int x, int y, Company userCompany, Context ctx,
+    private static PdfPTable getHeaderTable(int x, int y, Company userCompany, Activity activity, Context ctx,
                                            User user) throws DocumentException, IOException {
         Font companyNameFont;
         Font font;
@@ -158,65 +163,55 @@ public class SalesOrderDetailPDFCreator {
             }
         }
 
-        PdfPTable headerTable = new PdfPTable(2);
-        headerTable.setWidths(new float[] {230f, 250f});
-        headerTable.setTotalWidth(480);
-
-        PdfPCell companyLogoCell = new PdfPCell();
+        PdfPTable headerTable;
 
         if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-            try{
-                Bitmap bmp = Utils.getUserCompanyImage(ctx, user);
-                if(bmp!=null) {
-                    bmp = getResizedBitmap(bmp, 230, 80);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    Image companyLogoImage = Image.getInstance(stream.toByteArray());
-                    companyLogoCell = new PdfPCell(companyLogoImage, true);
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+            headerTable = new PdfPTable(1);
+            headerTable.setWidths(new float[] {480f});
+            headerTable.setTotalWidth(480);
+            Bitmap bmp = getHeaderBmp(activity, ctx, user, userCompany);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            PdfPCell cell = new PdfPCell(Image.getInstance(stream.toByteArray()), true);
+            stream.close();
+            cell.setBorder(PdfPCell.NO_BORDER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            headerTable.addCell(cell);
         } else {
+            headerTable = new PdfPTable(2);
+            headerTable.setWidths(new float[] {230f, 250f});
+            headerTable.setTotalWidth(480);
+
+            PdfPCell companyLogoCell = new PdfPCell();
+
             try{
-//                Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
-//                if(bmp!=null) {
-//                    bmp = getResizedBitmap(bmp, 230, 80);
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    Image companyLogoImage = Image.getInstance(stream.toByteArray());
-//                    companyLogoCell = new PdfPCell(companyLogoImage, true);
-//                }
                 Bitmap bmp = BitmapFactory.decodeStream(ctx.getAssets().open("companyLogo.jpg"));
                 if(bmp!=null){
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     Image companyLogo = Image.getInstance(stream.toByteArray());
                     companyLogo.setAbsolutePosition(50,680);
-                    //companyLogo.scalePercent(11);
                     companyLogoCell = new PdfPCell(companyLogo, true);
                 }
             }catch(Exception e){
                 e.printStackTrace();
             }
+
+            companyLogoCell.setPadding(3);
+            companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            companyLogoCell.disableBorderSide(Rectangle.UNDEFINED);
+            headerTable.addCell(companyLogoCell);
+
+            PdfPCell companyDataCell = new PdfPCell();
+            companyDataCell.setPadding(3);
+            companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
+            companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
+            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
+            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
+            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
+            headerTable.addCell(companyDataCell);
         }
-
-
-        companyLogoCell.setPadding(3);
-        companyLogoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        companyLogoCell.disableBorderSide(Rectangle.UNDEFINED);
-        headerTable.addCell(companyLogoCell);
-
-        PdfPCell companyDataCell = new PdfPCell();
-        companyDataCell.setPadding(3);
-        companyDataCell.disableBorderSide(Rectangle.UNDEFINED);
-        companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
-        //companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
-        headerTable.addCell(companyDataCell);
 
         return headerTable;
     }
@@ -390,7 +385,7 @@ public class SalesOrderDetailPDFCreator {
             superTable.addCell(superTableCell);
         }
         document.add(superTable);
-        document.add(new Phrase("\n"));
+        //document.add(new Phrase("\n"));
     }
 
     private void addSalesOrderFooter(Document document, Context ctx, SalesOrder salesOrder) throws DocumentException, IOException {
@@ -443,7 +438,7 @@ public class SalesOrderDetailPDFCreator {
         return resizedBitmap;
     }
 
-    class RoundRectangle implements PdfPCellEvent {
+    private class RoundRectangle implements PdfPCellEvent {
 
         public void cellLayout(PdfPCell cell, Rectangle rect,
                                PdfContentByte[] canvas) {
@@ -452,5 +447,34 @@ public class SalesOrderDetailPDFCreator {
             cb.roundRectangle(rect.getLeft(), rect.getBottom(), rect.getWidth(), rect.getHeight(), 3);
             cb.stroke();
         }
+    }
+
+    private static Bitmap getHeaderBmp(Activity activity, Context ctx, User user, Company userCompany) {
+        View view = activity.getLayoutInflater().inflate(R.layout.sales_order_business_partner_pdf_header, null);
+        Bitmap bmp = Utils.getUserCompanyImage(ctx, user);
+        if (bmp != null) {
+            ((ImageView) view.findViewById(R.id.company_logo)).setImageBitmap(bmp);
+        } else {
+            view.findViewById(R.id.company_logo_container).setVisibility(View.GONE);
+        }
+        Typeface typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/Roboto-Bold.ttf");
+        if (!TextUtils.isEmpty(userCompany.getName())) {
+            ((TextView) view.findViewById(R.id.company_name)).setText(userCompany.getName());
+            ((TextView) view.findViewById(R.id.company_name)).setTypeface(typefaceBold);
+        }
+        if (!TextUtils.isEmpty(userCompany.getAddress())) {
+            ((TextView) view.findViewById(R.id.company_address)).setText(userCompany.getAddress());
+            ((TextView) view.findViewById(R.id.company_address)).setTypeface(typefaceBold);
+        }
+        if (!TextUtils.isEmpty(userCompany.getPhoneNumber())) {
+            ((TextView) view.findViewById(R.id.company_phone_number))
+                    .setText(ctx.getString(R.string.phone_number_label_detail, userCompany.getPhoneNumber()));
+            ((TextView) view.findViewById(R.id.company_phone_number)).setTypeface(typefaceBold);
+        }
+        if (!TextUtils.isEmpty(userCompany.getEmailAddress())) {
+            ((TextView) view.findViewById(R.id.company_email_address)).setText(userCompany.getEmailAddress());
+            ((TextView) view.findViewById(R.id.company_email_address)).setTypeface(typefaceBold);
+        }
+        return Utils.getBitmapFromView(view);
     }
 }

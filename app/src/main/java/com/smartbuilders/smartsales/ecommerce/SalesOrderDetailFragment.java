@@ -51,6 +51,7 @@ public class SalesOrderDetailFragment extends Fragment {
     private int mRecyclerViewCurrentFirstPosition;
     private Intent mShareIntent;
     private ProgressDialog waitPlease;
+    private boolean mIsInitialLoad;
 
     public SalesOrderDetailFragment() {
     }
@@ -65,6 +66,8 @@ public class SalesOrderDetailFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sales_order_detail, container, false);
         setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
+
+        mIsInitialLoad = true;
 
         new Thread() {
             @Override
@@ -206,6 +209,16 @@ public class SalesOrderDetailFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        if (mIsInitialLoad) {
+            mIsInitialLoad = false;
+        } else {
+            mShareIntent = null;
+        }
+        super.onStart();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_sales_order_detail_fragment, menu);
@@ -287,7 +300,7 @@ public class SalesOrderDetailFragment extends Fragment {
             try {
                 if (mUser!=null && mSalesOrder!=null && mSalesOrderLines!=null && !mSalesOrderLines.isEmpty()) {
                     new SalesOrderDetailPDFCreator().generatePDF(mSalesOrder, mSalesOrderLines, fileName+".pdf",
-                            getContext(), mUser);
+                            getActivity(), getContext(), mUser);
 
                     mShareIntent = new Intent(Intent.ACTION_SEND);
                     mShareIntent.setType("application/pdf");

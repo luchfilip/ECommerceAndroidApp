@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="221px"
+        android:layout_width="1326px">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10px"
+            android:id="@+id/company_logo_container">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/company_logo"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10px">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/company_name"
+                android:gravity="center_horizontal"
+                android:padding="2px"
+                android:textStyle="normal|bold"
+                android:textColor="@android:color/black"
+                android:textSize="38px" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/company_address"
+                android:gravity="center_horizontal"
+                android:padding="2px"
+                android:textStyle="normal|bold"
+                android:textColor="@android:color/black"
+                android:textSize="28px" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/company_phone_number"
+                android:gravity="center_horizontal"
+                android:padding="2px"
+                android:textStyle="normal|bold"
+                android:textColor="@android:color/black"
+                android:textSize="28px" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/company_email_address"
+                android:gravity="center_horizontal"
+                android:padding="2px"
+                android:textStyle="normal|bold"
+                android:textColor="@android:color/black"
+                android:textSize="28px" />
+
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

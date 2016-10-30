@@ -508,4 +508,6 @@
     <string name="brand">Marca</string>
     <string name="name">Nombre</string>
     <string name="purpose">Uso</string>
+    <string name="phone_number_label_detail">Tlf.: %1$s</string>
+    <string name="no_image_loaded">No hay imágen cargada</string>
 </resources>
