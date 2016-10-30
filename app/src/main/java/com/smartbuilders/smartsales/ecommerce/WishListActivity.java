@@ -62,18 +62,7 @@ public class WishListActivity extends AppCompatActivity
         if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            // Esto es para cuando se entra a esta activity por la notificacion de nuevas existencias
-            // y no está el MainActivity cargado.
-            if (isTaskRoot()) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                    startActivity(new Intent(this, SalesForceSystemMainActivity.class));
-                } else {
-                    startActivity(new Intent(this, MainActivity.class));
-                }
-                finish();
-            } else {
-                super.onBackPressed();
-            }
+            super.onBackPressed();
         }
     }
 
