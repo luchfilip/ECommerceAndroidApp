@@ -264,7 +264,7 @@ public class RecommendedProductsListAdapter extends
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        holder.productInternalCode.setText(mDataset.get(position).getInternalCode());
+        holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
 
         holder.productReference.setText(mDataset.get(position).getReference());
     }

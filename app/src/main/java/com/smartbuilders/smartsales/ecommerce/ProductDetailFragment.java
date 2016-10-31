@@ -159,14 +159,14 @@ public class ProductDetailFragment extends Fragment {
 
                                     if (!TextUtils.isEmpty(mProduct.getInternalCode())) {
                                         ((TextView) view.findViewById(R.id.product_internal_code))
-                                                .setText(getContext().getString(R.string.product_internalCode, mProduct.getInternalCode()));
+                                                .setText(mProduct.getInternalCodeMayoreoFormat());
                                     } else {
                                         view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getReference())) {
                                         ((TextView) view.findViewById(R.id.product_reference))
-                                                .setText(getContext().getString(R.string.product_reference, mProduct.getReference()));
+                                                .setText(mProduct.getReference());
                                     } else {
                                         view.findViewById(R.id.product_reference).setVisibility(View.GONE);
                                     }

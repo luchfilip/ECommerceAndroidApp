@@ -93,7 +93,7 @@ public class SalesOrderLineAdapter extends RecyclerView.Adapter<SalesOrderLineAd
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                    mDataset.get(position).getProduct().getInternalCode()));
+                    mDataset.get(position).getProduct().getInternalCodeMayoreoFormat()));
         }
 
         holder.qtyOrdered.setText(mContext.getString(R.string.qty_ordered_label_detail,

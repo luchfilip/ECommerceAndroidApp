@@ -173,7 +173,7 @@ public class Utils {
         }
         if(!TextUtils.isEmpty(product.getInternalCode())){
             ((TextView) view.findViewById(R.id.product_internal_code)).setText(context.getString(R.string.product_internalCode,
-                    product.getInternalCode()));
+                    product.getInternalCodeMayoreoFormat()));
         }else{
             view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
         }

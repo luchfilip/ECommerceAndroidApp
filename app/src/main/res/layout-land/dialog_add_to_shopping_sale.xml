@@ -19,6 +19,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:maxLines="1"
+        android:ellipsize="end"
         android:minEms="28"/>
 
     <TextView

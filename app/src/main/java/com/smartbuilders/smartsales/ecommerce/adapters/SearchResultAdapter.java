@@ -111,7 +111,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 if((mTextToSearch!=null && mTextToSearch.length()<8 && !patternIsNotNumeric.matcher(mTextToSearch).matches())
                         && ((Product) mDataset.get(position)).getInternalCode()!=null) {
                     viewHolder.title.setText(mContext.getString(R.string.product_internalCode_and_name,
-                            ((Product) mDataset.get(position)).getInternalCode(),
+                            ((Product) mDataset.get(position)).getInternalCodeMayoreoFormat(),
                             ((Product) mDataset.get(position)).getName()));
                 }else{
                     viewHolder.title.setText(((Product) mDataset.get(position)).getName());

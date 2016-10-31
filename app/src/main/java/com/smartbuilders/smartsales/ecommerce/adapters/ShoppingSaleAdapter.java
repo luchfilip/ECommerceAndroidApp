@@ -144,7 +144,7 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
 
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
-                    mDataset.get(position).getProduct().getInternalCode()));
+                    mDataset.get(position).getProduct().getInternalCodeMayoreoFormat()));
         }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {

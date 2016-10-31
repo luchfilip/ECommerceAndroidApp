@@ -212,6 +212,14 @@ public class Product extends Model implements Parcelable {
         this.internalCode = internalCode;
     }
 
+    public String getInternalCodeMayoreoFormat() {
+        try {
+            return internalCode.charAt(0)+"-"+internalCode.substring(1,4)+"-"+internalCode.substring(4);
+        } catch (Exception e) {
+            return internalCode;
+        }
+    }
+
     public int getProductCategoryId() {
         return productCategoryId;
     }

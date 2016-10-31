@@ -142,6 +142,7 @@
                     android:id="@+id/product_brand"
                     android:textColor="@color/black"
                     android:maxLines="1"
+                    android:ellipsize="end"
                     android:textSize="@dimen/productDetailCardView_brand_text_size" />
 
                 <LinearLayout

@@ -510,4 +510,6 @@
     <string name="purpose">Uso</string>
     <string name="phone_number_label_detail">Tlf.: %1$s</string>
     <string name="no_image_loaded">No hay imágen cargada</string>
+    <string name="search_image">Buscar Imágen</string>
+    <string name="edit_image">Editar Imágen</string>
 </resources>

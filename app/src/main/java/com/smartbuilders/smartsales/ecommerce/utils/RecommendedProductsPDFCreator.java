@@ -254,7 +254,7 @@ public class RecommendedProductsPDFCreator {
         productBrandTextView.setText(product.getProductBrand().getName());
         productDescriptionTextView.setText(product.getDescription());
         productPurposeTextView.setText(product.getPurpose());
-        productCodeTextView.setText(product.getInternalCode().charAt(0)+"-"+product.getInternalCode().substring(1,4)+"-"+product.getInternalCode().substring(4));
+        productCodeTextView.setText(product.getInternalCodeMayoreoFormat());
         productReferenceTextView.setText(product.getReference());
         return Utils.getBitmapFromView(view);
     }

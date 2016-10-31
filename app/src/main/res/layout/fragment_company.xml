@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:layout_margin="5dp">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -38,13 +39,15 @@
             android:layout_height="0dp"
             android:id="@+id/scrollView"
             android:layout_weight="1"
-            android:paddingTop="2dp">
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/shape_style">
+                style="@style/shape_style"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -199,45 +202,51 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_image_loaded"
-                    android:id="@+id/no_image_loaded_textView"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:orientation="vertical"
+                    style="@style/shape_style">
 
-                <ImageView
-                    android:id="@+id/company_logo_imageView"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="300dp"
-                    android:layout_width="match_parent" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/choose_company_logo_image_button"
-                        android:text="@string/choose_image"
-                        android:layout_gravity="right"
-                        android:layout_weight="1"
-                        style="@style/GreyButtonAppTheme" />
+                        android:text="@string/no_image_loaded"
+                        android:id="@+id/no_image_loaded_textView"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
 
-                    <Button
-                        android:text="@string/discard_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/discard_image_button"
-                        android:layout_weight="1"
-                        style="@style/GreyButtonAppTheme" />
+                    <ImageView
+                        android:id="@+id/company_logo_imageView"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="300dp"
+                        android:layout_width="match_parent" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal">
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/choose_company_logo_image_button"
+                            android:text="@string/edit_image"
+                            style="@style/GreyButtonAppTheme" />
+
+                        <Button
+                            android:text="@string/discard_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/discard_image_button"
+                            style="@style/GreyButtonAppTheme" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -248,8 +257,7 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:id="@+id/save_button"
-            android:layout_gravity="right"
-            android:layout_margin="5dp" />
+            android:layout_gravity="right" />
     </LinearLayout>
 
 </FrameLayout>

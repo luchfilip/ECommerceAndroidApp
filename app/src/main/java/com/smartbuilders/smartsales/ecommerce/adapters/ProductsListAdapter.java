@@ -298,17 +298,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         });
 
         if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
-            holder.productInternalCode.setText(mDataset.get(position).getInternalCode());
+            holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
             holder.productReference.setText(mDataset.get(position).getReference());
 
             if(mDataset.get(position).getProductBrand()!=null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())){
-                if (mMask==MASK_PRODUCT_LARGE_DETAILS) {
-                    holder.productBrand.setText(mDataset.get(position).getProductBrand().getName());
-                } else {
-                    holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                            mDataset.get(position).getProductBrand().getName()));
-                }
+                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                    mDataset.get(position).getProductBrand().getName()));
                 holder.productBrand.setVisibility(TextView.VISIBLE);
             }else{
                 holder.productBrand.setVisibility(TextView.GONE);

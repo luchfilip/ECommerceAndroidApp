@@ -278,7 +278,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        holder.productInternalCode.setText(mDataset.get(position).getProduct().getInternalCode());
+        holder.productInternalCode.setText(mDataset.get(position).getProduct().getInternalCodeMayoreoFormat());
 
         holder.productReference.setText(mDataset.get(position).getProduct().getReference());
     }

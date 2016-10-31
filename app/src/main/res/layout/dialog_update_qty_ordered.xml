@@ -18,7 +18,8 @@
         android:id="@+id/product_name_textView"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
         android:layout_width="match_parent"

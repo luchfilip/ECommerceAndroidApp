@@ -158,7 +158,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/product_brand"
                     android:textColor="@color/black"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
 
                 <TextView
                     android:id="@+id/product_price"
