@@ -107,16 +107,16 @@ public class RequestUserPasswordFragment extends Fragment {
             unlockScreen(null);
         }
 
-        if (rootView.findViewById(R.id.user_prefix_spinner) != null) {
-            List<String> spinnerArray =  new ArrayList<>();
-            spinnerArray.add("J");
-            spinnerArray.add("V");
-            spinnerArray.add("E");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
-
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            ((Spinner) rootView.findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
-        }
+        //if (rootView.findViewById(R.id.user_prefix_spinner) != null) {
+        //    List<String> spinnerArray =  new ArrayList<>();
+        //    spinnerArray.add("J");
+        //    spinnerArray.add("V");
+        //    spinnerArray.add("E");
+        //    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
+        //
+        //    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //    ((Spinner) rootView.findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
+        //}
 
         return rootView;
     }

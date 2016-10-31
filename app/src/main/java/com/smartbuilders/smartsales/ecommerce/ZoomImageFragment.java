@@ -39,25 +39,31 @@ public class ZoomImageFragment extends Fragment {
         }
 
         View view;
-        Bitmap img = Utils.getImageFromOriginalDirByFileName(getContext(), mImageFileName);
-        if (img != null) {
-            TouchImageView touchImageView = new TouchImageView(getContext());
-            touchImageView.setImageBitmap(img);
-            touchImageView.setMaxZoom(4f);
-            view = touchImageView;
-            view.setBackgroundColor(Color.WHITE);
-        } else {
-            img = Utils.getImageFromThumbDirByFileName(getContext(), mImageFileName);
-            if (img != null) {
-                TouchImageView touchImageView = new TouchImageView(getContext());
-                touchImageView.setImageBitmap(img);
-                touchImageView.setMaxZoom(4f);
-                view = touchImageView;
-                view.setBackgroundColor(Color.WHITE);
-            }else{
-                view = inflater.inflate(R.layout.fragment_zoom_image, container, false);
-            }
-        }
+        TouchImageView touchImageView = new TouchImageView(getContext());
+        Utils.loadOriginalImageByFileName(getContext(), Utils.getCurrentUser(getContext()), mImageFileName, touchImageView);
+        touchImageView.setMaxZoom(4f);
+        view = touchImageView;
+        view.setBackgroundColor(Color.WHITE);
+
+        //Bitmap img = Utils.getImageFromOriginalDirByFileName(getContext(), mImageFileName);
+        //if (img != null) {
+        //    TouchImageView touchImageView = new TouchImageView(getContext());
+        //    touchImageView.setImageBitmap(img);
+        //    touchImageView.setMaxZoom(4f);
+        //    view = touchImageView;
+        //    view.setBackgroundColor(Color.WHITE);
+        //} else {
+        //    img = Utils.getImageFromThumbDirByFileName(getContext(), mImageFileName);
+        //    if (img != null) {
+        //        TouchImageView touchImageView = new TouchImageView(getContext());
+        //        touchImageView.setImageBitmap(img);
+        //        touchImageView.setMaxZoom(4f);
+        //        view = touchImageView;
+        //        view.setBackgroundColor(Color.WHITE);
+        //    }else{
+        //        view = inflater.inflate(R.layout.fragment_zoom_image, container, false);
+        //    }
+        //}
 
         return view;
     }

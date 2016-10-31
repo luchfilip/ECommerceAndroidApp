@@ -78,12 +78,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <Spinner
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/user_prefix_spinner"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
+                    <!--<Spinner-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/user_prefix_spinner"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:gravity="center"/>-->
 
                     <EditText
                         android:id="@+id/accountName"

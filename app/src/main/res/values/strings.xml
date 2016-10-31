@@ -96,7 +96,7 @@
     <string name="error_server_address_malformedurlexception">El URL no se encuentra escrito correctamente</string>
     <string name="server_address">Dirección del servidor</string>
     <string name="user_name">Nombre de usuario</string>
-    <string name="user_name_tax_id">R.I.F. / Usuario Ventas</string>
+    <string name="user_name_tax_id">Nombre de usuario</string>
     <string name="sync_user_group">Grupo de sincronización</string>
     <string name="password">Contraseña</string>
     <string name="company_host_name">www.febeca.com</string>
