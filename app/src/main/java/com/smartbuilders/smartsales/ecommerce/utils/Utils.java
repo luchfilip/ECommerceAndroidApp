@@ -171,12 +171,11 @@ public class Utils {
         }else{
             view.findViewById(R.id.product_name).setVisibility(View.GONE);
         }
-        if(!TextUtils.isEmpty(product.getInternalCode())){
-            ((TextView) view.findViewById(R.id.product_internal_code)).setText(context.getString(R.string.product_internalCode,
-                    product.getInternalCodeMayoreoFormat()));
-        }else{
-            view.findViewById(R.id.product_internal_code).setVisibility(View.GONE);
-        }
+
+        ((TextView) view.findViewById(R.id.product_internal_code)).setText(product.getInternalCodeMayoreoFormat());
+
+        ((TextView) view.findViewById(R.id.product_reference)).setText(product.getReference());
+
         if(product.getProductBrand()!=null
                 && !TextUtils.isEmpty(product.getProductBrand().getName())){
             ((TextView) view.findViewById(R.id.product_brand)).setText(context.getString(R.string.brand_detail,
