@@ -189,10 +189,9 @@ public class DialogProductDetails extends DialogFragment {
             }
         });
 
-        if(mProduct.getInternalCode()!=null){
-            ((TextView) view.findViewById(R.id.product_internal_code)).setText(getString(R.string.product_internalCode,
-                    mProduct.getInternalCodeMayoreoFormat()));
-        }
+        ((TextView) view.findViewById(R.id.product_internal_code)).setText(mProduct.getInternalCodeMayoreoFormat());
+
+        ((TextView) view.findViewById(R.id.product_reference)).setText(mProduct.getReference());
 
         if(mProduct.getProductBrand()!=null
                 && !TextUtils.isEmpty(mProduct.getProductBrand().getName())){

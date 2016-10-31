@@ -329,7 +329,6 @@ public class SearchResultsActivity extends AppCompatActivity
                             (new RecentSearchDB(SearchResultsActivity.this, Utils.getCurrentUser(SearchResultsActivity.this)))
                                     .deleteAllRecentSearches();
                             mSearchResultAdapter.setData(null, null);
-                            mSearchResultAdapter.notifyDataSetChanged();
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)

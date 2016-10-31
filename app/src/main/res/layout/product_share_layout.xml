@@ -78,22 +78,23 @@
                         android:layout_height="match_parent" >
 
                         <FrameLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@color/light_grey"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
-                            android:layout_weight="1"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="1dp"
                             android:layout_marginTop="1dp">
                             <TextView
                                 android:text="@string/code"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
                                 android:lines="1"
                                 android:layout_gravity="center"
+                                android:gravity="center_horizontal"
                                 android:id="@+id/productCodeLabel_textView"
                                 android:textStyle="normal|bold"
                                 android:textSize="18px" />
@@ -101,15 +102,15 @@
 
 
                         <FrameLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
                             android:background="@color/light_grey"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
-                            android:layout_weight="2"
                             android:layout_marginBottom="1dp"
                             android:layout_marginTop="1dp"
-                            android:layout_marginLeft="1dp"
-                            android:layout_width="0dp">
+                            android:layout_marginLeft="1dp" >
                             <TextView
                                 android:text="@string/reference"
                                 android:layout_width="match_parent"
@@ -129,7 +130,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="18px"
@@ -154,8 +155,7 @@
                             android:lines="1"
                             android:ellipsize="end"
                             android:textStyle="normal|bold"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginRight="1dp" />
+                            android:layout_marginLeft="1dp" />
                     </TableRow>
                 </TableLayout>
 
