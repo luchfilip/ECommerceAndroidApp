@@ -27,9 +27,9 @@ public class MainFragment extends Fragment {
     private int mListViewTop;
 
     private boolean mIsInitialLoad;
-    private MainActivityAdapter mMainActivityAdapter;
     private ListView mListView;
     private User mCurrentUser;
+    private View mProgressContainer;
 
     public MainFragment() {
     }
@@ -65,10 +65,9 @@ public class MainFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                mProgressContainer = view.findViewById(R.id.progressContainer);
                                 mListView = (ListView) view.findViewById(R.id.main_categories_list);
-                                mMainActivityAdapter = new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser);
-                                mListView.setAdapter(mMainActivityAdapter);
-                                mListView.setVisibility(View.VISIBLE);
+                                mListView.setAdapter(new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -88,12 +87,52 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         if(mIsInitialLoad){
-            mIsInitialLoad =false;
+            mIsInitialLoad = false;
         }else{
-            if(mListView!=null && mMainActivityAdapter!=null){
-                mMainActivityAdapter.setData((new MainPageSectionsDB(getContext(), mCurrentUser))
-                        .getActiveMainPageSections());
+            if (mProgressContainer!=null) {
+                mProgressContainer.setVisibility(View.VISIBLE);
             }
+            if (mListView!=null) {
+                mListView.setVisibility(View.GONE);
+            }
+            final ArrayList<Object> mainPageObjects = new ArrayList<>();
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        mCurrentUser = Utils.getCurrentUser(getActivity());
+                        mainPageObjects.addAll((new MainPageSectionsDB(getContext(), mCurrentUser)).getActiveMainPageSections());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if(getActivity()!=null && getContext()!=null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if(mListView!=null) {
+                                        if (mListView.getAdapter()!=null) {
+                                            ((MainActivityAdapter) mListView.getAdapter()).setData(mainPageObjects);
+                                        } else {
+                                            mListView.setAdapter(new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (mProgressContainer!=null) {
+                                        mProgressContainer.setVisibility(View.GONE);
+                                    }
+                                    if (mListView!=null) {
+                                        mListView.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }.start();
         }
         super.onStart();
     }
