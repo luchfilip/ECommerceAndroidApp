@@ -1,11 +1,15 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * Jesus Sarco, before 10.06.2016
@@ -23,7 +27,14 @@ public class CategoriesListActivity extends AppCompatActivity implements Categor
 
         mTwoPane = findViewById(R.id.subcategory_list_container) != null;
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

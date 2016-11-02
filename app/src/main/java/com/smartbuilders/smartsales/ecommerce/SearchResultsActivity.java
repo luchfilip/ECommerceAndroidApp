@@ -44,7 +44,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
     public static final String KEY_SEARCH_BY = "KEY_SEARCH_BY";
 
-    private static final String STATE_SEARCH_BY = "KEY_SEARCH_BY";
+    private static final String STATE_SEARCH_BY = "STATE_SEARCH_BY";
 
     private SearchResultAdapter mSearchResultAdapter;
     private ProductDB mProductDB;
@@ -52,6 +52,7 @@ public class SearchResultsActivity extends AppCompatActivity
     private int productId;
     private String mCurrentSearchByOptions;
     private String mCurrentFilterText;
+    private EditText searchEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,7 +142,7 @@ public class SearchResultsActivity extends AppCompatActivity
                 }
             }
 
-            final EditText searchEditText = (EditText) findViewById(R.id.search_product_editText);
+            searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
                 searchEditText.setFocusable(true);
                 searchEditText.setFocusableInTouchMode(true);
@@ -166,7 +167,6 @@ public class SearchResultsActivity extends AppCompatActivity
                                     mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
                                 }
                             }
-                            mSearchResultAdapter.notifyDataSetChanged();
                         }
                     }
 
@@ -328,6 +328,9 @@ public class SearchResultsActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             (new RecentSearchDB(SearchResultsActivity.this, Utils.getCurrentUser(SearchResultsActivity.this)))
                                     .deleteAllRecentSearches();
+                            if(searchEditText!=null){
+                                searchEditText.setText(null);
+                            }
                             mSearchResultAdapter.setData(null, null);
                         }
                     })

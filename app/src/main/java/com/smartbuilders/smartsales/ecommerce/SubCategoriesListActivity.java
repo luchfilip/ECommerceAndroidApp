@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -49,6 +50,10 @@ public class SubCategoriesListActivity extends AppCompatActivity {
                          .setText(getString(R.string.category_name_detail, productCategory.getName()));
             }
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null) {

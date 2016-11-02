@@ -229,7 +229,7 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notificaciones</string>
-    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias en Favoritos</string>
+    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias para productos en Favoritos</string>
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silencioso</string>
     <string name="pref_title_vibrate">Vibrar</string>
@@ -303,14 +303,15 @@
     <string name="choose_image">Escoger Imágen</string>
     <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
     <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
-    <string name="search_by">BUSCAR POR</string>
+    <string name="search_by">Buscar por</string>
+    <string name="search_by_capitals">BUSCAR POR</string>
     <string name="search_by_name">BUSCAR POR NOMBRE</string>
     <string name="search_by_reference">BUSCAR POR REFERENCIA</string>
     <string name="search_by_purpose">BUSCAR POR USO</string>
     <string name="search_by_category">BUSCAR POR CATEGORÍA</string>
     <string name="search_by_brand">BUSCAR POR MARCA</string>
     <string-array name="search_by_options">
-        <item>@string/search_by</item>
+        <item>@string/search_by_capitals</item>
         <item>@string/name</item>
         <item>@string/reference</item>
         <item>@string/purpose</item>
@@ -512,4 +513,8 @@
     <string name="no_image_loaded">No hay imágen cargada</string>
     <string name="search_image">Buscar Imágen</string>
     <string name="edit_image">Editar Imágen</string>
+    <string name="synchronization">Sincronización</string>
+    <string name="images_management">Manejo de Imágenes</string>
+    <string name="show_notification">Mostrar notificación</string>
+    <string name="subcategories">Sub Categorías</string>
 </resources>

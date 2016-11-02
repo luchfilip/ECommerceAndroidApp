@@ -2,6 +2,9 @@ package com.smartbuilders.synchronizer.ids.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 
 public class User implements Parcelable {
 
@@ -122,7 +125,7 @@ public class User implements Parcelable {
 	 * @return the serverAddress
 	 */
 	public String getServerAddress() {
-		return serverAddress;
+        return TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS) ? serverAddress : BuildConfig.SERVER_ADDRESS;
 	}
 
 	/**

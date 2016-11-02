@@ -1,39 +1,49 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:key="server_address"
-        android:title="@string/server_address">
+    <PreferenceCategory
+        android:key="category_sync"
+        android:title="@string/synchronization">
 
-    </EditTextPreference>
+        <EditTextPreference
+            android:key="server_address"
+            android:title="@string/server_address">
 
-    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
-         dismiss it. -->
-    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-    <ListPreference
-        android:defaultValue="@string/sync_periodicity_default_value"
-        android:entries="@array/pref_sync_frequency_titles"
-        android:entryValues="@array/pref_sync_frequency_values"
-        android:key="sync_periodicity"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_sync_frequency" />
+        </EditTextPreference>
 
-    <SwitchPreference
-        android:key="save_images_in_device"
-        android:defaultValue="true"
-        android:title="@string/save_images_in_device"
-        android:summaryOff="@string/save_images_in_device_summaryOff"
-        android:summaryOn="@string/save_images_in_device_summaryOn">
+        <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+             dismiss it. -->
+        <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+        <ListPreference
+            android:defaultValue="@string/sync_periodicity_default_value"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="sync_periodicity"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_sync_frequency" />
+    </PreferenceCategory>
 
-    </SwitchPreference>
+    <PreferenceCategory
+        android:key="category_images"
+        android:title="@string/images_management">
 
-    <SwitchPreference
-        android:key="sync_thumb_images"
-        android:defaultValue="false"
-        android:title="@string/load_thumb_images"
-        android:summaryOff="@string/load_thumb_images_summaryOff"
-        android:summaryOn="@string/load_thumb_images_summaryOn">
+        <SwitchPreference
+            android:key="save_images_in_device"
+            android:defaultValue="true"
+            android:title="@string/save_images_in_device"
+            android:summaryOff="@string/save_images_in_device_summaryOff"
+            android:summaryOn="@string/save_images_in_device_summaryOn">
 
-    </SwitchPreference>
+        </SwitchPreference>
+
+        <SwitchPreference
+            android:key="sync_thumb_images"
+            android:defaultValue="false"
+            android:title="@string/load_thumb_images"
+            android:summaryOff="@string/load_thumb_images_summaryOff"
+            android:summaryOn="@string/load_thumb_images_summaryOn">
+
+        </SwitchPreference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

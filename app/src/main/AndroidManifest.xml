@@ -238,10 +238,10 @@
 
         <activity
             android:name=".CategoriesListActivity"
-            android:label="@string/title_activity_categories" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SubCategoriesListActivity"
-            android:label="@string/title_activity_sub_categories" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ShoppingCartActivity"
             android:theme="@style/AppTheme.NoActionBar" />

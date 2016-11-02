@@ -50,7 +50,8 @@ public class SearchResultAdapter extends BaseAdapter {
         if(mDataset == null){
             mDataset = new ArrayList<>();
             mDataset.addAll(recentSearchDB.getRecentSearches());
-        }else if(mDataset.isEmpty()){
+        }
+        if(mDataset.isEmpty()){
             mDataset.add(context.getString(R.string.no_results_founds));
             mDataset.add(context.getString(R.string.search_by_category));
             mDataset.add(context.getString(R.string.search_by_brand));
@@ -62,19 +63,17 @@ public class SearchResultAdapter extends BaseAdapter {
         if(data!=null){
             mDataset = new ArrayList<>();
             mDataset.addAll(data);
+        } else {
+            mDataset = null;
         }
         if(mDataset==null){
             mDataset = new ArrayList<>();
+            mDataset.addAll(recentSearchDB.getRecentSearches());
         }
-
         if(mDataset.isEmpty()){
-            if(TextUtils.isEmpty(textToSearch)){
-                mDataset.addAll(recentSearchDB.getRecentSearches());
-            }else{
-                mDataset.add(mContext.getString(R.string.no_results_founds));
-                mDataset.add(mContext.getString(R.string.search_by_category));
-                mDataset.add(mContext.getString(R.string.search_by_brand));
-            }
+            mDataset.add(mContext.getString(R.string.no_results_founds));
+            mDataset.add(mContext.getString(R.string.search_by_category));
+            mDataset.add(mContext.getString(R.string.search_by_brand));
         }
         notifyDataSetChanged();
     }
@@ -136,7 +135,7 @@ public class SearchResultAdapter extends BaseAdapter {
                             ((Product) mDataset.get(position)).getReference(),
                             ((Product) mDataset.get(position)).getPurpose(),
                             ((Product) mDataset.get(position)).getId(),
-                            ((Product) mDataset.get(position)).getProductSubCategory().getId());
+                            ((Product) mDataset.get(position)).getProductSubCategoryId());
                     goToProductList(((Product) mDataset.get(position)).getName(),
                             ((Product) mDataset.get(position)).getReference(),
                             ((Product) mDataset.get(position)).getPurpose(), (Product) mDataset.get(position));
@@ -194,7 +193,7 @@ public class SearchResultAdapter extends BaseAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 recentSearchDB.deleteRecentSearchById(((RecentSearch) mDataset.get(position)).getId());
                                 mDataset.remove(position);
-                                notifyDataSetChanged();
+                                setData(mTextToSearch, (ArrayList) mDataset);
                             }
                         })
                         .setNegativeButton(R.string.cancel, null)

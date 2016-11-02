@@ -19,6 +19,8 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
@@ -255,13 +257,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            if (!TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS) &&  mCurrentUser != null
-                    && mCurrentUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                addPreferencesFromResource(R.xml.pref_data_sync_business_partner);
-            } else {
-                addPreferencesFromResource(R.xml.pref_data_sync);
-            }
+            addPreferencesFromResource(R.xml.pref_data_sync);
+
             setHasOptionsMenu(true);
+
+            if (!TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
+                getPreferenceScreen().removePreference(findPreference("category_sync"));
+            }
 
             try {
                 getPreferenceManager().findPreference("server_address").setSummary(mCurrentUser.getServerAddress());

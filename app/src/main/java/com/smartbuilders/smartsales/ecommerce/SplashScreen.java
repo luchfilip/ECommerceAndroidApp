@@ -33,6 +33,7 @@ import com.smartbuilders.synchronizer.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.List;
+import java.util.concurrent.Exchanger;
 
 /**
  * Jesus Sarco, 2/6/2016.
@@ -70,6 +71,7 @@ public class SplashScreen extends AppCompatActivity {
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_PROGRESS)) {
                             findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
                             findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                            mSynchronizationState = SYNC_RUNNING;
                             if (extras.containsKey(SyncAdapter.SYNC_INIT_TIME)) {
                                 mSyncDurationTextView.setText(ApplicationUtilities.parseMillisecondsToHMS((System.currentTimeMillis() - extras.getLong(SyncAdapter.SYNC_INIT_TIME)),
                                         ApplicationUtilities.TIME_FORMAT_1));
@@ -81,9 +83,16 @@ public class SplashScreen extends AppCompatActivity {
                                 if (extras.containsKey(SyncAdapter.LOG_MESSAGE)) {
                                     mProgressPercentage = extras.getString(SyncAdapter.LOG_MESSAGE);
                                     mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+                                    try {
+                                        if (Float.valueOf(mProgressPercentage) >= 100) {
+                                            initApp();
+                                            mSynchronizationState = SYNC_FINISHED;
+                                        }
+                                    } catch (Exception e) {
+                                        //do nothing
+                                    }
                                 }
                             }
-                            mSynchronizationState = SYNC_RUNNING;
                         } else if (intent.getAction().equals(SyncAdapter.AUTHENTICATOR_EXCEPTION)
                                 || intent.getAction().equals(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED)
                                 || intent.getAction().equals(SyncAdapter.SYNCHRONIZATION_CANCELED)
@@ -133,20 +142,24 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        float progressPercentage = 0;
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_SYNCHRONIZATION_STATE)) {
                 mSynchronizationState = savedInstanceState.getInt(STATE_SYNCHRONIZATION_STATE);
             }
             if (savedInstanceState.containsKey(STATE_SYNC_PROGRESS_PERCENTAGE)) {
                 mProgressPercentage = savedInstanceState.getString(STATE_SYNC_PROGRESS_PERCENTAGE);
+                try {
+                    progressPercentage = Float.valueOf(mProgressPercentage);
+                } catch (Exception e) {
+                    //do nothing
+                }
             }
         }
 
         mProgressPercentageTextView = (TextView) findViewById(R.id.progress_percentage);
-        mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
-
         mSyncDurationTextView = (TextView) findViewById(R.id.sync_duration);
-
         mAccountManager = AccountManager.get(this);
 
         findViewById(R.id.exit_app_button).setOnClickListener(new View.OnClickListener() {
@@ -156,7 +169,12 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        checkPermission();
+        if (progressPercentage >= 100) {
+            initApp();
+        } else {
+            mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+            checkPermission();
+        }
     }
 
     private void checkPermission() {
