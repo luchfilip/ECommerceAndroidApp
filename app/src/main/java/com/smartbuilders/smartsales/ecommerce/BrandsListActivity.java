@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.BrandsListAdapter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
  * Jesus Sarco
@@ -33,7 +36,14 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
             }
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.setCustomToolbarTitle(this, toolbar, false);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

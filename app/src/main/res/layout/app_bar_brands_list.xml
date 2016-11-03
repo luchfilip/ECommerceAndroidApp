@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -10,7 +11,84 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <include layout="@layout/brands_list_bar_layout" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            style="@style/title_style"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp">
+
+                <ImageView
+                    android:id="@+id/toolbar_imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_white_24dp"/>
+
+                <TextView
+                    android:text="@string/brands"
+                    android:id="@+id/title_textView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    style="@style/title_text_style"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/search_box_bg"
+                android:foregroundGravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lateral_menu_bg_color"
+                    android:hint="@string/filter"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:inputType="text"
+                    android:id="@+id/filter_editText"
+                    android:focusable="false"
+                    android:padding="2dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/filter_imageView"
+                    android:src="@drawable/ic_filter_list_black_24dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>
 

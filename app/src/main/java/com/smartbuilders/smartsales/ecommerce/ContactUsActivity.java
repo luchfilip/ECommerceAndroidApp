@@ -3,6 +3,9 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,7 +17,7 @@ import com.smartbuilders.smartsales.ecommerce.data.CompanyDB;
 import com.smartbuilders.smartsales.ecommerce.model.Company;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
-public class ContactUsActivity extends AppCompatActivity {
+public class ContactUsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,8 @@ public class ContactUsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Utils.inflateNavigationView(this, this, toolbar, Utils.getCurrentUser(this));
 
         final Company company = (new CompanyDB(this, Utils.getCurrentUser(this))).getCompany();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -46,6 +50,17 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPostResume() {
+        Utils.manageNotificationOnDrawerLayout(this);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            Utils.loadNavigationViewBadge(getApplicationContext(), Utils.getCurrentUser(this),
+                    (NavigationView) findViewById(R.id.nav_view));
+        }
+        super.onPostResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_contact_us, menu);
@@ -64,4 +79,24 @@ public class ContactUsActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(menuItem));
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Utils.navigationItemSelectedBehave(item.getItemId(), this);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(drawer!=null){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        return true;
+    }
 }
