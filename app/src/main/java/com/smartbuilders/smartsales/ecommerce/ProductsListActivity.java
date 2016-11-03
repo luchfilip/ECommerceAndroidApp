@@ -340,7 +340,9 @@ public class ProductsListActivity extends AppCompatActivity
                                         @Override
                                         public void afterTextChanged(Editable s) { }
                                     });
-                                    filterProduct.setText(mCurrentFilterText);
+                                    if (mCurrentFilterText!=null) {
+                                        filterProduct.setText(mCurrentFilterText);
+                                    }
                                     filterProduct.setSelection(filterProduct.length());
                                 }
                             }
@@ -473,7 +475,9 @@ public class ProductsListActivity extends AppCompatActivity
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         outState.putInt(STATE_CURRENT_SORT_OPTION, mCurrentSortOption);
-        outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        if (!TextUtils.isEmpty(mCurrentFilterText)) {
+            outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        }
         outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
         outState.putInt(STATE_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductIdShowRelatedShoppingProducts);
         outState.putBoolean(STATE_SHOW_PRODUCTS_RECENTLY_SEEN, mShowProductsRecentlySeen);

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -63,6 +64,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private boolean mIsManagePriceInOrder;
     private boolean mShowProductPrice;
     private boolean mShowProductTotalPrice;
+    private String mCurrentFilterText;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -468,32 +470,68 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     public void filter(String charText) {
         try {
-            mDataset.clear();
+            charText = Normalizer.normalize(charText.toLowerCase(Locale.getDefault()),Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
             if (TextUtils.isEmpty(charText)) {
+                mDataset.clear();
                 mDataset.addAll(filterAux);
                 return;
             }
-            charText = charText.toLowerCase(Locale.getDefault());
-            for (Product product : filterAux) {
+            ArrayList<Product> currentData = new ArrayList<>();
+            //si a la cadena de busqueda lo que se hace es agregar caracteres entonces se usa la actual
+            //lista de productos para filtrar, en caso contrario se toma la lista de productos originalmente cargada.
+            //esto es para que a medida que se vayan agregando caracteres la busqueda sea mas rapida
+            if (mCurrentFilterText!=null && charText.length()>mCurrentFilterText.length()) {
+                currentData.addAll(mDataset);
+            }
+
+            mCurrentFilterText = charText;
+            mDataset.clear();
+            for (Product product : currentData.isEmpty() ? filterAux : currentData) {
                 try {
-                    if (!TextUtils.isEmpty(product.getName()) &&
-                            product.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
-                        mDataset.add(product);
-                    } else if (!TextUtils.isEmpty(product.getInternalCode()) &&
+                    String normalized;
+                    if (!TextUtils.isEmpty(product.getName())) {
+                        normalized = Normalizer.normalize(product.getName().toLowerCase(Locale.getDefault()),Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                        try {
+                            for (String aux : (charText+" ").split("\\s+")) {
+                                if (!normalized.contains(aux)) {
+                                    throw new Exception("No se encontro la palabra");
+                                }
+                            }
+                            mDataset.add(product);
+                            //si se agrega el producto entonces no se sigue probando las otras opciones
+                            continue;
+                        } catch (Exception e) {
+                            //do nothing
+                        }
+                    }
+
+                    if (!patternIsNotNumeric.matcher(charText).matches() && !TextUtils.isEmpty(product.getInternalCode()) &&
                             product.getInternalCode().toLowerCase(Locale.getDefault()).startsWith(charText)) {
                         mDataset.add(product);
-                    } else if (!TextUtils.isEmpty(product.getPurpose()) &&
-                            product.getPurpose().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        continue;
+                    }
+
+                    if (!TextUtils.isEmpty(product.getPurpose()) &&
+                            Normalizer.normalize(product.getPurpose().toLowerCase(Locale.getDefault()), Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","").contains(charText)) {
                         mDataset.add(product);
-                    } else if (!TextUtils.isEmpty(product.getReference()) &&
-                            product.getReference().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        continue;
+                    }
+
+                    if (!TextUtils.isEmpty(product.getReference()) &&
+                            Normalizer.normalize(product.getReference().toLowerCase(Locale.getDefault()), Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","").contains(charText)) {
                         mDataset.add(product);
-                    } else if (product.getProductBrand() != null &&
+                        continue;
+                    }
+
+                    if (product.getProductBrand() != null &&
                             !TextUtils.isEmpty(product.getProductBrand().getName()) &&
-                            product.getProductBrand().getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                            Normalizer.normalize(product.getProductBrand().getName().toLowerCase(Locale.getDefault()), Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","").contains(charText)) {
                         mDataset.add(product);
-                    } else if (!TextUtils.isEmpty(product.getDescription()) &&
-                            product.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                        continue;
+                    }
+
+                    if (!TextUtils.isEmpty(product.getDescription()) &&
+                            Normalizer.normalize(product.getDescription().toLowerCase(Locale.getDefault()), Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","").contains(charText)) {
                         mDataset.add(product);
                     }
                 } catch (Exception e) {

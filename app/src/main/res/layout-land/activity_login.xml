@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/user_name_tax_id"
                     android:maxLines="1"
-                    android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ012345789"
+                    android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789"
                     android:inputType="text"
                     android:focusable="true"
                     android:focusableInTouchMode="true"

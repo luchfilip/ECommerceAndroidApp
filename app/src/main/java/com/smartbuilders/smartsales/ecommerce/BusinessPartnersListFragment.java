@@ -194,7 +194,9 @@ public class BusinessPartnersListFragment extends Fragment {
                                             public void afterTextChanged(Editable s) {
                                             }
                                         });
-                                        filterBusinessPartnerEditText.setText(mCurrentFilterText);
+                                        if (mCurrentFilterText!=null) {
+                                            filterBusinessPartnerEditText.setText(mCurrentFilterText);
+                                        }
                                         filterBusinessPartnerEditText.setSelection(filterBusinessPartnerEditText.length());
                                     }
                                 }
@@ -266,7 +268,9 @@ public class BusinessPartnersListFragment extends Fragment {
             outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
         }
         outState.putInt(STATE_CURRENT_SELECTED_INDEX, mCurrentSelectedIndex);
-        outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        if (!TextUtils.isEmpty(mCurrentFilterText)) {
+            outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        }
         outState.putInt(STATE_CURRENT_FILTER_OPTION, mCurrentFilterOption);
         outState.putInt(STATE_SPINNER_SELECTED_ITEM_POSITION, mSpinnerSelectedItemPosition);
         super.onSaveInstanceState(outState);

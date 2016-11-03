@@ -74,7 +74,9 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
                 @Override
                 public void afterTextChanged(Editable s) { }
             });
-            filterProduct.setText(mCurrentFilterText);
+            if (mCurrentFilterText!=null) {
+                filterProduct.setText(mCurrentFilterText);
+            }
             filterProduct.setSelection(filterProduct.length());
         }
     }
@@ -102,7 +104,9 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        if (!TextUtils.isEmpty(mCurrentFilterText)) {
+            outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);
+        }
         super.onSaveInstanceState(outState);
     }
 }
