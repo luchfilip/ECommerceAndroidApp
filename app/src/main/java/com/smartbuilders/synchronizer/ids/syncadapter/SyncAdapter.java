@@ -38,32 +38,32 @@ import android.os.Bundle;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-	public static final String PERIODIC_SYNCHRONIZATION_STARTED 	= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_STARTED";
-	public static final String PERIODIC_SYNCHRONIZATION_FINISHED 	= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_FINISHED";
-	public static final String PERIODIC_SYNCHRONIZATION_CANCELED 	= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_CANCELED";
-	public static final String SYNCHRONIZATION_STARTED 		        = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_STARTED";
-	public static final String SYNCHRONIZATION_PROGRESS 	        = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_PROGRESS";
-	public static final String SYNCHRONIZATION_FINISHED 	        = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_FINISHED";
-    public static final String FULL_SYNCHRONIZATION_FINISHED 	    = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".FULL_SYNCHRONIZATION_FINISHED";
-	public static final String SYNCHRONIZATION_CANCELED 	        = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_CANCELED";
-	public static final String IO_EXCEPTION 				        = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_IO_EXCEPTION";
-	public static final String GENERAL_EXCEPTION 			= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".GENERAL_EXCEPTION";
-	public static final String CONNECT_EXCEPTION 			= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".CONNECT_EXCEPTION";
-	public static final String SOCKET_EXCEPTION 			= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SOCKET_EXCEPTION";
-	public static final String OPERATION_CANCELED_EXCEPTION = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".OPERATION_CANCELED_EXCEPTION";
-	public static final String XML_PULL_PARSE_EXCEPTION 	= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".XML_PULL_PARSE_EXCEPTION";
-	public static final String AUTHENTICATOR_EXCEPTION 		= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".AUTHENTICATOR_EXCEPTION";
-	public static final String USER_ID 						= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".USER_ID";
-	public static final String LOG_MESSAGE 					= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".LOG_MESSAGE";
-	public static final String LOG_MESSAGE_DETAIL			= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".LOG_MESSAGE_DETAIL";
-	public static final String SYNC_INIT_TIME				= BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".SYNC_INIT_TIME";
+	public static final String PERIODIC_SYNCHRONIZATION_STARTED 	= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_STARTED";
+	public static final String PERIODIC_SYNCHRONIZATION_FINISHED 	= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_FINISHED";
+	public static final String PERIODIC_SYNCHRONIZATION_CANCELED 	= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".PERIODIC_SYNCHRONIZATION_CANCELED";
+	public static final String SYNCHRONIZATION_STARTED 		        = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_STARTED";
+	public static final String SYNCHRONIZATION_PROGRESS 	        = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_PROGRESS";
+	public static final String SYNCHRONIZATION_FINISHED 	        = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_FINISHED";
+    public static final String FULL_SYNCHRONIZATION_FINISHED 	    = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".FULL_SYNCHRONIZATION_FINISHED";
+	public static final String SYNCHRONIZATION_CANCELED 	        = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_CANCELED";
+	public static final String IO_EXCEPTION 				        = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNCHRONIZATION_IO_EXCEPTION";
+	public static final String GENERAL_EXCEPTION 			= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".GENERAL_EXCEPTION";
+	public static final String CONNECT_EXCEPTION 			= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".CONNECT_EXCEPTION";
+	public static final String SOCKET_EXCEPTION 			= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SOCKET_EXCEPTION";
+	public static final String OPERATION_CANCELED_EXCEPTION = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".OPERATION_CANCELED_EXCEPTION";
+	public static final String XML_PULL_PARSE_EXCEPTION 	= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".XML_PULL_PARSE_EXCEPTION";
+	public static final String AUTHENTICATOR_EXCEPTION 		= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".AUTHENTICATOR_EXCEPTION";
+	public static final String USER_ID 						= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".USER_ID";
+	public static final String LOG_MESSAGE 					= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".LOG_MESSAGE";
+	public static final String LOG_MESSAGE_DETAIL			= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".LOG_MESSAGE_DETAIL";
+	public static final String SYNC_INIT_TIME				= BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".SYNC_INIT_TIME";
 	private static final long MAX_RETRY_NUMBER 				= 0;
 	private static final long DELAY_TIME_TO_RETRY_SYNC 		= 5; //time in seconds
 	private static final int SYNCHRONIZATION_CANCELLED 		= 2;
 	private static final int SYNCHRONIZATION_RUNNING 		= 1;
 
-	public static final String KEY_CURRENT_USER = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".KEY_CURRENT_USER";
-	public static final String KEY_PERIODIC_SYNC_ACTIVE = BuildConfig.APPLICATION_ID + SyncAdapter.class.getSimpleName() + ".KEY_PERIODIC_SYNC_ACTIVE";
+	public static final String KEY_CURRENT_USER = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".KEY_CURRENT_USER";
+	public static final String KEY_PERIODIC_SYNC_ACTIVE = BuildConfig.APPLICATION_ID + "." + SyncAdapter.class.getSimpleName() + ".KEY_PERIODIC_SYNC_ACTIVE";
 	
 	/**
 	 * El usuario inicio sesion de sincronizacion

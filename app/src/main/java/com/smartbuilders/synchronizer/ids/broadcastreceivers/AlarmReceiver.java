@@ -15,9 +15,9 @@ import android.os.Bundle;
 
 public class AlarmReceiver extends BroadcastReceiver{
 
-	public static final String KEY_CURRENT_USER_ID 	= BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_USER_ID";
-	public static final String KEY_CURRENT_ALARM_ID = BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_ALARM_ID";
-	public static final String ACTION 				= BuildConfig.APPLICATION_ID + AlarmReceiver.class.getSimpleName() + ".ACTION";
+	public static final String KEY_CURRENT_USER_ID 	= BuildConfig.APPLICATION_ID + "." + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_USER_ID";
+	public static final String KEY_CURRENT_ALARM_ID = BuildConfig.APPLICATION_ID + "." + AlarmReceiver.class.getSimpleName() + ".KEY_CURRENT_ALARM_ID";
+	public static final String ACTION 				= BuildConfig.APPLICATION_ID + "." + AlarmReceiver.class.getSimpleName() + ".ACTION";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {

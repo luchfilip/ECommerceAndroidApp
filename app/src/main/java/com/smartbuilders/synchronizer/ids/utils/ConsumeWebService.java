@@ -22,8 +22,8 @@ import com.smartbuilders.smartsales.ecommerce.BuildConfig;
  */
 public class ConsumeWebService {
 	
-	public static final String SHOW_TOAST_MESSAGE 	= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".SHOW_TOAST_MESSAGE";
-	public static final String MESSAGE 				= BuildConfig.APPLICATION_ID + ConsumeWebService.class.getSimpleName() + ".MESSAGE";
+	public static final String SHOW_TOAST_MESSAGE 	= BuildConfig.APPLICATION_ID + "." + ConsumeWebService.class.getSimpleName() + ".SHOW_TOAST_MESSAGE";
+	public static final String MESSAGE 				= BuildConfig.APPLICATION_ID + "." + ConsumeWebService.class.getSimpleName() + ".MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
 	private final int MAX_RETRY_NUMBER 				= 3;
 	private final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds
