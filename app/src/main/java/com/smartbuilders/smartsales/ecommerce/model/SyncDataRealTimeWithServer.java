@@ -3,14 +3,14 @@ package com.smartbuilders.smartsales.ecommerce.model;
 /**
  * Created by stein on 23/7/2016.
  */
-public class FailedSyncDataWithServer {
+public class SyncDataRealTimeWithServer {
 
     private int id;
     private String selection;
     private String selectionArgs;
     private int columnCount;
 
-    public FailedSyncDataWithServer(int id, String selection, String selectionArgs, int columnCount){
+    public SyncDataRealTimeWithServer(int id, String selection, String selectionArgs, int columnCount){
         setId(id);
         setSelection(selection);
         setSelectionArgs(selectionArgs);

@@ -172,7 +172,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.SyncDataWithServer"
+            android:name=".services.SyncDataRealTimeWithServerService"
             android:exported="false" />
 
         <!--

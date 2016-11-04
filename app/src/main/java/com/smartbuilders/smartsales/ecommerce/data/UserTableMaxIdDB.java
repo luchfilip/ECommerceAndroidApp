@@ -26,14 +26,16 @@ public class UserTableMaxIdDB {
                 if(c.moveToNext()){
                     newId = c.getInt(0);
                 }else{
-                    context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                            null,
-                            "insert into USER_TABLE_MAX_ID (USER_ID, TABLE_NAME, ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                    context.getContentResolver()
+                            .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                                    null,
+                                    "insert into USER_TABLE_MAX_ID (USER_ID, TABLE_NAME, ID, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
                                     " VALUES (?, ?, ?, ?, ?, ?, ?) ",
-                            new String[]{String.valueOf(user.getServerUserId()), tableName, String.valueOf(newId),
-                                    DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(context),
-                                    user.getUserName(), Utils.getMacAddress(context)});
+                                    new String[]{String.valueOf(user.getServerUserId()), tableName, String.valueOf(newId),
+                                            DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(context),
+                                            user.getUserName(), Utils.getMacAddress(context)});
                 }
             }
         } finally {
@@ -100,15 +102,17 @@ public class UserTableMaxIdDB {
 
         //se incrementa el id en uno
         newId++;
-        int rowsAffected = context.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(),
-                null,
-                "UPDATE USER_TABLE_MAX_ID " +
-                        " SET ID = ?, CREATE_TIME = ?, APP_VERSION = ?, APP_USER_NAME = ?, DEVICE_MAC_ADDRESS = ? " +
+        int rowsAffected = context.getContentResolver()
+                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
+                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                        null,
+                        "UPDATE USER_TABLE_MAX_ID " +
+                                " SET ID = ?, CREATE_TIME = ?, APP_VERSION = ?, APP_USER_NAME = ?, DEVICE_MAC_ADDRESS = ? " +
                         " WHERE USER_ID = ? AND TABLE_NAME = ?",
-                new String[]{String.valueOf(newId), DateFormat.getCurrentDateTimeSQLFormat(),
-                        Utils.getAppVersionName(context), user.getUserName(), Utils.getMacAddress(context),
-                        String.valueOf(user.getServerUserId()), tableName});
+                        new String[]{String.valueOf(newId), DateFormat.getCurrentDateTimeSQLFormat(),
+                                Utils.getAppVersionName(context), user.getUserName(), Utils.getMacAddress(context),
+                                String.valueOf(user.getServerUserId()), tableName});
         if (rowsAffected <= 0){
             throw new SQLException("Error creando nuevo ID, no se insertó el registro en la base de datos.");
         }

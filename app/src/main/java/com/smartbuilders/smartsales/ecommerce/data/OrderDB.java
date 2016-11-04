@@ -228,17 +228,9 @@ public class OrderDB {
         }
 
         BusinessPartnerDB businessPartnerDB = new BusinessPartnerDB(mContext, mUser);
-        //ArrayList<Order> ordersToRemove = new ArrayList<>();
         for(Order order : activeOrders){
-            //if(order.getBusinessPartnerId()>0){
-                order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
-            //}
-            //if(order.getBusinessPartner()==null) {
-            //    ordersToRemove.add(order);
-            //}
+            order.setBusinessPartner(businessPartnerDB.getBusinessPartnerById(order.getBusinessPartnerId()));
         }
-        //se eliminan los pedidos que no tienen businessPartner asociado.
-        //activeOrders.removeAll(ordersToRemove);
         return activeOrders;
     }
 
@@ -313,21 +305,24 @@ public class OrderDB {
 
     public String deactiveOrderById(int orderId) {
         try {
-            mContext.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                            null,
-                            "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
-                                    " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
-                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderId),
-                                    String.valueOf(mUser.getServerUserId())});
+            //se elimina primero la cabecera porque sin cabecera no sirven de nada las lineas
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
                             "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                                    " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
+                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderId),
+                                    String.valueOf(mUser.getServerUserId())});
+
+            //se eliminan las lineas del pedido
+            rowsAffected += mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            null,
+                            "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
                                     " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
                             new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderId),
                                     String.valueOf(mUser.getServerUserId())});

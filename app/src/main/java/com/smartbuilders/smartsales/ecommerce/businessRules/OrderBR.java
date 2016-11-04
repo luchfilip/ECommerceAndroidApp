@@ -1,17 +1,12 @@
 package com.smartbuilders.smartsales.ecommerce.businessRules;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
-import com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider;
-
-import org.codehaus.jettison.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -97,9 +92,6 @@ public class OrderBR {
             e.printStackTrace();
             result = e.getMessage();
         }
-        if (result==null) {
-            syncDataWithServer(context, user.getUserId());
-        }
         return result;
     }
 
@@ -112,9 +104,6 @@ public class OrderBR {
             e.printStackTrace();
             result = e.getMessage();
         }
-        if (result==null) {
-            syncDataWithServer(context, user.getUserId());
-        }
         return result;
     }
 
@@ -122,31 +111,10 @@ public class OrderBR {
         String result;
         try {
             result = (new OrderDB(context, user)).deactiveOrderById(orderId);
-            syncDataWithServer(context, user.getUserId());
         } catch (Exception e) {
             result = e.getMessage();
             e.printStackTrace();
         }
         return result;
-    }
-
-    private static void syncDataWithServer(Context context, String userId) {
-        //TODO: MANJEAR QUE PASA SI NO SE REALIZA LA CONEXION EN EL MOMENTO
-        Cursor cursor = null;
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("1", "ECOMMERCE_ORDER_LINE");
-            jsonObject.put("2", "ECOMMERCE_ORDER");
-            cursor = context.getContentResolver().query(SynchronizerContentProvider.SYNC_DATA_TO_SERVER_URI.buildUpon()
-                            .appendQueryParameter(SynchronizerContentProvider.KEY_USER_ID, userId)
-                            .appendQueryParameter(SynchronizerContentProvider.KEY_TABLES_TO_SYNC, jsonObject.toString()).build(),
-                    null, null, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor!=null) {
-                cursor.close();
-            }
-        }
     }
 }

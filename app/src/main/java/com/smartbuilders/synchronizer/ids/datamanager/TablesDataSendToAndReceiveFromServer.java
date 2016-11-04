@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 
+import com.smartbuilders.smartsales.ecommerce.data.SyncDataRealTimeWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -198,6 +199,9 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                 break;
             }
         }
+        //si se termino de sincronizar todos los datos que van al server entonces se limpia la cola
+        //de los datos que estaban pendientes por sincronizar en tiempo real
+        (new SyncDataRealTimeWithServerDB(mContext, mUser)).deleteDataToSyncWithServer();
     }
 
     private void sendDataToServer (String tableName, String data, String errorMessage) throws Exception {

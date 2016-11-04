@@ -563,12 +563,19 @@ public class MyGcmListenerService extends GcmListenerService {
                                     if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastFullSyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){
+                                            //si la ultima sincronizacion completa se realizo en un tiempo mayor al periodo de sincronizacion automatica
+                                            //entonces se realiza la sincronozacion completa
                                             if(((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000) >= Utils.getSyncPeriodicityFromPreferences(this)) {
                                                 ApplicationUtilities.initSyncByAccount(this, account);
+                                                sendResponseToServer(this, requestMethodName, requestId,
+                                                        "Se activo la sincronizacion completa de los datos.", null);
                                             }else{
+                                                //si la ultima sincronizacion completa se realizo en un tiempo menor al periodo de sincronizacion automatica
+                                                //entonces se envia a sincronizar los datos que quedaron pendientes en la sincronizacion de tiempo real
                                                 ApplicationUtilities.initSyncDataWithServerService(this,
                                                         accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                                                throw new Exception("El tiempo de la ultima sincronizacion es menor al periodo de sincronizacion.");
+                                                sendResponseToServer(this, requestMethodName, requestId,
+                                                        "Se activo la sincronizacion de los datos en tiempo real.", null);
                                             }
                                         }else{
                                             ApplicationUtilities.initSyncByAccount(this, account);

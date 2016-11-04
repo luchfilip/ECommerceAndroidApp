@@ -5,26 +5,26 @@ import java.util.LinkedHashMap;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.services.SyncDataRealTimeWithServerService;
 import com.smartbuilders.synchronizer.ids.database.DatabaseHelper;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
 import com.smartbuilders.synchronizer.ids.utils.DataBaseUtilities;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.UriMatcher;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 
 /**
  * http://developer.android.com/guide/topics/providers/content-provider-creating.html
@@ -127,7 +127,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	}
 	
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		int response = 0;
 		switch (uriMatcher.match(uri)) {
 	    	case INTERNAL_DB:
@@ -141,16 +141,15 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 					} else {
 						mUserWriteableDB.execSQL(selection);
 					}
-					//if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
-					//		&& Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
-					//	Intent syncDataIntent = new Intent(getContext(), SyncDataWithServer.class);
-					//	syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, uri.getQueryParameter(KEY_USER_ID));
-					//	syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION, selection);
-					//	syncDataIntent.putExtra(SyncDataWithServer.KEY_SQL_SELECTION_ARGS, selectionArgs);
-					//	if (getContext()!=null) {
-					//		getContext().startService(syncDataIntent);
-					//	}
-					//}
+					if(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER)!=null
+							&& Boolean.valueOf(uri.getQueryParameter(KEY_SEND_DATA_TO_SERVER))){
+						if (getContext()!=null) {
+							getContext().startService((new Intent(getContext(), SyncDataRealTimeWithServerService.class)
+									.putExtra(SyncDataRealTimeWithServerService.KEY_USER_ID, uri.getQueryParameter(KEY_USER_ID))
+									.putExtra(SyncDataRealTimeWithServerService.KEY_SQL_SELECTION, selection))
+									.putExtra(SyncDataRealTimeWithServerService.KEY_SQL_SELECTION_ARGS, selectionArgs));
+						}
+					}
 	    		}else{
                     if(mIDSWriteableDB==null){
                         mIDSWriteableDB = dbHelper.getWritableDatabase();

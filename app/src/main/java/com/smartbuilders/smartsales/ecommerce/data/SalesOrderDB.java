@@ -46,8 +46,8 @@ public class SalesOrderDB {
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                 null,
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (ECOMMERCE_SALES_ORDER_ID, USER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID, DOC_STATUS, DOC_TYPE, " +
                                         " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
@@ -75,8 +75,8 @@ public class SalesOrderDB {
                 try {
                     int rowsAffected = mContext.getContentResolver()
                             .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                     null,
                                     "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
                                     new String[]{String.valueOf(salesOrder.getId()), String.valueOf(mUser.getServerUserId())});

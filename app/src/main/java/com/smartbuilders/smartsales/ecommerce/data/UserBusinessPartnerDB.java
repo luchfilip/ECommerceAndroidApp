@@ -73,9 +73,10 @@ public class UserBusinessPartnerDB {
 
     public String registerUserBusinessPartner(BusinessPartner businessPartner){
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "INSERT INTO USER_BUSINESS_PARTNER (USER_BUSINESS_PARTNER_ID, USER_ID, NAME, COMMERCIAL_NAME, TAX_ID, " +
                         " ADDRESS, CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER, CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
@@ -98,7 +99,8 @@ public class UserBusinessPartnerDB {
 
     public String updateUserBusinessPartner(BusinessPartner businessPartner){
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
@@ -123,12 +125,13 @@ public class UserBusinessPartnerDB {
 
     public String deactivateUserBusinessPartner(int businessPartnerId){
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                    null,
-                    "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
-                    new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            null,
+                            "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
+                            new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se desactivó el registro en la base de datos.";
             }

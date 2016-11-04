@@ -26,6 +26,7 @@ public class ProductRecentlySeenDB {
 
     public void addProduct(int productId){
         try {
+            //este dato no se envia en tiempo real al servidor por que la sentencia no es compatible (INSERT OR REPLACE INTO)
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .build(), null,

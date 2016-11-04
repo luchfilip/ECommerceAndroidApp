@@ -29,12 +29,12 @@ import net.iharder.Base64;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.services.SyncDataRealTimeWithServerService;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.synchronizer.ids.scheduler.SchedulerSyncData;
-import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.broadcastreceivers.AlarmReceiver;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -1411,11 +1411,14 @@ public class ApplicationUtilities {
     }
 
 
-
+	/**
+	 * solicitud de sincronizacion de los datos que se sincronizan en tiempo real
+	 * @param context
+	 * @param userId
+     */
 	public static void initSyncDataWithServerService(Context context, String userId){
-		//Intent syncDataIntent = new Intent(context, SyncDataWithServer.class);
-		//syncDataIntent.putExtra(SyncDataWithServer.KEY_USER_ID, userId);
-		//syncDataIntent.putExtra(SyncDataWithServer.KEY_RETRY_FAILED_SYNC_DATA_WITH_SERVER, true);
-		//context.startService(syncDataIntent);
+		Intent syncDataIntent = new Intent(context, SyncDataRealTimeWithServerService.class);
+		syncDataIntent.putExtra(SyncDataRealTimeWithServerService.KEY_USER_ID, userId);
+		context.startService(syncDataIntent);
 	}
 }

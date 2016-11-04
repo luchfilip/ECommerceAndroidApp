@@ -33,17 +33,29 @@ public class NetworkReceiver extends BroadcastReceiver {
                 AccountManager accountManager = AccountManager.get(context);
                 Account[] accounts = accountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);
                 for(Account account : accounts){
+                    //si no se esta realizando la sincronizacion en ese momento entonces se revisa si se hace
+                    //la sincronizacion completa o solo de los datos que se sincronizan en tiempo real
                     if(!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
                         try {
+                            //si no requiere la sincronizacion de carga inicial entonces dependiendo del
+                            //tipo de red a la que se encuentre conectado se decide si se sincroniza completo
+                            //o solo los datos que se sincronizan en tiempo real
                             if(!ApplicationUtilities.appRequireInitialLoad(context, account)){
+                                //si esta conectado a una red wifi entonces se revisa si se necesita sincronizacion
+                                //completa o solo se envian los datos que se sincronizan en tiempo real
                                 if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+                                    // si requiere sincronizacion completa entonces se realiza la sincronizacion completa
                                     if(ApplicationUtilities.appRequireFullSync(context, account)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
                                     }else{
+                                        //sino se realiza solo la sincronizacion de los datos que requieren
+                                        //sincronizacion en tiempo real
                                         ApplicationUtilities.initSyncDataWithServerService(context,
                                                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                     }
                                 }else{
+                                    //si no esta conectado a una red wifi entonces solo se sincronizan los datos
+                                    //que requieren sincronizacion en tiempo real
                                     ApplicationUtilities.initSyncDataWithServerService(context,
                                             accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                 }

@@ -24,7 +24,8 @@ public class UserCompanyDB {
 
     public String insertUserCompany(Company company) {
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
@@ -48,17 +49,19 @@ public class UserCompanyDB {
 
     public String updateUserCompany(Company company) {
         try {
-            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            int rowsAffected = mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                    null,
-                    "UPDATE user_company SET NAME=?, COMMERCIAL_NAME=?, TAX_ID=?, ADDRESS=?, " +
-                        " CONTACT_PERSON=?, EMAIL_ADDRESS=?, PHONE_NUMBER=?, APP_VERSION=?, " +
-                        " APP_USER_NAME=?, DEVICE_MAC_ADDRESS=? " +
-                    "WHERE USER_ID = ? ",
-                    new String[]{company.getName(), company.getCommercialName(), company.getTaxId(), company.getAddress(),
-                            company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
-                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext), String.valueOf(mUser.getServerUserId()) });
+                            null,
+                            "UPDATE user_company SET NAME=?, COMMERCIAL_NAME=?, TAX_ID=?, ADDRESS=?, " +
+                                    " CONTACT_PERSON=?, EMAIL_ADDRESS=?, PHONE_NUMBER=?, APP_VERSION=?, " +
+                                    " APP_USER_NAME=?, DEVICE_MAC_ADDRESS=? " +
+                            "WHERE USER_ID = ? ",
+                            new String[]{company.getName(), company.getCommercialName(), company.getTaxId(), company.getAddress(),
+                                    company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
+                                    Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),
+                                    String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se insertó o actualizó el registro en la base de datos.";
             }

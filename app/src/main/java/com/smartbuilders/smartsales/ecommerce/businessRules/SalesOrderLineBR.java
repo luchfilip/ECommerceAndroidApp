@@ -74,9 +74,9 @@ public class SalesOrderLineBR {
         salesOrderLine.setQuantityOrdered(qtyOrdered);
         salesOrderLine.setProductPrice(product.getDefaultProductPriceAvailability().getPrice());
         salesOrderLine.setProductTaxPercentage(product.getProductTax().getPercentage());
-        salesOrderLine.setLineTaxAmount(SalesOrderLineBR.getTaxAmount(salesOrderLine, product));
-        salesOrderLine.setSubTotalLineAmount(SalesOrderLineBR.getSubTotalLine(salesOrderLine, product));
-        salesOrderLine.setTotalLineAmount(SalesOrderLineBR.getTotalLine(salesOrderLine, product));
+        salesOrderLine.setLineTaxAmount(getTaxAmount(salesOrderLine, product));
+        salesOrderLine.setSubTotalLineAmount(getSubTotalLine(salesOrderLine, product));
+        salesOrderLine.setTotalLineAmount(getTotalLine(salesOrderLine, product));
     }
 
 }

@@ -155,12 +155,13 @@ public class OrderLineDB {
 
     public String clearWishList(){
         try {
-            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                    null,
-                    "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ? WHERE USER_ID = ? AND DOC_TYPE = ?",
-                    new String[]{"N", String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE});
+            mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            null,
+                            "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ? WHERE USER_ID = ? AND DOC_TYPE = ?",
+                            new String[]{"N", String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
