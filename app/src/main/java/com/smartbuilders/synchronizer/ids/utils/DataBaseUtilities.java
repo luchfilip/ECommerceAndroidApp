@@ -252,8 +252,9 @@ public class DataBaseUtilities {
                     statement.executeInsert();
                     //Fin de preparacion de la data que se insertara
                 }
+                //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
                 db.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
-                        : "SEQUENCE_ID NOT IN ("+unGzip(Base64.decode(validSequenceIds, Base64.GZIP))+")",
+                        : "SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN ("+unGzip(Base64.decode(validSequenceIds, Base64.GZIP))+")",
                         null);
                 db.setTransactionSuccessful();
             } catch (Exception e) {
