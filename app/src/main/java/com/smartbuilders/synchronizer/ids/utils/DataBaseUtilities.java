@@ -132,7 +132,7 @@ public class DataBaseUtilities {
      * @return
      * @throws Exception
      */
-    private static byte[] gzip(String s) throws Exception {
+    public static byte[] gzip(String s) throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         GZIPOutputStream gzip = new GZIPOutputStream(bos);
         OutputStreamWriter osw = new OutputStreamWriter(gzip, "UTF-8");
@@ -147,7 +147,7 @@ public class DataBaseUtilities {
      * @return
      * @throws Exception
      */
-    private static String unGzip(byte[] bytes) throws Exception{
+    public static String unGzip(byte[] bytes) throws Exception{
         InputStreamReader isr = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8");
         StringWriter sw = new StringWriter();
         char[] chars = new char[1024];

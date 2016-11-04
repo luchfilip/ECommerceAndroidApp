@@ -572,7 +572,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                             }else{
                                                 //si la ultima sincronizacion completa se realizo en un tiempo menor al periodo de sincronizacion automatica
                                                 //entonces se envia a sincronizar los datos que quedaron pendientes en la sincronizacion de tiempo real
-                                                ApplicationUtilities.initSyncDataWithServerService(this,
+                                                ApplicationUtilities.initSyncDataRealTimeWithServerService(this,
                                                         accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "Se activo la sincronizacion de los datos en tiempo real.", null);

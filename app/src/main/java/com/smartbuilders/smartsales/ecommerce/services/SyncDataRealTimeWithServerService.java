@@ -3,13 +3,16 @@ package com.smartbuilders.smartsales.ecommerce.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.smartbuilders.smartsales.ecommerce.data.SyncDataRealTimeWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.model.SyncDataRealTimeWithServer;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
+import com.smartbuilders.synchronizer.ids.utils.DataBaseUtilities;
+
+import net.iharder.Base64;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -21,8 +24,6 @@ import java.util.LinkedHashMap;
  * Created by stein on 22/7/2016.
  */
 public class SyncDataRealTimeWithServerService extends IntentService {
-
-    private static final String TAG = SyncDataRealTimeWithServerService.class.getSimpleName();
 
     public static final String KEY_USER_ID = "SyncDataRealTimeWithServerService.KEY_USER_ID";
     public static final String KEY_SQL_SELECTION = "SyncDataRealTimeWithServerService.KEY_SQL_SELECTION";
@@ -70,18 +71,17 @@ public class SyncDataRealTimeWithServerService extends IntentService {
 
                 //se sincronizan los registros encolados para sincronizar en tiempo real
                 JSONArray totalData = new JSONArray();
-                JSONObject data = new JSONObject();
                 for(SyncDataRealTimeWithServer syncDataRealTimeWithServer : syncDataRealTimeWithServerDB.getAllDataToSyncWithServer()){
-                    if (!TextUtils.isEmpty(syncDataRealTimeWithServer.getSelection())
-                            && !TextUtils.isEmpty(syncDataRealTimeWithServer.getSelectionArgs())
-                            && syncDataRealTimeWithServer.getColumnCount()>0) {
-                        data.put("0", syncDataRealTimeWithServer.getSelection());
-                        data.put("1", syncDataRealTimeWithServer.getSelectionArgs());
-                        data.put("2", syncDataRealTimeWithServer.getColumnCount());
-                        totalData.put(data);
-                    }
+                    totalData.put(new JSONObject()
+                            .put("1", String.valueOf(syncDataRealTimeWithServer.getId()))
+                            .put("2", syncDataRealTimeWithServer.getSelection())
+                            .put("3", syncDataRealTimeWithServer.getSelectionArgs())
+                            .put("4", syncDataRealTimeWithServer.getColumnCount()));
                 }
-                syncDataRealTimeWithServerDB.deleteDataToSyncWithServer(sendDataToServer(user, totalData));
+                if (totalData.length()>0) {
+                    syncDataRealTimeWithServerDB.deleteDataToSyncWithServer(DataBaseUtilities.unGzip(Base64.decode(sendDataToServer(user,
+                            Base64.encodeBytes(DataBaseUtilities.gzip(totalData.toString()), Base64.GZIP)), Base64.GZIP)));
+                }
             } else {
                 throw new Exception("user is null.");
             }
@@ -90,24 +90,23 @@ public class SyncDataRealTimeWithServerService extends IntentService {
         }
     }
 
-    private String sendDataToServer(User user, JSONArray data) throws Exception {
-        Log.w(TAG, "sendDataToServer(User user, "+data.toString()+")");
-        Log.w(TAG, "data.length(): "+data.length());
+    private String sendDataToServer(User user, String data) throws Exception {
         LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("authToken", user.getAuthToken());
         parameters.put("userGroupName", user.getUserGroup());
         parameters.put("userId", user.getServerUserId());
-        parameters.put("data", data.toString());
+        parameters.put("syncSessionId", user.getServerSyncSessionId());
+        parameters.put("appVersionCode", Utils.getAppVersionCode(getApplicationContext()));
+        parameters.put("data", data);
         ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
                 user.getServerAddress(),
-                "/IntelligentDataSynchronizer/services/ManageTableDataTransfer?wsdl",
-                "syncDataFromClient",
-                "urn:syncDataFromClient",
+                "/IntelligentDataSynchronizer/services/ManageDBDataTransfer?wsdl",
+                "syncDataRealTimeFromClient",
+                "urn:syncDataRealTimeFromClient",
                 parameters,
-                2000);
+                4000, 0);
         Object response = a.getWSResponse();
         if (response instanceof SoapPrimitive) {
-            Log.w(TAG, "response: " + response.toString());
             return response.toString();
         } else if (response != null) {
             throw new ClassCastException("response classCastException.");

@@ -3,7 +3,6 @@ package com.smartbuilders.synchronizer.ids.broadcastreceivers;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
-import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -50,13 +49,13 @@ public class NetworkReceiver extends BroadcastReceiver {
                                     }else{
                                         //sino se realiza solo la sincronizacion de los datos que requieren
                                         //sincronizacion en tiempo real
-                                        ApplicationUtilities.initSyncDataWithServerService(context,
+                                        ApplicationUtilities.initSyncDataRealTimeWithServerService(context,
                                                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                     }
                                 }else{
                                     //si no esta conectado a una red wifi entonces solo se sincronizan los datos
                                     //que requieren sincronizacion en tiempo real
-                                    ApplicationUtilities.initSyncDataWithServerService(context,
+                                    ApplicationUtilities.initSyncDataRealTimeWithServerService(context,
                                             accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                 }
                             }else{

@@ -25,8 +25,8 @@ public class ConsumeWebService {
 	public static final String SHOW_TOAST_MESSAGE 	= BuildConfig.APPLICATION_ID + "." + ConsumeWebService.class.getSimpleName() + ".SHOW_TOAST_MESSAGE";
 	public static final String MESSAGE 				= BuildConfig.APPLICATION_ID + "." + ConsumeWebService.class.getSimpleName() + ".MESSAGE";
 	private static final String NAMESPACE 			= "http://webservices.ids.jasgcorp.com";
-	private final int MAX_RETRY_NUMBER 				= 3;
-	private final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds
+	private static final int MAX_RETRY_NUMBER 				= 3;
+	private static final int HTTP_TRANSPORT_TIMEOUT 		= 30*1000;//in milliseconds
 	
 	//Constantes para la invocacion del web service
 	private Context context;
@@ -37,11 +37,20 @@ public class ConsumeWebService {
 	private LinkedHashMap<String, Object> parameters;
 	private int retryNumber;
 	private int connectionTimeOut;
+	private int maxRetryNumber = MAX_RETRY_NUMBER;
+
+	public ConsumeWebService(Context context, String serverAddress, String url,
+							 String methodName, String soapAction, LinkedHashMap<String, Object> parameters,
+                             int connectionTimeOut, int maxRetryNumber){
+		this(context, serverAddress, url, methodName, soapAction, parameters, connectionTimeOut);
+		this.maxRetryNumber = maxRetryNumber;
+	}
 
 	public ConsumeWebService(Context context, String serverAddress, String url,
 							 String methodName, String soapAction, LinkedHashMap<String, Object> parameters, int connectionTimeOut){
 		this(context, serverAddress, url, methodName, soapAction, parameters);
 		this.connectionTimeOut = connectionTimeOut;
+		this.maxRetryNumber = MAX_RETRY_NUMBER;
 	}
 
 	public ConsumeWebService(Context context, String serverAddress, String url, 
@@ -52,10 +61,7 @@ public class ConsumeWebService {
 		this.methodName 	= methodName;
 		this.soapAction 	= soapAction;
 		this.parameters 	= parameters;
-	}
-
-	public void setRetryNumber (int retryNumber) {
-		this.retryNumber = retryNumber;
+		this.maxRetryNumber = MAX_RETRY_NUMBER;
 	}
 	
 	public Object getWSResponse() throws Exception {
@@ -101,7 +107,7 @@ public class ConsumeWebService {
 	}
 
 	private Object retry(Exception exception) throws Exception{
-    	if(++retryNumber <= MAX_RETRY_NUMBER){
+    	if(++retryNumber <= maxRetryNumber){
     		try {
     			context.sendBroadcast((new Intent(SHOW_TOAST_MESSAGE))
     					.putExtra(MESSAGE, "Failed to communicate with server, retry in "+((2*retryNumber)*1000)+" milliseconds."));

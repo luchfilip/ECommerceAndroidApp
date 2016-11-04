@@ -1416,7 +1416,7 @@ public class ApplicationUtilities {
 	 * @param context
 	 * @param userId
      */
-	public static void initSyncDataWithServerService(Context context, String userId){
+	public static void initSyncDataRealTimeWithServerService(Context context, String userId){
 		Intent syncDataIntent = new Intent(context, SyncDataRealTimeWithServerService.class);
 		syncDataIntent.putExtra(SyncDataRealTimeWithServerService.KEY_USER_ID, userId);
 		context.startService(syncDataIntent);
