@@ -108,7 +108,7 @@ public class UserTableMaxIdDB {
                         .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                         null,
                         "UPDATE USER_TABLE_MAX_ID " +
-                                " SET ID = ?, CREATE_TIME = ?, APP_VERSION = ?, APP_USER_NAME = ?, DEVICE_MAC_ADDRESS = ? " +
+                                " SET ID = ?, CREATE_TIME = ?, APP_VERSION = ?, APP_USER_NAME = ?, DEVICE_MAC_ADDRESS = ?, SEQUENCE_ID = 0 " +
                         " WHERE USER_ID = ? AND TABLE_NAME = ?",
                         new String[]{String.valueOf(newId), DateFormat.getCurrentDateTimeSQLFormat(),
                                 Utils.getAppVersionName(context), user.getUserName(), Utils.getMacAddress(context),

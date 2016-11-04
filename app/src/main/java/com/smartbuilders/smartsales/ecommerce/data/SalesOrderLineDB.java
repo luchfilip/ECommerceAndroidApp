@@ -136,7 +136,7 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE " +
-                            " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ? " +
+                            " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
                             " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(salesOrderId), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_SALES_ORDER_DOC_TYPE,
                             String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
@@ -159,7 +159,7 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE SET QTY_REQUESTED = ?, SALES_PRICE = ?, " +
-                        " TAX_PERCENTAGE = ?, TAX_AMOUNT = ?, SUB_TOTAL_LINE = ?, TOTAL_LINE = ?, UPDATE_TIME = ? " +
+                        " TAX_PERCENTAGE = ?, TAX_AMOUNT = ?, SUB_TOTAL_LINE = ?, TOTAL_LINE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                     " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{String.valueOf(salesOrderLine.getQuantityOrdered()),
                             String.valueOf(salesOrderLine.getProductPrice()), String.valueOf(salesOrderLine.getProductTaxPercentage()),
@@ -219,7 +219,7 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                    "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                         " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ?",
                     new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderLine.getId()),
                             String.valueOf(mUser.getServerUserId())});
@@ -347,7 +347,7 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                                     " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                             new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(),
                                     String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), SHOPPING_SALE_DOC_TYPE});

@@ -56,8 +56,8 @@ public class UserCompanyDB {
                             null,
                             "UPDATE user_company SET NAME=?, COMMERCIAL_NAME=?, TAX_ID=?, ADDRESS=?, " +
                                     " CONTACT_PERSON=?, EMAIL_ADDRESS=?, PHONE_NUMBER=?, APP_VERSION=?, " +
-                                    " APP_USER_NAME=?, DEVICE_MAC_ADDRESS=? " +
-                            "WHERE USER_ID = ? ",
+                                    " APP_USER_NAME=?, DEVICE_MAC_ADDRESS=?, SEQUENCE_ID = 0 " +
+                            " WHERE USER_ID = ? ",
                             new String[]{company.getName(), company.getCommercialName(), company.getTaxId(), company.getAddress(),
                                     company.getContactPerson(), company.getEmailAddress(), company.getPhoneNumber(),
                                     Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),

@@ -380,7 +380,7 @@ public class SalesOrderDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
                             new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(salesOrderId),
                                     String.valueOf(mUser.getServerUserId())});
@@ -389,7 +389,7 @@ public class SalesOrderDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
-                            "UPDATE ECOMMERCE_SALES_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ? " +
+                            "UPDATE ECOMMERCE_SALES_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                                 " WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
                             new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(salesOrderId),
                                     String.valueOf(mUser.getServerUserId())});

@@ -105,7 +105,7 @@ public class UserBusinessPartnerDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE USER_BUSINESS_PARTNER SET NAME = ?, COMMERCIAL_NAME = ?, TAX_ID = ?, ADDRESS = ?, CONTACT_PERSON = ?, " +
-                        " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ? " +
+                        " EMAIL_ADDRESS = ?, PHONE_NUMBER = ?, APP_VERSION = ?, APP_USER_NAME = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                     " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
                     new String[]{businessPartner.getName(), businessPartner.getCommercialName(), businessPartner.getTaxId(),
                             businessPartner.getAddress(), businessPartner.getContactPerson(), businessPartner.getEmailAddress(),
@@ -130,7 +130,7 @@ public class UserBusinessPartnerDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
-                            "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ? WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
+                            "UPDATE USER_BUSINESS_PARTNER SET IS_ACTIVE = ?, SEQUENCE_ID = 0 WHERE USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ?",
                             new String[]{"N", String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected <= 0){
                 return "No se desactivó el registro en la base de datos.";
