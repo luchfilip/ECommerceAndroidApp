@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerce.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class SyncDataRealTimeWithServerDB {
 
-    private static final String TAG = SyncDataRealTimeWithServerDB.class.getSimpleName();
     private Context mContext;
     private User mUser;
 
@@ -29,23 +27,22 @@ public class SyncDataRealTimeWithServerDB {
         mContext.getContentResolver()
                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                        null, "INSERT INTO FAILED_SYNC_DATA_WITH_SERVER (selection, selectionArgs, columnCount) VALUES (?, ?, ?) ",
+                        null, "INSERT INTO SYNC_DATA_WITH_SERVER (selection, selection_args, column_count) VALUES (?, ?, ?) ",
                         new String[]{selection, selectionArgs, String.valueOf(columnCount)});
     }
 
     public void deleteDataToSyncWithServer(String idsToDelete){
-        Log.w(TAG, "deleteDataToSyncWithServer("+idsToDelete+")");
         mContext.getContentResolver()
                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                        null, "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER WHERE ROW_ID IN ("+idsToDelete+")", null);
+                        null, "DELETE FROM SYNC_DATA_WITH_SERVER WHERE ID IN ("+idsToDelete+")", null);
     }
 
     public void deleteDataToSyncWithServer(){
         mContext.getContentResolver()
                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                        null, "DELETE FROM FAILED_SYNC_DATA_WITH_SERVER", null);
+                        null, "DELETE FROM SYNC_DATA_WITH_SERVER", null);
     }
 
     public List<SyncDataRealTimeWithServer> getAllDataToSyncWithServer(){
@@ -55,7 +52,7 @@ public class SyncDataRealTimeWithServerDB {
             c = mContext.getContentResolver()
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            null, "SELECT row_id, selection, selectionArgs, columnCount FROM FAILED_SYNC_DATA_WITH_SERVER ORDER BY row_id ASC",
+                            null, "SELECT id, selection, selection_args, column_count FROM SYNC_DATA_WITH_SERVER ORDER BY id ASC",
                             null, null);
             if(c!=null){
                 while(c.moveToNext()){

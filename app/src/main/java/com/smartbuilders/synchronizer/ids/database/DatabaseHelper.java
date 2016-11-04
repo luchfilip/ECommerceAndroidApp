@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -505,13 +505,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
                     " PRIMARY KEY (USER_ID))";
 
-    private static final String CREATE_FAILED_SYNC_DATA_WITH_SERVER =
-            "CREATE TABLE IF NOT EXISTS FAILED_SYNC_DATA_WITH_SERVER (" +
-                    " row_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " selection TEXT DEFAULT NULL, " +
-                    " selectionArgs TEXT DEFAULT NULL, " +
+    private static final String CREATE_SYNC_DATA_WITH_SERVER =
+            "CREATE TABLE IF NOT EXISTS SYNC_DATA_WITH_SERVER (" +
+                    " ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " SELECTION TEXT DEFAULT NULL, " +
+                    " SELECTION_ARGS TEXT DEFAULT NULL, " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " columnCount INTEGER DEFAULT NULL)";
+                    " COLUMN_COUNT INTEGER DEFAULT NULL)";
 
     private static final String CREATE_USER_TABLE_MAX_ID =
             "CREATE TABLE IF NOT EXISTS USER_TABLE_MAX_ID (" +
@@ -647,7 +647,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_USER_BUSINESS_PARTNER);
             db.execSQL(CREATE_USER_BUSINESS_PARTNER_ADDRESS);
             db.execSQL(CREATE_USER_COMPANY);
-            db.execSQL(CREATE_FAILED_SYNC_DATA_WITH_SERVER);
+            db.execSQL(CREATE_SYNC_DATA_WITH_SERVER);
             db.execSQL(CREATE_USER_TABLE_MAX_ID);
             db.execSQL(CREATE_USER_BUSINESS_PARTNERS);
             db.execSQL(CREATE_PRODUCT_CHARGE);
@@ -788,6 +788,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (oldVersion < 17) {
                 db.execSQL(CREATE_ORDER_TRACKING_STATE);
                 db.execSQL(CREATE_ORDER_TRACKING);
+            }
+            if (oldVersion < 18) {
+                try {
+                    db.execSQL("DROP TABLE FAILED_SYNC_DATA_WITH_SERVER");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_SYNC_DATA_WITH_SERVER);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 	}
