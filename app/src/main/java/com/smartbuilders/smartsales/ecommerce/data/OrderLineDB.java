@@ -80,8 +80,8 @@ public class OrderLineDB {
         return getOrderLines(docType, orderId, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
     }
 
-    public int moveShoppingCartToFinalizedOrderByOrderId(int orderId) {
-        return moveOrderLinesToOrderByOrderId(orderId, FINALIZED_ORDER_DOC_TYPE, SHOPPING_CART_DOC_TYPE);
+    public int moveShoppingCartToFinalizedOrderByOrderId(int businessPartnerId, int orderId) {
+        return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_ORDER_DOC_TYPE, SHOPPING_CART_DOC_TYPE);
     }
 
     public int getActiveShoppingCartLinesNumber() throws Exception {
@@ -346,21 +346,59 @@ public class OrderLineDB {
         return 0;
     }
 
-    private int moveOrderLinesToOrderByOrderId(int orderId, String newDocType, String currentDocType) {
+    private int moveOrderLinesToOrderByOrderId(int businessPartnerId, int orderId, String newDocType, String currentDocType) {
         try {
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, " +
-                    " DOC_TYPE = ?, SEQUENCE_ID = 0 WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                    "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
+                    " WHERE ECOMMERCE_ORDER_LINE_ID IN ("+getOrderLinesIds(businessPartnerId, SHOPPING_CART_DOC_TYPE)+") " +
+                        " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
                     new String[]{String.valueOf(orderId), DateFormat.getCurrentDateTimeSQLFormat(),
-                            newDocType, String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
+                            newDocType, String.valueOf(businessPartnerId),
                             String.valueOf(mUser.getServerUserId()), currentDocType, "Y"});
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     *
+     * @param businessPartnerId
+     * @param docType
+     * @return
+     */
+    private String getOrderLinesIds(Integer businessPartnerId, String docType) {
+        StringBuilder orderLinesIds = new StringBuilder();
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                                    .build(), null,
+                            "SELECT ECOMMERCE_ORDER_LINE_ID FROM ECOMMERCE_ORDER_LINE " +
+                                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+                            new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+
+            if(c!=null){
+                while(c.moveToNext()){
+                    orderLinesIds.append(orderLinesIds.length()>0 ? "," : "").append(c.getInt(0));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return orderLinesIds.toString();
     }
 
     public OrderLine getOrderLineFromShoppingCartByProductId(int productId){
@@ -410,9 +448,9 @@ public class OrderLineDB {
 
     public int updateProductAvailabilitiesInWishList(){
         try {
+            //este cambio no se sincroniza en tiempo real para que no afecte la experiencia de otros usuarios con el mismo USER_ID
             return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET UPDATE_TIME = ?, " +
                         " QTY_REQUESTED = (SELECT CASE WHEN SUM(AVAILABILITY) IS NULL THEN 0 ELSE SUM(AVAILABILITY) END AS AVAILABILITY " +

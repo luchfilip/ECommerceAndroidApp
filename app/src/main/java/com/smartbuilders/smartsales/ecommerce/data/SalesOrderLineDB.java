@@ -137,7 +137,8 @@ public class SalesOrderLineDB {
                     null,
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE " +
                             " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
-                            " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
+                            " WHERE ECOMMERCE_SALES_ORDER_LINE_ID IN ("+getSalesOrderLinesIds(businessPartnerId, SHOPPING_SALE_DOC_TYPE)+") " +
+                                " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(salesOrderId), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_SALES_ORDER_DOC_TYPE,
                             String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
                             SHOPPING_SALE_DOC_TYPE, "Y"});
@@ -145,6 +146,43 @@ public class SalesOrderLineDB {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     *
+     * @param businessPartnerId
+     * @param docType
+     * @return
+     */
+    private String getSalesOrderLinesIds(int businessPartnerId, String docType) {
+        StringBuilder salesOrderLinesIds = new StringBuilder();
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                            "SELECT ECOMMERCE_SALES_ORDER_LINE_ID FROM ECOMMERCE_SALES_ORDER_LINE " +
+                            " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
+                            new String[]{String.valueOf(businessPartnerId),
+                                    String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
+            if (c!=null) {
+                while(c.moveToNext()){
+                    salesOrderLinesIds.append(salesOrderLinesIds.length()>0 ? "," : "").append(c.getInt(0));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return salesOrderLinesIds.toString();
     }
 
     /**

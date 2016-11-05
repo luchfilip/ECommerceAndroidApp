@@ -142,7 +142,7 @@ public class OrderDB {
                     orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
                 }
             } else {
-                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(orderId)<=0){
+                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(businessPartnerId, orderId)<=0){
                     try {
                         int rowsAffected = mContext.getContentResolver()
                                 .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
