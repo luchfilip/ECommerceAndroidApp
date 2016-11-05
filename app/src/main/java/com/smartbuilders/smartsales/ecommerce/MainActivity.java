@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity
                 Product product = (new ProductDB(this, mUser)).getProductByInternalCode(data.getQueryParameter("product").trim());
                 if(product!=null){
                     startActivity((new Intent(this, ProductDetailActivity.class))
-                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, product.getId()));
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT, product));
+                } else {
+                    Toast.makeText(this, getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -311,7 +311,7 @@ public class MainActivityAdapter extends BaseAdapter {
                                 @Override
                                 public void onClick(View v) {
                                     mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, ((Product) mDataset.get(position)).getId()));
+                                            .putExtra(ProductDetailActivity.KEY_PRODUCT, (Product) mDataset.get(position)));
                                 }
                             });
                         }
@@ -464,8 +464,13 @@ public class MainActivityAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(banner.getProductId()>0){
-                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, banner.getProductId()));
+                    Product product = (new ProductDB(mContext, mUser)).getProductById(banner.getProductId());
+                    if (product!=null) {
+                        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                                .putExtra(ProductDetailActivity.KEY_PRODUCT, product));
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                    }
                 } else if (banner.getProductBrandId()>0) {
                     mContext.startActivity(new Intent(mContext, ProductsListActivity.class)
                             .putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, banner.getProductBrandId()));
@@ -486,10 +491,14 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private void addToShoppingCart(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        DialogAddToShoppingCart dialogAddToShoppingCart =
-                DialogAddToShoppingCart.newInstance(product, mUser);
-        dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogAddToShoppingCart.class.getSimpleName());
+        if (product!=null) {
+            DialogAddToShoppingCart dialogAddToShoppingCart =
+                    DialogAddToShoppingCart.newInstance(product, mUser);
+            dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingCart.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     private void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
@@ -501,16 +510,20 @@ public class MainActivityAdapter extends BaseAdapter {
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
-                    DialogAddToShoppingSale2.newInstance(product, mUser);
-            dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
-                    DialogAddToShoppingSale2.class.getSimpleName());
+        if (product!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                        DialogAddToShoppingSale2.newInstance(product, mUser);
+                dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
+                        DialogAddToShoppingSale2.class.getSimpleName());
+            } else {
+                DialogAddToShoppingSale dialogAddToShoppingSale =
+                        DialogAddToShoppingSale.newInstance(product, mUser);
+                dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                        DialogAddToShoppingSale.class.getSimpleName());
+            }
         } else {
-            DialogAddToShoppingSale dialogAddToShoppingSale =
-                    DialogAddToShoppingSale.newInstance(product, mUser);
-            dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
-                    DialogAddToShoppingSale.class.getSimpleName());
+            //TODO: mostrar mensaje de error
         }
     }
 

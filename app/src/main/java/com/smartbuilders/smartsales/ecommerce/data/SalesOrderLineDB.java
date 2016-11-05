@@ -258,7 +258,8 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
-                        " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ?",
+                        " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ? " +
+                            " AND (ECOMMERCE_SALES_ORDER_ID IS NULL OR ECOMMERCE_SALES_ORDER_ID = 0)",
                     new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderLine.getId()),
                             String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
@@ -386,7 +387,8 @@ public class SalesOrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
                             "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
-                                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
+                                    " WHERE ECOMMERCE_SALES_ORDER_LINE_ID IN ("+getSalesOrderLinesIds(businessPartnerId, SHOPPING_SALE_DOC_TYPE)+") " +
+                                    " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ?",
                             new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(),
                                     String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), SHOPPING_SALE_DOC_TYPE});
         } catch (Exception e) {

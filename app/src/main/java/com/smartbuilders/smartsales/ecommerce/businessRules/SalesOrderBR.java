@@ -94,11 +94,15 @@ public class SalesOrderBR {
             ProductDB productDB = new ProductDB(context, user);
             for (SalesOrderLine salesOrderLine : salesOrderLines) {
                 Product product = productDB.getProductById(salesOrderLine.getProductId());
-                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
-                //pedida no es multiplo del empaque comercial del producto entonces se marca que
-                //esa linea del pedido tiene error en la cantidad pedida.
-                salesOrderLine.setQuantityOrderedInvalid((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
-                        || (salesOrderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0));
+                if (product!=null) {
+                    //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                    //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                    //esa linea del pedido tiene error en la cantidad pedida.
+                    salesOrderLine.setQuantityOrderedInvalid((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                            || (salesOrderLine.getQuantityOrdered() % product.getProductCommercialPackage().getUnits() != 0));
+                } else {
+                    salesOrderLine.setQuantityOrderedInvalid(true);
+                }
             }
         }
     }
@@ -108,12 +112,16 @@ public class SalesOrderBR {
             ProductDB productDB = new ProductDB(context, user);
             for (SalesOrderLine salesOrderLine : salesOrderLines) {
                 Product product = productDB.getProductById(salesOrderLine.getProductId());
-                //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
-                //pedida no es multiplo del empaque comercial del producto entonces se marca que
-                //esa linea del pedido tiene error en la cantidad pedida.
-                if ((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
-                        || (salesOrderLine.getQuantityOrdered()%product.getProductCommercialPackage().getUnits()!=0)) {
-                    return "Error en cantidad pedida del articulo "+product.getName();
+                if (product!=null) {
+                    //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
+                    //pedida no es multiplo del empaque comercial del producto entonces se marca que
+                    //esa linea del pedido tiene error en la cantidad pedida.
+                    if ((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                            || (salesOrderLine.getQuantityOrdered() % product.getProductCommercialPackage().getUnits() != 0)) {
+                        return "Error en cantidad pedida del articulo " + product.getName();
+                    }
+                } else {
+                    return "Error en carga de detalle del artículo.";
                 }
             }
         }

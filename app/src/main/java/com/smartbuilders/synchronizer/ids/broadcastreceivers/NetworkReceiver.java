@@ -42,7 +42,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                             if(!ApplicationUtilities.appRequireInitialLoad(context, account)){
                                 //si esta conectado a una red wifi entonces se revisa si se necesita sincronizacion
                                 //completa o solo se envian los datos que se sincronizan en tiempo real
-                                if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+                                //if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
                                     // si requiere sincronizacion completa entonces se realiza la sincronizacion completa
                                     if(ApplicationUtilities.appRequireFullSync(context, account)) {
                                         ApplicationUtilities.initSyncByAccount(context, account);
@@ -52,12 +52,12 @@ public class NetworkReceiver extends BroadcastReceiver {
                                         ApplicationUtilities.initSyncDataRealTimeWithServerService(context,
                                                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                     }
-                                }else{
-                                    //si no esta conectado a una red wifi entonces solo se sincronizan los datos
-                                    //que requieren sincronizacion en tiempo real
-                                    ApplicationUtilities.initSyncDataRealTimeWithServerService(context,
-                                            accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
-                                }
+                                //}else{
+                                //    //si no esta conectado a una red wifi entonces solo se sincronizan los datos
+                                //    //que requieren sincronizacion en tiempo real
+                                //    ApplicationUtilities.initSyncDataRealTimeWithServerService(context,
+                                //            accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
+                                //}
                             }else{
                                 ApplicationUtilities.initSyncByAccount(context, account);
                             }

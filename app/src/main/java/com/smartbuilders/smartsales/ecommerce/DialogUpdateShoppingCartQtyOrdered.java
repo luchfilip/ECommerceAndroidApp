@@ -117,7 +117,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
 
                     String result = null;
                     if (mIsShoppingCart) {
-                        result = (new OrderLineDB(getContext(), mUser)).updateOrderLine(mOrderLine);
+                        result = (new OrderLineDB(getContext(), mUser)).updateOrderLineInShoppingCart(mOrderLine );
                     }
                     if(result == null){
                         if(getTargetFragment() instanceof Callback){

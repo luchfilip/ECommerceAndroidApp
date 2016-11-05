@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -128,8 +130,14 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
         holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getProductId()));
+                Product product = (new ProductDB(mContext, mUser))
+                        .getProductById(mDataset.get(holder.getAdapterPosition()).getProductId());
+                if (product!=null) {
+                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT, product));
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

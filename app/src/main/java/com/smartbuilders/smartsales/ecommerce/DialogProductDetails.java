@@ -77,7 +77,7 @@ public class DialogProductDetails extends DialogFragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ProductDetailActivity.class)
-                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mProduct.getId()));
+                        .putExtra(ProductDetailActivity.KEY_PRODUCT, mProduct));
             }
         });
 
@@ -242,10 +242,14 @@ public class DialogProductDetails extends DialogFragment {
 
     private void addToShoppingCart(Product product) {
         product = (new ProductDB(getContext(), mUser)).getProductById(product.getId());
-        DialogAddToShoppingCart dialogAddToShoppingCart =
-                DialogAddToShoppingCart.newInstance(product, mUser);
-        dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingCart.class.getSimpleName());
+        if (product!=null) {
+            DialogAddToShoppingCart dialogAddToShoppingCart =
+                    DialogAddToShoppingCart.newInstance(product, mUser);
+            dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingCart.class.getSimpleName());
+        } else {
+            //TODO: mostrar error
+        }
     }
 
     public void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
@@ -257,16 +261,20 @@ public class DialogProductDetails extends DialogFragment {
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(getContext(), mUser)).getProductById(product.getId());
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
-                    DialogAddToShoppingSale2.newInstance(product, mUser);
-            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
-                    DialogAddToShoppingSale2.class.getSimpleName());
+        if (product!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                        DialogAddToShoppingSale2.newInstance(product, mUser);
+                dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                        DialogAddToShoppingSale2.class.getSimpleName());
+            } else {
+                DialogAddToShoppingSale dialogAddToShoppingSale =
+                        DialogAddToShoppingSale.newInstance(product, mUser);
+                dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                        DialogAddToShoppingSale.class.getSimpleName());
+            }
         } else {
-            DialogAddToShoppingSale dialogAddToShoppingSale =
-                    DialogAddToShoppingSale.newInstance(product, mUser);
-            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
-                    DialogAddToShoppingSale.class.getSimpleName());
+            //TODO: mostrar mensaje de error
         }
     }
 

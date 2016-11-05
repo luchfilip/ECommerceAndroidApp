@@ -444,7 +444,12 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     }
 
     private void refreshInterface(){
-        mShoppingCartAdapter.setData(mOrderLines);
+        if (mShoppingCartAdapter==null) {
+            mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
+                    ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
+        } else {
+            mShoppingCartAdapter.setData(mOrderLines);
+        }
         if (mOrderLines==null || mOrderLines.isEmpty()) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);

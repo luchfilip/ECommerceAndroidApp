@@ -177,8 +177,12 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             holder.containerLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                            .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+                    if (mDataset.get(holder.getAdapterPosition())!=null) {
+                        mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                                .putExtra(ProductDetailActivity.KEY_PRODUCT, mDataset.get(holder.getAdapterPosition())));
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -365,10 +369,14 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private void addToShoppingCart(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        DialogAddToShoppingCart dialogAddToShoppingCart =
-                DialogAddToShoppingCart.newInstance(product, mUser);
-        dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
-                DialogAddToShoppingCart.class.getSimpleName());
+        if (product!=null) {
+            DialogAddToShoppingCart dialogAddToShoppingCart =
+                    DialogAddToShoppingCart.newInstance(product, mUser);
+            dialogAddToShoppingCart.show(mFragmentActivity.getSupportFragmentManager(),
+                    DialogAddToShoppingCart.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     private void updateQtyOrderedInShoppingCart(OrderLine orderLine) {
@@ -380,16 +388,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private void addToShoppingSale(Product product) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
-                    DialogAddToShoppingSale2.newInstance(product, mUser);
-            dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
-                    DialogAddToShoppingSale2.class.getSimpleName());
+        if (product!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                        DialogAddToShoppingSale2.newInstance(product, mUser);
+                dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
+                        DialogAddToShoppingSale2.class.getSimpleName());
+            } else {
+                DialogAddToShoppingSale dialogAddToShoppingSale =
+                        DialogAddToShoppingSale.newInstance(product, mUser);
+                dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
+                        DialogAddToShoppingSale.class.getSimpleName());
+            }
         } else {
-            DialogAddToShoppingSale dialogAddToShoppingSale =
-                    DialogAddToShoppingSale.newInstance(product, mUser);
-            dialogAddToShoppingSale.show(mFragmentActivity.getSupportFragmentManager(),
-                    DialogAddToShoppingSale.class.getSimpleName());
+            //TODO: mostrar mensaje de error
         }
     }
 

@@ -18,7 +18,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class ProductDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String KEY_PRODUCT_ID = "key_product_id";
+    public static final String KEY_PRODUCT = "key_product";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

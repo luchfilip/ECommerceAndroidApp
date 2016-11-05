@@ -134,8 +134,12 @@ public class RecommendedProductsListAdapter extends
         holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
-                        .putExtra(ProductDetailActivity.KEY_PRODUCT_ID, mDataset.get(holder.getAdapterPosition()).getId()));
+                if (mDataset.get(holder.getAdapterPosition())!=null) {
+                    mContext.startActivity(new Intent(mContext, ProductDetailActivity.class)
+                            .putExtra(ProductDetailActivity.KEY_PRODUCT, mDataset.get(holder.getAdapterPosition())));
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         if (BuildConfig.USE_PRODUCT_IMAGE) {

@@ -42,9 +42,8 @@ import java.util.ArrayList;
  */
 public class ProductDetailFragment extends Fragment {
 
-    private static final String STATE_PRODUCT_ID = "STATE_PRODUCT_ID";
+    private static final String STATE_PRODUCT = "STATE_PRODUCT";
 
-    private int mProductId;
     private Product mProduct;
     private User mUser;
     private Intent mShareIntent;
@@ -68,21 +67,20 @@ public class ProductDetailFragment extends Fragment {
                 try {
                     if(getActivity()!=null && getActivity().getIntent()!=null
                             && getActivity().getIntent().getExtras()!=null) {
-                        if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_PRODUCT_ID)){
-                            mProductId = getActivity().getIntent().getExtras().getInt(ProductDetailActivity.KEY_PRODUCT_ID);
+                        if(getActivity().getIntent().getExtras().containsKey(ProductDetailActivity.KEY_PRODUCT)){
+                            mProduct = getActivity().getIntent().getExtras().getParcelable(ProductDetailActivity.KEY_PRODUCT);
                         }
                     }
 
                     if(savedInstanceState!=null){
-                        if(savedInstanceState.containsKey(STATE_PRODUCT_ID)){
-                            mProductId = savedInstanceState.getInt(STATE_PRODUCT_ID);
+                        if(savedInstanceState.containsKey(STATE_PRODUCT)){
+                            mProduct = savedInstanceState.getParcelable(STATE_PRODUCT);
                         }
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
                     ProductDB productDB = new ProductDB(getContext(), mUser);
 
-                    mProduct = productDB.getProductById(mProductId);
                     if (mProduct!=null) {
                         relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 12));
                         if (mProduct.getProductBrand()!=null) {
@@ -94,7 +92,7 @@ public class ProductDetailFragment extends Fragment {
                                     .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 12));
                         }
                         //Se agrega el producto a la lista de productos recientemente vistos
-                        (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProductId);
+                        (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProduct.getId());
 
                         // Se envia el id del producto por bluetooth
                         Cursor cursor = null;
@@ -105,7 +103,7 @@ public class ProductDetailFragment extends Fragment {
                                 cursor.close();
                                 // Get the message and tell the BluetoothChatService to write
                                 cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
-                                        .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, String.valueOf(mProductId)).build(), null, null, null, null);
+                                        .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, String.valueOf(mProduct.getId())).build(), null, null, null, null);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -251,7 +249,7 @@ public class ProductDetailFragment extends Fragment {
                                                     @Override
                                                     public void onClick(View view) {
                                                         Intent intent = new Intent(getContext(), ProductsListActivity.class);
-                                                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProductId);
+                                                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_ID_SHOW_RELATED_SHOPPING_PRODUCTS, mProduct.getId());
                                                         startActivity(intent);
                                                     }
                                                 });
@@ -332,7 +330,7 @@ public class ProductDetailFragment extends Fragment {
                                                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
                                                     try {
                                                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
-                                                                .getSalesOrderLineFromShoppingSales(mProductId, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                                                .getSalesOrderLineFromShoppingSales(mProduct.getId(), Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                                         if (salesOrderLine != null) {
                                                             updateQtyOrderedInShoppingSales(salesOrderLine);
                                                         } else {
@@ -353,7 +351,7 @@ public class ProductDetailFragment extends Fragment {
                                             @Override
                                             public void onClick(View v) {
                                                 OrderLine orderLine = (new OrderLineDB(getContext(), mUser))
-                                                        .getOrderLineFromShoppingCartByProductId(mProductId);
+                                                        .getOrderLineFromShoppingCartByProductId(mProduct.getId());
                                                 if (orderLine != null) {
                                                     updateQtyOrderedInShoppingCart(orderLine, mUser);
                                                 } else {
@@ -386,6 +384,8 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_availability))
                                             .setText(getString(R.string.availability,
                                                     mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                                } else {
+                                    //TODO: mostrar mesaje de error cuando el objeto product es null
                                 }
                             } catch (Exception e){
                                 e.printStackTrace();
@@ -515,7 +515,11 @@ public class ProductDetailFragment extends Fragment {
 
         private void createShareAndDownloadIntent() throws Exception {
             try {
-                mShareIntent = Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct);
+                if (getActivity()!=null && getContext()!=null && mUser!=null && mProduct==null) {
+                    mShareIntent = Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct);
+                } else {
+                    mShareIntent = null;
+                }
             } catch (Exception e) {
                 mShareIntent = null;
                 throw e;
@@ -525,7 +529,7 @@ public class ProductDetailFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_PRODUCT_ID, mProductId);
+        outState.putParcelable(STATE_PRODUCT, mProduct);
         super.onSaveInstanceState(outState);
     }
 }

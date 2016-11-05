@@ -206,10 +206,14 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     public void addToShoppingCart(int productId, User user) {
         Product product = (new ProductDB(getContext(), user))
                 .getProductById(productId);
-        DialogAddToShoppingCart dialogAddToShoppingCart =
-                DialogAddToShoppingCart.newInstance(product, user);
-        dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
-                DialogAddToShoppingCart.class.getSimpleName());
+        if (product!=null) {
+            DialogAddToShoppingCart dialogAddToShoppingCart =
+                    DialogAddToShoppingCart.newInstance(product, user);
+            dialogAddToShoppingCart.show(getActivity().getSupportFragmentManager(),
+                    DialogAddToShoppingCart.class.getSimpleName());
+        } else {
+            //TODO: mostrar mensaje de error
+        }
     }
 
     @Override
@@ -223,16 +227,20 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     @Override
     public void addToShoppingSale(int productId, User user) {
         Product product = (new ProductDB(getContext(), user)).getProductById(productId);
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
-                    DialogAddToShoppingSale2.newInstance(product, user);
-            dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
-                    DialogAddToShoppingSale2.class.getSimpleName());
+        if (product!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
+                        DialogAddToShoppingSale2.newInstance(product, user);
+                dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),
+                        DialogAddToShoppingSale2.class.getSimpleName());
+            } else {
+                DialogAddToShoppingSale dialogAddToShoppingSale =
+                        DialogAddToShoppingSale.newInstance(product, user);
+                dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
+                        DialogAddToShoppingSale.class.getSimpleName());
+            }
         } else {
-            DialogAddToShoppingSale dialogAddToShoppingSale =
-                    DialogAddToShoppingSale.newInstance(product, user);
-            dialogAddToShoppingSale.show(getActivity().getSupportFragmentManager(),
-                    DialogAddToShoppingSale.class.getSimpleName());
+            //TODO: mostrar mensaje de error
         }
     }
 
