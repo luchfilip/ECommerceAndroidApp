@@ -121,7 +121,10 @@ public class SalesOrderBR {
                         return "Error en cantidad pedida del articulo " + product.getName();
                     }
                 } else {
-                    return "Error en carga de detalle del artículo.";
+                    if (salesOrderLine.getProduct()!=null) {
+                        return "Error en cantidad pedida del artículo " + salesOrderLine.getProduct().getName();
+                    }
+                    return "Error en cantidad pedida.";
                 }
             }
         }

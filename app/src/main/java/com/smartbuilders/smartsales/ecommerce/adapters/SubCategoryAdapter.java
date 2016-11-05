@@ -59,16 +59,19 @@ public class SubCategoryAdapter  extends BaseAdapter {
 
         if(!TextUtils.isEmpty(mDataset.get(position).getName())){
             viewHolder.subcategoryName.setText(mDataset.get(position).getName());
+            viewHolder.subcategoryName.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.subcategoryName.setVisibility(TextView.GONE);
         }
         if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
             viewHolder.subcategoryDescription.setText(mDataset.get(position).getDescription());
+            viewHolder.subcategoryDescription.setVisibility(TextView.VISIBLE);
         }else{
             viewHolder.subcategoryDescription.setVisibility(TextView.GONE);
         }
         if(mDataset.get(position).getImageId()>0){
             viewHolder.subcategoryImage.setImageResource(mDataset.get(position).getImageId());
+            viewHolder.subcategoryImage.setVisibility(ImageView.VISIBLE);
         }else{
             viewHolder.subcategoryImage.setVisibility(ImageView.GONE);
         }

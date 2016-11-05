@@ -125,6 +125,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         if(mDataset.get(position).getProduct().getInternalCode()!=null){
             holder.productInternalCode.setText(mContext.getString(R.string.product_internalCode,
                     mDataset.get(position).getProduct().getInternalCodeMayoreoFormat()));
+        } else {
+            holder.productInternalCode.setVisibility(View.GONE);
         }
 
         if (BuildConfig.USE_PRODUCT_IMAGE) {

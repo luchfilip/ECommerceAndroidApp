@@ -268,7 +268,12 @@ public class RecommendedProductsListAdapter extends
             holder.productBrand.setVisibility(View.GONE);
         }
 
-        holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
+        if (mDataset.get(position).getInternalCode()!=null) {
+            holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
+            holder.productInternalCode.setVisibility(View.VISIBLE);
+        } else {
+            holder.productInternalCode.setVisibility(View.GONE);
+        }
 
         holder.productReference.setText(mDataset.get(position).getReference());
     }

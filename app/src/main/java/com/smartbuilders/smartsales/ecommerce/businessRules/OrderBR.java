@@ -85,7 +85,10 @@ public class OrderBR {
                         return "Error en cantidad pedida del artículo " + product.getName();
                     }
                 } else {
-                    return "Error en carga de detalle del artículo.";
+                    if (orderLine.getProduct()!=null) {
+                        return "Error en cantidad pedida del artículo " + orderLine.getProduct().getName();
+                    }
+                    return "Error en cantidad pedida.";
                 }
             }
         }
