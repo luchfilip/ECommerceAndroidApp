@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.SyncDataRealTimeWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.model.SyncDataRealTimeWithServer;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -28,6 +30,8 @@ public class SyncDataRealTimeWithServerService extends IntentService {
     public static final String KEY_USER_ID = "SyncDataRealTimeWithServerService.KEY_USER_ID";
     public static final String KEY_SQL_SELECTION = "SyncDataRealTimeWithServerService.KEY_SQL_SELECTION";
     public static final String KEY_SQL_SELECTION_ARGS = "SyncDataRealTimeWithServerService.KEY_SQL_SELECTION_ARGS";
+    public static final String SYNCHRONIZATION_FINISHED = BuildConfig.APPLICATION_ID
+            + ".SyncDataRealTimeWithServerService.SYNCHRONIZATION_FINISHED";
 
 
     public SyncDataRealTimeWithServerService() {
@@ -79,8 +83,24 @@ public class SyncDataRealTimeWithServerService extends IntentService {
                             .put("4", syncDataRealTimeWithServer.getColumnCount()));
                 }
                 if (totalData.length()>0) {
+                    /**
+                     * el manejo del OrderDB en este servicio es un parche en el cual se actualiza
+                     * el sequenceId de todos los pedidos a 1 asumiendo que si este proceso termina
+                     * exitosamente entonces se enviaron todos los pedidos que estaban pendientes por
+                     * enviar. Esto es necesario para el atributo orderWasDelivery de la clase order
+                     * que indica que el pedido ya fue transmitido.
+                     */
+                    OrderDB orderDB = new OrderDB(getApplicationContext(), user);
+                    //maximo pedido creado hasta antes de correr el proceso de envio de datos
+                    int maxOrderId = orderDB.getMaxOrderIdNotSentToServer();
                     syncDataRealTimeWithServerDB.deleteDataToSyncWithServer(DataBaseUtilities.unGzip(Base64.decode(sendDataToServer(user,
                             Base64.encodeBytes(DataBaseUtilities.gzip(totalData.toString()), Base64.GZIP)), Base64.GZIP)));
+                    if (maxOrderId>0) {
+                        //actualizacion del sequenceId a uno de todos los pedidos con id menor igual a maxOrderId y sequenceId igual a cero
+                        orderDB.markAsSentToServer(maxOrderId);
+                    }
+                    //se envia un broadcast notificando que acaba de finalizar una sincronizacion de los datos
+                    getApplicationContext().sendBroadcast(new Intent(SYNCHRONIZATION_FINISHED));
                 }
             } else {
                 throw new Exception("user is null.");

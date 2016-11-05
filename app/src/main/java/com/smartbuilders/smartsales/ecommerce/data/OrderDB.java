@@ -52,7 +52,7 @@ public class OrderDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT O.ECOMMERCE_ORDER_ID, O.ECOMMERCE_SALES_ORDER_ID, O.CREATE_TIME, O.LINES_NUMBER, " +
-                            " O.SUB_TOTAL, O.TAX, O.TOTAL, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID "+
+                            " O.SUB_TOTAL, O.TAX, O.TOTAL, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID, O.SEQUENCE_ID "+
                     " FROM ECOMMERCE_ORDER O " +
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE O.ECOMMERCE_ORDER_ID = ? AND O.USER_ID = ? AND O.IS_ACTIVE = ?",
@@ -78,6 +78,7 @@ public class OrderDB {
                 order.setTotalAmount(c.getDouble(6));
                 order.setBusinessPartnerId(c.getInt(7));
                 order.setBusinessPartnerAddressId(c.getInt(8));
+                order.setOrderWasDelivery(c.getInt(9)>0);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -179,7 +180,7 @@ public class OrderDB {
                             .build(), null,
                     "SELECT O.ECOMMERCE_ORDER_ID, O.DOC_STATUS, O.CREATE_TIME, O.UPDATE_TIME, " +
                         " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
-                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID " +
+                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID, O.SEQUENCE_ID " +
                     " FROM ECOMMERCE_ORDER O " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                     " WHERE O.BUSINESS_PARTNER_ID = ? AND O.USER_ID = ? AND O.DOC_TYPE = ? AND O.IS_ACTIVE = ? " +
@@ -212,6 +213,7 @@ public class OrderDB {
                     order.setSalesOrderId(c.getInt(10));
                     order.setBusinessPartnerId(c.getInt(11));
                     order.setBusinessPartnerAddressId(c.getInt(12));
+                    order.setOrderWasDelivery(c.getInt(13)>0);
                     activeOrders.add(order);
                 }
             }
@@ -247,7 +249,7 @@ public class OrderDB {
                             .build(), null,
                     "SELECT DISTINCT O.ECOMMERCE_ORDER_ID, O.DOC_STATUS, O.CREATE_TIME, O.UPDATE_TIME, " +
                         " O.APP_VERSION, O.APP_USER_NAME, O.LINES_NUMBER, O.SUB_TOTAL, O.TAX, O.TOTAL, " +
-                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID " +
+                        " O.ECOMMERCE_SALES_ORDER_ID, O.BUSINESS_PARTNER_ID, O.BUSINESS_PARTNER_ADDRESS_ID, O.SEQUENCE_ID " +
                     " FROM ECOMMERCE_ORDER O " +
                         " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = O.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
                         " INNER JOIN ORDER_TRACKING OT ON OT.ECOMMERCE_ORDER_ID = O.ECOMMERCE_ORDER_ID AND O.USER_ID = O.USER_ID AND OT.IS_ACTIVE = ? " +
@@ -279,6 +281,7 @@ public class OrderDB {
                     order.setSalesOrderId(c.getInt(10));
                     order.setBusinessPartnerId(c.getInt(11));
                     order.setBusinessPartnerAddressId(c.getInt(12));
+                    order.setOrderWasDelivery(c.getInt(13)>0);
                     activeOrders.add(order);
                 }
             }
@@ -334,5 +337,43 @@ public class OrderDB {
             return e.getMessage();
         }
         return null;
+    }
+
+    public int getMaxOrderIdNotSentToServer() {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null, "SELECT MAX(ECOMMERCE_ORDER_ID) FROM ECOMMERCE_ORDER WHERE USER_ID = ? AND SEQUENCE_ID = 0",
+                            new String[]{String.valueOf(mUser.getServerUserId())}, null);
+
+            if(c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+    public void markAsSentToServer(int maxOrderId) {
+        try {
+            mContext.getContentResolver()
+                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, "UPDATE ECOMMERCE_ORDER SET SEQUENCE_ID = 1 WHERE USER_ID = ? AND ECOMMERCE_ORDER_ID <= ? AND SEQUENCE_ID = 0",
+                            new String[]{String.valueOf(mUser.getServerUserId()), String.valueOf(maxOrderId)});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

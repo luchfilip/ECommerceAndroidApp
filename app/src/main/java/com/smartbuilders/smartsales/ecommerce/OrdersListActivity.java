@@ -1,7 +1,10 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,9 +21,11 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerce.services.SyncDataRealTimeWithServerService;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 
 /**
  * Jesus Sarco
@@ -33,6 +38,13 @@ public class OrdersListActivity extends AppCompatActivity
 
     private ListView mListView;
     private OrderDB mOrderDB;
+
+    private BroadcastReceiver syncDataFinishedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reloadOrdersList();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +72,28 @@ public class OrdersListActivity extends AppCompatActivity
                     (NavigationView) findViewById(R.id.nav_view));
         }
         super.onPostResume();
+    }
+
+    @Override
+    protected void onStart() {
+        try {
+            IntentFilter intentFilter = new IntentFilter(SyncAdapter.FULL_SYNCHRONIZATION_FINISHED);
+            intentFilter.addAction(SyncDataRealTimeWithServerService.SYNCHRONIZATION_FINISHED);
+            registerReceiver(syncDataFinishedReceiver, intentFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try{
+            unregisterReceiver(syncDataFinishedReceiver);
+        }catch(Exception e){
+            //do nothing
+        }
     }
 
     @Override

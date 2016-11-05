@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -79,6 +81,14 @@ public class OrdersListAdapter extends BaseAdapter {
         viewHolder.orderLinesNumber.setText(mContext.getString(R.string.order_lines_number,
                 String.valueOf(mDataset.get(position).getLinesNumber())));
 
+        if (mDataset.get(position).isOrderWasDelivery()) {
+            viewHolder.deliveryStatus.setImageResource(R.drawable.ic_cloud_done_black_18dp);
+            viewHolder.deliveryStatus.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+        } else {
+            viewHolder.deliveryStatus.setImageResource(R.drawable.ic_cloud_upload_black_18dp);
+            viewHolder.deliveryStatus.setColorFilter(Utils.getColor(mContext, R.color.grey_medium));
+        }
+
         return view;
     }
 
@@ -91,12 +101,14 @@ public class OrdersListAdapter extends BaseAdapter {
         public TextView orderNumber;
         public TextView orderDate;
         public TextView orderLinesNumber;
+        public ImageView deliveryStatus;
 
         public ViewHolder(View v) {
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
             orderNumber = (TextView) v.findViewById(R.id.order_number_tv);
             orderDate = (TextView) v.findViewById(R.id.order_date_tv);
             orderLinesNumber = (TextView) v.findViewById(R.id.order_lines_number_tv);
+            deliveryStatus = (ImageView) v.findViewById(R.id.delivery_status);
         }
     }
 
