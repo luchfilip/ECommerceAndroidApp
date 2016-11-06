@@ -507,7 +507,7 @@
     <string name="welcome_layout_wish_list_subtitle">Lista de Favoritos</string>
     <string name="welcome_layout_wish_list_details">Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas. Tambien podrás enterarte en tiempo real si algún producto incremento su disponibilidad.</string>
     <string name="brand">Marca</string>
-    <string name="name">Nombre</string>
+    <string name="name">Nombre/Cód.</string>
     <string name="purpose">Uso</string>
     <string name="phone_number_label_detail">Tlf.: %1$s</string>
     <string name="no_image_loaded">No hay imágen cargada</string>

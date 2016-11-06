@@ -207,11 +207,23 @@ public class SearchResultsActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         if(searchEditText!=null && searchEditText.getText()!=null){
-                            //new RecentSearchDB(SearchResultsActivity.this, mUser)
-                            //        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
-                            Intent intent = new Intent(SearchResultsActivity.this, ProductsListActivity.class);
-                            intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString());
-                            startActivity(intent);
+                            if (mCurrentSearchByOptions.equals(getString(R.string.name))) {
+                                new RecentSearchDB(SearchResultsActivity.this, mUser)
+                                        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            } else if (mCurrentSearchByOptions.equals(getString(R.string.reference))) {
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_REFERENCE, searchEditText.getText().toString()));
+                            } else if (mCurrentSearchByOptions.equals(getString(R.string.purpose))) {
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_PURPOSE, searchEditText.getText().toString()));
+                            } else {
+                                new RecentSearchDB(SearchResultsActivity.this, mUser)
+                                        .insertRecentSearch(searchEditText.getText().toString(), null, null, 0, 0);
+                                startActivity((new Intent(SearchResultsActivity.this, ProductsListActivity.class))
+                                        .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, searchEditText.getText().toString()));
+                            }
                         }
                     }
                 });
