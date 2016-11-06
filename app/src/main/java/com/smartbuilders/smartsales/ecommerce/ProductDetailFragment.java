@@ -81,6 +81,10 @@ public class ProductDetailFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
                     ProductDB productDB = new ProductDB(getContext(), mUser);
 
+                    if (mProduct.isRequireFullFill()) {
+                        mProduct = productDB.getProductById(mProduct.getId());
+                    }
+
                     if (mProduct!=null) {
                         relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 12));
                         if (mProduct.getProductBrand()!=null) {

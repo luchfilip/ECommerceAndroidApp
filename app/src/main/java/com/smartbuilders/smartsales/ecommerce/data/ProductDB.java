@@ -857,6 +857,7 @@ public class ProductDB {
      * @param cursor
      */
     private static void fillFullProductInfoFromCursor(Product product, Cursor cursor) {
+        product.setRequireFullFill(false);
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(3));
         product.setDescription(cursor.getString(4));
@@ -922,6 +923,7 @@ public class ProductDB {
      * @param cursor
      */
     public static void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
+        product.setRequireFullFill(true);
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(1));
         product.setDescription(cursor.getString(2));

@@ -64,9 +64,9 @@ android {
             buildConfigField "String", "BluetoothConnectionProvider_AUTHORITY", "\"${applicationId}.providers.BluetoothConnectionProvider\""
             buildConfigField "boolean", "IS_SALES_FORCE_SYSTEM", "false"
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
-            //buildConfigField "String", "SERVER_ADDRESS", "\"http://69.42.117.232:8089\""
+            buildConfigField "String", "SERVER_ADDRESS", "\"http://69.42.117.232:8089\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"http://10.48.52.28:8089\""
-            buildConfigField "String", "SERVER_ADDRESS", "\"\""
+            //buildConfigField "String", "SERVER_ADDRESS", "\"\""
 
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.febeca"

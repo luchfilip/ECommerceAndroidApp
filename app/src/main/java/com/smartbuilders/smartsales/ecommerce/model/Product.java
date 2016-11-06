@@ -31,6 +31,7 @@ public class Product extends Model implements Parcelable {
     private List<ProductPriceAvailability> productPriceAvailabilities;
     private boolean isFavorite;
     private float rating = -1;
+    private boolean requireFullFill;
 
     public Product(){
         super();
@@ -42,6 +43,7 @@ public class Product extends Model implements Parcelable {
         productCategory = new ProductCategory();
         productSubCategory = new ProductSubCategory();
         productCommercialPackage = new ProductCommercialPackage();
+        requireFullFill = true;
     }
 
     protected Product(Parcel in) {
@@ -65,6 +67,7 @@ public class Product extends Model implements Parcelable {
         isFavorite = in.readByte() != 0;
         rating = in.readFloat();
         defaultProductPriceAvailability = in.readParcelable(ProductPriceAvailability.class.getClassLoader());
+        requireFullFill = in.readByte() != 0;
     }
 
     @Override
@@ -89,6 +92,7 @@ public class Product extends Model implements Parcelable {
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
         dest.writeParcelable(defaultProductPriceAvailability, flags);
+        dest.writeByte((byte) (requireFullFill ? 1 : 0));
     }
 
     @Override
@@ -242,6 +246,14 @@ public class Product extends Model implements Parcelable {
 
     public void setProductCommercialPackageId(int productCommercialPackageId) {
         this.productCommercialPackageId = productCommercialPackageId;
+    }
+
+    public boolean isRequireFullFill() {
+        return requireFullFill;
+    }
+
+    public void setRequireFullFill(boolean requireFullFill) {
+        this.requireFullFill = requireFullFill;
     }
 
     @Override
