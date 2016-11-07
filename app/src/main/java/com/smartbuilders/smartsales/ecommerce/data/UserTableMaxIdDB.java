@@ -25,7 +25,9 @@ public class UserTableMaxIdDB {
                     new String[]{String.valueOf(user.getServerUserId()), tableName}, null);
             if(c!=null){
                 if(c.moveToNext()){
-                    newId = c.getInt(0);
+                    if (c.getInt(0)>newId) {
+                        newId = c.getInt(0);
+                    }
                 }else{
                     context.getContentResolver()
                             .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
