@@ -20,7 +20,7 @@
             android:textColor="@color/black"
             android:layout_gravity="center_vertical"
             android:textStyle="bold"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="2dp"
             android:layout_marginLeft="2dp" />
 
         <ImageView
@@ -29,7 +29,8 @@
             android:id="@+id/delete_item_button_img"
             android:src="@drawable/ic_highlight_off_black"
             android:layout_gravity="center"
-            android:background="?attr/selectableItemBackground" />
+            android:background="?attr/selectableItemBackground"
+            android:padding="2dp" />
     </LinearLayout>
 
     <TextView

@@ -518,4 +518,6 @@
     <string name="show_notification">Mostrar notificación</string>
     <string name="subcategories">Sub Categorías</string>
     <string name="creating_product_share_card_wait_please">Creando cartilla del producto, espere por favor...</string>
+    <string name="order_deliver_status_sent">El pedido se ha transmitido exitosamente.</string>
+    <string name="order_deliver_status_wait_for_send">El pedido está pendiente por transmitir, revise su conexión a internet.</string>
 </resources>

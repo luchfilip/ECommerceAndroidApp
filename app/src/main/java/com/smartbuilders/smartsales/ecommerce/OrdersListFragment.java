@@ -43,7 +43,7 @@ public class OrdersListFragment extends Fragment {
     private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
-        void onItemSelected(Order order);
+        void onItemSelected(Order order, int selectedIndex);
         void onItemLongSelected(Order order);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
@@ -120,7 +120,7 @@ public class OrdersListFragment extends Fragment {
                                         // if it cannot seek to that position.
                                         Order order = (Order) adapterView.getItemAtPosition(position);
                                         if (order != null) {
-                                            ((Callback) getActivity()).onItemSelected(order);
+                                            ((Callback) getActivity()).onItemSelected(order, position);
                                         }
                                     }
                                 });

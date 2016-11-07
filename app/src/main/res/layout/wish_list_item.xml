@@ -20,11 +20,9 @@
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/productDetailCardView_name_text_size"
             android:textStyle="bold"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="2dp"
             android:lines="1"
             android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
             android:layout_weight="1" />
 
         <ImageView
@@ -33,7 +31,8 @@
             android:id="@+id/delete_item_button_img"
             android:layout_gravity="right"
             android:src="@drawable/ic_highlight_off_black"
-            android:background="?attr/selectableItemBackground" />
+            android:background="?attr/selectableItemBackground"
+            android:padding="2dp" />
     </LinearLayout>
 
     <LinearLayout

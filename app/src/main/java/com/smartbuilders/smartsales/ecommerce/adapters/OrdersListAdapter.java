@@ -1,6 +1,7 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,9 +85,27 @@ public class OrdersListAdapter extends BaseAdapter {
         if (mDataset.get(position).isOrderWasDelivery()) {
             viewHolder.deliveryStatus.setImageResource(R.drawable.ic_cloud_done_black_18dp);
             viewHolder.deliveryStatus.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary));
+            viewHolder.deliveryStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setMessage(R.string.order_deliver_status_sent)
+                            .setNeutralButton(R.string.accept, null)
+                            .show();
+                }
+            });
         } else {
             viewHolder.deliveryStatus.setImageResource(R.drawable.ic_cloud_upload_black_18dp);
             viewHolder.deliveryStatus.setColorFilter(Utils.getColor(mContext, R.color.grey_medium));
+            viewHolder.deliveryStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setMessage(R.string.order_deliver_status_wait_for_send)
+                            .setNeutralButton(R.string.accept, null)
+                            .show();
+                }
+            });
         }
 
         return view;

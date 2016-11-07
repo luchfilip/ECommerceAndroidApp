@@ -38,11 +38,30 @@ public class OrdersListActivity extends AppCompatActivity
 
     private ListView mListView;
     private OrderDB mOrderDB;
+    private int mCurrentSelectedIndex;
 
     private BroadcastReceiver syncDataFinishedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            reloadOrdersList();
+            if(mListView!=null && mOrderDB!=null){
+                int oldListSize;
+                if (mListView.getAdapter()==null) {
+                    oldListSize = 0;
+                    mListView.setAdapter(new OrdersListAdapter(OrdersListActivity.this, mOrderDB.getActiveOrders()));
+                } else {
+                    oldListSize = mListView.getAdapter().getCount();
+                    ((OrdersListAdapter) mListView.getAdapter()).setData(mOrderDB.getActiveOrders());
+                }
+                if(mListView.getAdapter().getCount()>0){
+                    if(oldListSize==0){
+                        onListIsLoaded();
+                    }else{
+                        setSelectedIndex(mCurrentSelectedIndex);
+                    }
+                }else{
+                    onListIsLoaded();
+                }
+            }
         }
     };
 
@@ -151,6 +170,7 @@ public class OrdersListActivity extends AppCompatActivity
     @Override
     public void setSelectedIndex(int selectedIndex) {
         if (findViewById(R.id.order_detail_container) != null) {
+            mCurrentSelectedIndex = selectedIndex;
             if (mListView!=null && mListView.getAdapter()!=null
                     && mListView.getAdapter().getCount()>selectedIndex) {
                 mListView.setSelection(selectedIndex);
@@ -160,8 +180,9 @@ public class OrdersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(Order order) {
+    public void onItemSelected(Order order, int selectedIndex) {
         if(findViewById(R.id.order_detail_container) != null){
+            mCurrentSelectedIndex = selectedIndex;
             Bundle args = new Bundle();
             args.putInt(OrderDetailActivity.KEY_ORDER_ID, order.getId());
 
