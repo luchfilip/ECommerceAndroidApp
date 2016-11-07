@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -15,7 +16,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class UserTableMaxIdDB {
 
     public static int getNewIdForTable(Context context, User user, final String tableName) {
-        int newId = 0;
+        int newId = user.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID ? 1000000 : 0;
         Cursor c = null;
         try {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
