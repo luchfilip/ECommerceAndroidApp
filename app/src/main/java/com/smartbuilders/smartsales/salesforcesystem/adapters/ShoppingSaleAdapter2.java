@@ -145,10 +145,10 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
         if (mShowProductPrice) {
             //holder.productPrice.setText(mContext.getString(R.string.price_detail,
-            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getProductPriceStringFormat()));
+            //        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+            //        mDataset.get(position).getProduct().getProductPriceAvailability().getProductPriceStringFormat()));
             holder.productPrice.setText(mContext.getString(R.string.product_price,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setVisibility(View.VISIBLE);
         } else {
             holder.productPrice.setVisibility(View.GONE);
@@ -156,10 +156,10 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
         if (mShowProductTax) {
             //holder.productTax.setText(mContext.getString(R.string.product_tax_detail,
-            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-            //        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+            //        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+            //        mDataset.get(position).getProduct().getProductPriceAvailability().getTaxStringFormat()));
             holder.productTax.setText(mContext.getString(R.string.product_tax,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTaxStringFormat()));
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getTaxStringFormat()));
             holder.productTax.setVisibility(View.VISIBLE);
         } else {
             holder.productTax.setVisibility(View.GONE);
@@ -167,15 +167,15 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
         if (mShowProductTotalPrice) {
             holder.productTotalPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                    mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getTotalPriceStringFormat()));
             holder.productTotalPrice.setVisibility(View.VISIBLE);
         } else {
             holder.productTotalPrice.setVisibility(View.GONE);
         }
 
         holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
+                mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
                 mDataset.get(position).getTotalLineAmountStringFormat()));
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {

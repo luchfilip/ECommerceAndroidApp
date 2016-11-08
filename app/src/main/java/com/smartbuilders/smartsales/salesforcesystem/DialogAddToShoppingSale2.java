@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.salesforcesystem;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -84,13 +83,13 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
         if (Parameter.showProductTotalPrice(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_total_price_textView))
                     .setText(getString(R.string.product_total_price_detail,
-                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                            mProduct.getProductPriceAvailability().getCurrency().getName(),
+                            mProduct.getProductPriceAvailability().getTotalPriceStringFormat()));
         } else if (Parameter.showProductPrice(getContext(), mUser)) {
             ((TextView) view.findViewById(R.id.product_total_price_textView))
                     .setText(getString(R.string.product_price_detail,
-                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                            mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                            mProduct.getProductPriceAvailability().getCurrency().getName(),
+                            mProduct.getProductPriceAvailability().getPriceStringFormat()));
         } else {
             view.findViewById(R.id.product_total_price_textView).setVisibility(View.GONE);
         }
@@ -98,7 +97,7 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getString(R.string.availability,
-                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                        mProduct.getProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
                 new View.OnClickListener() {

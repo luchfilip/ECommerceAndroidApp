@@ -69,7 +69,7 @@ public class SubCategoriesListFragment extends Fragment {
                     }
 
                     productSubCategories.addAll((new ProductSubCategoryDB(getContext(), Utils.getCurrentUser(getContext())))
-                            .getActiveProductSubCategoriesByCategoryId(mCategoryId));
+                            .getProductSubCategoriesByCategoryId(mCategoryId));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

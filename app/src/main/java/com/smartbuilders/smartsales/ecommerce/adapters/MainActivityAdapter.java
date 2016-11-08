@@ -328,13 +328,13 @@ public class MainActivityAdapter extends BaseAdapter {
                             //solo se muestra uno de los precios, tomando como prioridad el precio total
                             if (mShowProductTotalPrice) {
                                 viewHolder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
-                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                                        ((Product) mDataset.get(position)).getProductPriceAvailability().getCurrency().getName(),
+                                        ((Product) mDataset.get(position)).getProductPriceAvailability().getTotalPriceStringFormat()));
                                 viewHolder.productPrice.setVisibility(View.VISIBLE);
                             } else if (mShowProductPrice) {
                                 viewHolder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getCurrency().getName(),
-                                        ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                        ((Product) mDataset.get(position)).getProductPriceAvailability().getCurrency().getName(),
+                                        ((Product) mDataset.get(position)).getProductPriceAvailability().getPriceStringFormat()));
                                 viewHolder.productPrice.setVisibility(View.VISIBLE);
                             } else {
                                 viewHolder.productPrice.setVisibility(View.GONE);
@@ -344,7 +344,7 @@ public class MainActivityAdapter extends BaseAdapter {
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
-                                ((Product) mDataset.get(position)).getDefaultProductPriceAvailability().getAvailability()));
+                                ((Product) mDataset.get(position)).getProductPriceAvailability().getAvailability()));
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override

@@ -174,13 +174,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         if (mIsManagePriceInOrder) {
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProduct().getProductPriceAvailability().getTotalPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
                 holder.productPrice.setVisibility(View.GONE);
@@ -190,9 +190,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()));
+                mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
 
-        int productAvailabilityVariation = mDataset.get(position).getProduct().getDefaultProductPriceAvailability().getAvailability()
+        int productAvailabilityVariation = mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()
                 - mDataset.get(position).getQuantityOrdered();
         if(productAvailabilityVariation!=0) {
             if(productAvailabilityVariation > 0){

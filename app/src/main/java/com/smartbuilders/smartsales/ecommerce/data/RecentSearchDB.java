@@ -80,11 +80,12 @@ public class RecentSearchDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "SELECT RECENT_SEARCH_ID, TEXT_TO_SEARCH, PRODUCT_ID, SUBCATEGORY_ID " +
-                    " FROM RECENT_SEARCH " +
-                    " WHERE USER_ID = ? AND IS_ACTIVE = ? " +
-                    " ORDER BY CREATE_TIME desc",
-                    new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
+                    "SELECT RS.RECENT_SEARCH_ID, RS.TEXT_TO_SEARCH, RS.PRODUCT_ID, SC.SUBCATEGORY_ID, SC.NAME " +
+                    " FROM RECENT_SEARCH RS " +
+                        " LEFT JOIN SUBCATEGORY SC ON SC.SUBCATEGORY_ID = RS.SUBCATEGORY_ID AND SC.IS_ACTIVE = ? " +
+                    " WHERE RS.USER_ID = ? AND RS.IS_ACTIVE = ? " +
+                    " ORDER BY RS.CREATE_TIME desc",
+                    new String[]{"Y", String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     RecentSearch recentSearch = new RecentSearch();
@@ -92,7 +93,8 @@ public class RecentSearchDB {
                     recentSearch.setTextToSearch(c.getString(1));
                     recentSearch.setProductName(c.getString(1));
                     recentSearch.setProductId(c.getInt(2));
-                    recentSearch.setSubcategoryId(c.getInt(3));
+                    recentSearch.setProductSubCategoryId(c.getInt(3));
+                    recentSearch.setProductSubCategoryName(c.getString(4));
                     recentSearches.add(recentSearch);
                 }
             }
@@ -106,10 +108,6 @@ public class RecentSearchDB {
                     e.printStackTrace();
                 }
             }
-        }
-        ProductSubCategoryDB mProductSubCategoryDB = new ProductSubCategoryDB(mContext, mUser);
-        for (RecentSearch recentSearch : recentSearches) {
-            recentSearch.setProductSubCategory(mProductSubCategoryDB.getActiveProductSubCategoryById(recentSearch.getSubcategoryId()));
         }
         return recentSearches;
     }

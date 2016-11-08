@@ -24,7 +24,7 @@ public class ProductCategoryDB {
         this.mUser = user;
     }
 
-    public ArrayList<ProductCategory> getActiveProductCategories(){
+    public ArrayList<ProductCategory> getProductCategories(){
         ArrayList<ProductCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
@@ -75,7 +75,7 @@ public class ProductCategoryDB {
         return categories;
     }
 
-    public ProductCategory getActiveProductCategoryById(int productCategoryId){
+    public ProductCategory getProductCategory(int productCategoryId){
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

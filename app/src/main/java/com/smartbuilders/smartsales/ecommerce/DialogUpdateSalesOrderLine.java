@@ -78,7 +78,7 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability,
-                        mSaleOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+                        mSaleOrderLine.getProduct().getProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,19 +145,19 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                     Product product = new Product();
                     product.setId(mSaleOrderLine.getProductId());
                     try {
-                        product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+                        product.getProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {
                         throw new Exception(getString(R.string.invalid_product_price));
                     }
                     try {
                         product.getProductTax().setPercentage(Float.valueOf(productTaxEditText.getText().toString()));
-                        product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
+                        product.getProductPriceAvailability().setTax(product.getProductPriceAvailability().getPrice()
                                 * (product.getProductTax().getPercentage() / 100));
                     } catch (NumberFormatException e) {
                         throw new Exception(getString(R.string.invalid_product_tax_percentage));
                     }
-                    product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
-                            + product.getDefaultProductPriceAvailability().getTax());
+                    product.getProductPriceAvailability().setTotalPrice(product.getProductPriceAvailability().getPrice()
+                            + product.getProductPriceAvailability().getTax());
                     /**********************************************************/
 
                     SalesOrderLineBR.fillSalesOrderLine(qtyOrdered, product, mSaleOrderLine);

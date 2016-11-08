@@ -23,8 +23,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.MainPageProductSectionDB;
+import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductRecentlySeenDB;
+import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.MainPageProductSection;
+import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
+import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ProductsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
@@ -240,14 +244,18 @@ public class ProductsListActivity extends AppCompatActivity
                             if(categorySubcategoryResultsTextView!=null){
                                 if(!products.isEmpty()) {
                                     if (productCategoryId != 0) {
-                                        if(products.get(0).getProductCategory()!=null){
+                                        ProductCategory productCategory = (new ProductCategoryDB(ProductsListActivity.this, user))
+                                                .getProductCategory(productCategoryId);
+                                        if(productCategory!=null){
                                             categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
-                                                    products.get(0).getProductCategory().getName()));
+                                                    productCategory.getName()));
                                         }
                                     } else if (productSubCategoryId != 0) {
-                                        if(products.get(0).getProductSubCategory()!=null){
+                                        ProductSubCategory productSubCategory = (new ProductSubCategoryDB(ProductsListActivity.this, user))
+                                                .getProductSubCategory(productSubCategoryId);
+                                        if(productSubCategory!=null){
                                             categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
-                                                    products.get(0).getProductSubCategory().getName()));
+                                                    productSubCategory.getName()));
                                         }
                                     } else if (productBrandId != 0) {
                                         if(products.get(0).getProductBrand()!=null

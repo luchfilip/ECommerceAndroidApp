@@ -3,9 +3,6 @@ package com.smartbuilders.smartsales.ecommerce.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Alberto on 23/3/2016.
  */
@@ -20,15 +17,11 @@ public class Product extends Model implements Parcelable {
     private String imageFileName;
     private String reference;
     private int productCategoryId;
-    private ProductCategory productCategory;
     private int productSubCategoryId;
-    private ProductSubCategory productSubCategory;
-    private int productCommercialPackageId;
     private ProductCommercialPackage productCommercialPackage;
     private int productTaxId;
     private ProductTax productTax;
-    private ProductPriceAvailability defaultProductPriceAvailability;
-    private List<ProductPriceAvailability> productPriceAvailabilities;
+    private ProductPriceAvailability productPriceAvailability;
     private boolean isFavorite;
     private float rating = -1;
     private boolean requireFullFill;
@@ -36,12 +29,9 @@ public class Product extends Model implements Parcelable {
     public Product(){
         super();
         //Se inicializan estos objetos para evitar NullPointerException
-        productPriceAvailabilities = new ArrayList<>();
         productBrand = new ProductBrand();
-        defaultProductPriceAvailability = new ProductPriceAvailability();
+        productPriceAvailability = new ProductPriceAvailability();
         productTax = new ProductTax();
-        productCategory = new ProductCategory();
-        productSubCategory = new ProductSubCategory();
         productCommercialPackage = new ProductCommercialPackage();
         requireFullFill = true;
     }
@@ -57,16 +47,13 @@ public class Product extends Model implements Parcelable {
         imageFileName = in.readString();
         reference = in.readString();
         productCategoryId = in.readInt();
-        productCategory = in.readParcelable(ProductCategory.class.getClassLoader());
         productSubCategoryId = in.readInt();
-        productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
-        productCommercialPackageId = in.readInt();
         productCommercialPackage = in.readParcelable(ProductCommercialPackage.class.getClassLoader());
         productTaxId = in.readInt();
         productTax = in.readParcelable(ProductTax.class.getClassLoader());
         isFavorite = in.readByte() != 0;
         rating = in.readFloat();
-        defaultProductPriceAvailability = in.readParcelable(ProductPriceAvailability.class.getClassLoader());
+        productPriceAvailability = in.readParcelable(ProductPriceAvailability.class.getClassLoader());
         requireFullFill = in.readByte() != 0;
     }
 
@@ -82,16 +69,13 @@ public class Product extends Model implements Parcelable {
         dest.writeString(imageFileName);
         dest.writeString(reference);
         dest.writeInt(productCategoryId);
-        dest.writeParcelable(productCategory, flags);
         dest.writeInt(productSubCategoryId);
-        dest.writeParcelable(productSubCategory, flags);
-        dest.writeInt(productCommercialPackageId);
         dest.writeParcelable(productCommercialPackage, flags);
         dest.writeInt(productTaxId);
         dest.writeParcelable(productTax, flags);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
-        dest.writeParcelable(defaultProductPriceAvailability, flags);
+        dest.writeParcelable(productPriceAvailability, flags);
         dest.writeByte((byte) (requireFullFill ? 1 : 0));
     }
 
@@ -111,14 +95,6 @@ public class Product extends Model implements Parcelable {
             return new Product[size];
         }
     };
-
-    public ProductCategory getProductCategory() {
-        return productCategory;
-    }
-
-    public ProductSubCategory getProductSubCategory() {
-        return productSubCategory;
-    }
 
     public String getName() {
         return name;
@@ -180,8 +156,8 @@ public class Product extends Model implements Parcelable {
         return productTax;
     }
 
-    public ProductPriceAvailability getDefaultProductPriceAvailability(){
-        return defaultProductPriceAvailability;
+    public ProductPriceAvailability getProductPriceAvailability(){
+        return productPriceAvailability;
     }
 
     public boolean isFavorite() {
@@ -240,14 +216,6 @@ public class Product extends Model implements Parcelable {
         this.productSubCategoryId = productSubCategoryId;
     }
 
-    public int getProductCommercialPackageId() {
-        return productCommercialPackageId;
-    }
-
-    public void setProductCommercialPackageId(int productCommercialPackageId) {
-        this.productCommercialPackageId = productCommercialPackageId;
-    }
-
     public boolean isRequireFullFill() {
         return requireFullFill;
     }
@@ -260,7 +228,7 @@ public class Product extends Model implements Parcelable {
     public boolean equals(Object o) {
         try {
             return ((Product) o).getName().equals(getName())
-                    && ((Product) o).getProductSubCategory().equals(getProductSubCategory());
+                    && ((Product) o).getProductSubCategoryId() == getProductSubCategoryId();
         } catch (Exception e) { }
         return super.equals(o);
     }

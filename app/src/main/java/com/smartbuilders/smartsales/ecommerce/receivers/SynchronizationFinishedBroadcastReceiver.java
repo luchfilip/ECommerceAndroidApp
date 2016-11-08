@@ -37,7 +37,7 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                 ArrayList<OrderLine> orderLines = orderLineDB.getWishList();
                 boolean showNotification = false;
                 for (OrderLine orderLine : orderLines) {
-                    if (orderLine.getProduct().getDefaultProductPriceAvailability().getAvailability() > orderLine.getQuantityOrdered()) {
+                    if (orderLine.getProduct().getProductPriceAvailability().getAvailability() > orderLine.getQuantityOrdered()) {
                         showNotification = true;
                         break;
                     }

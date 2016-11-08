@@ -52,8 +52,8 @@ public class OrderLineDB {
                     new String[]{String.valueOf(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_ORDER_LINE")),
                             String.valueOf(mUser.getServerUserId()),
                             String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
-                            String.valueOf(product.getId()), String.valueOf(product.getDefaultProductPriceAvailability().getAvailability()),
-                            String.valueOf(product.getDefaultProductPriceAvailability().getPrice()),
+                            String.valueOf(product.getId()), String.valueOf(product.getProductPriceAvailability().getAvailability()),
+                            String.valueOf(product.getProductPriceAvailability().getPrice()),
                             String.valueOf(product.getProductTax().getPercentage()), WISH_LIST_DOC_TYPE,
                             DateFormat.getCurrentDateTimeSQLFormat(), Utils.getAppVersionName(mContext),
                             mUser.getUserName(), Utils.getMacAddress(mContext)});

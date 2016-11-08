@@ -208,13 +208,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             //se toma solo uno de los dos precios, teniendo como prioridad el precio total
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
                 holder.productPrice.setVisibility(View.GONE);
@@ -224,7 +224,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+                mDataset.get(position).getProductPriceAvailability().getAvailability()));
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -457,16 +457,16 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                                     return rhs.getInternalCode().compareTo(lhs.getInternalCode());
                                 }
                             case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_ASC:
-                                if (lhs.getDefaultProductPriceAvailability()!=null
-                                        && rhs.getDefaultProductPriceAvailability()!=null) {
-                                    return Integer.valueOf(lhs.getDefaultProductPriceAvailability().getAvailability())
-                                            .compareTo(rhs.getDefaultProductPriceAvailability().getAvailability());
+                                if (lhs.getProductPriceAvailability()!=null
+                                        && rhs.getProductPriceAvailability()!=null) {
+                                    return Integer.valueOf(lhs.getProductPriceAvailability().getAvailability())
+                                            .compareTo(rhs.getProductPriceAvailability().getAvailability());
                                 }
                             case DialogSortProductListOptions.SORT_BY_PRODUCT_AVAILABILITY_DESC:
-                                if (lhs.getDefaultProductPriceAvailability()!=null
-                                        && rhs.getDefaultProductPriceAvailability()!=null) {
-                                    return Integer.valueOf(rhs.getDefaultProductPriceAvailability().getAvailability())
-                                            .compareTo(lhs.getDefaultProductPriceAvailability().getAvailability());
+                                if (lhs.getProductPriceAvailability()!=null
+                                        && rhs.getProductPriceAvailability()!=null) {
+                                    return Integer.valueOf(rhs.getProductPriceAvailability().getAvailability())
+                                            .compareTo(lhs.getProductPriceAvailability().getAvailability());
                                 }
                             default:
                                 return 0;

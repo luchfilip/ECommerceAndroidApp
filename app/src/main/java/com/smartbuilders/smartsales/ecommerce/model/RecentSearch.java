@@ -13,8 +13,8 @@ public class RecentSearch extends Model implements Parcelable {
     private String productReference;
     private String productPurpose;
     private int productId;
-    private int subcategoryId;
-    private ProductSubCategory productSubCategory;
+    private int productSubCategoryId;
+    private String productSubCategoryName;
 
     public RecentSearch(){
         super();
@@ -27,8 +27,8 @@ public class RecentSearch extends Model implements Parcelable {
         productReference = in.readString();
         productPurpose = in.readString();
         productId = in.readInt();
-        subcategoryId = in.readInt();
-        productSubCategory = in.readParcelable(ProductSubCategory.class.getClassLoader());
+        productSubCategoryId = in.readInt();
+        productSubCategoryName = in.readString();
     }
 
     @Override
@@ -39,8 +39,8 @@ public class RecentSearch extends Model implements Parcelable {
         dest.writeString(productReference);
         dest.writeString(productPurpose);
         dest.writeInt(productId);
-        dest.writeInt(subcategoryId);
-        dest.writeParcelable(productSubCategory, flags);
+        dest.writeInt(productSubCategoryId);
+        dest.writeString(productSubCategoryName);
     }
 
     @Override
@@ -100,19 +100,19 @@ public class RecentSearch extends Model implements Parcelable {
         this.productId = productId;
     }
 
-    public int getSubcategoryId() {
-        return subcategoryId;
+    public int getProductSubCategoryId() {
+        return productSubCategoryId;
     }
 
-    public void setSubcategoryId(int subcategoryId) {
-        this.subcategoryId = subcategoryId;
+    public void setProductSubCategoryId(int productSubCategoryId) {
+        this.productSubCategoryId = productSubCategoryId;
     }
 
-    public ProductSubCategory getProductSubCategory() {
-        return productSubCategory;
+    public String getProductSubCategoryName() {
+        return productSubCategoryName;
     }
 
-    public void setProductSubCategory(ProductSubCategory productSubCategory) {
-        this.productSubCategory = productSubCategory;
+    public void setProductSubCategoryName(String productSubCategoryName) {
+        this.productSubCategoryName = productSubCategoryName;
     }
 }

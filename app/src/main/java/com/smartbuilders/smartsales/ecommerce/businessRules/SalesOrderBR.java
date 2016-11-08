@@ -98,7 +98,7 @@ public class SalesOrderBR {
                     //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
                     //pedida no es multiplo del empaque comercial del producto entonces se marca que
                     //esa linea del pedido tiene error en la cantidad pedida.
-                    salesOrderLine.setQuantityOrderedInvalid((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                    salesOrderLine.setQuantityOrderedInvalid((salesOrderLine.getQuantityOrdered() > product.getProductPriceAvailability().getAvailability())
                             || (salesOrderLine.getQuantityOrdered() % product.getProductCommercialPackage().getUnits() != 0));
                 } else {
                     salesOrderLine.setQuantityOrderedInvalid(true);
@@ -116,7 +116,7 @@ public class SalesOrderBR {
                     //si la cantidad pedida es mayor a la cantidad disponible del producto o si la cantidad
                     //pedida no es multiplo del empaque comercial del producto entonces se marca que
                     //esa linea del pedido tiene error en la cantidad pedida.
-                    if ((salesOrderLine.getQuantityOrdered() > product.getDefaultProductPriceAvailability().getAvailability())
+                    if ((salesOrderLine.getQuantityOrdered() > product.getProductPriceAvailability().getAvailability())
                             || (salesOrderLine.getQuantityOrdered() % product.getProductCommercialPackage().getUnits() != 0)) {
                         return "Error en cantidad pedida del articulo " + product.getName();
                     }

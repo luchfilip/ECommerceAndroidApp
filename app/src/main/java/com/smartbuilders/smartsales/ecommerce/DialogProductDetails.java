@@ -93,13 +93,13 @@ public class DialogProductDetails extends DialogFragment {
         if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_total_price_detail,
-                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                        mProduct.getProductPriceAvailability().getCurrency().getName(),
+                        mProduct.getProductPriceAvailability().getTotalPriceStringFormat()));
                 view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
             } else if (Parameter.showProductPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_price_detail,
-                        mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                        mProduct.getProductPriceAvailability().getCurrency().getName(),
+                        mProduct.getProductPriceAvailability().getPriceStringFormat()));
                 view.findViewById(R.id.product_total_price).setVisibility(View.VISIBLE);
             } else {
                 view.findViewById(R.id.product_total_price).setVisibility(View.GONE);
@@ -109,7 +109,7 @@ public class DialogProductDetails extends DialogFragment {
         }
 
         ((TextView) view.findViewById(R.id.product_availability)).setText(getString(R.string.availability,
-                mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                mProduct.getProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.share_imageView).setOnClickListener(new View.OnClickListener() {
             @Override

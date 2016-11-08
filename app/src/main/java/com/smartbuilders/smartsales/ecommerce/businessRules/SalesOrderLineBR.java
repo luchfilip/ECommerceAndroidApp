@@ -19,7 +19,7 @@ public class SalesOrderLineBR {
     private static double getTaxAmount(SalesOrderLine salesOrderLine, Product product){
         double taxAmount = 0;
         try {
-            taxAmount = product.getDefaultProductPriceAvailability().getTax() * salesOrderLine.getQuantityOrdered();
+            taxAmount = product.getProductPriceAvailability().getTax() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class SalesOrderLineBR {
     private static double getSubTotalLine(SalesOrderLine salesOrderLine, Product product){
         double subTotalLine = 0;
         try {
-            subTotalLine = product.getDefaultProductPriceAvailability().getPrice() * salesOrderLine.getQuantityOrdered();
+            subTotalLine = product.getProductPriceAvailability().getPrice() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class SalesOrderLineBR {
     private static double getTotalLine(SalesOrderLine salesOrderLine, Product product){
         double totalLine = 0;
         try {
-            totalLine = product.getDefaultProductPriceAvailability().getTotalPrice() * salesOrderLine.getQuantityOrdered();
+            totalLine = product.getProductPriceAvailability().getTotalPrice() * salesOrderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class SalesOrderLineBR {
         if ((qtyOrdered % product.getProductCommercialPackage().getUnits())!=0) {
             throw new Exception(context.getString(R.string.invalid_commercial_package_qty_requested));
         }
-        if (qtyOrdered > product.getDefaultProductPriceAvailability().getAvailability()) {
+        if (qtyOrdered > product.getProductPriceAvailability().getAvailability()) {
             throw new Exception(context.getString(R.string.invalid_availability_qty_requested));
         }
     }
@@ -72,7 +72,7 @@ public class SalesOrderLineBR {
         salesOrderLine.setProductId(product.getId());
         salesOrderLine.setProduct(product);
         salesOrderLine.setQuantityOrdered(qtyOrdered);
-        salesOrderLine.setProductPrice(product.getDefaultProductPriceAvailability().getPrice());
+        salesOrderLine.setProductPrice(product.getProductPriceAvailability().getPrice());
         salesOrderLine.setProductTaxPercentage(product.getProductTax().getPercentage());
         salesOrderLine.setLineTaxAmount(getTaxAmount(salesOrderLine, product));
         salesOrderLine.setSubTotalLineAmount(getSubTotalLine(salesOrderLine, product));

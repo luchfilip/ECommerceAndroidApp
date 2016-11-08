@@ -39,7 +39,7 @@ public class SubCategoriesListActivity extends AppCompatActivity {
         }
 
         ProductCategory productCategory = (new ProductCategoryDB(this, Utils.getCurrentUser(this)))
-                .getActiveProductCategoryById(mCategoryId);
+                .getProductCategory(mCategoryId);
         if (productCategory!=null) {
             if (!TextUtils.isEmpty(productCategory.getDescription())) {
                 ((TextView) findViewById(R.id.title_textView))

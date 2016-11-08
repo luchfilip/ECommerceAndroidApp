@@ -19,7 +19,7 @@ public class OrderLineBR {
     private static double getTaxAmount(OrderLine orderLine, Product product){
         double taxAmount = 0;
         try {
-            taxAmount = product.getDefaultProductPriceAvailability().getTax() * orderLine.getQuantityOrdered();
+            taxAmount = product.getProductPriceAvailability().getTax() * orderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class OrderLineBR {
     private static double getSubTotalLine(OrderLine orderLine, Product product){
         double subTotalLine = 0;
         try {
-            subTotalLine = product.getDefaultProductPriceAvailability().getPrice() * orderLine.getQuantityOrdered();
+            subTotalLine = product.getProductPriceAvailability().getPrice() * orderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class OrderLineBR {
     private static double getTotalLine(OrderLine orderLine, Product product){
         double totalLine = 0;
         try {
-            totalLine = product.getDefaultProductPriceAvailability().getTotalPrice() * orderLine.getQuantityOrdered();
+            totalLine = product.getProductPriceAvailability().getTotalPrice() * orderLine.getQuantityOrdered();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class OrderLineBR {
         if ((qtyOrdered % product.getProductCommercialPackage().getUnits())!=0) {
             throw new Exception(context.getString(R.string.invalid_commercial_package_qty_requested));
         }
-        if (qtyOrdered > product.getDefaultProductPriceAvailability().getAvailability()) {
+        if (qtyOrdered > product.getProductPriceAvailability().getAvailability()) {
             throw new Exception(context.getString(R.string.invalid_availability_qty_requested));
         }
     }
@@ -72,7 +72,7 @@ public class OrderLineBR {
         orderLine.setProductId(product.getId());
         orderLine.setProduct(product);
         orderLine.setQuantityOrdered(qtyOrdered);
-        orderLine.setProductPrice(product.getDefaultProductPriceAvailability().getPrice());
+        orderLine.setProductPrice(product.getProductPriceAvailability().getPrice());
         orderLine.setProductTaxPercentage(product.getProductTax().getPercentage());
         orderLine.setLineTaxAmount(getTaxAmount(orderLine, product));
         orderLine.setSubTotalLineAmount(getSubTotalLine(orderLine, product));

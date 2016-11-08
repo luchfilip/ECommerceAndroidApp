@@ -20,7 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
+import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
@@ -48,6 +50,7 @@ public class ProductDetailFragment extends Fragment {
     private User mUser;
     private Intent mShareIntent;
     private ProgressDialog waitPlease;
+    private ProductSubCategory mProductSubCategory;
 
     public ProductDetailFragment() {
     }
@@ -91,9 +94,12 @@ public class ProductDetailFragment extends Fragment {
                             relatedProductsByBrandId.addAll(productDB
                                     .getRelatedProductsByBrandId(mProduct.getProductBrand().getId(), mProduct.getId(), 12));
                         }
-                        if (mProduct.getProductSubCategory()!=null) {
+
+                        mProductSubCategory = mProduct.getProductSubCategoryId()!=0 ? (new ProductSubCategoryDB(getContext(), mUser))
+                                .getProductSubCategory(mProduct.getProductSubCategoryId()) : null;
+                        if (mProductSubCategory!=null) {
                             relatedProductsBySubCategoryId.addAll(productDB
-                                    .getRelatedProductsBySubCategoryId(mProduct.getProductSubCategory().getId(), mProduct.getId(), 12));
+                                    .getRelatedProductsBySubCategoryId(mProductSubCategory.getId(), mProduct.getId(), 12));
                         }
                         //Se agrega el producto a la lista de productos recientemente vistos
                         (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProduct.getId());
@@ -290,10 +296,10 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.related_products_by_brand_card_view).setVisibility(View.GONE);
                                     }
 
-                                    if (!relatedProductsBySubCategoryId.isEmpty()) {
+                                    if (!relatedProductsBySubCategoryId.isEmpty() && mProductSubCategory!=null) {
                                         ((TextView) view.findViewById(R.id.related_products))
                                                 .setText(getString(R.string.related_products_by_sub_category_details,
-                                                        mProduct.getProductSubCategory().getName()));
+                                                        mProductSubCategory.getName()));
                                         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.relatedproducts_recycler_view);
                                         // use this setting to improve performance if you know that changes
                                         // in content do not change the layout size of the RecyclerView
@@ -369,14 +375,14 @@ public class ProductDetailFragment extends Fragment {
                                         if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                                             ((TextView) view.findViewById(R.id.product_price))
                                                     .setText(getString(R.string.product_total_price_detail,
-                                                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                                                            mProduct.getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                                                            mProduct.getProductPriceAvailability().getCurrency().getName(),
+                                                            mProduct.getProductPriceAvailability().getTotalPriceStringFormat()));
                                             view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
                                         } else if (Parameter.showProductPrice(getContext(), mUser)) {
                                             ((TextView) view.findViewById(R.id.product_price))
                                                     .setText(getString(R.string.product_price_detail,
-                                                            mProduct.getDefaultProductPriceAvailability().getCurrency().getName(),
-                                                            mProduct.getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                                            mProduct.getProductPriceAvailability().getCurrency().getName(),
+                                                            mProduct.getProductPriceAvailability().getPriceStringFormat()));
                                             view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
                                         } else {
                                             view.findViewById(R.id.product_price).setVisibility(View.GONE);
@@ -387,7 +393,7 @@ public class ProductDetailFragment extends Fragment {
 
                                     ((TextView) view.findViewById(R.id.product_availability))
                                             .setText(getString(R.string.availability,
-                                                    mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                                                    mProduct.getProductPriceAvailability().getAvailability()));
                                 } else {
                                     //TODO: mostrar mesaje de error cuando el objeto product es null
                                 }

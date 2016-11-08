@@ -166,13 +166,13 @@ public class RecommendedProductsListAdapter extends
         if (mIsManagePriceInOrder) {
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getDefaultProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getDefaultProductPriceAvailability().getPriceStringFormat()));
+                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                        mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
                 holder.productPrice.setVisibility(View.GONE);
@@ -182,7 +182,7 @@ public class RecommendedProductsListAdapter extends
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getDefaultProductPriceAvailability().getAvailability()));
+                mDataset.get(position).getProductPriceAvailability().getAvailability()));
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

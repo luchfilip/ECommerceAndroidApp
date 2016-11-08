@@ -12,13 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.model.ProductSearchResult;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.BrandsListActivity;
 import com.smartbuilders.smartsales.ecommerce.CategoriesListActivity;
 import com.smartbuilders.smartsales.ecommerce.ProductsListActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.RecentSearchDB;
-import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.model.RecentSearch;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -93,8 +93,8 @@ public class SearchResultAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if(mDataset.get(position) instanceof Product){
-            return ((Product) mDataset.get(position)).getId();
+        if(mDataset.get(position) instanceof ProductSearchResult){
+            return ((ProductSearchResult) mDataset.get(position)).getProductId();
         }
         return 0;
     }
@@ -105,40 +105,41 @@ public class SearchResultAdapter extends BaseAdapter {
         //complicado el mantenimiento
         View view = LayoutInflater.from(mContext).inflate(R.layout.search_result_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        if(mDataset.get(position) instanceof Product){
-            if(!TextUtils.isEmpty(((Product) mDataset.get(position)).getName())){
+        if(mDataset.get(position) instanceof ProductSearchResult){
+            if(!TextUtils.isEmpty(((ProductSearchResult) mDataset.get(position)).getProductName())){
                 if((mTextToSearch!=null && mTextToSearch.length()<8 && !patternIsNotNumeric.matcher(mTextToSearch).matches())
-                        && ((Product) mDataset.get(position)).getInternalCode()!=null) {
+                        && ((ProductSearchResult) mDataset.get(position)).getProductInternalCode()!=null) {
                     viewHolder.title.setText(mContext.getString(R.string.product_internalCode_and_name,
-                            ((Product) mDataset.get(position)).getInternalCodeMayoreoFormat(),
-                            ((Product) mDataset.get(position)).getName()));
+                            ((ProductSearchResult) mDataset.get(position)).getProductInternalCodeMayoreoFormat(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductName()));
                 }else{
-                    viewHolder.title.setText(((Product) mDataset.get(position)).getName());
+                    viewHolder.title.setText(((ProductSearchResult) mDataset.get(position)).getProductName());
                 }
-            }else if (!TextUtils.isEmpty(((Product) mDataset.get(position)).getReference())){
-                viewHolder.title.setText(((Product) mDataset.get(position)).getReference());
-            }else if (!TextUtils.isEmpty(((Product) mDataset.get(position)).getPurpose())){
-                viewHolder.title.setText(((Product) mDataset.get(position)).getPurpose());
+            }else if (!TextUtils.isEmpty(((ProductSearchResult) mDataset.get(position)).getProductReference())){
+                viewHolder.title.setText(((ProductSearchResult) mDataset.get(position)).getProductReference());
+            }else if (!TextUtils.isEmpty(((ProductSearchResult) mDataset.get(position)).getProductPurpose())){
+                viewHolder.title.setText(((ProductSearchResult) mDataset.get(position)).getProductPurpose());
             }else{
                 viewHolder.title.setVisibility(TextView.GONE);
             }
-            if(((Product) mDataset.get(position)).getProductSubCategory()!=null &&
-                    !TextUtils.isEmpty(((Product) mDataset.get(position)).getProductSubCategory().getName())){
-                viewHolder.subTitle.setText(((Product) mDataset.get(position)).getProductSubCategory().getName());
+            if(((ProductSearchResult) mDataset.get(position)).getProductSubCategoryName()!=null &&
+                    !TextUtils.isEmpty(((ProductSearchResult) mDataset.get(position)).getProductSubCategoryName())){
+                viewHolder.subTitle.setText(((ProductSearchResult) mDataset.get(position)).getProductSubCategoryName());
             }else{
                 viewHolder.subTitle.setVisibility(TextView.GONE);
             }
             view.findViewById(R.id.linearLayout_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    recentSearchDB.insertRecentSearch(((Product) mDataset.get(position)).getName(),
-                            ((Product) mDataset.get(position)).getReference(),
-                            ((Product) mDataset.get(position)).getPurpose(),
-                            ((Product) mDataset.get(position)).getId(),
-                            ((Product) mDataset.get(position)).getProductSubCategoryId());
-                    goToProductList(((Product) mDataset.get(position)).getName(),
-                            ((Product) mDataset.get(position)).getReference(),
-                            ((Product) mDataset.get(position)).getPurpose(), (Product) mDataset.get(position));
+                    recentSearchDB.insertRecentSearch(((ProductSearchResult) mDataset.get(position)).getProductName(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductReference(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductPurpose(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductId(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductSubCategoryId());
+                    goToProductList(((ProductSearchResult) mDataset.get(position)).getProductName(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductReference(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductPurpose(),
+                            ((ProductSearchResult) mDataset.get(position)).getProductSubCategoryId());
                 }
             });
         }else if(mDataset.get(position) instanceof String){
@@ -173,9 +174,9 @@ public class SearchResultAdapter extends BaseAdapter {
             viewHolder.title.setTextSize(14);
             viewHolder.title.setText(((RecentSearch) mDataset.get(position)).getTextToSearch());
 
-            if(((RecentSearch) mDataset.get(position)).getProductSubCategory()!=null &&
-                    !TextUtils.isEmpty(((RecentSearch) mDataset.get(position)).getProductSubCategory().getName())){
-                viewHolder.subTitle.setText(((RecentSearch) mDataset.get(position)).getProductSubCategory().getName());
+            if(((RecentSearch) mDataset.get(position)).getProductSubCategoryId()!=0 &&
+                    !TextUtils.isEmpty(((RecentSearch) mDataset.get(position)).getProductSubCategoryName())){
+                viewHolder.subTitle.setText(((RecentSearch) mDataset.get(position)).getProductSubCategoryName());
             }else{
                 viewHolder.subTitle.setVisibility(TextView.GONE);
             }
@@ -205,17 +206,14 @@ public class SearchResultAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if(((RecentSearch) mDataset.get(position)).getProductId()>0 &&
-                            ((RecentSearch) mDataset.get(position)).getSubcategoryId()>0) {
-                        Product product = new Product();
-                        product.setId(((RecentSearch) mDataset.get(position)).getProductId());
-                        product.setProductSubCategoryId(((RecentSearch) mDataset.get(position)).getSubcategoryId());
+                            ((RecentSearch) mDataset.get(position)).getProductSubCategoryId()>0) {
                         goToProductList(((RecentSearch) mDataset.get(position)).getProductName(),
                                 ((RecentSearch) mDataset.get(position)).getProductReference(),
-                                ((RecentSearch) mDataset.get(position)).getProductPurpose(), product);
+                                ((RecentSearch) mDataset.get(position)).getProductPurpose(),
+                                ((RecentSearch) mDataset.get(position)).getProductSubCategoryId());
                     }else{
-                        Intent intent = new Intent(mContext, ProductsListActivity.class);
-                        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch());
-                        mContext.startActivity(intent);
+                        mContext.startActivity((new Intent(mContext, ProductsListActivity.class))
+                                .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, ((RecentSearch) mDataset.get(position)).getTextToSearch()));
                     }
                 }
             });
@@ -224,13 +222,12 @@ public class SearchResultAdapter extends BaseAdapter {
         return view;
     }
 
-    private void goToProductList(String productName, String productReference, String productPurpose, Product product){
-        Intent intent = new Intent(mContext, ProductsListActivity.class);
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, product.getProductSubCategoryId());
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_NAME, productName);
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_REFERENCE, productReference);
-        intent.putExtra(ProductsListActivity.KEY_PRODUCT_PURPOSE, productPurpose);
-        mContext.startActivity(intent);
+    private void goToProductList(String productName, String productReference, String productPurpose, int productSubCategoryId){
+        mContext.startActivity(new Intent(mContext, ProductsListActivity.class)
+                .putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, productSubCategoryId)
+                .putExtra(ProductsListActivity.KEY_PRODUCT_NAME, productName)
+                .putExtra(ProductsListActivity.KEY_PRODUCT_REFERENCE, productReference)
+                .putExtra(ProductsListActivity.KEY_PRODUCT_PURPOSE, productPurpose));
     }
 
     /**

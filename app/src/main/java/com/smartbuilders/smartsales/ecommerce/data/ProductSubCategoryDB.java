@@ -22,7 +22,7 @@ public class ProductSubCategoryDB {
         this.mUser = user;
     }
 
-    public ProductSubCategory getActiveProductSubCategoryById(int subCategoryId){
+    public ProductSubCategory getProductSubCategory(int subCategoryId){
         Cursor c = null;
         try {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -54,7 +54,7 @@ public class ProductSubCategoryDB {
         return null;
     }
 
-    public ArrayList<ProductSubCategory> getActiveProductSubCategoriesByCategoryId(int categoryId){
+    public ArrayList<ProductSubCategory> getProductSubCategoriesByCategoryId(int categoryId){
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {

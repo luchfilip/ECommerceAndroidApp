@@ -78,14 +78,14 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_price_textView))
                         .setText(getString(R.string.product_total_price_detail,
-                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getTotalPriceStringFormat()));
+                                mOrderLine.getProduct().getProductPriceAvailability().getCurrency().getName(),
+                                mOrderLine.getProduct().getProductPriceAvailability().getTotalPriceStringFormat()));
                 view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
             } else if (Parameter.showProductPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_price_textView))
                         .setText(getString(R.string.product_price_detail,
-                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getCurrency().getName(),
-                                mOrderLine.getProduct().getDefaultProductPriceAvailability().getPriceStringFormat()));
+                                mOrderLine.getProduct().getProductPriceAvailability().getCurrency().getName(),
+                                mOrderLine.getProduct().getProductPriceAvailability().getPriceStringFormat()));
                 view.findViewById(R.id.product_price_textView).setVisibility(View.VISIBLE);
             } else {
                 view.findViewById(R.id.product_price_textView).setVisibility(View.GONE);
@@ -96,7 +96,7 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
 
         ((TextView) view.findViewById(R.id.product_availability_textView))
                 .setText(getContext().getString(R.string.availability,
-                        mOrderLine.getProduct().getDefaultProductPriceAvailability().getAvailability()));
+                        mOrderLine.getProduct().getProductPriceAvailability().getAvailability()));
 
         view.findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override

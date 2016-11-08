@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.smartbuilders.smartsales.ecommerce.model.ProductSearchResult;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
@@ -407,8 +408,8 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByName(String name){
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<ProductSearchResult> getLightProductsByName(String name){
+        ArrayList<ProductSearchResult> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
         if(TextUtils.isEmpty(name) || name.length()>120
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
@@ -462,13 +463,12 @@ public class ProductDB {
 
             if (c!=null) {
                 while(c.moveToNext()){
-                    Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setName(c.getString(2));
-                    p.setInternalCode(c.getString(3));
+                    ProductSearchResult p = new ProductSearchResult();
+                    p.setProductId(c.getInt(0));
+                    p.setProductName(c.getString(2));
+                    p.setProductInternalCode(c.getString(3));
                     p.setProductSubCategoryId(c.getInt(1));
-                    p.getProductSubCategory().setId(c.getInt(1));
-                    p.getProductSubCategory().setName(c.getString(4));
+                    p.setProductSubCategoryName(c.getString(4));
                     products.add(p);
                 }
             }
@@ -554,8 +554,8 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByReference(String reference){
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<ProductSearchResult> getLightProductsByReference(String reference){
+        ArrayList<ProductSearchResult> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
         if(TextUtils.isEmpty(reference) || reference.length()>120
                 || reference.replaceAll("\\s+", " ").trim().split(" ").length>15){
@@ -595,20 +595,19 @@ public class ProductDB {
             if (c!=null) {
                 productRepeated:
                 while(c.moveToNext()){
-                    for (Product product : products) {
+                    for (ProductSearchResult product : products) {
                         if (product.getProductSubCategoryId() == c.getInt(1)
-                                && product.getReference()!=null && c.getString(2)!=null
-                                && product.getReference().equals(c.getString(2))) {
+                                && product.getProductReference()!=null && c.getString(2)!=null
+                                && product.getProductReference().equals(c.getString(2))) {
                             continue productRepeated;
                         }
                     }
-                    Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setReference(c.getString(2));
-                    p.setInternalCode(c.getString(3));
+                    ProductSearchResult p = new ProductSearchResult();
+                    p.setProductId(c.getInt(0));
+                    p.setProductReference(c.getString(2));
+                    p.setProductInternalCode(c.getString(3));
                     p.setProductSubCategoryId(c.getInt(1));
-                    p.getProductSubCategory().setId(c.getInt(1));
-                    p.getProductSubCategory().setName(c.getString(4));
+                    p.setProductSubCategoryName(c.getString(4));
                     products.add(p);
                 }
             }
@@ -694,8 +693,8 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByPurpose(String purpose){
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<ProductSearchResult> getLightProductsByPurpose(String purpose){
+        ArrayList<ProductSearchResult> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
         if(TextUtils.isEmpty(purpose) || purpose.length()>120
                 || purpose.replaceAll("\\s+", " ").trim().split(" ").length>15){
@@ -735,20 +734,19 @@ public class ProductDB {
             if (c!=null) {
                 productRepeated:
                 while(c.moveToNext()){
-                    for (Product product : products) {
+                    for (ProductSearchResult product : products) {
                         if (product.getProductSubCategoryId() == c.getInt(1)
-                                && product.getPurpose()!=null && c.getString(2)!=null
-                                && product.getPurpose().equals(c.getString(2))) {
+                                && product.getProductPurpose()!=null && c.getString(2)!=null
+                                && product.getProductPurpose().equals(c.getString(2))) {
                             continue productRepeated;
                         }
                     }
-                    Product p = new Product();
-                    p.setId(c.getInt(0));
-                    p.setPurpose(c.getString(2));
-                    p.setInternalCode(c.getString(3));
+                    ProductSearchResult p = new ProductSearchResult();
+                    p.setProductId(c.getInt(0));
+                    p.setProductPurpose(c.getString(2));
+                    p.setProductInternalCode(c.getString(3));
                     p.setProductSubCategoryId(c.getInt(1));
-                    p.getProductSubCategory().setId(c.getInt(1));
-                    p.getProductSubCategory().setName(c.getString(4));
+                    p.setProductSubCategoryName(c.getString(4));
                     products.add(p);
                 }
             }
@@ -858,23 +856,23 @@ public class ProductDB {
         product.getProductBrand().setName(cursor.getString(9));
         product.getProductBrand().setDescription(cursor.getString(10));
         product.setProductCategoryId(cursor.getInt(11));
-        product.getProductCategory().setId(cursor.getInt(11));
-        product.getProductCategory().setName(cursor.getString(12));
-        product.getProductCategory().setDescription(cursor.getString(13));
+        //product.getProductCategory().setId(cursor.getInt(11));
+        //product.getProductCategory().setName(cursor.getString(12));
+        //product.getProductCategory().setDescription(cursor.getString(13));
         product.setProductSubCategoryId(cursor.getInt(1));
-        product.getProductSubCategory().setProductCategoryId(cursor.getInt(11));
-        product.getProductSubCategory().setId(cursor.getInt(1));
-        product.getProductSubCategory().setName(cursor.getString(14));
-        product.getProductSubCategory().setDescription(cursor.getString(15));
-        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(16));
+        //product.getProductSubCategory().setProductCategoryId(cursor.getInt(11));
+        //product.getProductSubCategory().setId(cursor.getInt(1));
+        //product.getProductSubCategory().setName(cursor.getString(14));
+        //product.getProductSubCategory().setDescription(cursor.getString(15));
+        product.getProductPriceAvailability().setAvailability(cursor.getInt(16));
         product.setImageFileName(cursor.getString(17));
         product.setRating(cursor.getFloat(18));
-        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(19));
-        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(19));
-        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(20));
-        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(21));
-        product.getDefaultProductPriceAvailability().setTax(cursor.getFloat(22));
-        product.getDefaultProductPriceAvailability().setTotalPrice(cursor.getFloat(23));
+        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(19));
+        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(19));
+        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(20));
+        product.getProductPriceAvailability().setPrice(cursor.getFloat(21));
+        product.getProductPriceAvailability().setTax(cursor.getFloat(22));
+        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(23));
         product.setProductTaxId(cursor.getInt(24));
         product.getProductTax().setId(cursor.getInt(24));
         product.getProductTax().setPercentage(cursor.getFloat(25));
@@ -923,18 +921,18 @@ public class ProductDB {
         product.getProductBrand().setDescription(cursor.getString(7));
         product.setProductCategoryId(cursor.getInt(8));
         product.setProductSubCategoryId(cursor.getInt(9));
-        product.getProductSubCategory().setProductCategoryId(cursor.getInt(8));
-        product.getProductSubCategory().setId(cursor.getInt(9));
-        product.getProductSubCategory().setName(cursor.getString(10));
-        product.getProductSubCategory().setDescription(cursor.getString(11));
-        product.getDefaultProductPriceAvailability().setAvailability(cursor.getInt(12));
+        //product.getProductSubCategory().setProductCategoryId(cursor.getInt(8));
+        //product.getProductSubCategory().setId(cursor.getInt(9));
+        //product.getProductSubCategory().setName(cursor.getString(10));
+        //product.getProductSubCategory().setDescription(cursor.getString(11));
+        product.getProductPriceAvailability().setAvailability(cursor.getInt(12));
         product.setRating(cursor.getFloat(13));
-        product.getDefaultProductPriceAvailability().setCurrencyId(cursor.getInt(14));
-        product.getDefaultProductPriceAvailability().getCurrency().setId(cursor.getInt(14));
-        product.getDefaultProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(15));
-        product.getDefaultProductPriceAvailability().setPrice(cursor.getFloat(16));
-        product.getDefaultProductPriceAvailability().setTax(cursor.getFloat(17));
-        product.getDefaultProductPriceAvailability().setTotalPrice(cursor.getFloat(18));
+        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(14));
+        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(14));
+        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(15));
+        product.getProductPriceAvailability().setPrice(cursor.getFloat(16));
+        product.getProductPriceAvailability().setTax(cursor.getFloat(17));
+        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(18));
         product.setFavorite(cursor.getString(19)!=null);
         product.setInternalCode(cursor.getString(20));
         product.setReference(cursor.getString(21));

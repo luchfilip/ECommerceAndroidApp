@@ -90,7 +90,7 @@ public class DialogAddToShoppingSale extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_sale, container);
         ((TextView) view.findViewById(R.id.product_availability_dialog_edit_qty_requested_tv))
                 .setText(getString(R.string.availability,
-                        mProduct.getDefaultProductPriceAvailability().getAvailability()));
+                        mProduct.getProductPriceAvailability().getAvailability()));
 
         businessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
         buttonsContainer = view.findViewById(R.id.buttons_container);
@@ -278,21 +278,21 @@ public class DialogAddToShoppingSale extends DialogFragment {
         product.setId(mProduct.getId());
 
         try {
-            product.getDefaultProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
+            product.getProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
         } catch (NumberFormatException e) {
             throw new Exception(getString(R.string.invalid_product_price));
         }
 
         try {
             product.getProductTax().setPercentage(Float.valueOf(productTaxPercentageEditText.getText().toString()));
-            product.getDefaultProductPriceAvailability().setTax(product.getDefaultProductPriceAvailability().getPrice()
+            product.getProductPriceAvailability().setTax(product.getProductPriceAvailability().getPrice()
                     * (product.getProductTax().getPercentage() / 100));
         } catch (NumberFormatException e) {
             throw new Exception(getString(R.string.invalid_product_tax_percentage));
         }
 
-        product.getDefaultProductPriceAvailability().setTotalPrice(product.getDefaultProductPriceAvailability().getPrice()
-                + product.getDefaultProductPriceAvailability().getTax());
+        product.getProductPriceAvailability().setTotalPrice(product.getProductPriceAvailability().getPrice()
+                + product.getProductPriceAvailability().getTax());
         /**********************************************************/
 
         SalesOrderLine salesOrderLine = new SalesOrderLine();
