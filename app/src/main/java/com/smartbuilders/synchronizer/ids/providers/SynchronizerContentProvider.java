@@ -23,6 +23,7 @@ import android.database.MatrixCursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 /**
  * 
@@ -183,11 +184,13 @@ public class SynchronizerContentProvider extends ContentProvider{
 				tablesDataSendToAndReceiveFromServer.start();
 				result = true;
 			} catch(IllegalThreadStateException e) {
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, IllegalThreadStateException() Exception");
+                //e.printStackTrace();
 				exceptionClass = e.getClass().getName();
-				e.printStackTrace();
 			} catch (Exception e) {
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, startSynchronization() Exception");
+                //e.printStackTrace();
 				exceptionClass = e.getClass().getName();
-				e.printStackTrace();
 				if(tablesDataSendToAndReceiveFromServer !=null && tablesDataSendToAndReceiveFromServer.isAlive()){
 					tablesDataSendToAndReceiveFromServer.stopSynchronization();
 				}
@@ -319,24 +322,29 @@ public class SynchronizerContentProvider extends ContentProvider{
 					throw new NullPointerException("response is null, "+user+".");
 				}
 			} catch(ConnectException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "ConnectException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signUp() ConnectException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signUp() ConnectException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketTimeoutException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketTimeoutException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signUp() SocketTimeoutException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signUp() SocketTimeoutException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signUp() SocketException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signUp() SocketException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(IOException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "IOException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signUp() IOException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signUp() IOException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch (Exception e) {
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "Exception, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signUp() Exception");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signUp() Exception" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			}
 		}
@@ -381,29 +389,34 @@ public class SynchronizerContentProvider extends ContentProvider{
 					codeResult = Integer.valueOf(responseJson.getString("STATE"));
                     syncSessionId = Integer.valueOf(responseJson.getString("SYNC_SESSION_ID"));
 				}else if (response != null){
-					throw new ClassCastException("response classCastException, "+user+".");
+					throw new ClassCastException("response classCastException.");
 				}else {
-					throw new NullPointerException("response is null, "+user+".");
+					throw new NullPointerException("response is null.");
 				}
 			} catch(ConnectException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "ConnectException, "+user+"." : e.getMessage();
+				Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signIn() ConnectException");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signIn() ConnectException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketTimeoutException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketTimeoutException, "+user+"." : e.getMessage();
+				Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signIn() SocketTimeoutException");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signIn() SocketTimeoutException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketException, "+user+"." : e.getMessage();
+				Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signIn() SocketException");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signIn() SocketException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(IOException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "IOException, "+user+"." : e.getMessage();
+				Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signIn() IOException");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signIn() IOException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch (Exception e) {
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "Exception, "+user+"." : e.getMessage();
+				Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signIn() Exception");
+				//e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signIn() Exception" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			}
 		}
@@ -445,24 +458,29 @@ public class SynchronizerContentProvider extends ContentProvider{
                     throw new NullPointerException("response is null, "+user+".");
                 }
             } catch(ConnectException e){
-                e.printStackTrace();
-                errorMessage = e.getMessage()==null ? "ConnectException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, getAuthToken() ConnectException");
+                //e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, getAuthToken() ConnectException" : e.getMessage();
                 exceptionClass = e.getClass().getName();
             } catch(SocketTimeoutException e){
-                e.printStackTrace();
-                errorMessage = e.getMessage()==null ? "SocketTimeoutException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, getAuthToken() SocketTimeoutException");
+                //e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, getAuthToken() SocketTimeoutException" : e.getMessage();
                 exceptionClass = e.getClass().getName();
             } catch(SocketException e){
-                e.printStackTrace();
-                errorMessage = e.getMessage()==null ? "SocketException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, getAuthToken() SocketException");
+                //e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, getAuthToken() SocketException" : e.getMessage();
                 exceptionClass = e.getClass().getName();
             } catch(IOException e){
-                e.printStackTrace();
-                errorMessage = e.getMessage()==null ? "IOException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, getAuthToken() IOException");
+                //e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, getAuthToken() IOException" : e.getMessage();
                 exceptionClass = e.getClass().getName();
             } catch (Exception e) {
-                e.printStackTrace();
-                errorMessage = e.getMessage()==null ? "Exception, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, getAuthToken() Exception");
+                //e.printStackTrace();
+                errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, getAuthToken() Exception" : e.getMessage();
                 exceptionClass = e.getClass().getName();
             }
         }
@@ -512,24 +530,29 @@ public class SynchronizerContentProvider extends ContentProvider{
 					throw new NullPointerException("response is null, "+user+".");
 				}
 			} catch(ConnectException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "ConnectException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signOut() ConnectException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signOut() ConnectException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketTimeoutException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketTimeoutException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signOut() SocketTimeoutException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signOut() SocketTimeoutException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(SocketException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "SocketException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signOut() SocketException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signOut() SocketException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch(IOException e){
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "IOException, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signOut() IOException");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signOut() IOException" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			} catch (Exception e) {
-				e.printStackTrace();
-				errorMessage = e.getMessage()==null ? "Exception, "+user+"." : e.getMessage();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, signOut() Exception");
+                //e.printStackTrace();
+				errorMessage = e.getMessage()==null ? "Error in SynchronizerContentProvider, signOut() Exception" : e.getMessage();
 				exceptionClass = e.getClass().getName();
 			}
 		}
@@ -574,7 +597,8 @@ public class SynchronizerContentProvider extends ContentProvider{
 					throw new ClassCastException("response classCastException, "+user+".");
 				}
 			}catch (Exception e){
-				e.printStackTrace();
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, registerGcmIdInServer() Exception");
+                //e.printStackTrace();
 				errorMessage = e.getMessage();
 				exceptionClass = e.getClass().getName();
 			}
@@ -601,9 +625,10 @@ public class SynchronizerContentProvider extends ContentProvider{
                         getContext(), uri.getQueryParameter(KEY_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_SERVER_TO_CLIENT)).start();
                 result = true;
             } catch (Exception e) {
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, syncDataFromServer() Exception");
+                //e.printStackTrace();
                 exceptionClass = e.getClass().getName();
                 errorMessage = e.getMessage();
-                e.printStackTrace();
             }
         }
         cursor.addRow(new Object[]{result, errorMessage, exceptionClass});
@@ -628,9 +653,10 @@ public class SynchronizerContentProvider extends ContentProvider{
                         getContext(), uri.getQueryParameter(KEY_TABLES_TO_SYNC), TablesDataSendToAndReceiveFromServer.TRANSMISSION_CLIENT_TO_SERVER)).start();
                 result = true;
             } catch (Exception e) {
+                Log.e(SynchronizerContentProvider.class.getSimpleName(), "Error in SynchronizerContentProvider, syncDataToServer() Exception");
+                //e.printStackTrace();
                 exceptionClass = e.getClass().getName();
                 errorMessage = e.getMessage();
-                e.printStackTrace();
             }
         }
         cursor.addRow(new Object[]{result, errorMessage, exceptionClass});

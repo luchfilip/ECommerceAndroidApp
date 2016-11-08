@@ -32,28 +32,27 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
-                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
-                        " INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = P.PRODUCT_ID AND R.PRODUCT_ID = ? " +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? "  +
-                    " ORDER BY R.TIMES DESC " +
-                    ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    sql, new String[]{"Y", "Y", "Y", "0", "Y", String.valueOf(productId), "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(productId), "Y"}, null);
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" INNER JOIN PRODUCT_SHOPPING_RELATED R ON R.PRODUCT_RELATED_ID = P.PRODUCT_ID AND R.PRODUCT_ID = ").append(productId).append(" ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.PRODUCT_ID <> ").append(productId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY R.TIMES DESC ")
+                    .append((limit!=null && limit>0) ? " LIMIT " + limit : "");
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(), null, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -79,27 +78,26 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
-                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.SUBCATEGORY_ID = ? AND P.PRODUCT_ID <> ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC " +
-                    ((limit!=null && limit>0) ? " LIMIT " + limit : "");
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    sql, new String[]{"Y", "Y", "Y", "0", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(subCategoryId), String.valueOf(productId), "Y"}, null);
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.SUBCATEGORY_ID = ").append(subCategoryId).append(" AND P.PRODUCT_ID <> ").append(productId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY P.NAME ASC ")
+                    .append((limit!=null && limit>0) ? " LIMIT " + limit : "");
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(), null, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -125,27 +123,25 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            String sql = "SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, " +
-                        " B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, " +
-                        " PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 "+
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.BRAND_ID = ? AND P.PRODUCT_ID <> ?  AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC " +
-                    ((limit!=null && limit>0) ? " LIMIT " + limit : "");
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, ")
+                    .append(" PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.BRAND_ID = ").append(brandId).append(" AND P.PRODUCT_ID <> ").append(productId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY P.NAME ASC ")
+                    .append(((limit!=null && limit>0) ? " LIMIT " + limit : ""));
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    sql, new String[]{"Y", "Y", "Y", "0", "Y", "Y", "1", "Y", "Y",
-                    String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                    String.valueOf(brandId), String.valueOf(productId), "Y"}, null);
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null, sql.toString(), null, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -172,28 +168,26 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
+                    .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.SUBCATEGORY_ID = ").append(subCategoryId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY P.NAME ASC ");
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
-                        " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
-                        " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ?" +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.SUBCATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC ",
-                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(subCategoryId), "Y"}, null);
+                    sql.toString(), null, null);
             if (c!=null) {
                 String[] words;
                 String searchPattern = productName;
@@ -249,28 +243,27 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
-                        " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 "+
-                        " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ?" +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE S.CATEGORY_ID = ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC ",
-                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(categoryId), "Y"}, null);
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
+                    .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE S.CATEGORY_ID = ").append(categoryId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY P.NAME ASC ");
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(), null, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -296,28 +289,27 @@ public class ProductDB {
         ArrayList<Product> products = new ArrayList<>();
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, " +
-                        " P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 "+
-                        " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ?" +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.BRAND_ID = ? AND P.IS_ACTIVE = ? " +
-                    " ORDER BY P.NAME ASC",
-                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(brandId), "Y"}, null);
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
+                    .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
+                    .append(" LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.BRAND_ID = ").append(brandId).append(" AND P.IS_ACTIVE = 'Y' ")
+                    .append(" ORDER BY P.NAME ASC");
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(), null, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -365,7 +357,7 @@ public class ProductDB {
                     .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
-                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = 'Y' ");
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ");
 
             //si es un numero
             if(name.length()<8 && !patternIsNotNumeric.matcher(name).matches()) {
@@ -374,8 +366,7 @@ public class ProductDB {
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                                 sql.append(" WHERE P.INTERNAL_CODE LIKE ? AND P.IS_ACTIVE = 'Y' ")
                                         .append(" ORDER BY P.NAME ASC").toString(),
-                                new String[]{String.valueOf(mUser.getServerUserId()),
-                                        OrderLineDB.WISH_LIST_DOC_TYPE, name+"%"}, null);
+                                new String[]{name+"%"}, null);
             }else{
                 StringBuilder aux = new StringBuilder();
                 StringBuilder firstWord = new StringBuilder();
@@ -393,8 +384,7 @@ public class ProductDB {
                                         .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
                                         .append(" AND P.IS_ACTIVE = 'Y' ")
                                         .append(" ORDER BY P.NAME ASC").toString(),
-                                new String[]{String.valueOf(mUser.getServerUserId()),
-                                        OrderLineDB.WISH_LIST_DOC_TYPE, firstWord.toString(), aux.toString()}, null);
+                                new String[]{firstWord.toString(), aux.toString()}, null);
             }
             if (c!=null) {
                 while(c.moveToNext()){
@@ -417,19 +407,19 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByName(String searchPattern){
+    public ArrayList<Product> getLightProductsByName(String name){
         ArrayList<Product> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
-        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
-                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
+        if(TextUtils.isEmpty(name) || name.length()>120
+                || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        searchPattern = Normalizer.normalize(searchPattern.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
+        name = Normalizer.normalize(name.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
                 Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
 
-        boolean isNumeric = (searchPattern.length()<8 && !patternIsNotNumeric.matcher(searchPattern).matches());
+        boolean isNumeric = (name.length()<8 && !patternIsNotNumeric.matcher(name).matches());
 
-        if(!isNumeric && (TextUtils.isEmpty(searchPattern) || searchPattern.length()<1)){
+        if(!isNumeric && (TextUtils.isEmpty(name) || name.length()<1)){
             return products;
         }
 
@@ -449,15 +439,15 @@ public class ProductDB {
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                                 sql.append(" WHERE P.INTERNAL_CODE LIKE ? AND P.IS_ACTIVE = 'Y' ")
                                         .append(" ORDER BY P.INTERNAL_CODE ASC LIMIT 30").toString(),
-                                new String[]{searchPattern+"%"}, null);
+                                new String[]{name+"%"}, null);
             } else {
                 StringBuilder aux = new StringBuilder();
                 StringBuilder firstWord = new StringBuilder();
-                for (String word : searchPattern.split(" ")){
+                for (String word : name.split(" ")){
                     firstWord.append(firstWord.length()==0 ? "% " : " ").append(word).append("%");
                     aux.append(aux.length()==0 ? "" : " ").append(word).append("%");
                 }
-                String firstReplace = searchPattern.contains("\"")
+                String firstReplace = name.contains("\"")
                         ? "replace(lower(P.NAME),'á','a')"
                         : "replace(replace(lower(P.NAME),'\"',''),'á','a')";
                 c = mContext.getContentResolver()
@@ -466,7 +456,7 @@ public class ProductDB {
                                 sql.append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
                                         .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
                                         .append(" AND P.IS_ACTIVE = 'Y' ORDER BY P.NAME ASC ")
-                                        .append((searchPattern.length()>1 ? "" : " LIMIT 50")).toString(),
+                                        .append((name.length()>1 ? "" : " LIMIT 50")).toString(),
                                 new String[]{firstWord.toString(), aux.toString()}, null);
             }
 
@@ -532,7 +522,7 @@ public class ProductDB {
                     .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
-                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
                     .append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
                     .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
                     .append(" AND P.IS_ACTIVE = 'Y' ")
@@ -542,8 +532,7 @@ public class ProductDB {
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null, sql.toString(),
-                            new String[]{String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE,
-                                    firstWord.toString(), aux.toString()}, null);
+                            new String[]{firstWord.toString(), aux.toString()}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -565,25 +554,25 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByReference(String searchPattern){
+    public ArrayList<Product> getLightProductsByReference(String reference){
         ArrayList<Product> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
-        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
-                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
+        if(TextUtils.isEmpty(reference) || reference.length()>120
+                || reference.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        searchPattern = Normalizer.normalize(searchPattern.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
+        reference = Normalizer.normalize(reference.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
                 Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
 
         Cursor c = null;
         try {
             StringBuilder aux = new StringBuilder();
             StringBuilder firstWord = new StringBuilder();
-            for (String word : searchPattern.split(" ")){
+            for (String word : reference.split(" ")){
                 firstWord.append(firstWord.length()==0 ? "% " : " ").append(word).append("%");
                 aux.append(aux.length()==0 ? "" : " ").append(word).append("%");
             }
-            String firstReplace = searchPattern.contains("\"")
+            String firstReplace = reference.contains("\"")
                     ? "replace(lower(P.REFERENCE_ID),'á','a')"
                     : "replace(replace(lower(P.REFERENCE_ID),'\"',''),'á','a')";
 
@@ -595,13 +584,14 @@ public class ProductDB {
                     .append(" INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
                     .append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
                     .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
-                    .append(" AND P.IS_ACTIVE = ? ")
+                    .append(" AND P.IS_ACTIVE = 'Y' ")
                     .append(" ORDER BY P.NAME ASC ")
-                    .append(searchPattern.length()>1 ? "" : " LIMIT 50");
+                    .append(reference.length()>1 ? "" : " LIMIT 50");
             c = mContext.getContentResolver()
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                            sql.toString(), new String[]{firstWord.toString(), aux.toString(), "Y"}, null);
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(),
+                            new String[]{firstWord.toString(), aux.toString()}, null);
             if (c!=null) {
                 productRepeated:
                 while(c.moveToNext()){
@@ -672,7 +662,7 @@ public class ProductDB {
                     .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
                     .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
-                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
                     .append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
                     .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
                     .append(" AND P.IS_ACTIVE = 'Y' ")
@@ -682,8 +672,7 @@ public class ProductDB {
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null, sql.toString(),
-                            new String[]{ String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE,
-                                    firstWord.toString(), aux.toString()}, null);
+                            new String[]{firstWord.toString(), aux.toString()}, null);
             if (c!=null) {
                 while(c.moveToNext()){
                     Product p = new Product();
@@ -705,25 +694,25 @@ public class ProductDB {
         return products;
     }
 
-    public ArrayList<Product> getLightProductsByPurpose(String searchPattern){
+    public ArrayList<Product> getLightProductsByPurpose(String purpose){
         ArrayList<Product> products = new ArrayList<>();
         //Se valida que la busqueda no este vacia o no sea muy grande
-        if(TextUtils.isEmpty(searchPattern) || searchPattern.length()>120
-                || searchPattern.replaceAll("\\s+", " ").trim().split(" ").length>15){
+        if(TextUtils.isEmpty(purpose) || purpose.length()>120
+                || purpose.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        searchPattern = Normalizer.normalize(searchPattern.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
+        purpose = Normalizer.normalize(purpose.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
                 Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
 
         Cursor c = null;
         try {
             StringBuilder aux = new StringBuilder();
             StringBuilder firstWord = new StringBuilder();
-            for (String word : searchPattern.split(" ")){
+            for (String word : purpose.split(" ")){
                 firstWord.append(firstWord.length()==0 ? "% " : " ").append(word).append("%");
                 aux.append(aux.length()==0 ? "" : " ").append(word).append("%");
             }
-            String firstReplace = searchPattern.contains("\"")
+            String firstReplace = purpose.contains("\"")
                     ? "replace(lower(P.PURPOSE),'á','a')"
                     : "replace(replace(lower(P.PURPOSE),'\"',''),'á','a')";
 
@@ -736,7 +725,7 @@ public class ProductDB {
                     .append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
                     .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
                     .append(" AND P.IS_ACTIVE = 'Y' ORDER BY P.NAME ASC ")
-                    .append(searchPattern.length()>1 ? "" : " LIMIT 100");
+                    .append(purpose.length()>1 ? "" : " LIMIT 100");
 
             c = mContext.getContentResolver()
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -783,27 +772,26 @@ public class ProductDB {
         }
         Cursor c = null;
         try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, " +
-                        " P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, " +
-                        " B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, " +
-                        " S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, " +
-                        " PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID " +
-                    " FROM PRODUCT P " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? " +
-                        " LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = ? "+
-                        " LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = ? AND PI.IS_ACTIVE = ? " +
-                        " LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = ? " +
-                        " LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ? AND OL.DOC_TYPE=? AND OL.IS_ACTIVE = ? " +
-                    " WHERE P.PRODUCT_ID = ? AND P.IS_ACTIVE = ?",
-                    new String[]{"Y", "Y", "Y", "0", "Y", "Y", "Y", "1", "Y", "Y",
-                            String.valueOf(mUser.getServerUserId()), OrderLineDB.WISH_LIST_DOC_TYPE, "Y",
-                            String.valueOf(id), "Y"}, null);
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
+                    .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, ")
+                    .append(" B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
+                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
+                    .append(" FROM PRODUCT P ")
+                    .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
+                    .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN CURRENCY CU ON CU.CURRENCY_ID = PA.CURRENCY_ID AND CU.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_TAX PT ON PT.PRODUCT_TAX_ID = P.PRODUCT_TAX_ID AND PT.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_IMAGE PI ON PI.PRODUCT_ID = P.PRODUCT_ID AND PI.PRIORITY = 1 AND PI.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN PRODUCT_RATING PR ON PR.PRODUCT_ID = P.PRODUCT_ID AND PR.IS_ACTIVE = 'Y' ")
+                    .append(" LEFT JOIN ECOMMERCE_ORDER_LINE OL ON OL.PRODUCT_ID = P.PRODUCT_ID AND OL.USER_ID = ").append(mUser.getServerUserId()).append(" AND OL.DOC_TYPE = '").append(OrderLineDB.WISH_LIST_DOC_TYPE).append("' AND OL.IS_ACTIVE = 'Y' ")
+                    .append(" WHERE P.PRODUCT_ID = ").append(id).append(" AND P.IS_ACTIVE = 'Y'");
+            c = mContext.getContentResolver()
+                    .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                            null, sql.toString(), null, null);
             if (c!=null && c.moveToNext()){
                 Product p = new Product();
                 fillFullProductInfoFromCursor(p, c);
@@ -966,8 +954,8 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT PRODUCT_ID FROM PRODUCT WHERE INTERNAL_CODE = ? AND IS_ACTIVE = ?",
-                    new String[]{productCode, "Y",}, null);
+                    "SELECT PRODUCT_ID FROM PRODUCT WHERE INTERNAL_CODE = ? AND IS_ACTIVE = 'Y'",
+                    new String[]{productCode}, null);
             if (c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
@@ -995,8 +983,8 @@ public class ProductDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT PRODUCT_ID FROM PRODUCT WHERE BAR_CODE = ? AND IS_ACTIVE = ?",
-                    new String[]{barCode, "Y",}, null);
+                    "SELECT PRODUCT_ID FROM PRODUCT WHERE BAR_CODE = ? AND IS_ACTIVE = 'Y'",
+                    new String[]{barCode}, null);
             if (c!=null && c.moveToNext()){
                 return c.getInt(0);
             }

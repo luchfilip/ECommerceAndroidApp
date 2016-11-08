@@ -519,7 +519,7 @@ public class ProductDetailFragment extends Fragment {
 
         private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (getActivity()!=null && getContext()!=null && mUser!=null && mProduct==null) {
+                if (getActivity()!=null && getContext()!=null && mUser!=null && mProduct!=null) {
                     mShareIntent = Utils.createShareProductIntentFromView(getActivity(), getContext(), mUser, mProduct);
                 } else {
                     mShareIntent = null;

@@ -520,4 +520,6 @@
     <string name="creating_product_share_card_wait_please">Creando cartilla del producto, espere por favor...</string>
     <string name="order_deliver_status_sent">El pedido se ha transmitido exitosamente.</string>
     <string name="order_deliver_status_wait_for_send">El pedido está pendiente por transmitir, revise su conexión a internet.</string>
+    <string name="sending_order">Enviando Pedido...</string>
+    <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
 </resources>
