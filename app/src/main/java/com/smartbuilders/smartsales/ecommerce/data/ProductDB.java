@@ -195,7 +195,7 @@ public class ProductDB {
                     filterColumn = 3;
                 } else if (productReference!=null) {
                     searchPattern = productReference;
-                    filterColumn = 27;
+                    filterColumn = 23;
                 } else if (productPurpose!=null) {
                     searchPattern = productPurpose;
                     filterColumn = 5;

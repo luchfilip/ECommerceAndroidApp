@@ -201,9 +201,9 @@ public class SearchResultsActivity extends AppCompatActivity
                 });
             }
 
-            View imageSearchBarLayout = findViewById(R.id.image_search_bar_layout);
-            if(imageSearchBarLayout!=null){
-                imageSearchBarLayout.setOnClickListener(new View.OnClickListener() {
+            View searchImageButton = findViewById(R.id.image_search_bar_layout);
+            if(searchImageButton!=null){
+                searchImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(searchEditText!=null && searchEditText.getText()!=null){

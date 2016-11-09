@@ -103,16 +103,6 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
     }
 
     @Override
-    public void onBackPressed() {
-        if (findViewById(R.id.filter_editText) != null
-                && !TextUtils.isEmpty(((EditText) findViewById(R.id.filter_editText)).getText())) {
-            ((EditText) findViewById(R.id.filter_editText)).setText(null);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (!TextUtils.isEmpty(mCurrentFilterText)) {
             outState.putString(STATE_CURRENT_FILTER_TEXT, mCurrentFilterText);

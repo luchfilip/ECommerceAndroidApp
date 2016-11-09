@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/lateral_menu_bg_color"
-            android:hint="@string/search_by"
+            android:hint="@string/search"
             android:textColor="@color/black"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
