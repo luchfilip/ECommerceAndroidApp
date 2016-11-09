@@ -254,7 +254,8 @@ public class DataBaseUtilities {
                 }
                 //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
                 db.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
-                        : "SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN ("+unGzip(Base64.decode(validSequenceIds, Base64.GZIP))+")",
+                        : (new StringBuilder("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (")
+                            .append(unGzip(Base64.decode(validSequenceIds, Base64.GZIP))).append(")").toString()),
                         null);
                 db.setTransactionSuccessful();
             } catch (Exception e) {

@@ -6,4 +6,10 @@
     <dimen name="welcome_layout_subtitle_text_size">33sp</dimen>
     <dimen name="welcome_layout_details_text_size">25sp</dimen>
 
+    <dimen name="productDetail_max_image_Width">130dp</dimen>
+    <dimen name="productDetail_max_image_Height">130dp</dimen>
+
+    <dimen name="wish_list_item_image_width">130dp</dimen>
+    <dimen name="wish_list_item_image_height">130dp</dimen>
+
 </resources>

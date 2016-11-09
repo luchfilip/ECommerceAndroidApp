@@ -1,4 +1,10 @@
 <resources>
+    <dimen name="productDetail_max_image_Width">100dp</dimen>
+    <dimen name="productDetail_max_image_Height">100dp</dimen>
+
+    <dimen name="wish_list_item_image_width">100dp</dimen>
+    <dimen name="wish_list_item_image_height">100dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
@@ -9,8 +15,6 @@
     <dimen name="productMinInfo_cardView_Width">170dp</dimen>
     <dimen name="productMinInfo_max_image_Width">140dp</dimen>
     <dimen name="productMinInfo_max_image_Height">140dp</dimen>
-    <dimen name="productDetail_max_image_Width">130dp</dimen>
-    <dimen name="productDetail_max_image_Height">130dp</dimen>
     <dimen name="productLargeDetail_max_image_Width">230dp</dimen>
     <dimen name="productLargeDetail_max_image_Height">230dp</dimen>
 </resources>
