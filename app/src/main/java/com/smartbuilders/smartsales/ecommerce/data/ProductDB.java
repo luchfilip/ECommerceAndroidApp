@@ -34,8 +34,7 @@ public class ProductDB {
         Cursor c = null;
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
-                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -80,8 +79,7 @@ public class ProductDB {
         Cursor c = null;
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
-                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -125,7 +123,7 @@ public class ProductDB {
         Cursor c = null;
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, PI.FILE_NAME, B.BRAND_ID, ")
-                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, ")
+                    .append(" B.NAME, B.DESCRIPTION, S.CATEGORY_ID, S.SUBCATEGORY_ID, ")
                     .append(" PA.AVAILABILITY, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, OL.PRODUCT_ID, P.INTERNAL_CODE, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
@@ -171,8 +169,7 @@ public class ProductDB {
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -246,8 +243,7 @@ public class ProductDB {
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
@@ -292,8 +288,7 @@ public class ProductDB {
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -346,8 +341,7 @@ public class ProductDB {
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -510,8 +504,7 @@ public class ProductDB {
 
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -649,8 +642,7 @@ public class ProductDB {
 
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, ")
-                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" P.COMMERCIAL_PACKAGE, B.NAME, B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -772,8 +764,7 @@ public class ProductDB {
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT P.PRODUCT_ID, P.SUBCATEGORY_ID, P.BRAND_ID, P.NAME, P.DESCRIPTION, P.PURPOSE, ")
                     .append(" P.INTERNAL_CODE, P.COMMERCIAL_PACKAGE_UNITS, P.COMMERCIAL_PACKAGE, B.NAME, ")
-                    .append(" B.DESCRIPTION, C.CATEGORY_ID, C.NAME, C.DESCRIPTION, S.NAME, ")
-                    .append(" S.DESCRIPTION, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
+                    .append(" B.DESCRIPTION, C.CATEGORY_ID, PA.AVAILABILITY, PI.FILE_NAME, PR.RATING, CU.CURRENCY_ID, CU.UNICODE_DECIMAL, ")
                     .append(" PA.PRICE, PA.TAX, PA.TOTAL_PRICE, PT.PRODUCT_TAX_ID, PT.PERCENTAGE, OL.PRODUCT_ID, P.REFERENCE_ID ")
                     .append(" FROM PRODUCT P ")
                     .append(" INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' ")
@@ -823,22 +814,18 @@ public class ProductDB {
      *     9) BRAND.NAME,
      *     10) BRAND.DESCRIPTION,
      *     11) CATEGORY.CATEGORY_ID,
-     *     12) CATEGORY.NAME,
-     *     13) CATEGORY.DESCRIPTION,
-     *     14) SUBCATEGORY.NAME,
-     *     15) SUBCATEGORY.DESCRIPTION,
-     *     16) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY,
-     *     17) PRODUCT_IMAGE.FILE_NAME,
-     *     18) PRODUCT_RATING.RATING,
-     *     19) CURRENCY.CURRENCY_ID,
-     *     20) CURRENCY.UNICODE_DECIMAL,
-     *     21) PRODUCT_PRICE_AVAILABILITY.PRICE
-     *     22) PRODUCT_PRICE_AVAILABILITY.TAX
-     *     23) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
-     *     24) PRODUCT_TAX.PRODUCT_TAX_ID,
-     *     25) PRODUCT_TAX.PERCENTAGE
-     *     26) ECOMMERCE_ORDER_LINE.PRODUCT_ID
-     *     27) PRODUCT.REFERENCE_ID
+     *     12) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY,
+     *     13) PRODUCT_IMAGE.FILE_NAME,
+     *     14) PRODUCT_RATING.RATING,
+     *     15) CURRENCY.CURRENCY_ID,
+     *     16) CURRENCY.UNICODE_DECIMAL,
+     *     17) PRODUCT_PRICE_AVAILABILITY.PRICE
+     *     18) PRODUCT_PRICE_AVAILABILITY.TAX
+     *     19) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
+     *     20) PRODUCT_TAX.PRODUCT_TAX_ID,
+     *     21) PRODUCT_TAX.PERCENTAGE
+     *     22) ECOMMERCE_ORDER_LINE.PRODUCT_ID
+     *     23) PRODUCT.REFERENCE_ID
      * @param product
      * @param cursor
      */
@@ -856,28 +843,21 @@ public class ProductDB {
         product.getProductBrand().setName(cursor.getString(9));
         product.getProductBrand().setDescription(cursor.getString(10));
         product.setProductCategoryId(cursor.getInt(11));
-        //product.getProductCategory().setId(cursor.getInt(11));
-        //product.getProductCategory().setName(cursor.getString(12));
-        //product.getProductCategory().setDescription(cursor.getString(13));
         product.setProductSubCategoryId(cursor.getInt(1));
-        //product.getProductSubCategory().setProductCategoryId(cursor.getInt(11));
-        //product.getProductSubCategory().setId(cursor.getInt(1));
-        //product.getProductSubCategory().setName(cursor.getString(14));
-        //product.getProductSubCategory().setDescription(cursor.getString(15));
-        product.getProductPriceAvailability().setAvailability(cursor.getInt(16));
-        product.setImageFileName(cursor.getString(17));
-        product.setRating(cursor.getFloat(18));
-        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(19));
-        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(19));
-        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(20));
-        product.getProductPriceAvailability().setPrice(cursor.getFloat(21));
-        product.getProductPriceAvailability().setTax(cursor.getFloat(22));
-        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(23));
-        product.setProductTaxId(cursor.getInt(24));
-        product.getProductTax().setId(cursor.getInt(24));
-        product.getProductTax().setPercentage(cursor.getFloat(25));
-        product.setFavorite(cursor.getString(26)!=null);
-        product.setReference(cursor.getString(27));
+        product.getProductPriceAvailability().setAvailability(cursor.getInt(12));
+        product.setImageFileName(cursor.getString(13));
+        product.setRating(cursor.getFloat(14));
+        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(15));
+        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(15));
+        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(16));
+        product.getProductPriceAvailability().setPrice(cursor.getFloat(17));
+        product.getProductPriceAvailability().setTax(cursor.getFloat(18));
+        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(19));
+        product.setProductTaxId(cursor.getInt(20));
+        product.getProductTax().setId(cursor.getInt(20));
+        product.getProductTax().setPercentage(cursor.getFloat(21));
+        product.setFavorite(cursor.getString(22)!=null);
+        product.setReference(cursor.getString(23));
     }
 
 
@@ -893,18 +873,16 @@ public class ProductDB {
      * 7) BRAND.DESCRIPTION
      * 8) SUBCATEGORY.CATEGORY_ID
      * 9) SUBCATEGORY.SUBCATEGORY_ID
-     * 10) SUBCATEGORY.NAME
-     * 11) SUBCATEGORY.DESCRIPTION
-     * 12) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY
-     * 13) PRODUCT_RATING.RATING
-     * 14) CURRENCY.CURRENCY_ID
-     * 15) CURRENCY.UNICODE_DECIMAL
-     * 16) PRODUCT_PRICE_AVAILABILITY.PRICE
-     * 17) PRODUCT_PRICE_AVAILABILITY.TAX
-     * 18) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
-     * 19) ECOMMERCE_ORDER_LINE.PRODUCT_ID
-     * 20) PRODUCT.INTERNAL_CODE
-     * 21) PRODUCT.REFERENCE_ID
+     * 10) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY
+     * 11) PRODUCT_RATING.RATING
+     * 12) CURRENCY.CURRENCY_ID
+     * 13) CURRENCY.UNICODE_DECIMAL
+     * 14) PRODUCT_PRICE_AVAILABILITY.PRICE
+     * 15) PRODUCT_PRICE_AVAILABILITY.TAX
+     * 16) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
+     * 17) ECOMMERCE_ORDER_LINE.PRODUCT_ID
+     * 18) PRODUCT.INTERNAL_CODE
+     * 19) PRODUCT.REFERENCE_ID
      * @param product
      * @param cursor
      */
@@ -921,21 +899,17 @@ public class ProductDB {
         product.getProductBrand().setDescription(cursor.getString(7));
         product.setProductCategoryId(cursor.getInt(8));
         product.setProductSubCategoryId(cursor.getInt(9));
-        //product.getProductSubCategory().setProductCategoryId(cursor.getInt(8));
-        //product.getProductSubCategory().setId(cursor.getInt(9));
-        //product.getProductSubCategory().setName(cursor.getString(10));
-        //product.getProductSubCategory().setDescription(cursor.getString(11));
-        product.getProductPriceAvailability().setAvailability(cursor.getInt(12));
-        product.setRating(cursor.getFloat(13));
-        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(14));
-        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(14));
-        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(15));
-        product.getProductPriceAvailability().setPrice(cursor.getFloat(16));
-        product.getProductPriceAvailability().setTax(cursor.getFloat(17));
-        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(18));
-        product.setFavorite(cursor.getString(19)!=null);
-        product.setInternalCode(cursor.getString(20));
-        product.setReference(cursor.getString(21));
+        product.getProductPriceAvailability().setAvailability(cursor.getInt(10));
+        product.setRating(cursor.getFloat(11));
+        product.getProductPriceAvailability().setCurrencyId(cursor.getInt(12));
+        product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(12));
+        product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(13));
+        product.getProductPriceAvailability().setPrice(cursor.getFloat(14));
+        product.getProductPriceAvailability().setTax(cursor.getFloat(15));
+        product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(16));
+        product.setFavorite(cursor.getString(17)!=null);
+        product.setInternalCode(cursor.getString(18));
+        product.setReference(cursor.getString(19));
     }
 
     public Product getProductByInternalCode(String productCode) {
