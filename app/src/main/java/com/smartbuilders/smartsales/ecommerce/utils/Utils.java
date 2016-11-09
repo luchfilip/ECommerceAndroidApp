@@ -30,7 +30,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -754,51 +753,59 @@ public class Utils {
     }
 
     public static void setCustomToolbarTitle(final Context context, Toolbar toolbar, boolean goHome){
-        toolbar.setTitle("");
-        if (goHome) {
-            for(int i = 0; i < toolbar.getChildCount(); i++){
-                if(toolbar.getChildAt(i) instanceof ImageView){
-                    (toolbar.getChildAt(i)).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                context.startActivity(new Intent(context, SalesForceSystemMainActivity.class));
-                            } else {
-                                context.startActivity(new Intent(context, MainActivity.class));
+        if (context!=null && toolbar!=null) {
+            toolbar.setTitle("");
+            if (goHome) {
+                for (int i = 0; i < toolbar.getChildCount(); i++) {
+                    if (toolbar.getChildAt(i) instanceof ImageView) {
+                        (toolbar.getChildAt(i)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                    context.startActivity(new Intent(context, SalesForceSystemMainActivity.class));
+                                } else {
+                                    context.startActivity(new Intent(context, MainActivity.class));
+                                }
                             }
-                        }
-                    });
-                    break;
+                        });
+                        break;
+                    }
                 }
             }
         }
     }
 
     public static void setCustomActionbarTitle(final Activity activity, ActionBar actionBar, boolean goToHome){
-        if(actionBar!=null){
+        if(activity!=null && actionBar!=null){
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
             View customView = activity.getLayoutInflater().inflate(R.layout.actionbar_title, null);
-            if(goToHome){
-                customView.findViewById(R.id.actionbarLogo).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
-                                MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    }
-                });
+            if (customView!=null) {
+                if (goToHome && customView.findViewById(R.id.actionbarLogo)!=null) {
+                    customView.findViewById(R.id.actionbarLogo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.getApplicationContext().startActivity(new Intent(activity.getApplicationContext(),
+                                    MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        }
+                    });
+                }
+                actionBar.setCustomView(customView);
             }
-            actionBar.setCustomView(customView);
         }
     }
 
     public static void manageNotificationOnDrawerLayout(Activity activity) {
-        if(activity!=null && activity.findViewById(R.id.badge_ham)!=null){
-            if (PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext()).getBoolean("show_badge", false)) {
-                activity.findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
-            } else {
-                activity.findViewById(R.id.badge_ham).setVisibility(View.GONE);
+        try {
+            if (activity != null && activity.findViewById(R.id.badge_ham) != null) {
+                if (PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext()).getBoolean("show_badge", false)) {
+                    activity.findViewById(R.id.badge_ham).setVisibility(View.VISIBLE);
+                } else {
+                    activity.findViewById(R.id.badge_ham).setVisibility(View.GONE);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1190,8 +1197,12 @@ public class Utils {
      * @param context
      */
     public static int getSyncPeriodicityFromPreferences(Context context){
-        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_periodicity",
-                context.getString(R.string.sync_periodicity_default_value)));
+        try {
+            return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_periodicity",
+                    context.getString(R.string.sync_periodicity_default_value)));
+        } catch (Exception e) {
+            return 3600;
+        }
     }
 
     /**
@@ -1200,9 +1211,13 @@ public class Utils {
      * @param businessPartnerId
      */
     public static void setAppCurrentBusinessPartnerId(Context context, int businessPartnerId){
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
-        editor.apply();
+        try {
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+            editor.putInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, businessPartnerId);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -1296,16 +1311,20 @@ public class Utils {
     }
 
     public static void lockScreenOrientation(Activity activity) {
-        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (activity!=null && activity.getResources()!=null && activity.getResources().getConfiguration()!=null) {
+            if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            } else {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+            }
         }
 
     }
 
     public static void unlockScreenOrientation(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if (activity!=null) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
     }
 
     public static void clearThumbImagesFolder(Context context) {
@@ -1333,6 +1352,10 @@ public class Utils {
     }
 
     private static boolean saveImagesInDevice(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", true);
+        try {
+            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", true);
+        } catch(Exception e) {
+            return false;
+        }
     }
 }

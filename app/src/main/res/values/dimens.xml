@@ -100,4 +100,14 @@
     <dimen name="shape_circular_transparent_white_padding_bottom">60dp</dimen>
     <dimen name="shape_circular_transparent_white_padding_top">60dp</dimen>
 
+    <dimen name="shape_product_color_padding_left">15dp</dimen>
+    <dimen name="shape_product_color_padding_right">15dp</dimen>
+    <dimen name="shape_product_color_padding_bottom">15dp</dimen>
+    <dimen name="shape_product_color_padding_top">15dp</dimen>
+    <dimen name="shape_product_color_corner_radius">15dp</dimen>
+    <dimen name="shape_product_color_layout_width">15dp</dimen>
+    <dimen name="shape_product_color_layout_height">15dp</dimen>
+    <dimen name="shape_product_color_layout_margin">2dp</dimen>
+    <dimen name="shape_product_color_layout_elevation">1dp</dimen>
+
 </resources>
