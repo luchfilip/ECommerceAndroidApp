@@ -63,8 +63,8 @@
     <dimen name="shopping_cart_item_image_width">92dp</dimen>
     <dimen name="shopping_cart_item_image_height">92dp</dimen>
 
-    <dimen name="wish_list_item_image_width">92dp</dimen>
-    <dimen name="wish_list_item_image_height">92dp</dimen>
+    <dimen name="wish_list_item_image_width">130dp</dimen>
+    <dimen name="wish_list_item_image_height">130dp</dimen>
 
     <dimen name="order_line_item_image_width">85dp</dimen>
     <dimen name="order_line_item_image_height">85dp</dimen>

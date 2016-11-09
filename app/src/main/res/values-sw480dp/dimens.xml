@@ -1,7 +1,0 @@
-<resources>
-    <dimen name="productDetail_max_image_Width">140dp</dimen>
-    <dimen name="productDetail_max_image_Height">140dp</dimen>
-
-    <dimen name="wish_list_item_image_width">140dp</dimen>
-    <dimen name="wish_list_item_image_height">140dp</dimen>
-</resources>

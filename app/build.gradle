@@ -10,7 +10,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 24
         versionCode 1
-        versionName "1.10"
+        versionName "1.11"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -52,7 +52,7 @@ android {
             applicationId "com.smartbuilders.smartsales.ecommerce.febeca"
             minSdkVersion 10
             targetSdkVersion 24
-            versionCode 27
+            versionCode 28
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
