@@ -468,6 +468,7 @@
     <string name="empty_orders_from_sales_orders">No hay Cotizaciones Hechas Pedidos</string>
     <string name="empty_shopping_sale_list">No hay Cotizaciones Abiertas</string>
     <string name="empty_orders_list">No hay Pedidos Cerrados</string>
+    <string name="empty_notifications_list">No hay notificaciones en este momento</string>
     <string name="empty_wish_list">No hay productos en la lista de Favoritos</string>
     <string name="empty_recommended_products_list">No hay productos en la lista de Recomendados</string>
     <string name="empty_business_partners_list">No existen Clientes registrados</string>
@@ -522,4 +523,5 @@
     <string name="order_deliver_status_wait_for_send">El pedido está pendiente por transmitir, revise su conexión a internet.</string>
     <string name="sending_order">Enviando Pedido...</string>
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
+    <string name="notifications">Notificaciones</string>
 </resources>

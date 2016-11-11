@@ -94,8 +94,7 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
         if (dbHelper == null) {
             dbHelper = new DatabaseHelper(getContext());
         }
-		AccountManager mAccountManager = AccountManager.get(getContext());
-		mAccountManager.addOnAccountsUpdatedListener(this, null, false);
+        AccountManager.get(getContext()).addOnAccountsUpdatedListener(this, null, false);
 		return true;
 	}
 

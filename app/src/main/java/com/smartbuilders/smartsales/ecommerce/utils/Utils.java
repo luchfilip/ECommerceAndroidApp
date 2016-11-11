@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
 import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
@@ -932,6 +933,9 @@ public class Utils {
                 activity.startActivity(new Intent(activity, WelcomeScreenSlideActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }else if (itemId == R.id.nav_notifications) {
+                activity.startActivity(new Intent(activity, NotificationsListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }
         } catch (Exception e) {
             e.printStackTrace();

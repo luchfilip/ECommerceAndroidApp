@@ -4,4 +4,7 @@
 
     <dimen name="wish_list_item_image_width">130dp</dimen>
     <dimen name="wish_list_item_image_height">130dp</dimen>
+
+    <dimen name="notification_list_item_image_width">120dp</dimen>
+    <dimen name="notification_list_item_image_height">120dp</dimen>
 </resources>

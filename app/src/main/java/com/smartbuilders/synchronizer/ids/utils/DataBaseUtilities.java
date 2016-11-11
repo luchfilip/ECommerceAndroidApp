@@ -148,13 +148,33 @@ public class DataBaseUtilities {
      * @throws Exception
      */
     public static String unGzip(byte[] bytes) throws Exception{
-        InputStreamReader isr = new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8");
-        StringWriter sw = new StringWriter();
-        char[] chars = new char[1024];
-        for (int len; (len = isr.read(chars)) > 0; ) {
-            sw.write(chars, 0, len);
+        InputStreamReader isr = null;
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+            isr = new InputStreamReader(gzipInputStream, "UTF-8");
+            StringWriter sw = new StringWriter();
+            char[] chars = new char[1024];
+            for (int len; (len = isr.read(chars)) > 0; ) {
+                sw.write(chars, 0, len);
+            }
+            return sw.toString();
+        } finally {
+            if (isr!=null) {
+                try {
+                    isr.close();
+                } catch (IOException e) {
+                    //do nothing
+                }
+            }
+            if (gzipInputStream!=null) {
+                try {
+                    gzipInputStream.close();
+                } catch (IOException e) {
+                    //do nothing
+                }
+            }
         }
-        return sw.toString();
     }
 
     /**
