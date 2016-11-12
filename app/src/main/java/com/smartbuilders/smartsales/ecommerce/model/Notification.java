@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.model;
 import android.os.Parcelable;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
@@ -48,10 +49,17 @@ public class Notification extends Model implements Parcelable {
         this.message = message;
     }
 
-    public String getCreatedStringFormat(){
+    public String getCreatedTimeStringFormat(){
         try {
-            return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM,
-                    new Locale("es","VE")).format(getCreated());
+            return  (new SimpleDateFormat("hh:mm a", new Locale("es","VE"))).format(getCreated());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getCreatedDateStringFormat(){
+        try {
+            return DateFormat.getDateInstance(DateFormat.LONG, new Locale("es","VE")).format(getCreated());
         } catch (Exception e) {
             return null;
         }

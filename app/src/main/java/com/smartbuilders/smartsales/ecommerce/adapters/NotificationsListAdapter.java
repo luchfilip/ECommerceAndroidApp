@@ -29,6 +29,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public View dividerGroupLine;
+        public TextView notificationGroupCreateDate;
         public ImageView notificationImage;
         public TextView notificationTitle;
         public TextView notificationMessage;
@@ -37,6 +39,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
 
         public ViewHolder(View v) {
             super(v);
+            dividerGroupLine = v.findViewById(R.id.divider_line);
+            notificationGroupCreateDate = (TextView) v.findViewById(R.id.notification_group_created_date);
             notificationImage = (ImageView) v.findViewById(R.id.notification_image);
             notificationTitle = (TextView) v.findViewById(R.id.notification_title);
             notificationMessage = (TextView) v.findViewById(R.id.notification_message);
@@ -81,11 +85,21 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if (position == 0 || (position>0 && !mDataset.get(position).getCreatedDateStringFormat()
+                .equals(mDataset.get(position-1).getCreatedDateStringFormat()))) {
+            holder.dividerGroupLine.setVisibility(position==0 ? View.GONE : View.VISIBLE);
+            holder.notificationGroupCreateDate.setText(mDataset.get(position).getCreatedDateStringFormat());
+            holder.notificationGroupCreateDate.setVisibility(View.VISIBLE);
+        } else {
+            holder.dividerGroupLine.setVisibility(View.GONE);
+            holder.notificationGroupCreateDate.setVisibility(View.GONE);
+        }
+
         holder.notificationTitle.setText(mDataset.get(position).getTitle());
 
         holder.notificationMessage.setText(mDataset.get(position).getMessage());
 
-        holder.notificationCreateTime.setText(mDataset.get(position).getCreatedStringFormat());
+        holder.notificationCreateTime.setText(mDataset.get(position).getCreatedTimeStringFormat());
 
         holder.containerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
