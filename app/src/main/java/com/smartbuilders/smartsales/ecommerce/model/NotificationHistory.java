@@ -10,27 +10,25 @@ import java.util.Locale;
  * Created by AlbertoSarco on 11/11/2016.
  */
 
-public class Notification extends Model implements Parcelable {
+public class NotificationHistory extends Model implements Parcelable {
 
-    private int productId;
-    private int orderTrackingId;
+    public static final int TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION = 1;
+    public static final int TYPE_NEW_ORDER_TRACKING = 2;
+    public static final int STATUS_NOT_SEEN = 1;
+    public static final int STATUS_SEEN = 2;
+
+    private int relatedId;
     private String title;
     private String message;
+    private int type;
+    private int status;
 
-    public int getProductId() {
-        return productId;
+    public int getRelatedId() {
+        return relatedId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public int getOrderTrackingId() {
-        return orderTrackingId;
-    }
-
-    public void setOrderTrackingId(int orderTrackingId) {
-        this.orderTrackingId = orderTrackingId;
+    public void setRelatedId(int relatedId) {
+        this.relatedId = relatedId;
     }
 
     public String getTitle() {
@@ -47,6 +45,22 @@ public class Notification extends Model implements Parcelable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getCreatedTimeStringFormat(){

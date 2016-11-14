@@ -51,6 +51,8 @@
     <dimen name="productMainActivity_productImage_height">100dp</dimen>
     <dimen name="productMainActivity_marginLeftAndRight">5dp</dimen>
 
+    <dimen name="mainPageTitleSection_button_marginLeftAndRight">4dp</dimen>
+
     <dimen name="mainPageTitleSection_textSize">19sp</dimen>
 
     <dimen name="related_products_label_text_size">16sp</dimen>
@@ -66,8 +68,9 @@
     <dimen name="wish_list_item_image_width">130dp</dimen>
     <dimen name="wish_list_item_image_height">130dp</dimen>
 
-    <dimen name="notification_list_item_image_width">120dp</dimen>
-    <dimen name="notification_list_item_image_height">120dp</dimen>
+    <dimen name="notification_list_item_image_width">80dp</dimen>
+    <dimen name="notification_list_item_image_height">80dp</dimen>
+    <dimen name="notification_list_item_card_marginLeftAndRight">5dp</dimen>
 
     <dimen name="order_line_item_image_width">85dp</dimen>
     <dimen name="order_line_item_image_height">85dp</dimen>

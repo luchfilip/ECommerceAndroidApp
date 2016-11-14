@@ -2,6 +2,8 @@
 
     <dimen name="productMainActivity_marginLeftAndRight">30dp</dimen>
 
+    <dimen name="mainPageTitleSection_button_marginLeftAndRight">28dp</dimen>
+
     <integer name="two_pane_left_side_weight">3</integer>
     <integer name="two_pane_right_side_weight">6</integer>
 
@@ -28,5 +30,7 @@
     <dimen name="welcome_layout_title_text_size">25sp</dimen>
     <dimen name="welcome_layout_subtitle_text_size">22sp</dimen>
     <dimen name="welcome_layout_details_text_size">14sp</dimen>
+
+    <dimen name="notification_list_item_card_marginLeftAndRight">20dp</dimen>
 
 </resources>

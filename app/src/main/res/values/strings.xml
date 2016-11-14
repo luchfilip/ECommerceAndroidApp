@@ -460,6 +460,7 @@
     <string name="title_activity_orders_tracking_list">OrdersTrackingListActivity</string>
     <string name="orders_tracking_list">Rastreo de Pedidos</string>
     <string name="no_product_details">No hay detalles del producto</string>
+    <string name="no_order_tracking_details">No hay detalles del rastreo del pedido</string>
     <string name="product_name_unavailable">Nombre de producto no disponible</string>
     <string name="no_info_available">No hay información disponible</string>
     <string name="empty_shopping_cart">No hay productos en el Pedido</string>
@@ -523,5 +524,5 @@
     <string name="order_deliver_status_wait_for_send">El pedido está pendiente por transmitir, revise su conexión a internet.</string>
     <string name="sending_order">Enviando Pedido...</string>
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
-    <string name="notifications">Notificaciones</string>
+    <string name="notificationHistories">Notificaciones</string>
 </resources>

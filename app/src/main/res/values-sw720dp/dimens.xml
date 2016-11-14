@@ -14,7 +14,8 @@
     <dimen name="wish_list_item_image_width">150dp</dimen>
     <dimen name="wish_list_item_image_height">150dp</dimen>
 
-    <dimen name="notification_list_item_image_width">120dp</dimen>
-    <dimen name="notification_list_item_image_height">120dp</dimen>
+    <dimen name="notification_list_item_image_width">100dp</dimen>
+    <dimen name="notification_list_item_image_height">100dp</dimen>
+    <dimen name="notification_list_item_card_marginLeftAndRight">20dp</dimen>
 
 </resources>

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 18;
+	private static final int DATABASE_VERSION = 19;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -572,14 +572,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_ORDER_TRACKING =
             "CREATE TABLE IF NOT EXISTS ORDER_TRACKING (" +
-                    "ECOMMERCE_ORDER_ID INTEGER NOT NULL, " +
+                    "ORDER_TRACKING_ID INTEGER NOT NULL, " +
                     " USER_ID INTEGER NOT NULL, " +
+                    " ECOMMERCE_ORDER_ID INTEGER NOT NULL, " +
                     " ORDER_TRACKING_STATE_ID INTEGER NOT NULL, " +
                     " DETAILS TEXT DEFAULT NULL, " +
                     " CREATE_TIME DATETIME DEFAULT NULL, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, "+
-                    " PRIMARY KEY (ECOMMERCE_ORDER_ID, USER_ID, ORDER_TRACKING_STATE_ID))";
+                    " PRIMARY KEY (ORDER_TRACKING_ID), " +
+                    " UNIQUE (USER_ID, ECOMMERCE_ORDER_ID, ORDER_TRACKING_STATE_ID))";
+
+    private static final String CREATE_NOTIFICATION_HISTORY =
+            "CREATE TABLE IF NOT EXISTS NOTIFICATION_HISTORY (" +
+                    "NOTIFICATION_HISTORY_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " TITLE TEXT DEFAULT NULL, " +
+                    " MESSAGE TEXT DEFAULT NULL, " +
+                    " TYPE INTEGER NOT NULL, " +
+                    " RELATED_ID INTEGER NOT NULL, " +
+                    " STATUS INTEGER NOT NULL, " +
+                    " CREATE_TIME DATETIME DEFAULT NULL)";
 
 	/**
 	 * 
@@ -653,6 +665,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_PRODUCT_CHARGE);
             db.execSQL(CREATE_ORDER_TRACKING_STATE);
             db.execSQL(CREATE_ORDER_TRACKING);
+            db.execSQL(CREATE_NOTIFICATION_HISTORY);
 		}
 	}
 
@@ -797,6 +810,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL(CREATE_SYNC_DATA_WITH_SERVER);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion < 19) {
+                try {
+                    db.execSQL("DROP TABLE IF EXISTS ORDER_TRACKING");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_ORDER_TRACKING);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL(CREATE_NOTIFICATION_HISTORY);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

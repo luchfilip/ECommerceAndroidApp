@@ -1,8 +1,8 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.NotificationsListAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.NotificationDB;
-import com.smartbuilders.smartsales.ecommerce.model.Notification;
-import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
+import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -28,12 +27,10 @@ public class NotificationsListFragment extends Fragment {
     private boolean mIsInitialLoad;
     private User mUser;
     private NotificationsListAdapter mNotificationsListAdapter;
-    private NotificationDB mNotificationDB;
-    private LinearLayoutManager mLinearLayoutManager;
+    private NotificationHistoryDB mNotificationHistoryDB;
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
     private RecyclerView recyclerView;
-    private ArrayList<Notification> mNotifications;
 
     public NotificationsListFragment() {
     }
@@ -54,11 +51,8 @@ public class NotificationsListFragment extends Fragment {
                         }
                     }
                     mUser = Utils.getCurrentUser(getContext());
-                    mNotificationDB = new NotificationDB(getContext(), mUser);
-
-                    mNotifications = mNotificationDB.getNotifications();
-
-                    mNotificationsListAdapter = new NotificationsListAdapter(getContext(), mNotifications, mUser);
+                    mNotificationHistoryDB = new NotificationHistoryDB(getContext(), mUser);
+                    mNotificationsListAdapter = new NotificationsListAdapter(getContext(), mNotificationHistoryDB.getNotifications(), mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -70,13 +64,20 @@ public class NotificationsListFragment extends Fragment {
                                 mBlankScreenView = view.findViewById(R.id.empty_layout_wallpaper);
                                 recyclerView = (RecyclerView) view.findViewById(R.id.notifications_list);
 
+                                if (view.findViewById(R.id.settings_fab)!=null) {
+                                    view.findViewById(R.id.settings_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            startActivity(new Intent(getContext(), SettingsNotifications.class));
+                                        }
+                                    });
+                                }
+
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
                                 recyclerView.setHasFixedSize(true);
 
-                                mLinearLayoutManager = new LinearLayoutManager(getContext());
-
-                                recyclerView.setLayoutManager(mLinearLayoutManager);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                                 recyclerView.setAdapter(mNotificationsListAdapter);
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
@@ -86,7 +87,8 @@ public class NotificationsListFragment extends Fragment {
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mNotifications.isEmpty()) {
+                                if (recyclerView==null || recyclerView.getAdapter()==null
+                                        || recyclerView.getAdapter().getItemCount()==0) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
                                     recyclerView.setVisibility(View.VISIBLE);
@@ -112,33 +114,29 @@ public class NotificationsListFragment extends Fragment {
     }
 
     public void reloadNotificationsList(){
-        if (mNotificationDB!=null) {
-            reloadNotificationsList(mNotificationDB.getNotifications());
+        if (mNotificationHistoryDB !=null) {
+            reloadNotificationsList(mNotificationHistoryDB.getNotifications());
         }
     }
 
-    public void reloadNotificationsList(ArrayList<Notification> notifications){
-        mNotifications = notifications;
-        mNotificationsListAdapter.setData(notifications);
-        if (notifications==null || notifications.size()==0) {
-            mBlankScreenView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        }else{
-            recyclerView.setVisibility(View.VISIBLE);
-            mBlankScreenView.setVisibility(View.GONE);
+    public void reloadNotificationsList(ArrayList<NotificationHistory> notificationHistories){
+        if (recyclerView!=null && recyclerView.getAdapter()!=null) {
+            ((NotificationsListAdapter) recyclerView.getAdapter()).setData(notificationHistories);
+            if (notificationHistories == null || notificationHistories.size() == 0) {
+                mBlankScreenView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                mBlankScreenView.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            if (mLinearLayoutManager instanceof GridLayoutManager) {
-                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        mLinearLayoutManager.findFirstVisibleItemPosition());
-            } else {
-                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
-            }
+            outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
+                    ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition());
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
@@ -147,7 +145,7 @@ public class NotificationsListFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        mNotificationDB.updateNotificationsStatus();
+        mNotificationHistoryDB.updateNotificationsStatus(NotificationHistory.STATUS_SEEN);
         super.onDestroy();
     }
 

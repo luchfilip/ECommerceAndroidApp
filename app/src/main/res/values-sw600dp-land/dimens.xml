@@ -2,6 +2,8 @@
 
     <dimen name="productMainActivity_marginLeftAndRight">60dp</dimen>
 
+    <dimen name="mainPageTitleSection_button_marginLeftAndRight">56dp</dimen>
+
     <dimen name="productDetail_max_image_Width">140dp</dimen>
     <dimen name="productDetail_max_image_Height">140dp</dimen>
 
@@ -21,5 +23,7 @@
     <dimen name="welcome_layout_title_text_size">33sp</dimen>
     <dimen name="welcome_layout_subtitle_text_size">30sp</dimen>
     <dimen name="welcome_layout_details_text_size">22sp</dimen>
+
+    <dimen name="notification_list_item_card_marginLeftAndRight">60dp</dimen>
 
 </resources>

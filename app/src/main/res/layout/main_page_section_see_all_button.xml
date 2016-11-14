@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="2dp">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <Button
         style="@style/BlackButtonAppTheme"
         android:id="@+id/see_all_products_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/mainPageTitleSection_button_marginLeftAndRight"
+        android:layout_marginRight="@dimen/mainPageTitleSection_button_marginLeftAndRight"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
         android:text="@string/see_all_products"
         android:textAllCaps="false"
         android:layout_gravity="right" />

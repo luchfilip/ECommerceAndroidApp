@@ -342,6 +342,9 @@
         <activity
             android:name=".NotificationsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsNotifications"
+            android:label="@string/notificationHistories"/>
     </application>
 
 </manifest>

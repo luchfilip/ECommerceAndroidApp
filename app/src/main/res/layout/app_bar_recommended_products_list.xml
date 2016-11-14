@@ -41,6 +41,18 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Medium Text"
+            android:id="@+id/business_partner_name"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:lines="1"
+            android:visibility="gone"
+            android:background="@android:color/white" />
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_recommended_products_list" />

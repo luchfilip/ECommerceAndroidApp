@@ -17,19 +17,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.RecommendedProductsListAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.RecommendedProductDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
@@ -55,8 +51,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private View mEmptyLayoutWallPaper;
     private View mainLayout;
     private User mUser;
-    private TextView mBusinessPartnerName;
-    private View mBusinessPartnerInfoSeparator;
     private ArrayList<Product> mRecommendedProducts;
     private ProgressDialog waitPlease;
 
@@ -100,9 +94,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 mEmptyLayoutWallPaper = view.findViewById(R.id.empty_layout_wallpaper);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
-                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
-
                                 if (view.findViewById(R.id.search_fab) != null) {
                                     view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -111,8 +102,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                         }
                                     });
                                 }
-
-                                setHeader();
 
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recommended_products_list);
                                 // use this setting to improve performance if you know that changes
@@ -156,23 +145,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
         return view;
     }
 
-    private void setHeader() {
-        if (mUser != null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID)) {
-            try {
-                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                if (businessPartner != null) {
-                    mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    mBusinessPartnerName.setVisibility(View.VISIBLE);
-                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onStart() {
         if (mIsInitialLoad) {
@@ -184,7 +156,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     }
 
     private void reloadRecommendedProductsList() {
-        setHeader();
         try {
             mRecommendedProducts = (new RecommendedProductDB(getActivity(), mUser))
                     .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));

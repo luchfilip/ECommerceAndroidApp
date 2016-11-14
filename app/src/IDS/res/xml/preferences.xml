@@ -63,7 +63,7 @@
 	<PreferenceCategory android:title="@string/advanced_options">
 	    <Preference 
 		    android:icon="@drawable/ic_notifications_black_36dp" 
-		    android:key="notifications" 
+		    android:key="notifications"
 		    android:title="@string/notifications"/>
 		<Preference 
 		    android:icon="@drawable/ic_list_black_36dp" 

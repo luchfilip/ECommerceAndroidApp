@@ -9,11 +9,23 @@
             android:title="@string/home" />
     </group>
     <group
-        android:id="@+id/menu_notifications">
+        android:id="@+id/menu_1">
         <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/notifications" />
+            android:title="@string/notificationHistories" />
+
+        <item
+            android:id="@+id/nav_wish_list"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/wish_list"
+            app:actionLayout="@layout/unread_items"/>
+
+        <item
+            android:id="@+id/nav_recommended_products_list"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
+            android:title="@string/recommended_products"
+            app:actionLayout="@layout/unread_items"/>
     </group>
     <group
         android:id="@+id/menu_business_partners">
@@ -21,22 +33,6 @@
             android:id="@+id/nav_business_partners"
             android:icon="@drawable/ic_supervisor_account_black_24dp"
             android:title="@string/business_partners" />
-    </group>
-    <group
-        android:id="@+id/menu_wish_list">
-        <item
-            android:id="@+id/nav_wish_list"
-            android:icon="@drawable/ic_favorite_black_24dp"
-            android:title="@string/wish_list"
-            app:actionLayout="@layout/unread_items"/>
-    </group>
-    <group
-        android:id="@+id/menu_recommended_products_list">
-        <item
-            android:id="@+id/nav_recommended_products_list"
-            android:icon="@drawable/ic_thumb_up_black_24dp"
-            android:title="@string/recommended_products"
-            app:actionLayout="@layout/unread_items"/>
     </group>
     <item android:title="@string/my_purchases">
         <menu>

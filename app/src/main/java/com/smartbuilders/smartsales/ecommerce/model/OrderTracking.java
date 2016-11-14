@@ -4,18 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
  * Created by AlbertoSarco on 21/10/2016.
  */
 
-public class OrderTracking implements Parcelable {
+public class OrderTracking extends Model implements Parcelable {
 
+    private int orderId;
     private int orderTrackingStateId;
     private String details;
-    private Date created;
     private OrderTrackingState orderTrackingState;
 
     public OrderTracking() {
@@ -29,6 +28,7 @@ public class OrderTracking implements Parcelable {
 
     private OrderTracking(Parcel in) {
         orderTrackingStateId = in.readInt();
+        orderId = in.readInt();
         details = in.readString();
         orderTrackingState = in.readParcelable(OrderTrackingState.class.getClassLoader());
     }
@@ -36,6 +36,7 @@ public class OrderTracking implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(orderTrackingStateId);
+        dest.writeInt(orderId);
         dest.writeString(details);
         dest.writeParcelable(orderTrackingState, flags);
     }
@@ -60,20 +61,20 @@ public class OrderTracking implements Parcelable {
         this.orderTrackingStateId = orderTrackingStateId;
     }
 
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
     public String getDetails() {
         return details;
     }
 
     public void setDetails(String details) {
         this.details = details;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public String getCreatedStringFormat() {

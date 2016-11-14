@@ -33,7 +33,7 @@
                 android:src="@drawable/ic_notifications_white_24dp"/>
 
             <TextView
-                android:text="@string/notifications"
+                android:text="@string/notificationHistories"
                 android:id="@+id/title_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
