@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce.model;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.text.DateFormat;
@@ -22,6 +23,30 @@ public class NotificationHistory extends Model implements Parcelable {
     private String message;
     private int type;
     private int status;
+
+    public NotificationHistory() {
+
+    }
+
+    protected NotificationHistory(Parcel in) {
+        relatedId = in.readInt();
+        title = in.readString();
+        message = in.readString();
+        type = in.readInt();
+        status = in.readInt();
+    }
+
+    public static final Creator<NotificationHistory> CREATOR = new Creator<NotificationHistory>() {
+        @Override
+        public NotificationHistory createFromParcel(Parcel in) {
+            return new NotificationHistory(in);
+        }
+
+        @Override
+        public NotificationHistory[] newArray(int size) {
+            return new NotificationHistory[size];
+        }
+    };
 
     public int getRelatedId() {
         return relatedId;
@@ -77,5 +102,19 @@ public class NotificationHistory extends Model implements Parcelable {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(relatedId);
+        dest.writeString(title);
+        dest.writeString(message);
+        dest.writeInt(type);
+        dest.writeInt(status);
     }
 }

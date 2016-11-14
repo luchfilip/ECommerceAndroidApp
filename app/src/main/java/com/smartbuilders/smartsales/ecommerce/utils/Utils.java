@@ -43,6 +43,8 @@ import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
+import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
+import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
 import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -818,27 +820,39 @@ public class Utils {
      */
     public static void loadNavigationViewBadge(Context context, User user, NavigationView navigationView){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && context!=null && user!=null
-                && navigationView!=null && navigationView.getMenu()!=null
-                && navigationView.getMenu().findItem(R.id.nav_wish_list)!=null
-                && navigationView.getMenu().findItem(R.id.nav_recommended_products_list)!=null) {
-            try {
-                int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
-                if(count>0){
-                    ((TextView) navigationView.getMenu().findItem(R.id.nav_wish_list).getActionView())
-                            .setText(count<100 ? String.valueOf(count) : "+99");
+                && navigationView!=null && navigationView.getMenu()!=null) {
+            if(navigationView.getMenu().findItem(R.id.nav_wish_list)!=null) {
+                try {
+                    int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
+                    if (count > 0) {
+                        ((TextView) navigationView.getMenu().findItem(R.id.nav_wish_list).getActionView())
+                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                    }
+                } catch (NullPointerException e) {
+                    // do nothing
                 }
-            } catch (NullPointerException e) {
-                // do nothing
             }
-
-            try {
-                int count = (new RecommendedProductDB(context, user)).getRecommendedProductsCount();
-                if (count > 0) {
-                    ((TextView) navigationView.getMenu().findItem(R.id.nav_recommended_products_list).getActionView())
-                            .setText(count < 100 ? String.valueOf(count) : "+99");
+            if (navigationView.getMenu().findItem(R.id.nav_recommended_products_list)!=null) {
+                try {
+                    int count = (new RecommendedProductDB(context, user)).getRecommendedProductsCount();
+                    if (count > 0) {
+                        ((TextView) navigationView.getMenu().findItem(R.id.nav_recommended_products_list).getActionView())
+                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                    }
+                } catch (Exception e) {
+                    // do nothing
                 }
-            } catch (Exception e) {
-                // do nothing
+            }
+            if (navigationView.getMenu().findItem(R.id.nav_notifications_history_list)!=null) {
+                try {
+                    int count = (new NotificationHistoryDB(context, user)).getCountByStatus(NotificationHistory.STATUS_NOT_SEEN);
+                    if (count > 0) {
+                        ((TextView) navigationView.getMenu().findItem(R.id.nav_notifications_history_list).getActionView())
+                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                    }
+                } catch (Exception e) {
+                    // do nothing
+                }
             }
         }
     }
@@ -933,7 +947,7 @@ public class Utils {
                 activity.startActivity(new Intent(activity, WelcomeScreenSlideActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }else if (itemId == R.id.nav_notifications) {
+            }else if (itemId == R.id.nav_notifications_history_list) {
                 activity.startActivity(new Intent(activity, NotificationsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }

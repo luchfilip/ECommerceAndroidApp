@@ -11,9 +11,10 @@
     <group
         android:id="@+id/menu_1">
         <item
-            android:id="@+id/nav_notifications"
+            android:id="@+id/nav_notifications_history_list"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/notificationHistories" />
+            android:title="@string/notificationHistories"
+            app:actionLayout="@layout/unread_items"/>
 
         <item
             android:id="@+id/nav_wish_list"

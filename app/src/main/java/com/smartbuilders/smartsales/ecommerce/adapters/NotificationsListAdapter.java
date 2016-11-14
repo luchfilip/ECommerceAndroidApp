@@ -105,11 +105,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         }
 
         holder.notificationTitle.setText(mDataset.get(position).getTitle());
+        if (mDataset.get(position).getStatus() == NotificationHistory.STATUS_NOT_SEEN) {
+            holder.notificationTitle.setTextColor(Utils.getColor(mContext, R.color.heart_color));
+        } else {
+            holder.notificationTitle.setTextColor(Utils.getColor(mContext, R.color.black));
+        }
         holder.notificationMessage.setText(mDataset.get(position).getMessage());
         holder.notificationCreateTime.setText(mDataset.get(position).getCreatedTimeStringFormat());
 
         if (mDataset.get(position).getRelatedId()!=0) {
-            if (mDataset.get(position).getType()==1) {
+            if (mDataset.get(position).getType()==NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION) {
                 final Product product = (new ProductDB(mContext, mUser))
                         .getProductById(mDataset.get(position).getRelatedId());
                 if (product != null) {
@@ -130,7 +135,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
                         }
                     });
                 }
-            } else if (mDataset.get(position).getType()==2) {
+            } else if (mDataset.get(position).getType()==NotificationHistory.TYPE_NEW_ORDER_TRACKING) {
                 final OrderTracking orderTracking = (new OrderTrackingDB(mContext, mUser))
                         .getOrderTracking(mDataset.get(position).getRelatedId());
                 if (orderTracking!=null) {

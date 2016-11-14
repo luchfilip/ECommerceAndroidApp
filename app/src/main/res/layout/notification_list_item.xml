@@ -31,29 +31,29 @@
         android:layout_height="wrap_content"
         style="@style/shape_selector_style"
         android:layout_marginLeft="@dimen/notification_list_item_card_marginLeftAndRight"
-        android:layout_marginRight="@dimen/notification_list_item_card_marginLeftAndRight" >
+        android:layout_marginRight="@dimen/notification_list_item_card_marginLeftAndRight"
+        android:padding="4dp">
 
         <ImageView
             android:layout_width="@dimen/notification_list_item_image_width"
             android:layout_height="@dimen/notification_list_item_image_height"
             android:id="@+id/notification_image"
-            android:layout_gravity="center"
-            android:layout_margin="4dp" />
+            android:layout_gravity="center" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="@dimen/notification_list_item_image_height"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:layout_marginBottom="4dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginLeft="2dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <TextView
@@ -63,15 +63,15 @@
                     android:layout_gravity="center_vertical"
                     android:textSize="@dimen/productDetailCardView_name_text_size"
                     android:textStyle="bold"
-                    android:lines="1"
-                    android:layout_marginBottom="2dp"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/notification_message"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="1dp" />
 
             </LinearLayout>
 
@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/notification_create_time"
                 android:layout_gravity="right"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
