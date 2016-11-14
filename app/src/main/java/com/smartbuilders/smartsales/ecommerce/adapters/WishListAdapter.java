@@ -55,7 +55,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public TextView productName;
         public TextView productPrice;
         public TextView productAvailability;
-        public TextView productAvailabilityVariation;
         public TextView productBrand;
         public TextView productInternalCode;
         public TextView productReference;
@@ -73,7 +72,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             productName = (TextView) v.findViewById(R.id.product_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
-            productAvailabilityVariation = (TextView) v.findViewById(R.id.product_availability_variation);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productInternalCode = (TextView) v.findViewById(R.id.product_internal_code);
             productReference = (TextView) v.findViewById(R.id.product_reference);
@@ -191,22 +189,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
-
-        int productAvailabilityVariation = mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()
-                - mDataset.get(position).getQuantityOrdered();
-        if(productAvailabilityVariation!=0) {
-            if(productAvailabilityVariation > 0){
-                holder.productAvailabilityVariation.setTextColor(Utils.getColor(mContext, R.color.green_dark));
-                holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_positive_variation,
-                        String.valueOf(productAvailabilityVariation)));
-            } else {
-                holder.productAvailabilityVariation.setTextColor(Utils.getColor(mContext, R.color.black));
-                holder.productAvailabilityVariation.setText(mContext.getString(R.string.availability_variation,
-                        String.valueOf(productAvailabilityVariation)));
-            }
-        }else{
-            holder.productAvailabilityVariation.setText(null);
-        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

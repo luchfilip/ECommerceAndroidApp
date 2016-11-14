@@ -40,35 +40,34 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                 ArrayList<OrderLine> orderLines = orderLineDB.getWishList();
                 boolean showNotification = false;
                 for (OrderLine orderLine : orderLines) {
-                    if (orderLine.getProduct().getProductPriceAvailability().getAvailability() != orderLine.getQuantityOrdered()) {
-                        if (orderLine.getProduct().getProductPriceAvailability().getAvailability() > orderLine.getQuantityOrdered()){
+                    int productAvailabilityVariation = orderLine.getProduct().getProductPriceAvailability().getAvailability()
+                            - orderLine.getQuantityOrdered();
+                    if(productAvailabilityVariation!=0) {
+                        if(productAvailabilityVariation > 0){
                             notificationHistoryDB.insertNotificationHistory("Artículo en Favoritos, variación de disponibilidad",
-                                    "Se incrementó la disponibilidad de: " + orderLine.getProduct().getName() + "." +
-                                    "\nAnterior disp.: " + orderLine.getQuantityOrdered() +
-                                    "\nNueva disp.: " + orderLine.getProduct().getProductPriceAvailability().getAvailability(),
+                                    orderLine.getProduct().getName() +
+                                    "<br/><font color=#159204>" + context.getString(R.string.availability_positive_variation, String.valueOf(productAvailabilityVariation))+"</font>",
                                     NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
                                     orderLine.getProductId());
-                            showNotification = true;
-                            //break;
                         } else {
                             notificationHistoryDB.insertNotificationHistory("Artículo en Favoritos, variación de disponibilidad",
-                                    "Se redujo la disponibilidad de: " + orderLine.getProduct().getName() + "." +
-                                    "\nAnterior disp.: " + orderLine.getQuantityOrdered() +
-                                    "\nNueva disp.: " + orderLine.getProduct().getProductPriceAvailability().getAvailability(),
+                                    orderLine.getProduct().getName() +
+                                    "<br/><font color=#c82c14>" + context.getString(R.string.availability_variation, String.valueOf(productAvailabilityVariation))+"</font>",
                                     NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
                                     orderLine.getProductId());
                         }
+                        showNotification = true;
                     }
                 }
 
                 if (showNotification) {
                     orderLineDB.updateProductAvailabilitiesInWishList();
                     BadgeUtils.setBadge(context, notificationHistoryDB.getCountByStatus(NotificationHistory.STATUS_NOT_SEEN));
-                    // Creates an explicit intent for an Activity in your app
-                    final Intent resultIntent = new Intent(context, WishListActivity.class);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    NotificationUtils.createNotification(context, context.getString(R.string.app_name),
-                            context.getString(R.string.new_availabilities_in_wishList), resultIntent);
+//                    // Creates an explicit intent for an Activity in your app
+//                    final Intent resultIntent = new Intent(context, WishListActivity.class);
+//                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    NotificationUtils.createNotification(context, context.getString(R.string.app_name),
+//                            context.getString(R.string.new_availabilities_in_wishList), resultIntent);
                 }
             }
         }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.smartbuilders.smartsales.ecommerce.adapters.NotificationsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
+import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -110,6 +111,12 @@ public class NotificationsListFragment extends Fragment {
         }else{
             reloadNotificationsList();
         }
+        if (getActivity()!=null) {
+            BadgeUtils.clearBadge(getActivity());
+        }
+        if (mNotificationHistoryDB!=null) {
+            mNotificationHistoryDB.updateNotificationsStatus(NotificationHistory.STATUS_SEEN);
+        }
         super.onStart();
     }
 
@@ -141,12 +148,6 @@ public class NotificationsListFragment extends Fragment {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDestroy() {
-        mNotificationHistoryDB.updateNotificationsStatus(NotificationHistory.STATUS_SEEN);
-        super.onDestroy();
     }
 
 }

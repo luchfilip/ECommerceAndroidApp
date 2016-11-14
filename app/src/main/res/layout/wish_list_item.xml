@@ -176,14 +176,6 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/productDetailCardView_availability_text_size" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_availability_variation"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/productDetailCardView_availability_text_size"
-                    android:textColor="@color/black" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -47,7 +47,6 @@ public class WishListActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        BadgeUtils.clearBadge(this);
         if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
                 || mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID)){
             try {

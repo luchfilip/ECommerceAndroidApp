@@ -393,10 +393,4 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
         }
         super.onSaveInstanceState(outState);
     }
-
-    @Override
-    public void onDestroy() {
-        mOrderLineDB.updateProductAvailabilitiesInWishList();
-        super.onDestroy();
-    }
 }

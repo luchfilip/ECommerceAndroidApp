@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,12 +106,19 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         }
 
         holder.notificationTitle.setText(mDataset.get(position).getTitle());
+
         if (mDataset.get(position).getStatus() == NotificationHistory.STATUS_NOT_SEEN) {
-            holder.notificationTitle.setTextColor(Utils.getColor(mContext, R.color.heart_color));
+            holder.notificationTitle.setTextColor(Utils.getColor(mContext, R.color.colorPrimary));
         } else {
             holder.notificationTitle.setTextColor(Utils.getColor(mContext, R.color.black));
         }
-        holder.notificationMessage.setText(mDataset.get(position).getMessage());
+
+        try {
+            holder.notificationMessage.setText(Html.fromHtml(mDataset.get(position).getMessage()));
+        } catch (Exception e) {
+            holder.notificationMessage.setText(mDataset.get(position).getMessage());
+        }
+
         holder.notificationCreateTime.setText(mDataset.get(position).getCreatedTimeStringFormat());
 
         if (mDataset.get(position).getRelatedId()!=0) {
