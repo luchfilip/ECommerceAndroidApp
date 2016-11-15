@@ -112,7 +112,7 @@ public class ApplicationUtilities {
 	public static final String ST_USER_WRONG_PASSWORD = "USER_WRONG_PASSWORD";
 	public static final String ST_USER_NOT_EXIST_IN_SERVER = "USER_NOT_EXIST_IN_SERVER";
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
     
     public static final String TIME_FORMAT_1 = "%02d:%02d:%02d";
     public static final String TIME_FORMAT_2 = "%02d H, %02d m, %02d s";

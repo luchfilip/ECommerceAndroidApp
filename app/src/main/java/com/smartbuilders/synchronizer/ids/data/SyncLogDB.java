@@ -22,7 +22,7 @@ import java.util.Locale;
 public class SyncLogDB {
 
     private Context mContext;
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     public SyncLogDB(Context context){
         this.mContext = context;

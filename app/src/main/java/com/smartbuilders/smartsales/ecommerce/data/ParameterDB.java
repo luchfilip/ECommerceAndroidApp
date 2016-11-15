@@ -193,10 +193,10 @@ public class ParameterDB {
                     break;
                 case DATETIME_VALUE_COLUMN_NAME:
                     try{
-                        return new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(result).getTime());
+                        return new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(result).getTime());
                     }catch(ParseException ex){
                         try {
-                            return new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(result).getTime());
+                            return new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(result).getTime());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }

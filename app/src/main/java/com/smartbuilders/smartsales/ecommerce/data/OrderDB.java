@@ -62,10 +62,10 @@ public class OrderDB {
                 order.setId(c.getInt(0));
                 order.setSalesOrderId(c.getInt(1));
                 try{
-                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) {
                         //empty
                     }
@@ -196,10 +196,10 @@ public class OrderDB {
                     Order order = new Order();
                     order.setId(c.getInt(0));
                     try{
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                     }catch(ParseException ex){
                         try {
-                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }
@@ -264,10 +264,10 @@ public class OrderDB {
                     Order order = new Order();
                     order.setId(c.getInt(0));
                     try{
-                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                        order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                     }catch(ParseException ex){
                         try {
-                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                            order.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }

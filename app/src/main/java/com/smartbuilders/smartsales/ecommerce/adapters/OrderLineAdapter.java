@@ -181,6 +181,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         } else {
             holder.productPrice.setVisibility(View.GONE);
             holder.productTax.setVisibility(View.GONE);
+            holder.productTotalPrice.setVisibility(View.GONE);
+            holder.subTotalLineAmount.setVisibility(View.GONE);
             holder.totalLineAmount.setVisibility(View.GONE);
         }
 

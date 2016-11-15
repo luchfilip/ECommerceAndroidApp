@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notification_group_created_date"
-        android:textSize="@dimen/mainPageTitleSection_textSize"
-        android:textColor="#555555"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black"
         android:layout_margin="10dp"
         android:textStyle="bold"
         android:visibility="gone" />

@@ -113,6 +113,6 @@ public class ProductPriceAvailability extends Model implements Parcelable {
     }
 
     public String getTotalPriceStringFormat() {
-        return String.format(new Locale("es", "VE"), "%,.2f", getTotalPrice());
+        return String.format(new Locale("es", "VE"), "%,.2f", totalPrice);
     }
 }

@@ -194,7 +194,9 @@ public class Product extends Model implements Parcelable {
 
     public String getInternalCodeMayoreoFormat() {
         try {
-            return internalCode.charAt(0)+"-"+internalCode.substring(1,4)+"-"+internalCode.substring(4);
+            return (new StringBuilder()).append(internalCode.charAt(0)).append("-")
+                    .append(internalCode.substring(1,4)).append("-")
+                    .append(internalCode.substring(4)).toString();
         } catch (Exception e) {
             return internalCode;
         }
@@ -227,8 +229,8 @@ public class Product extends Model implements Parcelable {
     @Override
     public boolean equals(Object o) {
         try {
-            return ((Product) o).getName().equals(getName())
-                    && ((Product) o).getProductSubCategoryId() == getProductSubCategoryId();
+            return ((Product) o).getName().equals(name)
+                    && ((Product) o).getProductSubCategoryId() == productSubCategoryId;
         } catch (Exception e) { }
         return super.equals(o);
     }

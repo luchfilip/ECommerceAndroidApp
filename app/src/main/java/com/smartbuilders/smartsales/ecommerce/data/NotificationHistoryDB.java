@@ -60,10 +60,10 @@ public class NotificationHistoryDB {
                     notificationHistory.setType(c.getInt(4));
                     notificationHistory.setStatus(c.getInt(5));
                     try{
-                        notificationHistory.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(6)).getTime()));
+                        notificationHistory.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(6)).getTime()));
                     }catch(ParseException ex){
                         try {
-                            notificationHistory.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(6)).getTime()));
+                            notificationHistory.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(6)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }

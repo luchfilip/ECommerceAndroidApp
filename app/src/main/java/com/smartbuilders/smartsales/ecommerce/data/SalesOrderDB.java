@@ -169,10 +169,10 @@ public class SalesOrderDB {
                 salesOrder = new SalesOrder();
                 salesOrder.setId(c.getInt(0));
                 try{
-                    salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(1)).getTime()));
+                    salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(1)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
+                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
                     } catch (ParseException e) {
                         //empty
                     }
@@ -320,10 +320,10 @@ public class SalesOrderDB {
                     SalesOrder salesOrder = new SalesOrder();
                     salesOrder.setId(c.getInt(0));
                     try{
-                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                        salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                     }catch(ParseException ex){
                         try {
-                            salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                            salesOrder.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }

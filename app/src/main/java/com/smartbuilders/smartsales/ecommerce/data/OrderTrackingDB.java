@@ -52,10 +52,10 @@ public class OrderTrackingDB {
                 orderTracking.setDetails(c.getString(2));
                 if (c.getString(3) != null) {
                     try {
-                        orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(3)).getTime()));
+                        orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(3)).getTime()));
                     } catch (ParseException ex) {
                         try {
-                            orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(3)).getTime()));
+                            orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(3)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }
@@ -127,10 +127,10 @@ public class OrderTrackingDB {
                     orderTracking.setDetails(c.getString(1));
                     if (c.getString(2) != null) {
                         try {
-                            orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                            orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                         } catch (ParseException ex) {
                             try {
-                                orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                                orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                             } catch (ParseException e) {
                                 //empty
                             }
@@ -200,10 +200,10 @@ public class OrderTrackingDB {
                 orderTracking.setOrderTrackingStateId(c.getInt(0));
                 orderTracking.setDetails(c.getString(1));
                 try{
-                    orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(c.getString(2)).getTime()));
+                    orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(2)).getTime()));
                 }catch(ParseException ex){
                     try {
-                        orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
+                        orderTracking.setCreated(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(2)).getTime()));
                     } catch (ParseException e) {
                         //empty
                     }

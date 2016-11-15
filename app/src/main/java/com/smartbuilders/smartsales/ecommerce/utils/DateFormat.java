@@ -10,6 +10,6 @@ import java.util.Locale;
 public class DateFormat {
 
     public static String getCurrentDateTimeSQLFormat(){
-        return (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", new Locale("es","VE"))).format(new Date());
+        return (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","VE"))).format(new Date());
     }
 }

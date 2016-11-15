@@ -68,7 +68,9 @@ public class ProductSearchResult implements Parcelable {
 
     public String getProductInternalCodeMayoreoFormat() {
         try {
-            return productInternalCode.charAt(0)+"-"+productInternalCode.substring(1,4)+"-"+productInternalCode.substring(4);
+            return (new StringBuilder()).append(productInternalCode.charAt(0)).append("-")
+                    .append(productInternalCode.substring(1,4)).append("-")
+                    .append(productInternalCode.substring(4)).toString();
         } catch (Exception e) {
             return productInternalCode;
         }
