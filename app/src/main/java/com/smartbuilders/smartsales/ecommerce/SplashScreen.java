@@ -33,7 +33,6 @@ import com.smartbuilders.synchronizer.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.List;
-import java.util.concurrent.Exchanger;
 
 /**
  * Jesus Sarco, 2/6/2016.
@@ -134,6 +133,12 @@ public class SplashScreen extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (Float.valueOf(mProgressPercentage) >= 100) {
+            initApp();
+        } else {
+            mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+            checkPermission();
+        }
         super.onStart();
     }
 
@@ -169,12 +174,12 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        if (progressPercentage >= 100) {
-            initApp();
-        } else {
-            mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
-            checkPermission();
-        }
+        //if (progressPercentage >= 100) {
+        //    initApp();
+        //} else {
+        //    mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+        //    checkPermission();
+        //}
     }
 
     private void checkPermission() {
@@ -328,6 +333,10 @@ public class SplashScreen extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 initApp();
             }
+        } else if (resultCode == 200) {
+            if (mUser!=null && !ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {
+                initApp();
+            }
         }
     }
 
@@ -359,7 +368,7 @@ public class SplashScreen extends AppCompatActivity {
                                 mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this, userId);
 
                                 //mostrar pantalla de bienvenida de la aplicacion
-                                startActivity(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class));
+                                startActivityForResult(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class), 200);
                                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                 checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));

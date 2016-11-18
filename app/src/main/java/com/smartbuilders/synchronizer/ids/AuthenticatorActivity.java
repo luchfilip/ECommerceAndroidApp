@@ -11,6 +11,7 @@ import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.RequestResetUserPasswordActivity;
 import com.smartbuilders.smartsales.ecommerce.RequestUserPasswordActivity;
+import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -176,6 +177,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
         });
+
+        //Si no se ha sincronizado nunca entonces se manda a limpiar el icono de la aplicacion
+        //del numero de notificaciones porque a veces cuando se elimina la aplicacion y se vuelve a instalar
+        //el dispositivo sigue mostrando el numero de notificaciones pendientes en el icono.
+        if (mUser==null) {
+            BadgeUtils.clearBadge(this);
+        }
     }
 
     @Override

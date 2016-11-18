@@ -525,4 +525,5 @@
     <string name="sending_order">Enviando Pedido...</string>
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
     <string name="notificationHistories">Notificaciones</string>
+    <string name="skip">SALTAR</string>
 </resources>

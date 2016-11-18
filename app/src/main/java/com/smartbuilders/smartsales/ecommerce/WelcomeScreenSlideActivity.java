@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
@@ -23,6 +26,7 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
      * The number of pages (wizard steps) to show in this demo.
      */
     private static final int NUM_PAGES = 8;
+    private static final String STATE_CURRENT_PAGE_SELECTED_POSITION = "STATE_CURRENT_PAGE_SELECTED_POSITION";
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -36,11 +40,19 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
     private PagerAdapter mPagerAdapter;
 
     private boolean doubleBackToExitPressedOnce;
+    private TextView skipTextView;
+    private int mCurrentPageSelectedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen_slide);
+
+        if (savedInstanceState!=null) {
+            if (savedInstanceState.containsKey(STATE_CURRENT_PAGE_SELECTED_POSITION)) {
+                mCurrentPageSelectedPosition = savedInstanceState.getInt(STATE_CURRENT_PAGE_SELECTED_POSITION);
+            }
+        }
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -50,16 +62,27 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                mCurrentPageSelectedPosition = position;
                 // When changing pages, reset the action bar actions since they are dependent
                 // on which page is currently active. An alternative approach is to have each
                 // fragment expose actions itself (rather than the activity exposing actions),
                 // but for simplicity, the activity provides the actions in this sample.
                 supportInvalidateOptionsMenu();
+                skipTextView.setVisibility((position==mPagerAdapter.getCount()-1) ? View.GONE : View.VISIBLE);
             }
         });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
         tabLayout.setupWithViewPager(mPager, true);
+
+        skipTextView = (TextView) findViewById(R.id.skip_textView);
+        skipTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        skipTextView.setVisibility((mCurrentPageSelectedPosition==mPagerAdapter.getCount()-1) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -89,6 +112,7 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            setResult(RESULT_OK);
             return;
         }
 
@@ -101,5 +125,11 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putInt(STATE_CURRENT_PAGE_SELECTED_POSITION, mCurrentPageSelectedPosition);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }

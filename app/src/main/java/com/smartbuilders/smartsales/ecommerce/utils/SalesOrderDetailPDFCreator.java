@@ -346,7 +346,7 @@ public class SalesOrderDetailPDFCreator {
             cell2.setUseVariableBorders(true);
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            if (user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID) {
                 cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
             }
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
