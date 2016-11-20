@@ -229,7 +229,10 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notificaciones</string>
-    <string name="pref_title_new_availabilities_wish_list_notifications">Notificación de nuevas existencias para productos en Favoritos</string>
+    <string name="pref_title_increment_availabilities_wish_list_notifications">Aumento de la existencia para productos en Favoritos</string>
+    <string name="pref_title_decrement_availabilities_wish_list_notifications">Decremento de la existencia para productos en Favoritos</string>
+    <string name="pref_title_new_order_tracking_notifications">Nuevo estatus Rastreo de Pedido</string>
+    <string name="pref_title_notify">Notificar</string>
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silencioso</string>
     <string name="pref_title_vibrate">Vibrar</string>
@@ -381,13 +384,18 @@
     <string name="product_tax">Imp: %1$s</string>
     <string name="product_tax_detail">Imp (%1$s): %2$s</string>
     <string name="product_total_price_detail">Precio total (%1$s): %2$s</string>
-    <string name="save_images_in_device">Guardar imagenes en el dispositivo</string>
-    <string name="load_thumb_images">Mantener sincronizadas imagenes miniatura de los productos</string>
-    <string name="load_thumb_images_summaryOff">Las imagenes en miniatura de los productos se cargan cada vez que se requiere. Se necesita acceso a internet para que puedan ser mostradas las imagenes.</string>
-    <string name="load_thumb_images_summaryOn">Se descargan las imagenes miniaturas de los productos en el dispositivo para que se puedan mostrar aún sin tener acceso a intenet.</string>
-    <string name="save_images_in_device_summaryOff">Las imagenes no se guardan en el dispositivo. Ahorro de espacio en disco. Se necesita acceso a internet para que puedan ser mostradas las imagenes.</string>
-    <string name="save_images_in_device_summaryOn">las imagenes que han sido mostradas se guardan en el dispositivo para no requerir una nueva descarga. Se requiere espacio en disco. Se ahorran los megas del plan de datos.</string>
-    <string name="clean_thumb_dir">¿Desea eliminar las imagenes anteriormente almacenadas?</string>
+    <string name="save_images_in_device">Guardar imágenes en el dispositivo</string>
+    <string name="load_thumb_images">Imágenes miniatura siempre disponibles</string>
+    <string name="load_original_images">Imágenes de alta resolución siempre disponibles</string>
+    <string name="load_thumb_images_summaryOff">Las imágenes en miniatura de los productos se cargan cada vez que se requiere. Se necesita acceso a internet para que puedan ser mostradas las imágenes.</string>
+    <string name="load_thumb_images_summaryOn">Se descargan las imágenes miniaturas de los productos en el dispositivo para que se puedan mostrar aún sin tener acceso a intenet.</string>
+    <string name="load_original_images_summaryOff">Las imágenes de alta resolución de los productos se cargan cada vez que se requiere. Se necesita acceso a internet para que puedan ser mostradas las imágenes.</string>
+    <string name="load_original_images_summaryOn">Se descargan las imágenes de alta resolución de los productos en el dispositivo para que se puedan mostrar aún sin tener acceso a intenet.</string>
+    <string name="save_images_in_device_summaryOff">Las imágenes no se guardan en el dispositivo. Ahorro de espacio en disco. Se necesita acceso a internet para que puedan ser mostradas las imágenes.</string>
+    <string name="save_images_in_device_summaryOn">las imágenes que han sido mostradas se guardan en el dispositivo para no requerir una nueva descarga. Se requiere espacio en disco. Se ahorran los megas del plan de datos.</string>
+    <string name="clean_thumb_and_original_dir">¿Desea eliminar las imágenes miniatura y de alta resolución anteriormente almacenadas?</string>
+    <string name="clean_thumb_dir">¿Desea eliminar las imágenes en miniatura anteriormente almacenadas?</string>
+    <string name="clean_original_dir">¿Desea eliminar las imágenes de alta resolución anteriormente almacenadas?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="no_image_available">No hay imagen disponible.</string>
@@ -517,7 +525,6 @@
     <string name="edit_image">Editar Imágen</string>
     <string name="synchronization">Sincronización</string>
     <string name="images_management">Manejo de Imágenes</string>
-    <string name="show_notification">Mostrar notificación</string>
     <string name="subcategories">Sub Categorías</string>
     <string name="creating_product_share_card_wait_please">Creando cartilla del producto, espere por favor...</string>
     <string name="order_deliver_status_sent">El pedido se ha transmitido exitosamente.</string>
@@ -526,4 +533,10 @@
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
     <string name="notificationHistories">Notificaciones</string>
     <string name="skip">SALTAR</string>
+    <string name="pref_summary_notify">Mostrar notificación y guardar en el listado de las notificaciones</string>
+    <string name="undo">DESHACER</string>
+    <string name="product_removed">Producto removido</string>
+    <string name="product_restored">Producto restaurado!</string>
+    <string name="notification_removed">Notificación removida</string>
+    <string name="notification_restored">Notificación restaurada!</string>
 </resources>

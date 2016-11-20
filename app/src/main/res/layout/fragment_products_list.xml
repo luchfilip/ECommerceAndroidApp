@@ -27,6 +27,9 @@
         android:id="@+id/product_list_result"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="@color/material_grey_50"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.smartbuilders.synchronizer.ids.broadcastreceivers;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
@@ -71,9 +72,15 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
 
             //if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_thumb_images", false)
-                        && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", false)
+                    && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_thumb_images", false)
+                    && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
                     context.startService(new Intent(context, LoadProductsThumbImage.class));
+                }
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", false)
+                    && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_original_images", false)
+                    && !Utils.isServiceRunning(context, LoadProductsOriginalImage.class)){
+                    context.startService(new Intent(context, LoadProductsOriginalImage.class));
                 }
             //}
         }

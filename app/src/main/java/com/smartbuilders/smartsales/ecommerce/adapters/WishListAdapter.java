@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     private Context mContext;
     private Fragment mFragment;
+    private View mParentLayout;
     private ArrayList<OrderLine> mDataset;
     private User mUser;
     private OrderLineDB orderLineDB;
@@ -90,7 +92,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user);
         void addToShoppingCart(Product product, User user);
         void addToShoppingSale(Product product, User user);
-        void reloadWishList(ArrayList<OrderLine> wishListLines);
+        void reloadWishList(ArrayList<OrderLine> wishListLines, boolean setData);
         void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user);
     }
 
@@ -190,25 +192,57 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
 
+//        holder.deleteItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new AlertDialog.Builder(mContext)
+//                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question,
+//                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
+//                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                String result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()).getId());
+//                                if(result == null){
+//                                    //mDataset.remove(holder.getAdapterPosition());
+//                                    //notifyItemRemoved(holder.getAdapterPosition());
+//                                    //((Callback) mFragment).reloadWishList(mDataset, false);
+//                                    removeItem(holder.getAdapterPosition());
+//                                } else {
+//                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.cancel, null)
+//                        .show();
+//            }
+//        });
+
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question,
-                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
-                                if(result == null){
-                                    mDataset.remove(holder.getAdapterPosition());
-                                    ((Callback) mFragment).reloadWishList(mDataset);
-                                } else {
-                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
+                final int itemPosition = holder.getAdapterPosition();
+                final OrderLine orderLine = mDataset.get(itemPosition);
+
+                String result = orderLineDB.deleteOrderLine(orderLine.getId());
+                if(result == null){
+                    removeItem(itemPosition);
+                    if (mParentLayout!=null) {
+                        Snackbar.make(mParentLayout, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.undo, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        String result = orderLineDB.restoreOrderLine(orderLine.getId());
+                                        if (result == null) {
+                                            addItem(itemPosition, orderLine);
+                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }).show();
+                    }
+                } else {
+                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -277,8 +311,36 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productReference.setText(mDataset.get(position).getProduct().getReference());
     }
 
+    public OrderLine getItem(int position) {
+        try {
+            return mDataset.get(position);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+        ((Callback) mFragment).reloadWishList(mDataset, false);
+    }
+
+    public void addItem(int position, OrderLine item) {
+        mDataset.add(position, item);
+        notifyItemInserted(position);
+        ((Callback) mFragment).reloadWishList(mDataset, false);
+    }
+
+    public ArrayList<OrderLine> getData() {
+        return mDataset;
+    }
+
     public void setData(ArrayList<OrderLine> wishListLines) {
         mDataset = wishListLines;
         notifyDataSetChanged();
+    }
+
+    public void setParentLayout(View parentLayout) {
+        mParentLayout = parentLayout;
     }
 }

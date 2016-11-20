@@ -2,6 +2,7 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     private Context mContext;
     private ArrayList<NotificationHistory> mDataset;
     private User mUser;
-
+    private Fragment mFragment;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -59,7 +60,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         }
     }
 
-    public NotificationsListAdapter(Context context, ArrayList<NotificationHistory> data, User user) {
+    public interface Callback{
+        void reloadNotificationsList(ArrayList<NotificationHistory> notificationHistories, boolean setData);
+    }
+
+    public NotificationsListAdapter(Fragment fragment, Context context, ArrayList<NotificationHistory> data, User user) {
+        mFragment = fragment;
         mContext = context;
         mDataset = data;
         mUser = user;
@@ -170,6 +176,26 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         } else {
             holder.notificationImage.setImageDrawable(Utils.getNoImageAvailableDrawable(mContext));
         }
+    }
+
+    public NotificationHistory getItem(int position) {
+        try {
+            return mDataset.get(position);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+        ((Callback) mFragment).reloadNotificationsList(mDataset, false);
+    }
+
+    public void addItem(int position, NotificationHistory item) {
+        mDataset.add(position, item);
+        notifyItemInserted(position);
+        ((Callback) mFragment).reloadNotificationsList(mDataset, false);
     }
 
     public void setData(ArrayList<NotificationHistory> notificationHistories) {

@@ -136,16 +136,36 @@ public class OrderLineDB {
         return null;
     }
 
-    public String deleteOrderLine(OrderLine orderLine){
+    public String deleteOrderLine(int id){
         try {
             //Solo se permite eliminar la linea si no esta asociada a un pedido
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, SEQUENCE_ID = 0 " +
-                    " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
-                    new String[]{"N", String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId())});
+                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
+                    new String[]{"N", String.valueOf(id), String.valueOf(mUser.getServerUserId())});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    public String restoreOrderLine(int id){
+        try {
+            //Solo se permite restaurar la linea si no esta asociada a un pedido
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, SEQUENCE_ID = 0 " +
+                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
+                    new String[]{"Y", String.valueOf(id), String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }

@@ -4,13 +4,19 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -55,7 +61,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     private View mainLayout;
     private Intent mShareIntent;
     private ProgressDialog waitPlease;
-    private ArrayList<OrderLine> mWishListLines;
 
     public WishListFragment() {
     }
@@ -78,9 +83,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                     mUser = Utils.getCurrentUser(getContext());
                     mOrderLineDB = new OrderLineDB(getContext(), mUser);
 
-                    mWishListLines = mOrderLineDB.getWishList();
-
-                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, mWishListLines, mUser);
+                    mWishListAdapter = new WishListAdapter(getContext(), WishListFragment.this, mOrderLineDB.getWishList(), mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -91,6 +94,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                             try {
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
+                                mWishListAdapter.setParentLayout(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView);
 
                                 if (view.findViewById(R.id.search_fab) != null) {
                                     view.findViewById(R.id.search_fab).setOnClickListener(new View.OnClickListener() {
@@ -117,6 +121,84 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
+                                ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                                        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT /*| ItemTouchHelper.DOWN | ItemTouchHelper.UP*/) {
+
+                                            @Override
+                                            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                                                //Remove swiped item from list and notify the RecyclerView
+                                                final int itemPosition = viewHolder.getAdapterPosition();
+                                                final OrderLine orderLine = mWishListAdapter.getItem(itemPosition);
+
+                                                String result = mOrderLineDB.deleteOrderLine(orderLine.getId());
+                                                if(result == null){
+                                                    //viewHolder.setIsRecyclable(false);
+                                                    mWishListAdapter.removeItem(itemPosition);
+                                                    Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                                            .setAction(R.string.undo, new View.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View view) {
+                                                                    String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
+                                                                    if(result == null){
+                                                                        mWishListAdapter.addItem(itemPosition, orderLine);
+                                                                        Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView,
+                                                                                R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            }).show();
+                                                } else {
+                                                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                                                    RecyclerView.ViewHolder viewHolder, float dX,
+                                                                    float dY, int actionState, boolean isCurrentlyActive) {
+                                                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                                                    // Get RecyclerView item from the ViewHolder
+                                                    View itemView = viewHolder.itemView;
+
+                                                    Paint p = new Paint();
+                                                    p.setColor(Utils.getColor(getContext(), R.color.on_swipe_bg_color));
+
+                                                    Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_highlight_off_white_48dp);
+                                                    if (dX > 0) {
+                                                        // Draw Rect with varying right side, equal to displacement dX
+                                                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                                                (float) itemView.getBottom(), p);
+
+                                                        // Set the image icon for Right swipe
+                                                        c.drawBitmap(icon,
+                                                                (float) itemView.getLeft() + Utils.convertDpToPixel(16, getContext()),
+                                                                (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                                p);
+                                                    } else {
+                                                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                                                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                                                        //Set the image icon for Left swipe
+                                                        c.drawBitmap(icon,
+                                                                (float) itemView.getRight() - Utils.convertDpToPixel(16, getContext()) - icon.getWidth(),
+                                                                (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                                p);
+                                                    }
+                                                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                                                }
+                                            }
+
+                                        };
+                                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+                                itemTouchHelper.attachToRecyclerView(recyclerView);
+
                                 view.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -127,7 +209,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mWishListLines.isEmpty()) {
+                                if (mWishListAdapter==null || mWishListAdapter.getItemCount()==0) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
@@ -199,14 +281,16 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
     public void reloadWishList(){
         if (mOrderLineDB!=null) {
-            reloadWishList(mOrderLineDB.getWishList());
+            reloadWishList(mOrderLineDB.getWishList(), true);
         }
     }
 
     @Override
-    public void reloadWishList(ArrayList<OrderLine> wishListLines){
-        mWishListLines = wishListLines;
-        mWishListAdapter.setData(wishListLines);
+    public void reloadWishList(ArrayList<OrderLine> wishListLines, boolean setData){
+        if (setData) {
+            mWishListAdapter.setData(wishListLines);
+        }
+        mWishListAdapter.setParentLayout(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView);
         mShareIntent = null;
         if (wishListLines==null || wishListLines.size()==0) {
             mBlankScreenView.setVisibility(View.VISIBLE);
@@ -321,8 +405,8 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
 
         private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (mWishListLines!=null && !mWishListLines.isEmpty()) {
-                    new WishListPDFCreator().generatePDF(mWishListLines, fileName + ".pdf",
+                if (mWishListAdapter!=null && mWishListAdapter.getItemCount()>0) {
+                    new WishListPDFCreator().generatePDF(mWishListAdapter.getData(), fileName + ".pdf",
                             getActivity(), getContext(), mUser);
 
                     mShareIntent = new Intent(Intent.ACTION_SEND);

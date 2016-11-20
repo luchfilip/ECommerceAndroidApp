@@ -1309,6 +1309,15 @@ public class Utils {
     }
 
     /**
+     *
+     * @param context
+     * @return
+     */
+    public static List<String> getListOfFilesInOriginalDir(Context context) {
+        return getListOfFilesByFolder(new File (getImagesOriginalFolderPath(context)));
+    }
+
+    /**
      * Devuelve una lista con los nombres de los archivos que se encuentran en el fichero
      * @param folder
      * @return

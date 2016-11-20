@@ -48,8 +48,8 @@ public class NotificationHistoryDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT NOTIFICATION_HISTORY_ID, TITLE, MESSAGE, RELATED_ID, TYPE, STATUS, CREATE_TIME " +
-                    " FROM NOTIFICATION_HISTORY " +
-                    " ORDER BY NOTIFICATION_HISTORY_ID DESC", null, null);
+                    " FROM NOTIFICATION_HISTORY WHERE IS_ACTIVE = ? " +
+                    " ORDER BY NOTIFICATION_HISTORY_ID DESC", new String[]{"Y"}, null);
             if(c!=null){
                 while (c.moveToNext()) {
                     NotificationHistory notificationHistory = new NotificationHistory();
@@ -105,8 +105,8 @@ public class NotificationHistoryDB {
             c = mContext.getContentResolver()
                     .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                            "SELECT count(NOTIFICATION_HISTORY_ID) FROM NOTIFICATION_HISTORY WHERE STATUS = ?",
-                            new String[]{String.valueOf(status)}, null);
+                            "SELECT count(NOTIFICATION_HISTORY_ID) FROM NOTIFICATION_HISTORY WHERE STATUS = ? AND IS_ACTIVE = ?",
+                            new String[]{String.valueOf(status), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }
@@ -122,5 +122,41 @@ public class NotificationHistoryDB {
             }
         }
         return -1;
+    }
+
+    public String deleteNotification(int id){
+        try {
+            //Solo se permite eliminar la linea si no esta asociada a un pedido
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null,
+                    "UPDATE NOTIFICATION_HISTORY SET IS_ACTIVE = ? WHERE NOTIFICATION_HISTORY_ID = ?",
+                    new String[]{"N", String.valueOf(id)});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    public String restoreNotification(int id){
+        try {
+            //Solo se permite eliminar la linea si no esta asociada a un pedido
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null,
+                    "UPDATE NOTIFICATION_HISTORY SET IS_ACTIVE = ? WHERE NOTIFICATION_HISTORY_ID = ?",
+                    new String[]{"Y", String.valueOf(id)});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
     }
 }

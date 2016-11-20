@@ -1,13 +1,20 @@
 package com.smartbuilders.smartsales.ecommerce;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.NotificationsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
@@ -21,7 +28,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NotificationsListFragment extends Fragment {
+public class NotificationsListFragment extends Fragment implements NotificationsListAdapter.Callback {
 
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
 
@@ -32,6 +39,7 @@ public class NotificationsListFragment extends Fragment {
     private int mRecyclerViewCurrentFirstPosition;
     private View mBlankScreenView;
     private RecyclerView recyclerView;
+    private View mMainLayout;
 
     public NotificationsListFragment() {
     }
@@ -53,7 +61,8 @@ public class NotificationsListFragment extends Fragment {
                     }
                     mUser = Utils.getCurrentUser(getContext());
                     mNotificationHistoryDB = new NotificationHistoryDB(getContext(), mUser);
-                    mNotificationsListAdapter = new NotificationsListAdapter(getContext(), mNotificationHistoryDB.getNotifications(), mUser);
+                    mNotificationsListAdapter = new NotificationsListAdapter(NotificationsListFragment.this,
+                            getContext(), mNotificationHistoryDB.getNotifications(), mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -64,6 +73,7 @@ public class NotificationsListFragment extends Fragment {
                             try {
                                 mBlankScreenView = view.findViewById(R.id.empty_layout_wallpaper);
                                 recyclerView = (RecyclerView) view.findViewById(R.id.notifications_list);
+                                mMainLayout = view.findViewById(R.id.main_layout);
 
                                 if (view.findViewById(R.id.settings_fab)!=null) {
                                     view.findViewById(R.id.settings_fab).setOnClickListener(new View.OnClickListener() {
@@ -84,6 +94,83 @@ public class NotificationsListFragment extends Fragment {
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
+
+                                ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                                        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT /*| ItemTouchHelper.DOWN | ItemTouchHelper.UP*/) {
+
+                                    @Override
+                                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                                        //Remove swiped item from list and notify the RecyclerView
+                                        final int itemPosition = viewHolder.getAdapterPosition();
+                                        final NotificationHistory notificationHistory = mNotificationsListAdapter.getItem(itemPosition);
+
+                                        String result = mNotificationHistoryDB.deleteNotification(notificationHistory.getId());
+                                        if(result == null){
+                                            //viewHolder.setIsRecyclable(false);
+                                            mNotificationsListAdapter.removeItem(itemPosition);
+                                            Snackbar.make(mMainLayout, R.string.notification_removed, Snackbar.LENGTH_LONG)
+                                                    .setAction(R.string.undo, new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            String result = mNotificationHistoryDB.restoreNotification(notificationHistory.getId());
+                                                            if(result == null){
+                                                                mNotificationsListAdapter.addItem(itemPosition, notificationHistory);
+                                                                Snackbar.make(mMainLayout, R.string.notification_restored, Snackbar.LENGTH_SHORT).show();
+                                                            } else {
+                                                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    }).show();
+                                        } else {
+                                            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                                            RecyclerView.ViewHolder viewHolder, float dX,
+                                                            float dY, int actionState, boolean isCurrentlyActive) {
+                                        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                                            // Get RecyclerView item from the ViewHolder
+                                            View itemView = viewHolder.itemView;
+
+                                            Paint p = new Paint();
+                                            p.setColor(Utils.getColor(getContext(), R.color.on_swipe_bg_color));
+
+                                            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_highlight_off_white_48dp);
+                                            if (dX > 0) {
+                                                // Draw Rect with varying right side, equal to displacement dX
+                                                c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                                        (float) itemView.getBottom(), p);
+
+                                                // Set the image icon for Right swipe
+                                                c.drawBitmap(icon,
+                                                        (float) itemView.getLeft() + Utils.convertDpToPixel(16, getContext()),
+                                                        (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                        p);
+                                            } else {
+                                                // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                                                c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                                        (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                                                //Set the image icon for Left swipe
+                                                c.drawBitmap(icon,
+                                                        (float) itemView.getRight() - Utils.convertDpToPixel(16, getContext()) - icon.getWidth(),
+                                                        (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                        p);
+                                            }
+                                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                                        }
+                                    }
+
+                                };
+                                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+                                itemTouchHelper.attachToRecyclerView(recyclerView);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -122,13 +209,16 @@ public class NotificationsListFragment extends Fragment {
 
     public void reloadNotificationsList(){
         if (mNotificationHistoryDB !=null) {
-            reloadNotificationsList(mNotificationHistoryDB.getNotifications());
+            reloadNotificationsList(mNotificationHistoryDB.getNotifications(), true);
         }
     }
 
-    public void reloadNotificationsList(ArrayList<NotificationHistory> notificationHistories){
+    @Override
+    public void reloadNotificationsList(ArrayList<NotificationHistory> notificationHistories, boolean setData){
         if (recyclerView!=null && recyclerView.getAdapter()!=null) {
-            ((NotificationsListAdapter) recyclerView.getAdapter()).setData(notificationHistories);
+            if (setData) {
+                ((NotificationsListAdapter) recyclerView.getAdapter()).setData(notificationHistories);
+            }
             if (notificationHistories == null || notificationHistories.size() == 0) {
                 mBlankScreenView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);

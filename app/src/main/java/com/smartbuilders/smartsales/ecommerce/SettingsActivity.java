@@ -19,8 +19,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
@@ -31,8 +29,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -341,19 +339,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (BuildConfig.USE_PRODUCT_IMAGE) {
                 bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
                 bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
+                bindPreferenceSummaryToValue(findPreference("sync_original_images"));
 
                 findPreference("save_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         final Context context = preference.getContext();
                         if((Boolean) newValue){
-                            findPreference("sync_thumb_images").setSelectable(true);
+                            //findPreference("sync_thumb_images").setSelectable(true);
                             //TODO: setear el valor de sync_thumb_images en FALSE
                         }else{
-                            findPreference("sync_thumb_images").setSelectable(false);
+                            //findPreference("sync_thumb_images").setSelectable(false);
                             context.stopService(new Intent(context, LoadProductsThumbImage.class));
                             new AlertDialog.Builder(context)
-                                    .setMessage(R.string.clean_thumb_dir)
+                                    .setMessage(R.string.clean_thumb_and_original_dir)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -394,12 +393,41 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         return true;
                     }
                 });
+
+                findPreference("sync_original_images").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final Context context = preference.getContext();
+                        if((Boolean) newValue){
+                            if(!Utils.isServiceRunning(context, LoadProductsOriginalImage.class)){
+                                context.startService(new Intent(context, LoadProductsOriginalImage.class));
+                            }
+                        }else{
+                            context.stopService(new Intent(context, LoadProductsOriginalImage.class));
+                            new AlertDialog.Builder(context)
+                                    .setMessage(R.string.clean_original_dir)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Utils.clearOriginalImagesFolder(context);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, null)
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    }
+                });
             } else {
                 findPreference("save_images_in_device").setShouldDisableView(true);
                 findPreference("save_images_in_device").setEnabled(false);
 
                 findPreference("sync_thumb_images").setShouldDisableView(true);
                 findPreference("sync_thumb_images").setEnabled(false);
+
+                findPreference("sync_original_images").setShouldDisableView(true);
+                findPreference("sync_original_images").setEnabled(false);
             }
         }
 

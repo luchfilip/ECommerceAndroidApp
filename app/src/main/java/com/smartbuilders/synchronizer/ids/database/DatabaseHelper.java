@@ -591,6 +591,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " TYPE INTEGER NOT NULL, " +
                     " RELATED_ID INTEGER NOT NULL, " +
                     " STATUS INTEGER NOT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT NULL)";
 
 	/**

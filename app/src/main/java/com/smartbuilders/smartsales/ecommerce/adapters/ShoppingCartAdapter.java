@@ -220,7 +220,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                         public void onClick(DialogInterface dialog, int which) {
                             String result = null;
                             if(mIsShoppingCart){
-                                result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()));
+                                result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()).getId());
                             }
                             if(result == null){
                                 if(mIsShoppingCart){

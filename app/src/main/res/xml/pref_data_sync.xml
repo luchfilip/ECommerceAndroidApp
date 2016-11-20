@@ -37,11 +37,22 @@
         </SwitchPreference>
 
         <SwitchPreference
+            android:dependency="save_images_in_device"
             android:key="sync_thumb_images"
             android:defaultValue="false"
             android:title="@string/load_thumb_images"
             android:summaryOff="@string/load_thumb_images_summaryOff"
             android:summaryOn="@string/load_thumb_images_summaryOn">
+
+        </SwitchPreference>
+
+        <SwitchPreference
+            android:dependency="save_images_in_device"
+            android:key="sync_original_images"
+            android:defaultValue="false"
+            android:title="@string/load_original_images"
+            android:summaryOff="@string/load_original_images_summaryOff"
+            android:summaryOn="@string/load_original_images_summaryOn">
 
         </SwitchPreference>
     </PreferenceCategory>
