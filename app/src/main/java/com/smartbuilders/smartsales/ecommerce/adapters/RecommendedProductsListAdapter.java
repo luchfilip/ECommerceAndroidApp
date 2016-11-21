@@ -286,6 +286,10 @@ public class RecommendedProductsListAdapter extends
         return (new OrderLineDB(mContext, mUser)).removeProductFromWishList(productId);
     }
 
+    public ArrayList<Product> getData() {
+        return mDataset;
+    }
+
     public void setData(ArrayList<Product> products) {
         mDataset = products;
         notifyDataSetChanged();

@@ -196,7 +196,9 @@ public class NotificationsListFragment extends Fragment implements Notifications
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            reloadNotificationsList();
+            if (mNotificationHistoryDB !=null) {
+                reloadNotificationsList(mNotificationHistoryDB.getNotifications(), true);
+            }
         }
         if (getActivity()!=null) {
             BadgeUtils.clearBadge(getActivity());
@@ -205,12 +207,6 @@ public class NotificationsListFragment extends Fragment implements Notifications
             mNotificationHistoryDB.updateNotificationsStatus(NotificationHistory.STATUS_SEEN);
         }
         super.onStart();
-    }
-
-    public void reloadNotificationsList(){
-        if (mNotificationHistoryDB !=null) {
-            reloadNotificationsList(mNotificationHistoryDB.getNotifications(), true);
-        }
     }
 
     @Override

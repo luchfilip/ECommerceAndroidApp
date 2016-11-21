@@ -554,4 +554,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             notifyDataSetChanged();
         }
     }
+
+    public void sortProductsList(int sortOption) {
+        try {
+            mSortOption = sortOption;
+            sortProductList();
+        } finally {
+            notifyDataSetChanged();
+        }
+    }
 }

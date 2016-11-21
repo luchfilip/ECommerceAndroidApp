@@ -200,4 +200,8 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             }
         });
     }
+
+    public ArrayList<OrderLine> getData() {
+        return mDataset;
+    }
 }

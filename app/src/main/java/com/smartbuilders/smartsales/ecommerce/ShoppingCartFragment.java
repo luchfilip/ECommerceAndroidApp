@@ -3,17 +3,24 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingCartFinalizeOptionsActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -50,24 +57,25 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private ShoppingCartAdapter mShoppingCartAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
-    private ArrayList<OrderLine> mOrderLines;
     private TextView mTotalLines;
     private TextView mSubTotalAmount;
     private TextView mTaxAmount;
     private TextView mTotalAmount;
     private ProgressDialog waitPlease;
-    private View mainLayout;
+    private View mMainLayout;
     private View mBlankScreenView;
     private boolean mIsShoppingCart = true;
     private TextView mBusinessPartnerName;
     private TextView mSalesOrderNumber;
     private View mSalesOrderInfoSeparator;
+    private OrderLineDB mOrderLineDB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
         mIsInitialLoad = true;
+        final ArrayList<OrderLine> mOrderLines = new ArrayList<>();
 
         new Thread() {
             @Override
@@ -82,7 +90,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                         if(savedInstanceState.containsKey(STATE_ORDER_LINES)){
-                            mOrderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
+                            ArrayList<OrderLine> orderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
+                            mOrderLines.addAll(orderLines);
                         }
                     } else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
@@ -92,20 +101,20 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
                             //Si viene de ShoppingCartFinalizeOptionsActivity
                             if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_ORDER_LINES)){
-                                mOrderLines = getActivity().getIntent().getExtras()
+                                ArrayList<OrderLine> orderLines = getActivity().getIntent().getExtras()
                                         .getParcelableArrayList(ShoppingCartActivity.KEY_ORDER_LINES);
+                                mOrderLines.addAll(orderLines);
                             }
                         }
+                    } else if (!mIsShoppingCart) {
+                        mOrderLines.addAll(mOrderLineDB.getOrderLinesBySalesOrderId(mSalesOrderId));
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
+                    mOrderLineDB = new OrderLineDB(getContext(), mUser);
 
                     if (mIsShoppingCart) {
-                        mOrderLines = (new OrderLineDB(getContext(), mUser)).getActiveOrderLinesFromShoppingCart();
-                    }else {
-                        if(mOrderLines==null){
-                            mOrderLines = (new OrderLineDB(getContext(), mUser)).getOrderLinesBySalesOrderId(mSalesOrderId);
-                        }
+                        mOrderLines.addAll(mOrderLineDB.getActiveOrderLinesFromShoppingCart());
                     }
                     mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
                             ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
@@ -119,7 +128,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         public void run() {
                             try {
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
-                                mainLayout = view.findViewById(R.id.main_layout);
+                                mMainLayout = view.findViewById(R.id.main_layout);
+                                mShoppingCartAdapter.setParentLayout(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView);
 
                                 mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mSalesOrderNumber = (TextView) view.findViewById(R.id.sales_order_number_textView);
@@ -151,6 +161,101 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
+
+                                ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                                        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+
+                                            @Override
+                                            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                                                //Remove swiped item from list and notify the RecyclerView
+                                                final int itemPosition = viewHolder.getAdapterPosition();
+                                                final OrderLine orderLine = mShoppingCartAdapter.getItem(itemPosition);
+
+                                                new AlertDialog.Builder(getContext())
+                                                        .setMessage(getString(R.string.delete_from_shopping_cart_question,
+                                                                orderLine.getProduct().getName()))
+                                                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                String result = null;
+                                                                if(mIsShoppingCart){
+                                                                    result = mOrderLineDB.deleteOrderLine(orderLine.getId());
+                                                                }
+                                                                if(result == null){
+                                                                    mShoppingCartAdapter.removeItem(itemPosition);
+                                                                    Snackbar.make(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                                                            .setAction(R.string.undo, new View.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(View view) {
+                                                                                    String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
+                                                                                    if(result == null){
+                                                                                        mShoppingCartAdapter.addItem(itemPosition, orderLine);
+                                                                                        Snackbar.make(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                                                                    } else {
+                                                                                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                                                    }
+                                                                                }
+                                                                            }).show();
+                                                                } else {
+                                                                    mShoppingCartAdapter.notifyDataSetChanged();
+                                                                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        })
+                                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                mShoppingCartAdapter.notifyDataSetChanged();
+                                                            }
+                                                        })
+                                                        .show();
+                                            }
+
+                                            @Override
+                                            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                                                    RecyclerView.ViewHolder viewHolder, float dX,
+                                                                    float dY, int actionState, boolean isCurrentlyActive) {
+                                                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                                                    // Get RecyclerView item from the ViewHolder
+                                                    View itemView = viewHolder.itemView;
+
+                                                    Paint p = new Paint();
+                                                    p.setColor(Utils.getColor(getContext(), R.color.on_swipe_bg_color));
+
+                                                    Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_highlight_off_white_48dp);
+                                                    if (dX > 0) {
+                                                        // Draw Rect with varying right side, equal to displacement dX
+                                                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                                                (float) itemView.getBottom(), p);
+
+                                                        // Set the image icon for Right swipe
+                                                        c.drawBitmap(icon,
+                                                                (float) itemView.getLeft() + Utils.convertDpToPixel(16, getContext()),
+                                                                (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                                p);
+                                                    } else {
+                                                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                                                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                                                        //Set the image icon for Left swipe
+                                                        c.drawBitmap(icon,
+                                                                (float) itemView.getRight() - Utils.convertDpToPixel(16, getContext()) - icon.getWidth(),
+                                                                (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight())/2,
+                                                                p);
+                                                    }
+                                                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                                                }
+                                            }
+
+                                        };
+                                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+                                itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
                                 if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
                                     view.findViewById(R.id.proceed_to_checkout_button).setVisibility(View.GONE);
@@ -204,10 +309,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mOrderLines!=null && !mOrderLines.isEmpty()) {
-                                    mainLayout.setVisibility(View.VISIBLE);
-                                } else {
+                                if (mShoppingCartAdapter==null || mShoppingCartAdapter.getItemCount()==0) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
+                                } else {
+                                    mMainLayout.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -223,7 +328,18 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            reloadShoppingCart();
+            if(mIsShoppingCart){
+                try {
+                    reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart(), true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.error)
+                            .setMessage(e.getMessage())
+                            .setNeutralButton(R.string.accept, null)
+                            .show();
+                }
+            }
         }
         super.onStart();
     }
@@ -235,10 +351,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             public void run() {
                 String result = null;
                 try {
-                    result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
+                    result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mShoppingCartAdapter.getData());
                     if (result==null) {
                         if (mSalesOrderId > 0) {
-                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, 0, mOrderLines);
+                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, 0, mShoppingCartAdapter.getData());
                         } else {
                             result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, 0);
                         }
@@ -294,7 +410,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     Intent intent = new Intent(getContext(), ShoppingCartFinalizeOptionsActivity.class);
                                     intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_BUSINESS_PARTNER_ID, Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                     intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_SALES_ORDER_ID, mSalesOrderId);
-                                    intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_ORDER_LINES, mOrderLines);
+                                    intent.putExtra(ShoppingCartFinalizeOptionsActivity.KEY_ORDER_LINES, mShoppingCartAdapter.getData());
                                     startActivity(intent);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -390,25 +506,25 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     }
 
     public void fillFields(){
-        if (mOrderLines!=null && !mOrderLines.isEmpty()) {
+        if (mShoppingCartAdapter!=null && mShoppingCartAdapter.getItemCount()>0) {
             mTotalLines.setText(getString(R.string.order_lines_number,
-                    String.valueOf(mOrderLines.size())));
+                    String.valueOf(mShoppingCartAdapter.getItemCount())));
             if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
                 Currency currency = (new CurrencyDB(getContext(), mUser))
                         .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
                 mSubTotalAmount.setText(getString(R.string.order_sub_total_amount,
                         currency!=null ? currency.getName() : "",
-                        OrderBR.getSubTotalAmountStringFormat(mOrderLines)));
+                        OrderBR.getSubTotalAmountStringFormat(mShoppingCartAdapter.getData())));
                 mSubTotalAmount.setVisibility(View.VISIBLE);
 
                 mTaxAmount.setText(getString(R.string.order_tax_amount,
                         currency!=null ? currency.getName() : "",
-                        OrderBR.getTaxAmountStringFormat(mOrderLines)));
+                        OrderBR.getTaxAmountStringFormat(mShoppingCartAdapter.getData())));
                 mTaxAmount.setVisibility(View.VISIBLE);
 
                 mTotalAmount.setText(getString(R.string.order_total_amount,
                         currency!=null ? currency.getName() : "",
-                        OrderBR.getTotalAmountStringFormat(mOrderLines)));
+                        OrderBR.getTotalAmountStringFormat(mShoppingCartAdapter.getData())));
                 mTotalAmount.setVisibility(View.VISIBLE);
             } else {
                 mSubTotalAmount.setVisibility(View.GONE);
@@ -420,42 +536,23 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void reloadShoppingCart(){
-        setHeader();
-        if(mIsShoppingCart){
-            try {
-                reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart());
-            } catch (Exception e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.error)
-                        .setMessage(e.getMessage())
-                        .setNeutralButton(R.string.accept, null)
-                        .show();
-            }
-        }else{
-            refreshInterface();
-        }
+        mShoppingCartAdapter.notifyDataSetChanged();
+        reloadShoppingCart(null, false);
     }
 
     @Override
-    public void reloadShoppingCart(ArrayList<OrderLine> orderLines){
-        mOrderLines = orderLines;
-        refreshInterface();
-    }
-
-    private void refreshInterface(){
-        if (mShoppingCartAdapter==null) {
-            mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
-                    ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
-        } else {
-            mShoppingCartAdapter.setData(mOrderLines);
+    public void reloadShoppingCart(ArrayList<OrderLine> orderLines, boolean setData){
+        if (setData) {
+            mShoppingCartAdapter.setData(orderLines);
         }
-        if (mOrderLines==null || mOrderLines.isEmpty()) {
+        mShoppingCartAdapter.setParentLayout(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView);
+        setHeader();
+        if (mShoppingCartAdapter==null || mShoppingCartAdapter.getItemCount()==0) {
             mBlankScreenView.setVisibility(View.VISIBLE);
-            mainLayout.setVisibility(View.GONE);
+            mMainLayout.setVisibility(View.GONE);
         }else{
             mBlankScreenView.setVisibility(View.GONE);
-            mainLayout.setVisibility(View.VISIBLE);
+            mMainLayout.setVisibility(View.VISIBLE);
             fillFields();
         }
     }
@@ -464,7 +561,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     public void onSaveInstanceState(Bundle outState) {
         if (!mIsShoppingCart) {
             outState.putInt(STATE_SALES_ORDER_ID, mSalesOrderId);
-            outState.putParcelableArrayList(STATE_ORDER_LINES, mOrderLines);
+            outState.putParcelableArrayList(STATE_ORDER_LINES, mShoppingCartAdapter.getData());
         }
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {

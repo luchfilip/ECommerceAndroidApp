@@ -51,7 +51,6 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
     private View mEmptyLayoutWallPaper;
     private View mainLayout;
     private User mUser;
-    private ArrayList<Product> mRecommendedProducts;
     private ProgressDialog waitPlease;
 
     public RecommendedProductsListFragment() {
@@ -74,14 +73,9 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                     }
                     mUser = Utils.getCurrentUser(getContext());
                     if (getContext() != null && mUser != null) {
-                        mRecommendedProducts = (new RecommendedProductDB(getContext(), mUser))
-                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                    } else {
-                        mRecommendedProducts = new ArrayList<>();
-                    }
-                    if (getContext() != null) {
                         mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
-                                RecommendedProductsListFragment.this, mRecommendedProducts, mUser);
+                                RecommendedProductsListFragment.this, (new RecommendedProductDB(getContext(), mUser))
+                                .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser)), mUser);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -129,7 +123,7 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (mRecommendedProducts.isEmpty()) {
+                                if (mRecommendedProductsListAdapter==null || mRecommendedProductsListAdapter.getItemCount()==0) {
                                     mEmptyLayoutWallPaper.setVisibility(View.VISIBLE);
                                 } else {
                                     mainLayout.setVisibility(View.VISIBLE);
@@ -157,11 +151,15 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
     private void reloadRecommendedProductsList() {
         try {
-            mRecommendedProducts = (new RecommendedProductDB(getActivity(), mUser))
-                    .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-            mRecommendedProductsListAdapter.setData(mRecommendedProducts);
+            if (mRecommendedProductsListAdapter==null) {
+                mRecommendedProductsListAdapter = new RecommendedProductsListAdapter(getContext(),
+                        RecommendedProductsListFragment.this, (new ArrayList<Product>()), mUser);
+            }
+            mRecommendedProductsListAdapter.setData((new RecommendedProductDB(getActivity(), mUser))
+                    .getRecommendedProductsByBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser)));
+
             mShareIntent = null;
-            if (mRecommendedProducts == null || mRecommendedProducts.size() == 0) {
+            if (mRecommendedProductsListAdapter == null || mRecommendedProductsListAdapter.getItemCount() == 0) {
                 mEmptyLayoutWallPaper.setVisibility(View.VISIBLE);
                 mainLayout.setVisibility(View.GONE);
             }else{
@@ -307,8 +305,8 @@ public class RecommendedProductsListFragment extends Fragment implements Recomme
 
         private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (mRecommendedProducts != null && !mRecommendedProducts.isEmpty()) {
-                    new RecommendedProductsPDFCreator().generatePDF(mRecommendedProducts, fileName + ".pdf",
+                if (mRecommendedProductsListAdapter != null && mRecommendedProductsListAdapter.getItemCount()>0) {
+                    new RecommendedProductsPDFCreator().generatePDF(mRecommendedProductsListAdapter.getData(), fileName + ".pdf",
                             getActivity(), getContext(), mUser);
 
                     mShareIntent = new Intent(Intent.ACTION_SEND);

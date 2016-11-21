@@ -86,7 +86,9 @@ public class BrandsListFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                ((Callback) getActivity()).onListLoaded();
+                                if (getActivity()!=null) {
+                                    ((Callback) getActivity()).onListLoaded();
+                                }
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 rootView.findViewById(R.id.brands_list).setVisibility(View.VISIBLE);
                             }

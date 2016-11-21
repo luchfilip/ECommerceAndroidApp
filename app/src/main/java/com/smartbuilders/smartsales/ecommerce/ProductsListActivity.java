@@ -68,7 +68,6 @@ public class ProductsListActivity extends AppCompatActivity
     private String productName;
     private String productReference;
     private String productPurpose;
-    private ArrayList<Product> products;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private int mRecyclerViewCurrentFirstPosition;
@@ -86,7 +85,7 @@ public class ProductsListActivity extends AppCompatActivity
         setContentView(R.layout.activity_products_list);
 
         final User user = Utils.getCurrentUser(this);
-
+        final ArrayList<Product> products = new ArrayList<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
@@ -153,8 +152,6 @@ public class ProductsListActivity extends AppCompatActivity
                             mMainPageProductSectionId = getIntent().getExtras().getInt(KEY_MAIN_PAGE_PRODUCT_SECTION_ID);
                         }
                     }
-
-                    products = new ArrayList<>();
 
                     if (productCategoryId != 0) {
                         products.addAll(new ProductDB(ProductsListActivity.this, user).getProductsByCategoryId(productCategoryId));
@@ -497,8 +494,7 @@ public class ProductsListActivity extends AppCompatActivity
     public void sortProductsList(int sortOption, User user) {
         if(mRecyclerView!=null && mRecyclerView.getAdapter() instanceof ProductsListAdapter){
             mCurrentSortOption = sortOption;
-            mRecyclerView.setAdapter(new ProductsListAdapter(this, this, products,
-                    mCurrentProductsListAdapterMask, mCurrentSortOption, user));
+            ((ProductsListAdapter) mRecyclerView.getAdapter()).sortProductsList(mCurrentSortOption);
         }
     }
 }

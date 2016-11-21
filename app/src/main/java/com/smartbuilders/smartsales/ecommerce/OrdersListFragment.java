@@ -20,8 +20,6 @@ import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
-import java.util.ArrayList;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -58,8 +56,6 @@ public class OrdersListFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_orders_list, container, false);
         mIsInitialLoad = true;
 
-        final ArrayList<Order> activeOrders = new ArrayList<>();
-
         new Thread() {
             @Override
             public void run() {
@@ -77,9 +73,8 @@ public class OrdersListFragment extends Fragment {
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
-
                     mOrderDB = new OrderDB(getContext(), mUser);
-                    activeOrders.addAll(mOrderDB.getActiveOrders());
+                    mOrdersListAdapter = new OrdersListAdapter(getActivity(), mOrderDB.getActiveOrders());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -106,8 +101,6 @@ public class OrdersListFragment extends Fragment {
                                 }
 
                                 setHeader();
-
-                                mOrdersListAdapter = new OrdersListAdapter(getActivity(), activeOrders);
 
                                 mListView = (ListView) view.findViewById(R.id.orders_list);
                                 mListView.setAdapter(mOrdersListAdapter);

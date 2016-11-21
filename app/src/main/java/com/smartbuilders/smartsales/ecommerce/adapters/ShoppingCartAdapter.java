@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +37,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     private Context mContext;
     private Fragment mFragment;
+    private View mParentLayout;
     private ArrayList<OrderLine> mDataset;
     private User mUser;
     private OrderLineDB orderLineDB;
@@ -82,8 +84,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     public interface Callback {
         void updateQtyOrdered(OrderLine orderLine);
-        void reloadShoppingCart();
-        void reloadShoppingCart(ArrayList<OrderLine> orderLines);
+        void reloadShoppingCart(ArrayList<OrderLine> orderLines, boolean setData);
     }
 
     public ShoppingCartAdapter(Context context, Fragment shoppingCartFragment,
@@ -101,6 +102,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
         mShowSubTotalLineAmount = Parameter.showSubTotalLineAmountInOrderLine(context, user);
         mShowTotalLineAmount = Parameter.showTotalLineAmountInOrderLine(context, user);
+    }
+
+    public void setParentLayout(View parentLayout) {
+        mParentLayout = parentLayout;
     }
 
     // Create new views (invoked by the layout manager)
@@ -218,16 +223,28 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                             mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
                     .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            final int itemPosition = holder.getAdapterPosition();
+                            final OrderLine orderLine = mDataset.get(itemPosition);
                             String result = null;
                             if(mIsShoppingCart){
                                 result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()).getId());
                             }
                             if(result == null){
-                                if(mIsShoppingCart){
-                                    ((Callback) mFragment).reloadShoppingCart();
-                                }else{
-                                    mDataset.remove(holder.getAdapterPosition());
-                                    ((Callback) mFragment).reloadShoppingCart(mDataset);
+                                removeItem(holder.getAdapterPosition());
+                                if (mParentLayout!=null) {
+                                    Snackbar.make(mParentLayout, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                            .setAction(R.string.undo, new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    String result = orderLineDB.restoreOrderLine(orderLine.getId());
+                                                    if (result == null) {
+                                                        addItem(itemPosition, orderLine);
+                                                        Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }).show();
                                 }
                             } else {
                                 Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
@@ -269,9 +286,33 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         });
     }
 
+    public ArrayList<OrderLine> getData(){
+        return mDataset;
+    }
+
     public void setData(ArrayList<OrderLine> orderLines) {
         mDataset = orderLines;
         OrderBR.validateQuantityOrderedInOrderLines(mContext, mUser, mDataset);
         notifyDataSetChanged();
+    }
+
+    public OrderLine getItem(int position) {
+        try {
+            return mDataset.get(position);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+        ((Callback) mFragment).reloadShoppingCart(mDataset, false);
+    }
+
+    public void addItem(int position, OrderLine item) {
+        mDataset.add(position, item);
+        notifyItemInserted(position);
+        ((Callback) mFragment).reloadShoppingCart(mDataset, false);
     }
 }

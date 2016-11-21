@@ -26,14 +26,12 @@ import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
-import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.OrderDetailPDFCreator;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,9 +46,9 @@ public class OrderDetailFragment extends Fragment {
     private User mUser;
     private int mOrderId;
     private LinearLayoutManager mLinearLayoutManager;
+    private OrderLineAdapter mOrderLineAdapter;
     private int mRecyclerViewCurrentFirstPosition;
     private Order mOrder;
-    private ArrayList<OrderLine> mOrderLines;
     private Intent mShareIntent;
     private ProgressDialog waitPlease;
 
@@ -93,7 +91,7 @@ public class OrderDetailFragment extends Fragment {
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
-                    mOrderLines = new OrderLineDB(getContext(), mUser).getActiveFinalizedOrderLinesByOrderId(mOrderId);
+                    mOrderLineAdapter = new OrderLineAdapter(getContext(), new OrderLineDB(getContext(), mUser).getActiveFinalizedOrderLinesByOrderId(mOrderId), mUser);
                     mOrder = (new OrderDB(getContext(), mUser)).getActiveOrderById(mOrderId);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -118,14 +116,14 @@ public class OrderDetailFragment extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getActivity());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new OrderLineAdapter(getContext(), mOrderLines, mUser));
+                                recyclerView.setAdapter(mOrderLineAdapter);
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
                                 ((TextView) view.findViewById(R.id.order_lines_number_tv))
-                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLines.size())));
+                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLineAdapter.getItemCount())));
 
                                 if (mOrder!=null) {
                                     ((TextView) view.findViewById(R.id.order_number_tv))
@@ -266,8 +264,8 @@ public class OrderDetailFragment extends Fragment {
 
         private void createShareAndDownloadIntent() throws Exception {
             try {
-                if (mUser!=null && mOrder != null && mOrderLines!=null && !mOrderLines.isEmpty()) {
-                    new OrderDetailPDFCreator().generatePDF(mOrder, mOrderLines, fileName + ".pdf",
+                if (mUser!=null && mOrder != null && mOrderLineAdapter!=null && mOrderLineAdapter.getItemCount()>0) {
+                    new OrderDetailPDFCreator().generatePDF(mOrder, mOrderLineAdapter.getData(), fileName + ".pdf",
                             getContext(), mUser);
 
                     mShareIntent = new Intent(Intent.ACTION_SEND);
