@@ -192,57 +192,44 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.productAvailability.setText(mContext.getString(R.string.availability,
                 mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
 
-//        holder.deleteItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new AlertDialog.Builder(mContext)
-//                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question,
-//                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
-//                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                String result = orderLineDB.deleteOrderLine(mDataset.get(holder.getAdapterPosition()).getId());
-//                                if(result == null){
-//                                    //mDataset.remove(holder.getAdapterPosition());
-//                                    //notifyItemRemoved(holder.getAdapterPosition());
-//                                    //((Callback) mFragment).reloadWishList(mDataset, false);
-//                                    removeItem(holder.getAdapterPosition());
-//                                } else {
-//                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        })
-//                        .setNegativeButton(R.string.cancel, null)
-//                        .show();
-//            }
-//        });
-
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final int itemPosition = holder.getAdapterPosition();
                 final OrderLine orderLine = mDataset.get(itemPosition);
 
-                String result = orderLineDB.deleteOrderLine(orderLine.getId());
-                if(result == null){
-                    removeItem(itemPosition);
-                    if (mParentLayout!=null) {
-                        Snackbar.make(mParentLayout, R.string.product_removed, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.undo, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        String result = orderLineDB.restoreOrderLine(orderLine.getId());
-                                        if (result == null) {
-                                            addItem(itemPosition, orderLine);
-                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                                        }
+                new AlertDialog.Builder(mContext)
+                        .setMessage(mContext.getString(R.string.delete_from_wish_list_question,
+                                mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String result = orderLineDB.deleteOrderLine(orderLine.getId());
+                                if(result == null){
+                                    removeItem(itemPosition);
+                                    if (mParentLayout!=null) {
+                                        Snackbar.make(mParentLayout, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                                .setAction(R.string.undo, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        String result = orderLineDB.restoreOrderLine(orderLine.getId());
+                                                        if (result == null) {
+                                                            addItem(itemPosition, orderLine);
+                                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }).show();
                                     }
-                                }).show();
-                    }
-                } else {
-                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                }
+                                } else {
+                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+
+
             }
         });
 

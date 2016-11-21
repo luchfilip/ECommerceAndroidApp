@@ -122,7 +122,7 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                 }
 
                                 ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-                                        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT /*| ItemTouchHelper.DOWN | ItemTouchHelper.UP*/) {
+                                        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
 
                                             @Override
                                             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -135,27 +135,40 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                                 final int itemPosition = viewHolder.getAdapterPosition();
                                                 final OrderLine orderLine = mWishListAdapter.getItem(itemPosition);
 
-                                                String result = mOrderLineDB.deleteOrderLine(orderLine.getId());
-                                                if(result == null){
-                                                    //viewHolder.setIsRecyclable(false);
-                                                    mWishListAdapter.removeItem(itemPosition);
-                                                    Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView, R.string.product_removed, Snackbar.LENGTH_LONG)
-                                                            .setAction(R.string.undo, new View.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(View view) {
-                                                                    String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
-                                                                    if(result == null){
-                                                                        mWishListAdapter.addItem(itemPosition, orderLine);
-                                                                        Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView,
-                                                                                R.string.product_restored, Snackbar.LENGTH_SHORT).show();
-                                                                    } else {
-                                                                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                }
-                                                            }).show();
-                                                } else {
-                                                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                                                }
+                                                new AlertDialog.Builder(getContext())
+                                                    .setMessage(getString(R.string.delete_from_wish_list_question,
+                                                            orderLine.getProduct().getName()))
+                                                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            String result = mOrderLineDB.deleteOrderLine(orderLine.getId());
+                                                            if(result == null){
+                                                                mWishListAdapter.removeItem(itemPosition);
+                                                                Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                                                        .setAction(R.string.undo, new View.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View view) {
+                                                                                String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
+                                                                                if(result == null){
+                                                                                    mWishListAdapter.addItem(itemPosition, orderLine);
+                                                                                    Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView,
+                                                                                            R.string.product_restored, Snackbar.LENGTH_SHORT).show();
+                                                                                } else {
+                                                                                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            }
+                                                                        }).show();
+                                                            } else {
+                                                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    })
+                                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            mWishListAdapter.notifyDataSetChanged();
+                                                        }
+                                                    })
+                                                    .show();
                                             }
 
                                             @Override
