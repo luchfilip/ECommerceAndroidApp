@@ -29,6 +29,7 @@
         android:layout_width="match_parent"
         android:id="@+id/main_layout"
         android:orientation="vertical"
+        android:background="@color/light_grey"
         android:visibility="gone" >
 
         <ListView

@@ -75,12 +75,15 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
         mIsInitialLoad = true;
-        final ArrayList<OrderLine> mOrderLines = new ArrayList<>();
+        final ArrayList<OrderLine> orderLines = new ArrayList<>();
 
         new Thread() {
             @Override
             public void run() {
                 try {
+                    mUser = Utils.getCurrentUser(getContext());
+                    mOrderLineDB = new OrderLineDB(getContext(), mUser);
+
                     if(savedInstanceState != null) {
                         if(savedInstanceState.containsKey(STATE_SALES_ORDER_ID)){
                             mIsShoppingCart = false;
@@ -90,10 +93,10 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                         if(savedInstanceState.containsKey(STATE_ORDER_LINES)){
-                            ArrayList<OrderLine> orderLines = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
-                            mOrderLines.addAll(orderLines);
+                            ArrayList<OrderLine> aux = savedInstanceState.getParcelableArrayList(STATE_ORDER_LINES);
+                            orderLines.addAll(aux);
                         }
-                    } else if(getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+                    } else if(getActivity()!=null && getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
                         if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_SALES_ORDER_ID)
                                 && getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_BUSINESS_PARTNER_ID)){
                             mIsShoppingCart = false;
@@ -101,24 +104,17 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                     .getInt(ShoppingCartActivity.KEY_SALES_ORDER_ID);
                             //Si viene de ShoppingCartFinalizeOptionsActivity
                             if(getActivity().getIntent().getExtras().containsKey(ShoppingCartActivity.KEY_ORDER_LINES)){
-                                ArrayList<OrderLine> orderLines = getActivity().getIntent().getExtras()
-                                        .getParcelableArrayList(ShoppingCartActivity.KEY_ORDER_LINES);
-                                mOrderLines.addAll(orderLines);
+                                ArrayList<OrderLine> aux = getActivity().getIntent().getExtras().getParcelableArrayList(ShoppingCartActivity.KEY_ORDER_LINES);
+                                orderLines.addAll(aux);
+                            } else {
+                                orderLines.addAll(mOrderLineDB.getOrderLinesBySalesOrderId(mSalesOrderId));
                             }
                         }
-                    } else if (!mIsShoppingCart) {
-                        mOrderLines.addAll(mOrderLineDB.getOrderLinesBySalesOrderId(mSalesOrderId));
                     }
 
-                    mUser = Utils.getCurrentUser(getContext());
-                    mOrderLineDB = new OrderLineDB(getContext(), mUser);
-
-                    if (mIsShoppingCart) {
-                        mOrderLines.addAll(mOrderLineDB.getActiveOrderLinesFromShoppingCart());
-                    }
-                    mShoppingCartAdapter = new ShoppingCartAdapter(getContext(),
-                            ShoppingCartFragment.this, mOrderLines, mIsShoppingCart, mUser);
-
+                    mShoppingCartAdapter = new ShoppingCartAdapter(getContext(), ShoppingCartFragment.this,
+                            mIsShoppingCart ? mOrderLineDB.getActiveOrderLinesFromShoppingCart() : orderLines,
+                            mIsShoppingCart, mUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -269,7 +265,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                                         public void run() {
                                                             String result = null;
                                                             try {
-                                                                result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mOrderLines);
+                                                                result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mShoppingCartAdapter.getData());
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                                 result = e.getMessage();

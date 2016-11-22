@@ -111,7 +111,7 @@ public class CategoriesListFragment extends Fragment {
                                 e.printStackTrace();
                             } finally {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                rootView.findViewById(R.id.categories_list).setVisibility(View.VISIBLE);
+                                rootView.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                 if (savedInstanceState==null && getActivity()!=null) {
                                     ((Callback) getActivity()).onCategoriesListIsLoaded();
                                 } else {

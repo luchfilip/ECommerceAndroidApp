@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -37,8 +33,6 @@ public class OrdersListFragment extends Fragment {
     private int mListViewTop;
     private int mCurrentSelectedIndex;
     private User mUser;
-    private TextView mBusinessPartnerName;
-    private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
         void onItemSelected(Order order, int selectedIndex);
@@ -83,9 +77,6 @@ public class OrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
-                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
-
                                 if (view.findViewById(R.id.empty_orders_list_imageView) != null) {
                                     ((ImageView) view.findViewById(R.id.empty_orders_list_imageView))
                                             .setColorFilter(Utils.getColor(getActivity(), R.color.colorPrimary));
@@ -99,8 +90,6 @@ public class OrdersListFragment extends Fragment {
                                         }
                                     });
                                 }
-
-                                setHeader();
 
                                 mListView = (ListView) view.findViewById(R.id.orders_list);
                                 mListView.setAdapter(mOrdersListAdapter);
@@ -156,7 +145,6 @@ public class OrdersListFragment extends Fragment {
         if(mIsInitialLoad){
             mIsInitialLoad = false;
         }else{
-            setHeader();
             if(mListView!=null && mOrdersListAdapter!=null && mOrderDB!=null){
                 int oldListSize = mOrdersListAdapter.getCount();
                 mOrdersListAdapter.setData(mOrderDB.getActiveOrders());
@@ -172,23 +160,6 @@ public class OrdersListFragment extends Fragment {
             }
         }
         super.onStart();
-    }
-
-    private void setHeader(){
-        if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
-            try {
-                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                if(businessPartner!=null){
-                    mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    mBusinessPartnerName.setVisibility(View.VISIBLE);
-                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

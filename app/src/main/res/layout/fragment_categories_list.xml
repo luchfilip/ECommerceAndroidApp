@@ -22,10 +22,18 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/categories_list"
+    <FrameLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/categories_list_style"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:background="@color/light_grey"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/categories_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/categories_list_style" />
+    </FrameLayout>
+
 </FrameLayout>

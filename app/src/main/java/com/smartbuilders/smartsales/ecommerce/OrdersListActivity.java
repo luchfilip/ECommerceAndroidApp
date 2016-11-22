@@ -16,15 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.services.SyncDataRealTimeWithServerService;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 
 /**
@@ -39,6 +43,7 @@ public class OrdersListActivity extends AppCompatActivity
     private ListView mListView;
     private OrderDB mOrderDB;
     private int mCurrentSelectedIndex;
+    private User mUser;
 
     private BroadcastReceiver syncDataFinishedReceiver = new BroadcastReceiver() {
         @Override
@@ -70,16 +75,16 @@ public class OrdersListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_list);
 
-        final User user = Utils.getCurrentUser(this);
+        mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
-        Utils.inflateNavigationView(this, this, toolbar, user);
+        Utils.inflateNavigationView(this, this, toolbar, mUser);
 
         mListView = (ListView) findViewById(R.id.orders_list);
-        mOrderDB = new OrderDB(this, user);
+        mOrderDB = new OrderDB(this, mUser);
     }
 
     @Override
@@ -101,6 +106,21 @@ public class OrdersListActivity extends AppCompatActivity
             registerReceiver(syncDataFinishedReceiver, intentFilter);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(findViewById(R.id.order_detail_container)==null
+                && (mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                || mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID))){
+            try {
+                BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+                if(businessPartner!=null){
+                    ((TextView) findViewById(R.id.business_partner_name))
+                            .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
+                    findViewById(R.id.business_partner_name).setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         super.onStart();
     }
