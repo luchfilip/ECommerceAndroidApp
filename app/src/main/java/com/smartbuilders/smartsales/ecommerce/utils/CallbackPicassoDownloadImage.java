@@ -43,7 +43,7 @@ public class CallbackPicassoDownloadImage implements com.squareup.picasso.Callba
 
     }
 
-    class DownloadAndCreateImage extends Thread {
+    private class DownloadAndCreateImage extends Thread {
 
         public void run() {
             downloadImage(mFileName, mContext, mUser, mIsThumb);

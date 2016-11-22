@@ -323,7 +323,7 @@ public class Utils {
      * @param context
      */
     public static void createFileInOriginalDir(String fileName, Bitmap image, Context context){
-        if (!saveImagesInDevice(context)) {
+        if (!saveOriginalImagesInDevice(context)) {
             return;
         }
         //check if external storage is available so that we can dump our PDF file there
@@ -1354,25 +1354,17 @@ public class Utils {
         }
     }
 
-    public static void clearThumbImagesFolder(Context context) {
+    public static void deleteThumbImagesFolder(Context context) {
         try {
-            for(File file: (new File (Utils.getImagesThumbFolderPath(context))).listFiles()){
-                if (!file.isDirectory()){
-                    file.delete();
-                }
-            }
+            (new File(Utils.getImagesThumbFolderPath(context))).delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void clearOriginalImagesFolder(Context context) {
+    public static void deleteOriginalImagesFolder(Context context) {
         try {
-            for(File file: (new File (Utils.getImagesOriginalFolderPath(context))).listFiles()){
-                if (!file.isDirectory()){
-                    file.delete();
-                }
-            }
+            (new File (Utils.getImagesOriginalFolderPath(context))).delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1380,7 +1372,17 @@ public class Utils {
 
     private static boolean saveImagesInDevice(Context context){
         try {
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", true);
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean("save_images_in_device", true);
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean saveOriginalImagesInDevice(Context context){
+        try {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean("save_original_images_in_device", false);
         } catch(Exception e) {
             return false;
         }

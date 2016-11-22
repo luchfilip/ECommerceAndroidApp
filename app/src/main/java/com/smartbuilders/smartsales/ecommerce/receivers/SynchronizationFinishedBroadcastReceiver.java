@@ -7,9 +7,10 @@ import android.preference.PreferenceManager;
 
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
+import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
+import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.WishListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
@@ -31,9 +32,9 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
     }
 
     private void checkNewAvailabilitiesInWishList(Context context){
+        User user = Utils.getCurrentUser(context);
         if (!NotificationUtils.isNotificationShown(context) && PreferenceManager
                 .getDefaultSharedPreferences(context).getBoolean("notifications_new_availabilities_wish_list", true)) {
-            User user = Utils.getCurrentUser(context);
             if (user != null) {
                 NotificationHistoryDB notificationHistoryDB = new NotificationHistoryDB(context, user);
                 OrderLineDB orderLineDB = new OrderLineDB(context, user);
@@ -70,6 +71,12 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
 //                            context.getString(R.string.new_availabilities_in_wishList), resultIntent);
                 }
             }
+        }
+        if (context!=null && user!=null) {
+            //Se limpia de la carpeta de imagenes miniatura las imagenes que no corresponden
+            LoadProductsThumbImage.cleanFolder(context, user);
+            //Se limpia de la carpeta de imagenes de alta resolución las imagenes que no corresponden
+            LoadProductsOriginalImage.cleanFolder(context, user);
         }
     }
 }

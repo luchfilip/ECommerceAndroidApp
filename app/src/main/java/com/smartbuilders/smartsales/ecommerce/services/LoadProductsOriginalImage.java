@@ -5,7 +5,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -27,8 +26,6 @@ import java.util.List;
  */
 public class LoadProductsOriginalImage extends IntentService {
 
-    private static final String TAG = LoadProductsOriginalImage.class.getSimpleName();
-
     public LoadProductsOriginalImage() {
         super(LoadProductsOriginalImage.class.getSimpleName());
     }
@@ -49,8 +46,8 @@ public class LoadProductsOriginalImage extends IntentService {
 
     private void getProductsOriginalImageFromServer(Context context, User user){
         Cursor c = null;
+        List<String> filesName = new ArrayList<>();
         try {
-            List<String> filesName = new ArrayList<>();
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(), null,
                     "SELECT PI.FILE_NAME FROM PRODUCT_IMAGE PI " +
@@ -62,29 +59,8 @@ public class LoadProductsOriginalImage extends IntentService {
                     " WHERE PI.IS_ACTIVE='Y' AND PI.PRIORITY=1",
                     null, null);
             if(c!=null){
-                ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 while(c.moveToNext()){
                     filesName.add(c.getString(0));
-                    if(Utils.getFileInOriginalDirByFileName(context, c.getString(0))==null){
-                        if(isServiceRunning(activityManager)){
-                            downloadImage(c.getString(0), context, user);
-                        }else{
-                            break;
-                        }
-                    }
-                }
-            }
-            //se limpia la carpeta de los archivos que ya no pertenezcan
-            List<String> filesInOriginalDir = Utils.getListOfFilesInOriginalDir(context);
-            if(filesInOriginalDir!=null && !filesInOriginalDir.isEmpty()){
-                filesInOriginalDir.removeAll(filesName);
-                for (String fileNameToRemove : filesInOriginalDir) {
-                    try {
-                        (new File (Utils.getImagesOriginalFolderPath(context), fileNameToRemove)).delete();
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error removing file: \""+String.valueOf(fileNameToRemove)+
-                                "\", ExceptionMessage: "+e.getMessage());
-                    }
                 }
             }
         } catch (Exception e){
@@ -97,6 +73,67 @@ public class LoadProductsOriginalImage extends IntentService {
                     e.printStackTrace();
                 }
             }
+        }
+        try {
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            for (String fileName : filesName) {
+                if (Utils.getFileInOriginalDirByFileName(context, fileName) == null) {
+                    if (isServiceRunning(activityManager)) {
+                        downloadImage(fileName, context, user);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cleanFolder(context, user);
+    }
+
+    /**
+     * se limpia la carpeta de los archivos que ya no pertenezcan
+     * @param context
+     * @param user
+     */
+    public static void cleanFolder(Context context, User user) {
+        List<String> filesName = new ArrayList<>();
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build(), null,
+                    "SELECT FILE_NAME FROM PRODUCT_IMAGE WHERE IS_ACTIVE='Y'",
+                    null, null);
+            if(c!=null){
+                while(c.moveToNext()){
+                    filesName.add(c.getString(0));
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(c != null) {
+                try {
+                    c.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            List<String> filesInOriginalDir = Utils.getListOfFilesInOriginalDir(context);
+            if (filesInOriginalDir != null && !filesInOriginalDir.isEmpty()) {
+                filesInOriginalDir.removeAll(filesName);
+                for (String fileNameToRemove : filesInOriginalDir) {
+                    try {
+                        (new File(Utils.getImagesOriginalFolderPath(context), fileNameToRemove)).delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

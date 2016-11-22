@@ -77,7 +77,7 @@ public class NetworkReceiver extends BroadcastReceiver {
                     && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
                     context.startService(new Intent(context, LoadProductsThumbImage.class));
                 }
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", false)
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_original_images_in_device", false)
                     && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_original_images", false)
                     && !Utils.isServiceRunning(context, LoadProductsOriginalImage.class)){
                     context.startService(new Intent(context, LoadProductsOriginalImage.class));

@@ -339,6 +339,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (BuildConfig.USE_PRODUCT_IMAGE) {
                 bindPreferenceSummaryToValue(findPreference("save_images_in_device"));
                 bindPreferenceSummaryToValue(findPreference("sync_thumb_images"));
+                bindPreferenceSummaryToValue(findPreference("save_original_images_in_device"));
                 bindPreferenceSummaryToValue(findPreference("sync_original_images"));
 
                 findPreference("save_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -352,12 +353,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                             //findPreference("sync_thumb_images").setSelectable(false);
                             context.stopService(new Intent(context, LoadProductsThumbImage.class));
                             new AlertDialog.Builder(context)
-                                    .setMessage(R.string.clean_thumb_and_original_dir)
+                                    .setMessage(R.string.clean_thumb_dir)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.clearOriginalImagesFolder(context);
-                                            Utils.clearThumbImagesFolder(context);
+                                            Utils.deleteThumbImagesFolder(context);
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -383,7 +383,33 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.clearThumbImagesFolder(context);
+                                            Utils.deleteThumbImagesFolder(context);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.no, null)
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    }
+                });
+
+                findPreference("save_original_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        final Context context = preference.getContext();
+                        if((Boolean) newValue){
+                            //findPreference("sync_original_images").setSelectable(true);
+                            //TODO: setear el valor de sync_thumb_images en FALSE
+                        }else{
+                            //findPreference("sync_original_images").setSelectable(false);
+                            context.stopService(new Intent(context, LoadProductsOriginalImage.class));
+                            new AlertDialog.Builder(context)
+                                    .setMessage(R.string.clean_original_dir)
+                                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Utils.deleteOriginalImagesFolder(context);
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -409,7 +435,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.clearOriginalImagesFolder(context);
+                                            Utils.deleteOriginalImagesFolder(context);
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -425,6 +451,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
                 findPreference("sync_thumb_images").setShouldDisableView(true);
                 findPreference("sync_thumb_images").setEnabled(false);
+
+                findPreference("save_original_images_in_device").setShouldDisableView(true);
+                findPreference("save_original_images_in_device").setEnabled(false);
 
                 findPreference("sync_original_images").setShouldDisableView(true);
                 findPreference("sync_original_images").setEnabled(false);
