@@ -78,10 +78,10 @@ public class SalesOrderBR {
         return result;
     }
 
-    public static String deactiveSalesOrderById(Context context, User user, int salesOrderId) {
+    public static String deactivateSalesOrderById(Context context, User user, int salesOrderId) {
         String result;
         try {
-            result = (new SalesOrderDB(context, user)).deactiveSalesOrderById(salesOrderId);
+            result = (new SalesOrderDB(context, user)).deactivateSalesOrderById(salesOrderId);
         } catch (Exception e) {
             result = e.getMessage();
             e.printStackTrace();

@@ -306,7 +306,7 @@ public class OrderDB {
         return activeOrders;
     }
 
-    public String deactiveOrderById(int orderId) {
+    public String deactivateOrderById(int orderId) {
         try {
             //se elimina primero la cabecera porque sin cabecera no sirven de nada las lineas
             int rowsAffected = mContext.getContentResolver()

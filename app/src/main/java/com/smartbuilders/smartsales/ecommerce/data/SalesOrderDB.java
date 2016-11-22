@@ -373,7 +373,7 @@ public class SalesOrderDB {
         return salesOrders;
     }
 
-    public String deactiveSalesOrderById(int salesOrderId) {
+    public String deactivateSalesOrderById(int salesOrderId) {
         try {
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

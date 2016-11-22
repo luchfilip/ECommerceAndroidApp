@@ -205,7 +205,7 @@ public class OrdersListActivity extends AppCompatActivity
                 .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = OrderBR.deactiveOrderById(OrdersListActivity.this,
+                        String result = OrderBR.deactivateOrderById(OrdersListActivity.this,
                                 Utils.getCurrentUser(OrdersListActivity.this), order.getId());
                         if (result==null) {
                             reloadOrdersList();

@@ -22,6 +22,8 @@ import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.ArrayList;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -187,7 +189,7 @@ public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleA
     }
 
     @Override
-    public void reloadShoppingSale() {
+    public void reloadShoppingSale(ArrayList<SalesOrderLine> salesOrderLines, boolean setData) {
         //do nothing
     }
 

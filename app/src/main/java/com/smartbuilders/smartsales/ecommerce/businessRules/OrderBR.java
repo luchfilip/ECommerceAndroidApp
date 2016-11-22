@@ -118,10 +118,10 @@ public class OrderBR {
         return result;
     }
 
-    public static String deactiveOrderById(Context context, User user, int orderId) {
+    public static String deactivateOrderById(Context context, User user, int orderId) {
         String result;
         try {
-            result = (new OrderDB(context, user)).deactiveOrderById(orderId);
+            result = (new OrderDB(context, user)).deactivateOrderById(orderId);
         } catch (Exception e) {
             result = e.getMessage();
             e.printStackTrace();

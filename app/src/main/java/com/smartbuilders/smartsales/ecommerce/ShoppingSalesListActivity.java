@@ -126,7 +126,7 @@ public class ShoppingSalesListActivity extends AppCompatActivity
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String result = (new SalesOrderLineDB(ShoppingSalesListActivity.this, user))
-                                .deactiveLinesFromShoppingSaleByBusinessPartnerId(salesOrder.getBusinessPartnerId());
+                                .deactivateLinesFromShoppingSaleByBusinessPartnerId(salesOrder.getBusinessPartnerId());
                         if (result==null) {
                             reloadShoppingSalesList(user);
                         } else {

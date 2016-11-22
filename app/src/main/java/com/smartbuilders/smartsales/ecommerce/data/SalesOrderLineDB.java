@@ -248,10 +248,10 @@ public class SalesOrderLineDB {
 
     /**
      *
-     * @param orderLine
+     * @param id
      * @return
      */
-    public String deactiveSalesOrderLine(SalesOrderLine orderLine){
+    public String deactivateSalesOrderLine(int id){
         try {
             int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -260,7 +260,33 @@ public class SalesOrderLineDB {
                     "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                         " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ? " +
                             " AND (ECOMMERCE_SALES_ORDER_ID IS NULL OR ECOMMERCE_SALES_ORDER_ID = 0)",
-                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(orderLine.getId()),
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(id),
+                            String.valueOf(mUser.getServerUserId())});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public String restoreSalesOrderLine(int id){
+        try {
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_SALES_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
+                            " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ? " +
+                            " AND (ECOMMERCE_SALES_ORDER_ID IS NULL OR ECOMMERCE_SALES_ORDER_ID = 0)",
+                    new String[]{"Y", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(id),
                             String.valueOf(mUser.getServerUserId())});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
@@ -379,7 +405,7 @@ public class SalesOrderLineDB {
      * @param businessPartnerId
      * @return
      */
-    public String deactiveLinesFromShoppingSaleByBusinessPartnerId(int businessPartnerId) {
+    public String deactivateLinesFromShoppingSaleByBusinessPartnerId(int businessPartnerId) {
         try {
             mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

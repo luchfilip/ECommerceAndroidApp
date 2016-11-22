@@ -211,7 +211,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         salesOrder.getBusinessPartner().getName()))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = SalesOrderBR.deactiveSalesOrderById(SalesOrdersListActivity.this,
+                        String result = SalesOrderBR.deactivateSalesOrderById(SalesOrdersListActivity.this,
                                 user, salesOrder.getId());
                         if (result==null) {
                             reloadSalesOrdersList(listView, user);
@@ -249,7 +249,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                 .setMessage(getString(R.string.delete_order_question, order.getOrderNumber()))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = OrderBR.deactiveOrderById(SalesOrdersListActivity.this,
+                        String result = OrderBR.deactivateOrderById(SalesOrdersListActivity.this,
                                 user, order.getId());
                         if (result==null) {
                             reloadOrdersList(listView, user);

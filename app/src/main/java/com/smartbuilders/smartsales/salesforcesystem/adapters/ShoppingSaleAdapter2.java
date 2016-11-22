@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.salesforcesystem.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -42,6 +43,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
     private boolean mShowProductPrice;
     private boolean mShowProductTax;
     private boolean mShowProductTotalPrice;
+    private View mParentLayout;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -76,7 +78,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
     public interface Callback {
         void updateQtyOrdered(SalesOrderLine salesOrderLine);
-        void reloadShoppingSale();
+        void reloadShoppingSale(ArrayList<SalesOrderLine> salesOrderLines, boolean setData);
     }
 
     public ShoppingSaleAdapter2(Context context, Fragment shoppingCartFragment,
@@ -90,6 +92,10 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         mShowProductPrice = Parameter.showProductPrice(context, user);
         mShowProductTax = Parameter.showProductTax(context, user);
         mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
+    }
+
+    public void setParentLayout(View parentLayout) {
+        mParentLayout = parentLayout;
     }
 
     // Create new views (invoked by the layout manager)
@@ -182,13 +188,32 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.delete_from_shopping_cart_question,
+                        .setMessage(mContext.getString(R.string.delete_from_shopping_sale_question,
                                 mDataset.get(holder.getAdapterPosition()).getProduct().getName()))
                         .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                String result = mSalesOrderLineDB.deactiveSalesOrderLine(mDataset.get(holder.getAdapterPosition()));
+                                final int itemPosition = holder.getAdapterPosition();
+                                final SalesOrderLine salesOrderLine = mDataset.get(holder.getAdapterPosition());
+
+                                String result = mSalesOrderLineDB.deactivateSalesOrderLine(mDataset.get(holder.getAdapterPosition()).getId());
                                 if(result == null){
-                                    ((Callback) mFragment).reloadShoppingSale();
+                                    removeItem(holder.getAdapterPosition());
+                                    if (mParentLayout!=null) {
+                                        Snackbar.make(mParentLayout, R.string.product_removed, Snackbar.LENGTH_LONG)
+                                                .setAction(R.string.undo, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        String result = mSalesOrderLineDB.restoreSalesOrderLine(salesOrderLine.getId());
+                                                        if (result == null) {
+                                                            addItem(itemPosition, salesOrderLine);
+                                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT)
+                                                                    .show();
+                                                        } else {
+                                                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }).show();
+                                    }
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                 }
@@ -229,9 +254,33 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         });
     }
 
+    public ArrayList<SalesOrderLine> getData() {
+        return mDataset;
+    }
+
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {
         mDataset = salesOrderLines;
         SalesOrderBR.validateQuantityOrderedInSalesOrderLines(mContext, mUser, mDataset);
         notifyDataSetChanged();
+    }
+
+    public SalesOrderLine getItem(int position) {
+        try {
+            return mDataset.get(position);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+        ((Callback) mFragment).reloadShoppingSale(mDataset, false);
+    }
+
+    public void addItem(int position, SalesOrderLine item) {
+        mDataset.add(position, item);
+        notifyItemInserted(position);
+        ((Callback) mFragment).reloadShoppingSale(mDataset, false);
     }
 }
