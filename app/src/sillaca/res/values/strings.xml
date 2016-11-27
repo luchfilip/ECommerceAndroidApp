@@ -7,4 +7,29 @@
     <string name="welcome_message_login_activity">Ahora Sillaca está en tus manos</string>
     <!--<string name="gcm_sender_id">921772913385</string>-->
     <!--<string name="gcm_server_api_key">AIzaSyB0vHAHx5PmVuG5U9a1TvEfi7kC14fBpZg</string>-->
+
+    <string name="welcome_layout_welcome_title">!Bienvenido a Catálogo Digital Sillaca!</string>
+    <string name="welcome_layout_welcome_subtitle">Sillaca está en tus manos</string>
+    <string name="welcome_layout_welcome_details">¡Gracias por descargar la aplicación! \nDesde ahora tienes en tus manos la posibilidad de comercializar todos los productos que Sillaca C.A. ofrece para ti.</string>
+    <string name="welcome_layout_wish_list_title">Ahorra tiempo en lo habitual</string>
+    <string name="welcome_layout_wish_list_subtitle">Lista de Favoritos</string>
+    <string name="welcome_layout_wish_list_details">Crea tu lista de productos favoritos y ten a la mano los articulos que más comercializas. Tambien podrás enterarte en tiempo real si algún producto incremento su disponibilidad.</string>
+    <string name="welcome_layout_business_partner_title">Manten la relación con tus clientes</string>
+    <string name="welcome_layout_business_partner_subtitle">Clientes</string>
+    <string name="welcome_layout_business_partner_details">Resgistra la información de tus clientes en la aplicación.</string>
+    <string name="welcome_layout_order_tracking_title">Mantente siempre informado</string>
+    <string name="welcome_layout_order_tracking_subtitle">Rastreo de Pedidos</string>
+    <string name="welcome_layout_order_tracking_details">Conoce en tiempo real el estado de tus pedidos desde la creación de la factura hasta el despacho y entrega de tu mercancia.</string>
+    <string name="welcome_layout_orders_title">Realiza pedidos en cualquier momento</string>
+    <string name="welcome_layout_orders_subtitle">Pedidos</string>
+    <string name="welcome_layout_orders_details">Ubica de manera sencilla los productos que deseas y crea pedidos en cualquier momento y desde la comodidad de tu teléfono personal o tablet.</string>
+    <string name="welcome_layout_recommended_products_title">Queremos orientarte e impulsar tu negocio</string>
+    <string name="welcome_layout_recommended_products_subtitle">Productos Recomendados</string>
+    <string name="welcome_layout_recommended_products_details">Hemos creado para ti una lista de Productos Recomendados establecida por tu tipo de negocio y tus areas de interés.</string>
+    <string name="welcome_layout_sales_order_title">Haz negociaciones de forma fácil y elegante</string>
+    <string name="welcome_layout_sales_order_subtitle">Cotizaciones</string>
+    <string name="welcome_layout_sales_order_details">Crea Cotizaciones para tus clientes con tus propios precios y los productos que Sillaca C.A. dispone para ti, luego enviala por correo a tu cliente.</string>
+    <string name="welcome_layout_share_title">Comparte contenidos y amplía tus oportunidades</string>
+    <string name="welcome_layout_share_subtitle">Compartelo Todo</string>
+    <string name="welcome_layout_share_details">Comparte desde la imágen del producto con su nombre y descripción hasta las cotizaciones realizadas de forma fácil y elegante.</string>
 </resources>

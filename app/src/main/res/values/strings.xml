@@ -126,8 +126,8 @@
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
     <string name="quantity_label">Cantidad:</string>
-    <string name="proceed_to_checkout_question">¿Está seguro que desea finalizar el pedido?</string>
-    <string name="proceed_to_checkout_quoatation_question">¿Está seguro que desea finalizar la cotización?</string>
+    <string name="proceed_to_checkout_question">¿Desea finalizar el pedido?</string>
+    <string name="proceed_to_checkout_quoatation_question">¿Desea finalizar la cotización?</string>
     <string name="order_number">Pedido No.: %1$s</string>
     <string name="sales_order_doc_name">COTIZACIÓN</string>
     <string name="order_doc_name">PEDIDO</string>
@@ -140,10 +140,10 @@
     <string name="product_moved_to_shopping_cart">Agregado al pedido.</string>
     <string name="product_moved_to_shopping_sale">Agregado a la cotización.</string>
     <string name="shopping_sale_updated_successfully">Cotización actualizada exitosamente.</string>
-    <string name="delete_from_wish_list_question">¿Está seguro que desea eliminar el producto %1$s de Favoritos?</string>
-    <string name="clear_wish_list_question">¿Está seguro que desea eliminar todos los registros en Favoritos?</string>
-    <string name="delete_from_shopping_cart_question">¿Está seguro que desea eliminar el producto %1$s del pedido?</string>
-    <string name="delete_from_shopping_sale_question">¿Está seguro que desea eliminar el producto %1$s de la cotización?</string>
+    <string name="delete_from_wish_list_question">¿Desea eliminar el producto %1$s de Favoritos?</string>
+    <string name="clear_wish_list_question">¿Desea eliminar todos los registros en Favoritos?</string>
+    <string name="delete_from_shopping_cart_question">¿Desea eliminar el producto %1$s del pedido?</string>
+    <string name="delete_from_shopping_sale_question">¿Desea eliminar el producto %1$s de la cotización?</string>
     <string name="accept">Aceptar</string>
     <string name="title_activity_shopping_sale">Cotización Abierta</string>
     <string name="title_activity_shopping_sale_finalize_options">Finalizar Cotización Abierta</string>
