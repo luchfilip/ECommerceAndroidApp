@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by Alberto on 23/3/2016.
  */
-public class Product extends Model implements Parcelable {
+public class Product extends Model implements Parcelable, Cloneable {
 
     private int productBrandId;
     private ProductBrand productBrand;
@@ -233,5 +233,10 @@ public class Product extends Model implements Parcelable {
                     && ((Product) o).getProductSubCategoryId() == productSubCategoryId;
         } catch (Exception e) { }
         return super.equals(o);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

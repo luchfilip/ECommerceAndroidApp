@@ -48,7 +48,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/title_textView"
             android:textColor="@color/black"
-            android:textAppearance="@android:style/TextAppearance.Medium"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -57,7 +56,7 @@
             android:id="@+id/date_textView"
             android:textColor="@color/black"
             android:layout_gravity="right"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:layout_marginTop="2dp" />
     </LinearLayout>
 </LinearLayout>

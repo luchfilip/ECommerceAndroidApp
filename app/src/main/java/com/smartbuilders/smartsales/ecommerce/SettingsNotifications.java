@@ -29,9 +29,7 @@ public class SettingsNotifications extends AppCompatPreferenceActivity {
         // to their values. When their values change, their summaries are
         // updated to reflect the new value, per the Android Design
         // guidelines.
-        bindPreferenceSummaryToValue(findPreference("notifications_increment_availabilities_wish_list_ringtone"));
-        bindPreferenceSummaryToValue(findPreference("notifications_decrement_availabilities_wish_list_ringtone"));
-        bindPreferenceSummaryToValue(findPreference("notifications_new_order_tracking_ringtone"));
+        bindPreferenceSummaryToValue(findPreference("notifications_ringtone"));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

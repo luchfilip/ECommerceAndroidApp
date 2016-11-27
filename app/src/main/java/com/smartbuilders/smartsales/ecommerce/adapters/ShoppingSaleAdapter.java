@@ -186,8 +186,6 @@ public class ShoppingSaleAdapter extends RecyclerView.Adapter<ShoppingSaleAdapte
                                                         String result = mSalesOrderLineDB.restoreSalesOrderLine(salesOrderLine.getId());
                                                         if (result == null) {
                                                             addItem(itemPosition, salesOrderLine);
-                                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT)
-                                                                    .show();
                                                         } else {
                                                             Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                                         }

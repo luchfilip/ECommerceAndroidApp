@@ -139,7 +139,7 @@ public class SalesOrderDetailFragment extends Fragment {
                                             .setText(getContext().getString(R.string.sales_order_number, mSalesOrder.getSalesOrderNumber()));
 
                                     ((TextView) view.findViewById(R.id.sales_order_date_tv))
-                                            .setText(getContext().getString(R.string.order_date, mSalesOrder.getCreatedStringFormat()));
+                                            .setText(getContext().getString(R.string.sales_order_date, mSalesOrder.getCreatedStringFormat()));
 
                                     ((TextView) view.findViewById(R.id.sales_order_sub_total_tv))
                                             .setText(getContext().getString(R.string.sales_order_sub_total_amount,

@@ -63,6 +63,8 @@
     <dimen name="notification_list_item_image_height">80dp</dimen>
     <dimen name="notification_list_item_card_marginLeftAndRight">10dp</dimen>
 
+    <dimen name="order_tracking_item_card_marginLeftAndRight">10dp</dimen>
+
     <dimen name="order_line_item_image_width">100dp</dimen>
     <dimen name="order_line_item_image_height">100dp</dimen>
 

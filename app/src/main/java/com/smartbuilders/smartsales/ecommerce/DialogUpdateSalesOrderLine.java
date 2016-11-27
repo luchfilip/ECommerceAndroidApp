@@ -142,8 +142,8 @@ public class DialogUpdateSalesOrderLine extends DialogFragment {
                     }
 
                     /**********************************************************/
-                    Product product = new Product();
-                    product.setId(mSaleOrderLine.getProductId());
+                    Product product = (Product) mSaleOrderLine.getProduct().clone();
+                    //product.setId(mSaleOrderLine.getProductId());
                     try {
                         product.getProductPriceAvailability().setPrice(Float.valueOf(productPriceEditText.getText().toString()));
                     } catch (NumberFormatException e) {

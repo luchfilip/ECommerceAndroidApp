@@ -3,6 +3,7 @@
 
     <item
         android:id="@+id/action_download"
-        app:showAsAction="never"
-        android:title="@string/download" />
+        android:title="@string/download"
+        android:icon="@drawable/ic_file_download_white_24dp"
+        app:showAsAction="collapseActionView|ifRoom"/>
 </menu>

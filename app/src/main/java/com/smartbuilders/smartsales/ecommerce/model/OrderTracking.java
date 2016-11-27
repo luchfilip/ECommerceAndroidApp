@@ -69,6 +69,10 @@ public class OrderTracking extends Model implements Parcelable {
         this.orderId = orderId;
     }
 
+    public String getOrderNumber() {
+        return String.format(new Locale("es","VE"), "%07d", orderId);
+    }
+
     public String getDetails() {
         return details;
     }

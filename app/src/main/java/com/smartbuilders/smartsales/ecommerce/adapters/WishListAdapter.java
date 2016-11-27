@@ -214,7 +214,6 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                                                         String result = orderLineDB.restoreOrderLine(orderLine.getId());
                                                         if (result == null) {
                                                             addItem(itemPosition, orderLine);
-                                                            Snackbar.make(mParentLayout, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
                                                         } else {
                                                             Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                                         }

@@ -42,19 +42,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/business_partner_name_textView"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:lines="1"
-            android:visibility="gone" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
             android:id="@+id/order_date_tv"
-            android:padding="5dp"
             android:textColor="@color/black" />
 
         <View style="@style/Divider"
@@ -122,21 +112,6 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:layout_gravity="bottom" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="bottom">
-
-                <Button
-                    style="@style/GreyButtonAppTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/share"
-                    android:id="@+id/share_button" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

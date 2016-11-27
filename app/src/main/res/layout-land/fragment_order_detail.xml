@@ -31,32 +31,13 @@
         android:baselineAligned="false"
         android:background="@android:color/white">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/order_lines"
+            android:layout_marginTop="2dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_weight="7">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/order_lines"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/material_grey_50" />
-
-            <View style="@style/Divider"
-                android:layout_marginBottom="1dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/order_lines_number_tv"
-                android:layout_gravity="right"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:layout_margin="5dp" />
-        </LinearLayout>
+            android:layout_weight="7"
+            android:background="@color/material_grey_50" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -77,16 +58,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/business_partner_name_textView"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:visibility="gone"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/order_date_tv"
@@ -102,6 +73,16 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
+                <View style="@style/Divider"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/order_lines_number_tv"
+                    android:layout_gravity="right"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -112,9 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/order_tax_tv"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -122,22 +101,9 @@
                     android:id="@+id/order_total_tv"
                     android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textColor="@color/black"
+                    android:layout_marginTop="3dp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    style="@style/GreyButtonAppTheme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/share"
-                    android:id="@+id/share_button"
-                    android:layout_gravity="bottom|right" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

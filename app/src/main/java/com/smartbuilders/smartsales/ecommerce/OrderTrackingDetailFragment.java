@@ -11,9 +11,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrderTrackingAdapter;
+import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
+import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderTrackingDB;
+import com.smartbuilders.smartsales.ecommerce.model.Currency;
+import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.OrderTracking;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
 
@@ -29,12 +35,13 @@ public class OrderTrackingDetailFragment extends Fragment {
     private boolean mIsInitialLoad;
     private int mOrderId;
     private int mRecyclerViewCurrentFirstPosition;
-    private TextView mProgressTextView;
-    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private String mProgressText;
-    private int mProgressPercentage;
     private ArrayList<OrderTracking> mOrderTrackings;
+    private Order mOrder;
+
+    public interface Callback {
+        void goToOrderDetail(int orderId);
+    }
 
     public OrderTrackingDetailFragment() {
     }
@@ -68,10 +75,11 @@ public class OrderTrackingDetailFragment extends Fragment {
                             mOrderId = getActivity().getIntent().getExtras().getInt(OrderTrackingDetailActivity.KEY_ORDER_ID);
                         }
                     }
-                    OrderTrackingDB orderTrackingDB = new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext()));
-                    mProgressText = orderTrackingDB.getProgressText(mOrderId);
-                    mProgressPercentage = orderTrackingDB.getProgressPercentage(mOrderId);
+                    final User user = Utils.getCurrentUser(getContext());
+
+                    OrderTrackingDB orderTrackingDB = new OrderTrackingDB(getContext(), user);
                     mOrderTrackings = orderTrackingDB.getOrderTrackings(mOrderId);
+                    mOrder = (new OrderDB(getContext(), user)).getActiveOrderById(mOrderId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -80,11 +88,26 @@ public class OrderTrackingDetailFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mProgressBar = ((ProgressBar) view.findViewById(R.id.orderTracking_progressBar));
-                                mProgressTextView = (TextView) view.findViewById(R.id.progress_textView);
                                 mRecyclerView = (RecyclerView) view.findViewById(R.id.order_tracking);
 
-                                loadViews(mProgressText, mProgressPercentage, mOrderTrackings);
+                                if (view.findViewById(R.id.go_to_order_fab) != null) {
+                                    view.findViewById(R.id.go_to_order_fab).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ((Callback) getActivity()).goToOrderDetail(mOrderId);
+                                        }
+                                    });
+                                }
+
+                                if (mOrder!=null) {
+                                    ((TextView) view.findViewById(R.id.order_number_tv))
+                                            .setText(getContext().getString(R.string.order_number, mOrder.getOrderNumber()));
+
+                                    ((TextView) view.findViewById(R.id.order_date_tv))
+                                            .setText(getContext().getString(R.string.order_date, mOrder.getCreatedStringFormat()));
+                                }
+
+                                loadViews(/*mProgressText, mProgressPercentage, */mOrderTrackings);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -105,17 +128,12 @@ public class OrderTrackingDetailFragment extends Fragment {
             mIsInitialLoad = false;
         } else {
             OrderTrackingDB orderTrackingDB = new OrderTrackingDB(getContext(), Utils.getCurrentUser(getContext()));
-            loadViews(orderTrackingDB.getProgressText(mOrderId),
-                    orderTrackingDB.getProgressPercentage(mOrderId),
-                    orderTrackingDB.getOrderTrackings(mOrderId));
+            loadViews(orderTrackingDB.getOrderTrackings(mOrderId));
         }
         super.onStart();
     }
 
-    private void loadViews(String progressText, int progressPercentage, ArrayList<OrderTracking> orderTrackings) {
-        mProgressTextView.setText(progressText);
-        mProgressBar.setProgress(progressPercentage);
-
+    private void loadViews(ArrayList<OrderTracking> orderTrackings) {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);

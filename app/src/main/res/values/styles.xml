@@ -94,6 +94,15 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="title_business_partner_style">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="title_text_style">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_marginLeft">8dp</item>
@@ -131,6 +140,14 @@
 
     <style name="shape_style">
         <item name="android:background">@drawable/shape</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
+    <style name="shape_order_tracking_style">
+        <item name="android:background">@drawable/order_tracking_shape</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:layout_marginTop">2dp</item>

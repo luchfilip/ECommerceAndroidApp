@@ -132,8 +132,8 @@
     <string name="sales_order_doc_name">COTIZACIÓN</string>
     <string name="order_doc_name">PEDIDO</string>
     <string name="sales_order_number">Cotización No.: %1$s</string>
-    <string name="sales_order_date">Fecha de creación: %1$s</string>
-    <string name="order_date">Fecha de creación: %1$s</string>
+    <string name="sales_order_date">Fecha de Cotización: %1$s</string>
+    <string name="order_date">Fecha del Pedido: %1$s</string>
     <string name="tax_id">RIF: %1$s</string>
     <string name="order_lines_number">Cantidad de líneas: %1$s</string>
     <string name="products_availables">Artículos disponibles: %1$s</string>
@@ -162,6 +162,7 @@
     <string name="delete_recent_search">¿Desea eliminar la busqueda "%1$s" del historial de busquedas?</string>
     <string name="delete_search_historical">Borrar historial</string>
     <string name="clear_wish_list">Limpiar Favoritos</string>
+    <string name="clear_notifications_list">Limpiar Notificaciones</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsquedas?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
     <string name="init_session_business_partner">¿Desea iniciar sesión con el cliente %1$s?</string>
@@ -404,7 +405,8 @@
     <string name="new_mandatory_version_available_message">Existe una nueva versión de la aplicación disponible en el Market. Para continuar con la aplicación debe actualizar.</string>
     <string name="product_ratingBar_label_text_detail">%1$s</string>
     <string name="new_availabilities">Nuevas existencias.</string>
-    <string name="new_availabilities_in_wishList">Nuevas existencias, productos en Favoritos.</string>
+    <string name="new_notifications">Nuevas notificaciones</string>
+    <string name="new_order_tracking">Nuevo estatus en Rastreo de Pedidos</string>
     <string name="category_name_detail">Categoría: %1$s</string>
     <string name="wish_list_doc_name">Favoritos</string>
     <string name="recommended_products_doc_name">Productos Recomendados</string>
@@ -536,7 +538,9 @@
     <string name="pref_summary_notify">Mostrar notificación y guardar en el listado de las notificaciones</string>
     <string name="undo">DESHACER</string>
     <string name="product_removed">Producto removido</string>
-    <string name="product_restored">Producto restaurado!</string>
     <string name="notification_removed">Notificación removida</string>
-    <string name="notification_restored">Notificación restaurada!</string>
+    <string name="pref_title_ringtone_and_vibrate">Ringtone y Vibración</string>
+    <string name="clear_notifications_list_question">¿Desea eliminar el registro completo de notificaciones? Está operación no puede ser revertida</string>
+    <string name="clear_shopping_cart">Limpiar Pedido Abierto</string>
+    <string name="clear_shopping_cart_notifications">¿Desea eliminar todos los artículos del Pedido Abierto? Esta operación no se puede revertir</string>
 </resources>

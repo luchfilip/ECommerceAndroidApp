@@ -20,4 +20,6 @@
 
     <dimen name="notification_list_item_card_marginLeftAndRight">20dp</dimen>
 
+    <dimen name="order_tracking_item_card_marginLeftAndRight">20dp</dimen>
+
 </resources>

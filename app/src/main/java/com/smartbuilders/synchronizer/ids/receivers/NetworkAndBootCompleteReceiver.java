@@ -1,4 +1,4 @@
-package com.smartbuilders.synchronizer.ids.broadcastreceivers;
+package com.smartbuilders.synchronizer.ids.receivers;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
@@ -21,7 +21,7 @@ import android.preference.PreferenceManager;
  * @author Jesus Sarco
  *
  */
-public class NetworkReceiver extends BroadcastReceiver {
+public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

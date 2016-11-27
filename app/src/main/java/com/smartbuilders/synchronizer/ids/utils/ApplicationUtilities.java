@@ -36,7 +36,7 @@ import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.synchronizer.ids.scheduler.SchedulerSyncData;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
-import com.smartbuilders.synchronizer.ids.broadcastreceivers.AlarmReceiver;
+import com.smartbuilders.synchronizer.ids.receivers.AlarmReceiver;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 

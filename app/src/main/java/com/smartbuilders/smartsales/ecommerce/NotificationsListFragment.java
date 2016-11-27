@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,10 +9,14 @@ import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -20,6 +25,7 @@ import com.smartbuilders.smartsales.ecommerce.adapters.NotificationsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
 import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
+import com.smartbuilders.smartsales.ecommerce.utils.NotificationNewNotifications;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -120,7 +126,6 @@ public class NotificationsListFragment extends Fragment implements Notifications
                                                             String result = mNotificationHistoryDB.restoreNotification(notificationHistory.getId());
                                                             if(result == null){
                                                                 mNotificationsListAdapter.addItem(itemPosition, notificationHistory);
-                                                                Snackbar.make(mMainLayout, R.string.notification_restored, Snackbar.LENGTH_SHORT).show();
                                                             } else {
                                                                 Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                             }
@@ -187,7 +192,7 @@ public class NotificationsListFragment extends Fragment implements Notifications
                 }
             }
         }.start();
-
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -202,6 +207,7 @@ public class NotificationsListFragment extends Fragment implements Notifications
         }
         if (getActivity()!=null) {
             BadgeUtils.clearBadge(getActivity());
+            NotificationNewNotifications.cancelNotification(getActivity());
         }
         if (mNotificationHistoryDB!=null) {
             mNotificationHistoryDB.updateNotificationsStatus(NotificationHistory.STATUS_SEEN);
@@ -223,6 +229,38 @@ public class NotificationsListFragment extends Fragment implements Notifications
                 mBlankScreenView.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_notifications_list_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.clear_notifications_list) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.clear_notifications_list_question)
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (mNotificationHistoryDB!=null) {
+                                String result = mNotificationHistoryDB.deactivateAllNotifications();
+                                if (result == null) {
+                                    reloadNotificationsList(mNotificationHistoryDB.getNotifications(), true);
+                                } else {
+                                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

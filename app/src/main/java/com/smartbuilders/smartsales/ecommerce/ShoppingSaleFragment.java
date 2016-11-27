@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
-import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity;
@@ -33,10 +32,8 @@ import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapte
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
@@ -75,7 +72,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private ProgressDialog waitPlease;
     private EditText mValidToEditText;
     private String mValidToText;
-    private TextView mBusinessPartnerName;
     private SalesOrderLineDB mSalesOrderLineDB;
 
     public ShoppingSaleFragment() {
@@ -140,8 +136,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_tv);
-
                                 mBlankScreenView = view.findViewById(R.id.company_logo_name);
                                 mainLayout = view.findViewById(R.id.main_layout);
 
@@ -223,11 +217,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                                                         } else {
                                                                                             mShoppingSaleAdapter.addItem(itemPosition, salesOrderLine);
                                                                                         }
-                                                                                        Snackbar.make((BuildConfig.IS_SALES_FORCE_SYSTEM
-                                                                                                ? mShoppingSaleAdapter2.getItemCount()>0
-                                                                                                : mShoppingSaleAdapter.getItemCount()>0)
-                                                                                                ? mainLayout : mBlankScreenView, R.string.product_restored, Snackbar.LENGTH_SHORT)
-                                                                                                .show();
                                                                                     } else {
                                                                                         Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                                                     }
@@ -322,7 +311,6 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                     }.start();
                                                 }
                                             });
-
                                 } else {
                                     mValidToEditText = (EditText) view.findViewById(R.id.valid_to_editText);
                                     mValidToEditText.setOnClickListener(new View.OnClickListener() {
@@ -489,25 +477,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        BusinessPartner businessPartner = null;
-        if(mUserBusinessPartnerId !=0) {
-            businessPartner = (new UserBusinessPartnerDB(getContext(), mUser))
-                    .getUserBusinessPartnerById(mUserBusinessPartnerId);
-        } else {
-            try {
-                businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail,
-                businessPartner!=null ? businessPartner.getName() : null));
-
         if (BuildConfig.IS_SALES_FORCE_SYSTEM
                 ? (mShoppingSaleAdapter2!=null && mShoppingSaleAdapter2.getItemCount()>0)
-                : (mShoppingSaleAdapter!=null || mShoppingSaleAdapter.getItemCount()>0)) {
+                : (mShoppingSaleAdapter!=null && mShoppingSaleAdapter.getItemCount()>0)) {
             mTotalLines.setText(getString(R.string.order_lines_number,
                     String.valueOf(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2.getItemCount() : mShoppingSaleAdapter.getItemCount())));
             Currency currency = (new CurrencyDB(getContext(), mUser))

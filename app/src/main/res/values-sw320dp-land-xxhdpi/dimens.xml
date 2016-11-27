@@ -7,4 +7,6 @@
     <dimen name="wish_list_item_image_height">120dp</dimen>
 
     <dimen name="notification_list_item_card_marginLeftAndRight">20dp</dimen>
+
+    <dimen name="order_tracking_item_card_marginLeftAndRight">20dp</dimen>
 </resources>

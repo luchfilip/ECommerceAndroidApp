@@ -12,25 +12,25 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
+import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 
 /**
  * Created by stein on 31/7/2016.
  */
-public class NotificationUtils {
+public class NotificationNewNotifications {
 
     private static final int NOTIFICATION_ID = 111222;
 
-    public static void createNotification(Context context, String contentTitle, String contentText,
-                                          Intent resultIntent) {
+    public static void createNotification(Context context) {
         NotificationCompat.Builder mBuilder;
 
         //if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             mBuilder = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_launcher)
-                    .setContentTitle(contentTitle)
+                    .setContentTitle(context.getString(R.string.app_name))
                     .setColor(context.getResources().getColor(R.color.colorAccent))
-                    .setContentText(contentText);
+                    .setContentText(context.getString(R.string.new_notifications));
         //} else {
         //    // Lollipop specific setColor method goes here.
         //    mBuilder = new NotificationCompat.Builder(context)
@@ -47,6 +47,9 @@ public class NotificationUtils {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the back stack for the Intent (but not the Intent itself)
         //stackBuilder.addParentStack(ResultActivity.class);
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(context, NotificationsListActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
@@ -57,10 +60,10 @@ public class NotificationUtils {
 
         /*******************************************************************************************/
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String ringtone = sharedPreferences.getString("notifications_new_availabilities_wish_list_ringtone",
+        String ringtone = sharedPreferences.getString("notifications_ringtone",
                 context.getString(R.string.pref_ringtone_silent));
         boolean useSound = !TextUtils.isEmpty(ringtone) && !ringtone.equals(context.getString(R.string.pref_ringtone_silent));
-        boolean vibrate = sharedPreferences.getBoolean("notifications_new_availabilities_wish_list_vibrate", true);
+        boolean vibrate = sharedPreferences.getBoolean("notifications_vibrate", true);
         if(useSound && vibrate) {
             mBuilder.setSound(Uri.parse(ringtone));
             mBuilder.setDefaults(Notification.DEFAULT_VIBRATE

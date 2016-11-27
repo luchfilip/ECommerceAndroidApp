@@ -94,6 +94,15 @@
         <item name="android:layout_marginBottom">2dp</item>
     </style>
 
+    <style name="shape_order_tracking_style">
+        <item name="android:background">@drawable/order_tracking_shape</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
     <style name="shape_selector_style">
         <item name="android:background">@drawable/ripple_rounded_corners</item>
         <item name="android:elevation">1dp</item>

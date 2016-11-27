@@ -16,6 +16,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -65,7 +68,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private View mMainLayout;
     private View mBlankScreenView;
     private boolean mIsShoppingCart = true;
-    private TextView mBusinessPartnerName;
     private TextView mSalesOrderNumber;
     private View mSalesOrderInfoSeparator;
     private OrderLineDB mOrderLineDB;
@@ -127,7 +129,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                 mMainLayout = view.findViewById(R.id.main_layout);
                                 mShoppingCartAdapter.setParentLayout(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView);
 
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
                                 mSalesOrderNumber = (TextView) view.findViewById(R.id.sales_order_number_textView);
                                 mSalesOrderInfoSeparator = view.findViewById(R.id.sales_order_info_separator);
 
@@ -190,7 +191,6 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                                                                     String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
                                                                                     if(result == null){
                                                                                         mShoppingCartAdapter.addItem(itemPosition, orderLine);
-                                                                                        Snackbar.make(mShoppingCartAdapter.getItemCount()>0 ? mMainLayout : mBlankScreenView, R.string.product_restored, Snackbar.LENGTH_SHORT).show();
                                                                                     } else {
                                                                                         Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                                                     }
@@ -316,6 +316,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 }
             }
         }.start();
+        if (mIsShoppingCart) {
+            setHasOptionsMenu(true);
+        }
         return view;
     }
 
@@ -326,7 +329,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
         }else{
             if(mIsShoppingCart){
                 try {
-                    reloadShoppingCart((new OrderLineDB(getActivity(), mUser)).getActiveOrderLinesFromShoppingCart(), true);
+                    reloadShoppingCart(mOrderLineDB.getActiveOrderLinesFromShoppingCart(), true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     new AlertDialog.Builder(getContext())
@@ -338,6 +341,51 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
             }
         }
         super.onStart();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mIsShoppingCart) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            inflater.inflate(R.menu.menu_shopping_cart_fragment, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.clear_shopping_cart) {
+            if (mIsShoppingCart) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.clear_shopping_cart_notifications)
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (mOrderLineDB!=null) {
+                                    String result = mOrderLineDB.deactivateOrderLinesFromShoppingCart();
+                                    if (result == null) {
+                                        try {
+                                            reloadShoppingCart(mOrderLineDB.getActiveOrderLinesFromShoppingCart(), true);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            new AlertDialog.Builder(getContext())
+                                                    .setTitle(R.string.error)
+                                                    .setMessage(e.getMessage())
+                                                    .setNeutralButton(R.string.accept, null)
+                                                    .show();
+                                        }
+                                    } else {
+                                        Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void closeOrder(){
@@ -457,39 +505,38 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
     private void setHeader(){
         if(mUser!=null) {
             if (BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
-                if (mIsShoppingCart) {
-                    try {
-                        BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                                .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                        if (businessPartner != null) {
-                            mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                            mBusinessPartnerName.setVisibility(View.VISIBLE);
-
-                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
+                //if (mIsShoppingCart) {
+                //    try {
+                //        BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
+                //                .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                //        if (businessPartner != null) {
+                //            mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
+                //            mBusinessPartnerName.setVisibility(View.VISIBLE);
+                //            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                //        }
+                //    } catch (Exception e) {
+                //        e.printStackTrace();
+                //    }
+                //} else {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner() != null) {
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
-                        mBusinessPartnerName.setVisibility(View.VISIBLE);
+                        //mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
+                        //mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);
 
                         mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
                     }
-                }
+                //}
             } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                 //solamente muestra el nombre del cliente y el numero de cotizacion cuando se esta
                 //pasando de cotizacion a pedido
                 if (!mIsShoppingCart) {
                     SalesOrder salesOrder = (new SalesOrderDB(getContext(), mUser)).getSalesOrderById(mSalesOrderId);
                     if (salesOrder != null && salesOrder.getBusinessPartner()!=null) {
-                        mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
-                        mBusinessPartnerName.setVisibility(View.VISIBLE);
+                        //mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, salesOrder.getBusinessPartner().getName()));
+                        //mBusinessPartnerName.setVisibility(View.VISIBLE);
 
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);

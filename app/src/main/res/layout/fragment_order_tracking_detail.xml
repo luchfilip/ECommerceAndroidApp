@@ -24,43 +24,56 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_layout"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:background="@android:color/white">
+        android:visibility="gone">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress_textView"
-                android:textSize="24sp"
-                android:layout_margin="4dp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/black" />
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/order_number_tv"
+                android:textColor="@color/black"
+                android:padding="5dp"
+                android:textStyle="bold" />
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/orderTracking_progressBar"
-                android:layout_margin="4dp" />
+                android:id="@+id/order_date_tv"
+                android:padding="5dp"
+                android:textColor="@color/black" />
 
+            <View style="@style/Divider"
+                android:layout_marginTop="1dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/order_tracking"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/material_grey_50"
+                android:paddingTop="5dp"
+                android:paddingBottom="80dp"
+                android:clipToPadding="false"/>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/order_tracking"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/material_grey_50" />
-    </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/go_to_order_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_go_to_white_24dp" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

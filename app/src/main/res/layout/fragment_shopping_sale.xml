@@ -73,21 +73,6 @@
         android:visibility="gone"
         android:background="@android:color/white">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:id="@+id/business_partner_commercial_name_tv"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="2dp"
-            android:textStyle="bold"
-            android:lines="1"
-            android:layout_marginBottom="2dp" />
-
-        <View style="@style/Divider"
-            android:layout_marginTop="1dp" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shoppingSale_items_list"
             android:background="@color/material_grey_50"

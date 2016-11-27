@@ -147,6 +147,8 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
                 holder.containerLinearLayout.setElevation(5);
             }
             /********************************************************************************/
+        } else {
+            holder.iconImageView.setColorFilter(Utils.getColor(mContext, R.color.grey));
         }
     }
 

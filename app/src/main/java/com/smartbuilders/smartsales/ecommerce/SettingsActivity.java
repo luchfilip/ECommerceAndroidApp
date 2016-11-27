@@ -222,7 +222,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_availabilities_wish_list_ringtone"));
+            bindPreferenceSummaryToValue(findPreference("notifications_ringtone"));
         }
 
         @Override

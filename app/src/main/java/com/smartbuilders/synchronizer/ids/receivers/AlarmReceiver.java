@@ -1,4 +1,4 @@
-package com.smartbuilders.synchronizer.ids.broadcastreceivers;
+package com.smartbuilders.synchronizer.ids.receivers;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;

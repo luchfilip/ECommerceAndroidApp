@@ -21,6 +21,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- used by GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -224,7 +225,7 @@
         <!-- GCM -->
 
         <receiver
-            android:name="com.smartbuilders.synchronizer.ids.broadcastreceivers.AlarmReceiver"
+            android:name="com.smartbuilders.synchronizer.ids.receivers.AlarmReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="${applicationId}.AlarmReceiver.Action" />
@@ -237,10 +238,11 @@
         a una red de wi-fi, etc.
         -->
         <receiver
-            android:name="com.smartbuilders.synchronizer.ids.broadcastreceivers.NetworkReceiver"
+            android:name="com.smartbuilders.synchronizer.ids.receivers.NetworkAndBootCompleteReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

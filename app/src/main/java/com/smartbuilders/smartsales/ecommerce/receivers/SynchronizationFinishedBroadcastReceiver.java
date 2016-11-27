@@ -6,18 +6,19 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
+import com.smartbuilders.smartsales.ecommerce.data.OrderTrackingDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
+import com.smartbuilders.smartsales.ecommerce.model.OrderTracking;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
-import com.smartbuilders.smartsales.ecommerce.utils.NotificationUtils;
+import com.smartbuilders.smartsales.ecommerce.utils.NotificationNewNotifications;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-
-import java.util.ArrayList;
 
 /**
  * Jesus Sarco, 31.07.2016
@@ -28,55 +29,75 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        checkNewAvailabilitiesInWishList(context);
+        checkNewNotifications(context);
     }
 
-    private void checkNewAvailabilitiesInWishList(Context context){
-        User user = Utils.getCurrentUser(context);
-        if (!NotificationUtils.isNotificationShown(context) && PreferenceManager
-                .getDefaultSharedPreferences(context).getBoolean("notifications_new_availabilities_wish_list", true)) {
-            if (user != null) {
-                NotificationHistoryDB notificationHistoryDB = new NotificationHistoryDB(context, user);
-                OrderLineDB orderLineDB = new OrderLineDB(context, user);
-                ArrayList<OrderLine> orderLines = orderLineDB.getWishList();
+    private void checkNewNotifications(Context context){
+        if (context!=null) {
+            User user = Utils.getCurrentUser(context);
+            if (user!=null) {
+                final NotificationHistoryDB notificationHistoryDB = new NotificationHistoryDB(context, user);
+                final OrderLineDB orderLineDB = new OrderLineDB(context, user);
+                final boolean notifyIncrementAvailabilityInWishList = PreferenceManager.getDefaultSharedPreferences(context)
+                        .getBoolean("notifications_increment_availabilities_wish_list", true);
+                final boolean notifyDecrementAvailabilityInWishList = PreferenceManager.getDefaultSharedPreferences(context)
+                        .getBoolean("notifications_decrement_availabilities_wish_list", true);
                 boolean showNotification = false;
-                for (OrderLine orderLine : orderLines) {
-                    int productAvailabilityVariation = orderLine.getProduct().getProductPriceAvailability().getAvailability()
-                            - orderLine.getQuantityOrdered();
-                    if(productAvailabilityVariation!=0) {
-                        if(productAvailabilityVariation > 0){
-                            notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
-                                    orderLine.getProduct().getName() +
-                                    "<br/><font color=#159204>" + context.getString(R.string.availability_positive_variation, String.valueOf(productAvailabilityVariation))+"</font>",
-                                    NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
-                                    orderLine.getProductId());
-                        } else {
-                            notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
-                                    orderLine.getProduct().getName() +
-                                    "<br/><font color=#c82c14>" + context.getString(R.string.availability_variation, String.valueOf(productAvailabilityVariation))+"</font>",
-                                    NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
-                                    orderLine.getProductId());
+                if (notifyIncrementAvailabilityInWishList || notifyDecrementAvailabilityInWishList) {
+                    for (OrderLine orderLine : orderLineDB.getWishList()) {
+                        int productAvailabilityVariation = orderLine.getProduct().getProductPriceAvailability().getAvailability()
+                                - orderLine.getQuantityOrdered();
+                        if (productAvailabilityVariation != 0) {
+                            if (productAvailabilityVariation > 0) {
+                                if (notifyIncrementAvailabilityInWishList) {
+                                    notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
+                                            orderLine.getProduct().getName() +
+                                                    "<br/><font color=#159204>" + context.getString(R.string.availability_positive_variation, String.valueOf(productAvailabilityVariation)) + "</font>",
+                                            NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
+                                            orderLine.getProductId());
+                                    showNotification = true;
+                                }
+                            } else {
+                                if (notifyDecrementAvailabilityInWishList) {
+                                    notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
+                                            orderLine.getProduct().getName() +
+                                                    "<br/><font color=#c82c14>" + context.getString(R.string.availability_variation, String.valueOf(productAvailabilityVariation)) + "</font>",
+                                            NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
+                                            orderLine.getProductId());
+                                    showNotification = true;
+                                }
+                            }
                         }
+                    }
+                }
+                orderLineDB.updateProductAvailabilitiesInWishList();
+
+                final boolean notifyNewOrderTracking = Parameter.isActiveOrderTracking(context, user)
+                        && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_new_order_tracking", true);
+                //boolean showNotificationNewOrderTracking = false;
+                if (notifyNewOrderTracking) {
+                    for (OrderTracking orderTracking : (new OrderTrackingDB(context, user)).getOrderTrackingWithoutNotification()) {
+                        notificationHistoryDB.insertNotificationHistory("Nuevo estatus en rastreo de pedidos",
+                                "<b>Pedido No.: "+orderTracking.getOrderNumber()+"</b>" +
+                                "</br>Estatus: "+orderTracking.getOrderTrackingState().getTitle(),
+                                NotificationHistory.TYPE_NEW_ORDER_TRACKING,
+                                orderTracking.getId());
                         showNotification = true;
                     }
                 }
 
-                if (showNotification) {
-                    orderLineDB.updateProductAvailabilitiesInWishList();
-                    BadgeUtils.setBadge(context, notificationHistoryDB.getCountByStatus(NotificationHistory.STATUS_NOT_SEEN));
-//                    // Creates an explicit intent for an Activity in your app
-//                    final Intent resultIntent = new Intent(context, WishListActivity.class);
-//                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    NotificationUtils.createNotification(context, context.getString(R.string.app_name),
-//                            context.getString(R.string.new_availabilities_in_wishList), resultIntent);
+                if (showNotification
+                        && !NotificationNewNotifications.isNotificationShown(context)) {
+                    NotificationNewNotifications.createNotification(context);
                 }
+
+                BadgeUtils.setBadge(context, notificationHistoryDB.getCountByStatus(NotificationHistory.STATUS_NOT_SEEN));
+
+                //Se limpia de la carpeta de imagenes miniatura las imagenes que no corresponden
+                LoadProductsThumbImage.cleanFolder(context, user);
+                //Se limpia de la carpeta de imagenes de alta resolución las imagenes que no corresponden
+                LoadProductsOriginalImage.cleanFolder(context, user);
             }
-        }
-        if (context!=null && user!=null) {
-            //Se limpia de la carpeta de imagenes miniatura las imagenes que no corresponden
-            LoadProductsThumbImage.cleanFolder(context, user);
-            //Se limpia de la carpeta de imagenes de alta resolución las imagenes que no corresponden
-            LoadProductsOriginalImage.cleanFolder(context, user);
         }
     }
 }

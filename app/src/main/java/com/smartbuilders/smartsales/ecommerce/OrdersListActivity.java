@@ -39,11 +39,13 @@ public class OrdersListActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener {
 
     public static final String ORDER_DETAIL_FRAGMENT_TAG = "ORDER_DETAIL_FRAGMENT_TAG";
+    public static final String KEY_ORDER_ID = "KEY_ORDER_ID";
 
     private ListView mListView;
     private OrderDB mOrderDB;
     private int mCurrentSelectedIndex;
     private User mUser;
+    private int mOrderId;
 
     private BroadcastReceiver syncDataFinishedReceiver = new BroadcastReceiver() {
         @Override
@@ -85,6 +87,12 @@ public class OrdersListActivity extends AppCompatActivity
 
         mListView = (ListView) findViewById(R.id.orders_list);
         mOrderDB = new OrderDB(this, mUser);
+
+        if (getIntent()!=null && getIntent().getExtras()!=null) {
+            if (getIntent().getExtras().containsKey(KEY_ORDER_ID)) {
+                mOrderId = getIntent().getExtras().getInt(KEY_ORDER_ID);
+            }
+        }
     }
 
     @Override
@@ -114,9 +122,8 @@ public class OrdersListActivity extends AppCompatActivity
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
                         .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
                 if(businessPartner!=null){
-                    ((TextView) findViewById(R.id.business_partner_name))
-                            .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    findViewById(R.id.business_partner_name).setVisibility(View.VISIBLE);
+                    ((TextView) findViewById(R.id.business_partner_name)).setText(businessPartner.getName());
+                    findViewById(R.id.business_partner_name_container).setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -157,7 +164,20 @@ public class OrdersListActivity extends AppCompatActivity
     public void onListIsLoaded() {
         if (findViewById(R.id.order_detail_container) != null) {
             if (mListView != null && mListView.getAdapter()!=null && !mListView.getAdapter().isEmpty()) {
-                mListView.performItemClick(mListView.getAdapter().getView(0, null, null), 0, 0);
+                int position = 0;
+                if (mOrderId!=0 && ((OrdersListAdapter) mListView.getAdapter()).getData()!=null) {
+                    for (int i = 0; i < mListView.getAdapter().getCount(); i++) {
+                        if (((OrdersListAdapter) mListView.getAdapter()).getData().get(i)!=null
+                                && ((OrdersListAdapter) mListView.getAdapter()).getData().get(i).getId()==mOrderId) {
+                            position = i;
+                            break;
+                        }
+                    }
+                }
+                mListView.performItemClick(mListView.getAdapter().getView(position, null, null), position, 0);
+                if (position>0) {
+                    mListView.smoothScrollToPosition(position);
+                }
             }
         }
         showOrHideEmptyLayoutWallpaper();

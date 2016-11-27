@@ -18,7 +18,7 @@
     <color name="product_category_color">#333333</color>
     <color name="product_subcategory_color">#467ed8</color>
     <color name="product_availability_color">#1556bf</color>
-    <color name="product_price_color">#b71c1c</color>
+    <color name="product_price_color">@color/black</color>
     <color name="label_color">#222222</color>
     <color name="dark_grey">#777777</color>
     <color name="grey">#cccccc</color>

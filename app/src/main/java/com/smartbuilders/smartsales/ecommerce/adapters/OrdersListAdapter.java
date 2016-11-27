@@ -131,6 +131,10 @@ public class OrdersListAdapter extends BaseAdapter {
         }
     }
 
+    public ArrayList<Order> getData() {
+        return mDataset;
+    }
+
     public void setData (ArrayList<Order> orders){
         mDataset = orders;
         notifyDataSetChanged();

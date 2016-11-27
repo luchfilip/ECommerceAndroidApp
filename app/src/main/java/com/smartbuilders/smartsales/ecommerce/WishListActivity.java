@@ -15,9 +15,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
-import com.smartbuilders.smartsales.ecommerce.utils.NotificationUtils;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.smartsales.ecommerce.utils.BadgeUtils;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
@@ -41,8 +39,6 @@ public class WishListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Utils.inflateNavigationView(this, this, toolbar, mUser);
-
-        NotificationUtils.cancelNotification(this);
     }
 
     @Override
@@ -53,9 +49,8 @@ public class WishListActivity extends AppCompatActivity
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
                         .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
                 if(businessPartner!=null){
-                    ((TextView) findViewById(R.id.business_partner_name))
-                            .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    findViewById(R.id.business_partner_name).setVisibility(View.VISIBLE);
+                    ((TextView) findViewById(R.id.business_partner_name)).setText(businessPartner.getName());
+                    findViewById(R.id.business_partner_name_container).setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){
                 e.printStackTrace();

@@ -45,9 +45,8 @@ public class RecommendedProductsListActivity extends AppCompatActivity
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
                         .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
                 if(businessPartner!=null){
-                    ((TextView) findViewById(R.id.business_partner_name))
-                            .setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    findViewById(R.id.business_partner_name).setVisibility(View.VISIBLE);
+                    ((TextView) findViewById(R.id.business_partner_name)).setText(businessPartner.getName());
+                    findViewById(R.id.business_partner_name_container).setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){
                 e.printStackTrace();

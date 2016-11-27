@@ -68,6 +68,28 @@ public class OrderLineDB {
         return getOrderLines(SHOPPING_CART_DOC_TYPE, null, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
     }
 
+    public String deactivateOrderLinesFromShoppingCart() {
+        try {
+            int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, SEQUENCE_ID = 0 " +
+                            " WHERE USER_ID = ? AND BUSINESS_PARTNER_ID = ? AND ECOMMERCE_ORDER_LINE_ID IN ("+getOrderLinesIds(businessPartnerId, SHOPPING_CART_DOC_TYPE)+") " +
+                            " AND DOC_TYPE = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
+                    new String[]{"N", String.valueOf(mUser.getServerUserId()),
+                            String.valueOf(businessPartnerId),  SHOPPING_CART_DOC_TYPE});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
     public ArrayList<OrderLine> getWishList(){
         return getOrderLines(WISH_LIST_DOC_TYPE, null, null);
     }

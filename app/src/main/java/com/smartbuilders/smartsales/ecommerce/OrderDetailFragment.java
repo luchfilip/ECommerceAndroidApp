@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
@@ -101,15 +100,6 @@ public class OrderDetailFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                                        || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
-                                    if(mOrder.getBusinessPartner()!=null){
-                                        ((TextView) view.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_name_detail, mOrder.getBusinessPartner().getName()));
-                                        view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
-                                    }
-                                }
-
                                 RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.order_lines);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
@@ -123,7 +113,7 @@ public class OrderDetailFragment extends Fragment {
                                 }
 
                                 ((TextView) view.findViewById(R.id.order_lines_number_tv))
-                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrderLineAdapter.getItemCount())));
+                                        .setText(getContext().getString(R.string.order_lines_number, String.valueOf(mOrder.getLinesNumber())));
 
                                 if (mOrder!=null) {
                                     ((TextView) view.findViewById(R.id.order_number_tv))
@@ -159,12 +149,6 @@ public class OrderDetailFragment extends Fragment {
                                         view.findViewById(R.id.order_total_tv).setVisibility(View.GONE);
                                     }
                                 }
-                                view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        new CreateShareAndDownloadIntentThread(0).start();
-                                    }
-                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -195,6 +179,8 @@ public class OrderDetailFragment extends Fragment {
         int i = item.getItemId();
         if (i == R.id.action_download) {
             new CreateShareAndDownloadIntentThread(1).start();
+        } else if (i == R.id.action_share) {
+            new CreateShareAndDownloadIntentThread(0).start();
         }
         return super.onOptionsItemSelected(item);
     }

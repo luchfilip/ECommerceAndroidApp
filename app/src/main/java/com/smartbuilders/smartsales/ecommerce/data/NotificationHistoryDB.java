@@ -159,4 +159,18 @@ public class NotificationHistoryDB {
         }
         return null;
     }
+
+    public String deactivateAllNotifications() {
+        try {
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null,
+                    "UPDATE NOTIFICATION_HISTORY SET IS_ACTIVE = ?",
+                    new String[]{"N"});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
 }

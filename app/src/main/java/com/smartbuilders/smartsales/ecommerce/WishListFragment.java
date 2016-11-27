@@ -150,8 +150,6 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
                                                                                 String result = mOrderLineDB.restoreOrderLine(orderLine.getId());
                                                                                 if(result == null){
                                                                                     mWishListAdapter.addItem(itemPosition, orderLine);
-                                                                                    Snackbar.make(mWishListAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView,
-                                                                                            R.string.product_restored, Snackbar.LENGTH_SHORT).show();
                                                                                 } else {
                                                                                     Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                                                                                 }

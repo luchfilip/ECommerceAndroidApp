@@ -32,5 +32,6 @@
     <dimen name="welcome_layout_details_text_size">14sp</dimen>
 
     <dimen name="notification_list_item_card_marginLeftAndRight">20dp</dimen>
+    <dimen name="order_tracking_item_card_marginLeftAndRight">20dp</dimen>
 
 </resources>
