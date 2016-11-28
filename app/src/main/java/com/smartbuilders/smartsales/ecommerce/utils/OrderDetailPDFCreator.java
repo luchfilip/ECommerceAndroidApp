@@ -132,7 +132,7 @@ public class OrderDetailPDFCreator {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, ctx, companyLogo).writeSelectedRows(0, -1, 60, 780,
+            getHeaderTable(i, n, userCompany, ctx, companyLogo).writeSelectedRows(0, -1, 60, 770,
                     stamper.getOverContent(i));
         }
     }
@@ -185,8 +185,12 @@ public class OrderDetailPDFCreator {
         companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
         //Se comento porque a veces la direccion es muy larga y descuadra el formato de la cabecera
         //companyDataCell.addElement(new Paragraph(ctx.getString(R.string.address_detail, userCompany.getAddress()), font));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
-        companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
+        if (!TextUtils.isEmpty(userCompany.getPhoneNumber())) {
+            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
+        }
+        if (!TextUtils.isEmpty(userCompany.getEmailAddress())) {
+            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
+        }
         headerTable.addCell(companyDataCell);
 
         return headerTable;
@@ -198,16 +202,16 @@ public class OrderDetailPDFCreator {
         Font fontBold;
         try{
             font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-            fontBold = new Font(BaseFont.createFont("assets/fonts/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            fontBold = new Font(BaseFont.createFont("assets/fonts/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 11f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
                 font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-                fontBold = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f, Font.BOLD);
+                fontBold = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 11f, Font.BOLD);
             }catch(Exception e) {
                 e.printStackTrace();
                 font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
-                fontBold = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f, Font.BOLD);
+                fontBold = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 11f, Font.BOLD);
             }
         }
 
@@ -285,7 +289,7 @@ public class OrderDetailPDFCreator {
                 bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
             }
         }
-        font = new Font(bf, 7.5f);
+        font = new Font(bf, 8.5f);
 
         document.add(new Phrase("\n"));
 
@@ -375,34 +379,34 @@ public class OrderDetailPDFCreator {
     private void addOrderFooter(Document document, Context ctx, Order order) throws DocumentException, IOException {
         Font font;
         try{
-            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 10f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
-                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 10f);
             }catch(Exception e) {
                 e.printStackTrace();
-                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
+                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 10f);
             }
         }
 
-        PdfPTable orderNumberTable = new PdfPTable(1);
-        orderNumberTable.setWidths(new float[] {560f});
-        PdfPCell orderNumberCell = new PdfPCell();
-        orderNumberCell.setPadding(3);
-        orderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
-        orderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_sub_total_amount,
+        PdfPTable pdfPTable = new PdfPTable(1);
+        pdfPTable.setWidths(new float[] {560f});
+        PdfPCell pdfPCell = new PdfPCell();
+        pdfPCell.setPadding(3);
+        pdfPCell.disableBorderSide(Rectangle.UNDEFINED);
+        pdfPCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.order_sub_total_amount,
                 currency!=null ? currency.getName() : "",
                 order.getSubTotalAmountStringFormat()), font));
-        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_tax_amount,
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.order_tax_amount,
                 currency!=null ? currency.getName() : "",
                 order.getTaxAmountStringFormat()), font));
-        orderNumberCell.addElement(new Paragraph(ctx.getString(R.string.order_total_amount,
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.order_total_amount,
                 currency!=null ? currency.getName() : "",
                 order.getTotalAmountStringFormat()), font));
-        orderNumberTable.addCell(orderNumberCell);
-        document.add(orderNumberTable);
+        pdfPTable.addCell(pdfPCell);
+        document.add(pdfPTable);
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {

@@ -77,32 +77,13 @@
         android:baselineAligned="false"
         android:background="@android:color/white">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/shoppingSale_items_list"
+            android:background="@color/material_grey_50"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/shoppingSale_items_list"
-                android:background="@color/material_grey_50"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <View style="@style/Divider"
-                android:layout_marginBottom="1dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_lines"
-                android:layout_gravity="right"
-                android:textColor="@color/black"
-                android:layout_margin="5dp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:layout_weight="4"/>
 
         <LinearLayout
             android:orientation="vertical"
@@ -121,6 +102,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/total_lines"
+                    android:layout_gravity="right"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -166,7 +155,7 @@
 
             <Button
                 style="@style/GoldenButtonAppTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/proceed_to_checkout_shopping_sale"
                 android:id="@+id/proceed_to_checkout_shopping_sale_button"
@@ -176,7 +165,7 @@
 
             <Button
                 style="@style/GoldenButtonAppTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
                 android:id="@+id/go_to_finalize_options_button"

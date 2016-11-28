@@ -441,19 +441,24 @@ public class Utils {
                                                    final String fileName, final ImageView imageView){
         try {
             if(!TextUtils.isEmpty(fileName)){
-                Drawable drawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
-                if (drawable==null) {
-                    drawable = getNoImageAvailableDrawable(context);
+                Drawable placeHolderDrawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
+                if (placeHolderDrawable==null) {
+                    placeHolderDrawable = getLoadingImageDrawable(context);
+                }
+
+                Drawable onErrorDrawable = Drawable.createFromPath(getImagesThumbFolderPath(context) + fileName);
+                if (onErrorDrawable==null) {
+                    onErrorDrawable = getNoImageAvailableDrawable(context);
                 }
 
                 File img = Utils.getFileInOriginalDirByFileName(context, fileName);
                 if(img!=null && img.exists()){
-                    Picasso.with(context).load(img).placeholder(drawable).error(drawable).into(imageView);
+                    Picasso.with(context).load(img).placeholder(placeHolderDrawable).error(onErrorDrawable).into(imageView);
                 }else{
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + fileName)
-                            .placeholder(drawable)
-                            .error(drawable)
+                            .placeholder(placeHolderDrawable)
+                            .error(onErrorDrawable)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -524,6 +529,7 @@ public class Utils {
                 }else{
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
+                            .placeholder(getLoadingImageDrawable(context))
                             .error(getNoImageAvailableDrawable(context))
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
@@ -1208,6 +1214,18 @@ public class Utils {
             }
         }
         return noImageAvailable;
+    }
+
+    private static Drawable loadingImage;
+    public static Drawable getLoadingImageDrawable(Context context){
+        if(loadingImage==null){
+            try {
+                loadingImage = context.getResources().getDrawable(R.drawable.loading_image);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+        return loadingImage;
     }
 
     /**

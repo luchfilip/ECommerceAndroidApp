@@ -30,6 +30,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.StringUtils;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
@@ -133,7 +134,7 @@ public class SalesOrderDetailPDFCreator {
         //Loop over the pages and add a header to each page
         int n = reader.getNumberOfPages();
         for (int i = 1; i <= n; i++) {
-            getHeaderTable(i, n, userCompany, activity, ctx, user).writeSelectedRows(0, -1, 60, 750,
+            getHeaderTable(i, n, userCompany, activity, ctx, user).writeSelectedRows(0, -1, 60, 770,
                     stamper.getOverContent(i));
         }
     }
@@ -208,8 +209,12 @@ public class SalesOrderDetailPDFCreator {
             companyDataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             companyDataCell.addElement(new Paragraph(userCompany.getName(), companyNameFont));
             companyDataCell.addElement(new Paragraph(ctx.getString(R.string.tax_id, userCompany.getTaxId()), font));
-            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
-            companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
+            if (!TextUtils.isEmpty(userCompany.getPhoneNumber())) {
+                companyDataCell.addElement(new Paragraph(ctx.getString(R.string.phone_detail, userCompany.getPhoneNumber()), font));
+            }
+            if (!TextUtils.isEmpty(userCompany.getEmailAddress())) {
+                companyDataCell.addElement(new Paragraph(ctx.getString(R.string.email_detail, userCompany.getEmailAddress()), font));
+            }
             headerTable.addCell(companyDataCell);
         }
 
@@ -222,16 +227,16 @@ public class SalesOrderDetailPDFCreator {
         Font fontBold;
         try{
             font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-            fontBold = new Font(BaseFont.createFont("assets/fonts/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            fontBold = new Font(BaseFont.createFont("assets/fonts/Roboto-Bold.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 11f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
                 font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
-                fontBold = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f, Font.BOLD);
+                fontBold = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 11f, Font.BOLD);
             }catch(Exception e) {
                 e.printStackTrace();
                 font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
-                fontBold = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f, Font.BOLD);
+                fontBold = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 11f, Font.BOLD);
             }
         }
 
@@ -308,7 +313,7 @@ public class SalesOrderDetailPDFCreator {
                 bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
             }
         }
-        font = new Font(bf, 7.5f);
+        font = new Font(bf, 8.5f);
 
         document.add(new Phrase("\n"));
 
@@ -346,10 +351,10 @@ public class SalesOrderDetailPDFCreator {
             cell2.setUseVariableBorders(true);
             cell2.setBorderColorRight(BaseColor.LIGHT_GRAY);
             cell2.setBorderColorLeft(BaseColor.LIGHT_GRAY);
-            if (user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID) {
-                cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCode()), font));
-            }
             cell2.addElement(new Paragraph(line.getProduct().getName(), font));
+            if (user!=null && user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID) {
+                cell2.addElement(new Paragraph(ctx.getString(R.string.product_internalCode, line.getProduct().getInternalCodeMayoreoFormat()), font));
+            }
             cell2.addElement(new Paragraph(ctx.getString(R.string.brand_detail, line.getProduct().getProductBrand().getName()), font));
             table.addCell(cell2);
 
@@ -385,40 +390,40 @@ public class SalesOrderDetailPDFCreator {
             superTable.addCell(superTableCell);
         }
         document.add(superTable);
-        //document.add(new Phrase("\n"));
+        document.add(new Phrase("\n"));
     }
 
     private void addSalesOrderFooter(Document document, Context ctx, SalesOrder salesOrder) throws DocumentException, IOException {
         Font font;
         try{
-            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+            font = new Font(BaseFont.createFont("assets/fonts/Roboto-Regular.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED), 10f);
         }catch (Exception ex){
             ex.printStackTrace();
             try{
-                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 9f);
+                font = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.WINANSI, BaseFont.EMBEDDED), 10f);
             }catch(Exception e) {
                 e.printStackTrace();
-                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 9f);
+                font = new Font(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED), 10f);
             }
         }
 
-        PdfPTable salesOrderNumberTable = new PdfPTable(1);
-        salesOrderNumberTable.setWidths(new float[] {560f});
-        PdfPCell salesOrderNumberCell = new PdfPCell();
-        salesOrderNumberCell.setPadding(3);
-        salesOrderNumberCell.disableBorderSide(Rectangle.UNDEFINED);
-        salesOrderNumberCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_amount,
+        PdfPTable pdfPTable = new PdfPTable(1);
+        pdfPTable.setWidths(new float[] {560f});
+        PdfPCell pdfPCell = new PdfPCell();
+        pdfPCell.setPadding(3);
+        pdfPCell.disableBorderSide(Rectangle.UNDEFINED);
+        pdfPCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_sub_total_amount,
                 currency!=null ? currency.getName() : "",
                 salesOrder.getSubTotalAmountStringFormat()), font));
-        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_tax_amount,
                 currency!=null ? currency.getName() : "",
                 salesOrder.getTaxAmountStringFormat()), font));
-        salesOrderNumberCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_total_amount,
+        pdfPCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_total_amount,
                 currency!=null ? currency.getName() : "",
                 salesOrder.getTotalAmountStringFormat()), font));
-        salesOrderNumberTable.addCell(salesOrderNumberCell);
-        document.add(salesOrderNumberTable);
+        pdfPTable.addCell(pdfPCell);
+        document.add(pdfPTable);
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {

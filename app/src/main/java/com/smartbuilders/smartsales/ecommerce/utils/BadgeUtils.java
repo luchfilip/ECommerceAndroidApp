@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.preference.PreferenceManager;
 
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
-
 import java.util.List;
 
 /**
@@ -24,7 +22,7 @@ public class BadgeUtils {
         setBadgeSony(context, launcherClassName, count);
         setBadgeHTC(context, launcherClassName, count);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean("show_badge", true);
+        editor.putBoolean("show_badge", (count>0));
         editor.apply();
     }
 

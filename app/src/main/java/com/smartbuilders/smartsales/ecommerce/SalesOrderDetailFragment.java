@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
@@ -112,9 +114,13 @@ public class SalesOrderDetailFragment extends Fragment {
                             try {
                                 if (mSalesOrder != null) {
                                     if(mSalesOrder.getBusinessPartner()!=null){
-                                        ((TextView) view.findViewById(R.id.business_partner_name_textView))
-                                                .setText(getString(R.string.business_partner_name_detail, mSalesOrder.getBusinessPartner().getName()));
-                                        view.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
+                                        if (getActivity().findViewById(R.id.business_partner_name_container)!=null
+                                                && getActivity().findViewById(R.id.business_partner_name)!=null) {
+                                            ((TextView) getActivity().findViewById(R.id.business_partner_name))
+                                                    .setText(mSalesOrder.getBusinessPartner().getName());
+                                            getActivity().findViewById(R.id.business_partner_name_container)
+                                                    .setVisibility(View.VISIBLE);
+                                        }
                                     }
 
                                     Currency currency = (new CurrencyDB(getContext(), mUser))
@@ -175,13 +181,13 @@ public class SalesOrderDetailFragment extends Fragment {
                                                 }
                                             });
 
-                                    view.findViewById(R.id.share_button)
-                                            .setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    new CreateShareAndDownloadIntentThread(0).start();
-                                                }
-                                            });
+                                    //view.findViewById(R.id.share_button)
+                                    //        .setOnClickListener(new View.OnClickListener() {
+                                    //            @Override
+                                    //            public void onClick(View v) {
+                                    //                new CreateShareAndDownloadIntentThread(0).start();
+                                    //            }
+                                    //        });
                                 } else {
                                     //TODO: mostrar mensaje que no hay detalles para mostrar.
                                 }
@@ -229,6 +235,8 @@ public class SalesOrderDetailFragment extends Fragment {
         int i = item.getItemId();
         if (i == R.id.action_download) {
             new CreateShareAndDownloadIntentThread(1).start();
+        } else if (i == R.id.action_share) {
+            new CreateShareAndDownloadIntentThread(0).start();
         }
         return super.onOptionsItemSelected(item);
     }
