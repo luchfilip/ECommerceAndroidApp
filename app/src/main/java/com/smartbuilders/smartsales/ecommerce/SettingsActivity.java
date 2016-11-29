@@ -26,10 +26,13 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsOriginalImage;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 
@@ -37,6 +40,7 @@ import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.smartsales.ecommerce.services.LoadProductsThumbImage;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -346,18 +350,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         final Context context = preference.getContext();
-                        if((Boolean) newValue){
-                            //findPreference("sync_thumb_images").setSelectable(true);
-                            //TODO: setear el valor de sync_thumb_images en FALSE
-                        }else{
-                            //findPreference("sync_thumb_images").setSelectable(false);
+                        if(!((Boolean) newValue)){
                             context.stopService(new Intent(context, LoadProductsThumbImage.class));
                             new AlertDialog.Builder(context)
                                     .setMessage(R.string.clean_thumb_dir)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.deleteThumbImagesFolder(context);
+                                            if (Utils.deleteThumbImagesFolder(context)) {
+                                                Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -383,7 +387,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.deleteThumbImagesFolder(context);
+                                            if (Utils.deleteThumbImagesFolder(context)) {
+                                                Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -394,22 +402,53 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 });
 
+                findPreference("thumb_images_folder_info").setSummary(
+                        "Espacio total requerido: " + Parameter.getThumbImagesRequiredDiskSpace(getActivity(), mCurrentUser) + "\n" +
+                        "Espacio total utilizado: " + Utils.getFolderSize(new File(Utils.getImagesThumbFolderPath(getActivity()))));
+
+                findPreference("delete_thumb_images_folder").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        final Context context = preference.getContext();
+                        context.stopService(new Intent(context, LoadProductsThumbImage.class));
+                        new AlertDialog.Builder(context)
+                                .setMessage(R.string.clean_thumb_dir)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (Utils.deleteThumbImagesFolder(context)) {
+                                            Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            findPreference("thumb_images_folder_info").setSummary(
+                                                    "Espacio total requerido: " + Parameter.getThumbImagesRequiredDiskSpace(getActivity(), mCurrentUser) + "\n" +
+                                                    "Espacio total utilizado: " + Utils.getFolderSize(new File(Utils.getImagesThumbFolderPath(getActivity()))));
+                                        } else {
+                                            Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .setCancelable(false)
+                                .show();
+                        return true;
+                    }
+                });
+
                 findPreference("save_original_images_in_device").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         final Context context = preference.getContext();
-                        if((Boolean) newValue){
-                            //findPreference("sync_original_images").setSelectable(true);
-                            //TODO: setear el valor de sync_thumb_images en FALSE
-                        }else{
-                            //findPreference("sync_original_images").setSelectable(false);
+                        if(!((Boolean) newValue)){
                             context.stopService(new Intent(context, LoadProductsOriginalImage.class));
                             new AlertDialog.Builder(context)
                                     .setMessage(R.string.clean_original_dir)
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.deleteOriginalImagesFolder(context);
+                                            if (Utils.deleteOriginalImagesFolder(context)) {
+                                                Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
@@ -435,13 +474,48 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Utils.deleteOriginalImagesFolder(context);
+                                            if (Utils.deleteOriginalImagesFolder(context)) {
+                                                Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     })
                                     .setNegativeButton(R.string.no, null)
                                     .setCancelable(false)
                                     .show();
                         }
+                        return true;
+                    }
+                });
+
+                findPreference("original_images_folder_info").setSummary(
+                        "Espacio total requerido: " + Parameter.getOriginalImagesRequiredDiskSpace(getActivity(), mCurrentUser) + "\n" +
+                        "Espacio total utilizado: " + Utils.getFolderSize(new File(Utils.getImagesOriginalFolderPath(getActivity()))));
+
+                findPreference("delete_original_images_folder").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        final Context context = preference.getContext();
+                        context.stopService(new Intent(context, LoadProductsOriginalImage.class));
+                        new AlertDialog.Builder(context)
+                                .setMessage(R.string.clean_original_dir)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (Utils.deleteOriginalImagesFolder(context)) {
+                                            Toast.makeText(context, R.string.folder_removed_successfully, Toast.LENGTH_SHORT).show();
+                                            findPreference("original_images_folder_info").setSummary(
+                                                    "Espacio total requerido: " + Parameter.getOriginalImagesRequiredDiskSpace(getActivity(), mCurrentUser) + "\n" +
+                                                    "Espacio total utilizado: " + Utils.getFolderSize(new File(Utils.getImagesOriginalFolderPath(getActivity()))));
+                                        } else {
+                                            Toast.makeText(context, R.string.folder_was_not_removed, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .setCancelable(false)
+                                .show();
                         return true;
                     }
                 });

@@ -543,4 +543,9 @@
     <string name="clear_notifications_list_question">¿Desea eliminar el registro completo de notificaciones? Está operación no puede ser revertida</string>
     <string name="clear_shopping_cart">Limpiar Pedido Abierto</string>
     <string name="clear_shopping_cart_notifications">¿Desea eliminar todos los artículos del Pedido Abierto? Esta operación no se puede revertir</string>
+    <string name="folder_removed_successfully">Fichero eliminado exitosamente</string>
+    <string name="folder_was_not_removed">El fichero no pudo ser eliminado</string>
+    <string name="images_folder_info">Información del fichero de imágenes</string>
+    <string name="delete_images_folder">Eliminar fichero de imágenes</string>
+    <string name="recovery_disk_space_explanation">Se puede recuperar espacio en disco eliminando el fichero de las imágenes almácenadas</string>
 </resources>

@@ -42,6 +42,15 @@
             android:summaryOff="@string/load_thumb_images_summaryOff"
             android:summaryOn="@string/load_thumb_images_summaryOn" />
 
+        <Preference
+            android:title="@string/images_folder_info"
+            android:key="thumb_images_folder_info" />
+
+        <Preference
+            android:title="@string/delete_images_folder"
+            android:key="delete_thumb_images_folder"
+            android:summary="@string/recovery_disk_space_explanation"
+            android:icon="@drawable/ic_delete_forever_black_24dp"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -63,6 +72,15 @@
             android:summaryOff="@string/load_original_images_summaryOff"
             android:summaryOn="@string/load_original_images_summaryOn" />
 
+        <Preference
+            android:title="@string/images_folder_info"
+            android:key="original_images_folder_info" />
+
+        <Preference
+            android:title="@string/delete_images_folder"
+            android:key="delete_original_images_folder"
+            android:summary="@string/recovery_disk_space_explanation"
+            android:icon="@drawable/ic_delete_forever_black_24dp"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -81,6 +81,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -1372,20 +1373,55 @@ public class Utils {
         }
     }
 
-    public static void deleteThumbImagesFolder(Context context) {
+    public static boolean deleteThumbImagesFolder(Context context) {
         try {
-            (new File(Utils.getImagesThumbFolderPath(context))).delete();
+            return delete(new File(Utils.getImagesThumbFolderPath(context)));
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void deleteOriginalImagesFolder(Context context) {
+    public static boolean deleteOriginalImagesFolder(Context context) {
         try {
-            (new File (Utils.getImagesOriginalFolderPath(context))).delete();
+            return delete(new File(Utils.getImagesOriginalFolderPath(context)));
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+    }
+
+    private static boolean delete(File fileOrFolder) {
+        boolean result = true;
+        if(fileOrFolder.isDirectory()) {
+            for (File file : fileOrFolder.listFiles()) {
+                result = result && delete(file);
+            }
+        }
+        result = result && fileOrFolder.delete();
+        return result;
+    }
+
+    private static long getSize(File file) {
+        long size;
+        if (file.isDirectory()) {
+            size = 0;
+            for (File child : file.listFiles()) {
+                size += getSize(child);
+            }
+        } else {
+            size = file.length();
+        }
+        return size;
+    }
+
+    public static String getFolderSize(File file) {
+        long size = getSize(file);
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups))
+                + " " + units[digitGroups];
     }
 
     private static boolean saveImagesInDevice(Context context){

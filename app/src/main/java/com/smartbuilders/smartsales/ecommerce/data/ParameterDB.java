@@ -36,6 +36,8 @@ public class ParameterDB {
     public static final int REPORT_ERROR_EMAIL = 11;
     public static final int SHOW_PRODUCT_IMAGES = 12;
     public static final int IS_ACTIVE_ORDER_TRACKING = 13;
+    public static final int THUMB_IMAGES_REQUIRED_DISK_SPACE = 14;
+    public static final int ORIGINAL_IMAGES_REQUIRED_DISK_SPACE = 15;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
