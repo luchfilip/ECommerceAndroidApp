@@ -26,8 +26,6 @@ import android.text.TextUtils;
  */
 public class IdsComServerAuthenticator implements ServerAuthenticate {
 
-	private static final String TAG = IdsComServerAuthenticator.class.getSimpleName();
-
     @Override
     public void userSignUp(User user, String authType, Context ctx) throws Exception {
     	try {

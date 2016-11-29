@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 20;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -594,6 +594,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " CREATE_TIME DATETIME DEFAULT NULL)";
 
+    private static final String CREATE_SALES_REP =
+            "CREATE TABLE IF NOT EXISTS SALES_REP (" +
+                    "SALES_REP_ID INTEGER NOT NULL, " +
+                    " USER_ID INTEGER NOT NULL, " +
+                    " NAME TEXT DEFAULT NULL, " +
+                    " DESCRIPTION TEXT DEFAULT NULL, " +
+                    " INTERNAL_CODE VARCHAR(128) NOT NULL, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
+                    " PRIMARY KEY (SALES_REP_ID, USER_ID))";
+
 	/**
 	 * 
 	 * @param context
@@ -667,6 +678,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_ORDER_TRACKING_STATE);
             db.execSQL(CREATE_ORDER_TRACKING);
             db.execSQL(CREATE_NOTIFICATION_HISTORY);
+            db.execSQL(CREATE_SALES_REP);
 		}
 	}
 
@@ -828,6 +840,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL(CREATE_NOTIFICATION_HISTORY);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion < 20) {
+                try {
+                    db.execSQL(CREATE_SALES_REP);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
