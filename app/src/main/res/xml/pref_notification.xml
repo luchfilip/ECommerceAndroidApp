@@ -26,7 +26,7 @@
 
 
     <PreferenceCategory
-        android:key="category_notify_decrement_availabilities_wish_list"
+        android:key="category_notify_new_order_tracking"
         android:title="@string/pref_title_new_order_tracking_notifications">
 
         <!-- A 'parent' preference, which enables/disables child preferences (below)
@@ -38,7 +38,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="category_notifications_behavor"
+        android:key="category_notifications_behavior"
         android:title="@string/pref_title_ringtone_and_vibrate">
 
         <!-- Allows the user to choose a ringtone in the 'notification' category. -->

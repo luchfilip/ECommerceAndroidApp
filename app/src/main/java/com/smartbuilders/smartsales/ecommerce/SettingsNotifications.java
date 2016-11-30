@@ -14,6 +14,9 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+
 /**
  * Created by AlbertoSarco on 12/11/2016.
  */
@@ -35,6 +38,14 @@ public class SettingsNotifications extends AppCompatPreferenceActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (!Parameter.isActiveOrderTracking(this, Utils.getCurrentUser(this))) {
+            try {
+                getPreferenceScreen().removePreference(findPreference("category_notify_new_order_tracking"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
