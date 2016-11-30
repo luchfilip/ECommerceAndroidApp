@@ -166,8 +166,8 @@ public class OrderLineDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, SEQUENCE_ID = 0 " +
-                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
-                    new String[]{"N", String.valueOf(id), String.valueOf(mUser.getServerUserId())});
+                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0) AND DOC_TYPE <> ?",
+                    new String[]{"N", String.valueOf(id), String.valueOf(mUser.getServerUserId()), FINALIZED_ORDER_DOC_TYPE});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }

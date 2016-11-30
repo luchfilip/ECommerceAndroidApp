@@ -149,8 +149,8 @@ public class OrderDB {
                                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                                 .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                                         null,
-                                        "DELETE FROM ECOMMERCE_ORDER WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
-                                        new String[]{String.valueOf(orderId), String.valueOf(mUser.getServerUserId())});
+                                        "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ? WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
+                                        new String[]{"N", String.valueOf(orderId), String.valueOf(mUser.getServerUserId())});
                         if(rowsAffected <= 0){
                             return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
                         }
@@ -311,8 +311,8 @@ public class OrderDB {
             //se elimina primero la cabecera porque sin cabecera no sirven de nada las lineas
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                             null,
                             "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                                     " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
@@ -322,8 +322,9 @@ public class OrderDB {
             //se eliminan las lineas del pedido
             rowsAffected += mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            //.appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
+                            .build(),
                             null,
                             "UPDATE ECOMMERCE_ORDER_LINE SET IS_ACTIVE = ?, UPDATE_TIME = ?, SEQUENCE_ID = 0 " +
                                     " WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
