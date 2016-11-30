@@ -33,10 +33,11 @@ public class BusinessPartnerDB {
                     "select bp.BUSINESS_PARTNER_ID, bp.NAME, bp.COMMERCIAL_NAME, bp.TAX_ID, bp.ADDRESS, " +
                         " bp.CONTACT_PERSON, bp.EMAIL_ADDRESS, bp.PHONE_NUMBER, bp.INTERNAL_CODE " +
                     " from BUSINESS_PARTNER bp " +
-                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = ? and ubp.is_active = ? " +
+                        " inner join SALES_REP SR ON SR.USER_ID = ? AND SR.IS_ACTIVE = ? " +
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = SR.sales_rep_id and ubp.is_active = ? " +
                     " where bp.IS_ACTIVE = ? " +
                     " order by bp.BUSINESS_PARTNER_ID desc",
-                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y"}, null);
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y", "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     BusinessPartner businessPartner = new BusinessPartner();
@@ -80,9 +81,10 @@ public class BusinessPartnerDB {
                     "select bp.NAME, bp.COMMERCIAL_NAME, bp.TAX_ID, bp.ADDRESS, " +
                         " bp.CONTACT_PERSON, bp.EMAIL_ADDRESS, bp.PHONE_NUMBER, bp.INTERNAL_CODE " +
                     " from BUSINESS_PARTNER bp " +
-                            " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = ? and ubp.is_active = ? " +
+                        " inner join SALES_REP SR ON SR.USER_ID = ? AND SR.IS_ACTIVE = ? " +
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = SR.sales_rep_id and ubp.is_active = ? " +
                     " where bp.BUSINESS_PARTNER_ID = ? AND bp.IS_ACTIVE = ?",
-                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", String.valueOf(businessPartnerId), "Y"},
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y", String.valueOf(businessPartnerId), "Y"},
                     null);
             if(c!=null && c.moveToNext()){
                 BusinessPartner businessPartner = new BusinessPartner();
@@ -121,9 +123,10 @@ public class BusinessPartnerDB {
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
                     "select MAX(bp.BUSINESS_PARTNER_ID) from BUSINESS_PARTNER bp " +
-                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = ? and ubp.is_active = ? " +
+                        " inner join SALES_REP SR ON SR.USER_ID = ? AND SR.IS_ACTIVE = ? " +
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = SR.sales_rep_id and ubp.is_active = ? " +
                     " where  bp.IS_ACTIVE = ? ",
-                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y"}, null);
+                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y", "Y"}, null);
             if(c!=null && c.moveToNext()){
                 return c.getInt(0);
             }

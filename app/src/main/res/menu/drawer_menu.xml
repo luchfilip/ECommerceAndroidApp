@@ -7,6 +7,10 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/home" />
+        <item
+            android:id="@+id/nav_my_company"
+            android:icon="@drawable/ic_business_black_24dp"
+            android:title="@string/my_company" />
     </group>
     <group
         android:id="@+id/menu_1">
@@ -15,7 +19,6 @@
             android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/notificationHistories"
             app:actionLayout="@layout/unread_items"/>
-
         <item
             android:id="@+id/nav_wish_list"
             android:icon="@drawable/ic_favorite_black_24dp"
@@ -35,7 +38,7 @@
             android:icon="@drawable/ic_supervisor_account_black_24dp"
             android:title="@string/business_partners" />
     </group>
-    <item android:title="@string/my_purchases">
+    <item android:title="@string/my_orders">
         <menu>
             <item
                 android:id="@+id/nav_shopping_cart"
@@ -56,7 +59,7 @@
             <item
                 android:id="@+id/nav_shopping_sale"
                 android:icon="@drawable/ic_shopping_cart_black_24dp"
-                android:title="@string/open_shopping_sales" />
+                android:title="@string/open_shopping_sale" />
             <item
                 android:id="@+id/nav_sales_orders"
                 android:icon="@drawable/ic_view_list_black_24dp"
@@ -71,42 +74,32 @@
                 android:title="@string/contact_us" />
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_share_black_24dp"
                 android:title="@string/invite" />
         </menu>
     </item>
-    <!--<item android:title="@string/value_us">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_value_us"-->
-                <!--android:icon="@drawable/google_play_icon"-->
-                <!--android:title="@string/google_play" />-->
-        <!--</menu>-->
-    <!--</item>-->
     <item android:title="@string/action_setting">
         <menu>
             <item
-                android:id="@+id/nav_my_company"
-                android:icon="@drawable/ic_business_black_24dp"
-                android:title="@string/my_company" />
+                android:id="@+id/nav_data_sync_settings"
+                android:icon="@drawable/ic_sync_black_24dp"
+                android:title="@string/data_sync" />
             <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/settings" />
+                android:id="@+id/nav_images_settings"
+                android:icon="@drawable/ic_photo_library_black_24dp"
+                android:title="@string/settings_images_management" />
+        </menu>
+    </item>
+    <item android:title="@string/help">
+        <menu>
+            <item
+                android:id="@+id/nav_welcome_message"
+                android:icon="@drawable/ic_burst_mode_black_24dp"
+                android:title="@string/welcome_message" />
             <item
                 android:id="@+id/nav_report_error"
                 android:icon="@drawable/ic_report_problem_black_24dp"
                 android:title="@string/report_error" />
         </menu>
     </item>
-
-    <item android:title="@string/help">
-        <menu>
-            <item
-                android:id="@+id/nav_welcome_message"
-                android:icon="@android:drawable/ic_menu_help"
-                android:title="@string/welcome_message" />
-        </menu>
-    </item>
-
 </menu>

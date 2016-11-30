@@ -42,6 +42,8 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
+import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
+import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
@@ -62,7 +64,6 @@ import com.smartbuilders.smartsales.ecommerce.ShoppingSaleActivity;
 import com.smartbuilders.smartsales.ecommerce.ShoppingSalesListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
-import com.smartbuilders.smartsales.ecommerce.SettingsActivity;
 import com.smartbuilders.smartsales.ecommerce.ShoppingCartActivity;
 import com.smartbuilders.smartsales.ecommerce.WishListActivity;
 import com.smartbuilders.smartsales.ecommerce.data.OrderLineDB;
@@ -910,8 +911,11 @@ public class Utils {
                 activity.startActivity(new Intent(activity, SalesOrdersListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
-            } else if (itemId == R.id.nav_settings) {
-                activity.startActivity(new Intent(activity, SettingsActivity.class));
+            } else if (itemId == R.id.nav_data_sync_settings) {
+                activity.startActivity(new Intent(activity, SettingsDataSync.class));
+
+            } else if (itemId == R.id.nav_images_settings) {
+                activity.startActivity(new Intent(activity, SettingsImagesManagement.class));
 
             } else if (itemId == R.id.nav_business_partners) {
                 activity.startActivity(new Intent(activity, BusinessPartnersListActivity.class)
@@ -980,16 +984,16 @@ public class Utils {
 
         NavigationView navigationView = (NavigationView) activity.findViewById(R.id.nav_view);
         if(navigationView!=null && user!=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM){
-                navigationView.inflateMenu(R.menu.sales_force_system_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.business_partner_drawer_menu);
-            }else if(user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                navigationView.inflateMenu(R.menu.sales_man_drawer_menu);
+            navigationView.inflateMenu(R.menu.drawer_menu);
+            if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                navigationView.getMenu().findItem(R.id.nav_my_company).setVisible(false);
             }
             if (!Parameter.isActiveOrderTracking(activity, user) && navigationView.getMenu()!=null
                     && navigationView.getMenu().findItem(R.id.nav_orders_tracking)!=null) {
                 navigationView.getMenu().findItem(R.id.nav_orders_tracking).setVisible(false);
+            }
+            if (!TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
+                navigationView.getMenu().findItem(R.id.nav_data_sync_settings).setVisible(false);
             }
             navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))

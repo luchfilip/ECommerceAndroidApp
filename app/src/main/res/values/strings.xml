@@ -205,7 +205,7 @@
     <string name="title_activity_settings">Configuraciones</string>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Datos &amp; sincronización</string>
+    <string name="data_sync">Datos &amp; Sincronización</string>
 
     <string name="pref_title_sync_frequency">Frecuencia de sincronización</string>
     <string-array name="pref_sync_frequency_titles">
@@ -534,6 +534,7 @@
     <string name="sending_order">Enviando Pedido...</string>
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
     <string name="notificationHistories">Notificaciones</string>
+    <string name="settings_images_management">Manejo de Imágenes</string>
     <string name="skip">SALTAR</string>
     <string name="pref_summary_notify">Mostrar notificación y guardar en el listado de las notificaciones</string>
     <string name="undo">DESHACER</string>

@@ -9,8 +9,8 @@ android {
         applicationId "com.smartbuilders.smartsales.ecommerce"
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.11.1"
+        versionCode 30
+        versionName "1.12"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -52,7 +52,7 @@ android {
             applicationId "com.smartbuilders.smartsales.ecommerce.febeca"
             minSdkVersion 10
             targetSdkVersion 24
-            versionCode 29
+            //versionCode 30
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
@@ -80,7 +80,7 @@ android {
             applicationId "com.smartbuilders.smartsales.ecommerce.sillaca"
             minSdkVersion 10
             targetSdkVersion 24
-            versionCode 27
+            //versionCode 30
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
@@ -106,8 +106,8 @@ android {
         beval {
             applicationId "com.smartbuilders.smartsales.ecommerce.beval"
             minSdkVersion 10
-            targetSdkVersion 24
-            versionCode 1
+            targetSdkVersion 30
+            //versionCode 1
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
@@ -134,7 +134,7 @@ android {
             applicationId "com.smartbuilders.synchronizer.ids"
             minSdkVersion 10
             targetSdkVersion 24
-            versionCode 1
+            //versionCode 1
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
@@ -161,7 +161,7 @@ android {
             applicationId "com.smartbuilders.smartsales.ecommerce.gruporivera"
             minSdkVersion 10
             targetSdkVersion 24
-            versionCode 1
+            //versionCode 1
 
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE

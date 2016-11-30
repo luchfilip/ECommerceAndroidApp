@@ -279,9 +279,6 @@
         <activity
             android:name=".SalesOrdersListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
         <activity android:name=".ZoomImageActivity" />
         <activity
             android:name=".BusinessPartnersListActivity"
@@ -355,6 +352,12 @@
         <activity
             android:name=".SettingsNotifications"
             android:label="@string/notificationHistories"/>
+        <activity
+            android:name=".SettingsImagesManagement"
+            android:label="@string/settings_images_management"/>
+        <activity
+            android:name=".SettingsDataSync"
+            android:label="@string/data_sync"/>
     </application>
 
 </manifest>

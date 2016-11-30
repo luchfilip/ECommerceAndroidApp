@@ -113,7 +113,7 @@ public class Parameter {
      */
     public static boolean showProductRatingBar(Context context, User user){
         return !BuildConfig.IS_SALES_FORCE_SYSTEM
-                && ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_RATING_BAR, true);
+                && ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_RATING_BAR, false);
     }
 
     /**
@@ -232,5 +232,13 @@ public class Parameter {
      */
     public static boolean showTotalLineAmountInOrderLine(Context context, User user) {
         return false;
+    }
+
+    public static String getThumbImagesRequiredDiskSpace(Context context, User user) {
+        return ParameterDB.getParameterStringValue(context, user, ParameterDB.THUMB_IMAGES_REQUIRED_DISK_SPACE, "no calculado");
+    }
+
+    public static String getOriginalImagesRequiredDiskSpace(Context context, User user) {
+        return ParameterDB.getParameterStringValue(context, user, ParameterDB.ORIGINAL_IMAGES_REQUIRED_DISK_SPACE, "no calculado");
     }
 }
