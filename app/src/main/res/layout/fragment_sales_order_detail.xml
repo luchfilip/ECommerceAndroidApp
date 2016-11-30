@@ -73,10 +73,11 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:gravity="bottom">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -119,10 +120,11 @@
 
             <Button
                 style="@style/MainButtonAppTheme"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/create_order"
-                android:id="@+id/create_order_button" />
+                android:id="@+id/create_order_button"
+                android:layout_margin="0dp" />
         </LinearLayout>
     </LinearLayout>
 

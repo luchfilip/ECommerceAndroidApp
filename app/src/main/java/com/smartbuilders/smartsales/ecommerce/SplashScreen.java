@@ -23,6 +23,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.utils.UtilsGetDataFromDB;
+import com.smartbuilders.smartsales.ecommerce.utils.UtilsSyncData;
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
 import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -31,6 +33,8 @@ import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+
+import org.codehaus.jettison.json.JSONObject;
 
 import java.util.List;
 
@@ -385,6 +389,16 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void initApp(){
+        //TODO: eliminar en el release siguiente a la version 30
+        if (mUser!=null && UtilsGetDataFromDB.getCountFromTableName(this, mUser, "SALES_REP")<=0) {
+            try {
+                JSONObject tablesToSync = new JSONObject();
+                tablesToSync.put("1", "SALES_REP");
+                UtilsSyncData.requestSyncByTableName(this, mUser, tablesToSync.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
         findViewById(R.id.progressContainer).setVisibility(View.GONE);
         if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
