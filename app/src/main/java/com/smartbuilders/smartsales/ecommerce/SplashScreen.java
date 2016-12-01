@@ -137,10 +137,21 @@ public class SplashScreen extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (Float.valueOf(mProgressPercentage) >= 100) {
+        float progressPercentage = 0;
+        try {
+            progressPercentage = Float.valueOf(mProgressPercentage);
+        } catch (NumberFormatException e) {
+            try {
+                progressPercentage = Float.valueOf(mProgressPercentage.replaceAll(",", "."));
+            } catch (Exception e2) {
+                //do nothing
+            }
+        }
+        if (progressPercentage >= 100) {
             initApp();
         } else {
-            mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
+            mProgressPercentageTextView.setText(getString(R.string.progress_percentage,
+                    ApplicationUtilities.formatFloatTwoDecimals(progressPercentage)));
             checkPermission();
         }
         super.onStart();
@@ -151,7 +162,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        float progressPercentage = 0;
+        //float progressPercentage = 0;
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_SYNCHRONIZATION_STATE)) {
@@ -159,11 +170,11 @@ public class SplashScreen extends AppCompatActivity {
             }
             if (savedInstanceState.containsKey(STATE_SYNC_PROGRESS_PERCENTAGE)) {
                 mProgressPercentage = savedInstanceState.getString(STATE_SYNC_PROGRESS_PERCENTAGE);
-                try {
-                    progressPercentage = Float.valueOf(mProgressPercentage);
-                } catch (Exception e) {
-                    //do nothing
-                }
+                //try {
+                //    progressPercentage = Float.valueOf(mProgressPercentage);
+                //} catch (Exception e) {
+                //    //do nothing
+                //}
             }
         }
 
