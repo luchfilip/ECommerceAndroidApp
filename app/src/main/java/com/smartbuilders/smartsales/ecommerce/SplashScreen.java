@@ -140,7 +140,7 @@ public class SplashScreen extends AppCompatActivity {
         float progressPercentage = 0;
         try {
             progressPercentage = Float.valueOf(mProgressPercentage);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             try {
                 progressPercentage = Float.valueOf(mProgressPercentage.replaceAll(",", "."));
             } catch (Exception e2) {
