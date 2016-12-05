@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.businessRules.OrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -160,6 +161,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         }
 
         if (mIsManagePriceInOrder) {
+            //esto es para que se use el precio actual del producto
+            OrderLineBR.fillOrderLine(mDataset.get(position).getQuantityOrdered(),
+                    mDataset.get(position).getProduct(), mDataset.get(position));
+
             if (mShowProductPrice) {
                 //holder.productPrice.setText(mContext.getString(R.string.price_detail,
                 //        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),

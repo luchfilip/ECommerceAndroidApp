@@ -168,6 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
+                android:visibility="gone"
                 android:id="@+id/go_to_finalize_options_button"
                 android:layout_gravity="bottom|right"
                 android:layout_marginTop="2dp"

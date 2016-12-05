@@ -96,11 +96,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/sales_order_number_textView"
-                android:visibility="gone"
                 android:textColor="@color/black"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -152,6 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/next"
+                    android:visibility="gone"
                     android:id="@+id/go_to_finalize_options_button"
                     android:layout_gravity="bottom|right" />
             </LinearLayout>

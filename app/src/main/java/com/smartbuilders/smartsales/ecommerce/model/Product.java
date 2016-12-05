@@ -236,7 +236,7 @@ public class Product extends Model implements Parcelable, Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Product clone() throws CloneNotSupportedException {
+        return (Product) super.clone();
     }
 }

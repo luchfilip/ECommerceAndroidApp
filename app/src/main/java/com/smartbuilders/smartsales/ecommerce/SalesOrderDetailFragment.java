@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrderLineAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
@@ -181,13 +179,6 @@ public class SalesOrderDetailFragment extends Fragment {
                                                 }
                                             });
 
-                                    //view.findViewById(R.id.share_button)
-                                    //        .setOnClickListener(new View.OnClickListener() {
-                                    //            @Override
-                                    //            public void onClick(View v) {
-                                    //                new CreateShareAndDownloadIntentThread(0).start();
-                                    //            }
-                                    //        });
                                 } else {
                                     //TODO: mostrar mensaje que no hay detalles para mostrar.
                                 }

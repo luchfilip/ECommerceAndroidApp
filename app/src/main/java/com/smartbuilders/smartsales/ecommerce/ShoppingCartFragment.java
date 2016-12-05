@@ -524,7 +524,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);
 
-                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        if (mSalesOrderInfoSeparator!=null) {
+                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        }
                     }
                 //}
             } else if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
@@ -539,7 +541,9 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                         mSalesOrderNumber.setText(getString(R.string.sales_order_number, salesOrder.getSalesOrderNumber()));
                         mSalesOrderNumber.setVisibility(View.VISIBLE);
 
-                        mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        if (mSalesOrderInfoSeparator!=null) {
+                            mSalesOrderInfoSeparator.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
@@ -577,6 +581,7 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
 
     @Override
     public void reloadShoppingCart(){
+        OrderBR.validateQuantityOrderedInOrderLines(getContext(), mUser, mShoppingCartAdapter.getData());
         mShoppingCartAdapter.notifyDataSetChanged();
         reloadShoppingCart(null, false);
     }

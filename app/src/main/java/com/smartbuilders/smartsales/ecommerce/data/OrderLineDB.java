@@ -35,7 +35,7 @@ public class OrderLineDB {
         return addOrderLine(orderLine, FINALIZED_ORDER_DOC_TYPE, orderId);
     }
 
-    public String addOrderLineToShoppingCart(OrderLine orderLine){
+    public String addOrderLineToShoppingCart(OrderLine orderLine) {
         return addOrderLine(orderLine, SHOPPING_CART_DOC_TYPE, null);
     }
 

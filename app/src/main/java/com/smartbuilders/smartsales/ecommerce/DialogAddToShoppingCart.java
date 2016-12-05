@@ -108,8 +108,11 @@ public class DialogAddToShoppingCart extends DialogFragment {
                                 mProduct);
 
                         OrderLine orderLine = new OrderLine();
-                        OrderLineBR.fillOrderLine(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
-                                mProduct, orderLine);
+                        orderLine.setProductId(mProduct.getId());
+                        orderLine.setProduct(mProduct);
+                        orderLine.setQuantityOrdered(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()));
+                        //OrderLineBR.fillOrderLine(Integer.valueOf(((EditText) view.findViewById(R.id.qty_requested_editText)).getText().toString()),
+                        //        mProduct, orderLine);
                         orderLine.setBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
 
                         String result = (new OrderLineDB(getContext(), mUser)).addOrderLineToShoppingCart(orderLine);
