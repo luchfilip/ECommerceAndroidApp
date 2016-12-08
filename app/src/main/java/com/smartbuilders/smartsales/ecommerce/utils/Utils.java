@@ -1281,7 +1281,8 @@ public class Utils {
                 return PreferenceManager.getDefaultSharedPreferences(context)
                         .getInt(BusinessPartner.CURRENT_APP_BP_ID_SHARED_PREFS_KEY, 0);
             } else if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                return user.getServerUserId();
+                //return user.getServerUserId();
+                return (new BusinessPartnerDB(context, user)).getMaxActiveBusinessPartnerId();
             } else {
                 throw new Exception("UserProfileId no identificado.");
             }
