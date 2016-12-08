@@ -257,7 +257,9 @@ public class SalesOrderDetailPDFCreator {
         salesOrderDataCell.disableBorderSide(Rectangle.UNDEFINED);
         salesOrderDataCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_date, salesOrder.getCreatedStringFormat()), font));
-        salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, salesOrder.getValidToStringFormat()), font));
+        if (salesOrder.getValidToStringFormat()!=null) {
+            salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.sales_order_valid_to, salesOrder.getValidToStringFormat()), font));
+        }
         if(!TextUtils.isEmpty(userCompany.getContactPerson())) {
             salesOrderDataCell.addElement(new Paragraph(ctx.getString(R.string.contact_person_detail, userCompany.getContactPerson()), font));
         }else{
@@ -466,6 +468,10 @@ public class SalesOrderDetailPDFCreator {
         if (!TextUtils.isEmpty(userCompany.getName())) {
             ((TextView) view.findViewById(R.id.company_name)).setText(userCompany.getName());
             ((TextView) view.findViewById(R.id.company_name)).setTypeface(typefaceBold);
+        }
+        if (!TextUtils.isEmpty(userCompany.getTaxId())) {
+            ((TextView) view.findViewById(R.id.company_tax_id)).setText(userCompany.getTaxId());
+            ((TextView) view.findViewById(R.id.company_tax_id)).setTypeface(typefaceBold);
         }
         if (!TextUtils.isEmpty(userCompany.getAddress())) {
             ((TextView) view.findViewById(R.id.company_address)).setText(userCompany.getAddress());
