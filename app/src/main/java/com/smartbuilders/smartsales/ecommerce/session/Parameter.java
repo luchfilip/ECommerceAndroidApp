@@ -261,7 +261,7 @@ public class Parameter {
      * @return
      */
     public static boolean showProductPriceInShareProductCard(Context context, User user) {
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_SHARE_PRODUCT_CARD, false);
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_SHARE_PRODUCT_CARD, true);
     }
 
     /**
@@ -271,7 +271,7 @@ public class Parameter {
      * @return
      */
     public static boolean showProductPriceInWishListPdf(Context context, User user) {
-        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_WISH_LIST_PDF, false);
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_WISH_LIST_PDF, true);
     }
 
     /**
