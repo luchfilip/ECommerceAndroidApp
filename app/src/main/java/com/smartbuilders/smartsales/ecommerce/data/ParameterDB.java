@@ -41,6 +41,7 @@ public class ParameterDB {
     public static final int SHOW_PRICE_IN_SHARE_PRODUCT_CARD = 16;
     public static final int SHOW_PRICE_IN_WISH_LIST_PDF = 17;
     public static final int SHOW_PRICE_IN_RECOMMENDED_PRODUCTS_PDF = 18;
+    public static final int SHOW_PRODUCTS_WITHOUT_AVAILABILITY = 19;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER
@@ -141,8 +142,8 @@ public class ParameterDB {
             c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                             .build(), null,
-                    "SELECT "+tableColumn+" FROM USER_APP_PARAMETER WHERE USER_ID=? AND APP_PARAMETER_ID=? AND IS_ACTIVE=?" ,
-                    new String[]{String.valueOf(user.getUserId()), String.valueOf(parameterId), "Y"}, null);
+                    "SELECT "+tableColumn+" FROM USER_APP_PARAMETER WHERE APP_PARAMETER_ID=? AND USER_ID=? AND IS_ACTIVE=?" ,
+                    new String[]{String.valueOf(parameterId), String.valueOf(user.getUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 result = c.getString(0);
                 paramFound = true;

@@ -283,4 +283,14 @@ public class Parameter {
     public static boolean showProductPriceInRecommendedProductsPdf(Context context, User user) {
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_RECOMMENDED_PRODUCTS_PDF, true);
     }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductsWithoutAvailability(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRODUCTS_WITHOUT_AVAILABILITY, false);
+    }
 }

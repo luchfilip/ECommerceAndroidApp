@@ -222,7 +222,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 holder.productPrice.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
+            holder.productPrice.setVisibility((mMask!=MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

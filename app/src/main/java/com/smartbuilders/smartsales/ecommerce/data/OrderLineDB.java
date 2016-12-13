@@ -540,7 +540,7 @@ public class OrderLineDB {
                     "UPDATE ECOMMERCE_ORDER_LINE SET UPDATE_TIME = ?, " +
                         " QTY_REQUESTED = (SELECT CASE WHEN SUM(AVAILABILITY) IS NULL THEN 0 ELSE SUM(AVAILABILITY) END AS AVAILABILITY " +
                                             " FROM PRODUCT_PRICE_AVAILABILITY WHERE PRODUCT_PRICE_ID = ? AND PRODUCT_ID = ECOMMERCE_ORDER_LINE.PRODUCT_ID AND IS_ACTIVE='Y'), " +
-                        " SEQUENCE_ID = 0 " +
+                        //" SEQUENCE_ID = 0 " +
                     " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
                     new String[]{DateFormat.getCurrentDateTimeSQLFormat(), "0",
                             String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});

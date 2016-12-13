@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
@@ -16,10 +17,12 @@ public class ProductSubCategoryDB {
 
     private Context context;
     private User mUser;
+    private boolean mShowProductsWithoutAvailability;
 
     public ProductSubCategoryDB(Context context, User user){
         this.context = context;
         this.mUser = user;
+        this.mShowProductsWithoutAvailability = Parameter.showProductsWithoutAvailability(context, user);
     }
 
     public ProductSubCategory getProductSubCategory(int subCategoryId){
@@ -64,8 +67,8 @@ public class ProductSubCategoryDB {
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = ? " +
+                        (mShowProductsWithoutAvailability ? " LEFT " : " INNER ") + " JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
                     " WHERE S.CATEGORY_ID = ? AND S.IS_ACTIVE = ? " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " ORDER BY S.NAME ASC",
