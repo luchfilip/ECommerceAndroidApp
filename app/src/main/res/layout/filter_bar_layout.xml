@@ -8,6 +8,8 @@
     android:layout_gravity="center_vertical"
     android:id="@+id/filter_bar_linear_layout"
     android:baselineAligned="false"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:background="@color/app_bar_background_color">
 
     <LinearLayout
@@ -49,7 +51,6 @@
                 android:layout_marginBottom="2dp"
                 android:inputType="text"
                 android:id="@+id/filter_product_editText"
-                android:focusable="false"
                 android:padding="2dp" />
 
             <ImageView

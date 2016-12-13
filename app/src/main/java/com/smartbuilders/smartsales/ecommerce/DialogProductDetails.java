@@ -90,7 +90,9 @@ public class DialogProductDetails extends DialogFragment {
             view.findViewById(R.id.product_image).setVisibility(View.GONE);
         }
 
-        if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+        if (Parameter.isManagePriceInOrder(getContext(), mUser)
+                && mProduct.getProductPriceAvailability().getAvailability()>0
+                && mProduct.getProductPriceAvailability().getPrice()>0) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_total_price)).setText(getString(R.string.product_total_price_detail,
                         mProduct.getProductPriceAvailability().getCurrency().getName(),

@@ -102,13 +102,13 @@ public class OrderLineDB {
         return getOrderLines(docType, orderId, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
     }
 
-    public int moveShoppingCartToFinalizedOrderByOrderId(int businessPartnerId, int orderId) {
-        return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_ORDER_DOC_TYPE, SHOPPING_CART_DOC_TYPE);
-    }
+    //public int moveShoppingCartToFinalizedOrderByOrderId(int businessPartnerId, int orderId) {
+    //    return moveOrderLinesToOrderByOrderId(businessPartnerId, orderId, FINALIZED_ORDER_DOC_TYPE, SHOPPING_CART_DOC_TYPE);
+    //}
 
-    public int getActiveShoppingCartLinesNumber() throws Exception {
-        return getActiveOrderLinesNumber(SHOPPING_CART_DOC_TYPE, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
-    }
+    //public int getActiveShoppingCartLinesNumber() throws Exception {
+    //    return getActiveOrderLinesNumber(SHOPPING_CART_DOC_TYPE, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+    //}
 
     public int getActiveWishListLinesNumber(){
         return getActiveOrderLinesNumber(WISH_LIST_DOC_TYPE, null);
@@ -148,6 +148,34 @@ public class OrderLineDB {
                             String.valueOf(orderLine.getLineTaxAmount()), String.valueOf(orderLine.getSubTotalLineAmount()),
                             String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(),
                             String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()), SHOPPING_CART_DOC_TYPE});
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    public String moveOrderLineToFinalizedOrder(OrderLine orderLine, int orderId){
+        try {
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                    null,
+                    "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, QTY_REQUESTED = ?, SALES_PRICE = ?, " +
+                            " TAX_PERCENTAGE = ?, TAX_AMOUNT = ?, SUB_TOTAL_LINE = ?, TOTAL_LINE = ?, " +
+                            " UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
+                            " WHERE ECOMMERCE_ORDER_LINE_ID = ? AND USER_ID = ? " +
+                            " AND BUSINESS_PARTNER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                            " AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
+                    new String[]{String.valueOf(orderId), String.valueOf(orderLine.getQuantityOrdered()),
+                            String.valueOf(orderLine.getProductPrice()), String.valueOf(orderLine.getProductTaxPercentage()),
+                            String.valueOf(orderLine.getLineTaxAmount()), String.valueOf(orderLine.getSubTotalLineAmount()),
+                            String.valueOf(orderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_ORDER_DOC_TYPE,
+                            String.valueOf(orderLine.getId()), String.valueOf(mUser.getServerUserId()), String.valueOf(orderLine.getBusinessPartnerId()),
+                            SHOPPING_CART_DOC_TYPE, "Y"});
             if (rowsAffected < 1) {
                 return "No se actualizó el registro en la base de datos.";
             }

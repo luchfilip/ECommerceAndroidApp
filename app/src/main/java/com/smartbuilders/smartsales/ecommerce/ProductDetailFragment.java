@@ -84,9 +84,9 @@ public class ProductDetailFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
                     ProductDB productDB = new ProductDB(getContext(), mUser);
 
-                    if (mProduct.isRequireFullFill()) {
-                        mProduct = productDB.getProductById(mProduct.getId());
-                    }
+                    //if (mProduct.isRequireFullFill()) {
+                    //    mProduct = productDB.getProductById(mProduct.getId());
+                    //}
 
                     if (mProduct!=null) {
                         relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 12));
@@ -371,7 +371,9 @@ public class ProductDetailFragment extends Fragment {
                                         }
                                     );
 
-                                    if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+                                    if (Parameter.isManagePriceInOrder(getContext(), mUser)
+                                            && mProduct.getProductPriceAvailability().getAvailability()>0
+                                            && mProduct.getProductPriceAvailability().getPrice()>0) {
                                         if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                                             ((TextView) view.findViewById(R.id.product_price))
                                                     .setText(getString(R.string.product_total_price_detail,

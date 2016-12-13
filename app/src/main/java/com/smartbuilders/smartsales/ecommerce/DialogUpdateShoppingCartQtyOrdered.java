@@ -74,7 +74,9 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         //se coloca el indicador del focus al final del texto
         qtyOrderedEditText.setSelection(qtyOrderedEditText.length());
 
-        if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+        if (Parameter.isManagePriceInOrder(getContext(), mUser)
+                && mOrderLine.getProduct().getProductPriceAvailability().getAvailability()>0
+                && mOrderLine.getProduct().getProductPriceAvailability().getPrice()>0) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_price_textView))
                         .setText(getString(R.string.product_total_price_detail,

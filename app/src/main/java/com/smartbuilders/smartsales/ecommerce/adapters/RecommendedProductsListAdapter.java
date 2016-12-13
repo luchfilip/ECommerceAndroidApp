@@ -163,7 +163,9 @@ public class RecommendedProductsListAdapter extends
             holder.productRatingBarContainer.setVisibility(View.GONE);
         }
 
-        if (mIsManagePriceInOrder) {
+        if (mIsManagePriceInOrder
+                && mDataset.get(position).getProductPriceAvailability().getAvailability()>0
+                && mDataset.get(position).getProductPriceAvailability().getPrice()>0) {
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
                         mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
@@ -175,10 +177,10 @@ public class RecommendedProductsListAdapter extends
                         mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
-                holder.productPrice.setVisibility(View.GONE);
+                holder.productPrice.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

@@ -33,9 +33,9 @@ public class OrderDB {
         return createOrder(salesOrderId, businessPartnerAddressId, orderLines, true);
     }
 
-    public String createOrderFromShoppingCart(int businessPartnerAddressId) throws Exception {
-        return createOrder(null, businessPartnerAddressId, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
-    }
+    //public String createOrderFromShoppingCart(int businessPartnerAddressId) throws Exception {
+    //    return createOrder(null, businessPartnerAddressId, (new OrderLineDB(mContext, mUser)).getActiveOrderLinesFromShoppingCart(), false);
+    //}
 
     public ArrayList<Order> getActiveOrders(){
         return getActiveOrders(false);
@@ -101,9 +101,9 @@ public class OrderDB {
 
     private String createOrder(Integer salesOrderId, int businessPartnerAddressId, ArrayList<OrderLine> orderLines,
                                boolean insertOrderLinesInDB) throws Exception {
-        OrderLineDB orderLineDB = new OrderLineDB(mContext, mUser);
-        int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
-        if((orderLines!=null && insertOrderLinesInDB) || shoppingCartLinesNumber>0){
+        //OrderLineDB orderLineDB = new OrderLineDB(mContext, mUser);
+        //int shoppingCartLinesNumber = orderLineDB.getActiveShoppingCartLinesNumber();
+        if((orderLines!=null /*&& insertOrderLinesInDB*/) /*|| shoppingCartLinesNumber>0*/){
             int orderId;
             int businessPartnerId = Utils.getAppCurrentBusinessPartnerId(mContext, mUser);
             try {
@@ -127,7 +127,7 @@ public class OrderDB {
                                         String.valueOf(businessPartnerAddressId), "CO",
                                         OrderLineDB.FINALIZED_ORDER_DOC_TYPE, DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext),
-                                        String.valueOf(orderLines!=null ? orderLines.size() : shoppingCartLinesNumber),
+                                        String.valueOf(/*orderLines!=null ?*/ orderLines.size() /*: shoppingCartLinesNumber*/),
                                         String.valueOf(subTotal), String.valueOf(tax), String.valueOf(total)});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
@@ -136,31 +136,38 @@ public class OrderDB {
                 e.printStackTrace();
                 return e.getMessage();
             }
-            if (orderLines!=null && insertOrderLinesInDB) {
-                for (OrderLine orderLine : orderLines) {
-                    orderLine.setBusinessPartnerId(businessPartnerId);
-                    orderLineDB.addOrderLineToFinalizedOrder(orderLine, orderId);
-                }
-            } else {
-                if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(businessPartnerId, orderId)<=0){
-                    try {
-                        int rowsAffected = mContext.getContentResolver()
-                                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                                .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                                        null,
-                                        "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ? WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
-                                        new String[]{"N", String.valueOf(orderId), String.valueOf(mUser.getServerUserId())});
-                        if(rowsAffected <= 0){
-                            return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        return e.getMessage();
+            //if (orderLines!=null && insertOrderLinesInDB) {
+                if (insertOrderLinesInDB) {
+                    for (OrderLine orderLine : orderLines) {
+                        orderLine.setBusinessPartnerId(businessPartnerId);
+                        (new OrderLineDB(mContext, mUser)).addOrderLineToFinalizedOrder(orderLine, orderId);
                     }
-                    return "Error 002 - No se insertó el pedido en la base de datos.";
+                } else {
+                    for (OrderLine orderLine : orderLines) {
+                        orderLine.setBusinessPartnerId(businessPartnerId);
+                        (new OrderLineDB(mContext, mUser)).moveOrderLineToFinalizedOrder(orderLine, orderId);
+                    }
                 }
-            }
+            //} else {
+                //if(orderLineDB.moveShoppingCartToFinalizedOrderByOrderId(businessPartnerId, orderId)<=0){
+                //    try {
+                //        int rowsAffected = mContext.getContentResolver()
+                //                .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                //                                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                //                                .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+                //                        null,
+                //                        "UPDATE ECOMMERCE_ORDER SET IS_ACTIVE = ? WHERE ECOMMERCE_ORDER_ID = ? AND USER_ID = ?",
+                //                        new String[]{"N", String.valueOf(orderId), String.valueOf(mUser.getServerUserId())});
+                //        if(rowsAffected <= 0){
+                //            return "Error 003 - No se insertó el pedido en la base de datos ni se eliminó la cabecera.";
+                //        }
+                //    } catch (Exception e){
+                //        e.printStackTrace();
+                //        return e.getMessage();
+                //    }
+                //    return "Error 002 - No se insertó el pedido en la base de datos.";
+                //}
+            //}
         }else{
             return "No existen productos en el Carrito de compras.";
         }

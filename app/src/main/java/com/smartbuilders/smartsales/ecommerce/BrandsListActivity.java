@@ -53,7 +53,7 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
         final EditText filterProduct = (EditText) findViewById(R.id.filter_editText);
 
         if(filterProduct!=null && filterImageView!=null) {
-            filterProduct.setFocusableInTouchMode(true);
+            //filterProduct.setFocusableInTouchMode(true);
 
             final View.OnClickListener filterImageViewOnClickListener =
                     new View.OnClickListener() {

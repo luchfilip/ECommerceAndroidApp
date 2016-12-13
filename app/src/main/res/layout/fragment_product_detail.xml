@@ -2,7 +2,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -45,7 +47,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
                 android:id="@+id/related_shopping_products_card_view"
                 style="@style/shape_style">
 
@@ -58,16 +59,14 @@
                     android:textSize="@dimen/related_products_label_text_size"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:textStyle="bold|italic"
-                    android:focusable="false" />
+                    android:textStyle="bold|italic" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/related_shopping_products_recycler_view"
                     android:scrollbars="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:focusable="false" />
+                    android:layout_marginTop="2dp" />
 
                 <View style="@style/Divider"
                     android:layout_marginTop="2dp" />
@@ -86,7 +85,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
                 android:id="@+id/related_products_by_brand_card_view"
                 style="@style/shape_style">
 
@@ -98,16 +96,14 @@
                     android:textSize="@dimen/related_products_label_text_size"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:textStyle="bold|italic"
-                    android:focusable="false" />
+                    android:textStyle="bold|italic" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/related_products_by_brand_recycler_view"
                     android:scrollbars="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:focusable="false" />
+                    android:layout_marginTop="2dp" />
 
                 <View style="@style/Divider"
                     android:layout_marginTop="2dp" />
@@ -126,7 +122,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:focusable="false"
                 style="@style/shape_style"
                 android:id="@+id/relatedproducts_card_view">
 
@@ -138,7 +133,6 @@
                     android:textSize="@dimen/related_products_label_text_size"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:focusable="false"
                     android:textStyle="bold|italic" />
 
                 <android.support.v7.widget.RecyclerView
@@ -146,7 +140,6 @@
                     android:scrollbars="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
                     android:layout_marginTop="2dp" />
 
                 <View style="@style/Divider"

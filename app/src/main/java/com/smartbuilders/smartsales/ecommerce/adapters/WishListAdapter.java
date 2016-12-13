@@ -171,7 +171,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productRatingBarContainer.setVisibility(View.GONE);
         }
 
-        if (mIsManagePriceInOrder) {
+        if (mIsManagePriceInOrder
+                && mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()>0
+                && mDataset.get(position).getProduct().getProductPriceAvailability().getPrice()>0) {
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
                         mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
@@ -183,10 +185,10 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                         mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
-                holder.productPrice.setVisibility(View.GONE);
+                holder.productPrice.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

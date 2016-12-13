@@ -214,11 +214,11 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
             public void run() {
                 String result = null;
                 try {
-                    if (mSalesOrderId > 0) {
+                    //if (mSalesOrderId > 0) {
                         result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, mSelectedBusinessPartnerAddressId, mOrderLines);
-                    } else {
-                        result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, mSelectedBusinessPartnerAddressId);
-                    }
+                    //} else {
+                    //    result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, mSelectedBusinessPartnerAddressId);
+                    //}
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

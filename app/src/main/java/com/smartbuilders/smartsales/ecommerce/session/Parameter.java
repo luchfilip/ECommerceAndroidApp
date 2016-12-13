@@ -234,11 +234,53 @@ public class Parameter {
         return false;
     }
 
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
     public static String getThumbImagesRequiredDiskSpace(Context context, User user) {
         return ParameterDB.getParameterStringValue(context, user, ParameterDB.THUMB_IMAGES_REQUIRED_DISK_SPACE, "no calculado");
     }
 
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
     public static String getOriginalImagesRequiredDiskSpace(Context context, User user) {
         return ParameterDB.getParameterStringValue(context, user, ParameterDB.ORIGINAL_IMAGES_REQUIRED_DISK_SPACE, "no calculado");
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductPriceInShareProductCard(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_SHARE_PRODUCT_CARD, false);
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductPriceInWishListPdf(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_WISH_LIST_PDF, false);
+    }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showProductPriceInRecommendedProductsPdf(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRICE_IN_RECOMMENDED_PRODUCTS_PDF, true);
     }
 }

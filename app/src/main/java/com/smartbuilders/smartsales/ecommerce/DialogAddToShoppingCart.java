@@ -65,7 +65,9 @@ public class DialogAddToShoppingCart extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_add_to_shopping_cart, container);
 
-        if (Parameter.isManagePriceInOrder(getContext(), mUser)) {
+        if (Parameter.isManagePriceInOrder(getContext(), mUser)
+                && mProduct.getProductPriceAvailability().getAvailability()>0
+                && mProduct.getProductPriceAvailability().getPrice()>0) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
                 ((TextView) view.findViewById(R.id.product_price_dialog_edit_qty_requested_tv))
                         .setText(getString(R.string.product_total_price_detail,

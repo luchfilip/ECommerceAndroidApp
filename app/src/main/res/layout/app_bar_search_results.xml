@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -59,9 +61,6 @@
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:id="@+id/search_product_editText"
-                    android:descendantFocusability="beforeDescendants"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:padding="2dp" />
 
                 <ImageView

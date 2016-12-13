@@ -204,7 +204,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        if (mIsManagePriceInOrder) {
+        if (mIsManagePriceInOrder
+                && mDataset.get(position).getProductPriceAvailability().getAvailability()>0
+                && mDataset.get(position).getProductPriceAvailability().getPrice()>0) {
             //se toma solo uno de los dos precios, teniendo como prioridad el precio total
             if (mShowProductTotalPrice) {
                 holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
@@ -217,10 +219,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {
-                holder.productPrice.setVisibility(View.GONE);
+                holder.productPrice.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(View.GONE);
+            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
         holder.productAvailability.setText(mContext.getString(R.string.availability,

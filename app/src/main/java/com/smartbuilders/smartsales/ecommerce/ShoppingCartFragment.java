@@ -395,11 +395,11 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                 try {
                     result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mShoppingCartAdapter.getData());
                     if (result==null) {
-                        if (mSalesOrderId > 0) {
+                        //if (mSalesOrderId > 0) {
                             result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, 0, mShoppingCartAdapter.getData());
-                        } else {
-                            result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, 0);
-                        }
+                        //} else {
+                        //    result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, 0);
+                        //}
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

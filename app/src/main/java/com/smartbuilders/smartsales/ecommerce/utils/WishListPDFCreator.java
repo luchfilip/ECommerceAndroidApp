@@ -3,7 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +22,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.io.ByteArrayOutputStream;
@@ -37,16 +38,18 @@ public class WishListPDFCreator {
 
     private View view;
     private ImageView productImageView;
-    //private Typeface typeface;
-    //private Typeface typefaceBold;
     private TextView productNameTextView;
     private TextView productBrandTextView;
     private TextView productDescriptionTextView;
     private TextView productPurposeTextView;
-    //private TextView productCodeLabelTextView;
     private TextView productCodeTextView;
-    //private TextView productReferenceLabelTextView;
     private TextView productReferenceTextView;
+    private TextView productCommercialPackageTextView;
+    private TextView productPriceTextView;
+    private boolean mShowProductPriceInWishListPdf;
+    private boolean mManagePriceInOrder;
+    private boolean mShowProductTotalPrice;
+    private boolean mShowProductPrice;
 
     public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Activity activity, Context ctx, User user) throws Exception {
         File pdfFile;
@@ -74,6 +77,11 @@ public class WishListPDFCreator {
 
                 PdfWriter.getInstance(document, byteArrayOutputStream);
                 document.open();
+
+                mShowProductPriceInWishListPdf = Parameter.showProductPriceInWishListPdf(ctx, user);
+                mManagePriceInOrder = Parameter.isManagePriceInOrder(ctx, user);
+                mShowProductTotalPrice = Parameter.showProductTotalPrice(ctx, user);
+                mShowProductPrice = Parameter.showProductPrice(ctx, user);
 
                 //se cargan las lineas del pedido
                 addDetails(document, orderLines, activity, ctx, user);
@@ -228,28 +236,18 @@ public class WishListPDFCreator {
     private Bitmap getProductCardImage(Activity activity, Context ctx, User user, Product product) {
         if (view == null) {
             view = activity.getLayoutInflater().inflate(R.layout.product_pdf_layout, null);
-            //typeface = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial.ttf");
-            //typefaceBold = Typeface.createFromAsset(ctx.getAssets(),"fonts/arial_bold.ttf");
             productImageView = (ImageView) view.findViewById(R.id.productImage_imageView);
             productNameTextView = (TextView) view.findViewById(R.id.productName_textView);
-            //productNameTextView.setTypeface(typefaceBold);
             productBrandTextView = (TextView) view.findViewById(R.id.productBrand_textView);
-            //productBrandTextView.setTypeface(typefaceBold);
             productDescriptionTextView = (TextView) view.findViewById(R.id.productDescription_textView);
-            //productDescriptionTextView.setTypeface(typeface);
             productPurposeTextView = (TextView) view.findViewById(R.id.productPurpose_textView);
-            //productPurposeTextView.setTypeface(typeface);
             productCodeTextView = (TextView) view.findViewById(R.id.productCode_textView);
-            //productCodeTextView.setTypeface(typeface);
             productReferenceTextView = (TextView) view.findViewById(R.id.productReference_textView);
-            //productReferenceTextView.setTypeface(typeface);
-            //productCodeLabelTextView = (TextView) view.findViewById(R.id.productCodeLabel_textView);
-            //productCodeLabelTextView.setTypeface(typefaceBold);
-            //productReferenceLabelTextView = (TextView) view.findViewById(R.id.productReferenceLabel_textView);
-            //productReferenceLabelTextView.setTypeface(typefaceBold);
+            productCommercialPackageTextView = (TextView) view.findViewById(R.id.productCommercialPackage_textView);
+            productPriceTextView = (TextView) view.findViewById(R.id.productPrice_textView);
         }
 
-        Bitmap bmp = Utils.getThumbImage(ctx, user, product.getImageFileName(), 130, 130);
+        Bitmap bmp = Utils.getThumbImage(ctx, user, product.getImageFileName(), 140, 140);
         if (bmp != null) {
             productImageView.setImageBitmap(bmp);
         } else {
@@ -259,8 +257,31 @@ public class WishListPDFCreator {
         productBrandTextView.setText(product.getProductBrand().getName());
         productDescriptionTextView.setText(product.getDescription());
         productPurposeTextView.setText(product.getPurpose());
+        if(product.getProductCommercialPackage()!=null
+                && !TextUtils.isEmpty(product.getProductCommercialPackage().getUnitDescription())){
+            productCommercialPackageTextView.setText(ctx.getString(R.string.commercial_package,
+                    product.getProductCommercialPackage().getUnitDescription(), product.getProductCommercialPackage().getUnits()));
+        }else{
+            productCommercialPackageTextView.setVisibility(TextView.GONE);
+        }
         productCodeTextView.setText(product.getInternalCodeMayoreoFormat());
         productReferenceTextView.setText(product.getReference());
+
+        if (mManagePriceInOrder && mShowProductPriceInWishListPdf
+                && product.getProductPriceAvailability().getAvailability()>0
+                && product.getProductPriceAvailability().getPrice()>0) {
+            if (mShowProductTotalPrice) {
+                productPriceTextView.setText(ctx.getString(R.string.product_total_price_detail,
+                        product.getProductPriceAvailability().getCurrency().getName(),
+                        product.getProductPriceAvailability().getTotalPriceStringFormat()));
+                productPriceTextView.setVisibility(View.VISIBLE);
+            } else if (mShowProductPrice) {
+                productPriceTextView.setText(ctx.getString(R.string.product_price_detail,
+                        product.getProductPriceAvailability().getCurrency().getName(),
+                        product.getProductPriceAvailability().getPriceStringFormat()));
+                productPriceTextView.setVisibility(View.VISIBLE);
+            }
+        }
         return Utils.getBitmapFromView(view);
     }
 }

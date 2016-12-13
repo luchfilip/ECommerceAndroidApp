@@ -199,6 +199,37 @@ public class Utils {
         }else{
             view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
         }
+
+        if(product.getProductCommercialPackage()!=null
+                && !TextUtils.isEmpty(product.getProductCommercialPackage().getUnitDescription())){
+            ((TextView) view.findViewById(R.id.product_commercial_package)).setText(context.getString(R.string.commercial_package_label_detail,
+                    product.getProductCommercialPackage().getUnitDescription(), product.getProductCommercialPackage().getUnits()));
+        }else{
+            view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
+        }
+
+        if (Parameter.isManagePriceInOrder(context, user)
+                && Parameter.showProductPriceInShareProductCard(context, user)
+                && product.getProductPriceAvailability().getAvailability()>0
+                && product.getProductPriceAvailability().getPrice()>0) {
+            if (Parameter.showProductTotalPrice(context, user)) {
+                ((TextView) view.findViewById(R.id.product_price))
+                        .setText(context.getString(R.string.product_total_price_detail,
+                                product.getProductPriceAvailability().getCurrency().getName(),
+                                product.getProductPriceAvailability().getTotalPriceStringFormat()));
+                view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+            } else if (Parameter.showProductPrice(context, user)) {
+                ((TextView) view.findViewById(R.id.product_price))
+                        .setText(context.getString(R.string.product_price_detail,
+                                product.getProductPriceAvailability().getCurrency().getName(),
+                                product.getProductPriceAvailability().getPriceStringFormat()));
+                view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.product_price).setVisibility(View.GONE);
+            }
+        } else {
+            view.findViewById(R.id.product_price).setVisibility(View.GONE);
+        }
         /****************************************************************************************/
         final String fileName = "productShared.png";
         createFileInCacheDir(fileName, getBitmapFromView(view), context);

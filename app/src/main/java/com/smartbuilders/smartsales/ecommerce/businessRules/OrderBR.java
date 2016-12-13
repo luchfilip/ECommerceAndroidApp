@@ -20,7 +20,8 @@ public class OrderBR {
     public static double getSubTotalAmount(ArrayList<OrderLine> orderLines){
         double subTotal=0;
         for(OrderLine orderLine : orderLines){
-            subTotal += orderLine.getSubTotalLineAmount();
+            //subTotal += orderLine.getSubTotalLineAmount();
+            subTotal += OrderLineBR.getSubTotalLine(orderLine, orderLine.getProduct());
         }
         return new BigDecimal(subTotal).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -32,7 +33,8 @@ public class OrderBR {
     public static double getTaxAmount(ArrayList<OrderLine> orderLines){
         double tax=0;
         for(OrderLine orderLine : orderLines){
-            tax += orderLine.getLineTaxAmount();
+            //tax += orderLine.getLineTaxAmount();
+            tax += OrderLineBR.getTaxAmount(orderLine, orderLine.getProduct());
         }
         return new BigDecimal(tax).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -44,7 +46,8 @@ public class OrderBR {
     public static double getTotalAmount(ArrayList<OrderLine> orderLines){
         double total=0;
         for(OrderLine orderLine : orderLines){
-            total += orderLine.getTotalLineAmount();
+            //total += orderLine.getTotalLineAmount();
+            total += OrderLineBR.getTotalLine(orderLine, orderLine.getProduct());
         }
         return new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -95,16 +98,16 @@ public class OrderBR {
         return null;
     }
 
-    public static String createOrderFromShoppingCart(Context context, User user, int businessPartnerAddressId) {
-        String result;
-        try {
-            result = (new OrderDB(context, user)).createOrderFromShoppingCart(businessPartnerAddressId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = e.getMessage();
-        }
-        return result;
-    }
+    //public static String createOrderFromShoppingCart(Context context, User user, int businessPartnerAddressId) {
+    //    String result;
+    //    try {
+    //        result = (new OrderDB(context, user)).createOrderFromShoppingCart(businessPartnerAddressId);
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //        result = e.getMessage();
+    //    }
+    //    return result;
+    //}
 
     public static String createOrderFromOrderLines(Context context, User user, int salesOrderId,
                                                    int businessPartnerAddressId, ArrayList<OrderLine> orderLines){

@@ -16,7 +16,7 @@ public class OrderLineBR {
      * @param orderLine
      * @return
      */
-    private static double getTaxAmount(OrderLine orderLine, Product product){
+    public static double getTaxAmount(OrderLine orderLine, Product product){
         double taxAmount = 0;
         try {
             taxAmount = product.getProductPriceAvailability().getTax() * orderLine.getQuantityOrdered();
@@ -31,7 +31,7 @@ public class OrderLineBR {
      * @param orderLine
      * @return
      */
-    private static double getSubTotalLine(OrderLine orderLine, Product product){
+    public static double getSubTotalLine(OrderLine orderLine, Product product){
         double subTotalLine = 0;
         try {
             subTotalLine = product.getProductPriceAvailability().getPrice() * orderLine.getQuantityOrdered();
@@ -46,7 +46,7 @@ public class OrderLineBR {
      * @param orderLine
      * @return
      */
-    private static double getTotalLine(OrderLine orderLine, Product product){
+    public static double getTotalLine(OrderLine orderLine, Product product){
         double totalLine = 0;
         try {
             totalLine = product.getProductPriceAvailability().getTotalPrice() * orderLine.getQuantityOrdered();

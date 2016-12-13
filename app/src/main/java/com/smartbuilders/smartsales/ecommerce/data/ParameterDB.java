@@ -38,6 +38,9 @@ public class ParameterDB {
     public static final int IS_ACTIVE_ORDER_TRACKING = 13;
     public static final int THUMB_IMAGES_REQUIRED_DISK_SPACE = 14;
     public static final int ORIGINAL_IMAGES_REQUIRED_DISK_SPACE = 15;
+    public static final int SHOW_PRICE_IN_SHARE_PRODUCT_CARD = 16;
+    public static final int SHOW_PRICE_IN_WISH_LIST_PDF = 17;
+    public static final int SHOW_PRICE_IN_RECOMMENDED_PRODUCTS_PDF = 18;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER

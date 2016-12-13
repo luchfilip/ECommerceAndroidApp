@@ -145,7 +145,7 @@ public class SearchResultsActivity extends AppCompatActivity
             searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
                 searchEditText.setFocusable(true);
-                searchEditText.setFocusableInTouchMode(true);
+                //searchEditText.setFocusableInTouchMode(true);
                 searchEditText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) { }

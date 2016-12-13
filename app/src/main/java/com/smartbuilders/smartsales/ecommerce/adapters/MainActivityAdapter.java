@@ -324,7 +324,9 @@ public class MainActivityAdapter extends BaseAdapter {
 
                         viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
 
-                        if (mIsManagePriceInOrder) {
+                        if (mIsManagePriceInOrder
+                                && ((Product) mDataset.get(position)).getProductPriceAvailability().getAvailability()>0
+                                && ((Product) mDataset.get(position)).getProductPriceAvailability().getPrice()>0) {
                             //solo se muestra uno de los precios, tomando como prioridad el precio total
                             if (mShowProductTotalPrice) {
                                 viewHolder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
@@ -337,10 +339,10 @@ public class MainActivityAdapter extends BaseAdapter {
                                         ((Product) mDataset.get(position)).getProductPriceAvailability().getPriceStringFormat()));
                                 viewHolder.productPrice.setVisibility(View.VISIBLE);
                             } else {
-                                viewHolder.productPrice.setVisibility(View.GONE);
+                                viewHolder.productPrice.setVisibility(View.INVISIBLE);
                             }
                         } else {
-                            viewHolder.productPrice.setVisibility(View.GONE);
+                            viewHolder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
                         }
 
                         viewHolder.productAvailability.setText(mContext.getString(R.string.availability,

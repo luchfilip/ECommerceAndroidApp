@@ -162,7 +162,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                     final EditText filterBusinessPartnerEditText = (EditText) getActivity().findViewById(R.id.filter_businessPartner_editText);
                                     final ImageView filterImageView = (ImageView) getActivity().findViewById(R.id.filter_imageView);
                                     if (filterBusinessPartnerEditText != null && filterImageView != null) {
-                                        filterBusinessPartnerEditText.setFocusableInTouchMode(true);
+                                        //filterBusinessPartnerEditText.setFocusableInTouchMode(true);
 
                                         final View.OnClickListener filterImageViewOnClickListener =
                                                 new View.OnClickListener() {

@@ -314,7 +314,7 @@ public class ProductsListActivity extends AppCompatActivity
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
-                                    filterProduct.setFocusableInTouchMode(true);
+                                    //filterProduct.setFocusableInTouchMode(true);
 
                                     final View.OnClickListener filterImageViewOnClickListener =
                                             new View.OnClickListener() {

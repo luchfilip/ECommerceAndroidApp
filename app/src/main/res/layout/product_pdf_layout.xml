@@ -35,8 +35,8 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="3px"
                 android:layout_marginRight="3px"
-                android:layout_width="300px"
-                android:layout_height="200px">
+                android:layout_height="200px"
+                android:layout_width="340px">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -89,6 +89,20 @@
                     android:layout_marginLeft="3px"
                     android:layout_marginRight="1px"
                     android:textSize="11px" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/productPrice_textView"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="2px"
+                    android:layout_marginTop="2px"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginRight="1px"
+                    android:textSize="13px"/>
 
                 <TableLayout
                     android:layout_width="wrap_content"
@@ -185,8 +199,8 @@
                 android:id="@+id/productImage_imageView"
                 android:layout_gravity="center"
                 android:layout_margin="3px"
-                android:layout_width="130px"
-                android:layout_height="130px" />
+                android:layout_width="140px"
+                android:layout_height="140px" />
 
         </LinearLayout>
     </LinearLayout>
