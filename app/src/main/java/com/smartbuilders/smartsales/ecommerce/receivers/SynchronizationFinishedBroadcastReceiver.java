@@ -50,8 +50,8 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                         if (productAvailabilityVariation != 0) {
                             if (productAvailabilityVariation > 0) {
                                 if (notifyIncrementAvailabilityInWishList) {
-                                    notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
-                                            orderLine.getProduct().getName() +
+                                    notificationHistoryDB.insertNotificationHistory("Aumento de disponibilidad, artículo en Favoritos",
+                                            "(<b>" + orderLine.getProduct().getInternalCodeMayoreoFormat() + "</b>) " + orderLine.getProduct().getName() +
                                                     "<br/><font color=#159204>" + context.getString(R.string.availability_positive_variation, String.valueOf(productAvailabilityVariation)) + "</font>",
                                             NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
                                             orderLine.getProductId());
@@ -59,8 +59,8 @@ public class SynchronizationFinishedBroadcastReceiver extends BroadcastReceiver 
                                 }
                             } else {
                                 if (notifyDecrementAvailabilityInWishList) {
-                                    notificationHistoryDB.insertNotificationHistory("Variación de disponibilidad, artículo en Favoritos",
-                                            orderLine.getProduct().getName() +
+                                    notificationHistoryDB.insertNotificationHistory("Disminución de disponibilidad, artículo en Favoritos",
+                                            "(<b>" + orderLine.getProduct().getInternalCodeMayoreoFormat() + "</b>) " + orderLine.getProduct().getName() +
                                                     "<br/><font color=#c82c14>" + context.getString(R.string.availability_variation, String.valueOf(productAvailabilityVariation)) + "</font>",
                                             NotificationHistory.TYPE_WISH_LIST_PRODUCT_AVAILABILITY_VARIATION,
                                             orderLine.getProductId());

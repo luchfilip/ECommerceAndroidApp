@@ -157,7 +157,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.RequestResetUserPasswordService"
+            android:name=".services.RequestResetUserCredentialsService"
             android:exported="false" />
 
         <!--

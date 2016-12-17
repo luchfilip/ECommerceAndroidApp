@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.smartbuilders.smartsales.ecommerce.services.RequestResetUserPasswordService;
+import com.smartbuilders.smartsales.ecommerce.services.RequestResetUserCredentialsService;
 import com.smartbuilders.smartsales.ecommerce.utils.EmailValidator;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -55,46 +55,64 @@ public class RequestResetUserPasswordFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String serverAddress = !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
-                        ? BuildConfig.SERVER_ADDRESS : ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
-                final String userEmail = ((EditText) rootView.findViewById(R.id.userEmail_editText)).getText().toString();
-                if (!mServiceRunning && validateInputFields(userEmail)) {
-                    lockScreen();
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.warning)
+                        .setMessage(R.string.warning_reset_user_credentials_message)
+                        .setPositiveButton(R.string.reset_password, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final String serverAddress = !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
+                                        ? BuildConfig.SERVER_ADDRESS : ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
+                                final String userName = ((EditText) rootView.findViewById(R.id.userName_editText)).getText().toString();
+                                if (!mServiceRunning && !TextUtils.isEmpty(userName)) {
+                                    lockScreen();
 
-                    new AsyncTask<Void, Void, String>() {
+                                    new AsyncTask<Void, Void, String>() {
 
-                        @Override
-                        protected String doInBackground(Void... params) {
-                            try {
-                                URL url = new URL(serverAddress);
-                                URLConnection conn = url.openConnection();
-                                conn.setConnectTimeout(1000 * 2);//2 seconds
-                                conn.connect();
+                                        @Override
+                                        protected String doInBackground(Void... params) {
+                                            try {
+                                                URL url = new URL(serverAddress);
+                                                URLConnection conn = url.openConnection();
+                                                conn.setConnectTimeout(1000 * 2);//2 seconds
+                                                conn.connect();
 
-                                Intent msgIntent = new Intent(getContext(), RequestResetUserPasswordService.class);
-                                msgIntent.putExtra(RequestResetUserPasswordService.SERVER_ADDRESS, serverAddress);
-                                msgIntent.putExtra(RequestResetUserPasswordService.USER_EMAIL, userEmail);
-                                getContext().startService(msgIntent);
-                            } catch (MalformedURLException e) {
-                                // the URL is not in a valid form
-                                e.printStackTrace();
-                                unlockScreen(getString(R.string.error_server_address_malformedurlexception));
-                            } catch (IOException e) {
-                                // the connection couldn't be established
-                                e.printStackTrace();
-                                unlockScreen(getString(R.string.error_server_address_ioexception));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                unlockScreen(e.getMessage());
+                                                Intent msgIntent = new Intent(getContext(), RequestResetUserCredentialsService.class);
+                                                msgIntent.putExtra(RequestResetUserCredentialsService.SERVER_ADDRESS, serverAddress);
+                                                msgIntent.putExtra(RequestResetUserCredentialsService.USER_NAME, userName);
+                                                getContext().startService(msgIntent);
+                                            } catch (MalformedURLException e) {
+                                                // the URL is not in a valid form
+                                                e.printStackTrace();
+                                                unlockScreen(getString(R.string.error_server_address_malformedurlexception));
+                                            } catch (IOException e) {
+                                                // the connection couldn't be established
+                                                e.printStackTrace();
+                                                unlockScreen(getString(R.string.error_server_address_ioexception));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                unlockScreen(e.getMessage());
+                                            }
+                                            return null;
+                                        }
+                                    }.execute();
+                                }
                             }
-                            return null;
-                        }
-                    }.execute();
-                }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .setCancelable(false)
+                        .show();
             }
         });
 
-        if(Utils.isServiceRunning(getContext(), RequestResetUserPasswordService.class)) {
+        rootView.findViewById(R.id.go_back_textView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+
+        if(Utils.isServiceRunning(getContext(), RequestResetUserCredentialsService.class)) {
             lockScreen();
         } else {
             unlockScreen(null);
@@ -125,6 +143,12 @@ public class RequestResetUserPasswordFragment extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Utils.unlockScreenOrientation(getActivity());
+                                    }
+                                })
+                                .setNeutralButton(R.string.go_back, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().finish();
                                     }
                                 })
                                 .setCancelable(false)

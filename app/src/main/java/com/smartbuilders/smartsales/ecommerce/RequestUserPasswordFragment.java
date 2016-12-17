@@ -118,6 +118,13 @@ public class RequestUserPasswordFragment extends Fragment {
         //    ((Spinner) rootView.findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
         //}
 
+        rootView.findViewById(R.id.go_back_textView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+
         return rootView;
     }
 
@@ -173,10 +180,16 @@ public class RequestUserPasswordFragment extends Fragment {
                     if(message!=null){
                         new AlertDialog.Builder(getContext())
                                 .setMessage(message)
-                                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                                .setNeutralButton(R.string.accept, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Utils.unlockScreenOrientation(getActivity());
+                                    }
+                                })
+                                .setPositiveButton(R.string.go_back, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().finish();
                                     }
                                 })
                                 .setCancelable(false)

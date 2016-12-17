@@ -35,13 +35,13 @@ public class ProductCategoryDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT C.CATEGORY_ID, C.NAME, C.DESCRIPTION, COUNT(C.CATEGORY_ID) " +
                     " FROM CATEGORY C " +
-                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = ? " +
-                        " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = ? " +
-                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = ? " +
-                        (mShowProductsWithoutAvailability ? " LEFT " : " INNER ") + " JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = ? AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = ? AND PA.AVAILABILITY > 0 " +
-                    " WHERE C.IS_ACTIVE = ? " +
+                        " INNER JOIN SUBCATEGORY S ON S.CATEGORY_ID = C.CATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = 'Y' " +
+                        " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
+                        (mShowProductsWithoutAvailability ? "" : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0") +
+                    " WHERE C.IS_ACTIVE = 'Y' " +
                     " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ",
-                    new String[]{"Y", "Y", "Y", "0", "Y", "Y"}, null);
+                    null, null);
             if(c!=null){
                 while(c.moveToNext()){
                     ProductCategory productCategory = new ProductCategory();
@@ -83,8 +83,8 @@ public class ProductCategoryDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND IS_ACTIVE=?",
-                    new String[]{String.valueOf(productCategoryId), "Y"}, null);
+                    "SELECT CATEGORY_ID, NAME, DESCRIPTION FROM CATEGORY WHERE CATEGORY_ID=? AND IS_ACTIVE='Y'",
+                    new String[]{String.valueOf(productCategoryId)}, null);
             if(c!=null && c.moveToNext()){
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setId(c.getInt(0));

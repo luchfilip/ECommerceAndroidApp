@@ -14,13 +14,13 @@ import java.util.LinkedHashMap;
 /**
  * Created by stein on 7/6/2016.
  */
-public class RequestResetUserPasswordService extends IntentService {
+public class RequestResetUserCredentialsService extends IntentService {
 
     public static final String SERVER_ADDRESS = "SERVER_ADDRESS";
-    public static final String USER_EMAIL = "USER_EMAIL";
+    public static final String USER_NAME = "USER_NAME";
 
-    public RequestResetUserPasswordService() {
-        super(RequestResetUserPasswordService.class.getSimpleName());
+    public RequestResetUserCredentialsService() {
+        super(RequestResetUserCredentialsService.class.getSimpleName());
     }
 
     /**
@@ -28,25 +28,25 @@ public class RequestResetUserPasswordService extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public RequestResetUserPasswordService(String name) {
+    public RequestResetUserCredentialsService(String name) {
         super(name);
     }
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
         String serverAddress = workIntent.getStringExtra(SERVER_ADDRESS);
-        String userEmail = workIntent.getStringExtra(USER_EMAIL);
+        String userName = workIntent.getStringExtra(USER_NAME);
 
         String resultMsg;
         try {
-            LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
             parameters.put("userGroup", getString(R.string.ids_user_group_name));
-            parameters.put("userEmail", userEmail);
+            parameters.put("userName", userName);
             ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
                                                         serverAddress,
                                                         "/IntelligentDataSynchronizer/services/ManageUser?wsdl",
-                                                        "resetUserPassword",
-                                                        "urn:resetUserPassword",
+                                                        "resetUserCredentials",
+                                                        "urn:resetUserCredentials",
                                                         parameters);
             Object response =  a.getWSResponse();
             if(response instanceof SoapPrimitive){

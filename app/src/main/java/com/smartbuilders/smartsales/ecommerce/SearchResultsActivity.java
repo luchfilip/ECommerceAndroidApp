@@ -113,10 +113,10 @@ public class SearchResultsActivity extends AppCompatActivity
                                     if (!TextUtils.isEmpty(mCurrentFilterText)) {
                                         mSearchResultAdapter.setData(mCurrentFilterText, productDB.getLightProductsByPurpose(mCurrentFilterText));
                                     }
-                                } else if (selectedOption.equals(getString(R.string.categories))) {
+                                } else if (selectedOption.equals(getString(R.string.category))) {
                                     startActivity(new Intent(SearchResultsActivity.this, CategoriesListActivity.class));
                                     searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
-                                } else if (selectedOption.equals(getString(R.string.brands))) {
+                                } else if (selectedOption.equals(getString(R.string.brand))) {
                                     startActivity(new Intent(SearchResultsActivity.this, BrandsListActivity.class));
                                     searchByOptionsSpinner.setSelection(adapter.getPosition(mCurrentSearchByOptions));
                                 } else if (selectedOption.equals(getString(R.string.barcode))) {
@@ -144,8 +144,6 @@ public class SearchResultsActivity extends AppCompatActivity
 
             searchEditText = (EditText) findViewById(R.id.search_product_editText);
             if(searchEditText!=null){
-                searchEditText.setFocusable(true);
-                //searchEditText.setFocusableInTouchMode(true);
                 searchEditText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) { }

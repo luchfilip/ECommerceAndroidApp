@@ -13,6 +13,7 @@
     <string name="navigation_drawer_close">Cerrar panel de navegación</string>
     <string name="action_setting">Configuración</string>
     <string name="search">Buscar</string>
+    <string name="category">Categoría</string>
     <string name="categories">Categorías</string>
     <string name="share">Compartir</string>
     <string name="download">Descargar</string>
@@ -251,7 +252,7 @@
     <string name="business_partner_name">Razón social</string>
     <string name="business_partner_internal_code_label">Código del Cliente:</string>
     <string name="business_partner_commercial_name_label">Nombre Comercial:</string>
-    <string name="business_partner_commercial_name">Nombre comercial</string>
+    <string name="business_partner_commercial_name">Nombre Comercial</string>
     <string name="address">Dirección</string>
     <string name="address_detail">Dirección: %1$s</string>
     <string name="address_label">Dirección:</string>
@@ -280,6 +281,7 @@
     <string name="reset_password">Reestablecer contraseña</string>
     <string name="sign_up">¿No posees una contraseña?</string>
     <string name="email">Correo electrónico</string>
+    <string name="registered_email">Correo electrónico registrado</string>
     <string name="email_detail">Correo electrónico: %1$s</string>
     <string name="action_sign_up">Registrarse</string>
     <string name="action_reset_password">Reestablecer Contraseña</string>
@@ -307,7 +309,7 @@
     <string name="choose_image">Escoger Imágen</string>
     <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
     <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
-    <string name="search_by">Buscar por</string>
+    <string name="search_by">Buscar por...</string>
     <string name="search_by_capitals">BUSCAR POR</string>
     <string name="search_by_name">BUSCAR POR NOMBRE</string>
     <string name="search_by_reference">BUSCAR POR REFERENCIA</string>
@@ -319,8 +321,8 @@
         <item>@string/name</item>
         <item>@string/reference</item>
         <item>@string/purpose</item>
-        <item>@string/categories</item>
-        <item>@string/brands</item>
+        <item>@string/category</item>
+        <item>@string/brand</item>
         <item>@string/barcode</item>
     </string-array>
     <string name="barcode">Cód. de barra</string>
@@ -358,7 +360,7 @@
     <string name="invalid_qty_requested">Cantidad solicitada inválida.</string>
     <string name="invalid_product_price">Precio del producto inválido.</string>
     <string name="invalid_product_tax_percentage">Porcentaje de impuesto inválido.</string>
-    <string name="invalid_commercial_package_qty_requested">La cantidad pedida debe ser multiplo del empaque comercial.</string>
+    <string name="invalid_commercial_package_qty_requested">La cantidad pedida debe ser multiplo del empaque.</string>
     <string name="invalid_availability_qty_requested">La cantidad pedida no puede ser mayor a la disponibilidad.</string>
     <string name="products_recently_seen">Productos Recientemente Vistos</string>
     <string name="sort_by_product_name_asc">Nombre, A->Z</string>
@@ -549,4 +551,7 @@
     <string name="images_folder_info">Información del fichero de imágenes</string>
     <string name="delete_images_folder">Eliminar fichero de imágenes</string>
     <string name="recovery_disk_space_explanation">Se puede recuperar espacio en disco eliminando el fichero de las imágenes almácenadas</string>
+    <string name="go_back">Volver</string>
+    <string name="warning_reset_user_credentials_message">¿Está seguro que desea reestablecer la cortraseña del usuario? Esto dejará sin validez previas instalaciones del catálogo.</string>
+    <string name="warning">¡Alerta!</string>
 </resources>

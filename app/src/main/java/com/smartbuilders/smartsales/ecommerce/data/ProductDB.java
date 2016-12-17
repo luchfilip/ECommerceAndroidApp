@@ -12,6 +12,10 @@ import com.smartbuilders.smartsales.ecommerce.model.Product;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -195,40 +199,17 @@ public class ProductDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     sql.toString(), null, null);
             if (c!=null) {
-                String[] words;
-                String searchPattern = productName;
-                int filterColumn = 3;
-                if (productName!=null) {
-                    searchPattern = productName;
-                    filterColumn = 3;
-                } else if (productReference!=null) {
-                    searchPattern = productReference;
-                    filterColumn = 23;
-                } else if (productPurpose!=null) {
-                    searchPattern = productPurpose;
-                    filterColumn = 5;
-                }
-                try {
-                    words = searchPattern == null ? null : searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
-                } catch (Exception e) {
-                    words = null;
-                }
-                whileStatement:
-                while(c.moveToNext()){
-                    if(searchPattern!=null && words!=null){
-                        try {
-                            for(String word : words){
-                                if(!c.getString(filterColumn).toUpperCase().contains(word)){
-                                    continue whileStatement;
-                                }
-                            }
-                        } catch (Exception e) {
-                            continue;
-                        }
-                    }
+                while(c.moveToNext()) {
                     Product p = new Product();
                     fillFullProductInfoFromCursor(p, c);
                     products.add(p);
+                }
+                if (!TextUtils.isEmpty(productName)) {
+                    ProductDBUtils.sortByProductNameContains(products, productName);
+                } else if (!TextUtils.isEmpty(productReference)) {
+                    ProductDBUtils.sortByProductReferenceContains(products, productReference);
+                } else if (!TextUtils.isEmpty(productPurpose)) {
+                    ProductDBUtils.sortByProductPurposeContains(products, productPurpose);
                 }
             }
         } catch (Exception e) {
@@ -342,8 +323,10 @@ public class ProductDB {
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        name = name.replace('ñ', '\001').replace('Ñ', '\002');
         name = Normalizer.normalize(name.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        name = name.replace('\001', 'ñ').replace('\002','Ñ');
 
         Cursor c = null;
         try {
@@ -395,6 +378,7 @@ public class ProductDB {
                     fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
+                ProductDBUtils.sortByProductNameStartsWith(products, name);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -417,8 +401,10 @@ public class ProductDB {
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        name = name.replace('ñ', '\001').replace('Ñ', '\002');
         name = Normalizer.normalize(name.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        name = name.replace('\001', 'ñ').replace('\002', 'Ñ');
 
         boolean isNumeric = (name.length()<8 && !patternIsNotNumeric.matcher(name).matches());
 
@@ -495,8 +481,10 @@ public class ProductDB {
                 || reference.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        reference = reference.replace('ñ', '\001').replace('Ñ', '\002');
         reference = Normalizer.normalize(reference.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        reference = reference.replace('\001', 'ñ').replace('\002', 'Ñ');
 
         Cursor c = null;
         try {
@@ -540,6 +528,7 @@ public class ProductDB {
                     fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
+                ProductDBUtils.sortByProductReferenceStartsWith(products, reference);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -562,8 +551,10 @@ public class ProductDB {
                 || reference.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        reference = reference.replace('ñ', '\001').replace('Ñ', '\002');
         reference = Normalizer.normalize(reference.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        reference = reference.replace('\001', 'ñ').replace('\002', 'Ñ');
 
         Cursor c = null;
         try {
@@ -633,8 +624,10 @@ public class ProductDB {
                 || purpose.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        purpose = purpose.replace('ñ', '\001').replace('Ñ', '\002');
         purpose = Normalizer.normalize(purpose.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        purpose = purpose.replace('\001', 'ñ').replace('\002', 'Ñ');
 
         Cursor c = null;
         try {
@@ -678,6 +671,7 @@ public class ProductDB {
                     fillFullProductInfoFromCursor(p, c);
                     products.add(p);
                 }
+                ProductDBUtils.sortByProductPurposeStartsWith(products, purpose);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -700,8 +694,10 @@ public class ProductDB {
                 || purpose.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
+        purpose = purpose.replace('ñ', '\001').replace('Ñ', '\002');
         purpose = Normalizer.normalize(purpose.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[^a-zA-Z0-9 ]","");
+                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+        purpose = purpose.replace('\001', 'ñ').replace('\002', 'Ñ');
 
         Cursor c = null;
         try {
@@ -838,7 +834,6 @@ public class ProductDB {
      * @param cursor
      */
     public static void fillFullProductInfoFromCursor(Product product, Cursor cursor) {
-        //product.setRequireFullFill(false);
         product.setId(cursor.getInt(0));
         product.setName(cursor.getString(3));
         product.setDescription(cursor.getString(4));
@@ -867,58 +862,6 @@ public class ProductDB {
         product.setFavorite(cursor.getString(22)!=null);
         product.setReference(cursor.getString(23));
     }
-
-
-    ///**
-    // * Carga el objeto Product que se pasa por parametro a partir de un cursor que posea las siguientes columnas:
-    // * 0) PRODUCT.PRODUCT_ID
-    // * 1) PRODUCT.NAME
-    // * 2) PRODUCT.DESCRIPTION
-    // * 3) PRODUCT.PURPOSE
-    // * 4) PRODUCT_IMAGE.FILE_NAME
-    // * 5) BRAND.BRAND_ID
-    // * 6) BRAND.NAME
-    // * 7) BRAND.DESCRIPTION
-    // * 8) SUBCATEGORY.CATEGORY_ID
-    // * 9) SUBCATEGORY.SUBCATEGORY_ID
-    // * 10) PRODUCT_PRICE_AVAILABILITY.AVAILABILITY
-    // * 11) PRODUCT_RATING.RATING
-    // * 12) CURRENCY.CURRENCY_ID
-    // * 13) CURRENCY.UNICODE_DECIMAL
-    // * 14) PRODUCT_PRICE_AVAILABILITY.PRICE
-    // * 15) PRODUCT_PRICE_AVAILABILITY.TAX
-    // * 16) PRODUCT_PRICE_AVAILABILITY.TOTAL_PRICE
-    // * 17) ECOMMERCE_ORDER_LINE.PRODUCT_ID
-    // * 18) PRODUCT.INTERNAL_CODE
-    // * 19) PRODUCT.REFERENCE_ID
-    // * @param product
-    // * @param cursor
-    // */
-    //public static void fillLightProductInfoFromCursor(Product product, Cursor cursor) {
-    //    product.setRequireFullFill(true);
-    //    product.setId(cursor.getInt(0));
-    //    product.setName(cursor.getString(1));
-    //    product.setDescription(cursor.getString(2));
-    //    product.setPurpose(cursor.getString(3));
-    //    product.setImageFileName(cursor.getString(4));
-    //    product.setProductBrandId(cursor.getInt(5));
-    //    product.getProductBrand().setId(cursor.getInt(5));
-    //    product.getProductBrand().setName(cursor.getString(6));
-    //    product.getProductBrand().setDescription(cursor.getString(7));
-    //    product.setProductCategoryId(cursor.getInt(8));
-    //    product.setProductSubCategoryId(cursor.getInt(9));
-    //    product.getProductPriceAvailability().setAvailability(cursor.getInt(10));
-    //    product.setRating(cursor.getFloat(11));
-    //    product.getProductPriceAvailability().setCurrencyId(cursor.getInt(12));
-    //    product.getProductPriceAvailability().getCurrency().setId(cursor.getInt(12));
-    //    product.getProductPriceAvailability().getCurrency().setUnicodeDecimal(cursor.getString(13));
-    //    product.getProductPriceAvailability().setPrice(cursor.getFloat(14));
-    //    product.getProductPriceAvailability().setTax(cursor.getFloat(15));
-    //    product.getProductPriceAvailability().setTotalPrice(cursor.getFloat(16));
-    //    product.setFavorite(cursor.getString(17)!=null);
-    //    product.setInternalCode(cursor.getString(18));
-    //    product.setReference(cursor.getString(19));
-    //}
 
     public Product getProductByInternalCode(String productCode) {
         return getProductById(getProductIdByInternalCode(productCode));
@@ -980,5 +923,137 @@ public class ProductDB {
             }
         }
         return -1;
+    }
+}
+
+/**
+ *
+ */
+class ProductDBUtils {
+
+    private static int incidencesByWord(String str, String[] words) {
+        int i = words.length;
+        for (String word : Arrays.asList(words)) {
+            if (!str.contains(word)) {
+                i--;
+            }
+        }
+        return i;
+    }
+
+    private static int startsWith(String str, String[] words) {
+        int i = 0;
+        for (String word : Arrays.asList(words)) {
+            i += str.indexOf(word);
+        }
+        return i;
+    }
+
+    static void sortByProductNameContains(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return incidencesByWord(p2.getName().toUpperCase(), aux)
+                            - incidencesByWord(p1.getName().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    static void sortByProductReferenceContains(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return incidencesByWord(p2.getReference().toUpperCase(), aux)
+                            - incidencesByWord(p1.getReference().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    static void sortByProductPurposeContains(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return incidencesByWord(p2.getPurpose().toUpperCase(), aux)
+                            - incidencesByWord(p1.getPurpose().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    static void sortByProductNameStartsWith(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return startsWith(p1.getName().toUpperCase(), aux)
+                            - startsWith(p2.getName().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    static void sortByProductReferenceStartsWith(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return startsWith(p1.getReference().toUpperCase(), aux)
+                            - startsWith(p2.getReference().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    static void sortByProductPurposeStartsWith(List<Product> products, String searchPattern) {
+        final String aux[] = searchPattern.toUpperCase().replaceAll("\\s+", " ").split(" ");
+        //Se ordena segun el parecido que tenga el producto con el texto buscado
+        Collections.sort(products, new Comparator<Product>() {
+
+            @Override
+            public int compare(Product p1, Product p2) {
+                try {
+                    return startsWith(p1.getPurpose().toUpperCase(), aux)
+                            - startsWith(p2.getPurpose().toUpperCase(), aux);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
     }
 }

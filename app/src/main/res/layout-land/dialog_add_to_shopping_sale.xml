@@ -58,16 +58,20 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Spinner
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/business_partners_spinner"
-                style="@style/shape_style"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:visibility="visible"
                 android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp" />
+                android:layout_marginRight="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/spinner_light_shape" >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/business_partners_spinner"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
 
             <Button
                 android:layout_width="0dp"
@@ -97,23 +101,29 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/product_price_editText"
-                android:paddingRight="5dp"
-                android:focusable="true"
-                android:enabled="true"
-                android:numeric="decimal"
-                android:background="@color/golden_medium"
-                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
                 android:layout_weight="5"
+                android:paddingRight="5dp"
                 android:paddingLeft="5dp"
                 android:gravity="center_vertical|right"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:background="@color/golden_medium">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/product_price_editText"
+                    android:focusable="true"
+                    android:enabled="true"
+                    android:numeric="decimal"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,23 +138,30 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/product_tax_editText"
-                android:paddingRight="5dp"
-                android:focusable="true"
-                android:enabled="true"
-                android:numeric="decimal"
-                android:background="@color/golden_medium"
-                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
                 android:layout_weight="3"
+                android:paddingRight="5dp"
                 android:paddingLeft="5dp"
+                android:background="@color/golden_medium"
                 android:gravity="center_vertical|right"
-                android:layout_gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_gravity="center_vertical" >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/product_tax_editText"
+                    android:focusable="true"
+                    android:enabled="true"
+                    android:numeric="decimal"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
         </TableRow>
 
         <TableRow
@@ -163,23 +180,29 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/qty_requested_editText"
-                android:numeric="integer"
-                android:paddingRight="5dp"
-                android:focusable="true"
-                android:enabled="true"
-                android:background="@color/golden_medium"
-                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/golden_medium"
                 android:layout_gravity="center_vertical"
-                android:gravity="right"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_weight="1" />
+                android:gravity="right">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/qty_requested_editText"
+                    android:numeric="integer"
+                    android:focusable="true"
+                    android:enabled="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow

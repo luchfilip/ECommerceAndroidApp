@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity
                             } else if (selectedOption.equals(getString(R.string.purpose))) {
                                 startActivity(new Intent(MainActivity.this, SearchResultsActivity.class)
                                         .putExtra(SearchResultsActivity.KEY_SEARCH_BY, getString(R.string.purpose)));
-                            } else if (selectedOption.equals(getString(R.string.categories))) {
+                            } else if (selectedOption.equals(getString(R.string.category))) {
                                 startActivity(new Intent(MainActivity.this, CategoriesListActivity.class));
-                            } else if (selectedOption.equals(getString(R.string.brands))) {
+                            } else if (selectedOption.equals(getString(R.string.brand))) {
                                 startActivity(new Intent(MainActivity.this, BrandsListActivity.class));
                             } else if (selectedOption.equals(getString(R.string.barcode))) {
                                 Utils.lockScreenOrientation(MainActivity.this);

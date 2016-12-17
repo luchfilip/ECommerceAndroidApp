@@ -6,7 +6,7 @@
     android:paddingBottom="5dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="5dp"
+    android:paddingTop="10dp"
     android:background="@color/colorPrimary"
     android:gravity="center"
     android:fitsSystemWindows="true"
@@ -14,7 +14,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/fields_scrollView">
 
         <LinearLayout
@@ -28,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/company_logo_name_alt"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp" />
 
             <TextView
@@ -91,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/user_name_tax_id"
                         android:maxLines="1"
-                        android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789"
+                        android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:layout_weight="1" />
@@ -125,9 +126,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"

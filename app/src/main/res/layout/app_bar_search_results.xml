@@ -3,9 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -70,17 +68,23 @@
                     android:padding="6dp"
                     android:background="@drawable/shape_black_rounded"
                     android:id="@+id/image_search_bar_layout"
-                    android:layout_margin="1dp" />
+                    android:layout_margin="1dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
-            <Spinner
-                android:id="@+id/search_by_options_spinner"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/spinner_dark_shape"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"/>
+                android:layout_gravity="center"
+                android:background="@drawable/spinner_dark_shape" >
+                <Spinner
+                    android:id="@+id/search_by_options_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
 
         </LinearLayout>
 

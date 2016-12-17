@@ -24,7 +24,6 @@ public class Product extends Model implements Parcelable, Cloneable {
     private ProductPriceAvailability productPriceAvailability;
     private boolean isFavorite;
     private float rating = -1;
-    //private boolean requireFullFill;
 
     public Product(){
         super();
@@ -33,7 +32,6 @@ public class Product extends Model implements Parcelable, Cloneable {
         productPriceAvailability = new ProductPriceAvailability();
         productTax = new ProductTax();
         productCommercialPackage = new ProductCommercialPackage();
-        //requireFullFill = true;
     }
 
     protected Product(Parcel in) {
@@ -54,7 +52,6 @@ public class Product extends Model implements Parcelable, Cloneable {
         isFavorite = in.readByte() != 0;
         rating = in.readFloat();
         productPriceAvailability = in.readParcelable(ProductPriceAvailability.class.getClassLoader());
-        //requireFullFill = in.readByte() != 0;
     }
 
     @Override
@@ -76,7 +73,6 @@ public class Product extends Model implements Parcelable, Cloneable {
         dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeFloat(rating);
         dest.writeParcelable(productPriceAvailability, flags);
-        //dest.writeByte((byte) (requireFullFill ? 1 : 0));
     }
 
     @Override
@@ -217,14 +213,6 @@ public class Product extends Model implements Parcelable, Cloneable {
     public void setProductSubCategoryId(int productSubCategoryId) {
         this.productSubCategoryId = productSubCategoryId;
     }
-
-    //public boolean isRequireFullFill() {
-    //    return requireFullFill;
-    //}
-
-    //public void setRequireFullFill(boolean requireFullFill) {
-    //    this.requireFullFill = requireFullFill;
-    //}
 
     @Override
     public boolean equals(Object o) {
