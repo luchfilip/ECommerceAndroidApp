@@ -16,6 +16,9 @@ import android.widget.ListView;
 import com.smartbuilders.smartsales.ecommerce.adapters.BrandsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Jesus Sarco
  */
@@ -76,13 +79,38 @@ public class BrandsListActivity extends AppCompatActivity implements BrandsListF
                         filterImageView.setOnClickListener(null);
                     }
                     mCurrentFilterText = s.toString();
-                    if(listView!=null && (listView.getAdapter() instanceof BrandsListAdapter)) {
-                        ((BrandsListAdapter) listView.getAdapter()).filter(mCurrentFilterText);
-                    }
                 }
 
+                private boolean isTyping = false;
+                private Timer timer = new Timer();
+                private final long DELAY = 800; // milliseconds
+
                 @Override
-                public void afterTextChanged(Editable s) { }
+                public void afterTextChanged(final Editable s) {
+                    if(!isTyping) {
+                        isTyping = true;
+                    }
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    isTyping = false;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            /**********************/
+                                            if(listView!=null && (listView.getAdapter() instanceof BrandsListAdapter)) {
+                                                ((BrandsListAdapter) listView.getAdapter()).filter(mCurrentFilterText);
+                                            }
+                                        }
+                                    });
+                                }
+                            },
+                            DELAY
+                    );
+                }
             });
             if (mCurrentFilterText!=null) {
                 filterProduct.setText(mCurrentFilterText);

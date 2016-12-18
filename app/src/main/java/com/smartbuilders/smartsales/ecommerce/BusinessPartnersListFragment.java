@@ -22,6 +22,9 @@ import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -186,12 +189,36 @@ public class BusinessPartnersListFragment extends Fragment {
                                                     filterImageView.setOnClickListener(null);
                                                 }
                                                 mCurrentFilterText = s.toString();
-                                                mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
-                                                        mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
                                             }
 
+                                            private boolean isTyping = false;
+                                            private Timer timer = new Timer();
+                                            private final long DELAY = 800; // milliseconds
+
                                             @Override
-                                            public void afterTextChanged(Editable s) {
+                                            public void afterTextChanged(final Editable s) {
+                                                if(!isTyping) {
+                                                    isTyping = true;
+                                                }
+                                                timer.cancel();
+                                                timer = new Timer();
+                                                timer.schedule(
+                                                        new TimerTask() {
+                                                            @Override
+                                                            public void run() {
+                                                                isTyping = false;
+                                                                getActivity().runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        /********************/
+                                                                        mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                                                                                mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                                                                    }
+                                                                });
+                                                            }
+                                                        },
+                                                        DELAY
+                                                );
                                             }
                                         });
                                         if (mCurrentFilterText!=null) {

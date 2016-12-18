@@ -36,6 +36,9 @@ import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.RecentSearchDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Jesus Sarco, 12.05.2016
  */
@@ -149,27 +152,52 @@ public class SearchResultsActivity extends AppCompatActivity
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s != null) {
-                            mCurrentFilterText = s.toString();
-                            if (TextUtils.isEmpty(s)) {
-                                mSearchResultAdapter.setData(null, null);
-                            } else {
-                                if (mCurrentSearchByOptions.equals(getString(R.string.name))) {
-                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
-                                } else if (mCurrentSearchByOptions.equals(getString(R.string.reference))) {
-                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByReference(s.toString()));
-                                } else if (mCurrentSearchByOptions.equals(getString(R.string.purpose))) {
-                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByPurpose(s.toString()));
-                                } else {
-                                    mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
-                                }
-                            }
-                        }
-                    }
+                    public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+                    private boolean isTyping = false;
+                    private Timer timer = new Timer();
+                    private final long DELAY = 800; // milliseconds
 
                     @Override
-                    public void afterTextChanged(Editable s) { }
+                    public void afterTextChanged(final Editable s) {
+                        if(!isTyping) {
+                            // Send notification for start typing event
+                            isTyping = true;
+                        }
+                        timer.cancel();
+                        timer = new Timer();
+                        timer.schedule(
+                                new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        isTyping = false;
+                                        if (s != null) {
+                                            mCurrentFilterText = s.toString();
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    /****************************/
+                                                    if (TextUtils.isEmpty(s)) {
+                                                        mSearchResultAdapter.setData(null, null);
+                                                    } else {
+                                                        if (mCurrentSearchByOptions.equals(getString(R.string.name))) {
+                                                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
+                                                        } else if (mCurrentSearchByOptions.equals(getString(R.string.reference))) {
+                                                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByReference(s.toString()));
+                                                        } else if (mCurrentSearchByOptions.equals(getString(R.string.purpose))) {
+                                                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByPurpose(s.toString()));
+                                                        } else {
+                                                            mSearchResultAdapter.setData(s.toString(), productDB.getLightProductsByName(s.toString()));
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                },
+                                DELAY
+                        );
+                    }
                 });
                 searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override

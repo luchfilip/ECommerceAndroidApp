@@ -323,10 +323,16 @@ public class ProductDB {
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        name = name.replace('ñ', '\001').replace('Ñ', '\002');
-        name = Normalizer.normalize(name.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
-        name = name.replace('\001', 'ñ').replace('\002','Ñ');
+        name = name.trim();
+        for(int i = 0; i < name.length(); i++) {
+            if (name.charAt(i)!='ñ' && name.charAt(i)!='Ñ') {
+                name = name.replace('ñ', '\001').replace('Ñ', '\002');
+                name = Normalizer.normalize(name.replaceAll("\\s+", " ").toLowerCase(Locale.getDefault()),
+                        Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+                name = name.replace('\001', 'ñ').replace('\002', 'Ñ');
+                break;
+            }
+        }
 
         Cursor c = null;
         try {
@@ -366,8 +372,8 @@ public class ProductDB {
                 c = mContext.getContentResolver()
                         .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                                sql.append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
-                                        .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
+                                sql.append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE BINARY ")
+                                        .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE BINARY) ")
                                         .append(" AND P.IS_ACTIVE = 'Y' ")
                                         .append(" ORDER BY P.NAME ASC").toString(),
                                 new String[]{firstWord.toString(), aux.toString()}, null);
@@ -401,10 +407,17 @@ public class ProductDB {
                 || name.replaceAll("\\s+", " ").trim().split(" ").length>15){
             return products;
         }
-        name = name.replace('ñ', '\001').replace('Ñ', '\002');
-        name = Normalizer.normalize(name.replaceAll("\\s+", " ").trim().toLowerCase(Locale.getDefault()),
-                Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
-        name = name.replace('\001', 'ñ').replace('\002', 'Ñ');
+
+        name = name.trim();
+        for(int i = 0; i < name.length(); i++) {
+            if (name.charAt(i)!='ñ' && name.charAt(i)!='Ñ') {
+                name = name.replace('ñ', '\001').replace('Ñ', '\002');
+                name = Normalizer.normalize(name.replaceAll("\\s+", " ").toLowerCase(Locale.getDefault()),
+                        Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]","");
+                name = name.replace('\001', 'ñ').replace('\002', 'Ñ');
+                break;
+            }
+        }
 
         boolean isNumeric = (name.length()<8 && !patternIsNotNumeric.matcher(name).matches());
 
@@ -442,8 +455,8 @@ public class ProductDB {
                 c = mContext.getContentResolver()
                         .query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                                sql.append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? ")
-                                        .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ?) ")
+                                sql.append(" WHERE (replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE BINARY ")
+                                        .append(" OR replace(replace(replace(replace(").append(firstReplace).append(",'é','e'),'í','i'),'ó','o'),'ú','u') LIKE ? COLLATE BINARY) ")
                                         .append(" AND P.IS_ACTIVE = 'Y' ORDER BY P.NAME ASC ")
                                         .append((name.length()>1 ? "" : " LIMIT 50")).toString(),
                                 new String[]{firstWord.toString(), aux.toString()}, null);

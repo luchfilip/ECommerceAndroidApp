@@ -36,6 +36,8 @@ import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Jesus Sarco
@@ -337,13 +339,38 @@ public class ProductsListActivity extends AppCompatActivity
                                                 filterImageView.setOnClickListener(null);
                                             }
                                             mCurrentFilterText = s.toString();
-                                            ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText);
-                                            productsListSize.setText(getString(R.string.products_list_size_details,
-                                                        String.valueOf(mRecyclerView.getAdapter().getItemCount())));
                                         }
 
+                                        private boolean isTyping = false;
+                                        private Timer timer = new Timer();
+                                        private final long DELAY = 800; // milliseconds
+
                                         @Override
-                                        public void afterTextChanged(Editable s) { }
+                                        public void afterTextChanged(final Editable s) {
+                                            if(!isTyping) {
+                                                isTyping = true;
+                                            }
+                                            timer.cancel();
+                                            timer = new Timer();
+                                            timer.schedule(
+                                                    new TimerTask() {
+                                                        @Override
+                                                        public void run() {
+                                                            isTyping = false;
+                                                            runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    /**************************/
+                                                                    ((ProductsListAdapter) mRecyclerView.getAdapter()).filter(mCurrentFilterText);
+                                                                    productsListSize.setText(getString(R.string.products_list_size_details,
+                                                                            String.valueOf(mRecyclerView.getAdapter().getItemCount())));
+                                                                }
+                                                            });
+                                                        }
+                                                    },
+                                                    DELAY
+                                            );
+                                        }
                                     });
                                     if (mCurrentFilterText!=null) {
                                         filterProduct.setText(mCurrentFilterText);
