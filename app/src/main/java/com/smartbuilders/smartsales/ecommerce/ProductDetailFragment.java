@@ -36,6 +36,7 @@ import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.util.ArrayList;
 
@@ -132,6 +133,8 @@ public class ProductDetailFragment extends Fragment {
                         public void run() {
                             try {
                                 if (mProduct!=null) {
+                                    final boolean managePriceInOrder = Parameter.isManagePriceInOrder(getContext(), mUser);
+
                                     ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
 
                                     if (BuildConfig.USE_PRODUCT_IMAGE) {
@@ -337,20 +340,21 @@ public class ProductDetailFragment extends Fragment {
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                                                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
                                                     try {
                                                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
                                                                 .getSalesOrderLineFromShoppingSales(mProduct.getId(), Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                                                         if (salesOrderLine != null) {
                                                             updateQtyOrderedInShoppingSales(salesOrderLine);
                                                         } else {
-                                                            addToShoppingSale(mProduct);
+                                                            addToShoppingSale(mProduct, managePriceInOrder);
                                                         }
                                                     } catch (Exception e) {
                                                         //do nothing
                                                     }
                                                 } else {
-                                                    addToShoppingSale(mProduct);
+                                                    addToShoppingSale(mProduct, managePriceInOrder);
                                                 }
                                             }
                                         }
@@ -371,7 +375,7 @@ public class ProductDetailFragment extends Fragment {
                                         }
                                     );
 
-                                    if (Parameter.isManagePriceInOrder(getContext(), mUser)
+                                    if (managePriceInOrder
                                             && mProduct.getProductPriceAvailability().getAvailability()>0
                                             && mProduct.getProductPriceAvailability().getPrice()>0) {
                                         if (Parameter.showProductTotalPrice(getContext(), mUser)) {
@@ -447,8 +451,9 @@ public class ProductDetailFragment extends Fragment {
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
-    private void addToShoppingSale(Product product) {
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+    private void addToShoppingSale(Product product, boolean managePriceInOrder) {
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                || (mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
             DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
                     DialogAddToShoppingSale2.newInstance(product, mUser);
             dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),

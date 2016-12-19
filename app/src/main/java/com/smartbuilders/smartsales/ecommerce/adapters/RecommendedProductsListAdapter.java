@@ -25,6 +25,7 @@ import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.util.ArrayList;
 
@@ -86,7 +87,7 @@ public class RecommendedProductsListAdapter extends
     public interface Callback{
         void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user);
         void addToShoppingCart(int productId, User user);
-        void addToShoppingSale(int productId, User user);
+        void addToShoppingSale(int productId, User user, boolean managePriceInOrder);
         void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user);
     }
 
@@ -183,8 +184,13 @@ public class RecommendedProductsListAdapter extends
             holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        if (mDataset.get(position).getProductPriceAvailability().getAvailability()>0) {
+            holder.productAvailability.setVisibility(View.VISIBLE);
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        } else {
+            holder.productAvailability.setVisibility(View.GONE);
+        }
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,7 +248,8 @@ public class RecommendedProductsListAdapter extends
         holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || (mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
                     try {
                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
                                 .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
@@ -250,13 +257,13 @@ public class RecommendedProductsListAdapter extends
                         if (salesOrderLine != null) {
                             ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
                         } else {
-                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser, mIsManagePriceInOrder);
                         }
                     } catch (Exception e) {
                         //do nothing
                     }
                 } else {
-                    ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser);
+                    ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getId(), mUser, mIsManagePriceInOrder);
                 }
             }
         });

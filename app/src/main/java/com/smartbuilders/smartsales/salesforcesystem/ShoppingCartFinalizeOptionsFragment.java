@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.OrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
@@ -183,13 +182,13 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                                             public void onClick(View v) {
                                                 new AlertDialog.Builder(getContext())
                                                         .setMessage(R.string.proceed_to_checkout_question)
-                                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                        .setPositiveButton(R.string.proceed_to_checkout, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 closeOrder();
                                                             }
                                                         })
-                                                        .setNegativeButton(R.string.no, null)
+                                                        .setNegativeButton(R.string.cancel, null)
                                                         .show();
                                             }
                                         });

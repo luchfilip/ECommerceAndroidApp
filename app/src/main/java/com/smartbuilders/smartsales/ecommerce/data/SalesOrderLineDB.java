@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -123,29 +124,63 @@ public class SalesOrderLineDB {
         return salesOrderLines;
     }
 
+    ///**
+    // *
+    // * @param businessPartnerId
+    // * @param salesOrderId
+    // * @return
+    // */
+    //public int moveShoppingSaleToSalesOrder(int businessPartnerId, int salesOrderId) {
+    //    try {
+    //        return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                        .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+    //                        .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+    //                null,
+    //                "UPDATE ECOMMERCE_SALES_ORDER_LINE " +
+    //                        " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
+    //                        " WHERE ECOMMERCE_SALES_ORDER_LINE_ID IN ("+getSalesOrderLinesIds(businessPartnerId, SHOPPING_SALE_DOC_TYPE)+") " +
+    //                            " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
+    //                new String[]{String.valueOf(salesOrderId), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_SALES_ORDER_DOC_TYPE,
+    //                        String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
+    //                        SHOPPING_SALE_DOC_TYPE, "Y"});
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //    return 0;
+    //}
+
     /**
      *
-     * @param businessPartnerId
-     * @param salesOrderId
+     * @param salesOrderLine
+     * @param orderId
      * @return
      */
-    public int moveShoppingSaleToSalesOrder(int businessPartnerId, int salesOrderId) {
+    public String moveSalesOrderLineToFinalizedSalesOrder(SalesOrderLine salesOrderLine, int orderId){
         try {
-            return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            int rowsAffected = mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                             .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
                     null,
-                    "UPDATE ECOMMERCE_SALES_ORDER_LINE " +
-                            " SET ECOMMERCE_SALES_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
-                            " WHERE ECOMMERCE_SALES_ORDER_LINE_ID IN ("+getSalesOrderLinesIds(businessPartnerId, SHOPPING_SALE_DOC_TYPE)+") " +
-                                " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ?",
-                    new String[]{String.valueOf(salesOrderId), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_SALES_ORDER_DOC_TYPE,
-                            String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()),
+                    "UPDATE ECOMMERCE_SALES_ORDER_LINE SET ECOMMERCE_SALES_ORDER_ID = ?, QTY_REQUESTED = ?, SALES_PRICE = ?, " +
+                            " TAX_PERCENTAGE = ?, TAX_AMOUNT = ?, SUB_TOTAL_LINE = ?, TOTAL_LINE = ?, " +
+                            " UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
+                            " WHERE ECOMMERCE_SALES_ORDER_LINE_ID = ? AND USER_ID = ? " +
+                            " AND BUSINESS_PARTNER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+                            " AND (ECOMMERCE_SALES_ORDER_ID IS NULL OR ECOMMERCE_SALES_ORDER_ID = 0)",
+                    new String[]{String.valueOf(orderId), String.valueOf(salesOrderLine.getQuantityOrdered()),
+                            String.valueOf(salesOrderLine.getProductPrice()), String.valueOf(salesOrderLine.getProductTaxPercentage()),
+                            String.valueOf(salesOrderLine.getLineTaxAmount()), String.valueOf(salesOrderLine.getSubTotalLineAmount()),
+                            String.valueOf(salesOrderLine.getTotalLineAmount()), DateFormat.getCurrentDateTimeSQLFormat(), FINALIZED_SALES_ORDER_DOC_TYPE,
+                            String.valueOf(salesOrderLine.getId()), String.valueOf(mUser.getServerUserId()), String.valueOf(salesOrderLine.getBusinessPartnerId()),
                             SHOPPING_SALE_DOC_TYPE, "Y"});
-        } catch (Exception e) {
+            if (rowsAffected < 1) {
+                return "No se actualizó el registro en la base de datos.";
+            }
+        } catch (Exception e){
             e.printStackTrace();
+            return e.getMessage();
         }
-        return 0;
+        return null;
     }
 
     /**

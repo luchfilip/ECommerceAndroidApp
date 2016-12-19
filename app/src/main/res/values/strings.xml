@@ -50,7 +50,6 @@
     <string name="move_to_shopping_cart">Mover al pedido</string>
     <string name="qty_ordered_label">Cant. pedida:</string>
     <string name="proceed_to_checkout">Finalizar</string>
-    <string name="proceed_to_checkout_shopping_sale">Finalizar</string>
     <string name="no_app_installed_to_share">No se encuentra una aplicación desde donde se pueda compartir</string>
     <string name="checkout_my_app">Hey, descarga la aplicación para comprar a %1$s desde: https://play.google.com/store/apps/details?id=%2$s y mantente al día con todas sus ofertas y promociones. Te sorprenderá!</string>
     <string name="search_title">Buscar</string>
@@ -128,7 +127,7 @@
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
     <string name="quantity_label">Cantidad:</string>
     <string name="proceed_to_checkout_question">¿Desea finalizar el pedido?</string>
-    <string name="proceed_to_checkout_quoatation_question">¿Desea finalizar la cotización?</string>
+    <string name="proceed_to_checkout_quotation_question">¿Desea finalizar la cotización?</string>
     <string name="order_number">Pedido No.: %1$s</string>
     <string name="sales_order_doc_name">COTIZACIÓN</string>
     <string name="order_doc_name">PEDIDO</string>
@@ -180,7 +179,8 @@
     <string name="sales_order_product_price">Precio (%1$s): %2$s</string>
     <string name="sales_order_sub_total_amount">Sub-Total (%1$s): %2$s</string>
     <string name="sales_order_valid_to">Válida hasta: %1$s</string>
-    <string name="sales_order_sub_total_line_amount">Total-Línea (%1$s): %2$s</string>
+    <string name="sales_order_sub_total_line_amount">SubTotal-Línea (%1$s): %2$s</string>
+    <string name="sales_order_total_line_amount">Total-Línea (%1$s): %2$s</string>
     <string name="sales_order_tax_amount">Impuesto (%1$s): %2$s</string>
     <string name="sales_order_tax_percentage">Impuesto (%%): %1$s</string>
     <string name="sales_order_total_amount">Total (%1$s): %2$s</string>
@@ -382,7 +382,8 @@
     <string name="qty_requested_updated">Se actualizó la cantidad pedida.</string>
     <string name="welcome_user_detail">¡Bienvenido!, %1$s</string>
     <string name="smallest_width">default</string>
-    <string name="product_price">Precio: %1$s</string>
+    <string name="product_price">%1$s %2$s</string>
+    <string name="product_price_label">Precio: %1$s</string>
     <string name="product_price_detail">Precio (%1$s): %2$s</string>
     <string name="product_tax">Imp: %1$s</string>
     <string name="product_tax_detail">Imp (%1$s): %2$s</string>
@@ -489,7 +490,6 @@
     <string name="order_tracking_detail">Detalle Rastreo del Pedido</string>
     <string name="action_previous">Anterior</string>
     <string name="action_next">Siguiente</string>
-    <string name="action_finish">Finalizar</string>
     <string name="help">Ayuda</string>
     <string name="welcome_message">Mensaje Bienvenida</string>
     <string name="orders">Pedidos</string>

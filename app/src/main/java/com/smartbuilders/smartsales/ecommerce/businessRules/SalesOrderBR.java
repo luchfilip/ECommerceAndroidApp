@@ -22,7 +22,8 @@ public class SalesOrderBR {
     public static double getSubTotalAmount(ArrayList<SalesOrderLine> salesOrderLines){
         double subTotal=0;
         for(SalesOrderLine salesOrderLine : salesOrderLines){
-            subTotal += salesOrderLine.getSubTotalLineAmount();
+            //subTotal += salesOrderLine.getSubTotalLineAmount();
+            subTotal += SalesOrderLineBR.getSubTotalLine(salesOrderLine, salesOrderLine.getProduct());
         }
         return new BigDecimal(subTotal).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -34,7 +35,8 @@ public class SalesOrderBR {
     public static double getTaxAmount(ArrayList<SalesOrderLine> salesOrderLines){
         double tax=0;
         for(SalesOrderLine salesOrderLine : salesOrderLines){
-            tax += salesOrderLine.getLineTaxAmount();
+            //tax += salesOrderLine.getLineTaxAmount();
+            tax += SalesOrderLineBR.getTaxAmount(salesOrderLine, salesOrderLine.getProduct());
         }
         return new BigDecimal(tax).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -46,7 +48,8 @@ public class SalesOrderBR {
     public static double getTotalAmount(ArrayList<SalesOrderLine> salesOrderLines){
         double total=0;
         for(SalesOrderLine salesOrderLine : salesOrderLines){
-            total += salesOrderLine.getTotalLineAmount();
+            //total += salesOrderLine.getTotalLineAmount();
+            total += SalesOrderLineBR.getTotalLine(salesOrderLine, salesOrderLine.getProduct());
         }
         return new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
@@ -56,21 +59,21 @@ public class SalesOrderBR {
     }
 
     public static String createSalesOrderFromShoppingSale(Context context, User user,
-                                                          Date validTo, int businessPartnerAddressId){
+                                                          Date validTo, int businessPartnerAddressId, ArrayList<SalesOrderLine> salesOrderLines){
         try {
             return createSalesOrderFromShoppingSale(context, user,
-                    Utils.getAppCurrentBusinessPartnerId(context, user), validTo, businessPartnerAddressId);
+                    Utils.getAppCurrentBusinessPartnerId(context, user), validTo, businessPartnerAddressId, salesOrderLines);
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
     public static String createSalesOrderFromShoppingSale(Context context, User user, Integer businessPartnerId,
-                                                          Date validTo, int businessPartnerAddressId){
+                                                          Date validTo, int businessPartnerAddressId, ArrayList<SalesOrderLine> salesOrderLines){
         String result;
         try {
             result = new SalesOrderDB(context, user)
-                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo, businessPartnerAddressId);
+                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo, businessPartnerAddressId, salesOrderLines);
         } catch (Exception e) {
             e.printStackTrace();
             result = e.getMessage();

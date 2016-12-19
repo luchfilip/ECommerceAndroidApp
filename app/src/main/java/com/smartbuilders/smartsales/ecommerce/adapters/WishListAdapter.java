@@ -29,6 +29,7 @@ import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.util.ArrayList;
 
@@ -91,7 +92,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     public interface Callback{
         void updateQtyOrderedInShoppingCart(OrderLine orderLine, User user);
         void addToShoppingCart(Product product, User user);
-        void addToShoppingSale(Product product, User user);
+        void addToShoppingSale(Product product, User user, boolean managePriceInOrder);
         void reloadWishList(ArrayList<OrderLine> wishListLines, boolean setData);
         void updateQtyOrderedInShoppingSales(SalesOrderLine salesOrderLine, User user);
     }
@@ -191,8 +192,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
+        if (mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()>0) {
+            holder.productAvailability.setVisibility(View.VISIBLE);
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()));
+        } else {
+            holder.productAvailability.setVisibility(View.GONE);
+        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,7 +267,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         holder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
                     try {
                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
                                 .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getProductId(),
@@ -269,13 +276,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                         if (salesOrderLine != null) {
                             ((Callback) mFragment).updateQtyOrderedInShoppingSales(salesOrderLine, mUser);
                         } else {
-                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
+                            ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser, mIsManagePriceInOrder);
                         }
                     } catch (Exception e) {
                         //do nothing
                     }
                 } else {
-                    ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser);
+                    ((Callback) mFragment).addToShoppingSale(mDataset.get(holder.getAdapterPosition()).getProduct(), mUser, mIsManagePriceInOrder);
                 }
             }
         });

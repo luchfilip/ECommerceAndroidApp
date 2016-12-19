@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.UtilsGetDataFromDB;
 import com.smartbuilders.smartsales.ecommerce.utils.UtilsSyncData;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -51,12 +55,14 @@ public class SalesOrderDB {
      * @param businessPartnerAddressId
      * @return
      */
-    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo, int businessPartnerAddressId) {
-        SalesOrder salesOrder = getSalesOrderFromShoppingSale(businessPartnerId);
-        if(salesOrder!=null && salesOrder.getLinesNumber()>0){
+    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo,
+                                                   int businessPartnerAddressId, ArrayList<SalesOrderLine> salesOrderLines) {
+        if(salesOrderLines!=null && salesOrderLines.size()>0){
             try {
-                salesOrder.setId(UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER"));
-                salesOrder.setBusinessPartnerAddressId(businessPartnerAddressId);
+                int salesOrderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER");
+                double subTotal = SalesOrderBR.getSubTotalAmount(salesOrderLines),
+                        tax = SalesOrderBR.getTaxAmount(salesOrderLines),
+                        total = SalesOrderBR.getTotalAmount(salesOrderLines);
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -66,42 +72,29 @@ public class SalesOrderDB {
                                 "INSERT INTO ECOMMERCE_SALES_ORDER (ECOMMERCE_SALES_ORDER_ID, USER_ID, BUSINESS_PARTNER_ID, BUSINESS_PARTNER_ADDRESS_ID, DOC_STATUS, DOC_TYPE, " +
                                         " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS, LINES_NUMBER, SUB_TOTAL, TAX, TOTAL, VALID_TO) " +
                                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ",
-                                new String[]{String.valueOf(salesOrder.getId()), String.valueOf(mUser.getServerUserId()),
-                                        String.valueOf(salesOrder.getBusinessPartnerId()),
-                                        String.valueOf(salesOrder.getBusinessPartnerAddressId()),
+                                new String[]{String.valueOf(salesOrderId), String.valueOf(mUser.getServerUserId()),
+                                        String.valueOf(businessPartnerId),
+                                        String.valueOf(businessPartnerAddressId),
                                         "CO", SalesOrderLineDB.FINALIZED_SALES_ORDER_DOC_TYPE,
                                         DateFormat.getCurrentDateTimeSQLFormat(),
                                         Utils.getAppVersionName(mContext), mUser.getUserName(),
                                         Utils.getMacAddress(mContext),
-                                        String.valueOf(salesOrder.getLinesNumber()),
-                                        String.valueOf(salesOrder.getSubTotalAmount()),
-                                        String.valueOf(salesOrder.getTaxAmount()),
-                                        String.valueOf(salesOrder.getTotalAmount()),
+                                        String.valueOf(salesOrderLines.size()),
+                                        String.valueOf(subTotal),
+                                        String.valueOf(tax),
+                                        String.valueOf(total),
                                         validTo!=null?(new SimpleDateFormat("yyyy-MM-dd")).format(validTo):null});
                 if(rowsAffected <= 0){
                     return "Error 001 - No se insertó el pedido en la base de datos.";
                 }
+                SalesOrderLineDB salesOrderLineDB = new SalesOrderLineDB(mContext, mUser);
+                for (SalesOrderLine salesOrderLine : salesOrderLines) {
+                    salesOrderLine.setBusinessPartnerId(businessPartnerId);
+                    salesOrderLineDB.moveSalesOrderLineToFinalizedSalesOrder(salesOrderLine, salesOrderId);
+                }
             } catch (Exception e){
                 e.printStackTrace();
                 return e.getMessage();
-            }
-            if((new SalesOrderLineDB(mContext, mUser)).moveShoppingSaleToSalesOrder(businessPartnerId, salesOrder.getId())<=0){
-                try {
-                    int rowsAffected = mContext.getContentResolver()
-                            .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                                    null,
-                                    "DELETE FROM ECOMMERCE_SALES_ORDER WHERE ECOMMERCE_SALES_ORDER_ID = ? AND USER_ID = ?",
-                                    new String[]{String.valueOf(salesOrder.getId()), String.valueOf(mUser.getServerUserId())});
-                    if(rowsAffected <= 0){
-                        return "Error 003 - No se insertó la cotización en la base de datos ni se eliminó la cabecera.";
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                    return e.getMessage();
-                }
-                return "Error 002 - No se insertó la cotización en la base de datos.";
             }
         }else{
             return "No existen productos en la cotización.";
@@ -109,46 +102,46 @@ public class SalesOrderDB {
         return null;
     }
 
-    /**
-     *
-     * @param businessPartnerId
-     * @return
-     */
-    private SalesOrder getSalesOrderFromShoppingSale(int businessPartnerId) {
-        Cursor c = null;
-        try {
-            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    "SELECT SUB_TOTAL_LINE, TAX_AMOUNT, TOTAL_LINE " +
-                    " FROM ECOMMERCE_SALES_ORDER_LINE " +
-                    " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
-                    new String[]{String.valueOf(businessPartnerId),
-                            String.valueOf(mUser.getServerUserId()),
-                            SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
-            if(c!=null){
-                SalesOrder salesOrder = new SalesOrder();
-                salesOrder.setBusinessPartnerId(businessPartnerId);
-                while(c.moveToNext()){
-                    salesOrder.setLinesNumber(salesOrder.getLinesNumber() + 1);
-                    salesOrder.setSubTotalAmount(salesOrder.getSubTotalAmount() + c.getDouble(0));
-                    salesOrder.setTaxAmount(salesOrder.getTaxAmount() + c.getDouble(1));
-                    salesOrder.setTotalAmount(salesOrder.getTotalAmount() + c.getDouble(2));
-                }
-                return salesOrder;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(c!=null){
-                try {
-                    c.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
+    ///**
+    // *
+    // * @param businessPartnerId
+    // * @return
+    // */
+    //private SalesOrder getSalesOrderFromShoppingSale(int businessPartnerId) {
+    //    Cursor c = null;
+    //    try {
+    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
+    //                "SELECT SUB_TOTAL_LINE, TAX_AMOUNT, TOTAL_LINE " +
+    //                " FROM ECOMMERCE_SALES_ORDER_LINE " +
+    //                " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
+    //                new String[]{String.valueOf(businessPartnerId),
+    //                        String.valueOf(mUser.getServerUserId()),
+    //                        SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
+    //        if(c!=null){
+    //            SalesOrder salesOrder = new SalesOrder();
+    //            salesOrder.setBusinessPartnerId(businessPartnerId);
+    //            while(c.moveToNext()){
+    //                salesOrder.setLinesNumber(salesOrder.getLinesNumber() + 1);
+    //                salesOrder.setSubTotalAmount(salesOrder.getSubTotalAmount() + c.getDouble(0));
+    //                salesOrder.setTaxAmount(salesOrder.getTaxAmount() + c.getDouble(1));
+    //                salesOrder.setTotalAmount(salesOrder.getTotalAmount() + c.getDouble(2));
+    //            }
+    //            return salesOrder;
+    //        }
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    } finally {
+    //        if(c!=null){
+    //            try {
+    //                c.close();
+    //            } catch (Exception e){
+    //                e.printStackTrace();
+    //            }
+    //        }
+    //    }
+    //    return null;
+    //}
 
     public SalesOrder getSalesOrderById(int salesOrderId) {
         Cursor c = null;

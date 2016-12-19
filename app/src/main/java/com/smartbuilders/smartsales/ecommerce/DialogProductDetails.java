@@ -27,6 +27,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 /**
  * Created by Jesus Sarco on 16/9/2016.
@@ -73,6 +74,8 @@ public class DialogProductDetails extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.dialog_product_details, container);
 
+        final boolean managePriceInOrder = Parameter.isManagePriceInOrder(getContext(), mUser);
+
         view.findViewById(R.id.container_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +93,7 @@ public class DialogProductDetails extends DialogFragment {
             view.findViewById(R.id.product_image).setVisibility(View.GONE);
         }
 
-        if (Parameter.isManagePriceInOrder(getContext(), mUser)
+        if (managePriceInOrder
                 && mProduct.getProductPriceAvailability().getAvailability()>0
                 && mProduct.getProductPriceAvailability().getPrice()>0) {
             if (Parameter.showProductTotalPrice(getContext(), mUser)) {
@@ -173,20 +176,21 @@ public class DialogProductDetails extends DialogFragment {
         view.findViewById(R.id.addToShoppingSale_imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
                     try {
                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(getContext(), mUser))
                                 .getSalesOrderLineFromShoppingSales(mProduct.getId(), Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
                         if (salesOrderLine != null) {
                             updateQtyOrderedInShoppingSales(salesOrderLine);
                         } else {
-                            addToShoppingSale(mProduct);
+                            addToShoppingSale(mProduct, managePriceInOrder);
                         }
                     } catch (Exception e) {
                         //do nothing
                     }
                 } else {
-                    addToShoppingSale(mProduct);
+                    addToShoppingSale(mProduct, managePriceInOrder);
                 }
             }
         });
@@ -261,10 +265,11 @@ public class DialogProductDetails extends DialogFragment {
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
-    private void addToShoppingSale(Product product) {
+    private void addToShoppingSale(Product product, boolean managePriceInOrder) {
         product = (new ProductDB(getContext(), mUser)).getProductById(product.getId());
         if (product!=null) {
-            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                    || (mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
                 DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
                         DialogAddToShoppingSale2.newInstance(product, mUser);
                 dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),

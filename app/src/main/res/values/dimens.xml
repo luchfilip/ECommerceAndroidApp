@@ -9,6 +9,8 @@
     <dimen name="productMinInfo_cardView_Width">210dp</dimen>
     <dimen name="productMinInfo_max_image_Width">165dp</dimen>
     <dimen name="productMinInfo_max_image_Height">165dp</dimen>
+    <dimen name="productMinInfo_min_image_Width">165dp</dimen>
+    <dimen name="productMinInfo_min_image_Height">165dp</dimen>
     <dimen name="productDetail_max_image_Width">130dp</dimen>
     <dimen name="productDetail_max_image_Height">130dp</dimen>
     <dimen name="productLargeDetail_max_image_Width">220dp</dimen>
@@ -18,8 +20,8 @@
     <dimen name="product_detail_width">220dp</dimen>
     <dimen name="product_detail_height">220dp</dimen>
     <dimen name="mainpage_name_size">20sp</dimen>
-    <dimen name="productMinInfo_availability_text_size">13sp</dimen>
-    <dimen name="productMinInfo_price_text_size">13sp</dimen>
+    <dimen name="productMinInfo_availability_text_size">14sp</dimen>
+    <dimen name="productMinInfo_price_text_size">14sp</dimen>
     <dimen name="productMinInfo_product_name_text_size">12sp</dimen>
 
     <dimen name="productDetailCardView_name_text_size">15sp</dimen>
@@ -45,8 +47,8 @@
 
     <dimen name="productMainActivity_productName_text_size">13sp</dimen>
     <dimen name="productMainActivity_productInternalCode_text_size">11sp</dimen>
-    <dimen name="productMainActivity_productPrice_text_size">13sp</dimen>
-    <dimen name="productMainActivity_productAvailability_text_size">13sp</dimen>
+    <dimen name="productMainActivity_productPrice_text_size">14sp</dimen>
+    <dimen name="productMainActivity_productAvailability_text_size">14sp</dimen>
     <dimen name="productMainActivity_productImage_width">100dp</dimen>
     <dimen name="productMainActivity_productImage_height">100dp</dimen>
     <dimen name="productMainActivity_marginLeftAndRight">5dp</dimen>
@@ -117,5 +119,6 @@
     <dimen name="shape_product_color_layout_height">15dp</dimen>
     <dimen name="shape_product_color_layout_margin">2dp</dimen>
     <dimen name="shape_product_color_layout_elevation">1dp</dimen>
+    <integer name="number_of_cards_in_staggered_grid_layout">2</integer>
 
 </resources>

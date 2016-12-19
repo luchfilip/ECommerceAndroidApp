@@ -2,13 +2,14 @@ package com.smartbuilders.smartsales.ecommerce;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import com.smartbuilders.smartsales.ecommerce.adapters.MainActivityStaggeredLayoutAdapter;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.smartsales.ecommerce.adapters.MainActivityAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.MainPageSectionsDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -19,15 +20,12 @@ import java.util.ArrayList;
  */
 public class MainFragment extends Fragment {
 
-    private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";
-    private static final String STATE_LIST_VIEW_TOP = "STATE_LIST_VIEW_TOP";
-
-    // save index and top position
-    private int mListViewIndex;
-    private int mListViewTop;
+    private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
 
     private boolean mIsInitialLoad;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
+    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    private int[] mRecyclerViewCurrentFirstPosition;
     private User mCurrentUser;
     private View mProgressContainer;
 
@@ -47,11 +45,8 @@ public class MainFragment extends Fragment {
             public void run() {
                 try {
                     if(savedInstanceState != null) {
-                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_INDEX)){
-                            mListViewIndex = savedInstanceState.getInt(STATE_LIST_VIEW_INDEX);
-                        }
-                        if(savedInstanceState.containsKey(STATE_LIST_VIEW_TOP)){
-                            mListViewTop = savedInstanceState.getInt(STATE_LIST_VIEW_TOP);
+                        if(savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)){
+                            mRecyclerViewCurrentFirstPosition = savedInstanceState.getIntArray(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
                         }
                     }
                     mCurrentUser = Utils.getCurrentUser(getActivity());
@@ -66,9 +61,21 @@ public class MainFragment extends Fragment {
                         public void run() {
                             try {
                                 mProgressContainer = view.findViewById(R.id.progressContainer);
-                                mListView = (ListView) view.findViewById(R.id.main_categories_list);
-                                mListView.setAdapter(new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
-                                mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
+
+                                mRecyclerView = (RecyclerView) view.findViewById(R.id.main_categories_list);
+                                // use this setting to improve performance if you know that changes
+                                // in content do not change the layout size of the RecyclerView
+                                mRecyclerView.setHasFixedSize(true);
+                                mStaggeredGridLayoutManager =
+                                        new StaggeredGridLayoutManager(
+                                                getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout),
+                                                StaggeredGridLayoutManager.VERTICAL);
+                                mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+                                mRecyclerView.setAdapter(new MainActivityStaggeredLayoutAdapter(getContext(),
+                                        getActivity(), mainPageObjects, mCurrentUser));
+                                if (mRecyclerViewCurrentFirstPosition!=null) {
+                                    mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition[0]);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -92,8 +99,8 @@ public class MainFragment extends Fragment {
             if (mProgressContainer!=null) {
                 mProgressContainer.setVisibility(View.VISIBLE);
             }
-            if (mListView!=null) {
-                mListView.setVisibility(View.GONE);
+            if (mRecyclerView!=null) {
+                mRecyclerView.setVisibility(View.GONE);
             }
             final ArrayList<Object> mainPageObjects = new ArrayList<>();
             new Thread() {
@@ -111,11 +118,11 @@ public class MainFragment extends Fragment {
                             @Override
                             public void run() {
                                 try {
-                                    if(mListView!=null) {
-                                        if (mListView.getAdapter()!=null) {
-                                            ((MainActivityAdapter) mListView.getAdapter()).setData(mainPageObjects);
+                                    if(mRecyclerView!=null) {
+                                        if (mRecyclerView.getAdapter()!=null) {
+                                            ((MainActivityStaggeredLayoutAdapter) mRecyclerView.getAdapter()).setData(mainPageObjects);
                                         } else {
-                                            mListView.setAdapter(new MainActivityAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
+                                            mRecyclerView.setAdapter(new MainActivityStaggeredLayoutAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
                                         }
                                     }
                                 } catch (Exception e) {
@@ -124,8 +131,8 @@ public class MainFragment extends Fragment {
                                     if (mProgressContainer!=null) {
                                         mProgressContainer.setVisibility(View.GONE);
                                     }
-                                    if (mListView!=null) {
-                                        mListView.setVisibility(View.VISIBLE);
+                                    if (mRecyclerView!=null) {
+                                        mRecyclerView.setVisibility(View.VISIBLE);
                                     }
                                 }
                             }
@@ -140,15 +147,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            outState.putInt(STATE_LIST_VIEW_INDEX, mListView.getFirstVisiblePosition());
+            int[] into = new int[getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout)];
+            outState.putIntArray(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
+                    ((StaggeredGridLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(into));
         } catch (Exception e) {
-            outState.putInt(STATE_LIST_VIEW_INDEX, mListViewIndex);
-        }
-        try {
-            outState.putInt(STATE_LIST_VIEW_TOP, (mListView.getChildAt(0) == null) ? 0 :
-                    (mListView.getChildAt(0).getTop() - mListView.getPaddingTop()));
-        } catch (Exception e) {
-            outState.putInt(STATE_LIST_VIEW_TOP, mListViewTop);
+            outState.putIntArray(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }
         super.onSaveInstanceState(outState);
     }

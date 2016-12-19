@@ -282,13 +282,13 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                                                 public void onClick(View v) {
                                                     new AlertDialog.Builder(getContext())
                                                             .setMessage(R.string.proceed_to_checkout_question)
-                                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                            .setPositiveButton(R.string.proceed_to_checkout, new DialogInterface.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     closeOrder();
                                                                 }
                                                             })
-                                                            .setNegativeButton(R.string.no, null)
+                                                            .setNegativeButton(R.string.cancel, null)
                                                             .show();
                                                 }
                                             });

@@ -28,7 +28,7 @@ import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptionsActivity;
-import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
+import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapterSalesMan;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
@@ -39,6 +39,7 @@ import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.DatePickerFragment;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,7 +51,7 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapter.Callback,
-        ShoppingSaleAdapter2.Callback, DatePickerFragment.Callback, DialogUpdateShoppingSaleQtyOrdered.Callback {
+        ShoppingSaleAdapterSalesMan.Callback, DatePickerFragment.Callback, DialogUpdateShoppingSaleQtyOrdered.Callback {
 
     private static final String STATE_USER_BUSINESS_PARTNER_ID = "STATE_USER_BUSINESS_PARTNER_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
@@ -59,7 +60,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private User mUser;
     private boolean mIsInitialLoad;
     private ShoppingSaleAdapter mShoppingSaleAdapter;
-    private ShoppingSaleAdapter2 mShoppingSaleAdapter2;
+    private ShoppingSaleAdapterSalesMan mShoppingSaleAdapterSalesMan;
     private View mBlankScreenView;
     private View mainLayout;
     private TextView mTotalLines;
@@ -73,6 +74,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     private EditText mValidToEditText;
     private String mValidToText;
     private SalesOrderLineDB mSalesOrderLineDB;
+    private boolean mUseSalesManShoppingSales;
 
     public ShoppingSaleFragment() {
     }
@@ -117,9 +119,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
                     mUser = Utils.getCurrentUser(getContext());
                     mSalesOrderLineDB = new SalesOrderLineDB(getContext(), mUser);
+                    mUseSalesManShoppingSales = BuildConfig.IS_SALES_FORCE_SYSTEM
+                            || (mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID && Parameter.isManagePriceInOrder(getContext(), mUser));
 
-                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                        mShoppingSaleAdapter2 = new ShoppingSaleAdapter2(getContext(), ShoppingSaleFragment.this,
+                    if (mUseSalesManShoppingSales) {
+                        mShoppingSaleAdapterSalesMan = new ShoppingSaleAdapterSalesMan(getContext(), ShoppingSaleFragment.this,
                                 (mUserBusinessPartnerId !=0 ? mSalesOrderLineDB.getShoppingSaleByBusinessPartnerId(mUserBusinessPartnerId)
                                         : mSalesOrderLineDB.getShoppingSale()), mUser);
                     } else {
@@ -144,8 +148,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 mTaxAmount = (TextView) view.findViewById(R.id.taxesAmount_tv);
                                 mTotalAmount = (TextView) view.findViewById(R.id.totalAmount_tv);
 
-                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                    mShoppingSaleAdapter2.setParentLayout(mShoppingSaleAdapter2.getItemCount()>0 ? mainLayout : mBlankScreenView);
+                                if (mShoppingSaleAdapterSalesMan!=null) {
+                                    mShoppingSaleAdapterSalesMan.setParentLayout(mShoppingSaleAdapterSalesMan.getItemCount()>0 ? mainLayout : mBlankScreenView);
                                 } else {
                                     mShoppingSaleAdapter.setParentLayout(mShoppingSaleAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView);
                                 }
@@ -169,7 +173,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2 : mShoppingSaleAdapter);
+                                recyclerView.setAdapter(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan : mShoppingSaleAdapter);
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -187,8 +191,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                                                 //Remove swiped item from list and notify the RecyclerView
                                                 final int itemPosition = viewHolder.getAdapterPosition();
-                                                final SalesOrderLine salesOrderLine = (BuildConfig.IS_SALES_FORCE_SYSTEM
-                                                        ? mShoppingSaleAdapter2.getItem(itemPosition)
+                                                final SalesOrderLine salesOrderLine = (mShoppingSaleAdapterSalesMan!=null
+                                                        ? mShoppingSaleAdapterSalesMan.getItem(itemPosition)
                                                         : mShoppingSaleAdapter.getItem(itemPosition));
 
                                                 new AlertDialog.Builder(getContext())
@@ -198,13 +202,13 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 String result = mSalesOrderLineDB.deactivateSalesOrderLine(salesOrderLine.getId());
                                                                 if(result == null){
-                                                                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                                                        mShoppingSaleAdapter2.removeItem(itemPosition);
+                                                                    if (mShoppingSaleAdapterSalesMan!=null) {
+                                                                        mShoppingSaleAdapterSalesMan.removeItem(itemPosition);
                                                                     } else {
                                                                         mShoppingSaleAdapter.removeItem(itemPosition);
                                                                     }
-                                                                    Snackbar.make((BuildConfig.IS_SALES_FORCE_SYSTEM
-                                                                            ? mShoppingSaleAdapter2.getItemCount()>0
+                                                                    Snackbar.make((mShoppingSaleAdapterSalesMan!=null
+                                                                            ? mShoppingSaleAdapterSalesMan.getItemCount()>0
                                                                             : mShoppingSaleAdapter.getItemCount()>0)
                                                                             ? mainLayout : mBlankScreenView, R.string.product_removed, Snackbar.LENGTH_LONG)
                                                                             .setAction(R.string.undo, new View.OnClickListener() {
@@ -212,8 +216,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                                                 public void onClick(View view) {
                                                                                     String result = mSalesOrderLineDB.restoreSalesOrderLine(salesOrderLine.getId());
                                                                                     if(result == null){
-                                                                                        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                                                                            mShoppingSaleAdapter2.addItem(itemPosition, salesOrderLine);
+                                                                                        if (mShoppingSaleAdapterSalesMan!=null) {
+                                                                                            mShoppingSaleAdapterSalesMan.addItem(itemPosition, salesOrderLine);
                                                                                         } else {
                                                                                             mShoppingSaleAdapter.addItem(itemPosition, salesOrderLine);
                                                                                         }
@@ -223,8 +227,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                                                 }
                                                                             }).show();
                                                                 } else {
-                                                                    if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                                                        mShoppingSaleAdapter2.notifyDataSetChanged();
+                                                                    if (mShoppingSaleAdapterSalesMan!=null) {
+                                                                        mShoppingSaleAdapterSalesMan.notifyDataSetChanged();
                                                                     } else {
                                                                         mShoppingSaleAdapter.notifyDataSetChanged();
                                                                     }
@@ -235,8 +239,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
-                                                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                                                                    mShoppingSaleAdapter2.notifyDataSetChanged();
+                                                                if (mShoppingSaleAdapterSalesMan!=null) {
+                                                                    mShoppingSaleAdapterSalesMan.notifyDataSetChanged();
                                                                 } else {
                                                                     mShoppingSaleAdapter.notifyDataSetChanged();
                                                                 }
@@ -300,7 +304,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                             String result = null;
                                                             try {
                                                                 result = SalesOrderBR.isValidQuantityOrderedInSalesOrderLines(getContext(), mUser,
-                                                                        BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter.getData() : mShoppingSaleAdapter.getData());
+                                                                        mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                                 result = e.getMessage();
@@ -339,8 +343,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                 @Override
                                                 public void onClick(View v) {
                                                     new AlertDialog.Builder(getContext())
-                                                            .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                            .setMessage(R.string.proceed_to_checkout_quotation_question)
+                                                            .setPositiveButton(R.string.proceed_to_checkout, new DialogInterface.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     Date validTo = null;
@@ -355,7 +359,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                                     closeSalesOrder(validTo);
                                                                 }
                                                             })
-                                                            .setNegativeButton(R.string.no, null)
+                                                            .setNegativeButton(R.string.cancel, null)
                                                             .show();
                                                 }
                                             });
@@ -366,8 +370,8 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                 e.printStackTrace();
                             } finally {
                                 view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                if (BuildConfig.IS_SALES_FORCE_SYSTEM
-                                        ? (mShoppingSaleAdapter2==null || mShoppingSaleAdapter2.getItemCount()==0)
+                                if (mUseSalesManShoppingSales
+                                        ? (mShoppingSaleAdapterSalesMan==null || mShoppingSaleAdapterSalesMan.getItemCount()==0)
                                         : (mShoppingSaleAdapter==null || mShoppingSaleAdapter.getItemCount()==0)) {
                                     mBlankScreenView.setVisibility(View.VISIBLE);
                                 } else {
@@ -410,9 +414,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                 try {
                     if (mUserBusinessPartnerId != 0) {
                         result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
-                                mUserBusinessPartnerId, validTo, 0);
+                                mUserBusinessPartnerId, validTo, 0,
+                                mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                     } else {
-                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0);
+                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0,
+                                mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -477,22 +483,22 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     }
 
     public void fillFields(){
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM
-                ? (mShoppingSaleAdapter2!=null && mShoppingSaleAdapter2.getItemCount()>0)
+        if (mUseSalesManShoppingSales
+                ? (mShoppingSaleAdapterSalesMan !=null && mShoppingSaleAdapterSalesMan.getItemCount()>0)
                 : (mShoppingSaleAdapter!=null && mShoppingSaleAdapter.getItemCount()>0)) {
             mTotalLines.setText(getString(R.string.order_lines_number,
-                    String.valueOf(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2.getItemCount() : mShoppingSaleAdapter.getItemCount())));
+                    String.valueOf(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getItemCount() : mShoppingSaleAdapter.getItemCount())));
             Currency currency = (new CurrencyDB(getContext(), mUser))
                     .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
             mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
                     currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getSubTotalAmountStringFormat(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2.getData() : mShoppingSaleAdapter.getData())));
+                    SalesOrderBR.getSubTotalAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
             mTaxAmount.setText(getString(R.string.sales_order_tax_amount,
                     currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getTaxAmountStringFormat(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2.getData() : mShoppingSaleAdapter.getData())));
+                    SalesOrderBR.getTaxAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
             mTotalAmount.setText(getString(R.string.sales_order_total_amount,
                     currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getTotalAmountStringFormat(BuildConfig.IS_SALES_FORCE_SYSTEM ? mShoppingSaleAdapter2.getData() : mShoppingSaleAdapter.getData())));
+                    SalesOrderBR.getTotalAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
         }
     }
 
@@ -527,9 +533,9 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
 
     @Override
     public void reloadShoppingSale(){
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            mShoppingSaleAdapter2.notifyDataSetChanged();
-        } else {
+        if (mShoppingSaleAdapterSalesMan!=null) {
+            mShoppingSaleAdapterSalesMan.notifyDataSetChanged();
+        } else if (mShoppingSaleAdapter!=null) {
             mShoppingSaleAdapter.notifyDataSetChanged();
         }
         reloadShoppingSale(null, false);
@@ -538,21 +544,21 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
     @Override
     public void reloadShoppingSale(ArrayList<SalesOrderLine> salesOrderLines, boolean setData){
         if (setData) {
-            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-                mShoppingSaleAdapter2.setData(salesOrderLines);
-            } else {
+            if (mShoppingSaleAdapterSalesMan!=null) {
+                mShoppingSaleAdapterSalesMan.setData(salesOrderLines);
+            } else if (mShoppingSaleAdapter!=null) {
                 mShoppingSaleAdapter.setData(salesOrderLines);
             }
         }
 
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            mShoppingSaleAdapter2.setParentLayout(mShoppingSaleAdapter2.getItemCount()>0 ? mainLayout : mBlankScreenView);
-        } else {
+        if (mShoppingSaleAdapterSalesMan!=null) {
+            mShoppingSaleAdapterSalesMan.setParentLayout(mShoppingSaleAdapterSalesMan.getItemCount()>0 ? mainLayout : mBlankScreenView);
+        } else if (mShoppingSaleAdapter!=null) {
             mShoppingSaleAdapter.setParentLayout(mShoppingSaleAdapter.getItemCount()>0 ? mainLayout : mBlankScreenView);
         }
 
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM
-                ? (mShoppingSaleAdapter2==null || mShoppingSaleAdapter2.getItemCount()==0)
+        if (mUseSalesManShoppingSales
+                ? (mShoppingSaleAdapterSalesMan==null || mShoppingSaleAdapterSalesMan.getItemCount()==0)
                 : (mShoppingSaleAdapter==null || mShoppingSaleAdapter.getItemCount()==0)) {
             mBlankScreenView.setVisibility(View.VISIBLE);
             mainLayout.setVisibility(View.GONE);

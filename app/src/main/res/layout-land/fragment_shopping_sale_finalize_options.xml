@@ -168,7 +168,7 @@
                 style="@style/GoldenButtonAppTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/proceed_to_checkout_shopping_sale"
+                android:text="@string/proceed_to_checkout"
                 android:id="@+id/proceed_to_checkout_shopping_sale_button"
                 android:layout_gravity="bottom|right"
                 android:layout_marginTop="2dp"

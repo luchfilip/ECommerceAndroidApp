@@ -59,7 +59,7 @@ public class MainPageProductSectionDB {
 
         if(!mainPageProductSections.isEmpty()) {
             for(MainPageProductSection mainPageProductSection : mainPageProductSections){
-                mainPageProductSection.setProducts(getActiveProductsByMainPageProductSectionId(mainPageProductSection.getId(), 25));
+                mainPageProductSection.setProducts(getActiveProductsByMainPageProductSectionId(mainPageProductSection.getId(), 45));
             }
         }
         return mainPageProductSections;

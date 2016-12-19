@@ -40,6 +40,7 @@ import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 /**
  * Created by Alberto on 22/3/2016.
@@ -204,29 +205,38 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        if (mIsManagePriceInOrder
-                && mDataset.get(position).getProductPriceAvailability().getAvailability()>0
-                && mDataset.get(position).getProductPriceAvailability().getPrice()>0) {
-            //se toma solo uno de los dos precios, teniendo como prioridad el precio total
-            if (mShowProductTotalPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
-            } else if (mShowProductPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
+        if (holder.productPrice!=null) {
+            if (mIsManagePriceInOrder
+                    && mDataset.get(position).getProductPriceAvailability().getAvailability() > 0
+                    && mDataset.get(position).getProductPriceAvailability().getPrice() > 0) {
+                //se toma solo uno de los dos precios, teniendo como prioridad el precio total
+                if (mShowProductTotalPrice) {
+                    holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
+                            mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                            mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
+                    holder.productPrice.setVisibility(View.VISIBLE);
+                } else if (mShowProductPrice) {
+                    holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
+                            mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
+                            mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
+                    holder.productPrice.setVisibility(View.VISIBLE);
+                } else {
+                    holder.productPrice.setVisibility(View.INVISIBLE);
+                }
             } else {
-                holder.productPrice.setVisibility(View.INVISIBLE);
+                holder.productPrice.setVisibility((mMask != MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
             }
-        } else {
-            holder.productPrice.setVisibility((mMask!=MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        if (holder.productAvailability!=null) {
+            if (mIsManagePriceInOrder) {
+                holder.productAvailability.setVisibility(View.GONE);
+            } else {
+                holder.productAvailability.setVisibility(View.VISIBLE);
+                holder.productAvailability.setText(mContext.getString(R.string.availability,
+                        mDataset.get(position).getProductPriceAvailability().getAvailability()));
+            }
+        }
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,7 +296,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
                     try {
                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
                                 .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
@@ -294,13 +305,13 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                         if (salesOrderLine != null) {
                             updateQtyOrderedInShoppingSales(salesOrderLine);
                         } else {
-                            addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                            addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
                         }
                     } catch (Exception e) {
                         //do nothing
                     }
                 } else {
-                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()));
+                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
                 }
             }
         });
@@ -388,10 +399,11 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
-    private void addToShoppingSale(Product product) {
+    private void addToShoppingSale(Product product, boolean managePriceInOrder) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
         if (product!=null) {
-            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                    || (mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
                 DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
                         DialogAddToShoppingSale2.newInstance(product, mUser);
                 dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),

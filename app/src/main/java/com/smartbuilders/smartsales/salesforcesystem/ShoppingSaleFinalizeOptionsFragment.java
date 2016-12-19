@@ -175,8 +175,8 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                                             @Override
                                             public void onClick(View v) {
                                                 new AlertDialog.Builder(getContext())
-                                                        .setMessage(R.string.proceed_to_checkout_quoatation_question)
-                                                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                                        .setMessage(R.string.proceed_to_checkout_quotation_question)
+                                                        .setPositiveButton(R.string.proceed_to_checkout, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 Date validTo = null;
@@ -191,7 +191,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                                                                 closeSalesOrder(validTo);
                                                             }
                                                         })
-                                                        .setNegativeButton(R.string.no, null)
+                                                        .setNegativeButton(R.string.cancel, null)
                                                         .show();
                                             }
                                         });
@@ -223,7 +223,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                 String result = null;
                 try {
                     result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
-                            validTo, mSelectedBusinessPartnerAddressId);
+                            validTo, mSelectedBusinessPartnerAddressId, mSalesOrderLines);
                 } catch (Exception e) {
                     e.printStackTrace();
                     result = e.getMessage();

@@ -421,24 +421,24 @@ public class OrderLineDB {
         return 0;
     }
 
-    private int moveOrderLinesToOrderByOrderId(int businessPartnerId, int orderId, String newDocType, String currentDocType) {
-        try {
-            return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
-                    null,
-                    "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
-                    " WHERE ECOMMERCE_ORDER_LINE_ID IN ("+getOrderLinesIds(businessPartnerId, SHOPPING_CART_DOC_TYPE)+") " +
-                        " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
-                        " AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
-                    new String[]{String.valueOf(orderId), DateFormat.getCurrentDateTimeSQLFormat(),
-                            newDocType, String.valueOf(businessPartnerId),
-                            String.valueOf(mUser.getServerUserId()), currentDocType, "Y"});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
+    //private int moveOrderLinesToOrderByOrderId(int businessPartnerId, int orderId, String newDocType, String currentDocType) {
+    //    try {
+    //        return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+    //                .appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE)).build(),
+    //                null,
+    //                "UPDATE ECOMMERCE_ORDER_LINE SET ECOMMERCE_ORDER_ID = ?, UPDATE_TIME = ?, DOC_TYPE = ?, SEQUENCE_ID = 0 " +
+    //                " WHERE ECOMMERCE_ORDER_LINE_ID IN ("+getOrderLinesIds(businessPartnerId, SHOPPING_CART_DOC_TYPE)+") " +
+    //                    " AND BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? " +
+    //                    " AND (ECOMMERCE_ORDER_ID IS NULL OR ECOMMERCE_ORDER_ID = 0)",
+    //                new String[]{String.valueOf(orderId), DateFormat.getCurrentDateTimeSQLFormat(),
+    //                        newDocType, String.valueOf(businessPartnerId),
+    //                        String.valueOf(mUser.getServerUserId()), currentDocType, "Y"});
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //    return 0;
+    //}
 
     /**
      *

@@ -20,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by Jesus Sarco, 2/10/2016.
  */
-public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapter2.ViewHolder> {
+public class ShoppingSaleAdapterSalesMan extends RecyclerView.Adapter<ShoppingSaleAdapterSalesMan.ViewHolder> {
 
     private Context mContext;
     private Fragment mFragment;
@@ -43,6 +44,8 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
     private boolean mShowProductPrice;
     private boolean mShowProductTax;
     private boolean mShowProductTotalPrice;
+    private boolean mShowSubTotalLineAmount;
+    private boolean mShowTotalLineAmount;
     private View mParentLayout;
 
     /**
@@ -57,7 +60,8 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         public TextView productPrice;
         public TextView productTax;
         public TextView productTotalPrice;
-        public TextView totalLineAmount;
+        public TextView subTotalLine;
+        public TextView totalLine;
         public EditText qtyOrdered;
         public View containerLayout;
 
@@ -69,7 +73,8 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productTax = (TextView) v.findViewById(R.id.product_tax);
             productTotalPrice = (TextView) v.findViewById(R.id.product_total_price);
-            totalLineAmount = (TextView) v.findViewById(R.id.total_line_amount_textView);
+            subTotalLine = (TextView) v.findViewById(R.id.sub_total_line_textView);
+            totalLine = (TextView) v.findViewById(R.id.total_line_textView);
             deleteItem = (ImageView) v.findViewById(R.id.delete_item_button_img);
             qtyOrdered = (EditText) v.findViewById(R.id.qty_ordered);
             containerLayout = v.findViewById(R.id.container_layout);
@@ -81,8 +86,8 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         void reloadShoppingSale(ArrayList<SalesOrderLine> salesOrderLines, boolean setData);
     }
 
-    public ShoppingSaleAdapter2(Context context, Fragment shoppingCartFragment,
-                                ArrayList<SalesOrderLine> data, User user) {
+    public ShoppingSaleAdapterSalesMan(Context context, Fragment shoppingCartFragment,
+                                       ArrayList<SalesOrderLine> data, User user) {
         mContext = context;
         mFragment = shoppingCartFragment;
         mDataset = data;
@@ -92,6 +97,8 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
         mShowProductPrice = Parameter.showProductPrice(context, user);
         mShowProductTax = Parameter.showProductTax(context, user);
         mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
+        mShowSubTotalLineAmount = Parameter.showSubTotalLineAmountInOrderLine(context, user);
+        mShowTotalLineAmount = Parameter.showTotalLineAmountInOrderLine(context, user);
     }
 
     public void setParentLayout(View parentLayout) {
@@ -100,10 +107,10 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ShoppingSaleAdapter2.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShoppingSaleAdapterSalesMan.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.shopping_sale_item_2, parent, false);
+                .inflate(R.layout.shopping_sale_item_sales_man, parent, false);
 
         return new ViewHolder(v);
     }
@@ -132,6 +139,10 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        //esto es para que se use el precio actual del producto
+        SalesOrderLineBR.fillSalesOrderLine(mDataset.get(position).getQuantityOrdered(),
+                mDataset.get(position).getProduct(), mDataset.get(position));
+
         if (BuildConfig.USE_PRODUCT_IMAGE) {
             Utils.loadThumbImageByFileName(mContext, mUser,
                     mDataset.get(position).getProduct().getImageFileName(), holder.productImage);
@@ -153,7 +164,7 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             //holder.productPrice.setText(mContext.getString(R.string.price_detail,
             //        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
             //        mDataset.get(position).getProduct().getProductPriceAvailability().getProductPriceStringFormat()));
-            holder.productPrice.setText(mContext.getString(R.string.product_price,
+            holder.productPrice.setText(mContext.getString(R.string.product_price_label,
                     mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
             holder.productPrice.setVisibility(View.VISIBLE);
         } else {
@@ -180,9 +191,23 @@ public class ShoppingSaleAdapter2 extends RecyclerView.Adapter<ShoppingSaleAdapt
             holder.productTotalPrice.setVisibility(View.GONE);
         }
 
-        holder.totalLineAmount.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
-                mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
-                mDataset.get(position).getTotalLineAmountStringFormat()));
+        if (mShowSubTotalLineAmount) {
+            holder.subTotalLine.setText(mContext.getString(R.string.sales_order_sub_total_line_amount,
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getSubTotalLineAmountStringFormat()));
+            holder.subTotalLine.setVisibility(View.VISIBLE);
+        } else {
+            holder.subTotalLine.setVisibility(View.GONE);
+        }
+
+        if (mShowTotalLineAmount) {
+            holder.totalLine.setText(mContext.getString(R.string.sales_order_total_line_amount,
+                    mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
+                    mDataset.get(position).getTotalLineAmountStringFormat()));
+            holder.totalLine.setVisibility(View.VISIBLE);
+        } else {
+            holder.totalLine.setVisibility(View.GONE);
+        }
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override

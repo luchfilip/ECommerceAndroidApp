@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
-import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapter2;
+import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapterSalesMan;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSalesListAdapter;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class ShoppingSalesListFragment extends Fragment implements ShoppingSaleAdapter.Callback,
-        ShoppingSaleAdapter2.Callback {
+        ShoppingSaleAdapterSalesMan.Callback {
 
     private static final String STATE_CURRENT_SELECTED_INDEX = "STATE_CURRENT_SELECTED_INDEX";
     private static final String STATE_LIST_VIEW_INDEX = "STATE_LIST_VIEW_INDEX";

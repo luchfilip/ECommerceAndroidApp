@@ -169,7 +169,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 //holder.productPrice.setText(mContext.getString(R.string.price_detail,
                 //        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
                 //        mDataset.get(position).getProduct().getProductPriceAvailability().getProductPriceStringFormat()));
-                holder.productPrice.setText(mContext.getString(R.string.product_price,
+                holder.productPrice.setText(mContext.getString(R.string.product_price_label,
                         mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
                 holder.productPrice.setVisibility(View.VISIBLE);
             } else {

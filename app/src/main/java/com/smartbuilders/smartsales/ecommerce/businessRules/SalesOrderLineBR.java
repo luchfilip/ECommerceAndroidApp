@@ -16,7 +16,7 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getTaxAmount(SalesOrderLine salesOrderLine, Product product){
+    public static double getTaxAmount(SalesOrderLine salesOrderLine, Product product){
         double taxAmount = 0;
         try {
             taxAmount = product.getProductPriceAvailability().getTax() * salesOrderLine.getQuantityOrdered();
@@ -31,7 +31,7 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getSubTotalLine(SalesOrderLine salesOrderLine, Product product){
+    public static double getSubTotalLine(SalesOrderLine salesOrderLine, Product product){
         double subTotalLine = 0;
         try {
             subTotalLine = product.getProductPriceAvailability().getPrice() * salesOrderLine.getQuantityOrdered();
@@ -46,7 +46,7 @@ public class SalesOrderLineBR {
      * @param salesOrderLine
      * @return
      */
-    private static double getTotalLine(SalesOrderLine salesOrderLine, Product product){
+    public static double getTotalLine(SalesOrderLine salesOrderLine, Product product){
         double totalLine = 0;
         try {
             totalLine = product.getProductPriceAvailability().getTotalPrice() * salesOrderLine.getQuantityOrdered();
@@ -68,7 +68,7 @@ public class SalesOrderLineBR {
         }
     }
 
-    public static void fillSalesOrderLine (int qtyOrdered, Product product, SalesOrderLine salesOrderLine) throws Exception {
+    public static void fillSalesOrderLine (int qtyOrdered, Product product, SalesOrderLine salesOrderLine) {
         salesOrderLine.setProductId(product.getId());
         salesOrderLine.setProduct(product);
         salesOrderLine.setQuantityOrdered(qtyOrdered);

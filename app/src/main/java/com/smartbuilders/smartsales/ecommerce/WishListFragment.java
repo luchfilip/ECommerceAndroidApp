@@ -39,6 +39,7 @@ import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.utils.WishListPDFCreator;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -263,8 +264,9 @@ public class WishListFragment extends Fragment implements WishListAdapter.Callba
     }
 
     @Override
-    public void addToShoppingSale(Product product, User user) {
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+    public void addToShoppingSale(Product product, User user, boolean managePriceInOrder) {
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                || (user.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
             DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
                     DialogAddToShoppingSale2.newInstance(product, user);
             dialogAddToShoppingSale2.show(getActivity().getSupportFragmentManager(),

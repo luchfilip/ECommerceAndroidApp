@@ -47,6 +47,7 @@ import com.smartbuilders.smartsales.ecommerce.model.ProductBrandPromotionalSecti
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.utils.ViewIdGenerator;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Alberto on 25/3/2016.
+ * @deprecated
  */
 public class MainActivityAdapter extends BaseAdapter {
 
@@ -345,8 +347,14 @@ public class MainActivityAdapter extends BaseAdapter {
                             viewHolder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
                         }
 
-                        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
-                                ((Product) mDataset.get(position)).getProductPriceAvailability().getAvailability()));
+                        if (mIsManagePriceInOrder) {
+                            viewHolder.productAvailability.setVisibility(View.GONE);
+                        } else {
+                            viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                                    ((Product) mDataset.get(position)).getProductPriceAvailability().getAvailability()));
+                            viewHolder.productAvailability.setVisibility(View.VISIBLE);
+                        }
+
 
                         viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -404,7 +412,8 @@ public class MainActivityAdapter extends BaseAdapter {
                         viewHolder.addToShoppingSaleImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                                if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
                                     try {
                                         SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
                                                 .getSalesOrderLineFromShoppingSales(((Product) mDataset.get(position)).getId(),
@@ -412,13 +421,13 @@ public class MainActivityAdapter extends BaseAdapter {
                                         if (salesOrderLine != null) {
                                             updateQtyOrderedInShoppingSales(salesOrderLine);
                                         } else {
-                                            addToShoppingSale(((Product) mDataset.get(position)));
+                                            addToShoppingSale(((Product) mDataset.get(position)), mIsManagePriceInOrder);
                                         }
                                     } catch (Exception e) {
                                         //do nothing
                                     }
                                 } else {
-                                    addToShoppingSale(((Product) mDataset.get(position)));
+                                    addToShoppingSale(((Product) mDataset.get(position)), mIsManagePriceInOrder);
                                 }
                             }
                         });
@@ -510,10 +519,11 @@ public class MainActivityAdapter extends BaseAdapter {
                 DialogUpdateShoppingCartQtyOrdered.class.getSimpleName());
     }
 
-    private void addToShoppingSale(Product product) {
+    private void addToShoppingSale(Product product, boolean managePriceInOrder) {
         product = (new ProductDB(mContext, mUser)).getProductById(product.getId());
         if (product!=null) {
-            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                    || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && managePriceInOrder)) {
                 DialogAddToShoppingSale2 dialogAddToShoppingSale2 =
                         DialogAddToShoppingSale2.newInstance(product, mUser);
                 dialogAddToShoppingSale2.show(mFragmentActivity.getSupportFragmentManager(),
