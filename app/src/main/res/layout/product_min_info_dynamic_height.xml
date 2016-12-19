@@ -21,7 +21,8 @@
             android:layout_marginTop="2dp"
             android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
-            android:textSize="@dimen/productMinInfo_product_name_text_size"/>
+            android:textSize="@dimen/productMinInfo_product_name_text_size"
+            android:textStyle="normal|bold" />
 
         <ImageView
             android:layout_width="@dimen/productMinInfo_max_image_Width"

@@ -28,7 +28,7 @@
     <dimen name="productDetailCardView_internalCode_text_size">13sp</dimen>
     <dimen name="productDetailCardView_reference_text_size">13sp</dimen>
     <dimen name="productDetailCardView_brand_text_size">14sp</dimen>
-    <dimen name="productDetailCardView_commercialPackage_text_size">13sp</dimen>
+    <dimen name="productDetailCardView_commercialPackage_text_size">14sp</dimen>
     <dimen name="productDetailCardView_description_text_size">13sp</dimen>
     <dimen name="productDetailCardView_purpose_text_size">13sp</dimen>
     <dimen name="productDetailCardView_tax_text_size">14sp</dimen>

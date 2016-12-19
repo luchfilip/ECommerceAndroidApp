@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -70,7 +71,7 @@ public class ProductsListActivity extends AppCompatActivity
     private String productName;
     private String productReference;
     private String productPurpose;
-    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private int mRecyclerViewCurrentFirstPosition;
     private int mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
@@ -190,7 +191,9 @@ public class ProductsListActivity extends AppCompatActivity
                             final ImageView changeLayoutImageButton = (ImageView) findViewById(R.id.change_layout_button);
                             if(changeLayoutImageButton!=null){
                                 if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
-                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_white_24dp);
+                                    changeLayoutImageButton.setImageResource(R.drawable.ic_view_headline_white_24dp);
+                                }else if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_DETAILS){
+                                    changeLayoutImageButton.setImageResource(R.drawable.ic_dashboard_white_24dp);
                                 }else{
                                     changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_white_24dp);
                                 }
@@ -198,27 +201,43 @@ public class ProductsListActivity extends AppCompatActivity
                                 changeLayoutImageButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        mRecyclerViewCurrentFirstPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+                                        if (mLayoutManager instanceof GridLayoutManager) {
+                                            mRecyclerViewCurrentFirstPosition = ((GridLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+                                        } else if (mLayoutManager instanceof LinearLayoutManager) {
+                                            mRecyclerViewCurrentFirstPosition = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+                                        } else {
+                                            int[] into = new int[getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout)];
+                                            ((StaggeredGridLayoutManager) mLayoutManager).findFirstCompletelyVisibleItemPositions(into);
+                                            mRecyclerViewCurrentFirstPosition = into[0];
+                                        }
+
                                         if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS){
                                             mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_DETAILS;
                                             if (useGridView()) {
-                                                if(!(mLinearLayoutManager instanceof GridLayoutManager)){
-                                                    mLinearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                                                if(!(mLayoutManager instanceof GridLayoutManager)){
+                                                    mLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
                                                 }
                                             }else{
-                                                if(mLinearLayoutManager instanceof GridLayoutManager){
-                                                    mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                                if(!(mLayoutManager instanceof LinearLayoutManager)){
+                                                    mLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                                                 }
                                             }
-                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_white_24dp);
-                                        }else{
-                                            mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS;
-                                            if(mLinearLayoutManager instanceof GridLayoutManager){
-                                                mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_dashboard_white_24dp);
+                                        }else if(mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_DETAILS){
+                                            mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT;
+                                            if(!(mLayoutManager instanceof StaggeredGridLayoutManager)){
+                                                mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout),
+                                                        StaggeredGridLayoutManager.VERTICAL);
                                             }
-                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_module_white_24dp);
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_agenda_white_24dp);
+                                        } else {
+                                            mCurrentProductsListAdapterMask = ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS;
+                                            if(!(mLayoutManager instanceof LinearLayoutManager)){
+                                                mLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                            }
+                                            changeLayoutImageButton.setImageResource(R.drawable.ic_view_headline_white_24dp);
                                         }
-                                        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+                                        mRecyclerView.setLayoutManager(mLayoutManager);
                                         mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
                                                 ProductsListActivity.this, products, mCurrentProductsListAdapterMask, mCurrentSortOption, user));
                                         mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -291,13 +310,19 @@ public class ProductsListActivity extends AppCompatActivity
                             // use this setting to improve performance if you know that changes
                             // in content do not change the layout size of the RecyclerView
                             mRecyclerView.setHasFixedSize(true);
-                            if (mCurrentProductsListAdapterMask!=ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS
-                                    && useGridView()) {
-                                mLinearLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                            if (mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_DETAILS) {
+                                if (useGridView()) {
+                                    mLayoutManager = new GridLayoutManager(ProductsListActivity.this, getSpanCount());
+                                } else {
+                                    mLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                }
+                            }else if (mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS) {
+                                mLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
                             }else{
-                                mLinearLayoutManager = new LinearLayoutManager(ProductsListActivity.this);
+                                mLayoutManager = new StaggeredGridLayoutManager(getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout),
+                                        StaggeredGridLayoutManager.VERTICAL);
                             }
-                            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+                            mRecyclerView.setLayoutManager(mLayoutManager);
                             mRecyclerView.setAdapter(new ProductsListAdapter(ProductsListActivity.this,
                                     ProductsListActivity.this, products, mCurrentProductsListAdapterMask, mCurrentSortOption, user));
 
@@ -316,8 +341,6 @@ public class ProductsListActivity extends AppCompatActivity
 
                                 final EditText filterProduct = (EditText) findViewById(R.id.filter_product_editText);
                                 if(filterProduct!=null && filterImageView!=null && productsListSize!=null) {
-                                    //filterProduct.setFocusableInTouchMode(true);
-
                                     final View.OnClickListener filterImageViewOnClickListener =
                                             new View.OnClickListener() {
                                                 @Override
@@ -495,13 +518,16 @@ public class ProductsListActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CURRENT_PRODUCTS_LIST_ADAPTER_MASK, mCurrentProductsListAdapterMask);
         try {
-            if (mLinearLayoutManager instanceof GridLayoutManager
-                    || mCurrentProductsListAdapterMask==ProductsListAdapter.MASK_PRODUCT_LARGE_DETAILS) {
+            if (mLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        mLinearLayoutManager.findFirstVisibleItemPosition());
-            } else {
+                        ((GridLayoutManager) mLayoutManager).findFirstVisibleItemPosition());
+            } else if (mLayoutManager instanceof LinearLayoutManager) {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                        mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+                        ((LinearLayoutManager) mLayoutManager).findFirstCompletelyVisibleItemPosition());
+            } else if (mLayoutManager instanceof StaggeredGridLayoutManager) {
+                int[] into = new int[getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout)];
+                ((StaggeredGridLayoutManager) mLayoutManager).findFirstCompletelyVisibleItemPositions(into);
+                outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, into[0]);
             }
         } catch (Exception e) {
             outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);

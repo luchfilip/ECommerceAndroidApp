@@ -65,11 +65,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/change_layout_button"
-            android:src="@drawable/ic_view_agenda_white_24dp"
+            android:src="@drawable/ic_dashboard_white_24dp"
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
             android:layout_gravity="center"
-            android:background="@drawable/image_dark_shape" />
+            android:background="@drawable/image_dark_shape"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -79,7 +81,9 @@
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
             android:layout_gravity="center"
-            android:background="@drawable/image_dark_shape" />
+            android:background="@drawable/image_dark_shape"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
 
     </LinearLayout>
 

@@ -20,4 +20,6 @@
 
     <dimen name="order_tracking_item_card_marginLeftAndRight">20dp</dimen>
 
+    <integer name="number_of_cards_in_staggered_grid_layout">4</integer>
+
 </resources>

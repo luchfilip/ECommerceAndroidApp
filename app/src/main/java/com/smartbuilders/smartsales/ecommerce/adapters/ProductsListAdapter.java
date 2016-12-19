@@ -47,10 +47,11 @@ import com.smartbuilders.synchronizer.ids.model.UserProfile;
  */
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ViewHolder> {
 
-    public static final int EMPTY_LAYOUT                = 0;
+    private static final int EMPTY_LAYOUT               = 0;
     public static final int MASK_PRODUCT_MIN_INFO       = 1;
     public static final int MASK_PRODUCT_DETAILS        = 2;
     public static final int MASK_PRODUCT_LARGE_DETAILS  = 3;
+    public static final int MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT = 4;
 
     // Regular expression in Java to check if String is number or not
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
@@ -81,6 +82,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productPurpose;
         public TextView productPrice;
         public TextView productAvailability;
+        public TextView productCommercialPackage;
         public ImageView shareImageView;
         public View shareImageViewContainer;
         public ImageView favoriteImageView;
@@ -106,6 +108,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
+            productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
             shareImageViewContainer = v.findViewById(R.id.share_imageView_container);
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
@@ -148,6 +151,10 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.product_min_info, parent, false);
                 break;
+            case MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.product_min_info_dynamic_height, parent, false);
+                break;
             case MASK_PRODUCT_DETAILS:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.product_details, parent, false);
@@ -169,8 +176,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public void onBindViewHolder(final ViewHolder holder, int position) {
         sortProductList();
 
-        if(mMask!=MASK_PRODUCT_MIN_INFO && mMask!=MASK_PRODUCT_DETAILS
-                && mMask!=MASK_PRODUCT_LARGE_DETAILS){
+        if(mMask!=MASK_PRODUCT_MIN_INFO && mMask!=MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT
+                && mMask!=MASK_PRODUCT_DETAILS && mMask!=MASK_PRODUCT_LARGE_DETAILS){
             return;
         }
 
@@ -229,12 +236,20 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         }
 
         if (holder.productAvailability!=null) {
-            if (mIsManagePriceInOrder) {
-                holder.productAvailability.setVisibility(View.GONE);
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        }
+
+        if (holder.productCommercialPackage!=null) {
+            if (mDataset.get(position).getProductCommercialPackage() != null
+                    && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())
+                    && mDataset.get(position).getProductCommercialPackage().getUnits() > 0) {
+                holder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
+                        mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
+                        mDataset.get(position).getProductCommercialPackage().getUnits()));
+                holder.productCommercialPackage.setVisibility(View.VISIBLE);
             } else {
-                holder.productAvailability.setVisibility(View.VISIBLE);
-                holder.productAvailability.setText(mContext.getString(R.string.availability,
-                        mDataset.get(position).getProductPriceAvailability().getAvailability()));
+                holder.productCommercialPackage.setVisibility(View.GONE);
             }
         }
 
