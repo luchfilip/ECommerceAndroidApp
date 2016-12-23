@@ -27,17 +27,15 @@
             android:layout_height="wrap_content" />
 
         <View style="@style/Divider"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
 
-        <Button
-            style="@style/BlackButtonAppTheme"
+        <TextView
             android:id="@+id/see_all_products_button"
+            style="@style/see_all_products_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/see_all_products"
-            android:textAllCaps="false"
-            android:layout_gravity="right" />
-
+            android:text="@string/see_all_products"/>
     </LinearLayout>
 
 </LinearLayout>

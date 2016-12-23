@@ -25,7 +25,6 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_categories_list"
-        android:background="@color/material_grey_50"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />

@@ -53,14 +53,12 @@ public class SalesOrderDB {
      * @param businessPartnerAddressId
      * @return
      */
-    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo,
-                                                   int businessPartnerAddressId, ArrayList<SalesOrderLine> salesOrderLines) {
+    public String createSalesOrderFromShoppingSale(int businessPartnerId, Date validTo, int businessPartnerAddressId,
+                                                   double subTotal, double tax, double total,
+                                                   ArrayList<SalesOrderLine> salesOrderLines) {
         if(salesOrderLines!=null && salesOrderLines.size()>0){
             try {
                 int salesOrderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER");
-                double subTotal = SalesOrderSalesManBR.getSubTotalAmount(salesOrderLines),
-                        tax = SalesOrderSalesManBR.getTaxAmount(salesOrderLines),
-                        total = SalesOrderSalesManBR.getTotalAmount(salesOrderLines);
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()

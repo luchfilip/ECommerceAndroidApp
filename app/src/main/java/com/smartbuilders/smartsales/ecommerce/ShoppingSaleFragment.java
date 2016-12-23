@@ -414,12 +414,15 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                 String result = null;
                 try {
                     if (mUserBusinessPartnerId != 0) {
-                        result = SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser,
-                                mUserBusinessPartnerId, validTo, 0,
-                                mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
+                        result = mUseSalesManShoppingSales
+                                ? SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                                mUserBusinessPartnerId, validTo, 0, mShoppingSaleAdapterSalesMan.getData())
+                                : SalesOrderBusinessPartnerBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                                mUserBusinessPartnerId, validTo, 0, mShoppingSaleAdapter.getData());
                     } else {
-                        result = SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0,
-                                mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
+                        result = mUseSalesManShoppingSales
+                                ? SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0, mShoppingSaleAdapterSalesMan.getData())
+                                : SalesOrderBusinessPartnerBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0, mShoppingSaleAdapter.getData());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -488,7 +491,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                 ? (mShoppingSaleAdapterSalesMan !=null && mShoppingSaleAdapterSalesMan.getItemCount()>0)
                 : (mShoppingSaleAdapter!=null && mShoppingSaleAdapter.getItemCount()>0)) {
             mTotalLines.setText(getString(R.string.order_lines_number,
-                    String.valueOf(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getItemCount() : mShoppingSaleAdapter.getItemCount())));
+                    String.valueOf(mUseSalesManShoppingSales ? mShoppingSaleAdapterSalesMan.getItemCount() : mShoppingSaleAdapter.getItemCount())));
             Currency currency = (new CurrencyDB(getContext(), mUser))
                     .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
             if (mUseSalesManShoppingSales) {

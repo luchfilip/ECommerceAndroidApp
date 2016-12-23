@@ -70,7 +70,11 @@ public class SalesOrderBusinessPartnerBR {
         String result;
         try {
             result = new SalesOrderDB(context, user)
-                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo, businessPartnerAddressId, salesOrderLines);
+                    .createSalesOrderFromShoppingSale(businessPartnerId, validTo, businessPartnerAddressId,
+                            getSubTotalAmount(salesOrderLines),
+                            getTaxAmount(salesOrderLines),
+                            getTotalAmount(salesOrderLines),
+                            salesOrderLines);
         } catch (Exception e) {
             e.printStackTrace();
             result = e.getMessage();

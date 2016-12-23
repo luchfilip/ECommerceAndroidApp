@@ -446,7 +446,7 @@
     <string name="no_barcode_captured">No se capturó ningún código de barra.</string>
     <string name="related_products_by_sub_category_details">Más productos de la categoría %1$s</string>
     <string name="click_back_again_to_exit">Pulse atrás nuevamente para salir</string>
-    <string name="see_all_products">Ver todos</string>
+    <string name="see_all_products">VER TODOS</string>
     <string name="our_brands">Nuestras Marcas</string>
     <string name="title_activity_sales_force_system_main">SalesForceSystemMainActivity</string>
     <string name="title_activity_shopping_cart_finalize_options">

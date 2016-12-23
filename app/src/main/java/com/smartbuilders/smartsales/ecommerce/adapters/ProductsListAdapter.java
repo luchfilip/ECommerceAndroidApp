@@ -199,48 +199,57 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             });
         }
 
-        if (BuildConfig.USE_PRODUCT_IMAGE) {
-            if (mMask == MASK_PRODUCT_LARGE_DETAILS) {
-                Utils.loadOriginalImageByFileName(mContext, mUser,
-                        mDataset.get(position).getImageFileName(), holder.productImage);
-            } else {
-                Utils.loadThumbImageByFileName(mContext, mUser,
-                        mDataset.get(position).getImageFileName(), holder.productImage);
-            }
-        } else {
-            holder.productImage.setVisibility(View.GONE);
-            if (holder.productDetailsInfoContainer!=null) {
-                holder.productDetailsInfoContainer.setMinimumHeight(0);
-            }
-        }
-
-        holder.productName.setText(mDataset.get(position).getName());
-
-        if (mIsManagePriceInOrder) {
-            if (mDataset.get(position).getProductPriceAvailability().getAvailability() > 0
-                    && mDataset.get(position).getProductPriceAvailability().getPrice() > 0) {
-                //se toma solo uno de los dos precios, teniendo como prioridad el precio total
-                if (mShowProductTotalPrice) {
-                    holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
-                    holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat());
-                    holder.productPriceContainer.setVisibility(View.VISIBLE);
-                } else if (mShowProductPrice) {
-                    holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
-                    holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getPriceStringFormat());
-                    holder.productPriceContainer.setVisibility(View.VISIBLE);
+        if (holder.productImage!=null) {
+            if (BuildConfig.USE_PRODUCT_IMAGE) {
+                if (mMask == MASK_PRODUCT_LARGE_DETAILS) {
+                    Utils.loadOriginalImageByFileName(mContext, mUser,
+                            mDataset.get(position).getImageFileName(), holder.productImage);
                 } else {
-                    holder.productPriceContainer.setVisibility(View.INVISIBLE);
+                    Utils.loadThumbImageByFileName(mContext, mUser,
+                            mDataset.get(position).getImageFileName(), holder.productImage);
                 }
             } else {
-                holder.productPriceContainer.setVisibility((mMask != MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
+                holder.productImage.setVisibility(View.GONE);
+                if (holder.productDetailsInfoContainer != null) {
+                    holder.productDetailsInfoContainer.setMinimumHeight(0);
+                }
             }
         }
 
-        holder.productAvailability.setText(mContext.getString(R.string.availability,
-                mDataset.get(position).getProductPriceAvailability().getAvailability()));
-        if ((mMask==MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT
-                || mMask==MASK_PRODUCT_MIN_INFO ) && !mIsManagePriceInOrder) {
-            holder.productAvailability.setVisibility(View.VISIBLE);
+        if (holder.productName!=null) {
+            holder.productName.setText(mDataset.get(position).getName());
+        }
+
+        if (holder.productPriceCurrencyName!=null && holder.productPrice!=null
+                && holder.productPriceContainer!=null) {
+            if (mIsManagePriceInOrder) {
+                if (mDataset.get(position).getProductPriceAvailability().getAvailability() > 0
+                        && mDataset.get(position).getProductPriceAvailability().getPrice() > 0) {
+                    //se toma solo uno de los dos precios, teniendo como prioridad el precio total
+                    if (mShowProductTotalPrice) {
+                        holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                        holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat());
+                        holder.productPriceContainer.setVisibility(View.VISIBLE);
+                    } else if (mShowProductPrice) {
+                        holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                        holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getPriceStringFormat());
+                        holder.productPriceContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.productPriceContainer.setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    holder.productPriceContainer.setVisibility((mMask != MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
+                }
+            }
+        }
+
+        if (holder.productAvailability!=null) {
+            holder.productAvailability.setText(mContext.getString(R.string.availability,
+                    mDataset.get(position).getProductPriceAvailability().getAvailability()));
+            if ((mMask == MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT
+                    || mMask == MASK_PRODUCT_MIN_INFO) && !mIsManagePriceInOrder) {
+                holder.productAvailability.setVisibility(View.VISIBLE);
+            }
         }
 
         if (holder.productCommercialPackage!=null) {
@@ -256,106 +265,123 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             }
         }
 
-        holder.shareImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.shareImageView.setEnabled(false);
-                new CreateShareIntentThread(mFragmentActivity, mContext, mUser, mDataset.get(holder.getAdapterPosition()),
-                        holder.shareImageView).start();
-            }
-        });
-
-        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
-            holder.favoriteImageView.setVisibility(View.GONE);
-            if (holder.favoriteImageViewViewContainer!=null) {
-                holder.favoriteImageViewViewContainer.setVisibility(View.GONE);
-            }
-        } else {
-            holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
-                    ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-            holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+        if (holder.shareImageView!=null) {
+            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mDataset.get(holder.getAdapterPosition()).isFavorite()) {
-                        String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
-                        if (result == null) {
-                            mDataset.get(holder.getAdapterPosition()).setFavorite(false);
-                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    holder.shareImageView.setEnabled(false);
+                    new CreateShareIntentThread(mFragmentActivity, mContext, mUser, mDataset.get(holder.getAdapterPosition()),
+                            holder.shareImageView).start();
+                }
+            });
+        }
+        if (holder.favoriteImageView!=null) {
+            if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                holder.favoriteImageView.setVisibility(View.GONE);
+                if (holder.favoriteImageViewViewContainer != null) {
+                    holder.favoriteImageViewViewContainer.setVisibility(View.GONE);
+                }
+            } else {
+                holder.favoriteImageView.setImageResource(mDataset.get(holder.getAdapterPosition()).isFavorite()
+                        ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+                holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mDataset.get(holder.getAdapterPosition()).isFavorite()) {
+                            String result = removeFromWishList(mDataset.get(holder.getAdapterPosition()).getId());
+                            if (result == null) {
+                                mDataset.get(holder.getAdapterPosition()).setFavorite(false);
+                                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            } else {
+                                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                            String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
+                            if (result == null) {
+                                mDataset.get(holder.getAdapterPosition()).setFavorite(true);
+                                holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            } else {
+                                Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                            }
                         }
+                    }
+                });
+            }
+        }
+
+        if (holder.addToShoppingCartImageView!=null) {
+            holder.addToShoppingCartImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OrderLine orderLine = (new OrderLineDB(mContext, mUser))
+                            .getOrderLineFromShoppingCartByProductId(mDataset.get(holder.getAdapterPosition()).getId());
+                    if (orderLine != null) {
+                        updateQtyOrderedInShoppingCart(orderLine);
                     } else {
-                        String result = addToWishList(mDataset.get(holder.getAdapterPosition()));
-                        if (result == null) {
-                            mDataset.get(holder.getAdapterPosition()).setFavorite(true);
-                            holder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
-                        } else {
-                            Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-                        }
+                        addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
                     }
                 }
             });
         }
-        holder.addToShoppingCartImageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-        holder.addToShoppingCartImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OrderLine orderLine = (new OrderLineDB(mContext, mUser))
-                        .getOrderLineFromShoppingCartByProductId(mDataset.get(holder.getAdapterPosition()).getId());
-                if(orderLine!=null){
-                    updateQtyOrderedInShoppingCart(orderLine);
-                }else{
-                    addToShoppingCart(mDataset.get(holder.getAdapterPosition()));
-                }
-            }
-        });
 
-        holder.addToShoppingSaleImageView.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
-        holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BuildConfig.IS_SALES_FORCE_SYSTEM
-                        || (mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
-                    try {
-                        SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
-                                .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
-                                        Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
-                        if (salesOrderLine != null) {
-                            updateQtyOrderedInShoppingSales(salesOrderLine);
-                        } else {
-                            addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
+        if (holder.addToShoppingSaleImageView!=null) {
+            holder.addToShoppingSaleImageView.setColorFilter(Utils.getColor(mContext, R.color.golden), PorterDuff.Mode.SRC_ATOP);
+            holder.addToShoppingSaleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (BuildConfig.IS_SALES_FORCE_SYSTEM
+                            || (mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID && mIsManagePriceInOrder)) {
+                        try {
+                            SalesOrderLine salesOrderLine = (new SalesOrderLineDB(mContext, mUser))
+                                    .getSalesOrderLineFromShoppingSales(mDataset.get(holder.getAdapterPosition()).getId(),
+                                            Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
+                            if (salesOrderLine != null) {
+                                updateQtyOrderedInShoppingSales(salesOrderLine);
+                            } else {
+                                addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
+                            }
+                        } catch (Exception e) {
+                            //do nothing
                         }
-                    } catch (Exception e) {
-                        //do nothing
+                    } else {
+                        addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
                     }
-                } else {
-                    addToShoppingSale(mDataset.get(holder.getAdapterPosition()), mIsManagePriceInOrder);
                 }
-            }
-        });
+            });
+        }
 
         if(mMask==MASK_PRODUCT_DETAILS || mMask==MASK_PRODUCT_LARGE_DETAILS){
-            holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
-            holder.productReference.setText(mDataset.get(position).getReference());
-
-            if(mDataset.get(position).getProductBrand()!=null
-                    && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())){
-                holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProductBrand().getName()));
-                holder.productBrand.setVisibility(TextView.VISIBLE);
-            }else{
-                holder.productBrand.setVisibility(TextView.GONE);
+            if (holder.productInternalCode!=null) {
+                holder.productInternalCode.setText(mDataset.get(position).getInternalCodeMayoreoFormat());
+            }
+            if (holder.productReference!=null) {
+                holder.productReference.setText(mDataset.get(position).getReference());
             }
 
-            if(Parameter.showProductRatingBar(mContext, mUser)){
-                holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
-                        Parameter.getProductRatingBarLabelText(mContext, mUser)));
-                if(mDataset.get(position).getRating()>=0){
-                    holder.productRatingBar.setRating(mDataset.get(position).getRating());
+            if (holder.productBrand!=null) {
+                if (mDataset.get(position).getProductBrand() != null
+                        && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())) {
+                    holder.productBrand.setText(mContext.getString(R.string.brand_detail,
+                            mDataset.get(position).getProductBrand().getName()));
+                    holder.productBrand.setVisibility(TextView.VISIBLE);
+                } else {
+                    holder.productBrand.setVisibility(TextView.GONE);
                 }
-                holder.productRatingBarContainer.setVisibility(View.VISIBLE);
-            }else{
-                holder.productRatingBarContainer.setVisibility(View.GONE);
+            }
+
+            if (holder.productRatingBarLabelTextView!=null && holder.productRatingBar!=null
+                    && holder.productRatingBarContainer!=null) {
+                if (Parameter.showProductRatingBar(mContext, mUser)) {
+                    holder.productRatingBarLabelTextView.setText(mContext.getString(R.string.product_ratingBar_label_text_detail,
+                            Parameter.getProductRatingBarLabelText(mContext, mUser)));
+                    if (mDataset.get(position).getRating() >= 0) {
+                        holder.productRatingBar.setRating(mDataset.get(position).getRating());
+                    }
+                    holder.productRatingBarContainer.setVisibility(View.VISIBLE);
+                } else {
+                    holder.productRatingBarContainer.setVisibility(View.GONE);
+                }
             }
 
             if(holder.productDescription!=null){

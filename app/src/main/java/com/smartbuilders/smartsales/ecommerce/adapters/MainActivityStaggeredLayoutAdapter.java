@@ -89,7 +89,7 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
         public ViewPager mViewPager;
         public TextView mTextView;
         public TextView mTitleTextView;
-        public Button mSeeAllProductsButton;
+        public View mSeeAllProductsButton;
 
         /*********************************************/
         public TextView productName;
@@ -113,7 +113,7 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
             mViewPager = (ViewPager) v.findViewById(R.id.view_pager);
             mTextView = (TextView) v.findViewById(R.id.textView);
             mTitleTextView = (TextView) v.findViewById(R.id.title_textView);
-            mSeeAllProductsButton = (Button) v.findViewById(R.id.see_all_products_button);
+            mSeeAllProductsButton = v.findViewById(R.id.see_all_products_button);
             /*********************************************/
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
