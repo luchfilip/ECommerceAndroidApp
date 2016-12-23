@@ -80,6 +80,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public TextView productBrand;
         public TextView productDescription;
         public TextView productPurpose;
+        public View productPriceContainer;
+        public TextView productPriceCurrencyName;
         public TextView productPrice;
         public TextView productAvailability;
         public TextView productCommercialPackage;
@@ -106,6 +108,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             productBrand = (TextView) v.findViewById(R.id.product_brand);
             productDescription = (TextView) v.findViewById(R.id.product_description);
             productPurpose = (TextView) v.findViewById(R.id.product_purpose);
+            productPriceContainer = v.findViewById(R.id.product_price_container);
+            productPriceCurrencyName = (TextView) v.findViewById(R.id.product_price_currency_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productCommercialPackage = (TextView) v.findViewById(R.id.product_commercial_package);
@@ -212,32 +216,31 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         holder.productName.setText(mDataset.get(position).getName());
 
-        if (holder.productPrice!=null) {
-            if (mIsManagePriceInOrder
-                    && mDataset.get(position).getProductPriceAvailability().getAvailability() > 0
+        if (mIsManagePriceInOrder) {
+            if (mDataset.get(position).getProductPriceAvailability().getAvailability() > 0
                     && mDataset.get(position).getProductPriceAvailability().getPrice() > 0) {
                 //se toma solo uno de los dos precios, teniendo como prioridad el precio total
                 if (mShowProductTotalPrice) {
-                    holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                            mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                            mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
-                    holder.productPrice.setVisibility(View.VISIBLE);
+                    holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                    holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat());
+                    holder.productPriceContainer.setVisibility(View.VISIBLE);
                 } else if (mShowProductPrice) {
-                    holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                            mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                            mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
-                    holder.productPrice.setVisibility(View.VISIBLE);
+                    holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                    holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getPriceStringFormat());
+                    holder.productPriceContainer.setVisibility(View.VISIBLE);
                 } else {
-                    holder.productPrice.setVisibility(View.INVISIBLE);
+                    holder.productPriceContainer.setVisibility(View.INVISIBLE);
                 }
             } else {
-                holder.productPrice.setVisibility((mMask != MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
+                holder.productPriceContainer.setVisibility((mMask != MASK_PRODUCT_LARGE_DETAILS && mIsManagePriceInOrder) ? View.INVISIBLE : View.GONE);
             }
         }
 
-        if (holder.productAvailability!=null) {
-            holder.productAvailability.setText(mContext.getString(R.string.availability,
-                    mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        holder.productAvailability.setText(mContext.getString(R.string.availability,
+                mDataset.get(position).getProductPriceAvailability().getAvailability()));
+        if ((mMask==MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT
+                || mMask==MASK_PRODUCT_MIN_INFO ) && !mIsManagePriceInOrder) {
+            holder.productAvailability.setVisibility(View.VISIBLE);
         }
 
         if (holder.productCommercialPackage!=null) {

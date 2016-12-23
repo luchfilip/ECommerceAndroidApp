@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBusinessPartnerBR;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
@@ -31,7 +32,7 @@ import com.smartbuilders.smartsales.salesforcesystem.ShoppingSaleFinalizeOptions
 import com.smartbuilders.smartsales.salesforcesystem.adapters.ShoppingSaleAdapterSalesMan;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.ShoppingSaleAdapter;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.Currency;
@@ -303,7 +304,7 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                                                         public void run() {
                                                             String result = null;
                                                             try {
-                                                                result = SalesOrderBR.isValidQuantityOrderedInSalesOrderLines(getContext(), mUser,
+                                                                result = SalesOrderSalesManBR.isValidQuantityOrderedInSalesOrderLines(getContext(), mUser,
                                                                         mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
@@ -413,11 +414,11 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                 String result = null;
                 try {
                     if (mUserBusinessPartnerId != 0) {
-                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                        result = SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser,
                                 mUserBusinessPartnerId, validTo, 0,
                                 mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                     } else {
-                        result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0,
+                        result = SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser, validTo, 0,
                                 mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData());
                     }
                 } catch (Exception e) {
@@ -490,15 +491,27 @@ public class ShoppingSaleFragment extends Fragment implements ShoppingSaleAdapte
                     String.valueOf(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getItemCount() : mShoppingSaleAdapter.getItemCount())));
             Currency currency = (new CurrencyDB(getContext(), mUser))
                     .getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
-            mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
-                    currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getSubTotalAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
-            mTaxAmount.setText(getString(R.string.sales_order_tax_amount,
-                    currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getTaxAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
-            mTotalAmount.setText(getString(R.string.sales_order_total_amount,
-                    currency!=null ? currency.getName() : "",
-                    SalesOrderBR.getTotalAmountStringFormat(mShoppingSaleAdapterSalesMan!=null ? mShoppingSaleAdapterSalesMan.getData() : mShoppingSaleAdapter.getData())));
+            if (mUseSalesManShoppingSales) {
+                mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderSalesManBR.getSubTotalAmountStringFormat(mShoppingSaleAdapterSalesMan.getData())));
+                mTaxAmount.setText(getString(R.string.sales_order_tax_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderSalesManBR.getTaxAmountStringFormat(mShoppingSaleAdapterSalesMan.getData())));
+                mTotalAmount.setText(getString(R.string.sales_order_total_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderSalesManBR.getTotalAmountStringFormat(mShoppingSaleAdapterSalesMan.getData())));
+            } else {
+                mSubTotalAmount.setText(getString(R.string.sales_order_sub_total_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderBusinessPartnerBR.getSubTotalAmountStringFormat(mShoppingSaleAdapter.getData())));
+                mTaxAmount.setText(getString(R.string.sales_order_tax_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderBusinessPartnerBR.getTaxAmountStringFormat(mShoppingSaleAdapter.getData())));
+                mTotalAmount.setText(getString(R.string.sales_order_total_amount,
+                        currency != null ? currency.getName() : "",
+                        SalesOrderBusinessPartnerBR.getTotalAmountStringFormat(mShoppingSaleAdapter.getData())));
+            }
         }
     }
 

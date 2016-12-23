@@ -91,5 +91,8 @@
 
     <integer name="welcome_layout_top_container_weight">1</integer>
     <integer name="welcome_layout_bottom_container_weight">1</integer>
-    <integer name="number_of_cards_in_staggered_grid_layout">3</integer>
+
+    <integer name="number_of_cards_in_staggered_grid_layout">2</integer>
+    <dimen name="productMinInfo_dynamic_height_max_image_Width">220dp</dimen>
+    <dimen name="productMinInfo_dynamic_height_max_image_Height">220dp</dimen>
 </resources>

@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -12,6 +11,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by stein on 5/6/2016.
@@ -351,6 +351,7 @@ public class SalesOrderLineDB {
     private ArrayList<SalesOrderLine> getSalesOrderLinesByDocTypeAndBusinessPartnerId(String docType, int businessPartnerId) {
         ArrayList<SalesOrderLine> salesOrderLines = new ArrayList<>();
         Cursor c = null;
+        StringBuilder productsIds = new StringBuilder();
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
@@ -363,6 +364,7 @@ public class SalesOrderLineDB {
                     new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), docType, "Y"}, null);
             if (c!=null) {
                 while(c.moveToNext()){
+                    productsIds.append(productsIds.length()==0 ? "" : ",").append(c.getInt(1));
                     SalesOrderLine salesOrderLine = new SalesOrderLine();
                     salesOrderLine.setId(c.getInt(0));
                     salesOrderLine.setProductId(c.getInt(1));
@@ -388,9 +390,9 @@ public class SalesOrderLineDB {
             }
         }
         ArrayList<SalesOrderLine> salesOrderLinesToRemove = new ArrayList<>();
-        ProductDB productDB = new ProductDB(mContext, mUser);
+        HashMap<Integer, Product> products = (new ProductDB(mContext, mUser)).getProductsByIds(productsIds.toString());
         for (SalesOrderLine salesOrderLine : salesOrderLines) {
-            salesOrderLine.setProduct(productDB.getProductById(salesOrderLine.getProductId()));
+            salesOrderLine.setProduct(products.get(salesOrderLine.getProductId()));
             if(salesOrderLine.getProduct()==null){
                 salesOrderLinesToRemove.add(salesOrderLine);
             }

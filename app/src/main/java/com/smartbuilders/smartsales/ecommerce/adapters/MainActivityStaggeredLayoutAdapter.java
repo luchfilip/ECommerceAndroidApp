@@ -76,6 +76,8 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
     private String mUrlScreenParameters;
     private boolean mIsLandscape;
     private boolean mIsManagePriceInOrder;
+    private boolean mShowProductPrice;
+    private boolean mShowProductTotalPrice;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -92,6 +94,8 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
         /*********************************************/
         public TextView productName;
         public ImageView productImage;
+        public View productPriceContainer;
+        public TextView productPriceCurrencyName;
         public TextView productPrice;
         public TextView productAvailability;
         public ImageView shareImageView;
@@ -113,6 +117,8 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
             /*********************************************/
             productName = (TextView) v.findViewById(R.id.product_name);
             productImage = (ImageView) v.findViewById(R.id.product_image);
+            productPriceContainer = v.findViewById(R.id.product_price_container);
+            productPriceCurrencyName = (TextView) v.findViewById(R.id.product_price_currency_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             shareImageView = (ImageView) v.findViewById(R.id.share_imageView);
@@ -157,6 +163,8 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
         mIsLandscape = mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         mUrlScreenParameters = Utils.getUrlScreenParameters(mIsLandscape, context);
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
+        mShowProductPrice = Parameter.showProductPrice(context, user);
+        mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
     }
 
     // Create new views (invoked by the layout manager)
@@ -324,6 +332,36 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
                                     ((Product) mDataset.get(viewHolder.getAdapterPosition())), viewHolder.shareImageView).start();
                         }
                     });
+
+                    if (mIsManagePriceInOrder) {
+                        if (((Product) mDataset.get(viewHolder.getAdapterPosition())).getProductPriceAvailability().getAvailability() > 0
+                                && ((Product) mDataset.get(viewHolder.getAdapterPosition())).getProductPriceAvailability().getPrice() > 0) {
+                            //se toma solo uno de los dos precios, teniendo como prioridad el precio total
+                            if (mShowProductTotalPrice) {
+                                viewHolder.productPriceCurrencyName.setText(((Product) mDataset.get(viewHolder.getAdapterPosition()))
+                                        .getProductPriceAvailability().getCurrency().getName());
+                                viewHolder.productPrice.setText(((Product) mDataset.get(viewHolder.getAdapterPosition()))
+                                        .getProductPriceAvailability().getTotalPriceStringFormat());
+                                viewHolder.productPriceContainer.setVisibility(View.VISIBLE);
+                            } else if (mShowProductPrice) {
+                                viewHolder.productPriceCurrencyName.setText(((Product) mDataset.get(viewHolder.getAdapterPosition()))
+                                        .getProductPriceAvailability().getCurrency().getName());
+                                viewHolder.productPrice.setText(((Product) mDataset.get(viewHolder.getAdapterPosition()))
+                                        .getProductPriceAvailability().getPriceStringFormat());
+                                viewHolder.productPriceContainer.setVisibility(View.VISIBLE);
+                            } else {
+                                viewHolder.productPriceContainer.setVisibility(View.GONE);
+                            }
+                        } else {
+                            viewHolder.productPriceContainer.setVisibility(View.GONE);
+                        }
+                    }
+
+                    if (!mIsManagePriceInOrder) {
+                        viewHolder.productAvailability.setText(mContext.getString(R.string.availability,
+                                ((Product) mDataset.get(viewHolder.getAdapterPosition())).getProductPriceAvailability().getAvailability()));
+                        viewHolder.productAvailability.setVisibility(View.VISIBLE);
+                    }
 
                     if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
                         viewHolder.favoriteImageView.setVisibility(View.GONE);

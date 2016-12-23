@@ -50,6 +50,8 @@ public class RecommendedProductsListAdapter extends
         // each data item is just a string in this case
         public ImageView productImage;
         public TextView productName;
+        public View productPriceContainer;
+        public TextView productPriceCurrencyName;
         public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
@@ -68,6 +70,8 @@ public class RecommendedProductsListAdapter extends
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productPriceContainer = v.findViewById(R.id.product_price_container);
+            productPriceCurrencyName = (TextView) v.findViewById(R.id.product_price_currency_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -168,20 +172,18 @@ public class RecommendedProductsListAdapter extends
                 && mDataset.get(position).getProductPriceAvailability().getAvailability()>0
                 && mDataset.get(position).getProductPriceAvailability().getPrice()>0) {
             if (mShowProductTotalPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
+                holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getTotalPriceStringFormat());
+                holder.productPriceContainer.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProductPriceAvailability().getPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
+                holder.productPriceCurrencyName.setText(mDataset.get(position).getProductPriceAvailability().getCurrency().getName());
+                holder.productPrice.setText(mDataset.get(position).getProductPriceAvailability().getPriceStringFormat());
+                holder.productPriceContainer.setVisibility(View.VISIBLE);
             } else {
-                holder.productPrice.setVisibility(View.INVISIBLE);
+                holder.productPriceContainer.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
+            holder.productPriceContainer.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
         if (mDataset.get(position).getProductPriceAvailability().getAvailability()>0) {

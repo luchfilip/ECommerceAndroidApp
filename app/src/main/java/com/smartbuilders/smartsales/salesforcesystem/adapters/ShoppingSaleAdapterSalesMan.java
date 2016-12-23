@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
@@ -92,7 +92,7 @@ public class ShoppingSaleAdapterSalesMan extends RecyclerView.Adapter<ShoppingSa
         mFragment = shoppingCartFragment;
         mDataset = data;
         mUser = user;
-        SalesOrderBR.validateQuantityOrderedInSalesOrderLines(context, user, data);
+        SalesOrderSalesManBR.validateQuantityOrderedInSalesOrderLines(context, user, data);
         mSalesOrderLineDB = new SalesOrderLineDB(context, user);
         mShowProductPrice = Parameter.showProductPrice(context, user);
         mShowProductTax = Parameter.showProductTax(context, user);
@@ -283,7 +283,7 @@ public class ShoppingSaleAdapterSalesMan extends RecyclerView.Adapter<ShoppingSa
 
     public void setData(ArrayList<SalesOrderLine> salesOrderLines) {
         mDataset = salesOrderLines;
-        SalesOrderBR.validateQuantityOrderedInSalesOrderLines(mContext, mUser, mDataset);
+        SalesOrderSalesManBR.validateQuantityOrderedInSalesOrderLines(mContext, mUser, mDataset);
         notifyDataSetChanged();
     }
 

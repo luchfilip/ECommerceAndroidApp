@@ -56,6 +56,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
         public ImageView productImage;
         public ImageView deleteItem;
         public TextView productName;
+        public View productPriceContainer;
+        public TextView productPriceCurrencyName;
         public TextView productPrice;
         public TextView productAvailability;
         public TextView productBrand;
@@ -73,6 +75,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             super(v);
             productImage = (ImageView) v.findViewById(R.id.product_image);
             productName = (TextView) v.findViewById(R.id.product_name);
+            productPriceContainer = v.findViewById(R.id.product_price_container);
+            productPriceCurrencyName = (TextView) v.findViewById(R.id.product_price_currency_name);
             productPrice = (TextView) v.findViewById(R.id.product_price);
             productAvailability = (TextView) v.findViewById(R.id.product_availability);
             productBrand = (TextView) v.findViewById(R.id.product_brand);
@@ -176,20 +180,18 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                 && mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()>0
                 && mDataset.get(position).getProduct().getProductPriceAvailability().getPrice()>0) {
             if (mShowProductTotalPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_total_price_detail,
-                        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProduct().getProductPriceAvailability().getTotalPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
+                holder.productPriceCurrencyName.setText(mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName());
+                holder.productPrice.setText(mDataset.get(position).getProduct().getProductPriceAvailability().getTotalPriceStringFormat());
+                holder.productPriceContainer.setVisibility(View.VISIBLE);
             } else if (mShowProductPrice) {
-                holder.productPrice.setText(mContext.getString(R.string.product_price_detail,
-                        mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName(),
-                        mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat()));
-                holder.productPrice.setVisibility(View.VISIBLE);
+                holder.productPriceCurrencyName.setText(mDataset.get(position).getProduct().getProductPriceAvailability().getCurrency().getName());
+                holder.productPrice.setText(mDataset.get(position).getProduct().getProductPriceAvailability().getPriceStringFormat());
+                holder.productPriceContainer.setVisibility(View.VISIBLE);
             } else {
-                holder.productPrice.setVisibility(View.INVISIBLE);
+                holder.productPriceContainer.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.productPrice.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
+            holder.productPriceContainer.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
         if (mDataset.get(position).getProduct().getProductPriceAvailability().getAvailability()>0) {

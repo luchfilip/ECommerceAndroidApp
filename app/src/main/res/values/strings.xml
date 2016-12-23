@@ -122,7 +122,7 @@
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">%1$s %2$d</string>
     <string name="commercial_package_label_detail">Empaque: %1$s %2$d</string>
-    <string name="availability">Disponibilidad: %1$d</string>
+    <string name="availability">Disponibles: %1$d</string>
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
     <string name="quantity_label">Cantidad:</string>

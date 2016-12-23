@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
@@ -160,15 +160,15 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
                                 ((TextView) rootView.findViewById(R.id.subTotalAmount_tv))
                                         .setText(getString(R.string.sales_order_sub_total_amount,
                                                 currency!=null ? currency.getName() : "",
-                                                SalesOrderBR.getSubTotalAmountStringFormat(mSalesOrderLines)));
+                                                SalesOrderSalesManBR.getSubTotalAmountStringFormat(mSalesOrderLines)));
                                 ((TextView) rootView.findViewById(R.id.taxesAmount_tv))
                                         .setText(getString(R.string.sales_order_tax_amount,
                                                 currency!=null ? currency.getName() : "",
-                                                SalesOrderBR.getTaxAmountStringFormat(mSalesOrderLines)));
+                                                SalesOrderSalesManBR.getTaxAmountStringFormat(mSalesOrderLines)));
                                 ((TextView) rootView.findViewById(R.id.totalAmount_tv))
                                         .setText(getString(R.string.sales_order_total_amount,
                                                 currency!=null ? currency.getName() : "",
-                                                SalesOrderBR.getTotalAmountStringFormat(mSalesOrderLines)));
+                                                SalesOrderSalesManBR.getTotalAmountStringFormat(mSalesOrderLines)));
 
                                 rootView.findViewById(R.id.proceed_to_checkout_shopping_sale_button)
                                         .setOnClickListener(new View.OnClickListener() {
@@ -222,7 +222,7 @@ public class ShoppingSaleFinalizeOptionsFragment extends Fragment implements Dat
             public void run() {
                 String result = null;
                 try {
-                    result = SalesOrderBR.createSalesOrderFromShoppingSale(getContext(), mUser,
+                    result = SalesOrderSalesManBR.createSalesOrderFromShoppingSale(getContext(), mUser,
                             validTo, mSelectedBusinessPartnerAddressId, mSalesOrderLines);
                 } catch (Exception e) {
                     e.printStackTrace();

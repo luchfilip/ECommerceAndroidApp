@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
@@ -211,7 +211,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                         salesOrder.getBusinessPartner().getName()))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String result = SalesOrderBR.deactivateSalesOrderById(SalesOrdersListActivity.this,
+                        String result = SalesOrderSalesManBR.deactivateSalesOrderById(SalesOrdersListActivity.this,
                                 user, salesOrder.getId());
                         if (result==null) {
                             reloadSalesOrdersList(listView, user);

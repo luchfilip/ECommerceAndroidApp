@@ -85,10 +85,6 @@ public class ProductDetailFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
                     ProductDB productDB = new ProductDB(getContext(), mUser);
 
-                    //if (mProduct.isRequireFullFill()) {
-                    //    mProduct = productDB.getProductById(mProduct.getId());
-                    //}
-
                     if (mProduct!=null) {
                         relatedProductsByShopping.addAll(productDB.getRelatedShoppingProductsByProductId(mProduct.getId(), 12));
                         if (mProduct.getProductBrand()!=null) {
@@ -379,22 +375,22 @@ public class ProductDetailFragment extends Fragment {
                                             && mProduct.getProductPriceAvailability().getAvailability()>0
                                             && mProduct.getProductPriceAvailability().getPrice()>0) {
                                         if (Parameter.showProductTotalPrice(getContext(), mUser)) {
+                                            ((TextView) view.findViewById(R.id.product_price_currency_name))
+                                                    .setText(mProduct.getProductPriceAvailability().getCurrency().getName());
                                             ((TextView) view.findViewById(R.id.product_price))
-                                                    .setText(getString(R.string.product_total_price_detail,
-                                                            mProduct.getProductPriceAvailability().getCurrency().getName(),
-                                                            mProduct.getProductPriceAvailability().getTotalPriceStringFormat()));
-                                            view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+                                                    .setText(mProduct.getProductPriceAvailability().getTotalPriceStringFormat());
+                                            view.findViewById(R.id.product_price_container).setVisibility(View.VISIBLE);
                                         } else if (Parameter.showProductPrice(getContext(), mUser)) {
+                                            ((TextView) view.findViewById(R.id.product_price_currency_name))
+                                                    .setText(mProduct.getProductPriceAvailability().getCurrency().getName());
                                             ((TextView) view.findViewById(R.id.product_price))
-                                                    .setText(getString(R.string.product_price_detail,
-                                                            mProduct.getProductPriceAvailability().getCurrency().getName(),
-                                                            mProduct.getProductPriceAvailability().getPriceStringFormat()));
-                                            view.findViewById(R.id.product_price).setVisibility(View.VISIBLE);
+                                                    .setText(mProduct.getProductPriceAvailability().getPriceStringFormat());
+                                            view.findViewById(R.id.product_price_container).setVisibility(View.VISIBLE);
                                         } else {
-                                            view.findViewById(R.id.product_price).setVisibility(View.GONE);
+                                            view.findViewById(R.id.product_price_container).setVisibility(View.GONE);
                                         }
                                     } else {
-                                        view.findViewById(R.id.product_price).setVisibility(View.GONE);
+                                        view.findViewById(R.id.product_price_container).setVisibility(View.GONE);
                                     }
 
                                     ((TextView) view.findViewById(R.id.product_availability))

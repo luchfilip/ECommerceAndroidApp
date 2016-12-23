@@ -196,7 +196,7 @@ public class SalesOrderLine extends Model implements Parcelable {
     @Override
     public boolean equals(Object o) {
         try{
-            return ((OrderLine) o).getId() == getId();
+            return ((SalesOrderLine) o).getId() == getId();
         }catch(Exception e){
             e.printStackTrace();
         }

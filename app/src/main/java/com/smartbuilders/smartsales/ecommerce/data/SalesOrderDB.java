@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
-import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderBR;
-import com.smartbuilders.smartsales.ecommerce.model.OrderLine;
+import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.utils.UtilsGetDataFromDB;
 import com.smartbuilders.smartsales.ecommerce.utils.UtilsSyncData;
@@ -60,9 +58,9 @@ public class SalesOrderDB {
         if(salesOrderLines!=null && salesOrderLines.size()>0){
             try {
                 int salesOrderId = UserTableMaxIdDB.getNewIdForTable(mContext, mUser, "ECOMMERCE_SALES_ORDER");
-                double subTotal = SalesOrderBR.getSubTotalAmount(salesOrderLines),
-                        tax = SalesOrderBR.getTaxAmount(salesOrderLines),
-                        total = SalesOrderBR.getTotalAmount(salesOrderLines);
+                double subTotal = SalesOrderSalesManBR.getSubTotalAmount(salesOrderLines),
+                        tax = SalesOrderSalesManBR.getTaxAmount(salesOrderLines),
+                        total = SalesOrderSalesManBR.getTotalAmount(salesOrderLines);
 
                 int rowsAffected = mContext.getContentResolver()
                         .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -238,6 +236,10 @@ public class SalesOrderDB {
                             " INNER JOIN USER_BUSINESS_PARTNERS UBP ON UBP.USER_ID = SR.SALES_REP_ID AND UBP.IS_ACTIVE = ? " +
                             " INNER JOIN BUSINESS_PARTNER BP ON BP.BUSINESS_PARTNER_ID = UBP.BUSINESS_PARTNER_ID " +
                                 " AND BP.BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND BP.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
                         " WHERE SOL.BUSINESS_PARTNER_ID = ? AND SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                         " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", "Y", "Y", String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
@@ -250,6 +252,10 @@ public class SalesOrderDB {
                         " FROM ECOMMERCE_SALES_ORDER_LINE SOL " +
                             " INNER JOIN USER_BUSINESS_PARTNER UBP ON UBP.USER_ID = SOL.USER_ID " +
                                 " AND UBP.USER_BUSINESS_PARTNER_ID = SOL.BUSINESS_PARTNER_ID AND UBP.IS_ACTIVE = ? " +
+                            " INNER JOIN PRODUCT P ON P.PRODUCT_ID = SOL.PRODUCT_ID AND P.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
                         " WHERE SOL.USER_ID = ? AND SOL.DOC_TYPE = ? AND SOL.IS_ACTIVE = ? " +
                         " GROUP BY SOL.BUSINESS_PARTNER_ID",
                         new String[]{"Y", String.valueOf(mUser.getServerUserId()),

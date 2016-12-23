@@ -121,4 +121,7 @@
     <dimen name="shape_product_color_layout_elevation">1dp</dimen>
     <integer name="number_of_cards_in_staggered_grid_layout">2</integer>
 
+
+    <dimen name="productMinInfo_dynamic_height_max_image_Width">165dp</dimen>
+    <dimen name="productMinInfo_dynamic_height_max_image_Height">165dp</dimen>
 </resources>

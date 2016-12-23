@@ -5,4 +5,6 @@
     <color name="colorPrimaryLight">#f1e4ed84</color>
     <color name="colorPrimaryDark">#222222</color>
     <color name="colorAccent">#cccccc</color>
+    <color name="product_availability_color">#1556bf</color>
+    <color name="product_price_color">#0f4db0</color>
 </resources>
