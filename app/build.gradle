@@ -53,7 +53,6 @@ android {
             minSdkVersion 10
             targetSdkVersion 24
             //versionCode 30
-
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
             buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.febeca\""
@@ -67,7 +66,6 @@ android {
             buildConfigField "String", "SERVER_ADDRESS", "\"http://www.febeca.com:8089\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"http://10.48.52.28:8089\""
             //buildConfigField "String", "SERVER_ADDRESS", "\"\""
-
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.febeca"
             resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
@@ -81,7 +79,6 @@ android {
             minSdkVersion 10
             targetSdkVersion 24
             //versionCode 30
-
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
             buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.sillaca\""
@@ -94,7 +91,6 @@ android {
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
             buildConfigField "String", "SERVER_ADDRESS", "\"http://69.42.117.234:8089\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"\""
-
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.sillaca"
             resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
@@ -108,7 +104,6 @@ android {
             minSdkVersion 10
             targetSdkVersion 30
             //versionCode 1
-
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
             buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.beval\""
@@ -121,7 +116,6 @@ android {
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "true"
             buildConfigField "String", "SERVER_ADDRESS", "\"\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"\""
-
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.beval"
             resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
@@ -135,7 +129,6 @@ android {
             minSdkVersion 10
             targetSdkVersion 24
             //versionCode 1
-
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
             buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.ids\""
@@ -148,7 +141,6 @@ android {
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "false"
             buildConfigField "String", "SERVER_ADDRESS", "\"\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"\""
-
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.ids"
             resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
@@ -162,7 +154,6 @@ android {
             minSdkVersion 10
             targetSdkVersion 24
             //versionCode 1
-
             //These are the values for the authorities and account types.
             //Reference them in the java files with e.g. BuildConfig.ACCOUNT_TYPE
             buildConfigField "String", "AUTHENTICATOR_ACCOUNT_TYPE", "\"com.smartbuilders.smartsales.auth.gruporivera\""
@@ -175,7 +166,6 @@ android {
             buildConfigField "boolean", "USE_PRODUCT_IMAGE", "false"
             buildConfigField "String", "SERVER_ADDRESS", "\"\""
             buildConfigField "String", "INTERNAL_SERVER_ADDRESS", "\"\""
-
             //Reference them in .xml files.
             resValue "string", "authenticator_account_type", "com.smartbuilders.smartsales.auth.gruporivera"
             resValue "string", "sync_adapter_content_authority", "${applicationId}.providers.SynchronizerContentProvider"
@@ -183,6 +173,10 @@ android {
             resValue "string", "SynchronizerContentProvider_AUTHORITY", "${applicationId}.providers.SynchronizerContentProvider"
             resValue "string", "CachedFileProvider_AUTHORITY", "${applicationId}.providers.CachedFileProvider"
             resValue "string", "BluetoothConnectionProvider_AUTHORITY", "${applicationId}.providers.BluetoothConnectionProvider"
+        }
+        serviherramientas {
+            minSdkVersion 10
+            applicationId 'com.smartbuilders.smartsales.ecommerce.serviherramientas'
         }
     }
 }
@@ -205,7 +199,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.2.3'
-
     compile 'com.google.zxing:core:3.2.1'
     compile 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
     compile 'com.embarkmobile:zxing-android-integration:2.0.0@aar'

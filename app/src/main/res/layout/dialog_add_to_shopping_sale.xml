@@ -103,27 +103,23 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <LinearLayout
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/golden_medium"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/product_price_editText"
+                android:paddingRight="4dp"
+                android:focusable="true"
+                android:enabled="true"
+                android:numeric="decimal"
+                android:background="@drawable/golden_edittext_selector"
                 android:layout_weight="1"
+                android:focusableInTouchMode="true"
                 android:paddingLeft="4dp"
-                android:paddingRight="4dp" >
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:ems="10"
-                    android:id="@+id/product_price_editText"
-                    android:focusable="true"
-                    android:enabled="true"
-                    android:numeric="decimal"
-                    android:focusableInTouchMode="true"
-                    android:layout_gravity="right"
-                    android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
         <TableRow
@@ -146,27 +142,23 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <LinearLayout
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/golden_medium"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/product_tax_editText"
                 android:paddingRight="4dp"
+                android:focusable="true"
+                android:enabled="true"
+                android:numeric="decimal"
+                android:background="@drawable/golden_edittext_selector"
+                android:layout_weight="1"
+                android:focusableInTouchMode="true"
                 android:paddingLeft="4dp"
-                android:layout_weight="1">
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:ems="10"
-                    android:id="@+id/product_tax_editText"
-                    android:focusable="true"
-                    android:enabled="true"
-                    android:numeric="decimal"
-                    android:focusableInTouchMode="true"
-                    android:layout_gravity="right"
-                    android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
         <TableRow
@@ -187,28 +179,23 @@
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <LinearLayout
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/golden_medium"
-                android:paddingLeft="4dp"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/qty_requested_editText"
+                android:numeric="integer"
                 android:paddingRight="4dp"
-                android:layout_weight="1">
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:ems="10"
-                    android:id="@+id/qty_requested_editText"
-                    android:numeric="integer"
-                    android:focusable="true"
-                    android:enabled="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_gravity="right"
-                    android:gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-
+                android:focusable="true"
+                android:enabled="true"
+                android:background="@drawable/golden_edittext_selector"
+                android:layout_weight="1"
+                android:focusableInTouchMode="true"
+                android:paddingLeft="4dp"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
     </TableLayout>

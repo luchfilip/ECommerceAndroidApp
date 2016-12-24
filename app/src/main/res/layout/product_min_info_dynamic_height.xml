@@ -50,6 +50,7 @@
             android:id="@+id/product_price_currency_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/productMinInfo_currency_text_size"
             android:textColor="@color/product_price_color"/>
 
         <TextView
@@ -57,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/product_price_color"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textSize="@dimen/productMinInfo_price_text_size"/>
     </LinearLayout>
 
     <View style="@style/Divider"

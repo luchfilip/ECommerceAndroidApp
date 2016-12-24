@@ -33,6 +33,7 @@
     <color name="green_dark">#159204</color>
     <color name="bright_green">#02d8b0</color>
     <color name="button_green">#10a54a</color>
+    <color name="golden_light">#aaffd859</color>
     <color name="golden">#ffc400</color>
     <color name="golden_medium">#ffd700</color>
     <color name="button_text_color">#444444</color>
