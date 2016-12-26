@@ -15,11 +15,11 @@
 
     <dimen name="mainpage_name_size">25sp</dimen>
     <dimen name="productMinInfo_availability_text_size">18sp</dimen>
-    <dimen name="productMinInfo_currency_text_size">14sp</dimen>
-    <dimen name="productMinInfo_price_text_size">18sp</dimen>
-    <dimen name="productMinInfo_product_name_text_size">14sp</dimen>
+    <dimen name="productMinInfo_currency_text_size">16sp</dimen>
+    <dimen name="productMinInfo_price_text_size">20sp</dimen>
+    <dimen name="productMinInfo_product_name_text_size">15sp</dimen>
 
-    <dimen name="productDetailCardView_name_text_size">17sp</dimen>
+    <dimen name="productDetailCardView_name_text_size">15sp</dimen>
     <dimen name="productDetailCardView_internalCode_text_size">15sp</dimen>
     <dimen name="productDetailCardView_reference_text_size">15sp</dimen>
     <dimen name="productDetailCardView_brand_text_size">15sp</dimen>

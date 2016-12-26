@@ -71,10 +71,8 @@
             android:numeric="integer"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:focusable="true"
             android:enabled="true"
-            android:layout_marginLeft="2dp"
-            android:focusableInTouchMode="true" />
+            android:layout_marginLeft="2dp"/>
     </LinearLayout>
 
     <LinearLayout
