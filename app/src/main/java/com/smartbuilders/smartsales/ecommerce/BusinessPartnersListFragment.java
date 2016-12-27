@@ -49,10 +49,11 @@ public class BusinessPartnersListFragment extends Fragment {
     private UserBusinessPartnerDB mUserBusinessPartnerDB;
     private BusinessPartnersListAdapter mBusinessPartnersListAdapter;
     private Spinner mFilterByOptionsSpinner;
+    private User mUser;
 
     public interface Callback {
         void onItemSelected(int businessPartnerId, User user);
-        //void onItemLongSelected(int businessPartnerId, String businessPartnerName, User user);
+        //void onItemLongSelected(int businessPartnerId, String businessPartnerName, User mUser);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
         Integer getBusinessPartnerIdInDetailFragment();
@@ -67,7 +68,7 @@ public class BusinessPartnersListFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_business_partners_list, container, false);
         mIsInitialLoad = true;
 
-        final User user = Utils.getCurrentUser(getContext());
+        mUser = Utils.getCurrentUser(getContext());
 
         new Thread() {
             @Override
@@ -93,16 +94,16 @@ public class BusinessPartnersListFragment extends Fragment {
                             mSpinnerSelectedItemPosition = savedInstanceState.getInt(STATE_SPINNER_SELECTED_ITEM_POSITION);
                         }
                     }
-                    if(user!=null){
-                        if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                            mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
+                    if(mUser !=null){
+                        if(BuildConfig.IS_SALES_FORCE_SYSTEM || mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+                            mBusinessPartnerDB = new BusinessPartnerDB(getContext(), mUser);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    user, mBusinessPartnerDB.getBusinessPartners(),
-                                    Utils.getAppCurrentBusinessPartnerId(getContext(), user));
-                        }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                            mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
+                                    mUser, mBusinessPartnerDB.getBusinessPartners(),
+                                    Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                        }else if(mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+                            mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mUser);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    user, mUserBusinessPartnerDB.getUserBusinessPartners(), 0);
+                                    mUser, mUserBusinessPartnerDB.getUserBusinessPartners(), 0);
                         }
                     }
                 } catch (Exception e) {
@@ -122,7 +123,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                         mCurrentSelectedIndex = position;
                                         final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                         if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemSelected(businessPartner.getId(), user);
+                                            ((Callback) getActivity()).onItemSelected(businessPartner.getId(), mUser);
                                         }
                                     }
                                 });
@@ -131,7 +132,7 @@ public class BusinessPartnersListFragment extends Fragment {
                                 //    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                                 //        final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                 //        if (businessPartner != null) {
-                                //            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getName(), user);
+                                //            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getName(), mUser);
                                 //        }
                                 //        return true;
                                 //    }
@@ -260,6 +261,11 @@ public class BusinessPartnersListFragment extends Fragment {
                 if(mUserBusinessPartnerDB!=null) {
                     mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getUserBusinessPartners());
                 }else if(mBusinessPartnerDB!=null) {
+                    try {
+                        mBusinessPartnersListAdapter.setAppCurrentBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                    } catch (Exception e) {
+                        //do nothing
+                    }
                     mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getBusinessPartners());
                 }
 

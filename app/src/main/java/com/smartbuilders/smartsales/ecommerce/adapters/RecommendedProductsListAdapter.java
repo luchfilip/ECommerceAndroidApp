@@ -186,13 +186,13 @@ public class RecommendedProductsListAdapter extends
             holder.productPriceContainer.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
         }
 
-        if (mDataset.get(position).getProductPriceAvailability().getAvailability()>0) {
-            holder.productAvailability.setVisibility(View.VISIBLE);
+        //if (mDataset.get(position).getProductPriceAvailability().getAvailability()>0) {
+            //holder.productAvailability.setVisibility(View.VISIBLE);
             holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getProductPriceAvailability().getAvailability()));
-        } else {
-            holder.productAvailability.setVisibility(View.GONE);
-        }
+        //} else {
+            //holder.productAvailability.setVisibility(mIsManagePriceInOrder ? View.INVISIBLE : View.GONE);
+        //}
 
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -265,15 +265,15 @@ public class ProductsListActivity extends AppCompatActivity
                                         ProductCategory productCategory = (new ProductCategoryDB(ProductsListActivity.this, user))
                                                 .getProductCategory(productCategoryId);
                                         if(productCategory!=null){
-                                            categorySubcategoryResultsTextView.setText(getString(R.string.category_detail,
-                                                    productCategory.getName()));
+                                            categorySubcategoryResultsTextView.setText(/*getString(R.string.category_detail,*/
+                                                    productCategory.getName()/*)*/);
                                         }
                                     } else if (productSubCategoryId != 0) {
                                         ProductSubCategory productSubCategory = (new ProductSubCategoryDB(ProductsListActivity.this, user))
                                                 .getProductSubCategory(productSubCategoryId);
                                         if(productSubCategory!=null){
-                                            categorySubcategoryResultsTextView.setText(getString(R.string.subcategory_detail,
-                                                    productSubCategory.getName()));
+                                            categorySubcategoryResultsTextView.setText(/*getString(R.string.subcategory_detail,*/
+                                                    productSubCategory.getName()/*)*/);
                                         }
                                     } else if (productBrandId != 0) {
                                         if(products.get(0).getProductBrand()!=null
