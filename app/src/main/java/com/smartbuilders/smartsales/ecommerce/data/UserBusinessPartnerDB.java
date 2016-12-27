@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
@@ -25,8 +25,8 @@ public class UserBusinessPartnerDB {
         this.mUser = user;
     }
 
-    public ArrayList<BusinessPartner> getUserBusinessPartners(){
-        ArrayList<BusinessPartner> businessPartners = new ArrayList<>();
+    public ArrayList<UserBusinessPartner> getUserBusinessPartners(){
+        ArrayList<UserBusinessPartner> businessPartners = new ArrayList<>();
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -40,7 +40,7 @@ public class UserBusinessPartnerDB {
                     new String[]{String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null){
                 while(c.moveToNext()){
-                    BusinessPartner businessPartner = new BusinessPartner();
+                    UserBusinessPartner businessPartner = new UserBusinessPartner();
                     businessPartner.setId(c.getInt(0));
                     businessPartner.setName(c.getString(1));
                     businessPartner.setCommercialName(c.getString(2));
@@ -64,14 +64,14 @@ public class UserBusinessPartnerDB {
             }
         }
         UserBusinessPartnerAddressDB userBusinessPartnerAddressDB = new UserBusinessPartnerAddressDB(mContext, mUser);
-        for (BusinessPartner businessPartner : businessPartners) {
+        for (UserBusinessPartner businessPartner : businessPartners) {
             businessPartner.setAddresses(userBusinessPartnerAddressDB
                     .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
         }
         return businessPartners;
     }
 
-    public String registerUserBusinessPartner(BusinessPartner businessPartner){
+    public String registerUserBusinessPartner(UserBusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -97,7 +97,7 @@ public class UserBusinessPartnerDB {
         return null;
     }
 
-    public String updateUserBusinessPartner(BusinessPartner businessPartner){
+    public String updateUserBusinessPartner(UserBusinessPartner businessPartner){
         try {
             int rowsAffected = mContext.getContentResolver()
                     .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -167,7 +167,7 @@ public class UserBusinessPartnerDB {
         return false;
     }
 
-    public BusinessPartner getUserBusinessPartnerById(int businessPartnerId) {
+    public UserBusinessPartner getUserBusinessPartnerById(int businessPartnerId) {
         Cursor c = null;
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
@@ -178,7 +178,7 @@ public class UserBusinessPartnerDB {
                     " where USER_BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND IS_ACTIVE = ?",
                     new String[]{String.valueOf(businessPartnerId), String.valueOf(mUser.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
-                BusinessPartner businessPartner = new BusinessPartner();
+                UserBusinessPartner businessPartner = new UserBusinessPartner();
                 businessPartner.setId(businessPartnerId);
                 businessPartner.setName(c.getString(0));
                 businessPartner.setCommercialName(c.getString(1));

@@ -296,9 +296,13 @@ public class ShoppingSaleAdapterSalesMan extends RecyclerView.Adapter<ShoppingSa
     }
 
     public void removeItem(int position) {
-        mDataset.remove(position);
-        notifyItemRemoved(position);
-        ((Callback) mFragment).reloadShoppingSale(mDataset, false);
+        try {
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+            ((Callback) mFragment).reloadShoppingSale(mDataset, false);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
 
     public void addItem(int position, SalesOrderLine item) {

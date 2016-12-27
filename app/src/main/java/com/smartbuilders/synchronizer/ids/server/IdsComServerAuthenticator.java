@@ -81,9 +81,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 					user.setSessionToken(ctx.getString(R.string.user_response_move_to_next_false));
 				}
 			}
-        }catch(Exception e){
-        	throw e;
-        }finally{
+        } finally {
         	if(response!=null){
         		response.close();
         	}
@@ -143,9 +141,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 					user.setSessionToken(ctx.getString(R.string.user_response_move_to_next_false));
 				}
 			}
-        }catch(Exception e){
-        	throw e;
-        }finally{
+        } finally {
         	if(response!=null){
         		response.close();
         	}
@@ -197,9 +193,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
                     user.setAuthToken(response.getString(response.getColumnIndex("authToken")));
                 }
             }
-        }catch(Exception e){
-            throw e;
-        }finally{
+        } finally {
             if(response!=null){
                 response.close();
             }
@@ -237,10 +231,7 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 					throw new Exception("userSignOut - response.moveToNext() is false.");
 				}
 			}
-        }catch(Exception e){
-        	e.printStackTrace();
-        	throw e;
-        }finally{
+        } finally {
         	if(response!=null){
         		response.close();
         	}

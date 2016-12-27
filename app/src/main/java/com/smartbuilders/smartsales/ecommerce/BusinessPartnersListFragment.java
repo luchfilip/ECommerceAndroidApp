@@ -51,8 +51,8 @@ public class BusinessPartnersListFragment extends Fragment {
     private Spinner mFilterByOptionsSpinner;
 
     public interface Callback {
-        void onItemSelected(int businessPartnerId);
-        void onItemLongSelected(int businessPartnerId, String businessPartnerName, User user);
+        void onItemSelected(int businessPartnerId, User user);
+        //void onItemLongSelected(int businessPartnerId, String businessPartnerName, User user);
         void onListIsLoaded();
         void setSelectedIndex(int selectedIndex);
         Integer getBusinessPartnerIdInDetailFragment();
@@ -97,12 +97,12 @@ public class BusinessPartnersListFragment extends Fragment {
                         if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
                             mBusinessPartnerDB = new BusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mBusinessPartnerDB.getBusinessPartners(),
+                                    user, mBusinessPartnerDB.getBusinessPartners(),
                                     Utils.getAppCurrentBusinessPartnerId(getContext(), user));
                         }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
                             mUserBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
                             mBusinessPartnersListAdapter = new BusinessPartnersListAdapter(getContext(),
-                                    mUserBusinessPartnerDB.getUserBusinessPartners(), 0);
+                                    user, mUserBusinessPartnerDB.getUserBusinessPartners(), 0);
                         }
                     }
                 } catch (Exception e) {
@@ -122,20 +122,20 @@ public class BusinessPartnersListFragment extends Fragment {
                                         mCurrentSelectedIndex = position;
                                         final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
                                         if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemSelected(businessPartner.getId());
+                                            ((Callback) getActivity()).onItemSelected(businessPartner.getId(), user);
                                         }
                                     }
                                 });
-                                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                                    @Override
-                                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                        final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
-                                        if (businessPartner != null) {
-                                            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getName(), user);
-                                        }
-                                        return true;
-                                    }
-                                });
+                                //mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                //    @Override
+                                //    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                //        final BusinessPartner businessPartner = (BusinessPartner) parent.getItemAtPosition(position);
+                                //        if (businessPartner != null) {
+                                //            ((Callback) getActivity()).onItemLongSelected(businessPartner.getId(), businessPartner.getName(), user);
+                                //        }
+                                //        return true;
+                                //    }
+                                //});
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
 
                                 /*******************************************************************************/

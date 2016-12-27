@@ -317,9 +317,13 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     }
 
     public void removeItem(int position) {
-        mDataset.remove(position);
-        notifyItemRemoved(position);
-        ((Callback) mFragment).reloadWishList(mDataset, false);
+        try {
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+            ((Callback) mFragment).reloadWishList(mDataset, false);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
 
     public void addItem(int position, OrderLine item) {

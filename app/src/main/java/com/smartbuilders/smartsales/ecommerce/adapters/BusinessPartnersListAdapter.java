@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +11,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.BusinessPartnersListActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -27,14 +34,19 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
     private Context mContext;
+    private User mUser;
     private ArrayList<BusinessPartner> mDataset;
     private ArrayList<BusinessPartner> filterAux;
     private int mAppCurrentBusinessPartnerId;
 
-    public BusinessPartnersListAdapter(Context context, ArrayList<BusinessPartner> data,
+    public BusinessPartnersListAdapter(Context context, User user, ArrayList<? extends BusinessPartner> data,
                                        int appCurrentBusinessPartnerId) {
         mContext = context;
-        mDataset = data;
+        mUser = user;
+        mDataset = new ArrayList<>();
+        if (data!=null) {
+            mDataset.addAll(data);
+        }
         filterAux = new ArrayList<>();
         filterAux.addAll(mDataset);
         mAppCurrentBusinessPartnerId = appCurrentBusinessPartnerId;
@@ -94,11 +106,58 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
         viewHolder.businessPartnerName.setText(mDataset.get(position).getName());
         viewHolder.businessPartnerTaxId.setText(mContext.getString(R.string.tax_id, mDataset.get(position).getTaxId()));
 
-        if(mDataset.get(position).getId() == mAppCurrentBusinessPartnerId){
-            viewHolder.appCurrentBusinessPartnerIndicator.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
-            viewHolder.appCurrentBusinessPartnerIndicator.setVisibility(View.VISIBLE);
-        }else{
-            viewHolder.appCurrentBusinessPartnerIndicator.setVisibility(View.GONE);
+        if (mDataset.get(position) instanceof UserBusinessPartner) {
+            viewHolder.imageView.setImageResource(R.drawable.ic_highlight_off_black);
+            viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setMessage(mContext.getString(R.string.delete_business_partner, mDataset.get(position).getName()))
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String result = (new UserBusinessPartnerDB(mContext, mUser)).deactivateUserBusinessPartner(mDataset.get(position).getId());
+                                    if (result==null) {
+                                        ((BusinessPartnersListActivity) mContext).reloadBusinessPartnersList();
+                                    } else {
+                                        Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                }
+            });
+        } else {
+            if (mDataset.get(position).getId() == mAppCurrentBusinessPartnerId) {
+                viewHolder.imageView.setColorFilter(Utils.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+                viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, mContext.getString(R.string.session_loaded_detail,
+                                mDataset.get(position).getName()), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                viewHolder.imageView.setColorFilter(Utils.getColor(mContext, R.color.dark_grey), PorterDuff.Mode.SRC_ATOP);
+                viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(mContext)
+                                .setMessage(mContext.getString(R.string.init_session_business_partner_question, mDataset.get(position).getName()))
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mAppCurrentBusinessPartnerId = mDataset.get(position).getId();
+                                        Utils.setAppCurrentBusinessPartnerId(mContext, mDataset.get(position).getId());
+                                        Toast.makeText(mContext, mContext.getString(R.string.session_loaded_detail,
+                                                mDataset.get(position).getName()), Toast.LENGTH_SHORT).show();
+                                        notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .show();
+                    }
+                });
+            }
         }
 
         return view;
@@ -113,19 +172,24 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
         public TextView businessPartnerName;
         public TextView businessPartnerTaxId;
         public TextView businessPartnerInternalCode;
-        public ImageView appCurrentBusinessPartnerIndicator;
+        public ImageView imageView;
 
         public ViewHolder(View v) {
             businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             businessPartnerName = (TextView) v.findViewById(R.id.business_partner_name_textView);
             businessPartnerTaxId = (TextView) v.findViewById(R.id.business_partner_tax_id_textView);
             businessPartnerInternalCode = (TextView) v.findViewById(R.id.business_partner_internal_code_textView);
-            appCurrentBusinessPartnerIndicator = (ImageView) v.findViewById(R.id.app_current_business_partner_indicator_imageView);
+            imageView = (ImageView) v.findViewById(R.id.imageView);
         }
     }
 
-    public void setData(ArrayList<BusinessPartner> businessPartners) {
-        mDataset = businessPartners;
+    public void setData(ArrayList<? extends BusinessPartner> businessPartners) {
+        if (businessPartners==null) {
+            mDataset = null;
+        } else {
+            mDataset = new ArrayList<>();
+            mDataset.addAll(businessPartners);
+        }
         filterAux = new ArrayList<>();
         filterAux.addAll(mDataset);
         notifyDataSetChanged();

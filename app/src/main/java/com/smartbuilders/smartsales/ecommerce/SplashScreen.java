@@ -347,6 +347,8 @@ public class SplashScreen extends AppCompatActivity {
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
                 initApp();
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
             }
         } else if (resultCode == 200) {
             if (mUser!=null && !ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {

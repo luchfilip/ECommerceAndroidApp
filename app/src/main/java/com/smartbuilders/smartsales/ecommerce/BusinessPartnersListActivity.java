@@ -33,9 +33,11 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 public class BusinessPartnersListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         BusinessPartnersListFragment.Callback, RegisterBusinessPartnerFragment.Callback,
+        BusinessPartnerDetailsFragment.Callback,
         DialogRegisterUserBusinessPartner.Callback {
 
     public static final String REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG = "REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG";
+    public static final String BUSINESS_PARTNER_DETAILS_FRAGMENT_TAG = "BUSINESS_PARTNER_DETAILS_FRAGMENT_TAG";
 
     private UserBusinessPartnerDB mUserBusinessPartnerDB;
     private BusinessPartnerDB mBusinessPartnerDB;
@@ -143,7 +145,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                     ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
                             mUserBusinessPartnerDB.getUserBusinessPartners());
                 } else {
-                    mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                    mListView.setAdapter(new BusinessPartnersListAdapter(this, mUser,
                             mUserBusinessPartnerDB.getUserBusinessPartners(), 0));
                 }
             }else if(mBusinessPartnerDB != null){
@@ -152,7 +154,7 @@ public class BusinessPartnersListActivity extends AppCompatActivity
                             mBusinessPartnerDB.getBusinessPartners());
                 } else {
                     try{
-                        mListView.setAdapter(new BusinessPartnersListAdapter(this,
+                        mListView.setAdapter(new BusinessPartnersListAdapter(this, mUser,
                                 mBusinessPartnerDB.getBusinessPartners(),
                                 Utils.getAppCurrentBusinessPartnerId(this, mUser)));
                     }catch (Exception e){
@@ -246,60 +248,77 @@ public class BusinessPartnersListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(int businessPartnerId) {
-        if (mTwoPane) {
-            mBusinessPartnerIdInDetailFragment = businessPartnerId;
-            Bundle args = new Bundle();
-            args.putInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId);
-            RegisterBusinessPartnerFragment fragment = new RegisterBusinessPartnerFragment();
-            fragment.setArguments(args);
+    public void onItemSelected(int businessPartnerId, User user) {
+        if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+            if (mTwoPane) {
+                mBusinessPartnerIdInDetailFragment = businessPartnerId;
+                Bundle args = new Bundle();
+                args.putInt(BusinessPartnerDetailsActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId);
+                BusinessPartnerDetailsFragment fragment = new BusinessPartnerDetailsFragment();
+                fragment.setArguments(args);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.business_partner_detail_container, fragment, REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
-                    .commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.business_partner_detail_container, fragment, BUSINESS_PARTNER_DETAILS_FRAGMENT_TAG)
+                        .commit();
+            } else {
+                startActivity(new Intent(this, BusinessPartnerDetailsActivity.class)
+                        .putExtra(BusinessPartnerDetailsActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId));
+            }
         } else {
-            startActivity(new Intent(this, RegisterBusinessPartnerActivity.class)
-                    .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId));
-        }
-    }
+            if (mTwoPane) {
+                mBusinessPartnerIdInDetailFragment = businessPartnerId;
+                Bundle args = new Bundle();
+                args.putInt(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId);
+                RegisterBusinessPartnerFragment fragment = new RegisterBusinessPartnerFragment();
+                fragment.setArguments(args);
 
-    @Override
-    public void onItemLongSelected(final int businessPartnerId, final String businessPartnerName, User user) {
-        if(user!=null){
-            if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.init_session_business_partner, businessPartnerName))
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Utils.setAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, businessPartnerId);
-                                if (mListView.getAdapter() instanceof BusinessPartnersListAdapter) {
-                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setAppCurrentBusinessPartnerId(businessPartnerId);
-                                    ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                                }
-                                Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
-                                        businessPartnerName), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-            } else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.delete_business_partner, businessPartnerName))
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
-                                if (result==null) {
-                                    reloadBusinessPartnersList();
-                                } else {
-                                    Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.business_partner_detail_container, fragment, REGISTER_BUSINESS_PARTNER_FRAGMENT_TAG)
+                        .commit();
+            } else {
+                startActivity(new Intent(this, RegisterBusinessPartnerActivity.class)
+                        .putExtra(RegisterBusinessPartnerActivity.KEY_BUSINESS_PARTNER_ID, businessPartnerId));
             }
         }
     }
+
+    //@Override
+    //public void onItemLongSelected(final int businessPartnerId, final String businessPartnerName, User user) {
+    //    if(user!=null){
+    //        if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
+    //            new AlertDialog.Builder(this)
+    //                    .setMessage(getString(R.string.init_session_business_partner_question, businessPartnerName))
+    //                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+    //                        public void onClick(DialogInterface dialog, int which) {
+    //                            Utils.setAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, businessPartnerId);
+    //                            if (mListView.getAdapter() instanceof BusinessPartnersListAdapter) {
+    //                                ((BusinessPartnersListAdapter) mListView.getAdapter()).setAppCurrentBusinessPartnerId(businessPartnerId);
+    //                                ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
+    //                            }
+    //                            Toast.makeText(BusinessPartnersListActivity.this, getString(R.string.session_loaded_detail,
+    //                                    businessPartnerName), Toast.LENGTH_SHORT).show();
+    //                        }
+    //                    })
+    //                    .setNegativeButton(R.string.no, null)
+    //                    .show();
+    //        } else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
+    //            new AlertDialog.Builder(this)
+    //                    .setMessage(getString(R.string.delete_business_partner, businessPartnerName))
+    //                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+    //                        public void onClick(DialogInterface dialog, int which) {
+    //                            String result = mUserBusinessPartnerDB.deactivateUserBusinessPartner(businessPartnerId);
+    //                            if (result==null) {
+    //                                reloadBusinessPartnersList();
+    //                            } else {
+    //                                Toast.makeText(BusinessPartnersListActivity.this, result, Toast.LENGTH_SHORT).show();
+    //                            }
+    //                        }
+    //                    })
+    //                    .setNegativeButton(R.string.cancel, null)
+    //                    .show();
+    //        }
+    //    }
+    //}
 
     @Override
     public void onBusinessPartnerRegistered() {
@@ -311,6 +330,14 @@ public class BusinessPartnersListActivity extends AppCompatActivity
         if (mListView!=null && mListView.getAdapter()!=null && mUserBusinessPartnerDB!=null) {
             ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
                     mUserBusinessPartnerDB.getUserBusinessPartners());
+        }
+    }
+
+    @Override
+    public void onBusinessPartnerSelected(int businessPartnerId) {
+        if (mListView!=null && mListView.getAdapter()!=null) {
+            ((BusinessPartnersListAdapter) mListView.getAdapter()).setAppCurrentBusinessPartnerId(businessPartnerId);
+            ((BusinessPartnersListAdapter) mListView.getAdapter()).notifyDataSetChanged();
         }
     }
 }

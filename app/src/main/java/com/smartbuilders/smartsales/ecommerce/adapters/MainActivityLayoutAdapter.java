@@ -14,7 +14,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,7 +56,7 @@ import java.util.ArrayList;
 /**
  * Created by Alberto on 25/3/2016.
  */
-public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<MainActivityStaggeredLayoutAdapter.ViewHolder> {
+public class MainActivityLayoutAdapter extends RecyclerView.Adapter<MainActivityLayoutAdapter.ViewHolder> {
 
     private static final int VIEW_TYPE_EMPTY_LAYOUT     = -1;
     private static final int VIEW_TYPE_VIEW_FLIPPER     = 0;
@@ -151,8 +150,8 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MainActivityStaggeredLayoutAdapter(Context context, FragmentActivity fragmentActivity,
-                                              ArrayList<Object> myDataset, User user) {
+    public MainActivityLayoutAdapter(Context context, FragmentActivity fragmentActivity,
+                                     ArrayList<Object> myDataset, User user) {
         mContext = context;
         mFragmentActivity = fragmentActivity;
         mDataset = myDataset;
@@ -169,7 +168,7 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MainActivityStaggeredLayoutAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MainActivityLayoutAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View view;
         switch (viewType) {
@@ -206,7 +205,7 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
                 view = LayoutInflater.from(mContext)
                         .inflate(R.layout.empty_layout, parent, false);
         }
-        return new MainActivityStaggeredLayoutAdapter.ViewHolder(view);
+        return new MainActivityLayoutAdapter.ViewHolder(view);
     }
 
     @Override
@@ -284,9 +283,9 @@ public class MainActivityStaggeredLayoutAdapter extends RecyclerView.Adapter<Mai
                     } else {
                         height = (metrics.widthPixels / 5);
                     }
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels - Utils.convertDpToPixel(10, mContext), height);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(metrics.widthPixels, height);
                     viewHolder.mViewPager.setLayoutParams(lp);
-                    //viewHolder.mViewPager.setPageMargin(10);
+
                     ProductBrandPromotionalAdapter productBrandPromotionalAdapter =
                             new ProductBrandPromotionalAdapter(mFragmentActivity.getSupportFragmentManager(), metrics);
                     productBrandPromotionalAdapter.setData(productBrandPromotionalSection.getProductBrandPromotionalCards());

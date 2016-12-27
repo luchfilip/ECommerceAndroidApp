@@ -351,13 +351,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsNotifications"
-            android:label="@string/notificationHistories"/>
+            android:label="@string/notificationHistories" />
         <activity
             android:name=".SettingsImagesManagement"
-            android:label="@string/settings_images_management"/>
+            android:label="@string/settings_images_management" />
         <activity
             android:name=".SettingsDataSync"
-            android:label="@string/data_sync"/>
+            android:label="@string/data_sync" />
+        <activity
+            android:name=".BusinessPartnerDetailsActivity"
+            android:label="@string/title_activity_business_partner_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -9,8 +9,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
@@ -30,8 +28,6 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_business_partner);
 
-        User user = Utils.getCurrentUser(this);
-
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER_ID)){
                 mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
@@ -43,17 +39,8 @@ public class RegisterBusinessPartnerActivity extends AppCompatActivity
         }
 
         if (mBusinessPartnerId!=0 && findViewById(R.id.title_textView)!=null) {
-            if(user!=null){
-                if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                    ((TextView) findViewById(R.id.title_textView))
-                            .setText(getString(R.string.business_partner_info));
-                }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                    ((TextView) findViewById(R.id.title_textView))
-                            .setText(getString(R.string.update_business_partner));
-                }
-            }
-            ((ImageView) findViewById(R.id.toolbar_imageView))
-                    .setImageResource(R.drawable.ic_person_white_24dp);
+            ((TextView) findViewById(R.id.title_textView)).setText(getString(R.string.update_business_partner));
+            ((ImageView) findViewById(R.id.toolbar_imageView)).setImageResource(R.drawable.ic_person_white_24dp);
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);

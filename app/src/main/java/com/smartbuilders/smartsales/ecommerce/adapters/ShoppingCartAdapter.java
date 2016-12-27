@@ -309,9 +309,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     }
 
     public void removeItem(int position) {
-        mDataset.remove(position);
-        notifyItemRemoved(position);
-        ((Callback) mFragment).reloadShoppingCart(mDataset, false);
+        try {
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+            ((Callback) mFragment).reloadShoppingCart(mDataset, false);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
 
     public void addItem(int position, OrderLine item) {

@@ -10,15 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.businessRules.UserBusinessPartnerBR;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
 /**
@@ -31,7 +28,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
     private static final String STATE_ORIGINAL_TAX_ID = "state_original_tax_id";
 
     private int mBusinessPartnerId;
-    private BusinessPartner mBusinessPartner;
+    private UserBusinessPartner mUserBusinessPartner;
     private String mOriginalTaxId;
 
     public interface Callback {
@@ -65,24 +62,17 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                             mBusinessPartnerId = savedInstanceState.getInt(STATE_BUSINESS_PARTNER_ID);
                         }
                         if(savedInstanceState.containsKey(STATE_BUSINESS_PARTNER)){
-                            mBusinessPartner = savedInstanceState.getParcelable(STATE_BUSINESS_PARTNER);
+                            mUserBusinessPartner = savedInstanceState.getParcelable(STATE_BUSINESS_PARTNER);
                         }
                         if(savedInstanceState.containsKey(STATE_ORIGINAL_TAX_ID)){
                             mOriginalTaxId = savedInstanceState.getString(STATE_ORIGINAL_TAX_ID);
                         }
                     }
 
-                    if(mBusinessPartnerId>0 && mBusinessPartner ==null){
-                        if(user!=null){
-                            if(BuildConfig.IS_SALES_FORCE_SYSTEM || user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-                                mBusinessPartner = (new BusinessPartnerDB(getContext(), user))
-                                        .getBusinessPartnerById(mBusinessPartnerId);
-                            }else if(user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                                mBusinessPartner = (new UserBusinessPartnerDB(getContext(), user))
-                                        .getUserBusinessPartnerById(mBusinessPartnerId);
-                                mOriginalTaxId = mBusinessPartner.getTaxId();
-                            }
-                        }
+                    if(mUserBusinessPartner==null){
+                        mUserBusinessPartner = (new UserBusinessPartnerDB(getContext(), user))
+                                .getUserBusinessPartnerById(mBusinessPartnerId);
+                        mOriginalTaxId = mUserBusinessPartner.getTaxId();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,192 +90,129 @@ public class RegisterBusinessPartnerFragment extends Fragment {
                                 final EditText businessPartnerEmailAddress = (EditText) rootView.findViewById(R.id.business_partner_email_address_editText);
                                 final EditText businessPartnerPhoneNumber = (EditText) rootView.findViewById(R.id.business_partner_phone_number_editText);
 
-                                Button saveButton = (Button) rootView.findViewById(R.id.save_button);
+                                final Button saveButton = (Button) rootView.findViewById(R.id.save_button);
 
-                                if (mBusinessPartner !=null){
-                                    businessPartnerName.setText(mBusinessPartner.getName());
-                                    businessPartnerCommercialName.setText(mBusinessPartner.getCommercialName());
-                                    businessPartnerTaxId.setText(mBusinessPartner.getTaxId());
-                                    businessPartnerAddress.setText(mBusinessPartner.getAddress());
-                                    businessPartnerContactPerson.setText(mBusinessPartner.getContactPerson());
-                                    businessPartnerEmailAddress.setText(mBusinessPartner.getEmailAddress());
-                                    businessPartnerPhoneNumber.setText(mBusinessPartner.getPhoneNumber());
+                                if (mUserBusinessPartner!=null){
+                                    businessPartnerName.setText(mUserBusinessPartner.getName());
+                                    businessPartnerCommercialName.setText(mUserBusinessPartner.getCommercialName());
+                                    businessPartnerTaxId.setText(mUserBusinessPartner.getTaxId());
+                                    businessPartnerAddress.setText(mUserBusinessPartner.getAddress());
+                                    businessPartnerContactPerson.setText(mUserBusinessPartner.getContactPerson());
+                                    businessPartnerEmailAddress.setText(mUserBusinessPartner.getEmailAddress());
+                                    businessPartnerPhoneNumber.setText(mUserBusinessPartner.getPhoneNumber());
 
-                                    if(user!=null && user.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-                                        businessPartnerName.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setName(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerCommercialName.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setCommercialName(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerTaxId.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setTaxId(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerAddress.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setAddress(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerContactPerson.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setContactPerson(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerEmailAddress.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setEmailAddress(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-                                        businessPartnerPhoneNumber.addTextChangedListener(new TextWatcher(){
-                                            public void afterTextChanged(Editable s) {
-                                                mBusinessPartner.setPhoneNumber(s.toString());
-                                            }
-                                            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                                            public void onTextChanged(CharSequence s, int start, int before, int count){}
-                                        });
-
-                                        saveButton.setText(getString(R.string.update));
-                                    }else{
-                                        /**************/
-                                        if(rootView.findViewById(R.id.business_partner_internal_code_tableRow)!=null){
-                                            rootView.findViewById(R.id.business_partner_internal_code_tableRow).setVisibility(View.VISIBLE);
-                                        }else{
-                                            rootView.findViewById(R.id.business_partner_internal_code_label).setVisibility(View.VISIBLE);
-                                            rootView.findViewById(R.id.business_partner_internal_code_textView).setVisibility(View.VISIBLE);
+                                    businessPartnerName.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setName(s.toString());
                                         }
-                                        ((TextView) rootView.findViewById(R.id.business_partner_internal_code_textView))
-                                                .setText(mBusinessPartner.getInternalCode());
-                                        /**************/
-
-                                        /**************/
-                                        businessPartnerName.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_name_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_name_textView)).setText(mBusinessPartner.getName());
-                                        /**************/
-
-                                        /**************/
-                                        businessPartnerCommercialName.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_commercial_name_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_commercial_name_textView)).setText(mBusinessPartner.getCommercialName());
-                                        /**************/
-
-                                        /**************/
-                                        businessPartnerTaxId.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_tax_id_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_tax_id_textView)).setText(mBusinessPartner.getTaxId());
-                                        /**************/
-
-                                        /**************/
-                                        businessPartnerAddress.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_address_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_address_textView)).setText(mBusinessPartner.getAddress());
-                                        /**************/
-
-                                        /**************/
-                                        if(rootView.findViewById(R.id.business_partner_contact_person_tableRow)!=null){
-                                            rootView.findViewById(R.id.business_partner_contact_person_tableRow).setVisibility(View.GONE);
-                                        }else{
-                                            rootView.findViewById(R.id.business_partner_contact_person_label).setVisibility(View.GONE);
-                                            businessPartnerContactPerson.setVisibility(View.GONE);
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerCommercialName.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setCommercialName(s.toString());
                                         }
-                                        /**************/
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerTaxId.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setTaxId(s.toString());
+                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerAddress.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setAddress(s.toString());
+                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerContactPerson.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setContactPerson(s.toString());
+                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerEmailAddress.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setEmailAddress(s.toString());
+                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
+                                    businessPartnerPhoneNumber.addTextChangedListener(new TextWatcher(){
+                                        public void afterTextChanged(Editable s) {
+                                            mUserBusinessPartner.setPhoneNumber(s.toString());
+                                        }
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                                        public void onTextChanged(CharSequence s, int start, int before, int count){}
+                                    });
 
-                                        /**************/
-                                        businessPartnerEmailAddress.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_email_address_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_email_address_textView)).setText(mBusinessPartner.getEmailAddress());
-                                        /**************/
-
-                                        /**************/
-                                        businessPartnerPhoneNumber.setVisibility(View.GONE);
-                                        rootView.findViewById(R.id.business_partner_phone_number_textView).setVisibility(View.VISIBLE);
-                                        ((TextView) rootView.findViewById(R.id.business_partner_phone_number_textView)).setText(mBusinessPartner.getPhoneNumber());
-                                        /**************/
-
-                                        saveButton.setVisibility(View.GONE);
-                                    }
+                                    saveButton.setText(getString(R.string.update));
                                 }
 
-                                if (saveButton!=null && user!=null
-                                        && user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                                    saveButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
-                                            if (mBusinessPartner !=null) {
-                                                if(!mBusinessPartner.getTaxId().equals(mOriginalTaxId)){
-                                                    String result = UserBusinessPartnerBR.validateBusinessPartner(mBusinessPartner,
-                                                            getContext(), user);
-                                                    if(result==null){
-                                                        result = userBusinessPartnerDB.updateUserBusinessPartner(mBusinessPartner);
-                                                        if (result==null){
-                                                            mOriginalTaxId = mBusinessPartner.getTaxId();
-                                                            ((Callback) getActivity()).onBusinessPartnerUpdated();
-                                                            Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_SHORT).show();
-                                                        } else {
-                                                            Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }else{
-                                                        new AlertDialog.Builder(getContext())
-                                                                .setMessage(result)
-                                                                .setNeutralButton(R.string.accept, null)
-                                                                .show();
-                                                    }
-                                                }else{
-                                                    String result = userBusinessPartnerDB.updateUserBusinessPartner(mBusinessPartner);
+                                saveButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), user);
+                                        if (mUserBusinessPartner !=null) {
+                                            if(!mUserBusinessPartner.getTaxId().equals(mOriginalTaxId)){
+                                                String result = UserBusinessPartnerBR.validateBusinessPartner(mUserBusinessPartner,
+                                                        getContext(), user);
+                                                if(result==null){
+                                                    result = userBusinessPartnerDB.updateUserBusinessPartner(mUserBusinessPartner);
                                                     if (result==null){
+                                                        mOriginalTaxId = mUserBusinessPartner.getTaxId();
                                                         ((Callback) getActivity()).onBusinessPartnerUpdated();
                                                         Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_SHORT).show();
                                                     } else {
                                                         Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
                                                     }
-                                                }
-                                            } else {
-                                                BusinessPartner userBusinessPartner = new BusinessPartner();
-                                                userBusinessPartner.setName(businessPartnerName.getText().toString());
-                                                userBusinessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
-                                                userBusinessPartner.setTaxId(businessPartnerTaxId.getText().toString());
-                                                userBusinessPartner.setAddress(businessPartnerAddress.getText().toString());
-                                                userBusinessPartner.setContactPerson(businessPartnerContactPerson.getText().toString());
-                                                userBusinessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
-                                                userBusinessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
-                                                String result = UserBusinessPartnerBR.validateBusinessPartner(userBusinessPartner,
-                                                        getContext(), user);
-                                                if (result==null) {
-                                                    result = userBusinessPartnerDB.registerUserBusinessPartner(userBusinessPartner);
-                                                    if (result==null){
-                                                        ((Callback) getActivity()).onBusinessPartnerRegistered();
-                                                    } else {
-                                                        Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                } else {
+                                                }else{
                                                     new AlertDialog.Builder(getContext())
                                                             .setMessage(result)
                                                             .setNeutralButton(R.string.accept, null)
                                                             .show();
                                                 }
+                                            }else{
+                                                String result = userBusinessPartnerDB.updateUserBusinessPartner(mUserBusinessPartner);
+                                                if (result==null){
+                                                    ((Callback) getActivity()).onBusinessPartnerUpdated();
+                                                    Toast.makeText(getContext(), getString(R.string.business_partner_updated_successfully), Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        } else {
+                                            UserBusinessPartner userBusinessPartner = new UserBusinessPartner();
+                                            userBusinessPartner.setName(businessPartnerName.getText().toString());
+                                            userBusinessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
+                                            userBusinessPartner.setTaxId(businessPartnerTaxId.getText().toString());
+                                            userBusinessPartner.setAddress(businessPartnerAddress.getText().toString());
+                                            userBusinessPartner.setContactPerson(businessPartnerContactPerson.getText().toString());
+                                            userBusinessPartner.setEmailAddress(businessPartnerEmailAddress.getText().toString());
+                                            userBusinessPartner.setPhoneNumber(businessPartnerPhoneNumber.getText().toString());
+                                            String result = UserBusinessPartnerBR.validateBusinessPartner(userBusinessPartner,
+                                                    getContext(), user);
+                                            if (result==null) {
+                                                result = userBusinessPartnerDB.registerUserBusinessPartner(userBusinessPartner);
+                                                if (result==null){
+                                                    ((Callback) getActivity()).onBusinessPartnerRegistered();
+                                                } else {
+                                                    Toast.makeText(getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                new AlertDialog.Builder(getContext())
+                                                        .setMessage(result)
+                                                        .setNeutralButton(R.string.accept, null)
+                                                        .show();
                                             }
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -304,7 +231,7 @@ public class RegisterBusinessPartnerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_BUSINESS_PARTNER_ID, mBusinessPartnerId);
-        outState.putParcelable(STATE_BUSINESS_PARTNER, mBusinessPartner);
+        outState.putParcelable(STATE_BUSINESS_PARTNER, mUserBusinessPartner);
         outState.putString(STATE_ORIGINAL_TAX_ID, mOriginalTaxId);
         super.onSaveInstanceState(outState);
     }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.services.RequestResetUserCredentialsService;
 import com.smartbuilders.smartsales.ecommerce.utils.EmailValidator;
@@ -47,8 +48,20 @@ public class RequestResetUserPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_request_reset_user_password, container, false);
 
+        final EditText userNameEditText = (EditText) rootView.findViewById(R.id.userName_editText);
+        final EditText userEmailEditText = (EditText) rootView.findViewById(R.id.userEmail_editText);
+
         if (TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
             rootView.findViewById(R.id.serverAddress_editText).setVisibility(View.VISIBLE);
+        }
+
+        if (getActivity()!=null && getActivity().getIntent()!=null && getActivity().getIntent().getExtras()!=null) {
+            if (getActivity().getIntent().getExtras().containsKey(RequestResetUserPasswordActivity.KEY_USER_NAME)) {
+                if (userNameEditText!=null) {
+                    userNameEditText.setText(getActivity().getIntent().getExtras().getString(RequestResetUserPasswordActivity.KEY_USER_NAME));
+                    userNameEditText.setEnabled(false);
+                }
+            }
         }
 
         submit = (Button) rootView.findViewById(R.id.submit);
@@ -63,8 +76,9 @@ public class RequestResetUserPasswordFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 final String serverAddress = !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
                                         ? BuildConfig.SERVER_ADDRESS : ((EditText) rootView.findViewById(R.id.serverAddress_editText)).getText().toString();
-                                final String userName = ((EditText) rootView.findViewById(R.id.userName_editText)).getText().toString();
-                                if (!mServiceRunning && !TextUtils.isEmpty(userName)) {
+                                final String userName = userNameEditText.getText().toString();
+                                final String userEmail = userEmailEditText.getText().toString();
+                                if (!mServiceRunning && !TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userEmail)) {
                                     lockScreen();
 
                                     new AsyncTask<Void, Void, String>() {
@@ -80,6 +94,7 @@ public class RequestResetUserPasswordFragment extends Fragment {
                                                 Intent msgIntent = new Intent(getContext(), RequestResetUserCredentialsService.class);
                                                 msgIntent.putExtra(RequestResetUserCredentialsService.SERVER_ADDRESS, serverAddress);
                                                 msgIntent.putExtra(RequestResetUserCredentialsService.USER_NAME, userName);
+                                                msgIntent.putExtra(RequestResetUserCredentialsService.USER_EMAIL, userEmail);
                                                 getContext().startService(msgIntent);
                                             } catch (MalformedURLException e) {
                                                 // the URL is not in a valid form
@@ -96,6 +111,10 @@ public class RequestResetUserPasswordFragment extends Fragment {
                                             return null;
                                         }
                                     }.execute();
+                                } else if (TextUtils.isEmpty(userName)) {
+                                    Toast.makeText(getContext(), "Debe llenar el campo Nombre de usuario", Toast.LENGTH_LONG).show();
+                                } else if (TextUtils.isEmpty(userEmail)) {
+                                    Toast.makeText(getContext(), "Debe llenar el campo Correo electrónico", Toast.LENGTH_LONG).show();
                                 }
                             }
                         })

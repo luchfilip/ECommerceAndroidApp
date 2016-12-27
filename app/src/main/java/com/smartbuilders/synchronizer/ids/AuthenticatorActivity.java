@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -23,17 +21,17 @@ import android.accounts.AccountManager;
 import android.accounts.AuthenticatorException;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +50,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_AUTH_TYPE 				= "AUTH_TYPE";
     public final static String ARG_USER_ID 			        = "USER_ID";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT 	= "IS_ADDING_ACCOUNT";
-    public final static String STATE_PREFIX_SELECTED_ITEM_POSITION = "AuthenticatorActivity.state_prefixSelectedItemPosition";
     public final static String STATE_USERNAME 		        = "AuthenticatorActivity.state_username";
     public final static String STATE_USER_PASS              = "AuthenticatorActivity.state_userpass";
     public final static String STATE_SERVER_ADDRESS         = "AuthenticatorActivity.state_serveraddress";
@@ -79,6 +76,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         if (getIntent()!=null && getIntent().getBooleanExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true)
                 && Utils.getCurrentUser(getApplicationContext())!=null) {
+            setResult(RESULT_CANCELED, null);
             finish();
         } else {
             mAccountManager = AccountManager.get(getBaseContext());
@@ -99,13 +97,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     ((EditText) findViewById(R.id.accountPassword)).setText(mUser.getUserPass());
                     ((EditText) findViewById(R.id.server_address)).setText(mUser.getServerAddress());
                     ((EditText) findViewById(R.id.user_group)).setText(mUser.getUserGroup());
+
+                    if (findViewById(R.id.sign_up_textView) != null) {
+                        findViewById(R.id.sign_up_textView).setVisibility(View.GONE);
+                    }
                 }
             } else if (savedInstanceState != null) {
-                //if (findViewById(R.id.user_prefix_spinner) != null
-                //        && savedInstanceState.containsKey(STATE_PREFIX_SELECTED_ITEM_POSITION)) {
-                //    ((Spinner) findViewById(R.id.user_prefix_spinner))
-                //            .setSelection(savedInstanceState.getInt(STATE_PREFIX_SELECTED_ITEM_POSITION));
-                //}
                 ((EditText) findViewById(R.id.accountName)).setText(savedInstanceState.getString(STATE_USERNAME));
                 ((EditText) findViewById(R.id.accountPassword)).setText(savedInstanceState.getString(STATE_USER_PASS));
                 ((EditText) findViewById(R.id.server_address)).setText(savedInstanceState.getString(STATE_SERVER_ADDRESS));
@@ -135,7 +132,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     findViewById(R.id.reset_password_textView).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class));
+                            if (mUser !=null && mAccount!=null) {
+                                startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class)
+                                        .putExtra(RequestResetUserPasswordActivity.KEY_USER_NAME, mUser.getUserName()));
+                            } else {
+                                startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class));
+                            }
                         }
                     });
 
@@ -149,17 +151,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     });
                 }
             }
-
-            //if (findViewById(R.id.user_prefix_spinner) != null) {
-            //    List<String> spinnerArray =  new ArrayList<>();
-            //    spinnerArray.add("J");
-            //    spinnerArray.add("V");
-            //    spinnerArray.add("E");
-            //    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
-            //
-            //    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            //    ((Spinner) findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
-            //}
         }
 
         final View activityRootView = findViewById(R.id.parent_layout);
@@ -202,24 +193,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         outState.putString(STATE_USER_PASS, ((EditText) findViewById(R.id.accountPassword)).getText().toString());
         outState.putString(STATE_SERVER_ADDRESS, ((EditText) findViewById(R.id.server_address)).getText().toString());
         outState.putString(STATE_USER_GROUP, ((EditText) findViewById(R.id.user_group)).getText().toString());
-        //if (findViewById(R.id.user_prefix_spinner) != null) {
-        //    outState.putInt(STATE_PREFIX_SELECTED_ITEM_POSITION, ((Spinner) findViewById(R.id.user_prefix_spinner)).getSelectedItemPosition());
-        //}
         super.onSaveInstanceState(outState);
     }
 
     public void submit() {
         final String userGroup 		= (findViewById(R.id.user_group)!=null && findViewById(R.id.user_group).getVisibility()!=View.VISIBLE)
                 ? getString(R.string.ids_user_group_name) : ((TextView) findViewById(R.id.user_group)).getText().toString();
-        String prefix = "";
-        //try {
-        //    if (findViewById(R.id.user_prefix_spinner) != null) {
-        //        prefix = ((Spinner) findViewById(R.id.user_prefix_spinner)).getSelectedItem().toString();
-        //    }
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
-        final String userName 		= prefix + ((EditText) findViewById(R.id.accountName)).getText().toString();
+        final String userName 		= ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass 		= ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String serverAddress 	= !TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)
                 ? BuildConfig.SERVER_ADDRESS : ((EditText) findViewById(R.id.server_address)).getText().toString();
@@ -235,9 +215,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             protected Intent doInBackground(Context... context) {
 
                 Bundle data = new Bundle();
-                if(mUser !=null){//entra aqui cuando hay problemas con la clave del usuario
+                if(mUser !=null && mAccount!=null){//entra aqui cuando hay problemas con la clave del usuario
                     try {
-                        mUser.setUserPass(userPass);
+                        //mUser.setUserPass(userPass);
+                        mAccountManager.setPassword(mAccount, userPass);
                         sServerAuthenticate.userGetAuthToken(mUser, mAuthTokenType, getBaseContext());
 
                         if(mUser.getAuthToken()!=null){
@@ -341,7 +322,22 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 waitPlease.dismiss();
                 Utils.unlockScreenOrientation(AuthenticatorActivity.this);
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    if (mUser !=null && mAccount!=null
+                            && intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_wrong_password))) {
+                        new AlertDialog.Builder(AuthenticatorActivity.this)
+                                .setMessage(R.string.user_wrong_password)
+                                .setPositiveButton(R.string.action_reset_password, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class)
+                                        .putExtra(RequestResetUserPasswordActivity.KEY_USER_NAME, mUser.getUserName()));
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
+                    } else {
+                        Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     finishLogin(intent);
                 }
@@ -383,4 +379,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED, null);
+        super.onBackPressed();
+    }
 }

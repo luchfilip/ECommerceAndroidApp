@@ -165,7 +165,8 @@
     <string name="clear_notifications_list">Limpiar Notificaciones</string>
     <string name="delete_all_recent_searches_question">¿Desea eliminar el historial de búsquedas?</string>
     <string name="delete_business_partner">¿Desea eliminar el cliente %1$s?</string>
-    <string name="init_session_business_partner">¿Desea iniciar sesión con el cliente %1$s?</string>
+    <string name="init_session_business_partner">Iniciar Sesión</string>
+    <string name="init_session_business_partner_question">¿Desea iniciar sesión con el cliente %1$s?</string>
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="delete_order_question">¿Desea eliminar el pedido No. %1$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
@@ -554,4 +555,5 @@
     <string name="go_back">Volver</string>
     <string name="warning_reset_user_credentials_message">¿Está seguro que desea reestablecer la cortraseña del usuario? Esto dejará sin validez previas instalaciones del catálogo.</string>
     <string name="warning">¡Alerta!</string>
+    <string name="title_activity_business_partner_details">BusinessPartnerDetailsActivity</string>
 </resources>

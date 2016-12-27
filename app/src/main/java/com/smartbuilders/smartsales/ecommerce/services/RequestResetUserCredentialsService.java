@@ -18,6 +18,7 @@ public class RequestResetUserCredentialsService extends IntentService {
 
     public static final String SERVER_ADDRESS = "SERVER_ADDRESS";
     public static final String USER_NAME = "USER_NAME";
+    public static final String USER_EMAIL = "USER_EMAIL";
 
     public RequestResetUserCredentialsService() {
         super(RequestResetUserCredentialsService.class.getSimpleName());
@@ -36,12 +37,14 @@ public class RequestResetUserCredentialsService extends IntentService {
     protected void onHandleIntent(Intent workIntent) {
         String serverAddress = workIntent.getStringExtra(SERVER_ADDRESS);
         String userName = workIntent.getStringExtra(USER_NAME);
+        String userEmail = workIntent.getStringExtra(USER_EMAIL);
 
         String resultMsg;
         try {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
             parameters.put("userGroup", getString(R.string.ids_user_group_name));
             parameters.put("userName", userName);
+            parameters.put("userEmail", userEmail);
             ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
                                                         serverAddress,
                                                         "/IntelligentDataSynchronizer/services/ManageUser?wsdl",

@@ -11,6 +11,8 @@ import android.widget.ScrollView;
  */
 public class RequestResetUserPasswordActivity extends AppCompatActivity {
 
+    public static String KEY_USER_NAME = "KEY_USER_NAME";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.smartbuilders.smartsales.ecommerce.adapters.MainActivityStaggeredLayoutAdapter;
+import com.smartbuilders.smartsales.ecommerce.adapters.MainActivityLayoutAdapter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.data.MainPageSectionsDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -71,7 +71,7 @@ public class MainFragment extends Fragment {
                                                 getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout),
                                                 StaggeredGridLayoutManager.VERTICAL);
                                 mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-                                mRecyclerView.setAdapter(new MainActivityStaggeredLayoutAdapter(getContext(),
+                                mRecyclerView.setAdapter(new MainActivityLayoutAdapter(getContext(),
                                         getActivity(), mainPageObjects, mCurrentUser));
                                 if (mRecyclerViewCurrentFirstPosition!=null) {
                                     mRecyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition[0]);
@@ -120,9 +120,9 @@ public class MainFragment extends Fragment {
                                 try {
                                     if(mRecyclerView!=null) {
                                         if (mRecyclerView.getAdapter()!=null) {
-                                            ((MainActivityStaggeredLayoutAdapter) mRecyclerView.getAdapter()).setData(mainPageObjects);
+                                            ((MainActivityLayoutAdapter) mRecyclerView.getAdapter()).setData(mainPageObjects);
                                         } else {
-                                            mRecyclerView.setAdapter(new MainActivityStaggeredLayoutAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
+                                            mRecyclerView.setAdapter(new MainActivityLayoutAdapter(getContext(), getActivity(), mainPageObjects, mCurrentUser));
                                         }
                                     }
                                 } catch (Exception e) {
@@ -149,7 +149,7 @@ public class MainFragment extends Fragment {
         try {
             int[] into = new int[getResources().getInteger(R.integer.number_of_cards_in_staggered_grid_layout)];
             outState.putIntArray(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,
-                    ((StaggeredGridLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPositions(into));
+                    ((StaggeredGridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPositions(into));
         } catch (Exception e) {
             outState.putIntArray(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION, mRecyclerViewCurrentFirstPosition);
         }

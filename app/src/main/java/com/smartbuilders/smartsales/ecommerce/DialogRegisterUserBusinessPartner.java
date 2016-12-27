@@ -12,10 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.businessRules.UserBusinessPartnerBR;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 
 /**
  * Created by stein on 5/1/2016.
@@ -82,7 +82,7 @@ public class DialogRegisterUserBusinessPartner extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     UserBusinessPartnerDB userBusinessPartnerDB = new UserBusinessPartnerDB(getContext(), mUser);
-                    BusinessPartner businessPartner = new BusinessPartner();
+                    UserBusinessPartner businessPartner = new UserBusinessPartner();
                     businessPartner.setName(businessPartnerName.getText().toString());
                     businessPartner.setCommercialName(businessPartnerCommercialName.getText().toString());
                     businessPartner.setTaxId(businessPartnerTaxId.getText().toString());
