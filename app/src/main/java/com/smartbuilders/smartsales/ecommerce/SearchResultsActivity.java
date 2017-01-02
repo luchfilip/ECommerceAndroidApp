@@ -156,7 +156,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
                     private boolean isTyping = false;
                     private Timer timer = new Timer();
-                    private final long DELAY = 800; // milliseconds
+                    private final long DELAY = 600; // milliseconds
 
                     @Override
                     public void afterTextChanged(final Editable s) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 20;
+	private static final int DATABASE_VERSION = 21;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
 //    private static final int DB_NOT_FOUND = 0;
 //    private static final int USING_INTERNAL_STORAGE = 1;
@@ -119,6 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS PRODUCT_PRICE_AVAILABILITY (" +
                     "PRODUCT_ID INTEGER NOT NULL, " +
                     " PRODUCT_PRICE_ID INTEGER DEFAULT 0 NOT NULL, " +
+                    " PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " PRICE DECIMAL DEFAULT 0 NOT NULL, " +
 					" TAX DECIMAL DEFAULT 0 NOT NULL, " +
 					" TOTAL_PRICE DECIMAL DEFAULT 0 NOT NULL, " +
@@ -285,6 +286,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_BUSINESS_PARTNER =
             "CREATE TABLE IF NOT EXISTS BUSINESS_PARTNER (" +
                     "BUSINESS_PARTNER_ID INTEGER NOT NULL, " +
+                    " PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL, " +
                     " INTERNAL_CODE VARCHAR(128) DEFAULT NULL, " +
                     " NAME TEXT DEFAULT NULL, " +
                     " COMMERCIAL_NAME TEXT DEFAULT NULL, " +
@@ -847,6 +849,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (oldVersion < 20) {
                 try {
                     db.execSQL(CREATE_SALES_REP);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion < 21) {
+                try {
+                    db.execSQL("ALTER TABLE PRODUCT_PRICE_AVAILABILITY ADD COLUMN PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    db.execSQL("ALTER TABLE BUSINESS_PARTNER ADD COLUMN PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

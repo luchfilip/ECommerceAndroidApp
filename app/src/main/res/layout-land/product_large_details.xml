@@ -186,6 +186,13 @@
             android:gravity="bottom">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_commercial_package"
+                android:textColor="@color/black"
+                android:textSize="@dimen/productDetailCardView_commercialPackage_text_size" />
+
+            <TextView
                 android:id="@+id/product_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

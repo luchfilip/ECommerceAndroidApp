@@ -5,8 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.SalesOrdersListActivity;
+import com.smartbuilders.smartsales.ecommerce.SalesOrdersListFragment;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -71,6 +75,16 @@ public class SalesOrdersListAdapter extends BaseAdapter {
             viewHolder.businessPartnerName.setVisibility(View.GONE);
         }
 
+        viewHolder.deleteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof SalesOrdersListActivity) {
+                    ((SalesOrdersListFragment.Callback) mContext).onItemLongSelected(mDataset.get(position),
+                            (ListView) ((SalesOrdersListActivity) mContext).findViewById(R.id.sales_orders_list), mUser);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -83,12 +97,14 @@ public class SalesOrdersListAdapter extends BaseAdapter {
         public TextView salesOrderNumber;
         public TextView salesOrderDate;
         public TextView salesOrderLinesNumber;
+        public View deleteImageView;
 
         public ViewHolder(View v) {
             businessPartnerName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);
             salesOrderNumber = (TextView) v.findViewById(R.id.sales_order_number_tv);
             salesOrderDate = (TextView) v.findViewById(R.id.sales_order_date_tv);
             salesOrderLinesNumber = (TextView) v.findViewById(R.id.sales_order_lines_number_tv);
+            deleteImageView = v.findViewById(R.id.delete_imageView);
         }
     }
 

@@ -43,8 +43,6 @@ public class SalesOrdersListFragment extends Fragment {
     private int mListViewIndex;
     private int mListViewTop;
     private int mCurrentSelectedIndex;
-    private TextView mBusinessPartnerName;
-    private View mBusinessPartnerInfoSeparator;
 
     public interface Callback {
         void onItemSelected(SalesOrder salesOrder);
@@ -108,9 +106,6 @@ public class SalesOrdersListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                mBusinessPartnerName = (TextView) view.findViewById(R.id.business_partner_commercial_name_textView);
-                                mBusinessPartnerInfoSeparator = view.findViewById(R.id.business_partner_info_separator);
-
                                 if (view.findViewById(R.id.empty_sales_order_list_imageView) != null) {
                                     if (mLoadOrdersFromSalesOrders) {
                                         ((ImageView) view.findViewById(R.id.empty_sales_order_list_imageView))
@@ -139,8 +134,6 @@ public class SalesOrdersListFragment extends Fragment {
                                         }
                                     });
                                 }
-
-                                setHeader();
 
                                 mListView = (ListView) view.findViewById(R.id.sales_orders_list);
                                 if (mLoadOrdersFromSalesOrders) {
@@ -188,19 +181,6 @@ public class SalesOrdersListFragment extends Fragment {
                                             }
                                         }
                                     });
-
-                                    mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                                        @Override
-                                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                                            // if it cannot seek to that position.
-                                            SalesOrder salesOrder = (SalesOrder) parent.getItemAtPosition(position);
-                                            if (salesOrder != null) {
-                                                ((Callback) getActivity()).onItemLongSelected(salesOrder, mListView, mUser);
-                                            }
-                                            return true;
-                                        }
-                                    });
                                 }
 
                                 mListView.setSelectionFromTop(mListViewIndex, mListViewTop);
@@ -226,23 +206,6 @@ public class SalesOrdersListFragment extends Fragment {
         return view;
     }
 
-    private void setHeader(){
-        if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM ||
-                mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
-            try {
-                BusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                if(businessPartner!=null){
-                    mBusinessPartnerName.setText(getString(R.string.business_partner_name_detail, businessPartner.getName()));
-                    mBusinessPartnerName.setVisibility(View.VISIBLE);
-                    mBusinessPartnerInfoSeparator.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onStart() {
         if(mIsInitialLoad){
@@ -266,7 +229,6 @@ public class SalesOrdersListFragment extends Fragment {
             }else{
                 ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
             }
-            setHeader();
         }
         super.onStart();
     }

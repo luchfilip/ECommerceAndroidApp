@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
@@ -15,12 +16,12 @@ import java.util.ArrayList;
  */
 public class ProductSubCategoryDB {
 
-    private Context context;
+    private Context mContext;
     private User mUser;
     private boolean mShowProductsWithoutAvailability;
 
     public ProductSubCategoryDB(Context context, User user){
-        this.context = context;
+        this.mContext = context;
         this.mUser = user;
         this.mShowProductsWithoutAvailability = Parameter.showProductsWithoutAvailability(context, user);
     }
@@ -28,7 +29,7 @@ public class ProductSubCategoryDB {
     public ProductSubCategory getProductSubCategory(int subCategoryId){
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT S.CATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " FROM SUBCATEGORY S " +
@@ -61,14 +62,16 @@ public class ProductSubCategoryDB {
         ArrayList<ProductSubCategory> categories = new ArrayList<>();
         Cursor c = null;
         try {
-            c = context.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
                     "SELECT S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION, COUNT(S.SUBCATEGORY_ID) " +
                     " FROM SUBCATEGORY S " +
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = 'Y' " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
                         " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
-                        (mShowProductsWithoutAvailability ? "" : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRODUCT_PRICE_ID = 0 AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ") +
+                        (mShowProductsWithoutAvailability ? ""
+                            : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID="+Utils.getAppCurrentBusinessPartnerId(mContext, mUser)+" AND IS_ACTIVE='Y') " +
+                                " AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ") +
                     " WHERE S.CATEGORY_ID = ? AND S.IS_ACTIVE = 'Y' " +
                     " GROUP BY S.SUBCATEGORY_ID, S.NAME, S.DESCRIPTION " +
                     " ORDER BY S.NAME ASC",

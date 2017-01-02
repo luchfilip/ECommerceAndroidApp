@@ -154,22 +154,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailCardView_purpose_text_size" />
 
-            <TextView
-                android:id="@+id/product_total_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/product_price_color"
-                android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_price_text_size" />
-
-            <TextView
-                android:id="@+id/product_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/product_availability_color"
-                android:textStyle="bold"
-                android:textSize="@dimen/productDetailCardView_availability_text_size" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,6 +178,23 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="2dp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/product_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/product_price_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_price_text_size" />
+
+            <TextView
+                android:id="@+id/product_availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/product_availability_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/productDetailCardView_availability_text_size" />
+
         </LinearLayout>
 
 

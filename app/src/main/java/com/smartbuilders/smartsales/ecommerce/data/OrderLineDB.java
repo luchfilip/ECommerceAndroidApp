@@ -539,9 +539,9 @@ public class OrderLineDB {
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET UPDATE_TIME = ?, " +
                         " QTY_REQUESTED = (SELECT CASE WHEN SUM(AVAILABILITY) IS NULL THEN 0 ELSE SUM(AVAILABILITY) END AS AVAILABILITY " +
-                                            " FROM PRODUCT_PRICE_AVAILABILITY WHERE PRODUCT_PRICE_ID = 0 AND PRODUCT_ID = ECOMMERCE_ORDER_LINE.PRODUCT_ID AND IS_ACTIVE='Y') " +
+                                            " FROM PRODUCT_PRICE_AVAILABILITY WHERE PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID=? AND IS_ACTIVE='Y') AND PRODUCT_ID = ECOMMERCE_ORDER_LINE.PRODUCT_ID AND IS_ACTIVE='Y') " +
                     " WHERE USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
-                    new String[]{DateFormat.getCurrentDateTimeSQLFormat(),
+                    new String[]{DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(Utils.getAppCurrentBusinessPartnerId(mContext, mUser)),
                             String.valueOf(mUser.getServerUserId()), WISH_LIST_DOC_TYPE, "Y"});
         } catch (Exception e) {
             e.printStackTrace();

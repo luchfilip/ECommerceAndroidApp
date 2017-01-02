@@ -15,12 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.businessRules.OrderBR;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
+import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
@@ -28,6 +31,7 @@ import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.ViewPager;
+import com.smartbuilders.synchronizer.ids.model.UserProfile;
 
 import java.util.ArrayList;
 
@@ -46,19 +50,22 @@ public class SalesOrdersListActivity extends AppCompatActivity
     private TabLayout mTabLayout;
     private int mCurrentTabSelected;
     private ArrayList<Fragment> fragments = new ArrayList<>();
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_orders_list);
 
-        final User user = Utils.getCurrentUser(this);
+        mUser = Utils.getCurrentUser(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, true);
         setSupportActionBar(toolbar);
 
-        Utils.inflateNavigationView(this, this, toolbar, user);
+        Utils.inflateNavigationView(this, this, toolbar, mUser);
+
+        setBusinessPartnerInfo();
 
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
@@ -132,7 +139,25 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if(mTabLayout!=null && mTabLayout.getTabAt(mCurrentTabSelected)!=null){
             mTabLayout.getTabAt(mCurrentTabSelected).select();
         }
+        setBusinessPartnerInfo();
         super.onStart();
+    }
+
+    private void setBusinessPartnerInfo() {
+        if(findViewById(R.id.sales_order_detail_container)==null
+                && (mUser !=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID))){
+            try {
+                BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
+                        .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
+                if(businessPartner!=null){
+                    ((TextView) findViewById(R.id.business_partner_name)).setText(businessPartner.getName());
+                    findViewById(R.id.business_partner_name_container).setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

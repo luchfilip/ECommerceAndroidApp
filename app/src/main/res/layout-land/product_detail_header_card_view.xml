@@ -196,6 +196,31 @@
                 android:textColor="@color/black" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/product_ratingBar_container"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_ratingBar_label_textView"
+                    style="@style/product_ratingBar_text_label_style" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="@color/ratingBar_progress_color"
+                    android:numStars="5"
+                    android:rating="2.5"
+                    android:id="@+id/product_ratingBar"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -247,30 +272,6 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:id="@+id/product_ratingBar_container"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/product_ratingBar_label_textView"
-                            style="@style/product_ratingBar_text_label_style" />
-
-                        <RatingBar
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:progressTint="@color/ratingBar_progress_color"
-                            android:numStars="5"
-                            android:rating="2.5"
-                            android:id="@+id/product_ratingBar"
-                            android:layout_gravity="bottom"
-                            android:layout_marginBottom="2dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageView
