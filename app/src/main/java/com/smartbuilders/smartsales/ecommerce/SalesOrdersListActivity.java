@@ -65,8 +65,6 @@ public class SalesOrdersListActivity extends AppCompatActivity
 
         Utils.inflateNavigationView(this, this, toolbar, mUser);
 
-        setBusinessPartnerInfo();
-
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
                 mCurrentTabSelected = savedInstanceState.getInt(STATE_CURRENT_TAB_SELECTED);
@@ -139,13 +137,8 @@ public class SalesOrdersListActivity extends AppCompatActivity
         if(mTabLayout!=null && mTabLayout.getTabAt(mCurrentTabSelected)!=null){
             mTabLayout.getTabAt(mCurrentTabSelected).select();
         }
-        setBusinessPartnerInfo();
-        super.onStart();
-    }
-
-    private void setBusinessPartnerInfo() {
         if(findViewById(R.id.sales_order_detail_container)==null
-                && (mUser !=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
+                && (mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
                 || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID))){
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
@@ -158,6 +151,7 @@ public class SalesOrdersListActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
+        super.onStart();
     }
 
     @Override

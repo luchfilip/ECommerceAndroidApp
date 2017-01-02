@@ -61,7 +61,7 @@ public class ShoppingSaleActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         BusinessPartner businessPartner = null;
-        if(mUserBusinessPartnerId !=0) {
+        if(mUserBusinessPartnerId!=0) {
             businessPartner = (new UserBusinessPartnerDB(this, mUser))
                     .getUserBusinessPartnerById(mUserBusinessPartnerId);
         } else {

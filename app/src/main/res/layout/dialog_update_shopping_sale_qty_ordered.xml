@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/main_layout"
     android:layout_height="wrap_content"
-    android:background="@color/material_grey_100">
+    android:background="@android:color/white">
 
     <TextView
         android:layout_width="match_parent"

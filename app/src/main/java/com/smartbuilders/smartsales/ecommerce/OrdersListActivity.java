@@ -117,7 +117,7 @@ public class OrdersListActivity extends AppCompatActivity
         }
         if(findViewById(R.id.order_detail_container)==null
                 && (mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                || mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID))){
+                || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID))){
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
                         .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));

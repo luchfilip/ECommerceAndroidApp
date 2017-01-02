@@ -184,4 +184,12 @@
         <item name="android:padding">5dp</item>
         <item name="android:clickable">true</item>
     </style>
+
+    <style name="GoldenEditTextTheme">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/golden_medium</item>
+        <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+        <item name="colorControlActivated">@color/golden</item>
+        <item name="colorControlHighlight">@color/golden</item>
+    </style>
 </resources>

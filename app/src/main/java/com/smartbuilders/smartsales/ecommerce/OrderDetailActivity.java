@@ -44,7 +44,7 @@ public class OrderDetailActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         if(mUser!=null && (BuildConfig.IS_SALES_FORCE_SYSTEM
-                || mUser.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID)){
+                || mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID)){
             try {
                 BusinessPartner businessPartner = (new BusinessPartnerDB(this, mUser))
                         .getBusinessPartnerById(Utils.getAppCurrentBusinessPartnerId(this, mUser));
