@@ -100,10 +100,10 @@ public class DialogAddToShoppingSale extends DialogFragment {
         productTaxPercentageEditText = (EditText) view.findViewById(R.id.product_tax_editText);
         qtyRequestedEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
-        Currency currency = (new CurrencyDB(getContext(), mUser)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
-        ((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
-                ? getString(R.string.price_currency_label_detail, currency.getName())
-                : getString(R.string.price_label));
+        //Currency currency = (new CurrencyDB(getContext(), mUser)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
+        //((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
+        //        ? getString(R.string.price_currency_label_detail, currency.getName())
+        //        : getString(R.string.price_label));
 
         if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
             registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {

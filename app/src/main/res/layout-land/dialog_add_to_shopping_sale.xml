@@ -53,7 +53,6 @@
                 android:textColor="@color/black"
                 android:layout_marginRight="4dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/textView7"
                 android:gravity="center_vertical|right"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -96,7 +95,6 @@
                 android:textColor="@color/black"
                 android:layout_marginRight="4dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/product_price_label_textView"
                 android:gravity="center_vertical|right"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -126,7 +124,6 @@
                 android:textColor="@color/black"
                 android:layout_marginRight="4dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/product_tax_label_textView"
                 android:gravity="center_vertical|right"
                 android:layout_marginLeft="10dp"
                 android:textStyle="bold"
@@ -162,7 +159,6 @@
                 android:textColor="@color/black"
                 android:layout_marginRight="4dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/qty_label_textView"
                 android:gravity="right"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
