@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/products_active_qty"
+            android:textColor="@color/colorPrimary"
             android:layout_gravity="right" />
 
     </LinearLayout>

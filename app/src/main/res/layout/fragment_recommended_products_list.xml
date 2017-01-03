@@ -79,7 +79,6 @@
             android:layout_height="match_parent"
             android:visibility="visible"
             android:paddingBottom="80dp"
-            android:background="@color/material_grey_50"
             android:clipToPadding="false"/>
 
         <android.support.design.widget.FloatingActionButton

@@ -49,7 +49,9 @@
                 android:id="@+id/title_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/black"
+                android:textStyle="italic"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:layout_margin="3dp" />
         </LinearLayout>
 
