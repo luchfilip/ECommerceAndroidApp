@@ -68,7 +68,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private boolean mShowProductPrice;
     private boolean mShowProductTotalPrice;
     private String mCurrentFilterText;
-    private Typeface mTypefaceMedium;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -145,7 +144,6 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
         mShowProductPrice = Parameter.showProductPrice(context, user);
         mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
-        mTypefaceMedium = Typeface.createFromAsset(context.getAssets(),"fonts/Roboto-Medium.ttf");
     }
 
     // Create new views (invoked by the layout manager)
@@ -221,7 +219,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         if (holder.productName!=null) {
             holder.productName.setText(mDataset.get(position).getName());
-            holder.productName.setTypeface(mTypefaceMedium);
+            holder.productName.setTypeface(Utils.getTypefaceMedium(mContext));
         }
 
         if (holder.productPriceCurrencyName!=null && holder.productPrice!=null
@@ -250,7 +248,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         if (holder.productAvailability!=null) {
             holder.productAvailability.setText(mContext.getString(R.string.availability,
                     mDataset.get(position).getProductPriceAvailability().getAvailability()));
-            holder.productAvailability.setTypeface(mTypefaceMedium);
+            holder.productAvailability.setTypeface(Utils.getTypefaceMedium(mContext));
             if ((mMask == MASK_PRODUCT_MIN_INFO_DYNAMIC_HEIGHT
                     || mMask == MASK_PRODUCT_MIN_INFO) && !mIsManagePriceInOrder) {
                 holder.productAvailability.setVisibility(View.VISIBLE);

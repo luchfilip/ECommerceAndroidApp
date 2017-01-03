@@ -16,6 +16,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -93,6 +94,7 @@ import java.util.concurrent.ExecutionException;
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
+    private static Typeface typefaceMedium;
 
     /**
      *
@@ -1475,6 +1477,17 @@ public class Utils {
                     .getBoolean("save_original_images_in_device", false);
         } catch(Exception e) {
             return false;
+        }
+    }
+
+    public static Typeface getTypefaceMedium(Context context) {
+        try {
+            if (typefaceMedium==null) {
+                typefaceMedium = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Medium.ttf");
+            }
+            return typefaceMedium;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
