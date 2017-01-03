@@ -48,6 +48,9 @@
     <color name="successLightColor">#FFDFF2BF</color>
     <color name="on_swipe_bg_color">@color/colorPrimaryMedium</color>
 
+    <color name="main_button_text_color">#ffffffff</color>
+    <color name="golden_button_text_color">#555555</color>
+
     <color name="material_grey_100">#fff5f5f5</color>
     <color name="material_grey_300">#ffe0e0e0</color>
     <color name="material_grey_50">#fffafafa</color>

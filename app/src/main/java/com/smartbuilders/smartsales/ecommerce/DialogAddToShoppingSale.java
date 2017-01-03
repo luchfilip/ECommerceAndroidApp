@@ -21,13 +21,11 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderLineBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
-import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
-import com.smartbuilders.smartsales.ecommerce.model.Currency;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 
 import java.util.ArrayList;
@@ -43,6 +41,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
 
     private Product mProduct;
     private User mUser;
+    private View mBusinessPartnersTableRow;
+    private View mBusinessPartnersSpinnerContainer;
     private Spinner mUseBusinessPartnersSpinner;
     private ArrayList<UserBusinessPartner> mUserBusinessPartners;
     private int mSalesOrderLineId;
@@ -91,6 +91,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
                 .setText(getString(R.string.availability,
                         mProduct.getProductPriceAvailability().getAvailability()));
 
+        mBusinessPartnersTableRow = view.findViewById(R.id.business_partners_tableRow);
+        mBusinessPartnersSpinnerContainer = view.findViewById(R.id.business_partners_spinner_container);
         mUseBusinessPartnersSpinner = (Spinner) view.findViewById(R.id.business_partners_spinner);
         buttonsContainer = view.findViewById(R.id.buttons_container);
         registerBusinessPartnerButton = view.findViewById(R.id.register_business_partner_button);
@@ -100,20 +102,17 @@ public class DialogAddToShoppingSale extends DialogFragment {
         productTaxPercentageEditText = (EditText) view.findViewById(R.id.product_tax_editText);
         qtyRequestedEditText = (EditText) view.findViewById(R.id.qty_requested_editText);
 
-        //Currency currency = (new CurrencyDB(getContext(), mUser)).getActiveCurrencyById(Parameter.getDefaultCurrencyId(getContext(), mUser));
-        //((TextView) view.findViewById(R.id.product_price_label_textView)).setText(currency!=null
-        //        ? getString(R.string.price_currency_label_detail, currency.getName())
-        //        : getString(R.string.price_label));
-
-        if(mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID){
-            registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDialogCreateBusinessPartner();
-                }
-            });
-        }else if(mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID){
-            registerBusinessPartnerButton.setVisibility(View.GONE);
+        if (mUser!=null) {
+            if (mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                registerBusinessPartnerButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialogCreateBusinessPartner();
+                    }
+                });
+            } else if (mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                registerBusinessPartnerButton.setVisibility(View.GONE);
+            }
         }
 
         view.findViewById(R.id.cancel_button).setOnClickListener(
@@ -192,73 +191,75 @@ public class DialogAddToShoppingSale extends DialogFragment {
     }
 
     public void initViews(){
-        int appCurrentBusinessPartnerId = 0;
-        try{
-            appCurrentBusinessPartnerId = PreferenceManager.getDefaultSharedPreferences(getContext())
-                    .getInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, 0);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-            mUserBusinessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getUserBusinessPartners();
-        }
-        //else if (mUser!=null && mUser.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
-        //    UserBusinessPartner businessPartner = (new BusinessPartnerDB(getContext(), mUser))
-        //            .getBusinessPartnerById(appCurrentBusinessPartnerId);
-        //    if (businessPartner!=null) {
-        //        mUserBusinessPartners = new ArrayList<>();
-        //        mUserBusinessPartners.add(businessPartner);
-        //    }
-        //}
-
-        if (mUserBusinessPartners !=null && !mUserBusinessPartners.isEmpty()) {
-            int index = 0;
-            int selectedIndex = 0;
-            List<String> spinnerArray =  new ArrayList<>();
-
-            for (UserBusinessPartner businessPartner : mUserBusinessPartners) {
-                if(businessPartner.getId() == appCurrentBusinessPartnerId){
-                    selectedIndex = index;
-                }
-                spinnerArray.add(businessPartner.getName() + " - " +
-                        getString(R.string.tax_id, businessPartner.getTaxId()));
-                index++;
-            }
-            ArrayAdapter<String> adapter =
-                    new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
-
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mUseBusinessPartnersSpinner.setAdapter(adapter);
-            mUseBusinessPartnersSpinner.setSelection(selectedIndex);
-
-            mUseBusinessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-                    editor.putInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, mUserBusinessPartners.get(position).getId());
-                    editor.apply();
-                    loadFields(mUserBusinessPartners.get(position).getId());
+        if (mUser!=null) {
+            if (mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                int appCurrentUserBusinessPartnerId = 0;
+                try{
+                    appCurrentUserBusinessPartnerId = PreferenceManager.getDefaultSharedPreferences(getContext())
+                            .getInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, 0);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) { }
-            });
-            mUseBusinessPartnersSpinner.setVisibility(View.VISIBLE);
-            buttonsContainer.setVisibility(View.VISIBLE);
-            registerBusinessPartnerButton.setVisibility(View.GONE);
-        } else {
-            if(appCurrentBusinessPartnerId!=0){
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-                editor.putInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, 0);
-                editor.apply();
-            }
+                mUserBusinessPartners = (new UserBusinessPartnerDB(getContext(), mUser)).getUserBusinessPartners();
+                if (mUserBusinessPartners != null && !mUserBusinessPartners.isEmpty()) {
+                    int index = 0;
+                    int selectedIndex = 0;
+                    List<String> spinnerArray = new ArrayList<>();
 
-            if (mUser!=null && mUser.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                mUseBusinessPartnersSpinner.setVisibility(View.GONE);
-                registerBusinessPartnerButton.setVisibility(View.VISIBLE);
+                    for (UserBusinessPartner businessPartner : mUserBusinessPartners) {
+                        if (businessPartner.getId() == appCurrentUserBusinessPartnerId) {
+                            selectedIndex = index;
+                        }
+                        spinnerArray.add(businessPartner.getName() + " - " +
+                                getString(R.string.tax_id, businessPartner.getTaxId()));
+                        index++;
+                    }
+                    ArrayAdapter<String> adapter =
+                            new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mUseBusinessPartnersSpinner.setAdapter(adapter);
+                    mUseBusinessPartnersSpinner.setSelection(selectedIndex);
+
+                    mUseBusinessPartnersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                            editor.putInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, mUserBusinessPartners.get(position).getId());
+                            editor.apply();
+                            loadFields(mUserBusinessPartners.get(position).getId());
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    mUseBusinessPartnersSpinner.setVisibility(View.VISIBLE);
+                    mBusinessPartnersSpinnerContainer.setVisibility(View.VISIBLE);
+                    buttonsContainer.setVisibility(View.VISIBLE);
+                    registerBusinessPartnerButton.setVisibility(View.GONE);
+                } else {
+                    if (appCurrentUserBusinessPartnerId != 0) {
+                        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                        editor.putInt(UserBusinessPartner.CURRENT_APP_UBP_ID_SHARED_PREFS_KEY, 0);
+                        editor.apply();
+                    }
+
+                    mBusinessPartnersSpinnerContainer.setVisibility(View.GONE);
+                    mUseBusinessPartnersSpinner.setVisibility(View.GONE);
+                    registerBusinessPartnerButton.setVisibility(View.VISIBLE);
+                    buttonsContainer.setVisibility(View.GONE);
+                }
+            } else if (mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID) {
+                mBusinessPartnersTableRow.setVisibility(View.GONE);
+                buttonsContainer.setVisibility(View.VISIBLE);
+                try {
+                    loadFields(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            buttonsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -298,7 +299,13 @@ public class DialogAddToShoppingSale extends DialogFragment {
         SalesOrderLine salesOrderLine = new SalesOrderLine();
         salesOrderLine.setId(mSalesOrderLineId);
         SalesOrderLineBR.fillSalesOrderLine(qtyRequested, product, salesOrderLine);
-        salesOrderLine.setBusinessPartnerId(mUserBusinessPartners.get(mUseBusinessPartnersSpinner.getSelectedItemPosition()).getId());
+        if (mUser!=null) {
+            if (mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                salesOrderLine.setBusinessPartnerId(mUserBusinessPartners.get(mUseBusinessPartnersSpinner.getSelectedItemPosition()).getId());
+            } else if (mUser.getUserProfileId()==UserProfile.SALES_MAN_PROFILE_ID) {
+                salesOrderLine.setBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+            }
+        }
         return salesOrderLine;
     }
 

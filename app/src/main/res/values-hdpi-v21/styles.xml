@@ -2,7 +2,7 @@
 <resources>
     <style name="MainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialMainButton</item>
-        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:textColor">@color/main_button_text_color</item>
         <item name="android:minHeight">0dp</item>
     </style>
 
@@ -13,7 +13,7 @@
 
     <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:theme">@style/Theme.MaterialGoldenButton</item>
-        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:textColor">@color/golden_button_text_color</item>
         <item name="android:minHeight">0dp</item>
     </style>
 

@@ -41,6 +41,27 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/business_partner_name_container"
+            style="@style/title_business_partner_style">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:src="@drawable/ic_person_black_18dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/business_partner_name"
+                android:textColor="#555555"
+                android:textStyle="bold|italic"
+                android:padding="5dp"
+                android:lines="1"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_notifications_list" />

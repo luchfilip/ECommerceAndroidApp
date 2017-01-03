@@ -2,7 +2,7 @@
 <resources>
     <style name="MainButtonAppTheme">
         <item name="android:background">@drawable/main_button_selector</item>
-        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:textColor">@color/main_button_text_color</item>
         <item name="android:minHeight">2dip</item>
         <item name="android:minWidth">2dip</item>
         <item name="android:padding">3dp</item>
@@ -11,7 +11,7 @@
 
     <style name="GoldenButtonAppTheme">
         <item name="android:background">@drawable/golden_button_selector</item>
-        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:textColor">@color/golden_button_text_color</item>
         <item name="android:minHeight">2dip</item>
         <item name="android:minWidth">2dip</item>
         <item name="android:padding">3dp</item>

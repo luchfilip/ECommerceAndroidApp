@@ -47,7 +47,8 @@
             android:layout_height="match_parent"
             android:padding="2dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp">
+            android:layout_marginBottom="3dp"
+            android:id="@+id/business_partners_tableRow">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,6 +70,7 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/business_partners_spinner_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
