@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -77,6 +78,7 @@ public class MainActivityLayoutAdapter extends RecyclerView.Adapter<MainActivity
     private boolean mIsManagePriceInOrder;
     private boolean mShowProductPrice;
     private boolean mShowProductTotalPrice;
+    private Typeface mTypefaceMedium;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -164,6 +166,7 @@ public class MainActivityLayoutAdapter extends RecyclerView.Adapter<MainActivity
         mIsManagePriceInOrder = Parameter.isManagePriceInOrder(context, user);
         mShowProductPrice = Parameter.showProductPrice(context, user);
         mShowProductTotalPrice = Parameter.showProductTotalPrice(context, user);
+        mTypefaceMedium = Typeface.createFromAsset(context.getAssets(),"fonts/Roboto-Medium.ttf");
     }
 
     // Create new views (invoked by the layout manager)
@@ -322,6 +325,7 @@ public class MainActivityLayoutAdapter extends RecyclerView.Adapter<MainActivity
                     }
 
                     viewHolder.productName.setText(((Product) mDataset.get(position)).getName());
+                    viewHolder.productName.setTypeface(mTypefaceMedium);
 
                     viewHolder.shareImageView.setOnClickListener(new View.OnClickListener() {
                         @Override

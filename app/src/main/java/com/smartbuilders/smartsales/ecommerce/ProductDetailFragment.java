@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -130,8 +131,10 @@ public class ProductDetailFragment extends Fragment {
                             try {
                                 if (mProduct!=null) {
                                     final boolean managePriceInOrder = Parameter.isManagePriceInOrder(getContext(), mUser);
+                                    final Typeface typefaceMedium = Typeface.createFromAsset(getContext().getAssets(),"fonts/Roboto-Medium.ttf");
 
                                     ((TextView) view.findViewById(R.id.product_name)).setText(mProduct.getName());
+                                    ((TextView) view.findViewById(R.id.product_name)).setTypeface(typefaceMedium);
 
                                     if (BuildConfig.USE_PRODUCT_IMAGE) {
                                         Utils.loadOriginalImageByFileName(getContext(), mUser, mProduct.getImageFileName(),
@@ -396,6 +399,7 @@ public class ProductDetailFragment extends Fragment {
                                     ((TextView) view.findViewById(R.id.product_availability))
                                             .setText(getString(R.string.availability,
                                                     mProduct.getProductPriceAvailability().getAvailability()));
+                                    ((TextView) view.findViewById(R.id.product_availability)).setTypeface(typefaceMedium);
                                 } else {
                                     //TODO: mostrar mesaje de error cuando el objeto product es null
                                 }

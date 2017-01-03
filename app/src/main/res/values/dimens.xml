@@ -21,12 +21,12 @@
     <dimen name="product_detail_height">220dp</dimen>
     <dimen name="mainpage_name_size">20sp</dimen>
 
-    <dimen name="productMinInfo_availability_text_size">15sp</dimen>
+    <dimen name="productMinInfo_availability_text_size">13sp</dimen>
     <dimen name="productMinInfo_currency_text_size">14sp</dimen>
     <dimen name="productMinInfo_price_text_size">18sp</dimen>
-    <dimen name="productMinInfo_product_name_text_size">13sp</dimen>
+    <dimen name="productMinInfo_product_name_text_size">12sp</dimen>
 
-    <dimen name="productDetailCardView_name_text_size">13sp</dimen>
+    <dimen name="productDetailCardView_name_text_size">14sp</dimen>
     <dimen name="productDetailCardView_internalCode_text_size">13sp</dimen>
     <dimen name="productDetailCardView_reference_text_size">13sp</dimen>
     <dimen name="productDetailCardView_brand_text_size">14sp</dimen>
