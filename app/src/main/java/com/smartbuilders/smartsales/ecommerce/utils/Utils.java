@@ -1203,9 +1203,10 @@ public class Utils {
             outStream.close();
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("Descarga completa, "+fileName)
-                            .setContentText("El archivo se encuentra en \"Descargas\".");
+                            .setSmallIcon(R.drawable.ic_file_download_white_24dp)
+                            .setContentTitle(context.getString(R.string.app_name))
+                            .setContentText("El archivo se encuentra en \"Descargas\".")
+                            .setContentInfo(fileName);
             // Creates an explicit intent for an Activity in your app
             final Intent resultIntent = new Intent(Intent.ACTION_VIEW);
             resultIntent.setDataAndType(Uri.fromFile(destinationFile), "application/pdf");
