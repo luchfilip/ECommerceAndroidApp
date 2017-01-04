@@ -531,10 +531,10 @@ public class OrderLineDB {
         return null;
     }
 
-    public int updateProductAvailabilitiesInWishList(){
+    public void updateProductAvailabilitiesInWishList(){
         try {
             //este cambio no se sincroniza en tiempo real para que no afecte la experiencia de otros usuarios con el mismo USER_ID
-            return mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                     null,
                     "UPDATE ECOMMERCE_ORDER_LINE SET UPDATE_TIME = ?, " +
@@ -546,6 +546,5 @@ public class OrderLineDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
     }
 }

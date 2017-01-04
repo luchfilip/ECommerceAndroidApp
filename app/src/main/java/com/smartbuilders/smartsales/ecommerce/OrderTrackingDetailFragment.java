@@ -7,17 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.OrderTrackingAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.CurrencyDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderTrackingDB;
-import com.smartbuilders.smartsales.ecommerce.model.Currency;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.OrderTracking;
-import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 

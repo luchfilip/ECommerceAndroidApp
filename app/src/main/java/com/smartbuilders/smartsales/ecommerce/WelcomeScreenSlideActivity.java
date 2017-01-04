@@ -29,12 +29,6 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
     private static final String STATE_CURRENT_PAGE_SELECTED_POSITION = "STATE_CURRENT_PAGE_SELECTED_POSITION";
 
     /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    private ViewPager mPager;
-
-    /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
@@ -55,7 +49,11 @@ public class WelcomeScreenSlideActivity extends AppCompatActivity {
         }
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
+        /*
+      The pager widget, which handles animation and allows swiping horizontally to access previous
+      and next wizard steps.
+     */
+        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(),
                 Parameter.isActiveOrderTracking(this, Utils.getCurrentUser(this)));
         mPager.setAdapter(mPagerAdapter);

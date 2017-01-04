@@ -12,8 +12,8 @@ import com.smartbuilders.smartsales.ecommerce.model.Company;
  */
 public class CompanyDB {
 
-    private Context mContext;
-    private User mUser;
+    final private Context mContext;
+    final private User mUser;
 
     public CompanyDB(Context context, User user){
         this.mContext = context;

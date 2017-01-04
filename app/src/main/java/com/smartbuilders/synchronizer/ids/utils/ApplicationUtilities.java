@@ -137,17 +137,16 @@ public class ApplicationUtilities {
     /**
      *
      * @param account
-     * @param authority
      * @return
      */
-	public static boolean isSyncActive(Account account, String authority) {
+	public static boolean isSyncActive(Account account) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return isSyncActiveHoneycomb(account, authority);
+            return isSyncActiveHoneycomb(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY);
         } else {
             @SuppressWarnings("deprecation")
 			SyncInfo currentSync = ContentResolver.getCurrentSync();
             return currentSync != null && currentSync.account.equals(account) 
-                    && currentSync.authority.equals(authority);
+                    && currentSync.authority.equals(BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY);
         }
     }
 
@@ -729,9 +728,9 @@ public class ApplicationUtilities {
     		if(user!=null){
 				c = ctx.getContentResolver()
 						.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-								new StringBuilder("SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, ")
-										.append(" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
-										.append(" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=").append(user.getUserId()).toString(),
+								"SELECT SCHEDULER_SYNC_ID, HOUR, MINUTE, MONDAY, TUESDAY, " +
+										" WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE " +
+										" FROM IDS_SCHEDULER_SYNC WHERE USER_ID=" + user.getUserId(),
 										null, null);
                 if(c!=null){
                     while(c.moveToNext()){
@@ -770,9 +769,9 @@ public class ApplicationUtilities {
     	try{
 			c = ctx.getContentResolver()
 					.query(DataBaseContentProvider.INTERNAL_DB_URI, null,
-							new StringBuilder("SELECT HOUR, MINUTE, MONDAY, TUESDAY, ")
-									.append("WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE ")
-									.append("FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=").append(schedulerSyncDataId).toString(),
+							"SELECT HOUR, MINUTE, MONDAY, TUESDAY, " +
+									"WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, IS_ACTIVE " +
+									"FROM IDS_SCHEDULER_SYNC WHERE SCHEDULER_SYNC_ID=" + schedulerSyncDataId,
 									null, null);
 			if(c!=null && c.moveToNext()){
 				return new SchedulerSyncData(schedulerSyncDataId,
@@ -820,10 +819,8 @@ public class ApplicationUtilities {
 	        FileInputStream fileInputStreamReader = new FileInputStream(file);
 	        byte[] bytes = new byte[(int)file.length()];
 	        fileInputStreamReader.read(bytes);
-	        encodedfile = Base64.encodeBytes(bytes).toString();
+	        encodedfile = Base64.encodeBytes(bytes);
 	        fileInputStreamReader.close();
-	    } catch(FileNotFoundException e) {
-	        e.printStackTrace();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

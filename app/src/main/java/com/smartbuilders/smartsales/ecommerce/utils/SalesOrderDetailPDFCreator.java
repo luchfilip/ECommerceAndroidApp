@@ -30,7 +30,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.StringUtils;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
@@ -57,7 +56,7 @@ public class SalesOrderDetailPDFCreator {
 
     private Currency currency;
 
-    public File generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName,
+    public void generatePDF(SalesOrder salesOrder, ArrayList<SalesOrderLine> lines, String fileName,
                             Activity activity, Context ctx, User user) throws Exception {
         File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
@@ -126,7 +125,6 @@ public class SalesOrderDetailPDFCreator {
                 e.printStackTrace();
             }
         }
-        return pdfFile;
     }
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper, Company userCompany,

@@ -51,7 +51,7 @@ public class WishListPDFCreator {
     private boolean mShowProductTotalPrice;
     private boolean mShowProductPrice;
 
-    public File generatePDF(ArrayList<OrderLine> orderLines, String fileName, Activity activity, Context ctx, User user) throws Exception {
+    public void generatePDF(ArrayList<OrderLine> orderLines, String fileName, Activity activity, Context ctx, User user) throws Exception {
         File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
@@ -104,7 +104,6 @@ public class WishListPDFCreator {
                 e.printStackTrace();
             }
         }
-        return pdfFile;
     }
 
     private void addPageHeaderFooter(PdfReader reader, PdfStamper stamper,

@@ -33,8 +33,8 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
     // Regular expression in Java to check if String is number or not
     private static final Pattern patternIsNotNumeric = Pattern.compile(".*[^0-9].*");
 
-    private Context mContext;
-    private User mUser;
+    final private Context mContext;
+    final private User mUser;
     private ArrayList<BusinessPartner> mDataset;
     private ArrayList<BusinessPartner> filterAux;
     private int mAppCurrentBusinessPartnerId;
@@ -168,11 +168,11 @@ public class BusinessPartnersListAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView businessPartnerCommercialName;
-        public TextView businessPartnerName;
-        public TextView businessPartnerTaxId;
-        public TextView businessPartnerInternalCode;
-        public ImageView imageView;
+        final TextView businessPartnerCommercialName;
+        final TextView businessPartnerName;
+        final TextView businessPartnerTaxId;
+        final TextView businessPartnerInternalCode;
+        final ImageView imageView;
 
         public ViewHolder(View v) {
             businessPartnerCommercialName = (TextView) v.findViewById(R.id.business_partner_commercial_name_textView);

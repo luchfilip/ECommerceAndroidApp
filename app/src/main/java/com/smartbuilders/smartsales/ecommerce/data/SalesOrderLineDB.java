@@ -338,7 +338,7 @@ public class SalesOrderLineDB {
             return getSalesOrderLinesByDocTypeAndBusinessPartnerId(docType, Utils.getAppCurrentBusinessPartnerId(mContext, mUser));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList<SalesOrderLine>();
+            return new ArrayList<>();
         }
     }
 

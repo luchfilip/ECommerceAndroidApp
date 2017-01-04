@@ -214,7 +214,8 @@ public class ShoppingCartFinalizeOptionsFragment extends Fragment {
                 String result = null;
                 try {
                     //if (mSalesOrderId > 0) {
-                        result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, mSelectedBusinessPartnerAddressId, mOrderLines);
+                        result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId,
+                                mSelectedBusinessPartnerAddressId, mOrderLines, (mSalesOrderId>0));
                     //} else {
                     //    result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, mSelectedBusinessPartnerAddressId);
                     //}

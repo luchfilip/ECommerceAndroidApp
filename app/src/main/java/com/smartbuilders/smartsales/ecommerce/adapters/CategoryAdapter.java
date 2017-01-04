@@ -19,8 +19,8 @@ import java.util.ArrayList;
  */
 public class CategoryAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private ArrayList<ProductCategory> mDataset;
+    final private Context mContext;
+    final private ArrayList<ProductCategory> mDataset;
 
     public CategoryAdapter(Context context, ArrayList<ProductCategory> data) {
         mContext = context;
@@ -87,10 +87,10 @@ public class CategoryAdapter extends BaseAdapter {
      */
     public static class ViewHolder {
         // each data item is just a string in this case
-        public TextView categoryName;
-        public TextView categoryDescription;
-        public ImageView categoryImage;
-        public TextView productsActiveQty;
+        final TextView categoryName;
+        final TextView categoryDescription;
+        final ImageView categoryImage;
+        final TextView productsActiveQty;
 
         public ViewHolder(View v) {
             categoryName = (TextView) v.findViewById(R.id.category_name_textView);

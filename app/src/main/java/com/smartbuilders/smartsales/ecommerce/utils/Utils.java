@@ -73,6 +73,8 @@ import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.smartsales.ecommerce.providers.CachedFileProvider;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -488,17 +490,23 @@ public class Utils {
 
                 File img = Utils.getFileInOriginalDirByFileName(context, fileName);
                 if(img!=null && img.exists()){
-                    Picasso.with(context).load(img).placeholder(placeHolderDrawable).error(onErrorDrawable).into(imageView);
+                    Picasso.with(context).load(img).placeholder(placeHolderDrawable).error(onErrorDrawable)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
+                    Picasso.with(context).invalidate(img);
                 }else{
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + fileName)
                             .placeholder(placeHolderDrawable)
                             .error(onErrorDrawable)
+                            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
                                     Utils.createFileInOriginalDir(fileName,
                                             ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
+                                    Picasso.with(context)
+                                            .invalidate(user.getServerAddress() + "/IntelligentDataSynchronizer/GetOriginalImage?fileName=" + fileName);
                                 }
 
                                 @Override
@@ -506,11 +514,13 @@ public class Utils {
                             });
                 }
             }else{
-                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
+                Picasso.with(context).load(R.drawable.no_image_available)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
             }
         } catch (Exception e) {
             if(imageView!=null){
-                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
+                Picasso.with(context).load(R.drawable.no_image_available)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
             }
             e.printStackTrace();
         }
@@ -560,17 +570,23 @@ public class Utils {
             if(!TextUtils.isEmpty(fileName)){
                 File imgFile = new File(getImagesThumbFolderPath(context), fileName);
                 if(imgFile.exists()){
-                    Picasso.with(context).load(imgFile).error(getNoImageAvailableDrawable(context)).into(imageView);
+                    Picasso.with(context).load(imgFile).error(getNoImageAvailableDrawable(context))
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
+                    Picasso.with(context).invalidate(imgFile);
                 }else{
                     Picasso.with(context)
                             .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName)
                             .placeholder(getLoadingImageDrawable(context))
                             .error(getNoImageAvailableDrawable(context))
+                            .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                             .into(imageView, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
                                     Utils.createFileInThumbDir(fileName,
                                             ((BitmapDrawable)imageView.getDrawable()).getBitmap(), context);
+                                    Picasso.with(context)
+                                            .invalidate(user.getServerAddress() + "/IntelligentDataSynchronizer/GetThumbImage?fileName=" + fileName);
                                 }
 
                                 @Override
@@ -578,11 +594,13 @@ public class Utils {
                             });
                 }
             }else{
-                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
+                Picasso.with(context).load(R.drawable.no_image_available)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
             }
         } catch (Exception e) {
             if(imageView!=null){
-                Picasso.with(context).load(R.drawable.no_image_available).into(imageView);
+                Picasso.with(context).load(R.drawable.no_image_available)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(imageView);
             }
             e.printStackTrace();
         }
@@ -1490,5 +1508,17 @@ public class Utils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Deletes a directory tree recursively.
+     */
+    public static void deleteDirectoryTree(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteDirectoryTree(child);
+            }
+        }
+        fileOrDirectory.delete();
     }
 }

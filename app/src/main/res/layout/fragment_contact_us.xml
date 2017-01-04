@@ -1,4 +1,4 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,163 +6,156 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     android:background="@android:color/white">
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/company_name"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="35sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/company_tax_id"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/contact_center_label"
+            android:id="@+id/contact_center_label"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/contact_center_phone"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold" />
+
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/company_name"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="35sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/company_tax_id"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/contact_center_label"
-                android:id="@+id/contact_center_label"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginTop="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/contact_center_phone"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginBottom="10dp"
-                android:textStyle="bold" />
-
-            <TableLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="2dp"
+                android:id="@+id/master_phone_tableRow">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="2dp"
-                    android:id="@+id/master_phone_tableRow">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/master_label"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/master_label"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/master_phone"
+                    android:autoLink="phone"
+                    android:textColorLink="@color/phoneNumberLinkColor"
+                    android:textColor="@color/black" />
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/master_phone"
-                        android:autoLink="phone"
-                        android:textColorLink="@color/phoneNumberLinkColor"
-                        android:textColor="@color/black" />
-                </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:id="@+id/fax_tableRow">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/fax_label"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/fax_number"
+                    android:autoLink="phone"
+                    android:textColorLink="@color/phoneNumberLinkColor"
+                    android:textColor="@color/black" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/email_address_tableRow">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/mail_label"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginRight="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/email_address"
+                    android:autoLink="email"
+                    android:textColorLink="@color/emailLinkColor"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:id="@+id/fax_tableRow">
+                    android:layout_gravity="center_vertical" />
+            </TableRow>
+        </TableLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/fax_label"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/web_page"
+            android:autoLink="web"
+            android:textColorLink="@color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/fax_number"
-                        android:autoLink="phone"
-                        android:textColorLink="@color/phoneNumberLinkColor"
-                        android:textColor="@color/black" />
-                </TableRow>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/address_label"
+            android:id="@+id/address_label"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/email_address_tableRow">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/mail_label"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginRight="5dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/email_address"
-                        android:autoLink="email"
-                        android:textColorLink="@color/emailLinkColor"
-                        android:layout_marginTop="2dp"
-                        android:layout_gravity="center_vertical" />
-                </TableRow>
-            </TableLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/web_page"
-                android:autoLink="web"
-                android:textColorLink="@color/black"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/address_label"
-                android:id="@+id/address_label"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/address"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black" />
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/address"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black" />
+    </LinearLayout>
+</ScrollView>

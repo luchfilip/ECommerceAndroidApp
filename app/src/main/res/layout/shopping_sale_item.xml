@@ -195,7 +195,7 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp" />
 
-            </LinearLayout>-->
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

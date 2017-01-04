@@ -54,7 +54,7 @@
         -->
     </style>
 
-    <style name="toolbar_products_list_style"></style>
+    <style name="toolbar_products_list_style"/>
 
     <style name="business_partners_list_style">
         <item name="android:background">@android:color/white</item>
@@ -132,7 +132,7 @@
         <item name="android:background">@drawable/touch_selector</item>
     </style>
 
-    <style name="image_button_style"></style>
+    <style name="image_button_style"/>
 
     <style name="go_to_arrow_style">
         <item name="android:visibility">visible</item>

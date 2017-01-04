@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
+        Utils.deleteDirectoryTree(getCacheDir());
         ApplicationUtilities.checkAppVersion(this, mUser);
         mProductDB = new ProductDB(this, mUser);
     }

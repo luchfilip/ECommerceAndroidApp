@@ -29,8 +29,9 @@ public class OrderDB {
         this.mUser = user;
     }
 
-    public String createOrderFromOrderLines(Integer salesOrderId, int businessPartnerAddressId, ArrayList<OrderLine> orderLines) throws Exception {
-        return createOrder(salesOrderId, businessPartnerAddressId, orderLines, true);
+    public String createOrderFromOrderLines(Integer salesOrderId, int businessPartnerAddressId,
+                                            ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB) throws Exception {
+        return createOrder(salesOrderId, businessPartnerAddressId, orderLines, insertOrderLinesInDB);
     }
 
     //public String createOrderFromShoppingCart(int businessPartnerAddressId) throws Exception {

@@ -49,6 +49,8 @@ import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQty
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -452,16 +454,22 @@ public class MainActivityLayoutAdapter extends RecyclerView.Adapter<MainActivity
         File img = Utils.getFileInBannerDirByFileName(mContext, mIsLandscape, banner.getImageFileName());
 
         if(img!=null){
-            Picasso.with(mContext).load(img).into(image);
+            Picasso.with(mContext).load(img).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(image);
+            Picasso.with(mContext).invalidate(img);
         }else{
             Picasso.with(mContext)
                     .load(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetBannerImage?fileName=" +
                             banner.getImageFileName() + mUrlScreenParameters)
+                    .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
                             Utils.createFileInBannerDir(mContext, mIsLandscape, banner.getImageFileName(),
                                     ((BitmapDrawable)(image).getDrawable()).getBitmap());
+                            Picasso.with(mContext)
+                                    .invalidate(mUser.getServerAddress() + "/IntelligentDataSynchronizer/GetBannerImage?fileName=" +
+                                            banner.getImageFileName() + mUrlScreenParameters);
                         }
 
                         @Override

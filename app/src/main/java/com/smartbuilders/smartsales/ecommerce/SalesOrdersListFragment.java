@@ -12,13 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartbuilders.synchronizer.ids.model.User;
-import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
-import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.OrderDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderDB;
-import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.model.Order;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;

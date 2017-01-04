@@ -274,8 +274,8 @@ public class DataBaseUtilities {
                 }
                 //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
                 db.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
-                        : (new StringBuilder("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (")
-                            .append(unGzip(Base64.decode(validSequenceIds, Base64.GZIP))).append(")").toString()),
+                        : ("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (" +
+                                unGzip(Base64.decode(validSequenceIds, Base64.GZIP)) + ")"),
                         null);
                 db.setTransactionSuccessful();
             } catch (Exception e) {
@@ -315,7 +315,7 @@ public class DataBaseUtilities {
         Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
         if(keys.hasNext()){
             int columnCount = 0;
-            Object columnValues[] = null;
+            Object columnValues[];
             JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
                     .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
             HashMap<String, String> colsIndex;
@@ -323,10 +323,10 @@ public class DataBaseUtilities {
 
             //MetadaData
             try{
-                ArrayList<String> columnNames = new ArrayList<String>();
+                ArrayList<String> columnNames = new ArrayList<>();
                 //Se carga la metadata de los indices de las columnas consultadas
                 Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-                colsIndex = new HashMap<String, String>();
+                colsIndex = new HashMap<>();
                 while(keysTemp.hasNext()){
                     columnCount++;
                     String key = (String) keysTemp.next();
@@ -340,7 +340,7 @@ public class DataBaseUtilities {
                 counter = 1;
                 //Se carga la metadata de los tipos de columnas consultadas
                 keysTemp = jsonArray2.getJSONObject(counter).keys();
-                colsType = new SparseArray<String>();
+                colsType = new SparseArray<>();
                 while(keysTemp.hasNext()){
                     String key = (String) keysTemp.next();
                     colsType.put(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));

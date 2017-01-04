@@ -35,7 +35,7 @@ public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
                 for(Account account : accounts){
                     //si no se esta realizando la sincronizacion en ese momento entonces se revisa si se hace
                     //la sincronizacion completa o solo de los datos que se sincronizan en tiempo real
-                    if(!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)){
+                    if(!ApplicationUtilities.isSyncActive(account)){
                         try {
                             //si no requiere la sincronizacion de carga inicial entonces dependiendo del
                             //tipo de red a la que se encuentre conectado se decide si se sincroniza completo

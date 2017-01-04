@@ -10,8 +10,8 @@ import com.smartbuilders.smartsales.ecommerce.model.BannerSection;
  */
 public class BannerSectionDB {
 
-    private Context mContext;
-    private User mUser;
+    final private Context mContext;
+    final private User mUser;
 
     public BannerSectionDB(Context context, User user){
         this.mContext = context;

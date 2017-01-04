@@ -17,7 +17,7 @@ public interface ServerAuthenticate {
 	 * @param ctx
 	 * @throws Exception
 	 */
-    public void userSignUp(final User user, final String authType, Context ctx) throws Exception;
+    void userSignUp(final User user, final String authType, Context ctx) throws Exception;
 
     /**
      * Se usa para verificar el authToken del usuario en el sistema
@@ -26,7 +26,7 @@ public interface ServerAuthenticate {
      * @param ctx
      * @throws Exception
      */
-    public void userSignIn(final User user, final String authType, Context ctx) throws Exception;
+    void userSignIn(final User user, final String authType, Context ctx) throws Exception;
 
 	/**
 	 * Se usa para recuperar el authToken del usuario del servidor
@@ -35,7 +35,7 @@ public interface ServerAuthenticate {
 	 * @param ctx
 	 * @throws Exception
 	 */
-	public void userGetAuthToken(final User user, final String authType, Context ctx) throws Exception;
+	void userGetAuthToken(final User user, final String authType, Context ctx) throws Exception;
     
     /**
      * Se usa para avisarle al servidor la sincronizacion finalizo
@@ -44,5 +44,5 @@ public interface ServerAuthenticate {
      * @param ctx
      * @throws Exception
      */
-    public void userSignOut(final User user, final String syncState, Context ctx) throws Exception;
+    void userSignOut(final User user, final String syncState, Context ctx) throws Exception;
 }

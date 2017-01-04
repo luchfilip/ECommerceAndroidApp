@@ -51,8 +51,8 @@ public class OrderDetailPDFCreator {
     private Currency currency;
     private boolean managePriceInOrder;
 
-    public File generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
-        File pdfFile = null;
+    public void generatePDF(Order order, ArrayList<OrderLine> orderLines, String fileName, Context ctx, User user) throws Exception {
+        File pdfFile;
         //check if external storage is available so that we can dump our PDF file there
         if (!Utils.isExternalStorageAvailable() || Utils.isExternalStorageReadOnly()) {
             throw new Exception(ctx.getString(R.string.external_storage_unavailable));
@@ -116,7 +116,6 @@ public class OrderDetailPDFCreator {
                 e.printStackTrace();
             }
         }
-        return pdfFile;
     }
 
     private void addPageHeader(PdfReader reader, PdfStamper stamper, Company userCompany,

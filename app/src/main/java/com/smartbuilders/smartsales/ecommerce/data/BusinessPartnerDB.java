@@ -4,13 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
-import com.smartbuilders.smartsales.ecommerce.utils.UtilsGetDataFromDB;
-import com.smartbuilders.smartsales.ecommerce.utils.UtilsSyncData;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
-
-import org.codehaus.jettison.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -19,22 +15,12 @@ import java.util.ArrayList;
  */
 public class BusinessPartnerDB {
 
-    private Context mContext;
-    private User mUser;
+    final private Context mContext;
+    final private User mUser;
 
     public BusinessPartnerDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
-        //TODO: eliminar en el release siguiente a la version 30
-        if (mUser!=null && UtilsGetDataFromDB.getCountFromTableName(context, mUser, "SALES_REP")<=0) {
-            try {
-                JSONObject tablesToSync = new JSONObject();
-                tablesToSync.put("1", "SALES_REP");
-                UtilsSyncData.requestSyncByTableName(context, mUser, tablesToSync.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public ArrayList<BusinessPartner> getBusinessPartners(){

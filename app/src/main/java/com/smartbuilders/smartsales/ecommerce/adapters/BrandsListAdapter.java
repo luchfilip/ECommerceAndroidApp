@@ -24,11 +24,11 @@ import java.util.Set;
  */
 public class BrandsListAdapter extends BaseAdapter implements SectionIndexer {
 
-    private HashMap<String, Integer> alphaIndexer;
+    final private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
-    private Context mContext;
-    private ArrayList<ProductBrand> mDataset;
-    private ArrayList<ProductBrand> arraylist;
+    final private Context mContext;
+    final private ArrayList<ProductBrand> mDataset;
+    final private ArrayList<ProductBrand> arraylist;
 
     public BrandsListAdapter(Context context, ArrayList<ProductBrand> data) {
         mContext = context;
@@ -149,10 +149,10 @@ public class BrandsListAdapter extends BaseAdapter implements SectionIndexer {
     }
 
     public static class ViewHolder {
-        public TextView brandName;
-        public TextView brandDescription;
-        public ImageView brandImage;
-        public TextView productsActiveQty;
+        final TextView brandName;
+        final TextView brandDescription;
+        final ImageView brandImage;
+        final TextView productsActiveQty;
 
         public ViewHolder(View v) {
             brandName = (TextView) v.findViewById(R.id.brand_name_tv);

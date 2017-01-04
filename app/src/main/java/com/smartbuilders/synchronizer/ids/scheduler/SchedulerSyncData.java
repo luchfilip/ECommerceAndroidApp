@@ -227,7 +227,7 @@ public class SchedulerSyncData implements Parcelable {
     	this.sunday = in.readString().equals(Boolean.TRUE.toString());
     	this.hourOfDay = in.readInt();
     	this.minute = in.readInt();
-    	this.isActive = in.readString().equals(Boolean.TRUE.toString());;
+    	this.isActive = in.readString().equals(Boolean.TRUE.toString());
     }
 
     @Override

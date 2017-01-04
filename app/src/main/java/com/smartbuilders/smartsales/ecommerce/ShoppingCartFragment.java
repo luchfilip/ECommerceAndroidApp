@@ -396,7 +396,8 @@ public class ShoppingCartFragment extends Fragment implements ShoppingCartAdapte
                     result = OrderBR.isValidQuantityOrderedInOrderLines(getContext(), mUser, mShoppingCartAdapter.getData());
                     if (result==null) {
                         //if (mSalesOrderId > 0) {
-                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser, mSalesOrderId, 0, mShoppingCartAdapter.getData());
+                            result = OrderBR.createOrderFromOrderLines(getContext(), mUser,
+                                    mSalesOrderId, 0, mShoppingCartAdapter.getData(), (mSalesOrderId>0));
                         //} else {
                         //    result = OrderBR.createOrderFromShoppingCart(getContext(), mUser, 0);
                         //}

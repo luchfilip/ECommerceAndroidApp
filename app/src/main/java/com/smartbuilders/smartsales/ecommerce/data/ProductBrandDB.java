@@ -32,17 +32,17 @@ public class ProductBrandDB {
         try {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-                    new StringBuilder("SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) ")
-                            .append(" FROM BRAND B ")
-                            .append(" INNER JOIN PRODUCT P ON P.BRAND_ID = B.BRAND_ID AND P.IS_ACTIVE = 'Y' ")
-                            .append(" INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' ")
-                            .append(" INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' ")
-                            .append(mShowProductsWithoutAvailability ? ""
-                                    : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID="+Utils.getAppCurrentBusinessPartnerId(mContext, mUser)+" AND IS_ACTIVE='Y') " +
-                                        " AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ")
-                            .append(" WHERE B.IS_ACTIVE = 'Y' ")
-                            .append(" GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION ")
-                            .append(" ORDER BY B.NAME ASC ").toString(),
+                    "SELECT B.BRAND_ID, B.NAME, B.DESCRIPTION, COUNT(B.BRAND_ID) " +
+                            " FROM BRAND B " +
+                            " INNER JOIN PRODUCT P ON P.BRAND_ID = B.BRAND_ID AND P.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
+                            " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
+                            (mShowProductsWithoutAvailability ? ""
+                                    : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID=" + Utils.getAppCurrentBusinessPartnerId(mContext, mUser) + " AND IS_ACTIVE='Y') " +
+                                    " AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ") +
+                            " WHERE B.IS_ACTIVE = 'Y' " +
+                            " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +
+                            " ORDER BY B.NAME ASC ",
                     null, null);
             if(c!=null){
                 while(c.moveToNext()){

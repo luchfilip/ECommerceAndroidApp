@@ -184,7 +184,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager mAccountManager = AccountManager.get(this);
                                 for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
-                                    if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
+                                    if (!ApplicationUtilities.isSyncActive(account)) {
                                         if(ApplicationUtilities.appRequireFullSync(this, account)){
                                             ApplicationUtilities.initSyncByAccount(this, account);
                                             sendResponseToServer(this, requestMethodName, requestId,
@@ -560,7 +560,7 @@ public class MyGcmListenerService extends GcmListenerService {
                             try {
                                 AccountManager accountManager = AccountManager.get(this);
                                 for(Account account : accountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
-                                    if (!ApplicationUtilities.isSyncActive(account, BuildConfig.SYNC_ADAPTER_CONTENT_AUTHORITY)) {
+                                    if (!ApplicationUtilities.isSyncActive(account)) {
                                         Date lastSuccessFullySyncTime = ApplicationUtilities.getLastFullSyncTime(this, account);
                                         if(lastSuccessFullySyncTime!=null){
                                             //si la ultima sincronizacion completa se realizo en un tiempo mayor al periodo de sincronizacion automatica

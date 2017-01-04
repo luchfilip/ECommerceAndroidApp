@@ -21,6 +21,8 @@ import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.model.ProductBrandPromotionalCard;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -62,18 +64,23 @@ public class ProductBrandPromotionFragment extends Fragment {
         final boolean isLandscape = getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         File img = Utils.getFileInProductBrandPromotionalDirByFileName(getContext(), isLandscape, mProductBrandPromotionalCard.getImageFileName());
         if (img!=null) {
-            Picasso.with(getContext())
-                    .load(img).into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView));
+            Picasso.with(getContext()).load(img).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView));
+            Picasso.with(getContext()).invalidate(img);
         } else if (user!=null) {
             Picasso.with(getContext())
                     .load(user.getServerAddress() + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
                             + mProductBrandPromotionalCard.getImageFileName() + Utils.getUrlScreenParameters(isLandscape, getContext()))
+                    .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView), new Callback() {
                         @Override
                         public void onSuccess() {
                             Utils.createFileInProductBrandPromotionalDir(getContext(), isLandscape,
                                     mProductBrandPromotionalCard.getImageFileName(),
                                     ((BitmapDrawable)((ImageView) rootView.findViewById(R.id.product_brand_promotion_imageView)).getDrawable()).getBitmap());
+                            Picasso.with(getContext()).invalidate(user.getServerAddress() + "/IntelligentDataSynchronizer/GetProductBrandPromotionalImage?fileName="
+                                    + mProductBrandPromotionalCard.getImageFileName() + Utils.getUrlScreenParameters(isLandscape, getContext()));
                         }
 
                         @Override

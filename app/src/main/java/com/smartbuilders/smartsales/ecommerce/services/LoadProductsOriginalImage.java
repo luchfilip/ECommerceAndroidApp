@@ -162,7 +162,7 @@ public class LoadProductsOriginalImage extends IntentService {
                     (new File(Utils.getImagesOriginalFolderPath(context))).mkdirs();
                     outputStream = new FileOutputStream(new File(Utils.getImagesOriginalFolderPath(context), fileName));
                 }
-                int read = 0;
+                int read;
                 byte[] bytes = new byte[1024];
                 while ((read = inputStream.read(bytes)) != -1) {
                     outputStream.write(bytes, 0, read);

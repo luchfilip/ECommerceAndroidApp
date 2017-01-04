@@ -360,8 +360,7 @@
             android:label="@string/data_sync" />
         <activity
             android:name=".BusinessPartnerDetailsActivity"
-            android:label="@string/title_activity_business_partner_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -40,66 +40,60 @@
             android:layout_height="match_parent"
             android:layout_weight="4">
 
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:background="@color/light_grey">
 
-                <TableLayout
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/shape_style">
 
-                    <TableRow
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/shape_style">
+                        android:text="@string/delivery_address_label"
+                        android:layout_gravity="center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:maxWidth="100dp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/delivery_address_label"
-                            android:layout_gravity="center_vertical"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:maxWidth="100dp" />
-
-                        <Spinner
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/business_partner_delivery_addresses_spinner"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
+                    <Spinner
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        style="@style/shape_style">
+                        android:id="@+id/business_partner_delivery_addresses_spinner"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1" />
+                </TableRow>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/valid_to_label"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:layout_gravity="center_vertical" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/shape_style">
 
-                        <EditText
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:inputType="date"
-                            android:focusable="false"
-                            android:ems="10"
-                            android:id="@+id/valid_to_editText"
-                            android:focusableInTouchMode="false"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1" />
-                    </TableRow>
-                </TableLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/valid_to_label"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_vertical" />
 
-            </LinearLayout>
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:ems="10"
+                        android:id="@+id/valid_to_editText"
+                        android:focusableInTouchMode="false"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1" />
+                </TableRow>
+            </TableLayout>
 
             <View style="@style/Divider"
                 android:layout_marginBottom="1dp" />

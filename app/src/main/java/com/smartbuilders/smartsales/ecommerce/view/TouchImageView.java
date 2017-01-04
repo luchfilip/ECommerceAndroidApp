@@ -20,16 +20,14 @@ public class TouchImageView extends ImageView {
     // Remember some things for zooming
     private PointF last = new PointF();
     private PointF start = new PointF();
-    private float minScale = 1f;
     private float maxScale = 3f;
     private float[] m;
     private int viewWidth, viewHeight;
     private static final int CLICK = 3;
     private float saveScale = 1f;
     protected float origWidth, origHeight;
-    private int oldMeasuredWidth, oldMeasuredHeight;
+    private int oldMeasuredHeight;
     private ScaleGestureDetector mScaleDetector;
-    private Context context;
 
     public TouchImageView(Context context) {
         super(context);
@@ -43,7 +41,6 @@ public class TouchImageView extends ImageView {
 
     private void sharedConstructing(Context context) {
         super.setClickable(true);
-        this.context = context;
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         matrix = new Matrix();
         m = new float[9];
@@ -107,6 +104,7 @@ public class TouchImageView extends ImageView {
             float mScaleFactor = detector.getScaleFactor();
             float origScale = saveScale;
             saveScale *= mScaleFactor;
+            float minScale = 1f;
             if (saveScale > maxScale) {
                 saveScale = maxScale;
                 mScaleFactor = maxScale / origScale;
@@ -168,7 +166,6 @@ public class TouchImageView extends ImageView {
                 || viewWidth == 0 || viewHeight == 0)
             return;
         oldMeasuredHeight = viewHeight;
-        oldMeasuredWidth = viewWidth;
         if (saveScale == 1) {
             //Fit to screen.
             float scale;

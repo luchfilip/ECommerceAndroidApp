@@ -14,8 +14,8 @@ import java.util.ArrayList;
  */
 public class BusinessPartnerAddressDB {
 
-    private Context mContext;
-    private User mUser;
+    final private Context mContext;
+    final private User mUser;
 
     public BusinessPartnerAddressDB(Context context, User user){
         this.mContext = context;

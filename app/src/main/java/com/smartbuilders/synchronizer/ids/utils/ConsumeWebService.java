@@ -71,7 +71,7 @@ public class ConsumeWebService {
 		//Recibe la URL del ws
 		HttpTransportSE transporte = new HttpTransportSE(serverAddress+url,
 				connectionTimeOut>0 ? connectionTimeOut : HTTP_TRANSPORT_TIMEOUT);
-		Object response = null;
+		Object response;
 		try {
 			//Hace la llamada al ws
 

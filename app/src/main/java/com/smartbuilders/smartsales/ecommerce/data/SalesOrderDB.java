@@ -4,18 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
-import com.smartbuilders.smartsales.ecommerce.businessRules.SalesOrderSalesManBR;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
-import com.smartbuilders.smartsales.ecommerce.utils.UtilsGetDataFromDB;
-import com.smartbuilders.smartsales.ecommerce.utils.UtilsSyncData;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrder;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
-
-import org.codehaus.jettison.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -34,16 +29,6 @@ public class SalesOrderDB {
     public SalesOrderDB(Context context, User user){
         this.mContext = context;
         this.mUser = user;
-        //TODO: eliminar en el release siguiente a la version 30
-        if (mUser!=null && UtilsGetDataFromDB.getCountFromTableName(context, mUser, "SALES_REP")<=0) {
-            try {
-                JSONObject tablesToSync = new JSONObject();
-                tablesToSync.put("1", "SALES_REP");
-                UtilsSyncData.requestSyncByTableName(context, mUser, tablesToSync.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**

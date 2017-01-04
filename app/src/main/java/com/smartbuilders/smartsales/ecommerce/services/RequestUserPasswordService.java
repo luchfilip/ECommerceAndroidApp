@@ -44,7 +44,7 @@ public class RequestUserPasswordService extends IntentService {
         String userEmail = workIntent.getStringExtra(USER_EMAIL);
         String resultMsg;
         try {
-            LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
+            LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
             parameters.put("userGroup", getString(R.string.ids_user_group_name));
             parameters.put("userName", userName);
             parameters.put("userEmail", userEmail);

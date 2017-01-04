@@ -184,11 +184,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	}
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
-        return super.bulkInsert(uri, values);
-    }
-
-    @Override
 	public void onAccountsUpdated(final Account[] accounts) {
 	    //Removes content associated with accounts that are not currently in the device
 	    ApplicationUtilities.cleanUsersData(getContext(), accounts);

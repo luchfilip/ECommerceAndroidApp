@@ -110,10 +110,11 @@ public class OrderBR {
     //}
 
     public static String createOrderFromOrderLines(Context context, User user, int salesOrderId,
-                                                   int businessPartnerAddressId, ArrayList<OrderLine> orderLines){
+                                                   int businessPartnerAddressId, ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         String result;
         try {
-            result = (new OrderDB(context, user)).createOrderFromOrderLines(salesOrderId, businessPartnerAddressId, orderLines);
+            result = (new OrderDB(context, user)).createOrderFromOrderLines(salesOrderId,
+                    businessPartnerAddressId, orderLines, insertOrderLinesInDB);
         } catch (Exception e) {
             e.printStackTrace();
             result = e.getMessage();

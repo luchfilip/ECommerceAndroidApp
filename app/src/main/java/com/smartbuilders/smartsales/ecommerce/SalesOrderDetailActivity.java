@@ -1,11 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
@@ -33,20 +31,9 @@ public class SalesOrderDetailActivity extends AppCompatActivity
         }
     }
 
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-    //    // Inflate the menu; this adds items to the action bar if it is present.
-    //    getMenuInflater().inflate(R.menu.menu_sales_order_detail, menu);
-    //    return super.onCreateOptionsMenu(menu);
-    //}
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
-        //if (i == R.id.search) {
-        //    startActivity(new Intent(this, SearchResultsActivity.class));
-        //    return true;
-        //} else
         if (i == android.R.id.home) {
             onBackPressed();
             return true;

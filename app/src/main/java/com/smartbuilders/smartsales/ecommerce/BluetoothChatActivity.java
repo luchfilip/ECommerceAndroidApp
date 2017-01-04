@@ -79,7 +79,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
         actionBar.setSubtitle(subTitle);
     }
 
-    private BroadcastReceiver bluetoothConnectionProviderReceiver =  new BroadcastReceiver() {
+    final private BroadcastReceiver bluetoothConnectionProviderReceiver =  new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent!=null && intent.getAction()!=null){
@@ -327,7 +327,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
     /**
      * The action listener for the EditText widget, to listen for the return key
      */
-    private TextView.OnEditorActionListener mWriteListener
+    final private TextView.OnEditorActionListener mWriteListener
             = new TextView.OnEditorActionListener() {
         public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
             // If the action is a key-up event on the return key, send the message

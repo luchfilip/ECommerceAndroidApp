@@ -14,10 +14,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.smartbuilders.smartsales.ecommerce.services.RequestUserPasswordService;
 import com.smartbuilders.smartsales.ecommerce.utils.EmailValidator;
@@ -27,8 +25,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -106,17 +102,6 @@ public class RequestUserPasswordFragment extends Fragment {
         }else{
             unlockScreen(null);
         }
-
-        //if (rootView.findViewById(R.id.user_prefix_spinner) != null) {
-        //    List<String> spinnerArray =  new ArrayList<>();
-        //    spinnerArray.add("J");
-        //    spinnerArray.add("V");
-        //    spinnerArray.add("E");
-        //    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
-        //
-        //    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //    ((Spinner) rootView.findViewById(R.id.user_prefix_spinner)).setAdapter(adapter);
-        //}
 
         rootView.findViewById(R.id.go_back_textView).setOnClickListener(new View.OnClickListener() {
             @Override

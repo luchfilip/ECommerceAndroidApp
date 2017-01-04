@@ -42,11 +42,6 @@ public class CategoriesListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_categories_list, container, false);

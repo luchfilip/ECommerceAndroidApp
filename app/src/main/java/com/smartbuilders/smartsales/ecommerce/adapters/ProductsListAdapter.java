@@ -2,7 +2,6 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
