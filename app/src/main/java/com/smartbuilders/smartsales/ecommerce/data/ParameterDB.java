@@ -143,7 +143,7 @@ public class ParameterDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId())
                             .build(), null,
                     "SELECT "+tableColumn+" FROM USER_APP_PARAMETER WHERE APP_PARAMETER_ID=? AND USER_ID=? AND IS_ACTIVE=?" ,
-                    new String[]{String.valueOf(parameterId), String.valueOf(user.getUserId()), "Y"}, null);
+                    new String[]{String.valueOf(parameterId), String.valueOf(user.getServerUserId()), "Y"}, null);
             if(c!=null && c.moveToNext()){
                 result = c.getString(0);
                 paramFound = true;
