@@ -158,19 +158,12 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //float progressPercentage = 0;
-
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STATE_SYNCHRONIZATION_STATE)) {
                 mSynchronizationState = savedInstanceState.getInt(STATE_SYNCHRONIZATION_STATE);
             }
             if (savedInstanceState.containsKey(STATE_SYNC_PROGRESS_PERCENTAGE)) {
                 mProgressPercentage = savedInstanceState.getString(STATE_SYNC_PROGRESS_PERCENTAGE);
-                //try {
-                //    progressPercentage = Float.valueOf(mProgressPercentage);
-                //} catch (Exception e) {
-                //    //do nothing
-                //}
             }
         }
 
@@ -184,13 +177,6 @@ public class SplashScreen extends AppCompatActivity {
                 finish();
             }
         });
-
-        //if (progressPercentage >= 100) {
-        //    initApp();
-        //} else {
-        //    mProgressPercentageTextView.setText(getString(R.string.progress_percentage, mProgressPercentage));
-        //    checkPermission();
-        //}
     }
 
     private void checkPermission() {
