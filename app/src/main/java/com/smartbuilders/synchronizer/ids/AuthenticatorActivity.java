@@ -322,19 +322,19 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 waitPlease.dismiss();
                 Utils.unlockScreenOrientation(AuthenticatorActivity.this);
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    if (mUser !=null && mAccount!=null
-                            && intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_wrong_password))) {
+                    if (intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_already_registered))) {
+                        final Intent intent1 = new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class);
+                        if (mUser !=null && mAccount!=null) {
+                            intent1.putExtra(RequestResetUserPasswordActivity.KEY_USER_NAME, mUser.getUserName());
+                        }
                         new AlertDialog.Builder(AuthenticatorActivity.this)
-                                .setMessage(R.string.user_wrong_password)
-                                .setPositiveButton(R.string.action_reset_password, new DialogInterface.OnClickListener() {
+                                .setMessage(R.string.user_already_registered)
+                                .setNeutralButton(R.string.action_reset_password, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        startActivity(new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class)
-                                        .putExtra(RequestResetUserPasswordActivity.KEY_USER_NAME, mUser.getUserName()));
+                                        startActivity(intent1);
                                     }
-                                })
-                                .setNegativeButton(R.string.cancel, null)
-                                .show();
+                                }).show();
                     } else {
                         Toast.makeText(getBaseContext(), intent.getStringExtra(KEY_ERROR_MESSAGE), Toast.LENGTH_SHORT).show();
                     }
