@@ -44,7 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 						        if(!ApplicationUtilities.isSyncActive(account)){
 									//TODO: revisar si la ultima sincronizacion se realizo en un tiempo mayor al
 									//definido por el periodo de sincronizacion
-						        	ApplicationUtilities.initSyncByAccount(context, account);
+						        	ApplicationUtilities.initSyncByAccount(account);
 						        	//Toast.makeText(context, "Automatic synchronization of Intelligent Data Synchronizer for user "+account.name+" has begun!!!",
 									//        Toast.LENGTH_SHORT).show();
 								    // Vibrate the mobile phone

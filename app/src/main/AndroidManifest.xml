@@ -114,21 +114,25 @@
             android:name=".providers.CachedFileProvider"
             android:authorities="${applicationId}.providers.CachedFileProvider"
             android:exported="true"
+            android:grantUriPermissions="true"
             android:multiprocess="true" />
         <provider
             android:name="com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider"
             android:authorities="${applicationId}.providers.Syncadapter"
-            android:exported="false"
+            android:exported="true"
+            android:grantUriPermissions="true"
             android:syncable="true" />
         <provider
             android:name="com.smartbuilders.synchronizer.ids.providers.SynchronizerContentProvider"
             android:authorities="${applicationId}.providers.SynchronizerContentProvider"
-            android:exported="false"
+            android:exported="true"
+            android:grantUriPermissions="true"
             android:syncable="true" />
         <provider
             android:name=".providers.BluetoothConnectionProvider"
             android:authorities="${applicationId}.providers.BluetoothConnectionProvider"
-            android:exported="false"
+            android:exported="true"
+            android:grantUriPermissions="true"
             android:multiprocess="true" />
 
         <service android:name="com.smartbuilders.synchronizer.ids.syncadapter.authenticator.AuthenticatorService">

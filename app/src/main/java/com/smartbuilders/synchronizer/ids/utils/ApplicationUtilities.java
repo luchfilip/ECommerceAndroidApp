@@ -152,10 +152,9 @@ public class ApplicationUtilities {
 
 	/**
 	 *
-	 * @param context
 	 * @param account
      */
-	public static void initSyncByAccount(Context context, Account account) {
+	public static void initSyncByAccount(Account account) {
 		Bundle settingsBundle = new Bundle();
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);

@@ -46,7 +46,7 @@ public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
                                 //if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
                                     // si requiere sincronizacion completa entonces se realiza la sincronizacion completa
                                     if(ApplicationUtilities.appRequireFullSync(context, account)) {
-                                        ApplicationUtilities.initSyncByAccount(context, account);
+                                        ApplicationUtilities.initSyncByAccount(account);
                                     }else{
                                         //sino se realiza solo la sincronizacion de los datos que requieren
                                         //sincronizacion en tiempo real
@@ -60,7 +60,7 @@ public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
                                 //            accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
                                 //}
                             }else{
-                                ApplicationUtilities.initSyncByAccount(context, account);
+                                ApplicationUtilities.initSyncByAccount(account);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

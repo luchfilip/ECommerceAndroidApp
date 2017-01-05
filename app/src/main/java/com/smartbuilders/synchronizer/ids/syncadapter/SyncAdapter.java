@@ -93,7 +93,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	 * Ocurrio un error de comunicacion
 	 */
 	public final static String STATE_COMMUNICATION_ERROR = "CE";
-    
+
     private static int syncStatus;
     
     /**
@@ -148,7 +148,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     	try{
         	syncStatus = SYNCHRONIZATION_CANCELLED;
-        	
+
     		// Get the session token for the current account
     		sServerAuthenticate.userSignIn(user, account.type, getContext());
 

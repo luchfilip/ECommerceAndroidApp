@@ -186,7 +186,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                 for(Account account : mAccountManager.getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE)){
                                     if (!ApplicationUtilities.isSyncActive(account)) {
                                         if(ApplicationUtilities.appRequireFullSync(this, account)){
-                                            ApplicationUtilities.initSyncByAccount(this, account);
+                                            ApplicationUtilities.initSyncByAccount(account);
                                             sendResponseToServer(this, requestMethodName, requestId,
                                                     "user: "+account.name+", App require full sync, Full Synchronization initialized.", null);
                                         }else if(!ApplicationUtilities.appRequireInitialLoad(this, account)){
@@ -210,7 +210,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                         "user: "+account.name+", tablesToSync: "+data.getString(KEY_PARAM_TABLES_TO_SYNC)+
                                                                 ", synchronization initialized.", null);
                                             } else {
-                                                ApplicationUtilities.initSyncByAccount(this, account);
+                                                ApplicationUtilities.initSyncByAccount(account);
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "user: "+account.name+", Full Synchronization initialized.", null);
                                             }
@@ -566,7 +566,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                             //si la ultima sincronizacion completa se realizo en un tiempo mayor al periodo de sincronizacion automatica
                                             //entonces se realiza la sincronozacion completa
                                             if(((System.currentTimeMillis() - lastSuccessFullySyncTime.getTime())/1000) >= Utils.getSyncPeriodicityFromPreferences(this)) {
-                                                ApplicationUtilities.initSyncByAccount(this, account);
+                                                ApplicationUtilities.initSyncByAccount(account);
                                                 sendResponseToServer(this, requestMethodName, requestId,
                                                         "Se activo la sincronizacion completa de los datos.", null);
                                             }else{
@@ -578,7 +578,7 @@ public class MyGcmListenerService extends GcmListenerService {
                                                         "Se activo la sincronizacion de los datos en tiempo real.", null);
                                             }
                                         }else{
-                                            ApplicationUtilities.initSyncByAccount(this, account);
+                                            ApplicationUtilities.initSyncByAccount(account);
                                         }
                                     }
                                 }

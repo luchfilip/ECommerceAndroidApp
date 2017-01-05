@@ -31,7 +31,7 @@ import android.util.Log;
  *
  */
 public class SynchronizerContentProvider extends ContentProvider{
-	
+
 	private static final String AUTHORITY = BuildConfig.SynchronizerContentProvider_AUTHORITY;
 	
 	private static final Uri CONTENT_URI 					= Uri.parse("content://"+AUTHORITY);

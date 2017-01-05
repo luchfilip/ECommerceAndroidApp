@@ -339,16 +339,19 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
-            if (resultCode == RESULT_OK) {
-                initApp();
-            } else if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
-        } else if (resultCode == 200) {
-            if (mUser!=null && !ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {
-                initApp();
-            }
+        switch (requestCode) {
+            case 100:
+                if (resultCode == RESULT_OK) {
+                    initApp();
+                } else if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
+            case 200:
+                if (mUser!=null && !ApplicationUtilities.appRequireInitialLoad(this, mUser.getUserId())) {
+                    initApp();
+                }
+                break;
         }
     }
 
@@ -418,7 +421,7 @@ public class SplashScreen extends AppCompatActivity {
         mUser = ApplicationUtilities.getUserByIdFromAccountManager(this,
                 accountManager.getUserData(account, AccountGeneral.USERDATA_USER_ID));
 
-        if(mUser !=null){
+        if(mUser!=null){
             /***************************************************************************************/
             boolean setPeriodicSync = false;
             ContentResolver.setMasterSyncAutomatically(true);
@@ -456,7 +459,7 @@ public class SplashScreen extends AppCompatActivity {
                 if(NetworkConnectionUtilities.isOnline(this)) {
                     findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
                     if(account!=null && !ApplicationUtilities.isSyncActive(account)){
-                        ApplicationUtilities.initSyncByAccount(this, account);
+                        ApplicationUtilities.initSyncByAccount(account);
                         mSynchronizationState = SYNC_RUNNING;
                     }
                 } else {
