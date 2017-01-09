@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -18,13 +19,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
-import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.SyncAdapter;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -32,6 +31,7 @@ import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.NetworkConnectionUtilities;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -177,6 +177,16 @@ public class SplashScreen extends AppCompatActivity {
                 finish();
             }
         });
+
+        findViewById(R.id.reTry_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
+                if (availableAccounts.length > 0) {
+                    checkInitialLoad(mAccountManager, availableAccounts[0]);
+                }
+            }
+        });
     }
 
     private void checkPermission() {
@@ -222,67 +232,84 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void activateInterface() {
-        findViewById(R.id.reTry_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.GONE);
-                if (availableAccounts.length > 0) {
-                    checkInitialLoad(mAccountManager, availableAccounts[0]);
-                }
-            }
-        });
-
         if (availableAccounts.length > 0) {
             if (mSynchronizationState == SYNC_ERROR) {
                 findViewById(R.id.error_loading_data_linearLayout).setVisibility(View.VISIBLE);
                 findViewById(R.id.progressContainer).setVisibility(View.GONE);
             } else {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        final StringBuilder authToken = new StringBuilder();
-                        final StringBuilder exceptionMessage = new StringBuilder();
-                        try {
-                            String aux = mAccountManager.blockingGetAuthToken(availableAccounts[0],
-                                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
-                            if (aux != null) {
-                                authToken.append(aux);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            exceptionMessage.append(e.getMessage());
-                        } finally {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (TextUtils.isEmpty(exceptionMessage)) {
-                                        if (TextUtils.isEmpty(authToken)) {
-                                            final Intent intent = new Intent(SplashScreen.this, AuthenticatorActivity.class);
-                                            intent.putExtra(AuthenticatorActivity.ARG_USER_ID, mAccountManager.getUserData(availableAccounts[0], AccountGeneral.USERDATA_USER_ID));
-                                            intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
-                                            intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
-                                            startActivityForResult(intent, 100);
-                                        } else {
-                                            checkInitialLoad(mAccountManager, availableAccounts[0]);
-                                        }
+                mAccountManager.getAuthToken(
+                        availableAccounts[0],           // Account retrieved using getAccountsByType()
+                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,            // Auth scope
+                        new Bundle(),                   // Authenticator-specific options
+                        this,                           // Your activity
+                        new AccountManagerCallback<Bundle>() { // Callback called when a token is successfully acquired
+                            @Override
+                            public void run(AccountManagerFuture<Bundle> future) {
+                                try {
+                                    Intent launch = (Intent) future.getResult().get(AccountManager.KEY_INTENT);
+                                    if (launch != null) {
+                                        startActivityForResult(launch, 100);
                                     } else {
-                                        findViewById(R.id.progressContainer).setVisibility(View.GONE);
-                                        new AlertDialog.Builder(SplashScreen.this)
-                                                .setTitle(R.string.error_initializing_app)
-                                                .setMessage(exceptionMessage)
-                                                .setPositiveButton(R.string.accept, null)
-                                                .setCancelable(false)
-                                                .show();
+                                        checkInitialLoad(mAccountManager, availableAccounts[0]);
                                     }
+                                } catch (OperationCanceledException | AuthenticatorException e) {
+                                    finish();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    new AlertDialog.Builder(SplashScreen.this)
+                                            .setTitle(R.string.error_initializing_app)
+                                            .setMessage(R.string.error_server_address_ioexception)
+                                            .setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    finish();
+                                                }
+                                            })
+                                            .setCancelable(false)
+                                            .show();
                                 }
-                            });
-                        }
-                    }
-                }.start();
+                            }
+                        },
+                        null);
             }
         } else {
-            addNewAccount(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+            mAccountManager.addAccount(
+                    BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+                    null,
+                    null,
+                    this,
+                    new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+                            try {
+                                Bundle bnd = future.getResult();
+                                if (bnd != null && bnd.getBundle(AccountManager.KEY_USERDATA)!=null) {
+                                    String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
+                                            .getString(AccountGeneral.USERDATA_USER_ID);
+                                    //mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this, userId);
+
+                                    //mostrar pantalla de bienvenida de la aplicacion
+                                    startActivityForResult(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class), 200);
+                                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                                    checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));
+                                }
+                            } catch(OperationCanceledException | AuthenticatorException e){
+                                if(finishActivityOnResultOperationCanceledException){
+                                    finish();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                new AlertDialog.Builder(SplashScreen.this)
+                                        .setTitle(R.string.error_initializing_app)
+                                        .setMessage(R.string.error_server_address_ioexception)
+                                        .setPositiveButton(R.string.accept, null)
+                                        .setCancelable(false)
+                                        .show();
+                            }
+                        }
+                    }, null);
             finishActivityOnResultOperationCanceledException = true;
         }
     }
@@ -305,7 +332,7 @@ public class SplashScreen extends AppCompatActivity {
                     // functionality that depends on this permission.
                     new AlertDialog.Builder(SplashScreen.this)
                             .setMessage("Imposible continuar con la aplicación, se necesita otorgar " +
-                                    "permisos de lectura de contactos para para poder acceder a la aplicación.")
+                                    "permisos de lectura de contactos para poder acceder a la aplicación.")
                             .setPositiveButton(R.string.close_app, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -349,40 +376,6 @@ public class SplashScreen extends AppCompatActivity {
         } else if (findViewById(R.id.parent_layout).getVisibility() == View.GONE) {
             findViewById(R.id.parent_layout).setVisibility(View.VISIBLE);
         }
-    }
-
-    /**
-     * Add new account to the account manager
-     * @param accountType
-     * @param authTokenType
-     */
-    private void addNewAccount(String accountType, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(accountType,
-                authTokenType, null, null, this, new AccountManagerCallback<Bundle>() {
-                    @Override
-                    public void run(AccountManagerFuture<Bundle> future) {
-                        try {
-                            Bundle bnd = future.getResult();
-                            if (bnd != null && bnd.getBundle(AccountManager.KEY_USERDATA)!=null) {
-                                String userId = bnd.getBundle(AccountManager.KEY_USERDATA)
-                                        .getString(AccountGeneral.USERDATA_USER_ID);
-                                mUser = ApplicationUtilities.getUserByIdFromAccountManager(SplashScreen.this, userId);
-
-                                //mostrar pantalla de bienvenida de la aplicacion
-                                startActivityForResult(new Intent(SplashScreen.this, WelcomeScreenSlideActivity.class), 200);
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-                                checkInitialLoad(mAccountManager, ApplicationUtilities.getAccountByIdFromAccountManager(SplashScreen.this, userId));
-                            }
-                        } catch(OperationCanceledException e){
-                            if(finishActivityOnResultOperationCanceledException){
-                                finish();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, null);
     }
 
     private void initApp(){

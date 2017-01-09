@@ -215,7 +215,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             protected Intent doInBackground(Context... context) {
 
                 Bundle data = new Bundle();
-                if(mUser !=null && mAccount!=null){//entra aqui cuando hay problemas con la clave del usuario
+                if(mUser !=null && mAccount!=null){//entra aqui cuando hay problemas con el auth_token del usuario
                     try {
                         //mUser.setUserPass(userPass);
                         mAccountManager.setPassword(mAccount, userPass);
@@ -247,6 +247,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         }else{
                             throw new AuthenticatorException(getString(R.string.user_session_token_null));
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        data.putString(KEY_ERROR_MESSAGE, getString(R.string.error_server_address_ioexception));
                     } catch (Exception e) {
                         e.printStackTrace();
                         data.putString(KEY_ERROR_MESSAGE, e.getMessage());
@@ -322,13 +325,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 waitPlease.dismiss();
                 Utils.unlockScreenOrientation(AuthenticatorActivity.this);
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    if (intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_already_registered))) {
+                    if (intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_already_registered))
+                            || intent.getStringExtra(KEY_ERROR_MESSAGE).equals(getString(R.string.user_not_authorized))) {
                         final Intent intent1 = new Intent(AuthenticatorActivity.this, RequestResetUserPasswordActivity.class);
                         if (mUser !=null && mAccount!=null) {
                             intent1.putExtra(RequestResetUserPasswordActivity.KEY_USER_NAME, mUser.getUserName());
                         }
                         new AlertDialog.Builder(AuthenticatorActivity.this)
-                                .setMessage(R.string.user_already_registered)
+                                .setMessage(intent.getStringExtra(KEY_ERROR_MESSAGE))
                                 .setNeutralButton(R.string.action_reset_password, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

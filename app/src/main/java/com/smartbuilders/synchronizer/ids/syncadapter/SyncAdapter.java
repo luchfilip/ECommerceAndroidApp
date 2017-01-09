@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.synchronizer.ids.data.SyncLogDB;
@@ -271,6 +272,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         								|| result.getString(result.getColumnIndex("exception_class")).equals(SocketTimeoutException.class.getName())
         								|| result.getString(result.getColumnIndex("exception_class")).equals(SocketException.class.getName())
         								|| result.getString(result.getColumnIndex("exception_class")).equals(IOException.class.getName())
+										|| result.getString(result.getColumnIndex("exception_class")).equals(UnknownHostException.class.getName())
                                         || result.getString(result.getColumnIndex("exception_class")).equals(org.ksoap2.SoapFault.class.getName()))){
 		        					throw new IOException(result.getString(result.getColumnIndex("error_message")));
 		        				} 

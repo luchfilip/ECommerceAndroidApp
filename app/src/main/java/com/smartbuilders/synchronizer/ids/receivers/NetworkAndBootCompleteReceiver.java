@@ -25,8 +25,7 @@ public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ConnectivityManager conn =  (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conn.getActiveNetworkInfo();
         if(networkInfo != null){
             try {
@@ -72,16 +71,24 @@ public class NetworkAndBootCompleteReceiver extends BroadcastReceiver {
             }
 
             //if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", false)
-                    && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_thumb_images", false)
-                    && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)){
+            try {
+                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_images_in_device", false)
+                        && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_thumb_images", false)
+                        && !Utils.isServiceRunning(context, LoadProductsThumbImage.class)) {
                     context.startService(new Intent(context, LoadProductsThumbImage.class));
                 }
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_original_images_in_device", false)
-                    && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_original_images", false)
-                    && !Utils.isServiceRunning(context, LoadProductsOriginalImage.class)){
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("save_original_images_in_device", false)
+                        && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("sync_original_images", false)
+                        && !Utils.isServiceRunning(context, LoadProductsOriginalImage.class)) {
                     context.startService(new Intent(context, LoadProductsOriginalImage.class));
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //}
         }
     }

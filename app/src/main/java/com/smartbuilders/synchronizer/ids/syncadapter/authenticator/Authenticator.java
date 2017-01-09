@@ -1,8 +1,5 @@
 package com.smartbuilders.synchronizer.ids.syncadapter.authenticator;
 
-import java.io.IOException;
-import java.net.SocketException;
-
 import com.smartbuilders.synchronizer.ids.AuthenticatorActivity;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGeneral;
@@ -25,8 +22,6 @@ import static com.smartbuilders.synchronizer.ids.syncadapter.model.AccountGenera
  */
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    private static final String TAG = Authenticator.class.getSimpleName();
-
     private final Context mContext;
 
     public Authenticator(Context context) {
@@ -40,6 +35,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
                              String[] requiredFeatures, Bundle options)
             throws NetworkErrorException {
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
         intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
@@ -84,8 +80,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
         String serverAddress 		= am.getUserData(account, AccountGeneral.USERDATA_SERVER_ADDRESS);
         String gcmRegistrationId 	= am.getUserData(account, AccountGeneral.USERDATA_GCM_REGISTRATION_ID);
         String userGroup 			= am.getUserData(account, AccountGeneral.USERDATA_USER_GROUP);
-        String syncPeriodicity 		= am.getUserData(account, AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY);
-        String syncNetworkMode 		= am.getUserData(account, AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE);
         String userId 				= am.getUserData(account, AccountGeneral.USERDATA_USER_ID);
         int userProfileId   	    = Integer.valueOf(am.getUserData(account, AccountGeneral.USERDATA_USER_PROFILE_ID));
         int serverUserId 		    = Integer.valueOf(am.getUserData(account, AccountGeneral.USERDATA_SERVER_USER_ID));
@@ -113,19 +107,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
                     if (user.getAuthToken()!=null) {
                         authToken = user.getAuthToken();
                         if(user.getGcmRegistrationId()!=null){
-                            gcmRegistrationId = user.getGcmRegistrationId();
+                            am.setUserData(account, AccountGeneral.USERDATA_GCM_REGISTRATION_ID, gcmRegistrationId);
+                            //gcmRegistrationId = user.getGcmRegistrationId();
                         }
                     }
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new NetworkErrorException(e.getMessage(), e.getCause());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    final Bundle result = new Bundle();
-                    result.putString(AccountManager.KEY_ERROR_MESSAGE, e.getMessage());
-                    return result;
                 }
             }
         }
@@ -136,30 +123,22 @@ public class Authenticator extends AbstractAccountAuthenticator {
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
             result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-            result.putString(AccountGeneral.USERDATA_SERVER_ADDRESS, serverAddress);
-            result.putString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, gcmRegistrationId);
-            result.putString(AccountGeneral.USERDATA_USER_GROUP, userGroup);
-            result.putString(AccountGeneral.USERDATA_AUTO_SYNC_PERIODICITY, syncPeriodicity);
-            result.putString(AccountGeneral.USERDATA_AUTO_SYNC_NETWORK_MODE, syncNetworkMode);
-            result.putString(AccountGeneral.USERDATA_USER_ID, userId);
-            result.putInt(AccountGeneral.USERDATA_USER_PROFILE_ID, userProfileId);
-            result.putLong(AccountGeneral.USERDATA_SERVER_USER_ID, serverUserId);
-            result.putString(AccountGeneral.USERDATA_USER_NAME, userName);
-            result.putString(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, String.valueOf(saveDBInExternalCard));
+            //result.putString(AccountGeneral.USERDATA_SERVER_ADDRESS, serverAddress);
+            //result.putString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, gcmRegistrationId);
+            //result.putString(AccountGeneral.USERDATA_USER_GROUP, userGroup);
+            //result.putString(AccountGeneral.USERDATA_USER_ID, userId);
+            //result.putInt(AccountGeneral.USERDATA_USER_PROFILE_ID, userProfileId);
+            //result.putLong(AccountGeneral.USERDATA_SERVER_USER_ID, serverUserId);
+            //result.putString(AccountGeneral.USERDATA_USER_NAME, userName);
+            //result.putString(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, String.valueOf(saveDBInExternalCard));
             return result;
         }
 
         // If we get here, then we couldn't access the user's password - so we
         // need to re-prompt them for their credentials. We do that by creating
         // an intent to display our AuthenticatorActivity.
-        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_USER_ID, userId);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
+        options.putString(AccountGeneral.USERDATA_USER_ID, userId);
+        return updateCredentials(response, account, authTokenType, options);
     }
 
     @Override
@@ -184,8 +163,15 @@ public class Authenticator extends AbstractAccountAuthenticator {
     public Bundle updateCredentials(AccountAuthenticatorResponse response,
                                     Account account, String authTokenType, Bundle options)
             throws NetworkErrorException {
-        // TODO Auto-generated method stub
-        return null;
+        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        intent.putExtra(AuthenticatorActivity.ARG_USER_ID, options.getString(AccountGeneral.USERDATA_USER_ID));
+        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, false);
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
     }
 
 }

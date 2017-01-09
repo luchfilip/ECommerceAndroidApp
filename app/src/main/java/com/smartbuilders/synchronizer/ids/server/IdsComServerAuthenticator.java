@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -59,7 +60,8 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
     						(exceptionClass.equals(ConnectException.class.getName())
 								|| exceptionClass.equals(SocketTimeoutException.class.getName())
 								|| exceptionClass.equals(SocketException.class.getName())
-								|| exceptionClass.equals(IOException.class.getName()))){
+								|| exceptionClass.equals(IOException.class.getName())
+                                || exceptionClass.equals(UnknownHostException.class.getName()))){
         					throw new IOException(response.getString(response.getColumnIndex("error_message")));
         				}
                         if(response.getString(response.getColumnIndex("error_message"))!=null){
@@ -106,11 +108,12 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
 					if(response.getString(response.getColumnIndex("error_message"))!=null){
 						String exceptionClass = response.getColumnIndex("exception_class")<0
 								? null : response.getString(response.getColumnIndex("exception_class"));
-        				if(exceptionClass!=null && 
+        				if(exceptionClass!=null &&
     						(exceptionClass.equals(ConnectException.class.getName())
 								|| exceptionClass.equals(SocketTimeoutException.class.getName())
 								|| exceptionClass.equals(SocketException.class.getName())
-								|| exceptionClass.equals(IOException.class.getName()))){
+								|| exceptionClass.equals(IOException.class.getName())
+                                || exceptionClass.equals(UnknownHostException.class.getName()))){
         					throw new IOException(response.getString(response.getColumnIndex("error_message")));
         				}
         				throw new Exception(response.getString(response.getColumnIndex("error_message")));
@@ -176,7 +179,8 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
                                 (exceptionClass.equals(ConnectException.class.getName())
                                         || exceptionClass.equals(SocketTimeoutException.class.getName())
                                         || exceptionClass.equals(SocketException.class.getName())
-                                        || exceptionClass.equals(IOException.class.getName()))){
+                                        || exceptionClass.equals(IOException.class.getName())
+                                        || exceptionClass.equals(UnknownHostException.class.getName()))){
                             throw new IOException(response.getString(response.getColumnIndex("error_message")));
                         }
                         if(response.getString(response.getColumnIndex("error_message"))!=null){
@@ -186,7 +190,9 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
                                 throw new Exception(ctx.getString(R.string.user_not_exist_in_server));
                             }else if(response.getString(response.getColumnIndex("error_message")).equals("DISABLED")){
                                 throw new Exception(ctx.getString(R.string.user_disabled));
-                            }
+                            }else if(response.getString(response.getColumnIndex("error_message")).equals("NOT_AUTHORIZED") ){
+								throw new Exception(ctx.getString(R.string.user_not_authorized));
+							}
                         }
                         throw new Exception(response.getString(response.getColumnIndex("error_message")));
                     }
@@ -222,7 +228,8 @@ public class IdsComServerAuthenticator implements ServerAuthenticate {
     						(exceptionClass.equals(ConnectException.class.getName())
 								|| exceptionClass.equals(SocketTimeoutException.class.getName())
 								|| exceptionClass.equals(SocketException.class.getName())
-								|| exceptionClass.equals(IOException.class.getName()))){
+								|| exceptionClass.equals(IOException.class.getName())
+                                || exceptionClass.equals(UnknownHostException.class.getName()))){
         					throw new IOException(response.getString(response.getColumnIndex("error_message")));
         				}
         				throw new Exception(response.getString(response.getColumnIndex("error_message")));

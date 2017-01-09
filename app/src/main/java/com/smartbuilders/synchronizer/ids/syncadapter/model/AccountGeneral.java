@@ -9,8 +9,6 @@ public class AccountGeneral {
     public static final String USERDATA_SERVER_ADDRESS = "userServerAddress";
     public static final String USERDATA_GCM_REGISTRATION_ID = "userGcmRegistrationId";
     public static final String USERDATA_USER_GROUP = "userGroup";
-    public static final String USERDATA_AUTO_SYNC_PERIODICITY = "userAutoSyncPeriodicity";
-    public static final String USERDATA_AUTO_SYNC_NETWORK_MODE = "userAutoSyncNetworkMode";
     public static final String USERDATA_USER_ID = "userId";
     public static final String USERDATA_USER_PROFILE_ID = "userProfileId";
     public static final String USERDATA_SERVER_USER_ID = "serverUserId";

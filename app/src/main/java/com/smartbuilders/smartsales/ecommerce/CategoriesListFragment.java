@@ -107,10 +107,12 @@ public class CategoriesListFragment extends Fragment {
                             } finally {
                                 rootView.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 rootView.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                                if (savedInstanceState==null && getActivity()!=null) {
-                                    ((Callback) getActivity()).onCategoriesListIsLoaded();
-                                } else {
-                                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                if (getActivity() != null) {
+                                    if (savedInstanceState == null) {
+                                        ((Callback) getActivity()).onCategoriesListIsLoaded();
+                                    } else {
+                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                    }
                                 }
                             }
                         }
