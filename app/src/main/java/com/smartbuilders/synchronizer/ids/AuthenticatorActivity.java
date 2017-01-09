@@ -174,6 +174,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         //el dispositivo sigue mostrando el numero de notificaciones pendientes en el icono.
         if (mUser==null) {
             BadgeUtils.clearBadge(this);
+        } else {
+            ApplicationUtilities.checkAppVersion(this, mUser);
         }
     }
 
