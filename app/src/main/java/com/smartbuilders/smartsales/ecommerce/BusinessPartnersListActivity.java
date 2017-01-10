@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.BusinessPartnersListAdapter;
@@ -25,6 +27,7 @@ import com.smartbuilders.smartsales.ecommerce.data.BusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.ArrayList;
 /**
  * Jesus Sarco, 03.06.2016
  */
@@ -137,31 +140,62 @@ public class BusinessPartnersListActivity extends AppCompatActivity
 
     @Override
     public void reloadBusinessPartnersList() {
-        if (mListView!=null) {
-            if (mUserBusinessPartnerDB != null) {
-                if (mListView.getAdapter() != null) {
-                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                            mUserBusinessPartnerDB.getUserBusinessPartners());
-                } else {
-                    mListView.setAdapter(new BusinessPartnersListAdapter(this, mUser,
-                            mUserBusinessPartnerDB.getUserBusinessPartners(), 0));
-                }
-            }else if(mBusinessPartnerDB != null){
-                if (mListView.getAdapter() != null) {
-                    ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(
-                            mBusinessPartnerDB.getBusinessPartners());
-                } else {
-                    try{
-                        mListView.setAdapter(new BusinessPartnersListAdapter(this, mUser,
-                                mBusinessPartnerDB.getBusinessPartners(),
-                                Utils.getAppCurrentBusinessPartnerId(this, mUser)));
-                    }catch (Exception e){
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        findViewById(R.id.main_layout).setVisibility(View.GONE);
+        findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+
+        final ArrayList<UserBusinessPartner> userBusinessPartners = new ArrayList<>();
+        final ArrayList<BusinessPartner> businessPartners = new ArrayList<>();
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    if (mListView!=null) {
+                        if (mUserBusinessPartnerDB != null) {
+                            userBusinessPartners.addAll(mUserBusinessPartnerDB.getUserBusinessPartners());
+                        }else if(mBusinessPartnerDB != null){
+                            businessPartners.addAll(mBusinessPartnerDB.getBusinessPartners());
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (mUserBusinessPartnerDB != null) {
+                                    if (mListView.getAdapter() != null) {
+                                        ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(userBusinessPartners);
+                                    } else {
+                                        mListView.setAdapter(new BusinessPartnersListAdapter(BusinessPartnersListActivity.this,
+                                                mUser, userBusinessPartners, 0));
+                                    }
+                                }else if(mBusinessPartnerDB != null){
+                                    if (mListView.getAdapter() != null) {
+                                        ((BusinessPartnersListAdapter) mListView.getAdapter()).setData(businessPartners);
+                                    } else {
+                                        try{
+                                            mListView.setAdapter(new BusinessPartnersListAdapter(
+                                                    BusinessPartnersListActivity.this, mUser, businessPartners,
+                                                    Utils.getAppCurrentBusinessPartnerId(BusinessPartnersListActivity.this, mUser)));
+                                        }catch (Exception e){
+                                            Toast.makeText(BusinessPartnersListActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                onListIsLoaded();
+                            }
+                        }
+                    });
                 }
             }
-        }
-        onListIsLoaded();
+        }.start();
     }
 
     private void showDialogCreateBusinessPartner(User user) {

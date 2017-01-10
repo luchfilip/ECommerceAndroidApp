@@ -47,6 +47,7 @@ import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
 import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
+import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
 import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
 import com.smartbuilders.smartsales.salesforcesystem.SalesForceSystemMainActivity;
@@ -885,7 +886,7 @@ public class Utils {
                     int count = (new OrderLineDB(context, user)).getActiveWishListLinesNumber();
                     if (count > 0) {
                         ((TextView) navigationView.getMenu().findItem(R.id.nav_wish_list).getActionView())
-                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                                .setText(count < 1000 ? String.valueOf(count) : "+999");
                     }
                 } catch (NullPointerException e) {
                     // do nothing
@@ -896,7 +897,7 @@ public class Utils {
                     int count = (new RecommendedProductDB(context, user)).getRecommendedProductsCount();
                     if (count > 0) {
                         ((TextView) navigationView.getMenu().findItem(R.id.nav_recommended_products_list).getActionView())
-                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                                .setText(count < 1000 ? String.valueOf(count) : "+999");
                     }
                 } catch (Exception e) {
                     // do nothing
@@ -907,7 +908,23 @@ public class Utils {
                     int count = (new NotificationHistoryDB(context, user)).getCountByStatus(NotificationHistory.STATUS_NOT_SEEN);
                     if (count > 0) {
                         ((TextView) navigationView.getMenu().findItem(R.id.nav_notifications_history_list).getActionView())
-                                .setText(count < 100 ? String.valueOf(count) : "+99");
+                                .setText(count < 1000 ? String.valueOf(count) : "+999");
+                    }
+                } catch (Exception e) {
+                    // do nothing
+                }
+            }
+            if (navigationView.getMenu().findItem(R.id.nav_business_partners)!=null) {
+                try {
+                    int count = 0;
+                    if (user.getUserProfileId()== UserProfile.SALES_MAN_PROFILE_ID) {
+                        count = (new BusinessPartnerDB(context, user)).getBusinessPartnersCount();
+                    } else if (user.getUserProfileId()== UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                        count = (new UserBusinessPartnerDB(context, user)).getUserBusinessPartnersCount();
+                    }
+                    if (count > 0) {
+                        ((TextView) navigationView.getMenu().findItem(R.id.nav_business_partners).getActionView())
+                                .setText(String.valueOf(count));
                     }
                 } catch (Exception e) {
                     // do nothing

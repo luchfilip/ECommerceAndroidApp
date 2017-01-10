@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
@@ -30,14 +31,13 @@ public class BusinessPartnerDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select bp.BUSINESS_PARTNER_ID, bp.NAME, bp.COMMERCIAL_NAME, bp.TAX_ID, bp.ADDRESS, " +
-                        " bp.CONTACT_PERSON, bp.EMAIL_ADDRESS, bp.PHONE_NUMBER, bp.INTERNAL_CODE " +
+                    "select bp.BUSINESS_PARTNER_ID, bp.NAME, bp.COMMERCIAL_NAME, bp.TAX_ID, bp.INTERNAL_CODE " +
                     " from BUSINESS_PARTNER bp " +
-                        " inner join SALES_REP SR ON SR.USER_ID = ? AND SR.IS_ACTIVE = ? " +
-                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id and ubp.user_id = SR.sales_rep_id and ubp.is_active = ? " +
-                    " where bp.IS_ACTIVE = ? " +
-                    " order by bp.BUSINESS_PARTNER_ID desc",
-                    new String[]{String.valueOf(mUser.getServerUserId()), "Y", "Y", "Y"}, null);
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id " +
+                            " and ubp.user_id in (SELECT SALES_REP_ID FROM SALES_REP WHERE USER_ID = ? AND IS_ACTIVE = 'Y') and ubp.is_active = 'Y' " +
+                    " where bp.IS_ACTIVE = 'Y' " +
+                    " order by bp.NAME asc",
+                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
             if(c!=null){
                 while(c.moveToNext()){
                     BusinessPartner businessPartner = new BusinessPartner();
@@ -45,11 +45,7 @@ public class BusinessPartnerDB {
                     businessPartner.setName(c.getString(1));
                     businessPartner.setCommercialName(c.getString(2));
                     businessPartner.setTaxId(c.getString(3));
-                    businessPartner.setAddress(c.getString(4));
-                    businessPartner.setContactPerson(c.getString(5));
-                    businessPartner.setEmailAddress(c.getString(6));
-                    businessPartner.setPhoneNumber(c.getString(7));
-                    businessPartner.setInternalCode(c.getString(8));
+                    businessPartner.setInternalCode(c.getString(4));
                     activeBusinessPartners.add(businessPartner);
                 }
             }
@@ -64,12 +60,47 @@ public class BusinessPartnerDB {
                 }
             }
         }
-        BusinessPartnerAddressDB businessPartnerAddressDB = new BusinessPartnerAddressDB(mContext, mUser);
-        for (BusinessPartner businessPartner : activeBusinessPartners) {
-            businessPartner.setAddresses(businessPartnerAddressDB
-                    .getBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            BusinessPartnerAddressDB businessPartnerAddressDB = new BusinessPartnerAddressDB(mContext, mUser);
+            for (BusinessPartner businessPartner : activeBusinessPartners) {
+                businessPartner.setAddresses(businessPartnerAddressDB
+                        .getBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+            }
         }
         return activeBusinessPartners;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getBusinessPartnersCount() {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                    "select count(bp.BUSINESS_PARTNER_ID) " +
+                    " from BUSINESS_PARTNER bp " +
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id " +
+                            " and ubp.user_id in (SELECT SALES_REP_ID FROM SALES_REP WHERE USER_ID = ? AND IS_ACTIVE = 'Y') and ubp.is_active = 'Y' " +
+                    " where bp.IS_ACTIVE = 'Y'",
+                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
+            if(c!=null && c.moveToNext()){
+                return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
     }
 
     public BusinessPartner getBusinessPartnerById(int businessPartnerId) {
@@ -98,8 +129,10 @@ public class BusinessPartnerDB {
                 businessPartner.setPhoneNumber(c.getString(6));
                 businessPartner.setInternalCode(c.getString(7));
                 c.close();
-                businessPartner.setAddresses((new BusinessPartnerAddressDB(mContext, mUser))
-                        .getBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    businessPartner.setAddresses((new BusinessPartnerAddressDB(mContext, mUser))
+                            .getBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+                }
                 return businessPartner;
             }
         } catch (Exception e) {

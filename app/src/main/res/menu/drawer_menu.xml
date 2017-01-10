@@ -36,7 +36,8 @@
         <item
             android:id="@+id/nav_business_partners"
             android:icon="@drawable/ic_supervisor_account_black_24dp"
-            android:title="@string/business_partners" />
+            android:title="@string/business_partners"
+            app:actionLayout="@layout/unread_items"/>
     </group>
     <item android:title="@string/my_orders">
         <menu>

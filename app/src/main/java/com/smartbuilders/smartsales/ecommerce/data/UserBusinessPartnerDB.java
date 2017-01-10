@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.data;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartnerAddress;
 import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -32,8 +33,7 @@ public class UserBusinessPartnerDB {
             c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                     .build(), null,
-                    "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID, ADDRESS, " +
-                        " CONTACT_PERSON, EMAIL_ADDRESS, PHONE_NUMBER " +
+                    "select USER_BUSINESS_PARTNER_ID, NAME, COMMERCIAL_NAME, TAX_ID " +
                     " from USER_BUSINESS_PARTNER " +
                     " where USER_ID = ? AND IS_ACTIVE = ? " +
                     " order by USER_BUSINESS_PARTNER_ID desc",
@@ -45,10 +45,6 @@ public class UserBusinessPartnerDB {
                     businessPartner.setName(c.getString(1));
                     businessPartner.setCommercialName(c.getString(2));
                     businessPartner.setTaxId(c.getString(3));
-                    businessPartner.setAddress(c.getString(4));
-                    businessPartner.setContactPerson(c.getString(5));
-                    businessPartner.setEmailAddress(c.getString(6));
-                    businessPartner.setPhoneNumber(c.getString(7));
                     businessPartners.add(businessPartner);
                 }
             }
@@ -63,12 +59,43 @@ public class UserBusinessPartnerDB {
                 }
             }
         }
-        UserBusinessPartnerAddressDB userBusinessPartnerAddressDB = new UserBusinessPartnerAddressDB(mContext, mUser);
-        for (UserBusinessPartner businessPartner : businessPartners) {
-            businessPartner.setAddresses(userBusinessPartnerAddressDB
-                    .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+        if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+            UserBusinessPartnerAddressDB userBusinessPartnerAddressDB = new UserBusinessPartnerAddressDB(mContext, mUser);
+            for (UserBusinessPartner businessPartner : businessPartners) {
+                businessPartner.setAddresses(userBusinessPartnerAddressDB
+                        .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+            }
         }
         return businessPartners;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getUserBusinessPartnersCount() {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                    "select count(USER_BUSINESS_PARTNER_ID) from USER_BUSINESS_PARTNER where USER_ID=? AND IS_ACTIVE='Y'",
+                    new String[]{String.valueOf(mUser.getServerUserId())}, null);
+            if(c!=null && c.moveToNext()){
+                 return c.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
     }
 
     public String registerUserBusinessPartner(UserBusinessPartner businessPartner){
@@ -188,8 +215,10 @@ public class UserBusinessPartnerDB {
                 businessPartner.setEmailAddress(c.getString(5));
                 businessPartner.setPhoneNumber(c.getString(6));
                 c.close();
-                businessPartner.setAddresses((new UserBusinessPartnerAddressDB(mContext, mUser))
-                        .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+                if (BuildConfig.IS_SALES_FORCE_SYSTEM) {
+                    businessPartner.setAddresses((new UserBusinessPartnerAddressDB(mContext, mUser))
+                            .getUserBusinessPartnerAddresses(businessPartner.getId(), BusinessPartnerAddress.TYPE_DELIVERY_ADDRESS));
+                }
                 return businessPartner;
             }
         } catch (Exception e) {

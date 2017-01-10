@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.smartbuilders.smartsales.ecommerce.model.UserBusinessPartner;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.model.UserProfile;
 import com.smartbuilders.smartsales.ecommerce.adapters.BusinessPartnersListAdapter;
@@ -22,6 +23,7 @@ import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.BusinessPartner;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -257,31 +259,70 @@ public class BusinessPartnersListFragment extends Fragment {
         }else{
             if(mListView!=null && mBusinessPartnersListAdapter!=null
                     && (mUserBusinessPartnerDB!=null || mBusinessPartnerDB!=null)){
-                int oldListSize = mBusinessPartnersListAdapter.getCount();
-                if(mUserBusinessPartnerDB!=null) {
-                    mBusinessPartnersListAdapter.setData(mUserBusinessPartnerDB.getUserBusinessPartners());
-                }else if(mBusinessPartnerDB!=null) {
-                    try {
-                        mBusinessPartnersListAdapter.setAppCurrentBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
-                    } catch (Exception e) {
-                        //do nothing
-                    }
-                    mBusinessPartnersListAdapter.setData(mBusinessPartnerDB.getBusinessPartners());
-                }
+                final ArrayList<UserBusinessPartner> userBusinessPartners = new ArrayList<>();
+                final ArrayList<BusinessPartner> businessPartners = new ArrayList<>();
+                if (getActivity()!=null) {
+                    getActivity().findViewById(R.id.main_layout).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.progressContainer).setVisibility(View.VISIBLE);
+                    final int oldListSize = mBusinessPartnersListAdapter.getCount();
 
-                if(mBusinessPartnersListAdapter.getCount()>0 && getActivity()!=null){
-                    if(mBusinessPartnersListAdapter.getCount()!=oldListSize){
-                        ((Callback) getActivity()).onListIsLoaded();
-                    }else{
-                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
-                    }
-                    mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
-                        mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
-                }else{
-                    ((Callback) getActivity()).onListIsLoaded();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                if(mUserBusinessPartnerDB!=null) {
+                                    userBusinessPartners.addAll(mUserBusinessPartnerDB.getUserBusinessPartners());
+                                }else if(mBusinessPartnerDB!=null) {
+                                    businessPartners.addAll(mBusinessPartnerDB.getBusinessPartners());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (getActivity()!=null) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                if(mUserBusinessPartnerDB!=null) {
+                                                    mBusinessPartnersListAdapter.setData(userBusinessPartners);
+                                                }else if(mBusinessPartnerDB!=null) {
+                                                    try {
+                                                        mBusinessPartnersListAdapter.setAppCurrentBusinessPartnerId(Utils.getAppCurrentBusinessPartnerId(getContext(), mUser));
+                                                    } catch (Exception e) {
+                                                        //do nothing
+                                                    }
+                                                    mBusinessPartnersListAdapter.setData(businessPartners);
+                                                }
+                                                if(mBusinessPartnersListAdapter.getCount()>0 ){
+                                                    if(mBusinessPartnersListAdapter.getCount()!=oldListSize){
+                                                        ((Callback) getActivity()).onListIsLoaded();
+                                                    }else{
+                                                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex);
+                                                    }
+                                                    mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                                                            mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                                                }else{
+                                                    ((Callback) getActivity()).onListIsLoaded();
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            } finally {
+                                                if (getActivity()!=null) {
+                                                    getActivity().findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                                    getActivity().findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }.start();
                 }
             } else {
-                ((Callback) getActivity()).onListIsLoaded();
+                if (getActivity()!=null) {
+                    ((Callback) getActivity()).onListIsLoaded();
+                }
             }
         }
         super.onStart();

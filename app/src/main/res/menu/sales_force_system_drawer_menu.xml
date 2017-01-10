@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/menu_home">
         <item
@@ -12,7 +13,8 @@
         <item
             android:id="@+id/nav_business_partners"
             android:icon="@drawable/ic_supervisor_account_black_24dp"
-            android:title="@string/business_partners" />
+            android:title="@string/business_partners"
+            app:actionLayout="@layout/unread_items"/>
     </group>
     <item android:title="@string/my_orders">
         <menu>
