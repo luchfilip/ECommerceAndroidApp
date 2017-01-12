@@ -1133,36 +1133,8 @@ public class Utils {
                 + File.separator + user.getUserName() + "/images/userCompany/";
     }
 
-    //public static void setCurrentUser(Context context, User user) {
-    //    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-    //    editor.putString(AccountGeneral.USERDATA_USER_ID, user.getUserId());
-    //    editor.putInt(AccountGeneral.USERDATA_USER_PROFILE_ID, user.getUserProfileId());
-    //    editor.putInt(AccountGeneral.USERDATA_SERVER_USER_ID, user.getServerUserId());
-    //    editor.putString(AccountGeneral.USERDATA_USER_NAME, user.getUserName());
-    //    editor.putString("password", user.getUserPass());
-    //    editor.putString(AccountGeneral.USERDATA_SERVER_ADDRESS, user.getServerAddress());
-    //    editor.putString(AccountGeneral.USERDATA_USER_GROUP, user.getUserGroup());
-    //    editor.putString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, user.getGcmRegistrationId());
-    //    editor.putBoolean(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, user.isSaveDBInExternalCard());
-    //    editor.putString("auth_token", user.getAuthToken());
-    //    editor.apply();
-    //}
-
     public static User getCurrentUser(Context context) {
         try {
-            //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            //if (sharedPreferences.contains(AccountGeneral.USERDATA_USER_ID)) {
-            //    User user = new User(sharedPreferences.getString(AccountGeneral.USERDATA_USER_ID, null));
-            //    user.setUserProfileId(sharedPreferences.getInt(AccountGeneral.USERDATA_USER_PROFILE_ID, 0));
-            //    user.setServerUserId(sharedPreferences.getInt(AccountGeneral.USERDATA_SERVER_USER_ID, 0));
-            //    user.setUserName(sharedPreferences.getString(AccountGeneral.USERDATA_USER_NAME, null));
-            //    user.setUserPass(sharedPreferences.getString("password", null));
-            //    user.setServerAddress(sharedPreferences.getString(AccountGeneral.USERDATA_SERVER_ADDRESS, null));
-            //    user.setUserGroup(sharedPreferences.getString(AccountGeneral.USERDATA_USER_GROUP, null));
-            //    user.setGcmRegistrationId(sharedPreferences.getString(AccountGeneral.USERDATA_GCM_REGISTRATION_ID, null));
-            //    user.setSaveDBInExternalCard(sharedPreferences.getBoolean(AccountGeneral.USERDATA_SAVE_DB_IN_EXTERNAL_CARD, false));
-            //    user.setAuthToken(sharedPreferences.getString("auth_token", null));
-            //}
             AccountManager accountManager = AccountManager.get(context);
             final Account availableAccounts[] = accountManager
                     .getAccountsByType(BuildConfig.AUTHENTICATOR_ACCOUNT_TYPE);

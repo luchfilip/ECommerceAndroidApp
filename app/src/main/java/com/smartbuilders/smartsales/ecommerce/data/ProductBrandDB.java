@@ -38,7 +38,7 @@ public class ProductBrandDB {
                             " INNER JOIN SUBCATEGORY S ON S.SUBCATEGORY_ID = P.SUBCATEGORY_ID AND S.IS_ACTIVE = 'Y' " +
                             " INNER JOIN CATEGORY C ON C.CATEGORY_ID = S.CATEGORY_ID AND C.IS_ACTIVE = 'Y' " +
                             (mShowProductsWithoutAvailability ? ""
-                                    : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID=" + Utils.getAppCurrentBusinessPartnerId(mContext, mUser) + " AND IS_ACTIVE='Y') " +
+                                    : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = COALESCE((SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID=" + Utils.getAppCurrentBusinessPartnerId(mContext, mUser) + " AND IS_ACTIVE='Y'),0) " +
                                     " AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0 ") +
                             " WHERE B.IS_ACTIVE = 'Y' " +
                             " GROUP BY B.BRAND_ID, B.NAME, B.DESCRIPTION " +

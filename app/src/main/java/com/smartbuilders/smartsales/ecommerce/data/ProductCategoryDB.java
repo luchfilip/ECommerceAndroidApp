@@ -40,7 +40,7 @@ public class ProductCategoryDB {
                         " INNER JOIN PRODUCT P ON P.SUBCATEGORY_ID = S.SUBCATEGORY_ID AND P.IS_ACTIVE = 'Y' " +
                         " INNER JOIN BRAND B ON B.BRAND_ID = P.BRAND_ID AND B.IS_ACTIVE = 'Y' " +
                         (mShowProductsWithoutAvailability ? ""
-                                : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = (SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID="+Utils.getAppCurrentBusinessPartnerId(mContext, mUser)+" AND IS_ACTIVE='Y') " +
+                                : " INNER JOIN PRODUCT_PRICE_AVAILABILITY PA ON PA.PRICE_LIST_ID = COALESCE((SELECT PRICE_LIST_ID FROM BUSINESS_PARTNER WHERE BUSINESS_PARTNER_ID="+Utils.getAppCurrentBusinessPartnerId(mContext, mUser)+" AND IS_ACTIVE='Y'),0) " +
                                     " AND PA.PRODUCT_ID = P.PRODUCT_ID AND PA.IS_ACTIVE = 'Y' AND PA.AVAILABILITY > 0") +
                     " WHERE C.IS_ACTIVE = 'Y' " +
                     " GROUP BY C.CATEGORY_ID, C.NAME, C.DESCRIPTION ",
