@@ -349,7 +349,7 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                                             ? ((List<SoapPrimitive>) result).get(0).toString() : null), Base64.GZIP)));
                         } catch (IOException e) {
                             //Seguramente entre aqui cuando no hay nada que sincronizar
-                            throw new IOException("IOException, data: " + String.valueOf(((List<SoapPrimitive>) result).get(0) != null
+                            throw new IOException("IOException, tableName: "+tableName+", data: " + String.valueOf(((List<SoapPrimitive>) result).get(0) != null
                                     ? ((List<SoapPrimitive>) result).get(0).toString() : null));
                         }
                         Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
