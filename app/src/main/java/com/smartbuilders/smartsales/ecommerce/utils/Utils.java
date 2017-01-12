@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
+import com.smartbuilders.smartsales.ecommerce.QueriesActivity;
 import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
 import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
@@ -1000,7 +1001,7 @@ public class Utils {
                 activity.startActivity(new Intent(activity, CompanyActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
-            } else if (itemId == R.id.nav_conctac_us) {
+            } else if (itemId == R.id.nav_contact_us) {
                 activity.startActivity(new Intent(activity, ContactUsActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
 
@@ -1029,6 +1030,9 @@ public class Utils {
             }else if (itemId == R.id.nav_notifications_history_list) {
                 activity.startActivity(new Intent(activity, NotificationsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            }else if (itemId == R.id.nav_queries) {
+                activity.startActivity(new Intent(activity, QueriesActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1055,6 +1059,10 @@ public class Utils {
             navigationView.inflateMenu(R.menu.drawer_menu);
             if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
                 navigationView.getMenu().findItem(R.id.nav_my_company).setVisible(false);
+            }
+            if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                navigationView.getMenu().findItem(R.id.nav_queries)
+                        .setVisible(Parameter.showQueriesMenu(activity, user));
             }
             if (!Parameter.isActiveOrderTracking(activity, user) && navigationView.getMenu()!=null
                     && navigationView.getMenu().findItem(R.id.nav_orders_tracking)!=null) {

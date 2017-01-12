@@ -364,6 +364,21 @@
             android:label="@string/data_sync" />
         <activity
             android:name=".BusinessPartnerDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".QueriesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShoppingCartsListQueryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrdersListQueryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShoppingSalesListQueryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SalesOrdersListQueryActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

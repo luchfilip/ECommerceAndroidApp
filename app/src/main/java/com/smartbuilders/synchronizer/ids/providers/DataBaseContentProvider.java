@@ -22,7 +22,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
@@ -47,12 +46,10 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
     public static final Uri INTERNAL_DB_URI = Uri.withAppendedPath(CONTENT_URI, "internalDB");
     public static final Uri REMOTE_DB_URI = Uri.withAppendedPath(CONTENT_URI, "remoteDB");
     public static final Uri DROP_USER_DB_URI = Uri.withAppendedPath(CONTENT_URI, "dropUserDB");
-    public static final Uri INSERT_UPDATE_DATA_FROM_WS_URI = Uri.withAppendedPath(CONTENT_URI, "insertUpdateDataFromWS");
 
     private static final int INTERNAL_DB = 1;
     private static final int REMOTE_DB = 2;
     private static final int DROP_USER_DB = 3;
-    private static final int INSERT_UPDATE_DATA_FROM_WS = 4;
 
     private static final UriMatcher uriMatcher;
 
@@ -67,7 +64,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
         uriMatcher.addURI(AUTHORITY, "internalDB", INTERNAL_DB);
         uriMatcher.addURI(AUTHORITY, "remoteDB", REMOTE_DB);
         uriMatcher.addURI(AUTHORITY, "dropUserDB", DROP_USER_DB);
-        uriMatcher.addURI(AUTHORITY, "insertUpdateDataFromWS", INSERT_UPDATE_DATA_FROM_WS);
     }
 
     @Override
@@ -174,9 +170,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 	    			throw new IllegalArgumentException("Incomplete URI " + uri);
 	    		}
 	        break;
-			case INSERT_UPDATE_DATA_FROM_WS:
-				insertUpdateDataFromWS(uri);
-				break;
 	        default:
 	        	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -265,29 +258,6 @@ public class DataBaseContentProvider extends ContentProvider implements OnAccoun
 			}
 		}
 		return rowsAffected;
-	}
-
-	/**
-	 *
-	 * @param uri
-	 * @throws SQLException
-	 */
-	private void insertUpdateDataFromWS(Uri uri) throws SQLException {
-        try {
-            User user = ApplicationUtilities.getUserByIdFromAccountManager(getContext(), uri.getQueryParameter(KEY_USER_ID));
-            if (user==null) {
-                if (mIDSWriteableDB == null) {
-                    mIDSWriteableDB = dbHelper.getWritableDatabase();
-                }
-            } else if (mUserWriteableDB == null) {
-                mUserWriteableDB = new DatabaseHelper(getContext(), user).getReadableDatabase();
-            }
-            DataBaseUtilities.insertDataFromWSResultData((user==null ? mIDSWriteableDB : mUserWriteableDB),
-                    uri.getQueryParameter(KEY_DATA_FROM_WS), uri.getQueryParameter(KEY_DATA_FROM_WS_VALID_SEQS_IDS),
-                    uri.getQueryParameter(KEY_DATA_FROM_WS_TABLE_NAME));
-        } catch (Exception e) {
-            throw new SQLiteException(e.getMessage());
-        }
 	}
 
 }

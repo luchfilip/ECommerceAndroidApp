@@ -293,4 +293,14 @@ public class Parameter {
     public static boolean showProductsWithoutAvailability(Context context, User user) {
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_PRODUCTS_WITHOUT_AVAILABILITY, false);
     }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean showQueriesMenu(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_QUERIES_MENU, false);
+    }
 }

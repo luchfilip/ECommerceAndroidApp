@@ -188,117 +188,117 @@ public class DataBaseUtilities {
         return string.trim().split("\\s+")[0]; //add " " to string to be sure there is something to split
     }
 
-    /**
-     *
-     * @param db
-     * @param data
-     * @param validSequenceIds
-     * @param tableName
-     * @throws Exception
-     */
-    public static void insertDataFromWSResultData(SQLiteDatabase db, String data, String validSequenceIds,
-                                                  String tableName) throws Exception {
-        int counterEntireCompressedData = 0;
-        int counter;
-        JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
-        Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-        if(keys.hasNext()){
-            int columnCount = 0;
-            JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
-                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
-            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
-            try{
-                counter = 0;
-                Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
-                while(keysTemp.hasNext()){
-                    if(columnCount==0){
-                        insertSentence.append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
-                    } else {
-                        insertSentence.append(", ").append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
-                    }
-                    columnCount++;
-                }
-                insertSentence.append(") VALUES (");
-                for (int i = 0; i<columnCount; i++) {
-                    insertSentence.append((i==0) ? "?" : ", ?");
-                }
-                insertSentence.append(")");
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-            SQLiteStatement statement = null;
-            try {
-                statement = db.compileStatement(insertSentence.toString());
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-                    db.beginTransactionNonExclusive();
-                } else {
-                    db.beginTransaction();
-                }
-                counter = 1;
-                Iterator<?> keysTemp;
-                String key;
-                //Se itera a traves de la data
-                while (counter <= jsonArray2.length()) {
-                    if (++counter >= jsonArray2.length()) {
-                        if (keys.hasNext()) {
-                            counter = 0;
-                            jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
-                                    .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-                            if (jsonArray2.length() < 1) {
-                                break;
-                            }
-                        } else {
-                            if (++counterEntireCompressedData >= jsonArray.length()) {
-                                break;
-                            } else {
-                                counter = 0;
-                                keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
-                                jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
-                                        .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
-                                if (jsonArray2.length() < 1) {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    //Se prepara la data que se insertara
-                    statement.clearBindings();
-                    keysTemp = jsonArray2.getJSONObject(counter).keys();
-                    while(keysTemp.hasNext()){
-                        key = (String) keysTemp.next();
-                        statement.bindString(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
-                    }
-                    statement.executeInsert();
-                    //Fin de preparacion de la data que se insertara
-                }
-                //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
-                db.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
-                        : ("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (" +
-                                unGzip(Base64.decode(validSequenceIds, Base64.GZIP)) + ")"),
-                        null);
-                db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw e;
-            } finally {
-                if(statement!=null) {
-                    try {
-                        statement.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(db!=null) {
-                    try {
-                        db.endTransaction();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
+    ///**
+    // *
+    // * @param sqLiteDatabase
+    // * @param data
+    // * @param validSequenceIds
+    // * @param tableName
+    // * @throws Exception
+    // */
+    //public static void insertDataFromWSResultData(SQLiteDatabase sqLiteDatabase, String data, String validSequenceIds,
+    //                                              String tableName) throws Exception {
+    //    int counterEntireCompressedData = 0;
+    //    int counter;
+    //    JSONArray jsonArray = new JSONArray(unGzip(Base64.decode(data, Base64.GZIP)));
+    //    Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
+    //    if(keys.hasNext()){
+    //        int columnCount = 0;
+    //        JSONArray jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+    //                .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+    //        StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
+    //        try{
+    //            counter = 0;
+    //            Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
+    //            while(keysTemp.hasNext()){
+    //                if(columnCount==0){
+    //                    insertSentence.append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+    //                } else {
+    //                    insertSentence.append(", ").append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+    //                }
+    //                columnCount++;
+    //            }
+    //            insertSentence.append(") VALUES (");
+    //            for (int i = 0; i<columnCount; i++) {
+    //                insertSentence.append((i==0) ? "?" : ", ?");
+    //            }
+    //            insertSentence.append(")");
+    //        } catch (Exception e){
+    //            e.printStackTrace();
+    //        }
+    //
+    //        SQLiteStatement statement = null;
+    //        try {
+    //            statement = sqLiteDatabase.compileStatement(insertSentence.toString());
+    //            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+    //                sqLiteDatabase.beginTransactionNonExclusive();
+    //            } else {
+    //                sqLiteDatabase.beginTransaction();
+    //            }
+    //            counter = 1;
+    //            Iterator<?> keysTemp;
+    //            String key;
+    //            //Se itera a traves de la data
+    //            while (counter <= jsonArray2.length()) {
+    //                if (++counter >= jsonArray2.length()) {
+    //                    if (keys.hasNext()) {
+    //                        counter = 0;
+    //                        jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+    //                                .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+    //                        if (jsonArray2.length() < 1) {
+    //                            break;
+    //                        }
+    //                    } else {
+    //                        if (++counterEntireCompressedData >= jsonArray.length()) {
+    //                            break;
+    //                        } else {
+    //                            counter = 0;
+    //                            keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
+    //                            jsonArray2 = new JSONArray(unGzip(Base64.decode(jsonArray
+    //                                    .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+    //                            if (jsonArray2.length() < 1) {
+    //                                break;
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //                //Se prepara la data que se insertara
+    //                statement.clearBindings();
+    //                keysTemp = jsonArray2.getJSONObject(counter).keys();
+    //                while(keysTemp.hasNext()){
+    //                    key = (String) keysTemp.next();
+    //                    statement.bindString(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
+    //                }
+    //                statement.executeInsert();
+    //                //Fin de preparacion de la data que se insertara
+    //            }
+    //            //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
+    //            sqLiteDatabase.delete(tableName, TextUtils.isEmpty(validSequenceIds) ? null
+    //                    : ("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (" +
+    //                            unGzip(Base64.decode(validSequenceIds, Base64.GZIP)) + ")"),
+    //                    null);
+    //            sqLiteDatabase.setTransactionSuccessful();
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //            throw e;
+    //        } finally {
+    //            if(statement!=null) {
+    //                try {
+    //                    statement.close();
+    //                } catch (Exception e) {
+    //                    e.printStackTrace();
+    //                }
+    //            }
+    //            if(sqLiteDatabase!=null) {
+    //                try {
+    //                    sqLiteDatabase.endTransaction();
+    //                } catch (Exception e) {
+    //                    e.printStackTrace();
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     /**
      *

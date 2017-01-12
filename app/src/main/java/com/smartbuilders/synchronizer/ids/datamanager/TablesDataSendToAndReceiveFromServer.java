@@ -1,26 +1,34 @@
 package com.smartbuilders.synchronizer.ids.datamanager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.ksoap2.serialization.SoapPrimitive;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.net.Uri;
+import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.smartbuilders.smartsales.ecommerce.data.SyncDataRealTimeWithServerDB;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
+import com.smartbuilders.synchronizer.ids.database.DatabaseHelper;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
 import com.smartbuilders.synchronizer.ids.utils.DataBaseUtilities;
 import com.smartbuilders.smartsales.ecommerce.session.Parameter;
+
+import net.iharder.Base64;
 
 /**
  *
@@ -45,6 +53,8 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private boolean mIsInitialLoad;
     private int mTransmissionWay;
     private int mCurrentAppVersionCode;
+    private static SQLiteDatabase mUserWriteableDB;
+    private static SQLiteDatabase mIDSWriteableDB;
 
     public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject,
                                                 int transmissionWay) throws Exception{
@@ -324,41 +334,136 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                     mConnectionTimeOut);
             Object result = a.getWSResponse();
             if (result instanceof List<?>) {
+                SQLiteDatabase sqLiteDatabase = user==null
+                        ? new DatabaseHelper(context).getWritableDatabase()
+                        : new DatabaseHelper(context, user).getWritableDatabase();
                 try {
                     try {
-                        Uri uri =  DataBaseContentProvider.INSERT_UPDATE_DATA_FROM_WS_URI;
-                        if (user!=null) {
-                            uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, user.getUserId()).build();
+                        /**********************************************************************************************/
+                        int counterEntireCompressedData = 0;
+                        int counter;
+                        JSONArray jsonArray;
+                        try {
+                            jsonArray = new JSONArray(DataBaseUtilities.unGzip(
+                                    Base64.decode((((List<SoapPrimitive>) result).get(0) != null
+                                            ? ((List<SoapPrimitive>) result).get(0).toString() : null), Base64.GZIP)));
+                        } catch (IOException e) {
+                            //Seguramente entre aqui cuando no hay nada que sincronizar
+                            throw new IOException("IOException, data: " + String.valueOf(((List<SoapPrimitive>) result).get(0) != null
+                                    ? ((List<SoapPrimitive>) result).get(0).toString() : null));
                         }
-                        if (((List<SoapPrimitive>) result).get(0) != null
-                                && !((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
-                            uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS,
-                                    ((List<SoapPrimitive>) result).get(0).toString()).build();
-                            if (((List<SoapPrimitive>) result).get(1) != null) {
-                                uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS_VALID_SEQS_IDS,
-                                        ((List<SoapPrimitive>) result).get(1).toString()).build();
+                        Iterator<?> keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
+                        if(keys.hasNext()){
+                            int columnCount = 0;
+                            JSONArray jsonArray2 = new JSONArray(DataBaseUtilities.unGzip(Base64.decode(jsonArray
+                                    .getJSONObject(counterEntireCompressedData).getString((String)keys.next()), Base64.GZIP)));
+                            StringBuilder insertSentence = new StringBuilder("INSERT OR REPLACE INTO ").append(tableName).append(" (");
+                            try{
+                                counter = 0;
+                                Iterator<?> keysTemp = jsonArray2.getJSONObject(counter).keys();
+                                while(keysTemp.hasNext()){
+                                    if(columnCount==0){
+                                        insertSentence.append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+                                    } else {
+                                        insertSentence.append(", ").append(jsonArray2.getJSONObject(counter).getString((String) keysTemp.next()));
+                                    }
+                                    columnCount++;
+                                }
+                                insertSentence.append(") VALUES (");
+                                for (int i = 0; i<columnCount; i++) {
+                                    insertSentence.append((i==0) ? "?" : ", ?");
+                                }
+                                insertSentence.append(")");
+                            } catch (Exception e){
+                                e.printStackTrace();
                             }
-                            if (tableName!=null) {
-                                uri = uri.buildUpon().appendQueryParameter(DataBaseContentProvider.KEY_DATA_FROM_WS_TABLE_NAME, tableName).build();
+
+                            SQLiteStatement statement = null;
+                            try {
+                                statement = sqLiteDatabase.compileStatement(insertSentence.toString());
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+                                    sqLiteDatabase.beginTransactionNonExclusive();
+                                } else {
+                                    sqLiteDatabase.beginTransaction();
+                                }
+                                counter = 1;
+                                Iterator<?> keysTemp;
+                                String key;
+                                //Se itera a traves de la data
+                                while (counter <= jsonArray2.length()) {
+                                    if (++counter >= jsonArray2.length()) {
+                                        if (keys.hasNext()) {
+                                            counter = 0;
+                                            jsonArray2 = new JSONArray(DataBaseUtilities.unGzip(Base64.decode(jsonArray
+                                                    .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+                                            if (jsonArray2.length() < 1) {
+                                                break;
+                                            }
+                                        } else {
+                                            if (++counterEntireCompressedData >= jsonArray.length()) {
+                                                break;
+                                            } else {
+                                                counter = 0;
+                                                keys = jsonArray.getJSONObject(counterEntireCompressedData).keys();
+                                                jsonArray2 = new JSONArray(DataBaseUtilities.unGzip(Base64.decode(jsonArray
+                                                        .getJSONObject(counterEntireCompressedData).getString((String) keys.next()), Base64.GZIP)));
+                                                if (jsonArray2.length() < 1) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    //Se prepara la data que se insertara
+                                    statement.clearBindings();
+                                    keysTemp = jsonArray2.getJSONObject(counter).keys();
+                                    while(keysTemp.hasNext()){
+                                        key = (String) keysTemp.next();
+                                        statement.bindString(Integer.valueOf(key), jsonArray2.getJSONObject(counter).getString(key));
+                                    }
+                                    statement.executeInsert();
+                                    //Fin de preparacion de la data que se insertara
+                                }
+                                //la condicion de SEQUENCE_ID <> 0 es para que no elimine los registro que no se han sincronizado
+                                sqLiteDatabase.delete(tableName, TextUtils.isEmpty(((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null) ? null
+                                                : ("SEQUENCE_ID <> 0 AND SEQUENCE_ID NOT IN (" +
+                                                DataBaseUtilities.unGzip(Base64.decode(((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null, Base64.GZIP)) + ")"),
+                                        null);
+                                sqLiteDatabase.setTransactionSuccessful();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                throw e;
+                            } finally {
+                                if(statement!=null) {
+                                    try {
+                                        statement.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if(sqLiteDatabase!=null) {
+                                    try {
+                                        sqLiteDatabase.endTransaction();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
-                            context.getContentResolver().update(uri, null, null, null);
                         }
-                        //DataBaseUtilities.insertDataFromWSResultData(((List<SoapPrimitive>) result).get(0) != null ? ((List<SoapPrimitive>) result).get(0).toString() : null,
-                        //        ((List<SoapPrimitive>) result).get(1) != null ? ((List<SoapPrimitive>) result).get(1).toString() : null,
-                        //        tableName, mContext, user);
-                    } /*catch (IOException e) {
-                        if (((List<SoapPrimitive>) result).get(0) != null
-                                && ((List<SoapPrimitive>) result).get(0).toString().equals("NOTHING_TO_SYNC")) {
-                            //Log.d(TAG, "table: " + tableName + ", nothing to sync.");
-                        } else {
-                            throw e;
-                        }
-                    }*/ catch (SQLiteException e) {
+                        /**********************************************************************************************/
+                    } catch (SQLiteException e) {
                         e.printStackTrace();
                         reportSyncError(String.valueOf(e.getMessage()), e.getClass().getName());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    if (sqLiteDatabase!=null) {
+                        try {
+                            sqLiteDatabase.close();
+                        } catch (Exception e) {
+                            //do nothing
+                        }
+                    }
                 }
             } else if (result instanceof Exception) {
                 throw (Exception) result;

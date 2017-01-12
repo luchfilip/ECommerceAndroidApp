@@ -132,7 +132,7 @@
         <item name="android:background">@drawable/touch_selector</item>
     </style>
 
-    <style name="image_button_style"/>
+    <style name="image_button_style" />
 
     <style name="go_to_arrow_style">
         <item name="android:visibility">visible</item>

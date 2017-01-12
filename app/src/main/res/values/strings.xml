@@ -556,4 +556,9 @@
     <string name="warning_reset_user_credentials_message">¿Está seguro que desea reestablecer la cortraseña del usuario? Esto dejará sin validez previas instalaciones del catálogo.</string>
     <string name="warning">¡Alerta!</string>
     <string name="title_activity_business_partner_details">BusinessPartnerDetailsActivity</string>
+    <string name="queries">Consultas</string>
+    <string name="sales_orders_by_business_partners">Cotizaciones Cerradas Por Cliente</string>
+    <string name="shopping_sales_by_business_partners">Cotizaciones Abiertas Por Cliente</string>
+    <string name="orders_by_business_partners">Pedidos Cerrados Por Cliente</string>
+    <string name="shopping_carts_by_business_partners">Pedidos Abiertos Por Cliente</string>
 </resources>

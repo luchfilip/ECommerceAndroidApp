@@ -67,10 +67,17 @@
                 android:title="@string/closed_sales_orders" />
         </menu>
     </item>
+    <group
+        android:id="@+id/menu_queries">
+        <item
+            android:id="@+id/nav_queries"
+            android:icon="@drawable/ic_show_chart_black_24dp"
+            android:title="@string/queries"/>
+    </group>
     <item android:title="@string/communicate">
         <menu>
             <item
-                android:id="@+id/nav_conctac_us"
+                android:id="@+id/nav_contact_us"
                 android:icon="@drawable/ic_email_black_24dp"
                 android:title="@string/contact_us" />
             <item

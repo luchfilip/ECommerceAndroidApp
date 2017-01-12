@@ -210,14 +210,16 @@ public class BusinessPartnersListFragment extends Fragment {
                                                             @Override
                                                             public void run() {
                                                                 isTyping = false;
-                                                                getActivity().runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        /********************/
-                                                                        mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
-                                                                                mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
-                                                                    }
-                                                                });
+                                                                if (getActivity()!=null) {
+                                                                    getActivity().runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            /********************/
+                                                                            mBusinessPartnersListAdapter.filter(((Callback) getActivity()).getBusinessPartnerIdInDetailFragment(),
+                                                                                    mCurrentFilterText, (String) mFilterByOptionsSpinner.getItemAtPosition(mSpinnerSelectedItemPosition));
+                                                                        }
+                                                                    });
+                                                                }
                                                             }
                                                         },
                                                         DELAY
