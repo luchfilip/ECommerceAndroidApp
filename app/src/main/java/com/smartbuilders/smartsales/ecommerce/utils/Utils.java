@@ -1061,6 +1061,8 @@ public class Utils {
                 navigationView.getMenu().findItem(R.id.nav_my_company).setVisible(false);
             }
             if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                navigationView.getMenu().findItem(R.id.nav_queries).setVisible(false);
+            } else {
                 navigationView.getMenu().findItem(R.id.nav_queries)
                         .setVisible(Parameter.showQueriesMenu(activity, user));
             }

@@ -9,8 +9,8 @@ android {
         applicationId "com.smartbuilders.smartsales.ecommerce"
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 37
-        versionName "1.14"
+        versionCode 38
+        versionName "1.14.1"
         // Enabling multidex support.
         multiDexEnabled true
 
