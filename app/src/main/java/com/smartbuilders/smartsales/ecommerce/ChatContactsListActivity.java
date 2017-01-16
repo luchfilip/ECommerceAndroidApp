@@ -109,7 +109,7 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
     }
 
     private void showOrHideEmptyLayoutWallpaper(ListView listView, boolean isRecentChats) {
-        int index = isRecentChats ? 1 : 0;
+        int index = isRecentChats ? 0 : 1;
         if (listView != null && listView.getAdapter()!=null && !listView.getAdapter().isEmpty()) {
             if (fragments.get(index)!=null && fragments.get(index).getView() != null) {
                 if (fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
@@ -202,8 +202,8 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
                 listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
             }
         }
-        if ((mCurrentTabSelected==0 && !isRecentConversation)
-                || (mCurrentTabSelected==1 && isRecentConversation)) {
+        if ((mCurrentTabSelected==0 && isRecentConversation)
+                || (mCurrentTabSelected==1 && !isRecentConversation)) {
             showOrHideEmptyLayoutWallpaper(listView, isRecentConversation);
         }
     }
