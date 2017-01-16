@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
 import com.smartbuilders.smartsales.ecommerce.ChatDetailsActivity;
-import com.smartbuilders.smartsales.ecommerce.ChatListActivity;
+import com.smartbuilders.smartsales.ecommerce.ChatContactsListActivity;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
 import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
@@ -1050,7 +1050,7 @@ public class Utils {
                         activity.startActivity(new Intent(activity, ChatDetailsActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                     } else if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
-                        activity.startActivity(new Intent(activity, ChatListActivity.class)
+                        activity.startActivity(new Intent(activity, ChatContactsListActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                     }
                 }

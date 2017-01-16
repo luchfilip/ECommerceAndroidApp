@@ -389,7 +389,7 @@
             android:name=".ChatDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChatListActivity"
+            android:name=".ChatContactsListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

@@ -84,6 +84,10 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+    <style name="chat_contacts_list_style">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
     <style name="title_style">
         <item name="android:background">@color/title_background_color</item>
         <item name="android:paddingLeft">10dp</item>

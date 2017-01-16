@@ -6,12 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
- * Created by stein on 11/6/2016.
+ * Created by Jesus Sarco on 16/01/2017.
  */
-public class ChatListPagerAdapter extends FragmentStatePagerAdapter {
+public class ChatContactsListPagerAdapter extends FragmentStatePagerAdapter {
     private int numOfTabs;
 
-    public ChatListPagerAdapter(FragmentManager fm, int numOfTabs) {
+    public ChatContactsListPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
     }
@@ -21,13 +21,12 @@ public class ChatListPagerAdapter extends FragmentStatePagerAdapter {
         Bundle args = new Bundle();
         switch (position) {
             case 0:
-                args.putBoolean(ChatListFragment.KEY_LOAD_RECENT_CONVERSATIONS, true);
-                ChatListFragment tab1 = new ChatListFragment();
+                args.putBoolean(ChatContactsListFragment.KEY_LOAD_RECENT_CONVERSATIONS, true);
+                ChatContactsListFragment tab1 = new ChatContactsListFragment();
                 tab1.setArguments(args);
                 return tab1;
             case 1:
-                args.putBoolean(ChatListFragment.KEY_LOAD_ALL_CONTACTS, true);
-                ChatListFragment tab2 = new ChatListFragment();
+                ChatContactsListFragment tab2 = new ChatContactsListFragment();
                 tab2.setArguments(args);
                 return tab2;
             default:

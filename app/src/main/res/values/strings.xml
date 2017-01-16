@@ -170,6 +170,7 @@
     <string name="delete_sales_order_question">¿Desea eliminar la cotización No. %1$s del cliente %2$s?</string>
     <string name="delete_order_question">¿Desea eliminar el pedido No. %1$s?</string>
     <string name="delete_shopping_sales_question">¿Desea eliminar la cotización del cliente %1$s?</string>
+    <string name="delete_chat_question">¿Desea eliminar la conversación con el cliente %1$s?</string>
     <string name="price_label">Precio:</string>
     <string name="price_currency_label_detail">Precio (%1$s):</string>
     <string name="tax_label">Imp. (%):</string>
@@ -565,4 +566,5 @@
     <string name="shopping_sales_by_business_partners">Cotizaciones Abiertas Por Cliente</string>
     <string name="orders_by_business_partners">Pedidos Cerrados Por Cliente</string>
     <string name="shopping_carts_by_business_partners">Pedidos Abiertos Por Cliente</string>
+    <string name="no_recent_messages">No Hay Mensajes Recientes</string>
 </resources>

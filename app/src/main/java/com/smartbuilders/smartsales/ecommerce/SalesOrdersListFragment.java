@@ -219,12 +219,18 @@ public class SalesOrdersListFragment extends Fragment {
                             getContext(), mUser)).getSalesOrderList());
                 }
                 if(mListView.getAdapter().getCount()!=oldListSize){
-                    ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
+                    if (getActivity()!=null) {
+                        ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
+                    }
                 }else{
-                    ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
+                    if (getActivity()!=null) {
+                        ((Callback) getActivity()).setSelectedIndex(mCurrentSelectedIndex, mListView);
+                    }
                 }
             }else{
-                ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
+                if (getActivity()!=null) {
+                    ((Callback) getActivity()).onListIsLoaded(mListView, mLoadOrdersFromSalesOrders);
+                }
             }
         }
         super.onStart();
