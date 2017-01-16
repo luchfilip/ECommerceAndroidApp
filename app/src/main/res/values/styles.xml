@@ -54,7 +54,7 @@
         -->
     </style>
 
-    <style name="toolbar_products_list_style"/>
+    <style name="toolbar_products_list_style" />
 
     <style name="business_partners_list_style">
         <item name="android:background">@android:color/white</item>
@@ -111,6 +111,11 @@
     <style name="MainButtonAppTheme">
         <item name="android:background">@drawable/main_button_selector</item>
         <item name="android:textColor">@color/main_button_text_color</item>
+    </style>
+
+    <style name="InverseMainButtonAppTheme">
+        <item name="android:background">@drawable/inverse_main_button_selector</item>
+        <item name="android:textColor">@color/inverse_main_button_text_color</item>
     </style>
 
     <style name="GoldenButtonAppTheme">

@@ -12,6 +12,18 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
+    <style name="InverseMainButtonAppTheme">
+        <item name="android:background">@drawable/inverse_main_button_selector</item>
+        <item name="android:textColor">@color/inverse_main_button_text_color</item>
+        <item name="android:minHeight">2dip</item>
+        <item name="android:minWidth">2dip</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
     <style name="GoldenButtonAppTheme">
         <item name="android:background">@drawable/golden_button_selector</item>
         <item name="android:textColor">@color/golden_button_text_color</item>

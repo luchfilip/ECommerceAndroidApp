@@ -285,6 +285,14 @@
                     android:layout_gravity="bottom" />
             </LinearLayout>
 
+            <Button
+                style="@style/InverseMainButtonAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/request_price"
+                android:id="@+id/product_request_price_button"/>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

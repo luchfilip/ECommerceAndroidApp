@@ -41,12 +41,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
+import com.smartbuilders.smartsales.ecommerce.ChatDetailsActivity;
+import com.smartbuilders.smartsales.ecommerce.ChatListActivity;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
-import com.smartbuilders.smartsales.ecommerce.QueriesActivity;
 import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
 import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
+import com.smartbuilders.smartsales.ecommerce.data.ChatDB;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
@@ -931,6 +933,17 @@ public class Utils {
                     // do nothing
                 }
             }
+            if (navigationView.getMenu().findItem(R.id.nav_chat)!=null) {
+                try {
+                    int count = (new ChatDB(context, user)).getUnreadMessagesCount();
+                    if (count > 0) {
+                        ((TextView) navigationView.getMenu().findItem(R.id.nav_chat).getActionView())
+                                .setText(String.valueOf(count));
+                    }
+                } catch (Exception e) {
+                    // do nothing
+                }
+            }
         }
     }
 
@@ -1027,12 +1040,20 @@ public class Utils {
                 activity.startActivity(new Intent(activity, WelcomeScreenSlideActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }else if (itemId == R.id.nav_notifications_history_list) {
+            } else if (itemId == R.id.nav_notifications_history_list) {
                 activity.startActivity(new Intent(activity, NotificationsListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
-            }else if (itemId == R.id.nav_queries) {
-                activity.startActivity(new Intent(activity, QueriesActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            } else if (itemId == R.id.nav_chat) {
+                User user = getCurrentUser(activity);
+                if (user != null) {
+                    if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
+                        activity.startActivity(new Intent(activity, ChatDetailsActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    } else if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
+                        activity.startActivity(new Intent(activity, ChatListActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1060,12 +1081,6 @@ public class Utils {
             if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
                 navigationView.getMenu().findItem(R.id.nav_my_company).setVisible(false);
             }
-            if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                navigationView.getMenu().findItem(R.id.nav_queries).setVisible(false);
-            } else {
-                navigationView.getMenu().findItem(R.id.nav_queries)
-                        .setVisible(Parameter.showQueriesMenu(activity, user));
-            }
             if (!Parameter.isActiveOrderTracking(activity, user) && navigationView.getMenu()!=null
                     && navigationView.getMenu().findItem(R.id.nav_orders_tracking)!=null) {
                 navigationView.getMenu().findItem(R.id.nav_orders_tracking).setVisible(false);
@@ -1073,6 +1088,8 @@ public class Utils {
             if (!TextUtils.isEmpty(BuildConfig.SERVER_ADDRESS)) {
                 navigationView.getMenu().findItem(R.id.nav_data_sync_settings).setVisible(false);
             }
+            navigationView.getMenu().findItem(R.id.nav_chat)
+                    .setVisible(Parameter.isRequestPriceAvailable(activity, user));
             navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
             ((TextView) navigationView.getHeaderView(0).findViewById(R.id.user_name))
                     .setText(activity.getString(R.string.welcome_user, user.getUserName()));

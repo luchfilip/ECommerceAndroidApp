@@ -121,7 +121,7 @@ public class BluetoothChatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_bluetooth_chat);
 
         Log.d(TAG, "onCreate(...)");
 

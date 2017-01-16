@@ -46,9 +46,19 @@
         <item name="android:textColor">@color/main_button_text_color</item>
     </style>
 
+    <style name="InverseMainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:theme">@style/Theme.MaterialMainButton</item>
+        <item name="android:textColor">@color/main_button_text_color</item>
+    </style>
+
     <style name="Theme.MaterialMainButton" parent="AppTheme">
         <item name="colorAccent">@color/colorPrimaryMedium</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.InverseMaterialMainButton" parent="AppTheme">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored">

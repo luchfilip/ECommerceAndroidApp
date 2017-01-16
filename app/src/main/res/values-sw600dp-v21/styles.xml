@@ -8,9 +8,23 @@
         <item name="android:layout_margin">1dp</item>
     </style>
 
+    <style name="InverseMainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:theme">@style/Theme.InverseMaterialMainButton</item>
+        <item name="android:textColor">@color/inverse_main_button_text_color</item>
+        <item name="android:minHeight">10dip</item>
+        <item name="android:minWidth">10dip</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">1dp</item>
+    </style>
+
     <style name="Theme.MaterialMainButton" parent="AppTheme">
         <item name="colorAccent">@color/colorPrimaryMedium</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.InverseMaterialMainButton" parent="AppTheme">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorButtonNormal">@android:color/white</item>
     </style>
 
     <style name="GoldenButtonAppTheme" parent="Widget.AppCompat.Button.Colored">

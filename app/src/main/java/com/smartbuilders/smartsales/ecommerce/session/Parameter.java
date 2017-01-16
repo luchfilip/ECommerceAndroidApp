@@ -303,4 +303,15 @@ public class Parameter {
     public static boolean showQueriesMenu(Context context, User user) {
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.SHOW_QUERIES_MENU, false);
     }
+
+    /**
+     *
+     * @param context
+     * @param user
+     * @return
+     */
+    public static boolean isRequestPriceAvailable(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_REQUEST_PRICE_AVAILABLE, true);
+    }
+
 }

@@ -6,6 +6,12 @@
         <item name="android:minHeight">0dp</item>
     </style>
 
+    <style name="InverseMainButtonAppTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:theme">@style/Theme.InverseMaterialMainButton</item>
+        <item name="android:textColor">@color/inverse_main_button_text_color</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
     <style name="Theme.MaterialMainButton" parent="AppTheme">
         <item name="colorAccent">@color/colorPrimaryMedium</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>

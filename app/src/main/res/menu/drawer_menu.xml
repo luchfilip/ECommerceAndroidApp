@@ -13,6 +13,14 @@
             android:title="@string/my_company" />
     </group>
     <group
+        android:id="@+id/menu_chat">
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_chat_black_24dp"
+            android:title="@string/chat"
+            app:actionLayout="@layout/unread_items"/>
+    </group>
+    <group
         android:id="@+id/menu_1">
         <item
             android:id="@+id/nav_notifications_history_list"
@@ -67,13 +75,6 @@
                 android:title="@string/closed_sales_orders" />
         </menu>
     </item>
-    <group
-        android:id="@+id/menu_queries">
-        <item
-            android:id="@+id/nav_queries"
-            android:icon="@drawable/ic_show_chart_black_24dp"
-            android:title="@string/queries"/>
-    </group>
     <item android:title="@string/communicate">
         <menu>
             <item

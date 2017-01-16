@@ -205,6 +205,7 @@
     <string name="add_to_shopping_cart">Enviar a Pedido</string>
     <string name="add_to_shopping_sales">Enviar a Cotización</string>
     <string name="title_activity_settings">Configuraciones</string>
+    <string name="request_price">Solicitar Precio</string>
 
     <!-- Example settings for Data & Sync -->
     <string name="data_sync">Datos &amp; Sincronización</string>
@@ -310,6 +311,8 @@
     <string name="choose_image">Escoger Imágen</string>
     <string name="sales_orders_list_tab0_name">Cotizaciones Cerradas</string>
     <string name="sales_orders_list_tab1_name">Cotizaciones Hechas Pedidos</string>
+    <string name="chat_list_tab0_name">Recientes</string>
+    <string name="chat_list_tab1_name">Contactos</string>
     <string name="search_by">Buscar por...</string>
     <string name="search_by_capitals">BUSCAR POR</string>
     <string name="search_by_name">BUSCAR POR NOMBRE</string>
@@ -537,6 +540,7 @@
     <string name="sending_order">Enviando Pedido...</string>
     <string name="error_sending_order">Error enviando pedido, revise su conexión</string>
     <string name="notificationHistories">Notificaciones</string>
+    <string name="chat">Chat</string>
     <string name="settings_images_management">Manejo de Imágenes</string>
     <string name="skip">SALTAR</string>
     <string name="pref_summary_notify">Mostrar notificación y guardar en el listado de las notificaciones</string>
