@@ -71,14 +71,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_sent);
             } else {
-                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector);
+                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector_chat_message_sent);
             }
         } else {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.LEFT;
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_received);
             } else {
-                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector);
+                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector_chat_message_received);
             }
         }
     }
