@@ -18,7 +18,6 @@ import com.smartbuilders.smartsales.ecommerce.adapters.ChatContactsListAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
 import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatContact;
-import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.ViewPager;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -27,7 +26,8 @@ import java.util.ArrayList;
 /**
  *
  */
-public class ChatContactsListActivity extends AppCompatActivity implements ChatContactsListFragment.Callback, ChatMessagesFragment.Callback{
+public class ChatContactsListActivity extends AppCompatActivity
+        implements ChatContactsListFragment.Callback, ChatMessagesFragment.Callback{
 
     public static final String STATE_CURRENT_TAB_SELECTED = "STATE_CURRENT_TAB_SELECTED";
     public static final String KEY_CURRENT_TAB_SELECTED = "KEY_CURRENT_TAB_SELECTED";
@@ -43,12 +43,12 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_contacts_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Utils.setCustomToolbarTitle(this, toolbar, false);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null) {
+            actionBar.setLogo(null);
+            actionBar.setTitle(R.string.chat);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
