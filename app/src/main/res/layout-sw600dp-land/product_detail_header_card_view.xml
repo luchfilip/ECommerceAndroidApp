@@ -178,6 +178,22 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/product_category"
+                android:textSize="@dimen/productDetailActivity_description_text_size"
+                android:focusable="false"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_subcategory"
+                android:textSize="@dimen/productDetailActivity_description_text_size"
+                android:focusable="false"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
                 android:focusable="false"
                 android:textColor="@color/black"

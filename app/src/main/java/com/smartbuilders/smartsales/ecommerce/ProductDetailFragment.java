@@ -21,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
+import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
+import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
@@ -201,6 +203,29 @@ public class ProductDetailFragment extends Fragment {
                                                 mProduct.getDescription()));
                                     } else {
                                         view.findViewById(R.id.product_description).setVisibility(View.GONE);
+                                    }
+
+                                    if (!TextUtils.isEmpty(mProduct.getPurpose())) {
+                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
+                                                mProduct.getPurpose()));
+                                    } else {
+                                        view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
+                                    }
+
+                                    ProductCategory productCategory = (new ProductCategoryDB(getContext(), mUser))
+                                            .getProductCategory(mProduct.getProductCategoryId());
+                                    if (productCategory!=null && !TextUtils.isEmpty(productCategory.getName())) {
+                                        ((TextView) view.findViewById(R.id.product_category)).setText(getString(R.string.product_category_detail,
+                                                productCategory.getName()));
+                                    } else {
+                                        view.findViewById(R.id.product_category).setVisibility(View.GONE);
+                                    }
+
+                                    if (mProductSubCategory!=null && !TextUtils.isEmpty(mProductSubCategory.getName())) {
+                                        ((TextView) view.findViewById(R.id.product_subcategory)).setText(getString(R.string.product_subcategory_detail,
+                                                mProductSubCategory.getName()));
+                                    } else {
+                                        view.findViewById(R.id.product_subcategory).setVisibility(View.GONE);
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getPurpose())) {

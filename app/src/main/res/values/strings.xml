@@ -23,6 +23,8 @@
     <string name="product_details_label">Detalles del Producto</string>
     <string name="product_description_detail">Descripción: %1$s</string>
     <string name="product_purpose_detail">Uso: %1$s</string>
+    <string name="product_category_detail">Categoría: %1$s</string>
+    <string name="product_subcategory_detail">SubCategoría: %1$s</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>
