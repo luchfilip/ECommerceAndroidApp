@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  *
  */
-public class ChatContactsListActivity extends AppCompatActivity implements ChatContactsListFragment.Callback {
+public class ChatContactsListActivity extends AppCompatActivity implements ChatContactsListFragment.Callback, ChatDetailsFragment.Callback{
 
     public static final String STATE_CURRENT_TAB_SELECTED = "STATE_CURRENT_TAB_SELECTED";
     public static final String KEY_CURRENT_TAB_SELECTED = "KEY_CURRENT_TAB_SELECTED";
@@ -216,5 +216,15 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
                 listView.setItemChecked(selectedIndex, true);
             }
         }
+    }
+
+    @Override
+    public void chatMessagesDetailLoaded() {
+
+    }
+
+    @Override
+    public boolean isFragmentMenuVisible() {
+        return false;
     }
 }

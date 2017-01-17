@@ -28,15 +28,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:id="@+id/chat_contact_internal_code"
+            android:id="@+id/chat_contact_name"
+            android:textStyle="bold"
             android:textColor="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:id="@+id/chat_contact_name"
-            android:textStyle="bold"
+            android:id="@+id/chat_contact_internal_code"
             android:textColor="@color/black" />
     </LinearLayout>
 

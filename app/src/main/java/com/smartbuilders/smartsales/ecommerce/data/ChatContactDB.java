@@ -12,7 +12,6 @@ import java.util.ArrayList;
 /**
  * Created by AlbertoSarco on 16/1/2017.
  */
-
 public class ChatContactDB {
 
     final private Context mContext;
@@ -94,5 +93,41 @@ public class ChatContactDB {
             }
         }
         return chatContacts;
+    }
+
+    public ChatContact getChatContactById(int chatContactId) {
+        Cursor c = null;
+        try {
+            c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
+                            .build(), null,
+                    "select bp.NAME, bp.COMMERCIAL_NAME, bp.TAX_ID, bp.INTERNAL_CODE " +
+                    " from BUSINESS_PARTNER bp " +
+                        " inner join USER_BUSINESS_PARTNERS ubp on ubp.business_partner_id = bp.business_partner_id " +
+                            " and ubp.user_id in (SELECT SALES_REP_ID FROM SALES_REP WHERE USER_ID = ? AND IS_ACTIVE = 'Y') and ubp.is_active = 'Y' " +
+                    " where bp.IS_ACTIVE = 'Y' and bp.BUSINESS_PARTNER_ID = ? " +
+                    " order by bp.NAME asc",
+                    new String[]{String.valueOf(mUser.getServerUserId()), String.valueOf(chatContactId)}, null);
+            if(c!=null && c.moveToNext()){
+                ChatContact chatContact = new ChatContact();
+                chatContact.setId(chatContactId);
+                chatContact.setName(c.getString(0));
+                chatContact.setCommercialName(c.getString(1));
+                chatContact.setTaxId(c.getString(2));
+                chatContact.setInternalCode(c.getString(3));
+                return chatContact;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }
