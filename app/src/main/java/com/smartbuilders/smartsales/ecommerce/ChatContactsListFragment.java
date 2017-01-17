@@ -79,7 +79,7 @@ public class ChatContactsListFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
 
                     if (mLoadRecentConversations) {
-                        chatContacts.addAll(new ChatContactDB(getContext(), mUser).getRecentContacts());
+                        chatContacts.addAll(new ChatContactDB(getContext(), mUser).getContactsWithRecentConversations());
                     } else {
                         chatContacts.addAll(new ChatContactDB(getContext(), mUser).getAvailableContacts());
                     }
@@ -92,7 +92,7 @@ public class ChatContactsListFragment extends Fragment {
                         public void run() {
                             try {
                                 mListView = (ListView) view.findViewById(R.id.chat_contacts_list);
-                                mListView.setAdapter(new ChatContactsListAdapter(getContext(), chatContacts));
+                                mListView.setAdapter(new ChatContactsListAdapter(getContext(), chatContacts, mLoadRecentConversations));
 
                                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -154,7 +154,7 @@ public class ChatContactsListFragment extends Fragment {
                 int oldListSize = mListView.getAdapter().getCount();
                 if (mLoadRecentConversations) {
                     ((ChatContactsListAdapter) mListView.getAdapter()).setData((new ChatContactDB(getContext(),
-                            mUser)).getRecentContacts());
+                            mUser)).getContactsWithRecentConversations());
                 }else{
                     ((ChatContactsListAdapter) mListView.getAdapter()).setData((new ChatContactDB(getContext(),
                             mUser)).getAvailableContacts());

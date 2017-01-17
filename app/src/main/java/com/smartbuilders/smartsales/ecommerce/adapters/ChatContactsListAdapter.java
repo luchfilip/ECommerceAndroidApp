@@ -19,10 +19,12 @@ public class ChatContactsListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<ChatContact> mDataset;
+    private boolean mLoadRecentConversations;
 
-    public ChatContactsListAdapter(Context context, ArrayList<ChatContact> data) {
+    public ChatContactsListAdapter(Context context, ArrayList<ChatContact> data, boolean loadRecentConversations) {
         mContext = context;
         mDataset = data;
+        mLoadRecentConversations = loadRecentConversations;
     }
 
     @Override
@@ -57,6 +59,12 @@ public class ChatContactsListAdapter extends BaseAdapter {
 
         viewHolder.internalCode.setText(mDataset.get(position).getInternalCode());
         viewHolder.name.setText(mDataset.get(position).getName());
+        if (mLoadRecentConversations) {
+            viewHolder.maxChatMessageCreateTime.setText(mDataset.get(position).getMaxChatMessageCreateTimeStringFormat());
+            viewHolder.maxChatMessageCreateTime.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.maxChatMessageCreateTime.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -68,10 +76,12 @@ public class ChatContactsListAdapter extends BaseAdapter {
         // each data item is just a string in this case
         public TextView name;
         public TextView internalCode;
+        public TextView maxChatMessageCreateTime;
 
         public ViewHolder(View v) {
             name = (TextView) v.findViewById(R.id.chat_contact_name);
             internalCode = (TextView) v.findViewById(R.id.chat_contact_internal_code);
+            maxChatMessageCreateTime = (TextView) v.findViewById(R.id.max_chat_message_create_time);
         }
     }
 

@@ -40,7 +40,7 @@ public class ChatMessagesActivity extends AppCompatActivity implements ChatMessa
 
         if (mChatContactId>0) {
             mChatContact = (new ChatContactDB(this, Utils.getCurrentUser(this)))
-                    .getChatContactById(mChatContactId);
+                    .getContactById(mChatContactId);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

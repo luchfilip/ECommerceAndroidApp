@@ -1,5 +1,6 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
 import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatContact;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
+import com.smartbuilders.smartsales.ecommerce.services.SendChatMessageService;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -80,7 +82,7 @@ public class ChatMessagesFragment extends Fragment {
                     mUser = Utils.getCurrentUser(getContext());
 
                     if (mChatContactId>0) {
-                        mChatContact = (new ChatContactDB(getContext(), mUser)).getChatContactById(mChatContactId);
+                        mChatContact = (new ChatContactDB(getContext(), mUser)).getContactById(mChatContactId);
                     }
 
                     if (mChatContact != null) {
@@ -113,13 +115,19 @@ public class ChatMessagesFragment extends Fragment {
                                             String messageToSend = ((EditText) view.findViewById(R.id.chat_message_to_send_editText))
                                                     .getText().toString();
                                             if (!TextUtils.isEmpty(messageToSend)) {
+                                                ((EditText) view.findViewById(R.id.chat_message_to_send_editText)).setText(null);
+
                                                 ChatMessage chatMessage = new ChatMessage();
                                                 chatMessage.setSenderChatContactId(mUser.getServerUserId());
                                                 chatMessage.setReceiverChatContactId(mChatContactId);
                                                 chatMessage.setMessage(messageToSend);
                                                 chatMessage.setCreated(new Date());
                                                 ((ChatMessagesAdapter) recyclerView.getAdapter()).addChatMessage(chatMessage);
-                                                ((EditText) view.findViewById(R.id.chat_message_to_send_editText)).setText(null);
+
+                                                Intent msgIntent = new Intent(getContext(), SendChatMessageService.class);
+                                                msgIntent.putExtra(SendChatMessageService.KEY_USER_ID, mUser.getUserId());
+                                                msgIntent.putExtra(SendChatMessageService.KEY_CHAT_MESSAGE, chatMessage);
+                                                getContext().startService(msgIntent);
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

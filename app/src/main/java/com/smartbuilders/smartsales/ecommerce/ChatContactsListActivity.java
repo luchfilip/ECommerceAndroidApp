@@ -12,7 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.adapters.ChatContactsListAdapter;
+import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
+import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatContact;
 import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.smartsales.ecommerce.view.ViewPager;
@@ -184,22 +188,41 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
     }
 
     @Override
-    public void onItemLongSelected(ChatContact chatContact, ListView listView, User user) {
+    public void onItemLongSelected(final ChatContact chatContact, final ListView listView, final User user) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.delete_chat_question, chatContact.getName()))
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //String result = OrderBR.deactivateOrderById(SalesOrdersListActivity.this,
-                        //        user, order.getId());
-                        //if (result==null) {
-                        //    reloadOrdersList(listView, user);
-                        //} else {
-                        //    Toast.makeText(SalesOrdersListActivity.this, result, Toast.LENGTH_SHORT).show();
-                        //}
+                        String result = (new ChatMessageDB(ChatContactsListActivity.this, user))
+                                .deactiveConversationByContactId(chatContact.getId());
+                        if (result==null) {
+                            reloadChatContactsList(listView, user, true);
+                        } else {
+                            Toast.makeText(ChatContactsListActivity.this, result, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void reloadChatContactsList(ListView listView, User user, boolean isRecentConversation) {
+        if (listView!=null && listView.getAdapter()!=null) {
+            int oldListSize = listView.getCount();
+            int selectedIndex = listView.getCheckedItemPosition();
+            ((ChatContactsListAdapter) listView.getAdapter())
+                    .setData(new ChatContactDB(this, user).getContactsWithRecentConversations());
+
+            if (mThreePane) {
+                if (listView.getCount() < oldListSize && !listView.getAdapter().isEmpty()) {
+                    listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, 0);
+                } else if (listView.getCount() > selectedIndex) {
+                    listView.setSelection(selectedIndex);
+                    listView.setItemChecked(selectedIndex, true);
+                }
+            }
+        }
+        showOrHideEmptyLayoutWallpaper(listView, isRecentConversation);
     }
 
     @Override

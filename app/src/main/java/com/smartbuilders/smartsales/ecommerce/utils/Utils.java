@@ -48,7 +48,7 @@ import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
 import com.smartbuilders.smartsales.ecommerce.SettingsDataSync;
 import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
-import com.smartbuilders.smartsales.ecommerce.data.ChatDB;
+import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
@@ -935,7 +935,7 @@ public class Utils {
             }
             if (navigationView.getMenu().findItem(R.id.nav_chat)!=null) {
                 try {
-                    int count = (new ChatDB(context, user)).getUnreadMessagesCount();
+                    int count = (new ChatMessageDB(context, user)).getUnreadMessagesCount();
                     if (count > 0) {
                         ((TextView) navigationView.getMenu().findItem(R.id.nav_chat).getActionView())
                                 .setText(String.valueOf(count));

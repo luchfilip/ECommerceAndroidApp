@@ -1,7 +1,9 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.R;
+import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.synchronizer.ids.model.User;
 
@@ -81,6 +85,28 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                 holder.containerLayout.setBackgroundResource(R.drawable.shape_selector_chat_message_received);
             }
         }
+        holder.containerLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new AlertDialog.Builder(mContext)
+                        .setMessage(mContext.getString(R.string.delete_message))
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String result = (new ChatMessageDB(mContext, mUser))
+                                        .deactiveMessage(mDataset.get(holder.getAdapterPosition()).getId());
+                                if (result==null) {
+                                    mDataset.remove(holder.getAdapterPosition());
+                                    notifyItemRemoved(holder.getAdapterPosition());
+                                } else {
+                                    Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+                return true;
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

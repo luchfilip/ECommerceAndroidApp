@@ -15,11 +15,8 @@ import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final int DATABASE_VERSION = 21;
+	private static final int DATABASE_VERSION = 22;
 	private static final String DATABASE_NAME = "IDS_DATABASE";
-//    private static final int DB_NOT_FOUND = 0;
-//    private static final int USING_INTERNAL_STORAGE = 1;
-//    private static final int USING_EXTERNAL_STORAGE = 2;
     private String dataBaseName;
 
     private static final String CREATE_IDS_USER_TABLE =
@@ -607,6 +604,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
                     " PRIMARY KEY (SALES_REP_ID, USER_ID))";
 
+    private static final String CREATE_CHAT_MESSAGE =
+            "CREATE TABLE IF NOT EXISTS CHAT_MESSAGE (" +
+                    "CHAT_MESSAGE_ID INTEGER NOT NULL, " +
+                    " SENDER_USER_ID INTEGER NOT NULL, " +
+                    " RECEIVER_USER_ID INTEGER DEFAULT NULL, " +
+                    " MESSAGE TEXT DEFAULT NULL, " +
+                    " MESSAGE_TYPE INTEGER DEFAULT NULL, " +
+                    " PRODUCT_ID INTEGER DEFAULT NULL, " +
+                    " IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, " +
+                    " CREATE_TIME DATETIME NOT NULL, " +
+                    " UPDATE_TIME DATETIME DEFAULT NULL, " +
+                    " STATUS INTEGER NOT NULL DEFAULT 0, " +
+                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
+                    " PRIMARY KEY (CHAT_MESSAGE_ID, SENDER_USER_ID))";
+
 	/**
 	 * 
 	 * @param context
@@ -681,6 +694,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_ORDER_TRACKING);
             db.execSQL(CREATE_NOTIFICATION_HISTORY);
             db.execSQL(CREATE_SALES_REP);
+            db.execSQL(CREATE_CHAT_MESSAGE);
 		}
 	}
 
@@ -861,6 +875,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 try {
                     db.execSQL("ALTER TABLE BUSINESS_PARTNER ADD COLUMN PRICE_LIST_ID INTEGER DEFAULT 0 NOT NULL");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (oldVersion < 22) {
+                try {
+                    db.execSQL(CREATE_CHAT_MESSAGE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

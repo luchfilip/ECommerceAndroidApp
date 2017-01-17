@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.services;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
@@ -41,6 +42,9 @@ public class SendChatMessageService extends IntentService {
 
         User user = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(),
                 workIntent.getStringExtra(KEY_USER_ID));
+
+        ChatMessageDB chatMessageDB = new ChatMessageDB(getApplicationContext(), user);
+        chatMessageDB.addChatMessage(chatMessage);
 
         String resultMsg;
         try {

@@ -83,6 +83,10 @@ public class UserTableMaxIdDB {
                     sqlValidator = "SELECT MAX(PRODUCT_RECENTLY_SEEN_ID) FROM PRODUCT_RECENTLY_SEEN WHERE USER_ID = ?";
                     selectionArgs = new String[]{String.valueOf(user.getServerUserId())};
                     break;
+                case "CHAT_MESSAGE":
+                    sqlValidator = "SELECT MAX(CHAT_MESSAGE_ID) FROM CHAT_MESSAGE WHERE SENDER_USER_ID = ?";
+                    selectionArgs = new String[]{String.valueOf(user.getServerUserId())};
+                    break;
 
             }
             if (sqlValidator!=null){

@@ -11,11 +11,16 @@ import java.util.Locale;
  */
 public class ChatMessage extends Model implements Parcelable{
 
+    public static final int STATUS_UNREADED = 0;
+    public static final int STATUS_READED = 1;
+
     private String message;
     private int receiverChatContactId;
     private int senderChatContactId;
     private int productId;
     private int chatMessageType;
+    private String imageFileName;
+    private int status;
 
     public ChatMessage() {
 
@@ -27,6 +32,8 @@ public class ChatMessage extends Model implements Parcelable{
         senderChatContactId = in.readInt();
         productId = in.readInt();
         chatMessageType = in.readInt();
+        imageFileName = in.readString();
+        status = in.readInt();
     }
 
     public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
@@ -81,6 +88,22 @@ public class ChatMessage extends Model implements Parcelable{
         this.chatMessageType = chatMessageType;
     }
 
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public String getCreatedStringFormat(){
         try {
             return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
@@ -101,5 +124,7 @@ public class ChatMessage extends Model implements Parcelable{
         dest.writeInt(senderChatContactId);
         dest.writeInt(productId);
         dest.writeInt(chatMessageType);
+        dest.writeString(imageFileName);
+        dest.writeInt(status);
     }
 }
