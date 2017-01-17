@@ -23,7 +23,23 @@ public class ChatMessage extends Model implements Parcelable{
 
     private ChatMessage(Parcel in) {
         message = in.readString();
+        receiverChatContactId = in.readInt();
+        senderChatContactId = in.readInt();
+        productId = in.readInt();
+        chatMessageType = in.readInt();
     }
+
+    public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
+        @Override
+        public ChatMessage createFromParcel(Parcel in) {
+            return new ChatMessage(in);
+        }
+
+        @Override
+        public ChatMessage[] newArray(int size) {
+            return new ChatMessage[size];
+        }
+    };
 
     public String getMessage() {
         return message;
@@ -73,18 +89,6 @@ public class ChatMessage extends Model implements Parcelable{
         return null;
     }
 
-    public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
-        @Override
-        public ChatMessage createFromParcel(Parcel in) {
-            return new ChatMessage(in);
-        }
-
-        @Override
-        public ChatMessage[] newArray(int size) {
-            return new ChatMessage[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
@@ -93,5 +97,9 @@ public class ChatMessage extends Model implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(message);
+        dest.writeInt(receiverChatContactId);
+        dest.writeInt(senderChatContactId);
+        dest.writeInt(productId);
+        dest.writeInt(chatMessageType);
     }
 }

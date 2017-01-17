@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -92,7 +94,7 @@ public class ChatMessagesFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_messages);
+                                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_messages);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
                                 recyclerView.setHasFixedSize(true);
@@ -107,8 +109,21 @@ public class ChatMessagesFragment extends Fragment {
                                 view.findViewById(R.id.chat_send_message_imageView).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        ((EditText) view.findViewById(R.id.chat_message_to_send_editText))
-                                                .getText().toString();
+                                        try {
+                                            String messageToSend = ((EditText) view.findViewById(R.id.chat_message_to_send_editText))
+                                                    .getText().toString();
+                                            if (!TextUtils.isEmpty(messageToSend)) {
+                                                ChatMessage chatMessage = new ChatMessage();
+                                                chatMessage.setSenderChatContactId(mUser.getServerUserId());
+                                                chatMessage.setReceiverChatContactId(mChatContactId);
+                                                chatMessage.setMessage(messageToSend);
+                                                chatMessage.setCreated(new Date());
+                                                ((ChatMessagesAdapter) recyclerView.getAdapter()).addChatMessage(chatMessage);
+                                                ((EditText) view.findViewById(R.id.chat_message_to_send_editText)).setText(null);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 });
                             } catch (Exception e) {

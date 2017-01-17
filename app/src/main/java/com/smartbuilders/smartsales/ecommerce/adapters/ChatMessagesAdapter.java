@@ -1,10 +1,13 @@
 package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.smartbuilders.smartsales.ecommerce.R;
@@ -63,6 +66,21 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
         holder.message.setText(mDataset.get(position).getMessage());
         holder.created.setText(mDataset.get(position).getCreatedStringFormat());
+        if (mDataset.get(position).getSenderChatContactId() == mUser.getServerUserId()) {
+            ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.RIGHT;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_sent);
+            } else {
+                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector);
+            }
+        } else {
+            ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.LEFT;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_received);
+            } else {
+                holder.containerLayout.setBackgroundResource(R.drawable.shape_selector);
+            }
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -72,5 +90,10 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
             return mDataset.size();
         }
         return 0;
+    }
+
+    public void addChatMessage(ChatMessage chatMessage) {
+        mDataset.add(chatMessage);
+        notifyItemInserted(mDataset.indexOf(chatMessage));
     }
 }

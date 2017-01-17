@@ -3,6 +3,7 @@
     <color name="colorPrimary">#009bef</color>
     <color name="colorPrimaryMedium">#4db5e7</color>
     <color name="colorPrimaryLight">#640692d6</color>
+    <color name="colorPrimaryLightSolid">#c0ebff</color>
     <color name="colorPrimaryDark">#222222</color>
     <color name="colorAccent">#4db5e7</color>
     <color name="state_pressed_selector_color">@color/colorPrimaryLight</color>

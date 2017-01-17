@@ -403,7 +403,9 @@ public class ProductDetailFragment extends Fragment {
                                                     mProduct.getProductPriceAvailability().getAvailability()));
                                     ((TextView) view.findViewById(R.id.product_availability)).setTypeface(typefaceMedium);
 
-                                    if (Parameter.isRequestPriceAvailable(getContext(), mUser)) {
+                                    if (!managePriceInOrder && mUser!=null
+                                            && mUser.getUserProfileId()==UserProfile.BUSINESS_PARTNER_PROFILE_ID
+                                            && Parameter.isRequestPriceAvailable(getContext(), mUser)) {
                                         view.findViewById(R.id.product_request_price_button).setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -419,7 +421,7 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_request_price_button).setVisibility(View.VISIBLE);
                                     }
                                 } else {
-                                    //TODO: mostrar mesaje de error cuando el objeto product es null
+                                    //TODO: mostrar mensaje de error cuando el objeto product es null
                                 }
                             } catch (Exception e){
                                 e.printStackTrace();
