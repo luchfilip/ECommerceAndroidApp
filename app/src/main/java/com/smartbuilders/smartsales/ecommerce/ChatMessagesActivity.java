@@ -15,7 +15,7 @@ import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 /**
  *
  */
-public class ChatDetailsActivity extends AppCompatActivity implements ChatDetailsFragment.Callback {
+public class ChatMessagesActivity extends AppCompatActivity implements ChatMessagesFragment.Callback {
 
     public static final String KEY_CHAT_CONTACT_ID = "KEY_CHAT_CONTACT_ID";
     private static final String STATE_CHAT_CONTACT_ID = "STATE_CHAT_CONTACT_ID";
@@ -26,7 +26,7 @@ public class ChatDetailsActivity extends AppCompatActivity implements ChatDetail
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_details);
+        setContentView(R.layout.activity_chat_messages);
 
         if (savedInstanceState!=null) {
             if (savedInstanceState.containsKey(STATE_CHAT_CONTACT_ID)) {
@@ -61,7 +61,7 @@ public class ChatDetailsActivity extends AppCompatActivity implements ChatDetail
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat_details, menu);
+        getMenuInflater().inflate(R.menu.menu_chat_messages, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

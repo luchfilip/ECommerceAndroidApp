@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 /**
  *
  */
-public class ChatContactsListActivity extends AppCompatActivity implements ChatContactsListFragment.Callback, ChatDetailsFragment.Callback{
+public class ChatContactsListActivity extends AppCompatActivity implements ChatContactsListFragment.Callback, ChatMessagesFragment.Callback{
 
     public static final String STATE_CURRENT_TAB_SELECTED = "STATE_CURRENT_TAB_SELECTED";
     public static final String KEY_CURRENT_TAB_SELECTED = "KEY_CURRENT_TAB_SELECTED";
@@ -40,6 +42,11 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Utils.setCustomToolbarTitle(this, toolbar, false);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(STATE_CURRENT_TAB_SELECTED)){
@@ -160,9 +167,9 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
     public void onItemSelected(ChatContact chatContact, boolean isRecentConversation) {
         if(mThreePane){
             Bundle args = new Bundle();
-            args.putInt(ChatDetailsActivity.KEY_CHAT_CONTACT_ID, chatContact.getId());
+            args.putInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID, chatContact.getId());
 
-            ChatDetailsFragment fragment = new ChatDetailsFragment();
+            ChatMessagesFragment fragment = new ChatMessagesFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
@@ -170,8 +177,8 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
                             fragment, CHAT_DETAIL_FRAGMENT_TAG)
                     .commit();
         }else{
-            Intent intent = new Intent(this, ChatDetailsActivity.class);
-            intent.putExtra(ChatDetailsActivity.KEY_CHAT_CONTACT_ID, chatContact.getId());
+            Intent intent = new Intent(this, ChatMessagesActivity.class);
+            intent.putExtra(ChatMessagesActivity.KEY_CHAT_CONTACT_ID, chatContact.getId());
             startActivity(intent);
         }
     }
@@ -226,5 +233,19 @@ public class ChatContactsListActivity extends AppCompatActivity implements ChatC
     @Override
     public boolean isFragmentMenuVisible() {
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        int i = menuItem.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+        }
+        return (super.onOptionsItemSelected(menuItem));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

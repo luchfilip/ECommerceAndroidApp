@@ -23,10 +23,11 @@ import android.widget.Toast;
 import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService;
 import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
 import com.smartbuilders.smartsales.ecommerce.model.SalesOrderLine;
 import com.smartbuilders.smartsales.ecommerce.providers.BluetoothConnectionProvider;
-import com.smartbuilders.smartsales.ecommerce.services.RequestProductPriceToSalesMan;
+import com.smartbuilders.smartsales.ecommerce.services.SendChatMessageService;
 import com.smartbuilders.smartsales.salesforcesystem.DialogAddToShoppingSale2;
 import com.smartbuilders.smartsales.salesforcesystem.DialogUpdateShoppingSaleQtyOrdered;
 import com.smartbuilders.synchronizer.ids.model.User;
@@ -406,9 +407,12 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_request_price_button).setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent msgIntent = new Intent(getContext(), RequestProductPriceToSalesMan.class);
-                                                msgIntent.putExtra(RequestProductPriceToSalesMan.KEY_PRODUCT_ID, mProduct.getId());
-                                                msgIntent.putExtra(RequestProductPriceToSalesMan.KEY_USER_ID, mUser.getUserId());
+                                                Intent msgIntent = new Intent(getContext(), SendChatMessageService.class);
+                                                msgIntent.putExtra(SendChatMessageService.KEY_USER_ID, mUser.getUserId());
+                                                ChatMessage chatMessage = new ChatMessage();
+                                                chatMessage.setSenderChatContactId(mUser.getServerUserId());
+                                                chatMessage.setProductId(mProduct.getId());
+                                                msgIntent.putExtra(SendChatMessageService.KEY_CHAT_MESSAGE, chatMessage);
                                                 getContext().startService(msgIntent);
                                             }
                                         });

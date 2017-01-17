@@ -73,6 +73,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_chat_details" />
+    <include layout="@layout/content_chat_messages" />
 
 </LinearLayout>

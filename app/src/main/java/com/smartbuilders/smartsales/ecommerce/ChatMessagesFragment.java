@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.ChatMessagesAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ChatDetailsFragment extends Fragment {
+public class ChatMessagesFragment extends Fragment {
 
     private static final String STATE_CHAT_CONTACT_ID = "STATE_CHAT_CONTACT_ID";
     private static final String STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION = "STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION";
@@ -40,13 +41,13 @@ public class ChatDetailsFragment extends Fragment {
         boolean isFragmentMenuVisible();
     }
 
-    public ChatDetailsFragment() {
+    public ChatMessagesFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_chat_details, container, false);
+        final View view = inflater.inflate(R.layout.fragment_chat_messages, container, false);
         setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
 
         mIsInitialLoad = true;
@@ -65,12 +66,12 @@ public class ChatDetailsFragment extends Fragment {
                     }
 
                     if (getArguments() != null) {
-                        if (getArguments().containsKey(ChatDetailsActivity.KEY_CHAT_CONTACT_ID)) {
-                            mChatContactId = getArguments().getInt(ChatDetailsActivity.KEY_CHAT_CONTACT_ID);
+                        if (getArguments().containsKey(ChatMessagesActivity.KEY_CHAT_CONTACT_ID)) {
+                            mChatContactId = getArguments().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
                         }
                     } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-                        if (getActivity().getIntent().getExtras().containsKey(ChatDetailsActivity.KEY_CHAT_CONTACT_ID)) {
-                            mChatContactId = getActivity().getIntent().getExtras().getInt(ChatDetailsActivity.KEY_CHAT_CONTACT_ID);
+                        if (getActivity().getIntent().getExtras().containsKey(ChatMessagesActivity.KEY_CHAT_CONTACT_ID)) {
+                            mChatContactId = getActivity().getIntent().getExtras().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
                         }
                     }
 
@@ -103,6 +104,13 @@ public class ChatDetailsFragment extends Fragment {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
                                 }
 
+                                view.findViewById(R.id.chat_send_message_imageView).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ((EditText) view.findViewById(R.id.chat_message_to_send_editText))
+                                                .getText().toString();
+                                    }
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
@@ -124,6 +132,16 @@ public class ChatDetailsFragment extends Fragment {
         }.start();
         setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        if (mIsInitialLoad) {
+            mIsInitialLoad = false;
+        } else {
+            //reload messages
+        }
+        super.onStart();
     }
 
     @Override

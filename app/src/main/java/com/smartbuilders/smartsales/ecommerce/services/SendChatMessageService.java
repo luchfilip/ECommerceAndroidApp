@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce.services;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.utils.ApplicationUtilities;
 import com.smartbuilders.synchronizer.ids.utils.ConsumeWebService;
@@ -12,17 +13,17 @@ import org.ksoap2.serialization.SoapPrimitive;
 import java.util.LinkedHashMap;
 
 /**
- * Created by AlbertoSarco on 16/1/2017.
+ * Created by AlbertoSarco on 17/1/2017.
  */
-public class RequestProductPriceToSalesMan extends IntentService {
+public class SendChatMessageService extends IntentService {
 
-    public static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
+    public static final String KEY_CHAT_MESSAGE = "KEY_CHAT_MESSAGE";
     public static final String KEY_USER_ID = "KEY_USER_ID";
     public static final String ACTION_RESP = "ACTION_RESP";
     public static final String MESSAGE = "MESSAGE";
 
-    public RequestProductPriceToSalesMan() {
-        super(RequestProductPriceToSalesMan.class.getSimpleName());
+    public SendChatMessageService() {
+        super(SendChatMessageService.class.getSimpleName());
     }
 
     /**
@@ -30,13 +31,13 @@ public class RequestProductPriceToSalesMan extends IntentService {
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public RequestProductPriceToSalesMan(String name) {
+    public SendChatMessageService(String name) {
         super(name);
     }
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        int productId = workIntent.getIntExtra(KEY_PRODUCT_ID, -1);
+        ChatMessage chatMessage = workIntent.getParcelableExtra(KEY_CHAT_MESSAGE);
 
         User user = ApplicationUtilities.getUserByIdFromAccountManager(getApplicationContext(),
                 workIntent.getStringExtra(KEY_USER_ID));
@@ -46,12 +47,16 @@ public class RequestProductPriceToSalesMan extends IntentService {
             LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
             parameters.put("authToken", user.getAuthToken());
             parameters.put("userId", user.getServerUserId());
-            parameters.put("productId", productId);
+            parameters.put("senderChatContactId", chatMessage.getSenderChatContactId());
+            parameters.put("receiverChatContactId", chatMessage.getReceiverChatContactId());
+            parameters.put("message", chatMessage.getMessage());
+            parameters.put("chatMessageType", chatMessage.getChatMessageType());
+            parameters.put("productId", chatMessage.getProductId());
             ConsumeWebService a = new ConsumeWebService(getApplicationContext(),
                     user.getServerAddress(),
                     "/IntelligentDataSynchronizer/services/ManageCommunication?wsdl",
-                    "requestProductPrice",
-                    "urn:requestProductPrice",
+                    "sendChatMessage",
+                    "urn:sendChatMessage",
                     parameters);
             Object response =  a.getWSResponse();
             if(response instanceof SoapPrimitive){

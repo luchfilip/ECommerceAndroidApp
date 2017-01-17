@@ -201,7 +201,7 @@
             the service is only available to this app.
         -->
         <service
-            android:name=".services.RequestProductPriceToSalesMan"
+            android:name=".services.SendChatMessageService"
             android:exported="false" />
 
         <!-- GCM -->
@@ -386,7 +386,7 @@
             android:name=".SalesOrdersListQueryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChatDetailsActivity"
+            android:name=".ChatMessagesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChatContactsListActivity"

@@ -12,6 +12,10 @@ import java.util.Locale;
 public class ChatMessage extends Model implements Parcelable{
 
     private String message;
+    private int receiverChatContactId;
+    private int senderChatContactId;
+    private int productId;
+    private int chatMessageType;
 
     public ChatMessage() {
 
@@ -27,6 +31,38 @@ public class ChatMessage extends Model implements Parcelable{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getReceiverChatContactId() {
+        return receiverChatContactId;
+    }
+
+    public void setReceiverChatContactId(int receiverChatContactId) {
+        this.receiverChatContactId = receiverChatContactId;
+    }
+
+    public int getSenderChatContactId() {
+        return senderChatContactId;
+    }
+
+    public void setSenderChatContactId(int senderChatContactId) {
+        this.senderChatContactId = senderChatContactId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getChatMessageType() {
+        return chatMessageType;
+    }
+
+    public void setChatMessageType(int chatMessageType) {
+        this.chatMessageType = chatMessageType;
     }
 
     public String getCreatedStringFormat(){

@@ -41,7 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.BuildConfig;
-import com.smartbuilders.smartsales.ecommerce.ChatDetailsActivity;
+import com.smartbuilders.smartsales.ecommerce.ChatMessagesActivity;
 import com.smartbuilders.smartsales.ecommerce.ChatContactsListActivity;
 import com.smartbuilders.smartsales.ecommerce.NotificationsListActivity;
 import com.smartbuilders.smartsales.ecommerce.OrdersTrackingListActivity;
@@ -1047,7 +1047,7 @@ public class Utils {
                 User user = getCurrentUser(activity);
                 if (user != null) {
                     if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
-                        activity.startActivity(new Intent(activity, ChatDetailsActivity.class)
+                        activity.startActivity(new Intent(activity, ChatMessagesActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                     } else if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
                         activity.startActivity(new Intent(activity, ChatContactsListActivity.class)
