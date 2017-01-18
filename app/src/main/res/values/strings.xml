@@ -570,4 +570,5 @@
     <string name="orders_by_business_partners">Pedidos Cerrados Por Cliente</string>
     <string name="shopping_carts_by_business_partners">Pedidos Abiertos Por Cliente</string>
     <string name="no_recent_messages">No Hay Mensajes Recientes</string>
+    <string name="no_contacts_availabe">No Hay Contactos Disponibles</string>
 </resources>

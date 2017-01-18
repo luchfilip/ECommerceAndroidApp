@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.ChatContactsListAdapter;
@@ -81,7 +83,7 @@ public class ChatContactsListActivity extends AppCompatActivity
             public void onTabSelected(TabLayout.Tab tab) {
                 mCurrentTabSelected = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
-                //manageMenu();
+                manageMenu();
                 switch (tab.getPosition()) {
                     case 0:
                         if (fragments!=null && fragments.size()>0 && fragments.get(0)!=null
@@ -151,6 +153,16 @@ public class ChatContactsListActivity extends AppCompatActivity
             if (fragments.get(index) != null && fragments.get(index).getView() != null) {
                 if (fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper) != null) {
                     fragments.get(index).getView().findViewById(R.id.empty_layout_wallpaper).setVisibility(View.VISIBLE);
+                    if (index == 1) {
+                        if (fragments.get(index).getView().findViewById(R.id.empty_chat_list_textView) != null) {
+                            ((TextView) fragments.get(index).getView().findViewById(R.id.empty_chat_list_textView))
+                                    .setText(R.string.no_contacts_availabe);
+                        }
+                        if (fragments.get(index).getView().findViewById(R.id.empty_sales_order_list_imageView) != null) {
+                            ((ImageView) fragments.get(index).getView().findViewById(R.id.empty_sales_order_list_imageView))
+                                    .setImageResource(R.drawable.ic_supervisor_account_black_48dp);
+                        }
+                    }
                 }
                 if (fragments.get(index).getView().findViewById(R.id.chat_contacts_list) != null) {
                     fragments.get(index).getView().findViewById(R.id.chat_contacts_list).setVisibility(View.GONE);
@@ -250,7 +262,31 @@ public class ChatContactsListActivity extends AppCompatActivity
 
     @Override
     public void chatMessagesDetailLoaded() {
+        manageMenu();
+    }
 
+    private void manageMenu(){
+        if(mThreePane && getSupportFragmentManager()!=null){
+            //if(mTabLayout.getSelectedTabPosition()==0) {
+                if(getSupportFragmentManager().findFragmentByTag(CHAT_DETAIL_FRAGMENT_TAG)!=null){
+                    getSupportFragmentManager().findFragmentByTag(CHAT_DETAIL_FRAGMENT_TAG)
+                            .setMenuVisibility(true);
+                }
+                //if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                //    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
+                //            .setMenuVisibility(false);
+                //}
+            //}else{
+            //    if(getSupportFragmentManager().findFragmentByTag(CHAT_DETAIL_FRAGMENT_TAG)!=null){
+            //        getSupportFragmentManager().findFragmentByTag(CHAT_DETAIL_FRAGMENT_TAG)
+            //                .setMenuVisibility(false);
+            //    }
+                //if(getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)!=null){
+                //    getSupportFragmentManager().findFragmentByTag(OrdersListActivity.ORDER_DETAIL_FRAGMENT_TAG)
+                //            .setMenuVisibility(true);
+                //}
+            //}
+        }
     }
 
     @Override

@@ -12,13 +12,11 @@
     This layout is a two-pane layout for the Items master/detail flow.
     -->
 
-    <fragment
-        android:id="@+id/fragment_chat_contacts_list"
-        android:name="com.smartbuilders.smartsales.ecommerce.ChatContactsListFragment"
+    <com.smartbuilders.smartsales.ecommerce.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="@integer/two_pane_left_side_weight"
-        tools:layout="@layout/fragment_chat_contacts_list" />
+        android:layout_weight="@integer/two_pane_left_side_weight" />
 
     <FrameLayout
         android:id="@+id/chat_recent_detail_container"
