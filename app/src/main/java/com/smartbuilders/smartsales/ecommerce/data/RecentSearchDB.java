@@ -39,7 +39,6 @@ public class RecentSearchDB {
             if(!TextUtils.isEmpty(productName)){
                 mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                         .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                        //.appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
                         .build(), null,
                         "INSERT INTO RECENT_SEARCH (RECENT_SEARCH_ID, USER_ID, PRODUCT_ID, SUBCATEGORY_ID, TEXT_TO_SEARCH, " +
                                 " CREATE_TIME, APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -61,7 +60,6 @@ public class RecentSearchDB {
         try {
             mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                     .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
-                    //.appendQueryParameter(DataBaseContentProvider.KEY_SEND_DATA_TO_SERVER, String.valueOf(Boolean.TRUE))
                     .build(), null, "UPDATE RECENT_SEARCH SET IS_ACTIVE = ?, SEQUENCE_ID = 0 WHERE RECENT_SEARCH_ID = ? AND USER_ID = ?",
                     new String[]{"N", String.valueOf(recentSearchId), String.valueOf(mUser.getServerUserId())});
         } catch (Exception e){

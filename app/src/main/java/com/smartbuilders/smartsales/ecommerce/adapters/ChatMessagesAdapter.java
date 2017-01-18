@@ -28,6 +28,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     private ArrayList<ChatMessage> mDataset;
     private Context mContext;
     private User mUser;
+    private int mSenderChatContactId;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,10 +48,11 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ChatMessagesAdapter(Context context, ArrayList<ChatMessage> myDataset, User user) {
+    public ChatMessagesAdapter(Context context, ArrayList<ChatMessage> myDataset, User user, int senderChatContactId) {
         mDataset = myDataset;
         mUser = user;
         mContext = context;
+        mSenderChatContactId = senderChatContactId;
     }
 
     // Create new views (invoked by the layout manager)
@@ -70,7 +72,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
 
         holder.message.setText(mDataset.get(position).getMessage());
         holder.created.setText(mDataset.get(position).getCreatedStringFormat());
-        if (mDataset.get(position).getSenderChatContactId() == mUser.getServerUserId()) {
+        if (mDataset.get(position).getSenderChatContactId() == mSenderChatContactId) {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.RIGHT;
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_sent);

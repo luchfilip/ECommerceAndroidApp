@@ -173,6 +173,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_category"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="@dimen/productDetailActivity_description_text_size"
                 android:focusable="false"
                 android:textColor="@color/black" />
@@ -181,6 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_subcategory"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="@dimen/productDetailActivity_description_text_size"
                 android:focusable="false"
                 android:textColor="@color/black" />
@@ -189,6 +193,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_brand"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:focusable="false"
                 android:textColor="@color/black"
                 android:textSize="@dimen/productDetailActivity_productBrand_text_size"
@@ -199,6 +205,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/product_description"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
                 android:textSize="@dimen/productDetailActivity_description_text_size"
                 android:focusable="false"
                 android:textColor="@color/black" />

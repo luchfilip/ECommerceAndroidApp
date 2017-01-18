@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -169,8 +170,8 @@ public class DialogAddToShoppingSale extends DialogFragment {
         if(view.findViewById(R.id.product_commercial_package) != null){
             if(mProduct.getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getString(R.string.commercial_package_label_detail,
-                        mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits()));
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(Html.fromHtml(getString(R.string.commercial_package_label_detail_html,
+                        mProduct.getProductCommercialPackage().getUnitDescription(), mProduct.getProductCommercialPackage().getUnits())));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }

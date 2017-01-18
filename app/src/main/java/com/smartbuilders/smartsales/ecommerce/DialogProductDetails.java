@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -201,8 +202,8 @@ public class DialogProductDetails extends DialogFragment {
 
         if(mProduct.getProductBrand()!=null
                 && !TextUtils.isEmpty(mProduct.getProductBrand().getName())){
-            ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
-                    mProduct.getProductBrand().getName()));
+            ((TextView) view.findViewById(R.id.product_brand)).setText(Html.fromHtml(getString(R.string.brand_detail_html,
+                    mProduct.getProductBrand().getName())));
             view.findViewById(R.id.product_brand).setVisibility(TextView.VISIBLE);
         }else{
             view.findViewById(R.id.product_brand).setVisibility(TextView.GONE);
@@ -220,16 +221,16 @@ public class DialogProductDetails extends DialogFragment {
         }
 
         if(!TextUtils.isEmpty(mProduct.getDescription())){
-            ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
-                    mProduct.getDescription()));
+            ((TextView) view.findViewById(R.id.product_description)).setText(Html.fromHtml(getString(R.string.product_description_detail_html,
+                    mProduct.getDescription())));
             view.findViewById(R.id.product_description).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_description).setVisibility(View.GONE);
         }
 
         if(!TextUtils.isEmpty(mProduct.getPurpose())){
-            ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
-                    mProduct.getPurpose()));
+            ((TextView) view.findViewById(R.id.product_purpose)).setText(Html.fromHtml(getString(R.string.product_purpose_detail_html,
+                    mProduct.getPurpose())));
             view.findViewById(R.id.product_purpose).setVisibility(View.VISIBLE);
         }else{
             view.findViewById(R.id.product_purpose).setVisibility(View.GONE);

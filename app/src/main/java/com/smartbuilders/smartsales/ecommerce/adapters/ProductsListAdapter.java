@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -258,9 +259,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             if (mDataset.get(position).getProductCommercialPackage() != null
                     && !TextUtils.isEmpty(mDataset.get(position).getProductCommercialPackage().getUnitDescription())
                     && mDataset.get(position).getProductCommercialPackage().getUnits() > 0) {
-                holder.productCommercialPackage.setText(mContext.getString(R.string.commercial_package_label_detail,
+                holder.productCommercialPackage.setText(Html.fromHtml(mContext.getString(R.string.commercial_package_label_detail_html,
                         mDataset.get(position).getProductCommercialPackage().getUnitDescription(),
-                        mDataset.get(position).getProductCommercialPackage().getUnits()));
+                        mDataset.get(position).getProductCommercialPackage().getUnits())));
                 holder.productCommercialPackage.setVisibility(View.VISIBLE);
             } else {
                 holder.productCommercialPackage.setVisibility(View.GONE);
@@ -364,8 +365,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             if (holder.productBrand!=null) {
                 if (mDataset.get(position).getProductBrand() != null
                         && !TextUtils.isEmpty(mDataset.get(position).getProductBrand().getName())) {
-                    holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                            mDataset.get(position).getProductBrand().getName()));
+                    holder.productBrand.setText(Html.fromHtml(mContext.getString(R.string.brand_detail_html,
+                            mDataset.get(position).getProductBrand().getName())));
                     holder.productBrand.setVisibility(TextView.VISIBLE);
                 } else {
                     holder.productBrand.setVisibility(TextView.GONE);
@@ -388,8 +389,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
             if(holder.productDescription!=null){
                 if(!TextUtils.isEmpty(mDataset.get(position).getDescription())){
-                    holder.productDescription.setText(mContext.getString(R.string.product_description_detail,
-                            mDataset.get(position).getDescription()));
+                    holder.productDescription.setText(Html.fromHtml(mContext.getString(R.string.product_description_detail_html,
+                            mDataset.get(position).getDescription())));
                     holder.productDescription.setVisibility(View.VISIBLE);
                 }else{
                     holder.productDescription.setVisibility(View.GONE);
@@ -398,8 +399,8 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
             if(holder.productPurpose!=null){
                 if(!TextUtils.isEmpty(mDataset.get(position).getPurpose())){
-                    holder.productPurpose.setText(mContext.getString(R.string.product_purpose_detail,
-                            mDataset.get(position).getPurpose()));
+                    holder.productPurpose.setText(Html.fromHtml(mContext.getString(R.string.product_purpose_detail_html,
+                            mDataset.get(position).getPurpose())));
                     holder.productPurpose.setVisibility(View.VISIBLE);
                 }else{
                     holder.productPurpose.setVisibility(View.GONE);

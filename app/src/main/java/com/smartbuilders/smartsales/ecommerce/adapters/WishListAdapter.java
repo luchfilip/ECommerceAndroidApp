@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -291,8 +292,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
         if (mDataset.get(position).getProduct().getProductBrand() != null
                 && mDataset.get(position).getProduct().getProductBrand().getName() != null) {
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProduct().getProductBrand().getName()));
+            holder.productBrand.setText(Html.fromHtml(mContext.getString(R.string.brand_detail_html,
+                    mDataset.get(position).getProduct().getProductBrand().getName())));
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.GONE);

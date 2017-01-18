@@ -32,6 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -50,6 +51,7 @@ import com.smartbuilders.smartsales.ecommerce.SettingsImagesManagement;
 import com.smartbuilders.smartsales.ecommerce.WelcomeScreenSlideActivity;
 import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
 import com.smartbuilders.smartsales.ecommerce.data.NotificationHistoryDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesRepDB;
 import com.smartbuilders.smartsales.ecommerce.data.UserBusinessPartnerDB;
 import com.smartbuilders.smartsales.ecommerce.model.NotificationHistory;
 import com.smartbuilders.smartsales.salesforcesystem.PricesListActivity;
@@ -190,28 +192,28 @@ public class Utils {
 
         if(product.getProductBrand()!=null
                 && !TextUtils.isEmpty(product.getProductBrand().getName())){
-            ((TextView) view.findViewById(R.id.product_brand)).setText(context.getString(R.string.brand_detail,
-                    product.getProductBrand().getName()));
+            ((TextView) view.findViewById(R.id.product_brand)).setText(Html.fromHtml(context.getString(R.string.brand_detail_html,
+                    product.getProductBrand().getName())));
         }else{
             view.findViewById(R.id.product_brand).setVisibility(TextView.GONE);
         }
         if(!TextUtils.isEmpty(product.getDescription())){
-            ((TextView) view.findViewById(R.id.product_description)).setText(context.getString(R.string.product_description_detail,
-                    product.getDescription()));
+            ((TextView) view.findViewById(R.id.product_description)).setText(Html.fromHtml(context.getString(R.string.product_description_detail_html,
+                    product.getDescription())));
         }else{
             view.findViewById(R.id.product_description).setVisibility(View.GONE);
         }
         if(!TextUtils.isEmpty(product.getPurpose())){
-            ((TextView) view.findViewById(R.id.product_purpose)).setText(context.getString(R.string.product_purpose_detail,
-                    product.getPurpose()));
+            ((TextView) view.findViewById(R.id.product_purpose)).setText(Html.fromHtml(context.getString(R.string.product_purpose_detail_html,
+                    product.getPurpose())));
         }else{
             view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
         }
 
         if(product.getProductCommercialPackage()!=null
                 && !TextUtils.isEmpty(product.getProductCommercialPackage().getUnitDescription())){
-            ((TextView) view.findViewById(R.id.product_commercial_package)).setText(context.getString(R.string.commercial_package_label_detail,
-                    product.getProductCommercialPackage().getUnitDescription(), product.getProductCommercialPackage().getUnits()));
+            ((TextView) view.findViewById(R.id.product_commercial_package)).setText(Html.fromHtml(context.getString(R.string.commercial_package_label_detail_html,
+                    product.getProductCommercialPackage().getUnitDescription(), product.getProductCommercialPackage().getUnits())));
         }else{
             view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
         }
@@ -1048,6 +1050,7 @@ public class Utils {
                 if (user != null) {
                     if (user.getUserProfileId() == UserProfile.BUSINESS_PARTNER_PROFILE_ID) {
                         activity.startActivity(new Intent(activity, ChatMessagesActivity.class)
+                                .putExtra(ChatMessagesActivity.KEY_CHAT_CONTACT_ID, new SalesRepDB(activity, user).getSalesRepId())
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP));
                     } else if (user.getUserProfileId() == UserProfile.SALES_MAN_PROFILE_ID) {
                         activity.startActivity(new Intent(activity, ChatContactsListActivity.class)

@@ -21,10 +21,10 @@
     <string name="related_shopping_products">Productos relacionados según pedidos</string>
     <string name="title_activity_login">Iniciar Sesión</string>
     <string name="product_details_label">Detalles del Producto</string>
-    <string name="product_description_detail">Descripción: %1$s</string>
-    <string name="product_purpose_detail">Uso: %1$s</string>
-    <string name="product_category_detail">Categoría: %1$s</string>
-    <string name="product_subcategory_detail">SubCategoría: %1$s</string>
+    <string name="product_description_detail_html">&lt;b&gt;Descripción:&lt;/b&gt; %1$s</string>
+    <string name="product_purpose_detail_html">&lt;b&gt;Uso:&lt;/b&gt; %1$s</string>
+    <string name="product_category_detail_html_link">&lt;b&gt;Categoría:&lt;/b&gt; &lt;font color="#07C"&gt;&lt;u&gt;%1$s&lt;/u&gt;&lt;/font&gt;</string>
+    <string name="product_subcategory_detail_html_link">&lt;b&gt;SubCategoría:&lt;/b&gt; &lt;font color="#07C"&gt;&lt;u&gt;%1$s&lt;/u&gt;&lt;/font&gt;</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar Producto</string>
     <string name="shopping_cart">Pedido Abierto</string>
@@ -123,7 +123,7 @@
     <string name="title_activity_filter_options">Busqueda Por</string>
     <string name="title_activity_brands_list">Marcas</string>
     <string name="commercial_package">%1$s %2$d</string>
-    <string name="commercial_package_label_detail">Empaque: %1$s %2$d</string>
+    <string name="commercial_package_label_detail_html">&lt;b&gt;Empaque:&lt;/b&gt; %1$s %2$d</string>
     <string name="availability">Disponibles: %1$d</string>
     <string name="availability_variation">Variación Disp.: %1$s</string>
     <string name="availability_positive_variation">Variación Disp.: +%1$s</string>
@@ -155,6 +155,8 @@
     <string name="title_activity_sales_orders_list">Cotizaciones</string>
     <string name="product_put_in_wishlist">Producto agregado a Favoritos.</string>
     <string name="brand_detail">Marca: %1$s</string>
+    <string name="brand_detail_html">&lt;b&gt;Marca:&lt;/b&gt; %1$s</string>
+    <string name="brand_detail_html_link">&lt;b&gt;Marca:&lt;/b&gt; &lt;font color="#07C"&gt;&lt;u&gt;%1$s&lt;/u&gt;&lt;/font&gt;</string>
     <string name="my_purchases">Mis Compras</string>
     <string name="my_orders">Mis Pedidos</string>
     <string name="my_sales_orders">Mis Cotizaciones</string>
@@ -571,4 +573,6 @@
     <string name="shopping_carts_by_business_partners">Pedidos Abiertos Por Cliente</string>
     <string name="no_recent_messages">No Hay Mensajes Recientes</string>
     <string name="no_contacts_availabe">No Hay Contactos Disponibles</string>
+    <string name="request_price_chat_message">Solicitud de precio para el articulo %1$s, cod: %2$s.</string>
+    <string name="product_price_requested">Solicitud de precio</string>
 </resources>

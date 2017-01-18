@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -278,8 +279,8 @@ public class ProductsListActivity extends AppCompatActivity
                                     } else if (productBrandId != 0) {
                                         if(products.get(0).getProductBrand()!=null
                                                 && !TextUtils.isEmpty(products.get(0).getProductBrand().getName())){
-                                            categorySubcategoryResultsTextView.setText(getString(R.string.brand_detail,
-                                                    products.get(0).getProductBrand().getName()));
+                                            categorySubcategoryResultsTextView.setText(Html.fromHtml(getString(R.string.brand_detail_html,
+                                                    products.get(0).getProductBrand().getName())));
                                         }
                                     } else if (productName != null) {
                                         categorySubcategoryResultsTextView.setText(getString(R.string.search_pattern_detail,

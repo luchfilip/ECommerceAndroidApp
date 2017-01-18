@@ -71,7 +71,7 @@ public class SendChatMessageService extends IntentService {
                         parameters);
                 Object response = a.getWSResponse();
                 if (response instanceof SoapPrimitive) {
-                    //resultMsg = response.toString();
+                    //Log.d(SendChatMessageService.class.getSimpleName(), "response: "+response.toString());
                 } else if (response != null) {
                     throw new ClassCastException("response classCastException.");
                 } else {

@@ -35,9 +35,9 @@ public class ChatMessageDB {
                             .build(), null,
                     "SELECT CHAT_MESSAGE_ID, CREATE_TIME, MESSAGE, SENDER_USER_ID, RECEIVER_USER_ID, PRODUCT_ID, STATUS " +
                     " FROM CHAT_MESSAGE " +
-                    " WHERE IS_ACTIVE = ? AND (SENDER_USER_ID = ? OR RECEIVER_USER_ID = ?) " +
+                    " WHERE (SENDER_USER_ID = ? OR RECEIVER_USER_ID = ?) AND IS_ACTIVE = ? " +
                     " ORDER BY CHAT_MESSAGE_ID ASC",
-                    new String[]{"Y", String.valueOf(chatContactId), String.valueOf(chatContactId)}, null);
+                    new String[]{String.valueOf(chatContactId), String.valueOf(chatContactId), "Y"}, null);
             if(c!=null){
                 while (c.moveToNext()) {
                     ChatMessage chatMessage = new ChatMessage();

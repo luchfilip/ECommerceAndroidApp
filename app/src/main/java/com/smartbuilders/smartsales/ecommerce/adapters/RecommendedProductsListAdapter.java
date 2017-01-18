@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -272,8 +273,8 @@ public class RecommendedProductsListAdapter extends
 
         if (mDataset.get(position).getProductBrand() != null
                 && mDataset.get(position).getProductBrand().getName() != null) {
-            holder.productBrand.setText(mContext.getString(R.string.brand_detail,
-                    mDataset.get(position).getProductBrand().getName()));
+            holder.productBrand.setText(Html.fromHtml(mContext.getString(R.string.brand_detail_html,
+                    mDataset.get(position).getProductBrand().getName())));
             holder.productBrand.setVisibility(View.VISIBLE);
         } else {
             holder.productBrand.setVisibility(View.GONE);

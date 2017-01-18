@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.smartbuilders.smartsales.ecommerce.adapters.ChatMessagesAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
 import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesRepDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatContact;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.smartsales.ecommerce.services.SendChatMessageService;
@@ -34,8 +35,9 @@ public class ChatMessagesFragment extends Fragment {
 
     private User mUser;
     private boolean mIsInitialLoad;
-    private int mChatContactId;
-    private ChatContact mChatContact;
+    private int mSenderChatContactId;
+    private int mReceiverChatContactId;
+    private ChatContact mReceiverChatContact;
     private ArrayList<ChatMessage> mChatMessages;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
@@ -62,7 +64,7 @@ public class ChatMessagesFragment extends Fragment {
                 try {
                     if (savedInstanceState!=null) {
                         if (savedInstanceState.containsKey(STATE_CHAT_CONTACT_ID)) {
-                            mChatContactId = savedInstanceState.getInt(STATE_CHAT_CONTACT_ID);
+                            mReceiverChatContactId = savedInstanceState.getInt(STATE_CHAT_CONTACT_ID);
                         }
                         if (savedInstanceState.containsKey(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION)) {
                             mRecyclerViewCurrentFirstPosition = savedInstanceState.getInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION);
@@ -71,23 +73,25 @@ public class ChatMessagesFragment extends Fragment {
 
                     if (getArguments() != null) {
                         if (getArguments().containsKey(ChatMessagesActivity.KEY_CHAT_CONTACT_ID)) {
-                            mChatContactId = getArguments().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
+                            mReceiverChatContactId = getArguments().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
                         }
                     } else if (getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
                         if (getActivity().getIntent().getExtras().containsKey(ChatMessagesActivity.KEY_CHAT_CONTACT_ID)) {
-                            mChatContactId = getActivity().getIntent().getExtras().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
+                            mReceiverChatContactId = getActivity().getIntent().getExtras().getInt(ChatMessagesActivity.KEY_CHAT_CONTACT_ID);
                         }
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
 
-                    if (mChatContactId>0) {
-                        mChatContact = (new ChatContactDB(getContext(), mUser)).getContactById(mChatContactId);
+                    if (mReceiverChatContactId >0) {
+                        mReceiverChatContact = (new ChatContactDB(getContext(), mUser)).getContactById(mReceiverChatContactId);
                     }
 
-                    if (mChatContact != null) {
-                        mChatMessages = (new ChatMessageDB(getContext(), mUser)).getMessagesFromContact(mChatContact.getId());
+                    if (mReceiverChatContact != null) {
+                        mChatMessages = (new ChatMessageDB(getContext(), mUser)).getMessagesFromContact(mReceiverChatContactId);
                     }
+
+                    mSenderChatContactId = new SalesRepDB(getContext(), mUser).getSalesRepId();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -102,7 +106,7 @@ public class ChatMessagesFragment extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new ChatMessagesAdapter(getContext(), mChatMessages, mUser));
+                                recyclerView.setAdapter(new ChatMessagesAdapter(getContext(), mChatMessages, mUser, mSenderChatContactId));
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
@@ -118,8 +122,8 @@ public class ChatMessagesFragment extends Fragment {
                                                 ((EditText) view.findViewById(R.id.chat_message_to_send_editText)).setText(null);
 
                                                 ChatMessage chatMessage = new ChatMessage();
-                                                chatMessage.setSenderChatContactId(mUser.getServerUserId());
-                                                chatMessage.setReceiverChatContactId(mChatContactId);
+                                                chatMessage.setSenderChatContactId(mSenderChatContactId);
+                                                chatMessage.setReceiverChatContactId(mReceiverChatContactId);
                                                 chatMessage.setMessage(messageToSend);
                                                 chatMessage.setCreated(new Date());
                                                 ((ChatMessagesAdapter) recyclerView.getAdapter()).addChatMessage(chatMessage);
@@ -137,7 +141,7 @@ public class ChatMessagesFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                if (mChatContact!=null) {
+                                if (mReceiverChatContact !=null) {
                                     view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
                                     view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
                                 } else {
@@ -169,7 +173,7 @@ public class ChatMessagesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_CHAT_CONTACT_ID, mChatContactId);
+        outState.putInt(STATE_CHAT_CONTACT_ID, mReceiverChatContactId);
         try {
             if (mLinearLayoutManager instanceof GridLayoutManager) {
                 outState.putInt(STATE_RECYCLER_VIEW_CURRENT_FIRST_POSITION,

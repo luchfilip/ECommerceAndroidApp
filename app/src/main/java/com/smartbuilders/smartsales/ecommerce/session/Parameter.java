@@ -314,4 +314,8 @@ public class Parameter {
         return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_REQUEST_PRICE_AVAILABLE, true);
     }
 
+    public static boolean isBluetoothChatAvailable(Context context, User user) {
+        return false;
+    }
+
 }

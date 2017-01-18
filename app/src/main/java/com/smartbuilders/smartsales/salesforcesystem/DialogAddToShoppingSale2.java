@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.salesforcesystem;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,9 +73,9 @@ public class DialogAddToShoppingSale2 extends DialogFragment {
             if(mProduct.getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())){
                 ((TextView) view.findViewById(R.id.product_commercial_package_textView))
-                        .setText(getContext().getString(R.string.commercial_package_label_detail,
+                        .setText(Html.fromHtml(getContext().getString(R.string.commercial_package_label_detail_html,
                                 mProduct.getProductCommercialPackage().getUnitDescription(),
-                                mProduct.getProductCommercialPackage().getUnits()));
+                                mProduct.getProductCommercialPackage().getUnits())));
             }else{
                 view.findViewById(R.id.product_commercial_package_textView).setVisibility(TextView.GONE);
             }

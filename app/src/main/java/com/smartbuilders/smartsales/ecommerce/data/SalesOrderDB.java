@@ -83,47 +83,6 @@ public class SalesOrderDB {
         return null;
     }
 
-    ///**
-    // *
-    // * @param businessPartnerId
-    // * @return
-    // */
-    //private SalesOrder getSalesOrderFromShoppingSale(int businessPartnerId) {
-    //    Cursor c = null;
-    //    try {
-    //        c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-    //                .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(), null,
-    //                "SELECT SUB_TOTAL_LINE, TAX_AMOUNT, TOTAL_LINE " +
-    //                " FROM ECOMMERCE_SALES_ORDER_LINE " +
-    //                " WHERE BUSINESS_PARTNER_ID = ? AND USER_ID = ? AND DOC_TYPE = ? AND IS_ACTIVE = ? ",
-    //                new String[]{String.valueOf(businessPartnerId),
-    //                        String.valueOf(mUser.getServerUserId()),
-    //                        SalesOrderLineDB.SHOPPING_SALE_DOC_TYPE, "Y"}, null);
-    //        if(c!=null){
-    //            SalesOrder salesOrder = new SalesOrder();
-    //            salesOrder.setBusinessPartnerId(businessPartnerId);
-    //            while(c.moveToNext()){
-    //                salesOrder.setLinesNumber(salesOrder.getLinesNumber() + 1);
-    //                salesOrder.setSubTotalAmount(salesOrder.getSubTotalAmount() + c.getDouble(0));
-    //                salesOrder.setTaxAmount(salesOrder.getTaxAmount() + c.getDouble(1));
-    //                salesOrder.setTotalAmount(salesOrder.getTotalAmount() + c.getDouble(2));
-    //            }
-    //            return salesOrder;
-    //        }
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    } finally {
-    //        if(c!=null){
-    //            try {
-    //                c.close();
-    //            } catch (Exception e){
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
-    //    return null;
-    //}
-
     public SalesOrder getSalesOrderById(int salesOrderId) {
         Cursor c = null;
         SalesOrder salesOrder = null;

@@ -3,6 +3,7 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -144,8 +145,8 @@ public class DialogUpdateShoppingCartQtyOrdered extends DialogFragment {
         if(view.findViewById(R.id.product_commercial_package) != null){
             if(mOrderLine.getProduct()!=null && mOrderLine.getProduct().getProductCommercialPackage()!=null
                     && !TextUtils.isEmpty(mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription())){
-                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(getContext().getString(R.string.commercial_package_label_detail,
-                        mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(), mOrderLine.getProduct().getProductCommercialPackage().getUnits()));
+                ((TextView) view.findViewById(R.id.product_commercial_package)).setText(Html.fromHtml(getContext().getString(R.string.commercial_package_label_detail_html,
+                        mOrderLine.getProduct().getProductCommercialPackage().getUnitDescription(), mOrderLine.getProduct().getProductCommercialPackage().getUnits())));
             }else{
                 view.findViewById(R.id.product_commercial_package).setVisibility(TextView.GONE);
             }

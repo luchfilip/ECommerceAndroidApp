@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import com.smartbuilders.smartsales.ecommerce.bluetoothchat.BluetoothChatService
 import com.smartbuilders.smartsales.ecommerce.data.ProductCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.ProductSubCategoryDB;
 import com.smartbuilders.smartsales.ecommerce.data.SalesOrderLineDB;
+import com.smartbuilders.smartsales.ecommerce.data.SalesRepDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.smartsales.ecommerce.model.ProductCategory;
 import com.smartbuilders.smartsales.ecommerce.model.ProductSubCategory;
@@ -106,22 +109,24 @@ public class ProductDetailFragment extends Fragment {
                         //Se agrega el producto a la lista de productos recientemente vistos
                         (new ProductRecentlySeenDB(getContext(), mUser)).addProduct(mProduct.getId());
 
-                        // Se envia el id del producto por bluetooth
-                        Cursor cursor = null;
-                        try {
-                            cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
-                            // Check that we're actually connected before trying anything
-                            if(cursor!=null && cursor.moveToNext() && cursor.getInt(0)==BluetoothChatService.STATE_CONNECTED){
-                                cursor.close();
-                                // Get the message and tell the BluetoothChatService to write
-                                cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
-                                        .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, String.valueOf(mProduct.getId())).build(), null, null, null, null);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (cursor!=null) {
-                                cursor.close();
+                        if (Parameter.isBluetoothChatAvailable(getContext(), mUser)) {
+                            // Se envia el id del producto por bluetooth
+                            Cursor cursor = null;
+                            try {
+                                cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.GET_CHAT_SERVICE_STATE_URI, null, null, null, null);
+                                // Check that we're actually connected before trying anything
+                                if (cursor != null && cursor.moveToNext() && cursor.getInt(0) == BluetoothChatService.STATE_CONNECTED) {
+                                    cursor.close();
+                                    // Get the message and tell the BluetoothChatService to write
+                                    cursor = getContext().getContentResolver().query(BluetoothConnectionProvider.SEND_MESSAGE_URI.buildUpon()
+                                            .appendQueryParameter(BluetoothConnectionProvider.KEY_MESSAGE, String.valueOf(mProduct.getId())).build(), null, null, null, null);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (cursor != null) {
+                                    cursor.close();
+                                }
                             }
                         }
                     }
@@ -193,51 +198,59 @@ public class ProductDetailFragment extends Fragment {
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getDescription())) {
-                                        ((TextView) view.findViewById(R.id.product_description)).setText(mProduct.getDescription());
+                                        ((TextView) view.findViewById(R.id.product_description)).setText(Html.fromHtml(getString(R.string.product_description_detail_html,
+                                                mProduct.getDescription())));
                                     } else {
                                         view.findViewById(R.id.product_description).setVisibility(View.GONE);
                                     }
 
-                                    if (!TextUtils.isEmpty(mProduct.getDescription())) {
-                                        ((TextView) view.findViewById(R.id.product_description)).setText(getString(R.string.product_description_detail,
-                                                mProduct.getDescription()));
-                                    } else {
-                                        view.findViewById(R.id.product_description).setVisibility(View.GONE);
-                                    }
-
-                                    if (!TextUtils.isEmpty(mProduct.getPurpose())) {
-                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
-                                                mProduct.getPurpose()));
-                                    } else {
-                                        view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
-                                    }
-
-                                    ProductCategory productCategory = (new ProductCategoryDB(getContext(), mUser))
+                                    final ProductCategory productCategory = (new ProductCategoryDB(getContext(), mUser))
                                             .getProductCategory(mProduct.getProductCategoryId());
                                     if (productCategory!=null && !TextUtils.isEmpty(productCategory.getName())) {
-                                        ((TextView) view.findViewById(R.id.product_category)).setText(getString(R.string.product_category_detail,
-                                                productCategory.getName()));
+                                        ((TextView) view.findViewById(R.id.product_category)).setText(Html.fromHtml(getString(R.string.product_category_detail_html_link,
+                                                productCategory.getName())));
+                                        view.findViewById(R.id.product_category).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                startActivity(new Intent(getContext(), ProductsListActivity.class)
+                                                        .putExtra(ProductsListActivity.KEY_PRODUCT_CATEGORY_ID, productCategory.getId()));
+                                            }
+                                        });
                                     } else {
                                         view.findViewById(R.id.product_category).setVisibility(View.GONE);
                                     }
 
                                     if (mProductSubCategory!=null && !TextUtils.isEmpty(mProductSubCategory.getName())) {
-                                        ((TextView) view.findViewById(R.id.product_subcategory)).setText(getString(R.string.product_subcategory_detail,
-                                                mProductSubCategory.getName()));
+                                        ((TextView) view.findViewById(R.id.product_subcategory)).setText(Html.fromHtml(getString(R.string.product_subcategory_detail_html_link,
+                                                mProductSubCategory.getName())));
+                                        view.findViewById(R.id.product_subcategory).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                startActivity(new Intent(getContext(), ProductsListActivity.class)
+                                                        .putExtra(ProductsListActivity.KEY_PRODUCT_SUBCATEGORY_ID, mProductSubCategory.getId()));
+                                            }
+                                        });
                                     } else {
                                         view.findViewById(R.id.product_subcategory).setVisibility(View.GONE);
                                     }
 
                                     if (!TextUtils.isEmpty(mProduct.getPurpose())) {
-                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(getString(R.string.product_purpose_detail,
-                                                mProduct.getPurpose()));
+                                        ((TextView) view.findViewById(R.id.product_purpose)).setText(Html.fromHtml(getString(R.string.product_purpose_detail_html,
+                                                mProduct.getPurpose())));
                                     } else {
                                         view.findViewById(R.id.product_purpose).setVisibility(View.GONE);
                                     }
 
                                     if (mProduct.getProductBrand() != null && !TextUtils.isEmpty(mProduct.getProductBrand().getName())) {
-                                        ((TextView) view.findViewById(R.id.product_brand)).setText(getString(R.string.brand_detail,
-                                                mProduct.getProductBrand().getName()));
+                                        ((TextView) view.findViewById(R.id.product_brand)).setText(Html.fromHtml(getString(R.string.brand_detail_html_link,
+                                                mProduct.getProductBrand().getName())));
+                                        view.findViewById(R.id.product_brand).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                startActivity(new Intent(getContext(), ProductsListActivity.class)
+                                                        .putExtra(ProductsListActivity.KEY_PRODUCT_BRAND_ID, mProduct.getProductBrandId()));
+                                            }
+                                        });
                                     } else {
                                         view.findViewById(R.id.product_brand).setVisibility(View.GONE);
                                     }
@@ -355,9 +368,9 @@ public class ProductDetailFragment extends Fragment {
                                             && !TextUtils.isEmpty(mProduct.getProductCommercialPackage().getUnitDescription())
                                             && mProduct.getProductCommercialPackage().getUnits()>0) {
                                         ((TextView) view.findViewById(R.id.product_commercial_package))
-                                                .setText(getContext().getString(R.string.commercial_package_label_detail,
+                                                .setText(Html.fromHtml(getContext().getString(R.string.commercial_package_label_detail_html,
                                                         mProduct.getProductCommercialPackage().getUnitDescription(),
-                                                        mProduct.getProductCommercialPackage().getUnits()));
+                                                        mProduct.getProductCommercialPackage().getUnits())));
                                     } else {
                                         view.findViewById(R.id.product_commercial_package).setVisibility(View.GONE);
                                     }
@@ -434,13 +447,29 @@ public class ProductDetailFragment extends Fragment {
                                         view.findViewById(R.id.product_request_price_button).setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent msgIntent = new Intent(getContext(), SendChatMessageService.class);
-                                                msgIntent.putExtra(SendChatMessageService.KEY_USER_ID, mUser.getUserId());
-                                                ChatMessage chatMessage = new ChatMessage();
-                                                chatMessage.setSenderChatContactId(mUser.getServerUserId());
-                                                chatMessage.setProductId(mProduct.getId());
-                                                msgIntent.putExtra(SendChatMessageService.KEY_CHAT_MESSAGE, chatMessage);
-                                                getContext().startService(msgIntent);
+                                                try {
+                                                    final int senderChatContactId = new SalesRepDB(getContext(), mUser).getSalesRepId();
+                                                    Intent msgIntent = new Intent(getContext(), SendChatMessageService.class);
+                                                    msgIntent.putExtra(SendChatMessageService.KEY_USER_ID, mUser.getUserId());
+                                                    ChatMessage chatMessage = new ChatMessage();
+                                                    chatMessage.setSenderChatContactId(senderChatContactId);
+                                                    chatMessage.setProductId(mProduct.getId());
+                                                    chatMessage.setChatMessageType(ChatMessage.TYPE_REQUEST_PRODUCT_PRICE);
+                                                    chatMessage.setMessage(getString(R.string.request_price_chat_message,
+                                                            mProduct.getName(), mProduct.getInternalCodeMayoreoFormat()));
+                                                    msgIntent.putExtra(SendChatMessageService.KEY_CHAT_MESSAGE, chatMessage);
+                                                    getContext().startService(msgIntent);
+                                                    Snackbar.make(view.findViewById(R.id.main_layout), R.string.product_price_requested, Snackbar.LENGTH_LONG)
+                                                            .setAction(R.string.chat, new View.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View view) {
+                                                                    startActivity(new Intent(getContext(), ChatMessagesActivity.class)
+                                                                            .putExtra(ChatMessagesActivity.KEY_CHAT_CONTACT_ID, senderChatContactId));
+                                                                }
+                                                            }).show();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
                                         });
                                         view.findViewById(R.id.product_request_price_button).setVisibility(View.VISIBLE);

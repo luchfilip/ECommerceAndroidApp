@@ -90,7 +90,8 @@ public class OrderDetailFragment extends Fragment {
                     }
 
                     mUser = Utils.getCurrentUser(getContext());
-                    mOrderLineAdapter = new OrderLineAdapter(getContext(), new OrderLineDB(getContext(), mUser).getActiveFinalizedOrderLinesByOrderId(mOrderId), mUser);
+                    mOrderLineAdapter = new OrderLineAdapter(getContext(), new OrderLineDB(getContext(), mUser)
+                            .getActiveFinalizedOrderLinesByOrderId(mOrderId), mUser);
                     mOrder = (new OrderDB(getContext(), mUser)).getActiveOrderById(mOrderId);
                 } catch (Exception e) {
                     e.printStackTrace();
