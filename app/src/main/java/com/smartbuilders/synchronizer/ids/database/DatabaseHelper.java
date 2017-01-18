@@ -606,7 +606,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_CHAT_MESSAGE =
             "CREATE TABLE IF NOT EXISTS CHAT_MESSAGE (" +
-                    "CHAT_MESSAGE_ID INTEGER NOT NULL, " +
+                    "CHAT_SEQUENCE_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    " CHAT_MESSAGE_ID INTEGER NOT NULL, " +
                     " SENDER_USER_ID INTEGER NOT NULL, " +
                     " RECEIVER_USER_ID INTEGER DEFAULT NULL, " +
                     " MESSAGE TEXT DEFAULT NULL, " +
@@ -615,10 +616,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " IMAGE_FILE_NAME VARCHAR(255) DEFAULT NULL, " +
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
+                    " SERVER_CREATE_TIME DATETIME DEFAULT NULL, " +
                     " STATUS INTEGER NOT NULL DEFAULT 0, " +
                     " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
-                    " PRIMARY KEY (CHAT_MESSAGE_ID, SENDER_USER_ID))";
+                    " UNIQUE (CHAT_MESSAGE_ID, SENDER_USER_ID))";
 
 	/**
 	 * 

@@ -37,6 +37,8 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
 
     public static final int TRANSMISSION_SERVER_TO_CLIENT = 1;
     public static final int TRANSMISSION_CLIENT_TO_SERVER = 2;
+    public static final int TRANSMISSION_SERVER_TO_CLIENT_AND_CLIENT_TO_SERVER = 3;
+    public static final int TRANSMISSION_CLIENT_TO_SERVER_AND_SERVER_TO_CLIENT = 4;
 
 	private static final String TAG = TablesDataSendToAndReceiveFromServer.class.getSimpleName();
 
@@ -53,8 +55,6 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
     private boolean mIsInitialLoad;
     private int mTransmissionWay;
     private int mCurrentAppVersionCode;
-    private static SQLiteDatabase mUserWriteableDB;
-    private static SQLiteDatabase mIDSWriteableDB;
 
     public TablesDataSendToAndReceiveFromServer(User user, Context context, String tablesToSyncJSONObject,
                                                 int transmissionWay) throws Exception{
@@ -109,6 +109,38 @@ public class TablesDataSendToAndReceiveFromServer extends Thread {
                         case TRANSMISSION_CLIENT_TO_SERVER:
                             numberOfTablesToSync = (new JSONObject(mTablesToSyncJSONObject)).length();
                             sendUserDataToServer(getSQLToSync(mTablesToSyncJSONObject));
+                            break;
+                        case TRANSMISSION_CLIENT_TO_SERVER_AND_SERVER_TO_CLIENT:
+                            numberOfTablesToSync = (new JSONObject(mTablesToSyncJSONObject)).length();
+
+                            /*******************/
+                            sendUserDataToServer(getSQLToSync(mTablesToSyncJSONObject));
+                            /*******************/
+
+                            /*******************/
+                            keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
+                            while(keys.hasNext()){
+                                tablesToSync.add(new SoapPrimitive(null, null,
+                                        (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
+                            }
+                            getDataFromWS(mContext, mUser, tablesToSync);
+                            /*******************/
+                            break;
+                        case TRANSMISSION_SERVER_TO_CLIENT_AND_CLIENT_TO_SERVER:
+                            numberOfTablesToSync = (new JSONObject(mTablesToSyncJSONObject)).length();
+
+                            /*******************/
+                            keys = (new JSONObject(mTablesToSyncJSONObject)).keys();
+                            while(keys.hasNext()){
+                                tablesToSync.add(new SoapPrimitive(null, null,
+                                        (String) new JSONObject(mTablesToSyncJSONObject).get(keys.next().toString())));
+                            }
+                            getDataFromWS(mContext, mUser, tablesToSync);
+                            /*******************/
+
+                            /*******************/
+                            sendUserDataToServer(getSQLToSync(mTablesToSyncJSONObject));
+                            /*******************/
                             break;
                     }
                 }
