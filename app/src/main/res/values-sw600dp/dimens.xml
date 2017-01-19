@@ -96,4 +96,11 @@
     <integer name="number_of_cards_in_staggered_grid_layout">2</integer>
     <dimen name="productMinInfo_dynamic_height_max_image_Width">220dp</dimen>
     <dimen name="productMinInfo_dynamic_height_max_image_Height">220dp</dimen>
+
+    <dimen name="chat_message_text_size">18sp</dimen>
+    <dimen name="chat_message_created_text_size">14sp</dimen>
+
+    <dimen name="productDetailActivity_description_text_size">16sp</dimen>
+    <dimen name="productDetailActivity_subcategory_text_size">16sp</dimen>
+    <dimen name="productDetailActivity_category_text_size">16sp</dimen>
 </resources>

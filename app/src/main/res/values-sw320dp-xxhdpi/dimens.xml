@@ -36,4 +36,9 @@
     <dimen name="productDetailActivity_productPrice_text_size">15sp</dimen>
     <dimen name="productDetailActivity_productAvailability_text_size">15sp</dimen>
     <dimen name="productDetailActivity_description_text_size">14sp</dimen>
+    <dimen name="productDetailActivity_subcategory_text_size">14sp</dimen>
+    <dimen name="productDetailActivity_category_text_size">14sp</dimen>
+
+    <dimen name="chat_message_text_size">16sp</dimen>
+    <dimen name="chat_message_created_text_size">12sp</dimen>
 </resources>

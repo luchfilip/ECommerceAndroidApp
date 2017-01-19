@@ -617,8 +617,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " CREATE_TIME DATETIME NOT NULL, " +
                     " UPDATE_TIME DATETIME DEFAULT NULL, " +
                     " SERVER_CREATE_TIME DATETIME DEFAULT NULL, " +
+                    " APP_VERSION VARCHAR(128) NOT NULL, " +
+                    " APP_USER_NAME VARCHAR(128) NOT NULL, " +
+                    " DEVICE_MAC_ADDRESS VARCHAR(128) NOT NULL, " +
                     " STATUS INTEGER NOT NULL DEFAULT 0, " +
-                    " IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " SENDER_IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
+                    " RECEIVER_IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
                     " UNIQUE (CHAT_MESSAGE_ID, SENDER_USER_ID))";
 

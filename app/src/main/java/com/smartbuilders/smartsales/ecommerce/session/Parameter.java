@@ -318,4 +318,7 @@ public class Parameter {
         return false;
     }
 
+    public static boolean isDeactiveOrderAvailable(Context context, User user) {
+        return ParameterDB.getParameterBooleanValue(context, user, ParameterDB.IS_DEACTIVE_ORDER_AVAILABLE, true);
+    }
 }

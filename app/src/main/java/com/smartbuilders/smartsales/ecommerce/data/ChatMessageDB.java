@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
 import com.smartbuilders.smartsales.ecommerce.utils.DateFormat;
+import com.smartbuilders.smartsales.ecommerce.utils.Utils;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.synchronizer.ids.providers.DataBaseContentProvider;
 
@@ -35,9 +36,13 @@ public class ChatMessageDB {
                             .build(), null,
                     "SELECT CHAT_MESSAGE_ID, CREATE_TIME, MESSAGE, SENDER_USER_ID, RECEIVER_USER_ID, PRODUCT_ID, STATUS " +
                     " FROM CHAT_MESSAGE " +
-                    " WHERE (SENDER_USER_ID = ? OR RECEIVER_USER_ID = ?) AND IS_ACTIVE = ? " +
+                    " WHERE SENDER_USER_ID = ? AND SENDER_IS_ACTIVE = 'Y' " +
+                    " UNION " +
+                    " SELECT CHAT_MESSAGE_ID, CREATE_TIME, MESSAGE, SENDER_USER_ID, RECEIVER_USER_ID, PRODUCT_ID, STATUS " +
+                    " FROM CHAT_MESSAGE " +
+                    " WHERE RECEIVER_USER_ID = ? AND RECEIVER_IS_ACTIVE = 'Y' " +
                     " ORDER BY CHAT_MESSAGE_ID ASC",
-                    new String[]{String.valueOf(chatContactId), String.valueOf(chatContactId), "Y"}, null);
+                    new String[]{String.valueOf(chatContactId), String.valueOf(chatContactId)}, null);
             if(c!=null){
                 while (c.moveToNext()) {
                     ChatMessage chatMessage = new ChatMessage();
@@ -87,14 +92,16 @@ public class ChatMessageDB {
                             .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
                             null,
                             "INSERT INTO CHAT_MESSAGE (CHAT_MESSAGE_ID, SENDER_USER_ID, RECEIVER_USER_ID, " +
-                                    " MESSAGE, MESSAGE_TYPE, PRODUCT_ID, IMAGE_FILE_NAME, CREATE_TIME, STATUS) " +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    " MESSAGE, MESSAGE_TYPE, PRODUCT_ID, IMAGE_FILE_NAME, CREATE_TIME, STATUS, " +
+                                    " APP_VERSION, APP_USER_NAME, DEVICE_MAC_ADDRESS) " +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             new String[]{String.valueOf(chatMessage.getId()),
                             String.valueOf(chatMessage.getSenderChatContactId()),
                             String.valueOf(chatMessage.getReceiverChatContactId()),
                             chatMessage.getMessage(), String.valueOf(chatMessage.getChatMessageType()),
                             String.valueOf(chatMessage.getProductId()), chatMessage.getImageFileName(),
-                            DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(ChatMessage.STATUS_READED)});
+                            DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(ChatMessage.STATUS_READED),
+                            Utils.getAppVersionName(mContext), mUser.getUserName(), Utils.getMacAddress(mContext)});
             if(rowsAffected <= 0){
                 return "Error 001 - No se insertó el mensaje en la base de datos.";
             }
@@ -107,13 +114,14 @@ public class ChatMessageDB {
 
     public String deactiveConversationByContactId(int chatContactId) {
         try {
-            mContext.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                            .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            null,
-                            "UPDATE CHAT_MESSAGE SET IS_ACTIVE=?, UPDATE_TIME=? WHERE SENDER_USER_ID=? OR RECEIVER_USER_ID=?",
-                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(),
-                                    String.valueOf(chatContactId), String.valueOf(chatContactId)});
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null, "UPDATE CHAT_MESSAGE SET RECEIVER_IS_ACTIVE=?, UPDATE_TIME=? WHERE RECEIVER_USER_ID=?",
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(chatContactId)});
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null, "UPDATE CHAT_MESSAGE SET SENDER_IS_ACTIVE=?, UPDATE_TIME=? WHERE SENDER_USER_ID=?",
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(chatContactId)});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
@@ -121,14 +129,17 @@ public class ChatMessageDB {
         return null;
     }
 
-    public String deactiveMessage(int chatMessageId) {
+    public String deactiveMessage(int chatContactId, int chatMessageId) {
         try {
-            mContext.getContentResolver()
-                    .update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
-                                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
-                            null,
-                            "UPDATE CHAT_MESSAGE SET IS_ACTIVE=?, UPDATE_TIME=? WHERE CHAT_MESSAGE_ID=?",
-                            new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(chatMessageId)});
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null, "UPDATE CHAT_MESSAGE SET RECEIVER_IS_ACTIVE=?, UPDATE_TIME=? WHERE CHAT_MESSAGE_ID=? AND RECEIVER_USER_ID=?",
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(chatMessageId), String.valueOf(chatContactId)});
+
+            mContext.getContentResolver().update(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
+                    .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId()).build(),
+                    null, "UPDATE CHAT_MESSAGE SET SENDER_IS_ACTIVE=?, UPDATE_TIME=? WHERE CHAT_MESSAGE_ID=? AND SENDER_USER_ID=?",
+                    new String[]{"N", DateFormat.getCurrentDateTimeSQLFormat(), String.valueOf(chatMessageId), String.valueOf(chatContactId)});
         } catch (Exception e){
             e.printStackTrace();
             return e.getMessage();

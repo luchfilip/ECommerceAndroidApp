@@ -189,8 +189,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     public void removeItem(int position) {
         try {
             mDataset.remove(position);
-            //notifyItemRemoved(position);
-            notifyDataSetChanged();
+            notifyItemRemoved(position);
             ((Callback) mFragment).reloadNotificationsList(mDataset, false);
         } catch (Exception e) {
             //do nothing

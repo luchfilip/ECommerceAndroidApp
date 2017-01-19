@@ -46,6 +46,8 @@
     <dimen name="productDetailActivity_productPrice_text_size">15sp</dimen>
     <dimen name="productDetailActivity_productAvailability_text_size">15sp</dimen>
     <dimen name="productDetailActivity_description_text_size">14sp</dimen>
+    <dimen name="productDetailActivity_subcategory_text_size">14sp</dimen>
+    <dimen name="productDetailActivity_category_text_size">14sp</dimen>
 
     <dimen name="productMainActivity_productName_text_size">13sp</dimen>
     <dimen name="productMainActivity_productInternalCode_text_size">11sp</dimen>
@@ -126,4 +128,7 @@
 
     <dimen name="productMinInfo_dynamic_height_max_image_Width">165dp</dimen>
     <dimen name="productMinInfo_dynamic_height_max_image_Height">165dp</dimen>
+
+    <dimen name="chat_message_text_size">16sp</dimen>
+    <dimen name="chat_message_created_text_size">12sp</dimen>
 </resources>

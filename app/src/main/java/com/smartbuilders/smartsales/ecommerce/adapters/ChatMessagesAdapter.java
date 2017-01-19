@@ -111,7 +111,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                         .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String result = (new ChatMessageDB(mContext, mUser))
-                                        .deactiveMessage(mDataset.get(holder.getAdapterPosition()).getId());
+                                        .deactiveMessage(mSenderChatContactId, mDataset.get(holder.getAdapterPosition()).getId());
                                 if (result==null) {
                                     mDataset.remove(holder.getAdapterPosition());
                                     //notifyItemRemoved(holder.getAdapterPosition());

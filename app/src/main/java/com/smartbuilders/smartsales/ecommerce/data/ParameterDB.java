@@ -44,6 +44,7 @@ public class ParameterDB {
     public static final int SHOW_PRODUCTS_WITHOUT_AVAILABILITY = 19;
     public static final int SHOW_QUERIES_MENU = 20;
     public static final int IS_REQUEST_PRICE_AVAILABLE = 21;
+    public static final int IS_DEACTIVE_ORDER_AVAILABLE = 22;
 
     /**
      * Devuelve el valor del parametro segun la tabla USER_APP_PARAMETER o APP_PARAMETER

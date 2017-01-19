@@ -98,17 +98,6 @@ public class OrderBR {
         return null;
     }
 
-    //public static String createOrderFromShoppingCart(Context context, User user, int businessPartnerAddressId) {
-    //    String result;
-    //    try {
-    //        result = (new OrderDB(context, user)).createOrderFromShoppingCart(businessPartnerAddressId);
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //        result = e.getMessage();
-    //    }
-    //    return result;
-    //}
-
     public static String createOrderFromOrderLines(Context context, User user, int salesOrderId,
                                                    int businessPartnerAddressId, ArrayList<OrderLine> orderLines, boolean insertOrderLinesInDB){
         String result;

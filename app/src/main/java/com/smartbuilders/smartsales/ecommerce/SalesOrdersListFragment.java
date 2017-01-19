@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartbuilders.smartsales.ecommerce.session.Parameter;
 import com.smartbuilders.synchronizer.ids.model.User;
 import com.smartbuilders.smartsales.ecommerce.adapters.OrdersListAdapter;
 import com.smartbuilders.smartsales.ecommerce.adapters.SalesOrdersListAdapter;
@@ -150,18 +151,20 @@ public class SalesOrdersListFragment extends Fragment {
                                         }
                                     });
 
-                                    mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                                        @Override
-                                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                            // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                                            // if it cannot seek to that position.
-                                            Order order = (Order) parent.getItemAtPosition(position);
-                                            if (order != null) {
-                                                ((Callback) getActivity()).onItemLongSelected(order, mListView, mUser);
+                                    if (Parameter.isDeactiveOrderAvailable(getContext(), mUser)) {
+                                        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                            @Override
+                                            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                                                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                                                // if it cannot seek to that position.
+                                                Order order = (Order) parent.getItemAtPosition(position);
+                                                if (order != null) {
+                                                    ((Callback) getActivity()).onItemLongSelected(order, mListView, mUser);
+                                                }
+                                                return true;
                                             }
-                                            return true;
-                                        }
-                                    });
+                                        });
+                                    }
                                 } else {
                                     mListView.setAdapter(new SalesOrdersListAdapter(getContext(), mUser, activeSalesOrders));
 

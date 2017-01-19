@@ -135,6 +135,8 @@ public class ChatMessagesFragment extends Fragment {
                                                 chatMessage.setMessage(messageToSend);
                                                 chatMessage.setCreated(new Date());
                                                 ((ChatMessagesAdapter) recyclerView.getAdapter()).addChatMessage(chatMessage);
+                                                //se mueve el listado al nuevo mensaje
+                                                recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
 
                                                 Intent msgIntent = new Intent(getContext(), SendChatMessageService.class);
                                                 msgIntent.putExtra(SendChatMessageService.KEY_USER_ID, mUser.getUserId());
