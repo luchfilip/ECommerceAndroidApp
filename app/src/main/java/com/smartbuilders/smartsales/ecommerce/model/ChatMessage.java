@@ -113,6 +113,21 @@ public class ChatMessage extends Model implements Parcelable{
         return null;
     }
 
+    public String getCreatedTimeStringFormat(){
+        try {
+            return DateFormat.getTimeInstance(DateFormat.SHORT, new Locale("es","VE")).format(getCreated());
+        } catch (Exception e) { }
+        return null;
+    }
+
+    public String getCreatedDateStringFormat(){
+        try {
+            return DateFormat.getDateInstance(DateFormat.LONG, new Locale("es","VE")).format(getCreated());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;

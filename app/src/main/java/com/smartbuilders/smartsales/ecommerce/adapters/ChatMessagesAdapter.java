@@ -43,12 +43,14 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
         private View containerLayout;
         private TextView message;
         private TextView created;
+        private TextView messageGroupCreateDate;
 
         public ViewHolder(View v) {
             super(v);
             containerLayout = v.findViewById(R.id.container_layout);
             message = (TextView) v.findViewById(R.id.message);
             created = (TextView) v.findViewById(R.id.created);
+            messageGroupCreateDate = (TextView) v.findViewById(R.id.message_group_created_date);
         }
     }
 
@@ -74,12 +76,19 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if (position==0 || (position>0 && !mDataset.get(position).getCreatedDateStringFormat()
+                .equals(mDataset.get(position-1).getCreatedDateStringFormat()))) {
+            holder.messageGroupCreateDate.setText(mDataset.get(position).getCreatedDateStringFormat());
+            holder.messageGroupCreateDate.setVisibility(View.VISIBLE);
+        } else {
+            holder.messageGroupCreateDate.setVisibility(View.GONE);
+        }
 
         holder.message.setText(Html.fromHtml(mDataset.get(position).getMessage()));
-        holder.created.setText(mDataset.get(position).getCreatedStringFormat());
+        holder.created.setText(mDataset.get(position).getCreatedTimeStringFormat());
         if (mDataset.get(position).getSenderChatContactId() == mSenderChatContactId) {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.RIGHT;
-            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(4, 0, 0, 0);
+            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(40, 0, 0, 0);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_sent);
             } else {
@@ -87,7 +96,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
             }
         } else {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.LEFT;
-            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(0, 0, 4, 0);
+            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(0, 0, 40, 0);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_received);
             } else {
@@ -105,7 +114,8 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                                         .deactiveMessage(mDataset.get(holder.getAdapterPosition()).getId());
                                 if (result==null) {
                                     mDataset.remove(holder.getAdapterPosition());
-                                    notifyItemRemoved(holder.getAdapterPosition());
+                                    //notifyItemRemoved(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
                                 }
