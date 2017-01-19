@@ -2,9 +2,11 @@ package com.smartbuilders.smartsales.ecommerce.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.smartbuilders.smartsales.ecommerce.ProductDetailActivity;
 import com.smartbuilders.smartsales.ecommerce.R;
 import com.smartbuilders.smartsales.ecommerce.data.ChatMessageDB;
+import com.smartbuilders.smartsales.ecommerce.data.ProductDB;
 import com.smartbuilders.smartsales.ecommerce.model.ChatMessage;
+import com.smartbuilders.smartsales.ecommerce.model.Product;
 import com.smartbuilders.synchronizer.ids.model.User;
 
 import java.util.ArrayList;
@@ -70,10 +75,11 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.message.setText(mDataset.get(position).getMessage());
+        holder.message.setText(Html.fromHtml(mDataset.get(position).getMessage()));
         holder.created.setText(mDataset.get(position).getCreatedStringFormat());
         if (mDataset.get(position).getSenderChatContactId() == mSenderChatContactId) {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.RIGHT;
+            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(4, 0, 0, 0);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_sent);
             } else {
@@ -81,6 +87,7 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
             }
         } else {
             ((LinearLayout.LayoutParams) holder.containerLayout.getLayoutParams()).gravity = Gravity.LEFT;
+            ((LinearLayout.LayoutParams)holder.containerLayout.getLayoutParams()).setMargins(0, 0, 4, 0);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.containerLayout.setBackgroundResource(R.drawable.ripple_rounded_corners_chat_message_received);
             } else {
@@ -109,6 +116,22 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
                 return true;
             }
         });
+        if (mDataset.get(position).getProductId()>0) {
+            holder.containerLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Product product = (new ProductDB(mContext, mUser)).getProductById(mDataset.get(holder.getAdapterPosition()).getProductId());
+                    if(product!=null){
+                        mContext.startActivity((new Intent(mContext, ProductDetailActivity.class))
+                                .putExtra(ProductDetailActivity.KEY_PRODUCT, product));
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.no_product_details), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            holder.containerLayout.setOnClickListener(null);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

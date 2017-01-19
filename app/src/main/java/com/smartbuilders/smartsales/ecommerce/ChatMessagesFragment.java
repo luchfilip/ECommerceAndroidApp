@@ -110,6 +110,14 @@ public class ChatMessagesFragment extends Fragment {
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);
+                                } else {
+                                    recyclerView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Call smooth scroll
+                                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
+                                        }
+                                    });
                                 }
 
                                 view.findViewById(R.id.chat_send_message_imageView).setOnClickListener(new View.OnClickListener() {
