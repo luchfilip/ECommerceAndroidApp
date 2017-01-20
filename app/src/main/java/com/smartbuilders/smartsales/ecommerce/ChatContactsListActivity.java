@@ -290,11 +290,6 @@ public class ChatContactsListActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean isFragmentMenuVisible() {
-        return false;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int i = menuItem.getItemId();
         if (i == android.R.id.home) {

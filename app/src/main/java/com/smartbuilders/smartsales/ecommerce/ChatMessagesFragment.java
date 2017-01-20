@@ -1,16 +1,22 @@
 package com.smartbuilders.smartsales.ecommerce;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.smartbuilders.smartsales.ecommerce.adapters.ChatMessagesAdapter;
 import com.smartbuilders.smartsales.ecommerce.data.ChatContactDB;
@@ -38,13 +44,14 @@ public class ChatMessagesFragment extends Fragment {
     private int mSenderChatContactId;
     private int mReceiverChatContactId;
     private ChatContact mReceiverChatContact;
-    private ArrayList<ChatMessage> mChatMessages;
     private LinearLayoutManager mLinearLayoutManager;
     private int mRecyclerViewCurrentFirstPosition;
+    private RecyclerView recyclerView;
+    private View mainLayout;
+    private View progressContainer;
 
     public interface Callback{
         void chatMessagesDetailLoaded();
-        boolean isFragmentMenuVisible();
     }
 
     public ChatMessagesFragment() {
@@ -54,7 +61,8 @@ public class ChatMessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_chat_messages, container, false);
-        setMenuVisibility(((Callback) getActivity()).isFragmentMenuVisible());
+
+        final ArrayList<ChatMessage> mChatMessages = new ArrayList<>();
 
         mIsInitialLoad = true;
 
@@ -88,7 +96,7 @@ public class ChatMessagesFragment extends Fragment {
                     }
 
                     if (mReceiverChatContact != null) {
-                        mChatMessages = (new ChatMessageDB(getContext(), mUser)).getMessagesFromContact(mReceiverChatContactId);
+                        mChatMessages.addAll((new ChatMessageDB(getContext(), mUser)).getMessagesFromContact(mReceiverChatContactId));
                     }
 
                     mSenderChatContactId = new SalesRepDB(getContext(), mUser).getSalesRepId();
@@ -100,7 +108,10 @@ public class ChatMessagesFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_messages);
+                                mainLayout = view.findViewById(R.id.main_layout);
+                                progressContainer = view.findViewById(R.id.progressContainer);
+
+                                recyclerView = (RecyclerView) view.findViewById(R.id.chat_messages);
                                 // use this setting to improve performance if you know that changes
                                 // in content do not change the layout size of the RecyclerView
                                 recyclerView.setHasFixedSize(true);
@@ -153,11 +164,11 @@ public class ChatMessagesFragment extends Fragment {
                                 e.printStackTrace();
                             } finally {
                                 if (mReceiverChatContact !=null) {
-                                    view.findViewById(R.id.main_layout).setVisibility(View.VISIBLE);
-                                    view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                    mainLayout.setVisibility(View.VISIBLE);
+                                    progressContainer.setVisibility(View.GONE);
                                 } else {
-                                    view.findViewById(R.id.main_layout).setVisibility(View.GONE);
-                                    view.findViewById(R.id.progressContainer).setVisibility(View.GONE);
+                                    mainLayout.setVisibility(View.GONE);
+                                    progressContainer.setVisibility(View.GONE);
                                 }
                                 if(getActivity()!=null){
                                     ((Callback) getActivity()).chatMessagesDetailLoaded();
@@ -177,9 +188,72 @@ public class ChatMessagesFragment extends Fragment {
         if (mIsInitialLoad) {
             mIsInitialLoad = false;
         } else {
-            //reload messages
+            reloadChatMessages();
         }
         super.onStart();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_chat_messages, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == R.id.clear_chat_messages) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(getString(R.string.clear_chat_messages_question))
+                    .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String result = (new ChatMessageDB(getContext(), mUser))
+                                    .deactiveConversationByContactId(mSenderChatContactId);
+                            if (result==null) {
+                                reloadChatMessages();
+                            } else {
+                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void reloadChatMessages() {
+        progressContainer.setVisibility(View.VISIBLE);
+        mainLayout.setVisibility(View.GONE);
+        final ArrayList<ChatMessage> mChatMessages = new ArrayList<>();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    mChatMessages.addAll((new ChatMessageDB(getContext(), mUser)).getMessagesFromContact(mReceiverChatContactId));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ((ChatMessagesAdapter) recyclerView.getAdapter()).setData(mChatMessages);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                mainLayout.setVisibility(View.VISIBLE);
+                                progressContainer.setVisibility(View.GONE);
+                                if(getActivity()!=null){
+                                    ((Callback) getActivity()).chatMessagesDetailLoaded();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     @Override

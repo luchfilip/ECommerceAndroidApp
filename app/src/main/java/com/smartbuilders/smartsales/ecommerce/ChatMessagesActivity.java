@@ -3,7 +3,6 @@ package com.smartbuilders.smartsales.ecommerce;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -59,19 +58,9 @@ public class ChatMessagesActivity extends AppCompatActivity implements ChatMessa
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat_messages, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int i = menuItem.getItemId();
-        if (i == R.id.search) {
-
-            return true;
-        } else if (i == android.R.id.home) {
+        if (i == android.R.id.home) {
             onBackPressed();
         }
         return (super.onOptionsItemSelected(menuItem));
@@ -85,11 +74,6 @@ public class ChatMessagesActivity extends AppCompatActivity implements ChatMessa
     @Override
     public void chatMessagesDetailLoaded() {
 
-    }
-
-    @Override
-    public boolean isFragmentMenuVisible() {
-        return false;
     }
 
     @Override
