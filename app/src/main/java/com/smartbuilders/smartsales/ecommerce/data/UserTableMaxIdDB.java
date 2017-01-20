@@ -84,7 +84,7 @@ public class UserTableMaxIdDB {
                     selectionArgs = new String[]{String.valueOf(user.getServerUserId())};
                     break;
                 case "CHAT_MESSAGE":
-                    sqlValidator = "SELECT MAX(CHAT_MESSAGE_ID) FROM CHAT_MESSAGE WHERE SENDER_USER_ID = ?";
+                    sqlValidator = "SELECT MAX(CHAT_MESSAGE_ID) FROM CHAT_MESSAGE WHERE SENDER_CHAT_CONTACT_ID = ?";
                     selectionArgs = new String[]{String.valueOf(new SalesRepDB(context, user).getSalesRepId())};
                     break;
 

@@ -74,21 +74,26 @@ public class ChatContactDB {
                 c = mContext.getContentResolver().query(DataBaseContentProvider.INTERNAL_DB_URI.buildUpon()
                                 .appendQueryParameter(DataBaseContentProvider.KEY_USER_ID, mUser.getUserId())
                                 .build(), null,
-                        "SELECT MAX(CHAT_MESSAGE_ID), MAX(CREATE_TIME) FROM CHAT_MESSAGE " +
-                        " WHERE (SENDER_USER_ID = ? OR RECEIVER_USER_ID = ?) AND IS_ACTIVE = 'Y'",
+                        "SELECT MAX(CHAT_MESSAGE_ID), " +
+                            " (SELECT CREATE_TIME FROM CHAT_MESSAGE WHERE CHAT_SEQUENCE_ID=CM.CHAT_SEQUENCE_ID) AS CREATE_TIME, " +
+                            " (SELECT MESSAGE FROM CHAT_MESSAGE WHERE CHAT_SEQUENCE_ID=CM.CHAT_SEQUENCE_ID) AS MESSAGE " +
+                        " FROM CHAT_MESSAGE CM " +
+                        " WHERE (CM.SENDER_CHAT_CONTACT_ID = ? AND CM.SENDER_IS_ACTIVE = 'Y') " +
+                                " OR (CM.RECEIVER_CHAT_CONTACT_ID = ? AND CM.RECEIVER_IS_ACTIVE = 'Y')",
                         new String[]{String.valueOf(chatContact.getId()), String.valueOf(chatContact.getId())}, null);
                 if(c!=null && c.moveToNext() && c.getInt(0)>0){
                     try{
-                        chatContact.setMaxChatMessageCreateTime(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(1)).getTime()));
+                        chatContact.setLastMessageCreateTimeInConversation(new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(c.getString(1)).getTime()));
                     }catch(ParseException ex){
                         try {
-                            chatContact.setMaxChatMessageCreateTime(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
+                            chatContact.setLastMessageCreateTimeInConversation(new Timestamp(new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.SSSSSS").parse(c.getString(1)).getTime()));
                         } catch (ParseException e) {
                             //empty
                         }
                     }catch(Exception ex){
                         //empty
                     }
+                    chatContact.setLastMessageInConversation(c.getString(2));
                     chatContacts.add(chatContact);
                 }
             } catch (Exception e) {
@@ -109,10 +114,10 @@ public class ChatContactDB {
             @Override
             public int compare(ChatContact chatContact1, ChatContact chatContact2) {
                 if (chatContact1!=null && chatContact2!=null
-                        && chatContact1.getMaxChatMessageCreateTime()!=null
-                        && chatContact2.getMaxChatMessageCreateTime()!=null) {
-                    return (chatContact2.getMaxChatMessageCreateTime()
-                            .compareTo(chatContact1.getMaxChatMessageCreateTime()));
+                        && chatContact1.getLastMessageCreateTimeInConversation()!=null
+                        && chatContact2.getLastMessageCreateTimeInConversation()!=null) {
+                    return (chatContact2.getLastMessageCreateTimeInConversation()
+                            .compareTo(chatContact1.getLastMessageCreateTimeInConversation()));
                 }
                 return 0;
             }

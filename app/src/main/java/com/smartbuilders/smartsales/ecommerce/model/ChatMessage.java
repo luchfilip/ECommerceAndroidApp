@@ -14,6 +14,7 @@ public class ChatMessage extends Model implements Parcelable{
     public static final int STATUS_UNREADED = 0;
     public static final int STATUS_READED = 1;
     public static final int TYPE_REQUEST_PRODUCT_PRICE = 2;
+    public static final int TYPE_SEND_PRODUCT_PRICE = 3;
 
     private String message;
     private int receiverChatContactId;

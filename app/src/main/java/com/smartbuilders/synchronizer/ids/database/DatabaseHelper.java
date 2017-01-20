@@ -608,8 +608,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS CHAT_MESSAGE (" +
                     "CHAT_SEQUENCE_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " CHAT_MESSAGE_ID INTEGER NOT NULL, " +
-                    " SENDER_USER_ID INTEGER NOT NULL, " +
-                    " RECEIVER_USER_ID INTEGER DEFAULT NULL, " +
+                    " SENDER_CHAT_CONTACT_ID INTEGER NOT NULL, " +
+                    " RECEIVER_CHAT_CONTACT_ID INTEGER DEFAULT NULL, " +
                     " MESSAGE TEXT DEFAULT NULL, " +
                     " MESSAGE_TYPE INTEGER DEFAULT NULL, " +
                     " PRODUCT_ID INTEGER DEFAULT NULL, " +
@@ -624,7 +624,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     " SENDER_IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " RECEIVER_IS_ACTIVE CHAR(1) DEFAULT 'Y', " +
                     " SEQUENCE_ID BIGINT UNSIGNED NOT NULL DEFAULT 0, " +
-                    " UNIQUE (CHAT_MESSAGE_ID, SENDER_USER_ID))";
+                    " UNIQUE (CHAT_MESSAGE_ID, SENDER_CHAT_CONTACT_ID, DEVICE_MAC_ADDRESS))";
 
 	/**
 	 * 

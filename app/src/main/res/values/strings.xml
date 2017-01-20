@@ -573,6 +573,8 @@
     <string name="shopping_carts_by_business_partners">Pedidos Abiertos Por Cliente</string>
     <string name="no_recent_messages">No Hay Mensajes Recientes</string>
     <string name="no_contacts_availabe">No Hay Contactos Disponibles</string>
-    <string name="request_price_chat_message">Solicitud de precio para el articulo &lt;b&gt;%1$s&lt;/b&gt;, cod: &lt;font color="#07C"&gt;&lt;u&gt;%2$s&lt;/u&gt;&lt;/font&gt;.</string>
+    <string name="request_product_price_chat_message">Solicitud de precio para el articulo &lt;b&gt;%1$s&lt;/b&gt;, cod: &lt;font color="#07C"&gt;&lt;u&gt;%2$s&lt;/u&gt;&lt;/font&gt;.</string>
+    <string name="send_product_price_chat_message">Precio: &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="product_price_requested">Solicitud de precio</string>
+    <string name="send_product_price">ENVIAR PRECIO</string>
 </resources>

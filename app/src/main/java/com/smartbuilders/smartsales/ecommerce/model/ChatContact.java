@@ -12,40 +12,51 @@ import java.util.Locale;
  */
 public class ChatContact extends BusinessPartner implements Parcelable {
 
-    private Date maxChatMessageCreateTime;
+    private Date lastMessageCreateTimeInConversation;
+    private String lastMessageInConversation;
 
     public ChatContact() {
 
     }
 
-    public Date getMaxChatMessageCreateTime() {
-        return maxChatMessageCreateTime;
+    public Date getLastMessageCreateTimeInConversation() {
+        return lastMessageCreateTimeInConversation;
     }
 
-    public void setMaxChatMessageCreateTime(Date maxChatMessageCreateTime) {
-        this.maxChatMessageCreateTime = maxChatMessageCreateTime;
+    public void setLastMessageCreateTimeInConversation(Date lastMessageCreateTimeInConversation) {
+        this.lastMessageCreateTimeInConversation = lastMessageCreateTimeInConversation;
     }
 
     public String getMaxChatMessageCreateTimeStringFormat(){
         try {
             return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-                    new Locale("es","VE")).format(maxChatMessageCreateTime);
+                    new Locale("es","VE")).format(lastMessageCreateTimeInConversation);
         } catch (Exception e) { }
         return null;
+    }
+
+    public String getLastMessageInConversation() {
+        return lastMessageInConversation;
+    }
+
+    public void setLastMessageInConversation(String lastMessageInConversation) {
+        this.lastMessageInConversation = lastMessageInConversation;
     }
 
     private ChatContact(Parcel in) {
         super(in);
         try{
             Long date = in.readLong();
-            setMaxChatMessageCreateTime(date > 0 ? new Date(date) : null);
+            this.lastMessageCreateTimeInConversation = date > 0 ? new Date(date) : null;
         }catch(Exception ex){ ex.printStackTrace(); }
+        this.lastMessageInConversation = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeLong(maxChatMessageCreateTime != null ? maxChatMessageCreateTime.getTime() : -1);
+        dest.writeLong(this.lastMessageCreateTimeInConversation != null ? this.lastMessageCreateTimeInConversation.getTime() : -1);
+        dest.writeString(this.lastMessageInConversation);
     }
 
     @Override

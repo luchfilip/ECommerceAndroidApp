@@ -27,6 +27,98 @@
         android:id="@+id/container_layout"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/product_layout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/shape_selector_style">
+
+            <ImageView
+                android:layout_width="@dimen/productDetail_max_image_Width"
+                android:layout_height="@dimen/productDetail_max_image_Height"
+                android:id="@+id/product_image"
+                android:layout_gravity="center"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingLeft="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_name"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/productDetailCardView_name_text_size"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:layout_margin="2dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_internal_code"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/productDetailCardView_internalCode_text_size"
+                    android:lines="1"
+                    android:ellipsize="end" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:baselineAligned="false"
+                    android:layout_weight="1"
+                    android:gravity="bottom">
+
+                    <View style="@style/Divider"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/addToShoppingCart_imageView"
+                            android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                            style="@style/image_button_style"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp" />
+
+                        <ImageView
+                            style="@style/image_button_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/addToShoppingSale_imageView"
+                            android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/message"
             android:layout_width="wrap_content"
@@ -34,13 +126,40 @@
             android:textSize="@dimen/chat_message_text_size"
             android:textColor="@android:color/black" />
 
-        <TextView
-            android:id="@+id/created"
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/send_product_price_divider"
+            android:background="@color/colorPrimary"
+            style="@style/Divider"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black"
-            android:textSize="@dimen/chat_message_created_text_size" />
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/send_product_price_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:text="@string/send_product_price"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/chat_message_created_text_size" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

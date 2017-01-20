@@ -106,7 +106,8 @@ public class ChatMessagesFragment extends Fragment {
                                 recyclerView.setHasFixedSize(true);
                                 mLinearLayoutManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(mLinearLayoutManager);
-                                recyclerView.setAdapter(new ChatMessagesAdapter(getContext(), mChatMessages, mUser, mSenderChatContactId));
+                                recyclerView.setAdapter(new ChatMessagesAdapter(getContext(), getActivity(),
+                                        mChatMessages, mUser, mSenderChatContactId));
 
                                 if (mRecyclerViewCurrentFirstPosition!=0) {
                                     recyclerView.scrollToPosition(mRecyclerViewCurrentFirstPosition);

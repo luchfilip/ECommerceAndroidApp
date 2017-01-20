@@ -91,9 +91,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         public ImageView favoriteImageView;
         public View favoriteImageViewViewContainer;
         public ImageView addToShoppingCartImageView;
-        public View addToShoppingCartImageViewContainer;
         public ImageView addToShoppingSaleImageView;
-        public View addToShoppingSaleImageViewContainer;
         public View productRatingBarContainer;
         public TextView productRatingBarLabelTextView;
         public RatingBar productRatingBar;
@@ -119,9 +117,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             favoriteImageView = (ImageView) v.findViewById(R.id.favorite_imageView);
             favoriteImageViewViewContainer = v.findViewById(R.id.favorite_imageView_container);
             addToShoppingCartImageView = (ImageView) v.findViewById(R.id.addToShoppingCart_imageView);
-            addToShoppingCartImageViewContainer = v.findViewById(R.id.addToShoppingCart_imageView_container);
             addToShoppingSaleImageView = (ImageView) v.findViewById(R.id.addToShoppingSale_imageView);
-            addToShoppingSaleImageViewContainer = v.findViewById(R.id.addToShoppingSale_imageView_container);
             productRatingBarContainer = v.findViewById(R.id.product_ratingBar_container);
             productRatingBarLabelTextView = (TextView) v.findViewById(R.id.product_ratingBar_label_textView);
             productRatingBar = (RatingBar) v.findViewById(R.id.product_ratingBar);

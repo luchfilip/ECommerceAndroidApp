@@ -455,7 +455,7 @@ public class ProductDetailFragment extends Fragment {
                                                     chatMessage.setSenderChatContactId(senderChatContactId);
                                                     chatMessage.setProductId(mProduct.getId());
                                                     chatMessage.setChatMessageType(ChatMessage.TYPE_REQUEST_PRODUCT_PRICE);
-                                                    chatMessage.setMessage(getString(R.string.request_price_chat_message,
+                                                    chatMessage.setMessage(getString(R.string.request_product_price_chat_message,
                                                             mProduct.getName(), mProduct.getInternalCodeMayoreoFormat()));
                                                     msgIntent.putExtra(SendChatMessageService.KEY_CHAT_MESSAGE, chatMessage);
                                                     getContext().startService(msgIntent);

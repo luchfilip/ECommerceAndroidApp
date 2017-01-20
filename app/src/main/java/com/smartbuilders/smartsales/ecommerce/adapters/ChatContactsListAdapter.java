@@ -57,13 +57,19 @@ public class ChatContactsListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.internalCode.setText(mDataset.get(position).getInternalCode());
         viewHolder.name.setText(mDataset.get(position).getName());
+
         if (mLoadRecentConversations) {
             viewHolder.maxChatMessageCreateTime.setText(mDataset.get(position).getMaxChatMessageCreateTimeStringFormat());
             viewHolder.maxChatMessageCreateTime.setVisibility(View.VISIBLE);
+            viewHolder.internalCode.setVisibility(View.GONE);
+            viewHolder.lastChatMessage.setText(mDataset.get(position).getLastMessageInConversation());
+            viewHolder.lastChatMessage.setVisibility(View.VISIBLE);
         } else {
+            viewHolder.internalCode.setText(mDataset.get(position).getInternalCode());
+            viewHolder.internalCode.setVisibility(View.VISIBLE);
             viewHolder.maxChatMessageCreateTime.setVisibility(View.GONE);
+            viewHolder.lastChatMessage.setVisibility(View.GONE);
         }
 
         return view;
@@ -72,16 +78,18 @@ public class ChatContactsListAdapter extends BaseAdapter {
     /**
      * Cache of the children views for a forecast list item.
      */
-    public static class ViewHolder {
+    private static class ViewHolder {
         // each data item is just a string in this case
-        public TextView name;
-        public TextView internalCode;
-        public TextView maxChatMessageCreateTime;
+        private TextView name;
+        private TextView internalCode;
+        private TextView maxChatMessageCreateTime;
+        private TextView lastChatMessage;
 
         public ViewHolder(View v) {
             name = (TextView) v.findViewById(R.id.chat_contact_name);
             internalCode = (TextView) v.findViewById(R.id.chat_contact_internal_code);
             maxChatMessageCreateTime = (TextView) v.findViewById(R.id.max_chat_message_create_time);
+            lastChatMessage = (TextView) v.findViewById(R.id.last_chat_message);
         }
     }
 
